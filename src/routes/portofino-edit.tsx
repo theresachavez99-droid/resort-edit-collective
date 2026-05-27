@@ -404,30 +404,10 @@ function PortofinoEditPage() {
                                 </div>
                               </div>
 
-                              <ul className="px-4 py-5 space-y-3 flex-1">
-                                {items.map((item) => (
-                                  <li key={item.brand + item.item}>
-                                    <a
-                                      href={item.href}
-                                      target="_blank"
-                                      rel="noreferrer noopener"
-                                      className="flex justify-between gap-3 group/item"
-                                    >
-                                      <div className="text-left leading-tight min-w-0">
-                                        <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate">
-                                          {item.brand}
-                                        </div>
-                                        <div className="font-serif text-[0.82rem] text-ink/80 mt-0.5 truncate">
-                                          {item.item}
-                                        </div>
-                                      </div>
-                                      <div className="font-serif text-[0.82rem] text-gold shrink-0 self-center">
-                                        {item.price}
-                                      </div>
-                                    </a>
-                                  </li>
-                                ))}
-                              </ul>
+                              <CategorizedItems
+                                items={items}
+                                finishingNote={currentLook.finishingNote}
+                              />
 
                               <div className="px-4 pb-4">
                                 <a
