@@ -40,14 +40,14 @@ function Index() {
                 <div className="eyebrow text-[0.6rem] sm:text-[0.65rem] mt-0.5">{look.title}</div>
               </div>
               {/* Image */}
-              <div className="aspect-[3/4] overflow-hidden bg-muted">
+              <div className="aspect-[2/5] overflow-hidden bg-muted">
                 <img
                   src={look.image}
                   alt={`${look.title} look`}
                   loading="lazy"
                   width={832}
                   height={1216}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover object-top"
                 />
               </div>
               {/* Caption */}
