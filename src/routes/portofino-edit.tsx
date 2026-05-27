@@ -1,7 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Heart, Share2, ShoppingBag, ChevronDown, ArrowLeft } from "lucide-react";
-import { portofinoEdit, tiers, type Tier } from "@/data/portofinoEdit";
+import { Heart, Share2, ShoppingBag, ChevronDown, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  portofinoEdit,
+  tiers,
+  lookMetas,
+  type Tier,
+  type LookKey,
+} from "@/data/portofinoEdit";
 import logo from "@/assets/resort-edit-logo.png";
 
 export const Route = createFileRoute("/portofino-edit")({
@@ -11,12 +17,13 @@ export const Route = createFileRoute("/portofino-edit")({
       {
         name: "description",
         content:
-          "The same Portofino aesthetic, translated across designer, mid-luxe, and accessible investment levels.",
+          "One destination, three style directions per day — print forward, quiet luxury, texture forward — across designer, mid-luxe, and accessible tiers.",
       },
       { property: "og:title", content: "Portofino Resort Edit — Across Price Points" },
       {
         property: "og:description",
-        content: "Same aesthetic. Different investment. Explore the Portofino edit.",
+        content:
+          "Same aesthetic. Different investment. Three looks per vacation day in Portofino.",
       },
     ],
   }),
@@ -30,6 +37,9 @@ function PortofinoEditPage() {
   const [openDays, setOpenDays] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(portofinoEdit.map((d) => [d.day, true])),
   );
+  const [activeLook, setActiveLook] = useState<Record<string, LookKey>>(() =>
+    Object.fromEntries(portofinoEdit.map((d) => [d.day, "print" as LookKey])),
+  );
   const [saved, setSaved] = useState<Record<string, boolean>>({});
   const [activeDay, setActiveDay] = useState<string>(portofinoEdit[0].day);
 
@@ -38,7 +48,6 @@ function PortofinoEditPage() {
     [filter],
   );
 
-  // Track which day is in view for sticky nav highlighting.
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -58,7 +67,8 @@ function PortofinoEditPage() {
 
   const toggleDay = (day: string) =>
     setOpenDays((p) => ({ ...p, [day]: !p[day] }));
-
+  const setLook = (day: string, look: LookKey) =>
+    setActiveLook((p) => ({ ...p, [day]: look }));
   const toggleSave = (key: string) =>
     setSaved((p) => ({ ...p, [key]: !p[key] }));
 
@@ -79,7 +89,10 @@ function PortofinoEditPage() {
     <div className="bg-ivory min-h-screen">
       {/* MASTHEAD */}
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-8 md:pt-12 pb-6 text-center">
-        <Link to="/" className="inline-flex items-center gap-2 eyebrow text-[0.6rem] text-ink/60 hover:text-gold transition-colors">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 eyebrow text-[0.6rem] text-ink/60 hover:text-gold transition-colors"
+        >
           <ArrowLeft className="w-3 h-3" /> Back to the Edit
         </Link>
         <img
@@ -88,15 +101,16 @@ function PortofinoEditPage() {
           className="mx-auto mt-6 w-[220px] sm:w-[300px] h-auto"
         />
         <p className="eyebrow text-gold mt-4 text-[0.7rem] tracking-[0.3em]">
-          The Portofino Edit · Across Price Points
+          The Portofino Edit · Three Ways To Vacation
         </p>
         <h1 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-[0.08em] mt-6 text-ink">
-          Same Aesthetic.
-          <br className="sm:hidden" /> Different Investment.
+          One Destination.
+          <br className="sm:hidden" /> Multiple Ways To Vacation Beautifully.
         </h1>
         <p className="font-serif text-[0.95rem] sm:text-base text-ink/70 max-w-2xl mx-auto mt-5 leading-relaxed">
-          Explore each Resort Edit look translated across multiple price points
-          while keeping the same destination aesthetic.
+          Each day, three style directions — print forward, quiet luxury, and
+          texture forward — translated across designer, mid-luxe, and accessible
+          tiers. Same aesthetic. Different investment.
         </p>
       </div>
 
@@ -126,7 +140,6 @@ function PortofinoEditPage() {
       {/* STICKY NAV */}
       <div className="sticky top-0 z-30 bg-ivory/95 backdrop-blur border-y border-border/60">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          {/* Day nav */}
           <nav className="flex gap-1 sm:gap-2 overflow-x-auto -mx-1 px-1">
             {portofinoEdit.map((d) => (
               <a
@@ -148,7 +161,6 @@ function PortofinoEditPage() {
               </a>
             ))}
           </nav>
-          {/* Filters */}
           <div className="flex gap-1 sm:gap-2 overflow-x-auto -mx-1 px-1">
             {(["designer", "mid", "riviera", "all"] as Filter[]).map((f) => {
               const labelMap: Record<Filter, string> = {
@@ -177,9 +189,12 @@ function PortofinoEditPage() {
       </div>
 
       {/* DAYS */}
-      <main className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 space-y-16">
+      <main className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 space-y-20">
         {portofinoEdit.map((day) => {
           const isOpen = openDays[day.day];
+          const currentLookKey = activeLook[day.day];
+          const currentLook =
+            day.looks.find((l) => l.id === currentLookKey) ?? day.looks[0];
           return (
             <section key={day.day} id={day.day} className="scroll-mt-32">
               {/* Day header */}
@@ -209,133 +224,193 @@ function PortofinoEditPage() {
 
               {isOpen && (
                 <>
-                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-8 lg:gap-10">
-                    {/* Visual anchor */}
-                    <figure className="bg-card">
-                      <div className="aspect-[2/3] overflow-hidden bg-muted">
-                        <img
-                          src={day.image}
-                          alt={`${day.title} look`}
-                          loading="lazy"
-                          className="h-full w-full object-cover object-top"
-                        />
-                      </div>
-                      <figcaption className="text-center py-4 px-3">
-                        <div className="eyebrow text-[0.6rem] text-gold tracking-[0.25em]">
-                          The Original Look
+                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_2.4fr] gap-8 lg:gap-12">
+                    {/* LEFT — Editorial anchor */}
+                    <aside>
+                      <figure className="bg-card">
+                        <div className="aspect-[2/3] overflow-hidden bg-muted">
+                          <img
+                            src={day.image}
+                            alt={`${day.title} editorial look`}
+                            loading="lazy"
+                            className="h-full w-full object-cover object-top"
+                          />
                         </div>
-                      </figcaption>
-                    </figure>
+                        <figcaption className="text-center py-4 px-3">
+                          <div className="eyebrow text-[0.6rem] text-gold tracking-[0.25em]">
+                            The Editorial Reference
+                          </div>
+                        </figcaption>
+                      </figure>
+                      <div className="mt-5">
+                        <div className="eyebrow text-[0.6rem] text-ink/50 tracking-[0.3em]">
+                          {day.day}
+                        </div>
+                        <h3 className="font-display text-xl sm:text-2xl tracking-[0.06em] text-ink mt-2">
+                          {day.title}
+                        </h3>
+                        <p className="font-serif italic text-[0.85rem] text-ink/60 mt-2">
+                          {day.subtitle}
+                        </p>
+                        <button
+                          onClick={() => {
+                            // Cycle through the three looks to "view all"
+                            const order: LookKey[] = ["print", "neutral", "texture"];
+                            const next =
+                              order[(order.indexOf(currentLookKey) + 1) % order.length];
+                            setLook(day.day, next);
+                          }}
+                          className="mt-5 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.28em] text-ink border-b border-gold pb-1 hover:text-gold transition-colors cursor-pointer"
+                        >
+                          View All 3 {day.title} Looks
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </aside>
 
-                    {/* Tier cards */}
-                    <div
-                      className={`grid gap-5 sm:gap-6 ${
-                        visibleTiers.length === 1
-                          ? "grid-cols-1"
-                          : visibleTiers.length === 2
-                            ? "grid-cols-1 md:grid-cols-2"
-                            : "grid-cols-1 md:grid-cols-3"
-                      }`}
-                    >
-                      {visibleTiers.map((tier) => {
-                        const items = day.tiers[tier.id];
-                        const saveKey = `${day.day}-${tier.id}`;
-                        return (
-                          <article
-                            key={tier.id}
-                            className="group bg-card border border-border/50 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(141,110,68,0.35)] hover:border-gold/60"
-                          >
-                            {/* Tier label */}
-                            <div className="px-4 py-3 border-b border-border/50 flex items-center justify-between">
-                              <div>
-                                <div className="eyebrow text-gold text-[0.6rem] tracking-[0.25em]">
-                                  {tier.label}
-                                </div>
-                                <div className="font-serif text-[0.75rem] text-ink/60 italic mt-0.5">
-                                  {tier.range}
-                                </div>
-                              </div>
-                              <div className="flex gap-1.5">
-                                <button
-                                  onClick={() => toggleSave(saveKey)}
-                                  aria-label="Save this edit"
-                                  className="w-8 h-8 inline-flex items-center justify-center border border-border/60 hover:border-gold hover:text-gold transition-colors cursor-pointer"
-                                >
-                                  <Heart
-                                    className={`w-3.5 h-3.5 ${saved[saveKey] ? "fill-gold text-gold" : ""}`}
-                                  />
-                                </button>
-                                <button
-                                  onClick={shareEdit}
-                                  aria-label="Share this edit"
-                                  className="w-8 h-8 inline-flex items-center justify-center border border-border/60 hover:border-gold hover:text-gold transition-colors cursor-pointer"
-                                >
-                                  <Share2 className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            </div>
-
-                            {/* Hero image (reuses day image, tinted differently per tier) */}
-                            <div className="aspect-[4/5] overflow-hidden bg-muted relative">
-                              <img
-                                src={day.image}
-                                alt={`${day.title} — ${tier.label}`}
-                                loading="lazy"
-                                className={`h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03] ${
-                                  tier.id === "designer"
-                                    ? ""
-                                    : tier.id === "mid"
-                                      ? "saturate-[0.95]"
-                                      : "saturate-[0.9] brightness-[1.02]"
+                    {/* RIGHT — Looks with tabs */}
+                    <div>
+                      {/* Look tabs */}
+                      <div
+                        className="flex gap-2 sm:gap-3 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 pb-1 snap-x snap-mandatory"
+                        role="tablist"
+                        aria-label={`${day.title} style directions`}
+                      >
+                        {day.looks.map((look) => {
+                          const meta = lookMetas.find((m) => m.id === look.id)!;
+                          const active = currentLookKey === look.id;
+                          return (
+                            <button
+                              key={look.id}
+                              role="tab"
+                              aria-selected={active}
+                              onClick={() => setLook(day.day, look.id)}
+                              className={`snap-start shrink-0 text-left px-4 py-3 border transition-colors cursor-pointer min-w-[220px] sm:min-w-0 sm:flex-1 ${
+                                active
+                                  ? "border-gold bg-gold/5"
+                                  : "border-border/60 hover:border-gold/60"
+                              }`}
+                            >
+                              <div
+                                className={`eyebrow text-[0.55rem] tracking-[0.28em] ${
+                                  active ? "text-gold" : "text-ink/50"
                                 }`}
-                              />
-                            </div>
-
-                            {/* Items */}
-                            <ul className="px-4 py-5 space-y-3 flex-1">
-                              {items.map((item) => (
-                                <li key={item.brand + item.item}>
-                                  <a
-                                    href={item.href}
-                                    target="_blank"
-                                    rel="noreferrer noopener"
-                                    className="flex justify-between gap-3 group/item"
-                                  >
-                                    <div className="text-left leading-tight min-w-0">
-                                      <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate">
-                                        {item.brand}
-                                      </div>
-                                      <div className="font-serif text-[0.82rem] text-ink/80 mt-0.5 truncate">
-                                        {item.item}
-                                      </div>
-                                    </div>
-                                    <div className="font-serif text-[0.82rem] text-gold shrink-0 self-center">
-                                      {item.price}
-                                    </div>
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-
-                            {/* Shop CTA */}
-                            <div className="px-4 pb-4">
-                              <a
-                                href="#"
-                                target="_blank"
-                                rel="noreferrer noopener"
-                                className="block text-center eyebrow text-[0.65rem] tracking-[0.25em] py-3 border border-ink text-ink hover:bg-ink hover:text-ivory transition-colors"
                               >
-                                Shop the {tier.label.replace(" Edit", "")}
-                              </a>
-                            </div>
-                          </article>
-                        );
-                      })}
+                                {meta.shortLabel} · {meta.category}
+                              </div>
+                              <div
+                                className={`font-display text-[0.95rem] sm:text-base tracking-[0.05em] mt-1.5 ${
+                                  active ? "text-ink" : "text-ink/70"
+                                }`}
+                              >
+                                {look.name}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Look description */}
+                      <div className="mt-6 mb-6 border-l-2 border-gold/60 pl-4">
+                        <div className="eyebrow text-[0.6rem] text-gold tracking-[0.28em]">
+                          {currentLook.category}
+                        </div>
+                        <p className="font-serif italic text-[0.95rem] text-ink/75 mt-2 max-w-xl leading-relaxed">
+                          {currentLook.description}
+                        </p>
+                      </div>
+
+                      {/* Tier cards */}
+                      <div
+                        className={`grid gap-5 sm:gap-6 ${
+                          visibleTiers.length === 1
+                            ? "grid-cols-1"
+                            : visibleTiers.length === 2
+                              ? "grid-cols-1 md:grid-cols-2"
+                              : "grid-cols-1 md:grid-cols-3"
+                        }`}
+                      >
+                        {visibleTiers.map((tier) => {
+                          const items = currentLook.tiers[tier.id];
+                          const saveKey = `${day.day}-${currentLook.id}-${tier.id}`;
+                          return (
+                            <article
+                              key={tier.id}
+                              className="group bg-card border border-border/50 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(141,110,68,0.35)] hover:border-gold/60"
+                            >
+                              <div className="px-4 py-3 border-b border-border/50 flex items-center justify-between">
+                                <div>
+                                  <div className="eyebrow text-gold text-[0.6rem] tracking-[0.25em]">
+                                    {tier.label}
+                                  </div>
+                                  <div className="font-serif text-[0.75rem] text-ink/60 italic mt-0.5">
+                                    {tier.range}
+                                  </div>
+                                </div>
+                                <div className="flex gap-1.5">
+                                  <button
+                                    onClick={() => toggleSave(saveKey)}
+                                    aria-label="Save this edit"
+                                    className="w-8 h-8 inline-flex items-center justify-center border border-border/60 hover:border-gold hover:text-gold transition-colors cursor-pointer"
+                                  >
+                                    <Heart
+                                      className={`w-3.5 h-3.5 ${saved[saveKey] ? "fill-gold text-gold" : ""}`}
+                                    />
+                                  </button>
+                                  <button
+                                    onClick={shareEdit}
+                                    aria-label="Share this edit"
+                                    className="w-8 h-8 inline-flex items-center justify-center border border-border/60 hover:border-gold hover:text-gold transition-colors cursor-pointer"
+                                  >
+                                    <Share2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+
+                              <ul className="px-4 py-5 space-y-3 flex-1">
+                                {items.map((item) => (
+                                  <li key={item.brand + item.item}>
+                                    <a
+                                      href={item.href}
+                                      target="_blank"
+                                      rel="noreferrer noopener"
+                                      className="flex justify-between gap-3 group/item"
+                                    >
+                                      <div className="text-left leading-tight min-w-0">
+                                        <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate">
+                                          {item.brand}
+                                        </div>
+                                        <div className="font-serif text-[0.82rem] text-ink/80 mt-0.5 truncate">
+                                          {item.item}
+                                        </div>
+                                      </div>
+                                      <div className="font-serif text-[0.82rem] text-gold shrink-0 self-center">
+                                        {item.price}
+                                      </div>
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+
+                              <div className="px-4 pb-4">
+                                <a
+                                  href="#"
+                                  target="_blank"
+                                  rel="noreferrer noopener"
+                                  className="block text-center eyebrow text-[0.65rem] tracking-[0.25em] py-3 border border-ink text-ink hover:bg-ink hover:text-ivory transition-colors"
+                                >
+                                  Shop the {tier.label.replace(" Edit", "")}
+                                </a>
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
                   {/* Day-level actions */}
-                  <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                  <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
                     <button
                       onClick={() => toggleSave(`day-${day.day}`)}
                       className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-5 py-3 border border-gold/60 text-ink hover:bg-gold/5 transition-colors cursor-pointer"
