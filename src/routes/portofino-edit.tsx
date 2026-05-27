@@ -305,6 +305,9 @@ function PortofinoEditPage() {
                               >
                                 {look.name}
                               </div>
+                              <div className="font-serif italic text-[0.7rem] text-ink/55 mt-1 leading-snug">
+                                {look.fabric}
+                              </div>
                             </button>
                           );
                         })}
@@ -314,6 +317,12 @@ function PortofinoEditPage() {
                       <div className="mt-6 mb-6 border-l-2 border-gold/60 pl-4">
                         <div className="eyebrow text-[0.6rem] text-gold tracking-[0.28em]">
                           {currentLook.category}
+                        </div>
+                        <div className="font-display tracking-[0.06em] text-ink text-[1.05rem] mt-2">
+                          {currentLook.name}
+                        </div>
+                        <div className="eyebrow text-[0.6rem] text-ink/60 tracking-[0.22em] mt-1.5">
+                          {currentLook.fabric}
                         </div>
                         <p className="font-serif italic text-[0.95rem] text-ink/75 mt-2 max-w-xl leading-relaxed">
                           {currentLook.description}
