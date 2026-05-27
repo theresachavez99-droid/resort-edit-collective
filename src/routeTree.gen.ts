@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PortofinoEditRouteImport } from './routes/portofino-edit'
 import { Route as PortofinoRouteImport } from './routes/portofino'
 import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as AboutRouteImport } from './routes/about'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortofinoEditRoute = PortofinoEditRouteImport.update({
+  id: '/portofino-edit',
+  path: '/portofino-edit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortofinoRoute = PortofinoRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/destinations': typeof DestinationsRoute
   '/portofino': typeof PortofinoRoute
+  '/portofino-edit': typeof PortofinoEditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/destinations': typeof DestinationsRoute
   '/portofino': typeof PortofinoRoute
+  '/portofino-edit': typeof PortofinoEditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
@@ -61,19 +69,33 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/destinations': typeof DestinationsRoute
   '/portofino': typeof PortofinoRoute
+  '/portofino-edit': typeof PortofinoEditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/destinations' | '/portofino' | '/sitemap.xml'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/destinations'
+    | '/portofino'
+    | '/portofino-edit'
+    | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/destinations' | '/portofino' | '/sitemap.xml'
+  to:
+    | '/'
+    | '/about'
+    | '/destinations'
+    | '/portofino'
+    | '/portofino-edit'
+    | '/sitemap.xml'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/destinations'
     | '/portofino'
+    | '/portofino-edit'
     | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
@@ -82,6 +104,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   DestinationsRoute: typeof DestinationsRoute
   PortofinoRoute: typeof PortofinoRoute
+  PortofinoEditRoute: typeof PortofinoEditRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -92,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portofino-edit': {
+      id: '/portofino-edit'
+      path: '/portofino-edit'
+      fullPath: '/portofino-edit'
+      preLoaderRoute: typeof PortofinoEditRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portofino': {
@@ -130,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   DestinationsRoute: DestinationsRoute,
   PortofinoRoute: PortofinoRoute,
+  PortofinoEditRoute: PortofinoEditRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
