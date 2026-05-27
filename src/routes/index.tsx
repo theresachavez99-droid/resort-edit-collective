@@ -105,8 +105,8 @@ function Index() {
           href="#"
           className="mt-6 block border border-gold/60 bg-card text-center py-4 px-4 hover:bg-gold/5 transition-colors"
         >
-          <span className="eyebrow text-gold text-[0.65rem] sm:text-[0.75rem] tracking-[0.2em]">
-            View Luxury &nbsp;/&nbsp; Under $500 &nbsp;/&nbsp; Riviera Finds for Each Look &nbsp;→
+          <span className="eyebrow text-gold text-[0.65rem] sm:text-[0.75rem] tracking-[0.25em] uppercase">
+            Explore This Resort Edit Across Price Points &nbsp;→
           </span>
         </a>
 
