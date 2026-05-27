@@ -24,14 +24,15 @@ export const tiers: TierMeta[] = [
 
 export const lookMetas: LookMeta[] = [
   { id: "print", shortLabel: "Look A", category: "Print Forward" },
-  { id: "neutral", shortLabel: "Look B", category: "Quiet Luxury" },
-  { id: "texture", shortLabel: "Look C", category: "Texture Forward" },
+  { id: "neutral", shortLabel: "Look B", category: "Quiet Luxury & Fabric Focused" },
+  { id: "texture", shortLabel: "Look C", category: "Fabric + Texture Forward" },
 ];
 
 export type LookEdit = {
   id: LookKey;
   name: string;       // e.g. "Mediterranean Glam"
   category: string;   // "Print Forward"
+  fabric: string;     // e.g. "Blue tile print • Linen blend • Raffia accents"
   description: string;
   tiers: Record<Tier, ShopItem[]>;
 };
