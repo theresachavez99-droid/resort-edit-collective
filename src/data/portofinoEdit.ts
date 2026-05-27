@@ -95,6 +95,7 @@ const day1Looks: LookEdit[] = [
     category: "Print Forward",
     fabric: "Blue tile silk print • Linen blend • Raffia accents",
     description: "A printed silk caftan over a sleek swimsuit. Gold at the ears, citrus on the deck.",
+    finishingNote: "Low chignon · Bronzed skin · Tinted SPF",
     tiers: {
       designer: [
         { brand: "Emilio Pucci", item: "Printed Silk Caftan", price: "$1,495", href: "#", category: "layer" },
@@ -287,6 +288,7 @@ const day3Looks: LookEdit[] = [
     category: "Print Forward",
     fabric: "Mediterranean silk print • Cotton poplin • Polished leather",
     description: "A bold Mediterranean print shirtdress, sandals that mean business, statement earrings.",
+    finishingNote: "Loose beach waves · Glossy nude lip",
     tiers: {
       designer: [
         { brand: "Zimmermann", item: "Printed Shirtdress", price: "$1,250", href: "#", category: "clothing" },
@@ -413,6 +415,7 @@ const day4Looks: LookEdit[] = [
     category: "Quiet Luxury",
     fabric: "Heavy silk slip • Italian leather • Brushed gold",
     description: "An ivory silk slip, a small black chain bag, a single gold cuff. Quietly powerful.",
+    finishingNote: "Sleek low pony · Statement red lip",
     tiers: {
       designer: [
         { brand: "Galvan", item: "Ivory Silk Slip Dress", price: "$1,495", href: "#", category: "clothing" },
@@ -443,6 +446,7 @@ const day4Looks: LookEdit[] = [
     category: "Texture Forward",
     fabric: "Ribbed knit halter • Heavy satin • Intrecciato leather",
     description: "Textured black knit halter, satin column skirt, sculpted woven clutch. All tone, all texture.",
+    finishingNote: "Soft waves · Glowy skin · Nude lip",
     tiers: {
       designer: [
         { brand: "Khaite", item: "Black Knit Halter Top", price: "$780", href: "#", category: "clothing" },
@@ -509,6 +513,7 @@ const day5Looks: LookEdit[] = [
     category: "Quiet Luxury",
     fabric: "Washed European linen • Viscose blend trousers • Smooth leather",
     description: "Camel linen shirt, cream trousers, polished leather sandals, a structured tan tote.",
+    finishingNote: "Low bun · Glowy skin · Tinted SPF",
     tiers: {
       designer: [
         { brand: "The Row", item: "Camel Linen Shirt", price: "$890", href: "#", category: "clothing" },
