@@ -53,6 +53,7 @@ const day1Looks: LookEdit[] = [
     id: "print",
     name: "Mediterranean Glam",
     category: "Print Forward",
+    fabric: "Blue tile silk print • Linen blend • Raffia accents",
     description: "A printed silk caftan over a sleek swimsuit. Gold at the ears, citrus on the deck.",
     tiers: {
       designer: [
@@ -82,6 +83,7 @@ const day1Looks: LookEdit[] = [
     id: "neutral",
     name: "Quiet Luxury Yacht Wife",
     category: "Quiet Luxury",
+    fabric: "European linen • Cotton poplin • Gold hardware",
     description: "White linen pants, a cream knit polo, and a quiet leather tote. Cartier on the wrist.",
     tiers: {
       designer: [
@@ -111,6 +113,7 @@ const day1Looks: LookEdit[] = [
     id: "texture",
     name: "Italian Riviera Glam",
     category: "Texture Forward",
+    fabric: "Open crochet knit • Woven raffia • Tonal linen",
     description: "Crocheted top, woven raffia bag, tonal cream-on-cream. Texture as the focal point.",
     tiers: {
       designer: [
@@ -146,6 +149,7 @@ const day2Looks: LookEdit[] = [
     id: "print",
     name: "Lemon Print Cabana",
     category: "Print Forward",
+    fabric: "Lemon print cotton voile • Silk twill scarf • Raffia weave",
     description: "The iconic lemon-print kaftan over a solid swimsuit, knotted silk scarf, raffia at hand.",
     tiers: {
       designer: [
@@ -175,6 +179,7 @@ const day2Looks: LookEdit[] = [
     id: "neutral",
     name: "Neutral Resort Luxe",
     category: "Quiet Luxury",
+    fabric: "Ivory European linen • Matte swim • Burnished leather",
     description: "Ivory linen shirtdress, oat-toned swim underneath, polished leather sandals.",
     tiers: {
       designer: [
@@ -204,6 +209,7 @@ const day2Looks: LookEdit[] = [
     id: "texture",
     name: "Coastal Texture",
     category: "Texture Forward",
+    fabric: "Cotton eyelet • Raffia straw • Woven leather slides",
     description: "Eyelet cover-up, raffia hat, woven slides — tonal sand-on-cream texture story.",
     tiers: {
       designer: [
@@ -239,6 +245,7 @@ const day3Looks: LookEdit[] = [
     id: "print",
     name: "Palermo Print Day Club",
     category: "Print Forward",
+    fabric: "Mediterranean silk print • Cotton poplin • Polished leather",
     description: "A bold Mediterranean print shirtdress, sandals that mean business, statement earrings.",
     tiers: {
       designer: [
@@ -268,6 +275,7 @@ const day3Looks: LookEdit[] = [
     id: "neutral",
     name: "White Resort Day Club",
     category: "Quiet Luxury",
+    fabric: "Ivory cotton poplin • Silk lining • Camel leather",
     description: "A long ivory shirtdress, gold sandals, a structured camel bag. Monochrome and polished.",
     tiers: {
       designer: [
@@ -297,6 +305,7 @@ const day3Looks: LookEdit[] = [
     id: "texture",
     name: "Crochet Day Club",
     category: "Texture Forward",
+    fabric: "Open crochet • Woven leather • Raffia weave",
     description: "Crochet midi, woven slides, raffia mini. Tonal cream layered with handworked texture.",
     tiers: {
       designer: [
@@ -332,6 +341,7 @@ const day4Looks: LookEdit[] = [
     id: "print",
     name: "Sunset Print Dress",
     category: "Print Forward",
+    fabric: "Sunset silk print • Silk blend • Jeweled hardware",
     description: "A sunset-print silk maxi, strappy heel, a small jeweled clutch.",
     tiers: {
       designer: [
@@ -361,6 +371,7 @@ const day4Looks: LookEdit[] = [
     id: "neutral",
     name: "Silk Slip Dressing",
     category: "Quiet Luxury",
+    fabric: "Heavy silk slip • Italian leather • Brushed gold",
     description: "An ivory silk slip, a small black chain bag, a single gold cuff. Quietly powerful.",
     tiers: {
       designer: [
@@ -390,6 +401,7 @@ const day4Looks: LookEdit[] = [
     id: "texture",
     name: "Black Resort Glam",
     category: "Texture Forward",
+    fabric: "Ribbed knit halter • Heavy satin • Intrecciato leather",
     description: "Textured black knit halter, satin column skirt, sculpted woven clutch. All tone, all texture.",
     tiers: {
       designer: [
@@ -425,6 +437,7 @@ const day5Looks: LookEdit[] = [
     id: "print",
     name: "Riviera Stripe",
     category: "Print Forward",
+    fabric: "Cotton poplin stripe • Linen blend shorts • Woven leather",
     description: "A signature blue Riviera stripe shirt, white shorts, a woven tote.",
     tiers: {
       designer: [
@@ -454,6 +467,7 @@ const day5Looks: LookEdit[] = [
     id: "neutral",
     name: "Camel & Cream Wander",
     category: "Quiet Luxury",
+    fabric: "Washed European linen • Viscose blend trousers • Smooth leather",
     description: "Camel linen shirt, cream trousers, polished leather sandals, a structured tan tote.",
     tiers: {
       designer: [
@@ -483,6 +497,7 @@ const day5Looks: LookEdit[] = [
     id: "texture",
     name: "Linen & Raffia",
     category: "Texture Forward",
+    fabric: "Crinkled Italian linen • Raffia weave • Woven leather",
     description: "Crinkled linen set, raffia tote, woven slides. Texture from head to toe.",
     tiers: {
       designer: [
