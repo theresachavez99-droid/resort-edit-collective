@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import logo from "@/assets/resort-edit-logo.png";
 
 const nav = [
   { to: "/", label: "Journal" },
@@ -10,10 +11,9 @@ const nav = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-ivory/85 backdrop-blur-md border-b border-border/60">
-      <div className="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between gap-6">
-        <Link to="/" className="flex flex-col leading-none">
-          <span className="font-display text-2xl md:text-[28px] tracking-[0.25em] text-ink">RESORT EDIT</span>
-          <span className="hidden md:block eyebrow text-gold mt-1">Curated Escapes</span>
+      <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between gap-6">
+        <Link to="/" className="flex items-center leading-none">
+          <img src={logo} alt="Resort Edit" className="h-14 md:h-16 w-auto" />
         </Link>
         <nav className="hidden md:flex items-center gap-10">
           {nav.map((n) => (
