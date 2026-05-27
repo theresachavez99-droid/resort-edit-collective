@@ -1,144 +1,145 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import heroImg from "@/assets/hero-portofino.jpg";
-import { destinations } from "@/data/destinations";
-import { portofinoLooks } from "@/data/portofino";
+import logo from "@/assets/resort-edit-logo.png";
+import stillLife from "@/assets/portofino-stilllife.jpg";
+import { portofinoLooks, itinerary, travelTips } from "@/data/portofino";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Resort Edit — Curated Escapes. Inspired By You." },
-      { name: "description", content: "Editorial travel and fashion for sophisticated women. Mediterranean itineraries, resort wardrobes and quiet luxury addresses." },
-      { property: "og:title", content: "Resort Edit — Curated Escapes" },
-      { property: "og:description", content: "A luxury digital publication for travel and fashion." },
-      { property: "og:image", content: heroImg },
+      { title: "Resort Edit — 5 Days in Portofino" },
+      { name: "description", content: "A style & itinerary guide to five days in Portofino. Shop the looks, book the experiences." },
+      { property: "og:title", content: "Resort Edit — 5 Days in Portofino" },
+      { property: "og:description", content: "Curated escapes. Inspired by you." },
+      { property: "og:image", content: logo },
     ],
   }),
   component: Index,
 });
 
 function Index() {
-  const featured = destinations.slice(0, 4);
-  const portofinoPreview = portofinoLooks.slice(0, 3);
   return (
-    <div>
-      {/* HERO */}
-      <section className="relative h-[92vh] min-h-[640px] w-full overflow-hidden">
-        <img
-          src={heroImg}
-          alt="Woman in silk dress on a Portofino terrace at golden hour"
-          width={1920}
-          height={1280}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/5 to-ivory/40" />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center text-center px-6">
-          <span className="eyebrow text-ivory drop-shadow-md">Volume I · The Riviera Issue</span>
-          <h1 className="font-display text-ivory text-5xl md:text-8xl lg:text-9xl tracking-[0.2em] mt-6 drop-shadow-lg">
-            RESORT EDIT
+    <div className="bg-ivory">
+      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-10 md:pt-16 pb-10">
+        {/* MASTHEAD */}
+        <header className="text-center">
+          <img src={logo} alt="Resort Edit — Curated Escapes. Inspired By You." className="mx-auto w-[280px] sm:w-[360px] md:w-[440px] h-auto" />
+          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl tracking-[0.08em] mt-6 text-ink">
+            5 DAYS IN PORTOFINO
           </h1>
-          <div className="mt-6 flex items-center gap-4">
-            <span className="hairline bg-ivory/80" />
-            <span className="font-serif italic text-ivory text-lg md:text-xl">Curated Escapes. Inspired By You.</span>
-            <span className="hairline bg-ivory/80" />
-          </div>
-          <Link to="/portofino" className="mt-12 eyebrow text-ink bg-ivory px-8 py-4 hover:bg-gold hover:text-ivory transition-colors">
-            Open the Portofino Edit
-          </Link>
-        </div>
-      </section>
+          <p className="eyebrow text-gold mt-4">A Style &amp; Itinerary Guide</p>
+        </header>
 
-      {/* EDITOR'S LETTER */}
-      <section className="mx-auto max-w-3xl px-6 py-28 text-center">
-        <span className="eyebrow text-gold">From the Editor</span>
-        <p className="font-serif italic text-2xl md:text-3xl leading-relaxed mt-8 text-ink">
-          “There is a quiet kind of luxury in knowing where to be, what to wear, and when to do nothing at all. This issue is a love letter to the long Mediterranean afternoon — the printed silks, the harbor lunches, the boats that wait.”
-        </p>
-        <p className="eyebrow text-ink/60 mt-10">— The Resort Edit</p>
-      </section>
-
-      {/* FEATURED DESTINATIONS */}
-      <section className="bg-cream py-28">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
-            <div>
-              <span className="eyebrow text-gold">The Atlas</span>
-              <h2 className="font-display text-4xl md:text-6xl mt-4 tracking-wide">Featured Destinations</h2>
-            </div>
-            <Link to="/destinations" className="eyebrow text-ink border-b border-gold pb-1 hover:text-gold w-fit">
-              View the full atlas →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featured.map((d) => (
-              <Link
-                key={d.slug}
-                to={d.href ? "/portofino" : "/destinations"}
-                className="group block"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-                  <img
-                    src={d.image}
-                    alt={d.name}
-                    loading="lazy"
-                    width={1024}
-                    height={1280}
-                    className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
-                  />
+        {/* 5-DAY GRID */}
+        <section className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+          {portofinoLooks.map((look, i) => (
+            <article key={look.title} className="bg-card flex flex-col">
+              {/* Day banner */}
+              <div className="bg-gold text-ivory text-center py-2.5 px-2">
+                <div className="eyebrow text-[0.6rem] sm:text-[0.65rem]">Day {i + 1}</div>
+                <div className="eyebrow text-[0.6rem] sm:text-[0.65rem] mt-0.5">{look.title}</div>
+              </div>
+              {/* Image */}
+              <div className="aspect-[3/4] overflow-hidden bg-muted">
+                <img
+                  src={look.image}
+                  alt={`${look.title} look`}
+                  loading="lazy"
+                  width={832}
+                  height={1216}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              {/* Caption */}
+              <div className="px-3 pt-4 pb-3 text-center">
+                <p className="eyebrow text-[0.55rem] sm:text-[0.6rem] text-ink leading-relaxed">
+                  {look.subtitle}
+                </p>
+              </div>
+              {/* Shop the look */}
+              <div className="px-3 pb-5 mt-1">
+                <div className="text-center mb-3">
+                  <span className="eyebrow text-gold text-[0.6rem]">Shop the Look</span>
+                  <div className="mx-auto mt-1 h-px w-8 bg-gold/60" />
                 </div>
-                <div className="mt-5 text-center">
-                  <span className="eyebrow text-gold">{d.region}</span>
-                  <h3 className="font-display text-2xl md:text-3xl mt-2 tracking-wider">{d.name}</h3>
-                  <p className="font-serif italic text-ink/60 mt-2 text-sm">{d.tagline}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+                <ul className="space-y-3">
+                  {look.shop.map((item) => (
+                    <li key={item.item}>
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="flex gap-2 group"
+                      >
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 bg-cream border border-border/60 flex items-center justify-center">
+                          <span className="eyebrow text-[0.5rem] text-gold">edit</span>
+                        </div>
+                        <div className="text-left leading-tight">
+                          <div className="eyebrow text-[0.55rem] text-ink group-hover:text-gold transition-colors">
+                            {item.brand}
+                          </div>
+                          <div className="font-serif text-[0.78rem] text-ink/80 mt-0.5">{item.item}</div>
+                          <div className="font-serif text-[0.78rem] text-gold mt-0.5">{item.price}</div>
+                        </div>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))}
+        </section>
 
-      {/* FEATURE: 5 DAYS IN PORTOFINO */}
-      <section className="py-32">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-20">
-            <span className="eyebrow text-gold">Featured Editorial</span>
-            <h2 className="font-display text-5xl md:text-7xl mt-6 tracking-[0.05em]">5 Days in Portofino</h2>
-            <div className="mt-4 flex items-center justify-center gap-3">
-              <span className="hairline" />
-              <span className="eyebrow text-ink/60">A Style & Itinerary Guide</span>
-              <span className="hairline" />
-            </div>
+        {/* BOTTOM CARD: ITINERARY + TIPS + IMAGE */}
+        <section className="mt-6 bg-card grid grid-cols-1 md:grid-cols-3 gap-0">
+          {/* Itinerary */}
+          <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border/60">
+            <h3 className="font-display text-xl sm:text-2xl tracking-wide">5-Day Portofino Itinerary</h3>
+            <ul className="mt-5 space-y-4">
+              {itinerary.map((it) => (
+                <li key={it.day} className="flex gap-3">
+                  <span className="eyebrow text-gold w-10 shrink-0 pt-1">{it.day}</span>
+                  <div>
+                    <div className="eyebrow text-[0.6rem] text-ink">{it.title}</div>
+                    <p className="font-serif text-[0.85rem] text-ink/70 leading-snug mt-1">{it.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
+          {/* Tips */}
+          <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border/60">
+            <h3 className="font-display text-xl sm:text-2xl tracking-wide">Portofino Travel Tips</h3>
+            <ul className="mt-5 space-y-4">
+              {travelTips.map((tip) => (
+                <li key={tip.title}>
+                  <div className="eyebrow text-[0.6rem] text-ink">{tip.title}</div>
+                  <p className="font-serif text-[0.85rem] text-ink/70 leading-snug mt-1">{tip.text}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Image */}
+          <div className="relative min-h-[280px] md:min-h-0">
+            <img
+              src={stillLife}
+              alt="Portofino harbor still life"
+              loading="lazy"
+              width={1280}
+              height={896}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {portofinoPreview.map((look) => (
-              <article key={look.title} className="bg-card border border-border/60">
-                <div className="aspect-[3/4] overflow-hidden bg-muted">
-                  <img
-                    src={look.image}
-                    alt={look.title}
-                    loading="lazy"
-                    width={1024}
-                    height={1408}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-7 text-center">
-                  <span className="eyebrow text-gold">{look.day}</span>
-                  <h3 className="font-display text-3xl mt-3 tracking-wide">{look.title}</h3>
-                  <p className="font-serif italic text-ink/70 mt-3 text-sm">{look.subtitle}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <Link to="/portofino" className="eyebrow text-ivory bg-ink px-10 py-5 hover:bg-gold transition-colors inline-block">
-              Read the Full Edit →
-            </Link>
-          </div>
-        </div>
-      </section>
+        {/* FOOTER BAR */}
+        <Link
+          to="/portofino"
+          className="mt-6 block bg-gold text-ivory text-center py-5 eyebrow hover:bg-ink transition-colors"
+        >
+          Shop All Looks &amp; Itinerary Details &nbsp;·&nbsp; Link in Bio
+        </Link>
+      </div>
     </div>
   );
 }
