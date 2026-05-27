@@ -2,7 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/resort-edit-logo.png";
 import stillLife from "@/assets/portofino-stilllife.jpg";
-import { portofinoLooks, itinerary, travelTips } from "@/data/portofino";
+import { portofinoLooks, itinerary, travelTips, whereToStay, moreBrands } from "@/data/portofino";
+import expYacht from "@/assets/exp-yacht.jpg";
+import expBeach from "@/assets/exp-beachclub.jpg";
+import expTour from "@/assets/exp-tour.jpg";
+import expExperiences from "@/assets/exp-experiences.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,6 +22,12 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const experiences = [
+    { label: "Book a Yacht", image: expYacht },
+    { label: "Reserve a Beach Club", image: expBeach },
+    { label: "Book a Tour", image: expTour },
+    { label: "View Experiences", image: expExperiences },
+  ];
   return (
     <div className="bg-ivory">
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-10 md:pt-16 pb-10">
@@ -91,7 +101,7 @@ function Index() {
         </section>
 
         {/* BOTTOM CARD: ITINERARY + TIPS + IMAGE */}
-        <section className="mt-6 bg-card grid grid-cols-1 md:grid-cols-3 gap-0">
+        <section className="mt-6 bg-card grid grid-cols-1 md:grid-cols-4 gap-0">
           {/* Itinerary */}
           <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border/60">
             <h3 className="font-display text-xl sm:text-2xl tracking-wide">5-Day Portofino Itinerary</h3>
@@ -103,6 +113,18 @@ function Index() {
                     <div className="eyebrow text-[0.6rem] text-ink">{it.title}</div>
                     <p className="font-serif text-[0.85rem] text-ink/70 leading-snug mt-1">{it.text}</p>
                   </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Where to Stay */}
+          <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border/60">
+            <h3 className="font-display text-xl sm:text-2xl tracking-wide">Where to Stay</h3>
+            <ul className="mt-5 space-y-5">
+              {whereToStay.map((s) => (
+                <li key={s.name}>
+                  <div className="eyebrow text-[0.6rem] text-ink">{s.name}</div>
+                  <p className="font-serif text-[0.85rem] text-ink/70 leading-snug mt-1">{s.text}</p>
                 </li>
               ))}
             </ul>
@@ -132,6 +154,35 @@ function Index() {
           </div>
         </section>
 
+        {/* BOOK YOUR PORTOFINO EXPERIENCE */}
+        <section className="mt-10 text-center">
+          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.08em] text-ink">
+            BOOK YOUR PORTOFINO EXPERIENCE
+          </h2>
+          <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            {experiences.map((exp) => (
+              <a
+                key={exp.label}
+                href="#"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="relative block aspect-[4/3] overflow-hidden group"
+              >
+                <img
+                  src={exp.image}
+                  alt={exp.label}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-ink/10 group-hover:bg-ink/0 transition-colors" />
+                <span className="absolute left-1/2 -translate-x-1/2 bottom-3 sm:bottom-4 bg-gold text-ivory eyebrow text-[0.6rem] sm:text-[0.65rem] px-4 py-2 whitespace-nowrap">
+                  {exp.label}
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
         {/* FOOTER BAR */}
         <Link
           to="/portofino"
@@ -139,6 +190,30 @@ function Index() {
         >
           Shop All Looks &amp; Itinerary Details &nbsp;·&nbsp; Link in Bio
         </Link>
+
+        {/* MORE BRANDS WE LOVE */}
+        <section className="mt-8 bg-card px-4 sm:px-8 py-8">
+          <h3 className="font-display text-center text-lg sm:text-xl tracking-[0.12em] text-ink">
+            MORE BRANDS WE LOVE
+          </h3>
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-x-4 gap-y-6 text-center">
+            {moreBrands.map((col, i) => (
+              <div key={i} className={i > 0 ? "lg:border-l border-border/60 lg:pl-4" : ""}>
+                <ul className="space-y-2">
+                  {col.map((b) => (
+                    <li key={b} className="eyebrow text-[0.6rem] text-ink/80">
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <p className="mt-6 text-center eyebrow text-[0.55rem] text-ink/50">
+          Prices are subject to change. Links may earn a small commission at no extra cost to you.
+        </p>
       </div>
     </div>
   );
