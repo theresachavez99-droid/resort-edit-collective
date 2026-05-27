@@ -101,14 +101,14 @@ function Index() {
         </section>
 
         {/* BOTTOM CARD: ITINERARY + TIPS + IMAGE */}
-        <a
-          href="#"
+        <Link
+          to="/portofino-edit"
           className="mt-6 block border border-gold/60 bg-card text-center py-4 px-4 hover:bg-gold/5 transition-colors"
         >
           <span className="eyebrow text-gold text-[0.65rem] sm:text-[0.75rem] tracking-[0.25em] uppercase">
             Explore This Resort Edit Across Price Points &nbsp;→
           </span>
-        </a>
+        </Link>
 
         <section className="mt-6 bg-card grid grid-cols-1 md:grid-cols-4 gap-0">
           {/* Itinerary */}
