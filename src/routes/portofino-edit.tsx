@@ -1,13 +1,41 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Heart, Share2, ShoppingBag, ChevronDown, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  Heart,
+  Share2,
+  ShoppingBag,
+  ChevronDown,
+  ArrowLeft,
+  ArrowRight,
+  Shirt,
+  Footprints,
+  Gem,
+  Sun,
+  Layers,
+  Sparkles,
+} from "lucide-react";
 import {
   portofinoEdit,
   tiers,
   lookMetas,
+  categoryOrder,
+  categoryLabels,
+  requiredCategories,
   type Tier,
   type LookKey,
+  type AccessoryCategory,
+  type EditItem,
 } from "@/data/portofinoEdit";
+
+const categoryIcons: Record<AccessoryCategory, React.ComponentType<{ className?: string }>> = {
+  clothing: Shirt,
+  shoes: Footprints,
+  bag: ShoppingBag,
+  jewelry: Gem,
+  sunglasses: Sun,
+  layer: Layers,
+  finishing: Sparkles,
+};
 import logo from "@/assets/resort-edit-logo.png";
 
 export const Route = createFileRoute("/portofino-edit")({
@@ -31,6 +59,87 @@ export const Route = createFileRoute("/portofino-edit")({
 });
 
 type Filter = Tier | "all";
+
+function CategorizedItems({
+  items,
+  finishingNote,
+}: {
+  items: EditItem[];
+  finishingNote?: string;
+}) {
+  const grouped = items.reduce<Record<AccessoryCategory, EditItem[]>>(
+    (acc, it) => {
+      (acc[it.category] ||= []).push(it);
+      return acc;
+    },
+    {} as Record<AccessoryCategory, EditItem[]>,
+  );
+
+  return (
+    <div className="px-4 py-5 divide-y divide-border/40 flex-1">
+      {categoryOrder.map((cat) => {
+        const list = grouped[cat] ?? [];
+        const isRequired = requiredCategories.includes(cat);
+        const hasNote = cat === "finishing" && finishingNote;
+
+        // Optional cats with nothing to show -> hide entirely
+        if (!isRequired && list.length === 0 && !hasNote) return null;
+
+        const Icon = categoryIcons[cat];
+        return (
+          <div key={cat} className="py-3 first:pt-0 last:pb-0">
+            <div className="flex items-center gap-2 mb-2">
+              <Icon className="w-3 h-3 text-gold/80" />
+              <div className="eyebrow text-[0.55rem] text-ink/60 tracking-[0.28em]">
+                {categoryLabels[cat]}
+              </div>
+            </div>
+
+            {list.length > 0 ? (
+              <ul className="space-y-2">
+                {list.map((item) => (
+                  <li key={item.brand + item.item}>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="flex justify-between gap-3 group/item"
+                    >
+                      <div className="text-left leading-tight min-w-0">
+                        <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate">
+                          {item.brand}
+                        </div>
+                        <div className="font-serif text-[0.82rem] text-ink/80 mt-0.5 truncate">
+                          {item.item}
+                        </div>
+                      </div>
+                      <div className="font-serif text-[0.82rem] text-gold shrink-0 self-center">
+                        {item.price}
+                      </div>
+                    </a>
+                  </li>
+                ))}
+                {hasNote && (
+                  <li className="font-serif italic text-[0.78rem] text-ink/65 pt-1">
+                    {finishingNote}
+                  </li>
+                )}
+              </ul>
+            ) : hasNote ? (
+              <p className="font-serif italic text-[0.78rem] text-ink/65">
+                {finishingNote}
+              </p>
+            ) : (
+              <p className="font-serif italic text-[0.72rem] text-ink/40">
+                Not needed for this look
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 function PortofinoEditPage() {
   const [filter, setFilter] = useState<Filter>("all");
@@ -376,30 +485,10 @@ function PortofinoEditPage() {
                                 </div>
                               </div>
 
-                              <ul className="px-4 py-5 space-y-3 flex-1">
-                                {items.map((item) => (
-                                  <li key={item.brand + item.item}>
-                                    <a
-                                      href={item.href}
-                                      target="_blank"
-                                      rel="noreferrer noopener"
-                                      className="flex justify-between gap-3 group/item"
-                                    >
-                                      <div className="text-left leading-tight min-w-0">
-                                        <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate">
-                                          {item.brand}
-                                        </div>
-                                        <div className="font-serif text-[0.82rem] text-ink/80 mt-0.5 truncate">
-                                          {item.item}
-                                        </div>
-                                      </div>
-                                      <div className="font-serif text-[0.82rem] text-gold shrink-0 self-center">
-                                        {item.price}
-                                      </div>
-                                    </a>
-                                  </li>
-                                ))}
-                              </ul>
+                              <CategorizedItems
+                                items={items}
+                                finishingNote={currentLook.finishingNote}
+                              />
 
                               <div className="px-4 pb-4">
                                 <a
