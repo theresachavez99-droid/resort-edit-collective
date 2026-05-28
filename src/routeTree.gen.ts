@@ -13,8 +13,10 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PortofinoEditRouteImport } from './routes/portofino-edit'
 import { Route as PortofinoRouteImport } from './routes/portofino'
 import { Route as DestinationsRouteImport } from './routes/destinations'
+import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -36,6 +38,11 @@ const DestinationsRoute = DestinationsRouteImport.update({
   path: '/destinations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandsRoute = BrandsRouteImport.update({
+  id: '/brands',
+  path: '/brands',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -46,62 +53,80 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandsSlugRoute = BrandsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BrandsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRoute
   '/portofino': typeof PortofinoRoute
   '/portofino-edit': typeof PortofinoEditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/brands/$slug': typeof BrandsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRoute
   '/portofino': typeof PortofinoRoute
   '/portofino-edit': typeof PortofinoEditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/brands/$slug': typeof BrandsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRoute
   '/portofino': typeof PortofinoRoute
   '/portofino-edit': typeof PortofinoEditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/brands/$slug': typeof BrandsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/brands'
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
     | '/sitemap.xml'
+    | '/brands/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/brands'
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
     | '/sitemap.xml'
+    | '/brands/$slug'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/brands'
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
     | '/sitemap.xml'
+    | '/brands/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BrandsRoute: typeof BrandsRouteWithChildren
   DestinationsRoute: typeof DestinationsRoute
   PortofinoRoute: typeof PortofinoRoute
   PortofinoEditRoute: typeof PortofinoEditRoute
@@ -138,6 +163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DestinationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brands': {
+      id: '/brands'
+      path: '/brands'
+      fullPath: '/brands'
+      preLoaderRoute: typeof BrandsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -152,12 +184,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brands/$slug': {
+      id: '/brands/$slug'
+      path: '/$slug'
+      fullPath: '/brands/$slug'
+      preLoaderRoute: typeof BrandsSlugRouteImport
+      parentRoute: typeof BrandsRoute
+    }
   }
 }
+
+interface BrandsRouteChildren {
+  BrandsSlugRoute: typeof BrandsSlugRoute
+}
+
+const BrandsRouteChildren: BrandsRouteChildren = {
+  BrandsSlugRoute: BrandsSlugRoute,
+}
+
+const BrandsRouteWithChildren =
+  BrandsRoute._addFileChildren(BrandsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BrandsRoute: BrandsRouteWithChildren,
   DestinationsRoute: DestinationsRoute,
   PortofinoRoute: PortofinoRoute,
   PortofinoEditRoute: PortofinoEditRoute,
@@ -166,3 +217,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
