@@ -126,10 +126,47 @@ export const travelTips = [
   { title: "Don't Miss", text: "Sunset at Castello Brown & a boat ride to San Fruttuoso." },
 ];
 
-export const whereToStay = [
-  { name: "Splendido, A Belmond Hotel", text: "Iconic views, timeless Italian luxury." },
-  { name: "Eight Hotel Portofino", text: "Chic, stylish & steps from the piazzetta." },
-  { name: "Hotel Piccolo Portofino", text: "Boutique charm with exceptional service." },
+export type Hotel = {
+  hotel_name: string;
+  destination: string;
+  description: string;
+  image_url: string;
+  affiliate_link?: string;
+  booking_link?: string;
+  backup_link?: string;
+};
+
+export const whereToStay: Hotel[] = [
+  {
+    hotel_name: "Splendido, A Belmond Hotel",
+    destination: "Portofino, Italy",
+    description:
+      "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied view on the Riviera.",
+    image_url: "splendido",
+    affiliate_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+    booking_link: "https://www.booking.com/hotel/it/splendido.html",
+    backup_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+  },
+  {
+    hotel_name: "Eight Hotel Portofino",
+    destination: "Portofino, Italy",
+    description:
+      "Quietly chic and steps from the piazzetta. A modern Italian retreat for travelers who want to live like a local in the heart of town.",
+    image_url: "eight",
+    affiliate_link: "https://www.booking.com/hotel/it/eight-portofino.html",
+    booking_link: "https://www.eighthotels.com/en/eight-hotel-portofino/",
+    backup_link: "https://www.eighthotels.com/en/eight-hotel-portofino/",
+  },
+  {
+    hotel_name: "Hotel Piccolo Portofino",
+    destination: "Portofino, Italy",
+    description:
+      "An intimate seaside hideaway tucked into a private cove. Sun-bleached terraces, turquoise water, and the kind of service that anticipates everything.",
+    image_url: "piccolo",
+    affiliate_link: "https://www.booking.com/hotel/it/piccolo.html",
+    booking_link: "https://www.hotelpiccoloportofino.com/",
+    backup_link: "https://www.hotelpiccoloportofino.com/",
+  },
 ];
 
 export const moreBrands: string[][] = [
