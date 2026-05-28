@@ -141,7 +141,7 @@ const day1Looks: LookEdit[] = [
     name: "Look B — Quiet Luxury Riviera",
     category: "Quiet Luxury",
     fabric: "European linen • Cotton poplin • Gold hardware",
-    description: "White linen pants, a cream knit polo, and a quiet leather tote. Cartier on the wrist.",
+    description: "White linen pants, a cream knit polo, and a soft leather tote. Cartier on the wrist.",
     tiers: {
       designer: [
         { brand: "The Row", item: "Cream Knit Polo", price: "$890", href: "#", category: "clothing" },
