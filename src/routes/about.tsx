@@ -33,7 +33,7 @@ function AboutPage() {
         <p className="font-serif text-lg leading-relaxed text-ink/80">
           Each edit is a complete world — a destination, an itinerary, a wardrobe. We share the boutiques, beach clubs and quiet hotels we'd send a friend to, alongside the resortwear we'd actually pack. Our taste leans Mediterranean, our standards are exacting, and our recommendations are the ones we live by.
         </p>
-        <p className="mt-8 eyebrow text-gold">Curated escapes. Inspired by you.</p>
+        <p className="mt-8 eyebrow text-gold">Curated escapes. Styled your way.</p>
       </section>
     </div>
   );

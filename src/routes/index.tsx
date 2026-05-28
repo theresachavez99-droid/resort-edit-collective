@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
       { title: "Resort Edit — 5 Days in Portofino" },
       { name: "description", content: "A style & itinerary guide to five days in Portofino. Shop the looks, book the experiences." },
       { property: "og:title", content: "Resort Edit — 5 Days in Portofino" },
-      { property: "og:description", content: "Curated escapes. Inspired by you." },
+      { property: "og:description", content: "Curated escapes. Styled your way." },
       { property: "og:image", content: logo },
     ],
   }),
@@ -37,7 +37,7 @@ function Index() {
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-10 md:pt-16 pb-10">
         {/* MASTHEAD */}
         <header className="text-center">
-          <img src={logo} alt="Resort Edit — Curated Escapes. Inspired By You." className="mx-auto w-[280px] sm:w-[360px] md:w-[440px] h-auto" />
+          <img src={logo} alt="Resort Edit — Curated Escapes. Styled Your Way." className="mx-auto w-[280px] sm:w-[360px] md:w-[440px] h-auto" />
           <h1 className="font-display text-4xl sm:text-5xl md:text-7xl tracking-[0.08em] mt-6 text-ink">
             5 DAYS IN PORTOFINO
           </h1>

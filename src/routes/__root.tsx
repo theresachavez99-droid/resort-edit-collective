@@ -74,7 +74,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Resort Edit — Curated Escapes. Inspired By You." },
+      { title: "Resort Edit — Curated Escapes. Styled Your Way." },
       { name: "description", content: "A luxury editorial travel and fashion guide for sophisticated women. Curated resort looks, Mediterranean itineraries, and elevated escapes." },
       { name: "author", content: "Resort Edit" },
       { property: "og:title", content: "Resort Edit — Curated Escapes" },
