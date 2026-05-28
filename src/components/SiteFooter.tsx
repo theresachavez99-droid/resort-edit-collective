@@ -10,22 +10,14 @@ export function SiteFooter() {
   return (
     <footer id="newsletter" className="bg-ink text-ivory mt-32">
       <div className="mx-auto max-w-5xl px-6 py-24 text-center">
-        <img
-          src={logo}
-          alt="Resort Edit — Curated escapes. Styled your way."
-          loading="lazy"
-          width={1024}
-          height={1024}
-          className="mx-auto h-40 md:h-52 w-auto invert brightness-0 contrast-200 opacity-0 hidden"
-        />
-        <div className="mx-auto bg-ivory inline-block px-12 py-10">
+        <div className="mx-auto inline-block bg-ivory px-10 py-8 md:px-14 md:py-10">
           <img
             src={logo}
-            alt="Resort Edit"
+            alt="Resort Edit — Curated escapes. Styled your way."
             loading="lazy"
             width={1024}
             height={1024}
-            className="mx-auto h-36 md:h-44 w-auto"
+            className="mx-auto h-40 md:h-52 w-auto"
           />
         </div>
         <p className="mt-8 eyebrow text-gold-soft tracking-[0.4em]">The Next Edit</p>
