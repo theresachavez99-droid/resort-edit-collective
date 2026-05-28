@@ -131,7 +131,7 @@ function PortofinoPage() {
                               />
                             </div>
                             <div className="p-4">
-                              <span className="eyebrow text-gold text-[10px]">{exp.category}</span>
+                              <span className="eyebrow text-gold text-[10px]">{exp.price_tier}</span>
                               <h4 className="font-display text-base tracking-wide mt-2 leading-snug">
                                 {exp.experience_name}
                               </h4>
