@@ -45,9 +45,9 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 1",
     title: "Yacht Day & Harbor Aperitivo",
-    subtitle: "An unhurried day at sea, ending in candlelight on the marina.",
+    subtitle: "Open water, hidden coves, harbor nightfall.",
     caption:
-      "Leave the piazzetta behind by mid-morning. Drift past the lighthouse, drop anchor wherever the water turns the right shade of green, and let the afternoon dissolve into espressos on deck. Back in port by dusk, just in time for a Negroni and the slow Ligurian sunset.",
+      "Drift past the lighthouse into glassy green water, then ease back to the marina as the piazzetta fills with candlelight and Negronis.",
     image: yacht,
     itinerary:
       "Cast off from Marina di Portofino around 10. Two long swim stops along the Promontorio, lunch on board, a pause at Paraggi, and a dockside aperitivo at Lo Scoglio before golden hour.",
@@ -95,9 +95,9 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 2",
     title: "Beach Club & Long Lunches",
-    subtitle: "Cabana hours measured in espressos, sea swims and chilled white wine.",
+    subtitle: "Slow mornings, seafood lunches, seaside glamour.",
     caption:
-      "The kind of day that doesn't need a plan. A cliffside cabana, a long table beneath the pines, a plate of just-caught crudo, and the gentle pull of the tide between courses. Walk it off along the coastal path as the light softens.",
+      "Trade the morning for a cliffside cabana above Paraggi, then linger over crudo beneath the pines until the coastal path back into town turns gold.",
     image: beach,
     itinerary:
       "Cabana at La Fontelina from late morning. Lunch at DaV Mare with the sea below. Afternoon swim, an espresso at the bar, and the slow cliff-path walk back into town.",
@@ -145,9 +145,9 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 3",
     title: "Pool Club, Shopping & Aperitivo",
-    subtitle: "A loungewear morning, a stylist's afternoon, a Campari kind of evening.",
+    subtitle: "Poolside ease, Via Roma, Campari hour.",
     caption:
-      "Trade the boat for a daybed. The kind of slow day that drifts from poolside to the cool of a boutique fitting room, then back into the piazzetta as it begins to fill. Linen still damp from a swim, a new pair of sandals, and Prosecco that arrives before you've asked.",
+      "Drift from a sun-warmed daybed into the cool of the ateliers along Via Roma, landing in the piazzetta just as the yachts come in and the Prosecco starts to pour.",
     image: dayclub,
     itinerary:
       "Morning daybed at Eight Club Portofino. A wander through the ateliers on Via Roma. Aperitivo at Langosteria as the boats come in.",
@@ -195,9 +195,9 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 4",
     title: "Sunset Cocktails & Dinner With a View",
-    subtitle: "Dress for it — the night the whole trip has been building toward.",
+    subtitle: "Golden hour, candlelight, harbor below.",
     caption:
-      "The one night to dress for. Heels you can manage on cobblestones, a silk that catches the breeze, and the rooftop hush of a hotel built into the cliffside. Dinner arrives one course at a time, and so does the moon over the harbor.",
+      "A silk dress, a rooftop cocktail high above the cliffs, and a long Italian dinner unfolding as the lights of the harbor blink on one by one.",
     image: dinner,
     itinerary:
       "Cocktails on the terrace at Belmond Splendido. Dinner at La Terrazza as the lights come up around the bay. A digestivo down in the piazzetta before bed.",
@@ -245,9 +245,9 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 5",
     title: "Market Strolls & Coastal Goodbyes",
-    subtitle: "The morning to wander, the lunch to linger, the goodbye to take slowly.",
+    subtitle: "Quiet rituals and a long last lunch.",
     caption:
-      "Save the last day for the small rituals — the third espresso, the climb to Castello Brown, the gelato eaten standing up. One unhurried lunch on the water, one last boat ride into the cove, and the kind of departure that already feels like a promise to return.",
+      "Climb the path to Castello Brown for one last look over the harbor, then drift down to a waterside table where lunch turns into the kind of farewell that already feels like a return.",
     image: town,
     itinerary:
       "Espresso at Caffè Excelsior. The walk up to Castello Brown for the view that defines Portofino. Gelato at Mario, then a boat over to the abbey at San Fruttuoso before lunch.",
@@ -295,11 +295,11 @@ export const portofinoLooks: Look[] = [
 ];
 
 export const itinerary = [
-  { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Open water, hidden coves, and a slow return to port just as the light turns gold." },
-  { day: "Day 2", title: "Beach Club & Long Lunches", text: "A cabana at the water's edge, a tablecloth in the shade, and nowhere to be." },
-  { day: "Day 3", title: "Pool Club, Shopping & Aperitivo", text: "From a quiet daybed to the ateliers on Via Roma, then into the piazzetta for a Spritz." },
-  { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "The night you dress for — cocktails on a cliffside terrace, dinner above the harbor lights." },
-  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Small rituals: espresso, the climb to the castello, one last boat ride before lunch." },
+  { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Open water, hidden coves, harbor nightfall." },
+  { day: "Day 2", title: "Beach Club & Long Lunches", text: "Slow mornings, seafood lunches, seaside glamour." },
+  { day: "Day 3", title: "Pool Club, Shopping & Aperitivo", text: "Poolside ease, Via Roma, Campari hour." },
+  { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "Golden hour, candlelight, harbor below." },
+  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Quiet rituals and a long last lunch." },
 ];
 
 export const travelTips = [
