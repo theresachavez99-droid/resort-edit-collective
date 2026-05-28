@@ -207,7 +207,7 @@ const day2Looks: LookEdit[] = [
     name: "Lemon Print Cabana",
     category: "Print Forward",
     fabric: "Lemon print cotton voile • Silk twill scarf • Raffia weave",
-    description: "The iconic lemon-print kaftan over a solid swimsuit, knotted silk scarf, raffia at hand.",
+    description: "The iconic lemon-print kaftan layered over a solid swimsuit, finished with a knotted silk scarf, woven raffia accessories, and easy resort sandals for seaside lunches and waterfront strolls.",
     tiers: {
       designer: [
         { brand: "Dolce & Gabbana", item: "Lemon Print Kaftan", price: "$1,895", href: "#", category: "layer" },
