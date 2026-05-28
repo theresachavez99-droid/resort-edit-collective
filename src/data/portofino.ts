@@ -168,7 +168,6 @@ export const portofinoLooks: Look[] = [
     ],
     experiences: [
       {
-      {
         experience_name: "Splendido Spa Afternoon",
         experience_image: yacht,
         experience_description: "A signature ritual and quiet pool access at Portofino's most storied address.",
