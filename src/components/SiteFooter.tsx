@@ -32,6 +32,7 @@ export function SiteFooter() {
           <div className="flex gap-8">
             <Link to="/" className="hover:text-gold">Journal</Link>
             <Link to="/destinations" className="hover:text-gold">Destinations</Link>
+            <Link to="/brands" className="hover:text-gold">Brands</Link>
             <Link to="/about" className="hover:text-gold">About</Link>
           </div>
           <span className="italic font-serif normal-case tracking-normal text-sm">Curated escapes. Inspired by you.</span>

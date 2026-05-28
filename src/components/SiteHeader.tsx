@@ -4,7 +4,8 @@ import logo from "@/assets/resort-edit-logo.png";
 const nav = [
   { to: "/", label: "Journal" },
   { to: "/destinations", label: "Destinations" },
-  { to: "/portofino", label: "Portofino Edit" },
+  { to: "/portofino", label: "Resort Edits" },
+  { to: "/brands", label: "Brands We Love" },
   { to: "/about", label: "About" },
 ] as const;
 
