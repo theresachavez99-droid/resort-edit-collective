@@ -212,7 +212,7 @@ function Index() {
           to="/portofino"
           className="mt-6 block bg-gold text-ivory text-center py-5 eyebrow hover:bg-ink transition-colors"
         >
-          Shop All Looks &amp; Itinerary Details &nbsp;→
+          Explore the Full Portofino Edit &nbsp;→
         </Link>
 
         <p className="mt-6 text-center eyebrow text-[0.55rem] text-ink/50">
