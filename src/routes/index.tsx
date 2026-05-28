@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/resort-edit-logo.png";
 import stillLife from "@/assets/portofino-stilllife.jpg";
-import { portofinoLooks, itinerary, travelTips, whereToStay } from "@/data/portofino";
+import { portofinoLooks, itinerary, travelTips, whereToStay, resolveProductLink } from "@/data/portofino";
 import expYacht from "@/assets/exp-yacht.jpg";
 import expBeach from "@/assets/exp-beachclub.jpg";
 import expTour from "@/assets/exp-tour.jpg";
@@ -97,10 +97,12 @@ function Index() {
                   <div className="mx-auto mt-1 h-px w-8 bg-gold/60" />
                 </div>
                 <ul className="space-y-3">
-                  {look.shop.map((item) => (
+                  {look.shop
+                    .filter((item) => resolveProductLink(item) !== null)
+                    .map((item) => (
                     <li key={item.item}>
                       <a
-                        href={item.href}
+                        href={resolveProductLink(item) ?? "#"}
                         target="_blank"
                         rel="noreferrer noopener"
                         className="flex gap-2 group"
@@ -109,8 +111,13 @@ function Index() {
                           <span className="eyebrow text-[0.5rem] text-gold">edit</span>
                         </div>
                         <div className="text-left leading-tight">
-                          <div className="eyebrow text-[0.55rem] text-ink group-hover:text-gold transition-colors">
-                            {item.brand}
+                          <div className="eyebrow text-[0.55rem] text-ink group-hover:text-gold transition-colors flex items-center gap-1.5">
+                            <span>{item.brand}</span>
+                            {item.replaced && (
+                              <span className="eyebrow text-[0.5rem] tracking-[0.2em] text-gold border border-gold/50 px-1 py-px">
+                                Updated
+                              </span>
+                            )}
                           </div>
                           <div className="font-serif text-[0.78rem] text-ink/80 mt-0.5">{item.item}</div>
                           <div className="font-serif text-[0.78rem] text-gold mt-0.5">{item.price}</div>
