@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram } from "lucide-react";
 import { useState } from "react";
+import logo from "@/assets/resort-edit-logo.png";
 
 export function SiteFooter() {
   const [submitted, setSubmitted] = useState(false);
@@ -9,12 +10,27 @@ export function SiteFooter() {
   return (
     <footer id="newsletter" className="bg-ink text-ivory mt-32">
       <div className="mx-auto max-w-5xl px-6 py-24 text-center">
-        <span className="eyebrow text-gold-soft tracking-[0.4em]">Resort Edit</span>
-        <h2 className="font-display text-4xl md:text-6xl mt-6 tracking-wide">
-          The Resort Edit
-        </h2>
-        <p className="mt-6 text-ivory/70 max-w-xl mx-auto font-serif text-lg italic">
-          Destination style, itineraries, and shoppable escapes—beautifully edited.
+        <img
+          src={logo}
+          alt="Resort Edit — Curated escapes. Styled your way."
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="mx-auto h-40 md:h-52 w-auto invert brightness-0 contrast-200 opacity-0 hidden"
+        />
+        <div className="mx-auto bg-ivory inline-block px-12 py-10">
+          <img
+            src={logo}
+            alt="Resort Edit"
+            loading="lazy"
+            width={1024}
+            height={1024}
+            className="mx-auto h-36 md:h-44 w-auto"
+          />
+        </div>
+        <p className="mt-8 eyebrow text-gold-soft tracking-[0.4em]">The Next Edit</p>
+        <p className="mt-4 text-ivory/70 max-w-xl mx-auto font-serif text-lg italic">
+          Destination style, itineraries, and shoppable escapes—delivered to your inbox.
         </p>
         {submitted ? (
           <p className="mt-10 font-serif italic text-lg text-gold max-w-md mx-auto">
