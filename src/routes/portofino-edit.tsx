@@ -26,6 +26,7 @@ import {
   type AccessoryCategory,
   type EditItem,
 } from "@/data/portofinoEdit";
+import { resolveProductLink } from "@/data/portofino";
 
 const categoryIcons: Record<AccessoryCategory, React.ComponentType<{ className?: string }>> = {
   clothing: Shirt,
@@ -69,6 +70,8 @@ function CategorizedItems({
 }) {
   const grouped = items.reduce<Record<AccessoryCategory, EditItem[]>>(
     (acc, it) => {
+      // Hide cards that have no resolvable link (inventory unavailable + no backup).
+      if (resolveProductLink(it) === null) return acc;
       (acc[it.category] ||= []).push(it);
       return acc;
     },
@@ -100,14 +103,19 @@ function CategorizedItems({
                 {list.map((item) => (
                   <li key={item.brand + item.item}>
                     <a
-                      href={item.href}
+                      href={resolveProductLink(item) ?? "#"}
                       target="_blank"
                       rel="noreferrer noopener"
                       className="flex justify-between gap-3 group/item"
                     >
                       <div className="text-left leading-tight min-w-0">
-                        <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate">
-                          {item.brand}
+                        <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate flex items-center gap-1.5">
+                          <span className="truncate">{item.brand}</span>
+                          {item.replaced && (
+                            <span className="eyebrow text-[0.5rem] tracking-[0.2em] text-gold border border-gold/50 px-1 py-px shrink-0">
+                              Updated Pick
+                            </span>
+                          )}
                         </div>
                         <div className="font-serif text-[0.82rem] text-ink/80 mt-0.5 truncate">
                           {item.item}
