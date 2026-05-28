@@ -215,6 +215,7 @@ const day2Looks: LookEdit[] = [
         { brand: "Dolce & Gabbana", item: "Silk Headscarf", price: "$395", href: "#", category: "finishing" },
         { brand: "Loewe", item: "Anagram Raffia Tote", price: "$1,250", href: "#", category: "bag" },
         { brand: "Saint Laurent", item: "Sunglasses", price: "$465", href: "#", category: "sunglasses" },
+        { brand: "Bottega Veneta", item: "Gold Hoop Earrings", price: "$620", href: "#", category: "jewelry" },
       ],
       mid: [
         { brand: "Farm Rio", item: "Lemon Print Kaftan", price: "$245", href: "#", category: "layer" },
@@ -222,6 +223,7 @@ const day2Looks: LookEdit[] = [
         { brand: "Anine Bing", item: "Silk Scarf", price: "$120", href: "#", category: "finishing" },
         { brand: "Loeffler Randall", item: "Raffia Tote", price: "$350", href: "#", category: "bag" },
         { brand: "Anine Bing", item: "Sunglasses", price: "$230", href: "#", category: "sunglasses" },
+        { brand: "Mejuri", item: "Bold Gold Hoops", price: "$98", href: "#", category: "jewelry" },
       ],
       riviera: [
         { brand: "H&M", item: "Printed Kaftan", price: "$59", href: "#", category: "layer" },
@@ -229,6 +231,7 @@ const day2Looks: LookEdit[] = [
         { brand: "Sézane", item: "Square Silk Scarf", price: "$65", href: "#", category: "finishing" },
         { brand: "Mango", item: "Woven Tote", price: "$79", href: "#", category: "bag" },
         { brand: "Le Specs", item: "Sunglasses", price: "$89", href: "#", category: "sunglasses" },
+        { brand: "Mango", item: "Gold Hoops", price: "$25", href: "#", category: "jewelry" },
       ],
     },
   },
@@ -245,6 +248,7 @@ const day2Looks: LookEdit[] = [
         { brand: "Hermès", item: "Oran Sandals", price: "$760", href: "#", category: "shoes" },
         { brand: "The Row", item: "Soft Leather Tote", price: "$1,890", href: "#", category: "bag" },
         { brand: "Saint Laurent", item: "Sunglasses", price: "$465", href: "#", category: "sunglasses" },
+        { brand: "Cartier", item: "Love Bracelet", price: "$7,350", href: "#", category: "jewelry" },
       ],
       mid: [
         { brand: "Anine Bing", item: "Linen Shirtdress", price: "$249", href: "#", category: "clothing" },
@@ -252,6 +256,7 @@ const day2Looks: LookEdit[] = [
         { brand: "Ancient Greek Sandals", item: "Flat Sandals", price: "$215", href: "#", category: "shoes" },
         { brand: "Demellier", item: "Leather Tote", price: "$495", href: "#", category: "bag" },
         { brand: "Anine Bing", item: "Sunglasses", price: "$230", href: "#", category: "sunglasses" },
+        { brand: "Monica Vinader", item: "Gold Cuff Bracelet", price: "$295", href: "#", category: "jewelry" },
       ],
       riviera: [
         { brand: "Mango", item: "Linen Shirtdress", price: "$89", href: "#", category: "clothing" },
@@ -259,6 +264,7 @@ const day2Looks: LookEdit[] = [
         { brand: "Sam Edelman", item: "Flat Sandals", price: "$110", href: "#", category: "shoes" },
         { brand: "Mansur Gavriel", item: "Mini Tote", price: "$145", href: "#", category: "bag" },
         { brand: "DIFF", item: "Sunglasses", price: "$95", href: "#", category: "sunglasses" },
+        { brand: "Mejuri", item: "Thin Gold Bracelet", price: "$65", href: "#", category: "jewelry" },
       ],
     },
   },
@@ -275,6 +281,7 @@ const day2Looks: LookEdit[] = [
         { brand: "Eric Javits", item: "Raffia Wide-Brim Hat", price: "$395", href: "#", category: "finishing" },
         { brand: "Loewe", item: "Raffia Basket Bag", price: "$1,150", href: "#", category: "bag" },
         { brand: "Ancient Greek Sandals", item: "Woven Leather Slides", price: "$295", href: "#", category: "shoes" },
+        { brand: "Sophie Buhai", item: "Shell Pendant Necklace", price: "$850", href: "#", category: "jewelry" },
       ],
       mid: [
         { brand: "Sea NY", item: "Eyelet Cover-up", price: "$345", href: "#", category: "layer" },
@@ -282,6 +289,7 @@ const day2Looks: LookEdit[] = [
         { brand: "Lack of Color", item: "Raffia Hat", price: "$129", href: "#", category: "finishing" },
         { brand: "Cult Gaia", item: "Raffia Bag", price: "$298", href: "#", category: "bag" },
         { brand: "Dragon Diffusion", item: "Woven Slides", price: "$215", href: "#", category: "shoes" },
+        { brand: "Lié Studio", item: "Sculptural Earrings", price: "$185", href: "#", category: "jewelry" },
       ],
       riviera: [
         { brand: "Mango", item: "Eyelet Cover-up", price: "$69", href: "#", category: "layer" },
@@ -289,6 +297,7 @@ const day2Looks: LookEdit[] = [
         { brand: "& Other Stories", item: "Raffia Hat", price: "$49", href: "#", category: "finishing" },
         { brand: "Sézane", item: "Woven Raffia Bag", price: "$145", href: "#", category: "bag" },
         { brand: "Mango", item: "Woven Slides", price: "$79", href: "#", category: "shoes" },
+        { brand: "& Other Stories", item: "Shell Necklace", price: "$35", href: "#", category: "jewelry" },
       ],
     },
   },
@@ -506,6 +515,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Isabel Marant", item: "Leather Sandals", price: "$495", href: "#", category: "shoes" },
         { brand: "Loewe", item: "Woven Tote", price: "$1,150", href: "#", category: "bag" },
         { brand: "Celine", item: "Sunglasses", price: "$490", href: "#", category: "sunglasses" },
+        { brand: "Tiffany & Co.", item: "Gold Bean Pendant", price: "$1,150", href: "#", category: "jewelry" },
       ],
       mid: [
         { brand: "Frame", item: "Striped Cotton Shirt", price: "$228", href: "#", category: "clothing" },
@@ -513,6 +523,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Ancient Greek Sandals", item: "Leather Sandals", price: "$215", href: "#", category: "shoes" },
         { brand: "Dragon Diffusion", item: "Woven Tote", price: "$385", href: "#", category: "bag" },
         { brand: "Anine Bing", item: "Sunglasses", price: "$230", href: "#", category: "sunglasses" },
+        { brand: "Mejuri", item: "Layered Gold Necklace", price: "$148", href: "#", category: "jewelry" },
       ],
       riviera: [
         { brand: "Mango", item: "Striped Linen Shirt", price: "$69", href: "#", category: "clothing" },
@@ -520,6 +531,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Sam Edelman", item: "Slide Sandals", price: "$110", href: "#", category: "shoes" },
         { brand: "Sézane", item: "Straw Tote", price: "$145", href: "#", category: "bag" },
         { brand: "DIFF", item: "Sunglasses", price: "$95", href: "#", category: "sunglasses" },
+        { brand: "Mango", item: "Gold Pendant Necklace", price: "$29", href: "#", category: "jewelry" },
       ],
     },
   },
@@ -537,6 +549,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Hermès", item: "Oran Sandals", price: "$760", href: "#", category: "shoes" },
         { brand: "The Row", item: "Tan Leather Tote", price: "$1,890", href: "#", category: "bag" },
         { brand: "Celine", item: "Sunglasses", price: "$490", href: "#", category: "sunglasses" },
+        { brand: "Cartier", item: "Trinity Ring", price: "$1,310", href: "#", category: "jewelry" },
       ],
       mid: [
         { brand: "Anine Bing", item: "Camel Linen Shirt", price: "$200", href: "#", category: "clothing" },
@@ -544,6 +557,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Ancient Greek Sandals", item: "Leather Sandals", price: "$215", href: "#", category: "shoes" },
         { brand: "Demellier", item: "Tan Leather Tote", price: "$495", href: "#", category: "bag" },
         { brand: "Anine Bing", item: "Sunglasses", price: "$230", href: "#", category: "sunglasses" },
+        { brand: "Monica Vinader", item: "Gold Hoops", price: "$195", href: "#", category: "jewelry" },
       ],
       riviera: [
         { brand: "Mango", item: "Camel Linen Shirt", price: "$69", href: "#", category: "clothing" },
@@ -551,6 +565,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Sam Edelman", item: "Leather Sandals", price: "$110", href: "#", category: "shoes" },
         { brand: "Mansur Gavriel", item: "Tan Tote", price: "$145", href: "#", category: "bag" },
         { brand: "DIFF", item: "Sunglasses", price: "$95", href: "#", category: "sunglasses" },
+        { brand: "Mejuri", item: "Small Gold Hoops", price: "$58", href: "#", category: "jewelry" },
       ],
     },
   },
@@ -567,6 +582,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Bottega Veneta", item: "Woven Slides", price: "$1,090", href: "#", category: "shoes" },
         { brand: "Loewe", item: "Raffia Basket Tote", price: "$1,150", href: "#", category: "bag" },
         { brand: "Celine", item: "Sunglasses", price: "$490", href: "#", category: "sunglasses" },
+        { brand: "Sophie Buhai", item: "Sculptural Gold Cuff", price: "$720", href: "#", category: "jewelry" },
       ],
       mid: [
         { brand: "Vince", item: "Crinkled Linen Shirt", price: "$245", href: "#", category: "clothing" },
@@ -574,6 +590,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Dragon Diffusion", item: "Woven Slides", price: "$215", href: "#", category: "shoes" },
         { brand: "Cult Gaia", item: "Raffia Tote", price: "$298", href: "#", category: "bag" },
         { brand: "Anine Bing", item: "Sunglasses", price: "$230", href: "#", category: "sunglasses" },
+        { brand: "Lié Studio", item: "Wide Sculptural Cuff", price: "$215", href: "#", category: "jewelry" },
       ],
       riviera: [
         { brand: "Mango", item: "Crinkled Linen Shirt", price: "$59", href: "#", category: "clothing" },
@@ -581,6 +598,7 @@ const day5Looks: LookEdit[] = [
         { brand: "Mango", item: "Woven Slides", price: "$79", href: "#", category: "shoes" },
         { brand: "Sézane", item: "Raffia Tote", price: "$145", href: "#", category: "bag" },
         { brand: "DIFF", item: "Sunglasses", price: "$95", href: "#", category: "sunglasses" },
+        { brand: "& Other Stories", item: "Sculptural Cuff", price: "$39", href: "#", category: "jewelry" },
       ],
     },
   },
