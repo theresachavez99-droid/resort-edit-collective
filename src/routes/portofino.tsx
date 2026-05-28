@@ -104,6 +104,49 @@ function PortofinoPage() {
                       {look.experience.label} →
                     </a>
                   </div>
+
+                  {/* Book This Experience */}
+                  <div className="mt-10">
+                    <span className="eyebrow text-ink">Book This Experience</span>
+                    <p className="font-serif italic text-ink/60 mt-2 text-sm">
+                      Curated, bookable moments to complete the day.
+                    </p>
+                    <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-5">
+                      {look.experiences.map((exp) => {
+                        const href = exp.affiliate_link || exp.backup_link || "#";
+                        return (
+                          <a
+                            key={exp.experience_name}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer sponsored"
+                            className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
+                          >
+                            <div className="aspect-[4/3] overflow-hidden bg-muted">
+                              <img
+                                src={exp.experience_image}
+                                alt={exp.experience_name}
+                                loading="lazy"
+                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                            </div>
+                            <div className="p-4">
+                              <span className="eyebrow text-gold text-[10px]">{exp.category}</span>
+                              <h4 className="font-display text-base tracking-wide mt-2 leading-snug">
+                                {exp.experience_name}
+                              </h4>
+                              <p className="font-serif italic text-ink/65 text-xs mt-2 leading-relaxed">
+                                {exp.experience_description}
+                              </p>
+                              <span className="mt-4 inline-block eyebrow text-[10px] text-ink group-hover:text-gold transition-colors">
+                                Book This Experience →
+                              </span>
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               </article>
             );
