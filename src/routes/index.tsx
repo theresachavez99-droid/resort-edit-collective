@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/resort-edit-logo.png";
 import stillLife from "@/assets/portofino-stilllife.jpg";
-import { portofinoLooks, itinerary, travelTips, whereToStay, moreBrands } from "@/data/portofino";
+import { portofinoLooks, itinerary, travelTips, whereToStay } from "@/data/portofino";
 import expYacht from "@/assets/exp-yacht.jpg";
 import expBeach from "@/assets/exp-beachclub.jpg";
 import expTour from "@/assets/exp-tour.jpg";
@@ -39,6 +39,26 @@ function Index() {
           </h1>
           <p className="eyebrow text-gold mt-4">A Style &amp; Itinerary Guide</p>
         </header>
+
+        {/* TRUST / POSITIONING BAND */}
+        <section className="mt-10 border-y border-border/60 py-8 text-center">
+          <h2 className="font-display text-xl sm:text-2xl md:text-3xl tracking-[0.04em] text-ink max-w-3xl mx-auto leading-snug">
+            Luxury labels. Riviera finds. Resort style across price points.
+          </h2>
+          <p className="mt-4 font-serif italic text-ink/65 text-base max-w-2xl mx-auto">
+            Curated from international resort favorites, quiet luxury labels, and
+            vacation brands we love.
+          </p>
+          <p className="mt-5 eyebrow text-[0.6rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
+            Zimmermann <span className="text-gold">·</span> Johanna Ortiz{" "}
+            <span className="text-gold">·</span> SIR <span className="text-gold">·</span>{" "}
+            Farm Rio <span className="text-gold">·</span> Melissa Odabash{" "}
+            <span className="text-gold">·</span>{" "}
+            <Link to="/brands" className="text-gold hover:underline">
+              more
+            </Link>
+          </p>
+        </section>
 
         {/* 5-DAY GRID */}
         <section className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
@@ -199,26 +219,6 @@ function Index() {
         >
           Shop All Looks &amp; Itinerary Details &nbsp;·&nbsp; Link in Bio
         </Link>
-
-        {/* MORE BRANDS WE LOVE */}
-        <section className="mt-8 bg-card px-4 sm:px-8 py-8">
-          <h3 className="font-display text-center text-lg sm:text-xl tracking-[0.12em] text-ink">
-            MORE BRANDS WE LOVE
-          </h3>
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-x-4 gap-y-6 text-center">
-            {moreBrands.map((col, i) => (
-              <div key={i} className={i > 0 ? "lg:border-l border-border/60 lg:pl-4" : ""}>
-                <ul className="space-y-2">
-                  {col.map((b) => (
-                    <li key={b} className="eyebrow text-[0.6rem] text-ink/80">
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </section>
 
         <p className="mt-6 text-center eyebrow text-[0.55rem] text-ink/50">
           Prices are subject to change. Links may earn a small commission at no extra cost to you.
