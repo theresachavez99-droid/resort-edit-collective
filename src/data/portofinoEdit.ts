@@ -89,7 +89,7 @@ export type LookEdit = {
   fabric: string;
   description: string;
   finishingNote?: string;
-  image: string;
+  image?: string;
   tiers: Record<Tier, EditItem[]>;
 };
 
