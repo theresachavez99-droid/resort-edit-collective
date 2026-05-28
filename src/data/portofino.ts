@@ -21,10 +21,10 @@ export type Look = {
 export const portofinoLooks: Look[] = [
   {
     day: "Day 1",
-    title: "Yacht Day",
-    subtitle: "Sail in style. Champagne, sea breeze & Italian sun.",
+    title: "Yacht Day & Harbor Aperitivo",
+    subtitle: "Sail the Ligurian coast. Salty kisses, sunshine & sunset drinks.",
     caption:
-      "She steps onto the teak deck in a bandeau and floor-grazing sarong — the kind of ensemble that needs no apology. A raffia tote, gold at the ears, and the harbor of Portofino unfolding behind her.",
+      "Private yacht charter along the Ligurian coast, swim stops in hidden coves, dockside aperitivo, and sunset drinks overlooking the harbor.",
     image: yacht,
     itinerary:
       "Private charter from Marina di Portofino at 10am, swim stops along the Promontorio, aperitivo at Lo Scoglio, sunset return.",
@@ -39,10 +39,10 @@ export const portofinoLooks: Look[] = [
   },
   {
     day: "Day 2",
-    title: "Beach Cabana",
-    subtitle: "Laid-back luxury. Cabana days & limoncello lunches.",
+    title: "Beach Club & Long Lunches",
+    subtitle: "Slow mornings, seafood lunch & limoncello by the water.",
     caption:
-      "A lemon-print kaftan moving in the breeze, a silk scarf knotted at the temples. The crispness of linen, the slow ritual of a long lunch under a white umbrella.",
+      "Slow morning, beach club lounging, seafood lunch, limoncello by the water, and golden hour strolls.",
     image: beach,
     itinerary:
       "Reserve a cabana at La Fontelina from 11am. Lunch at DaV Mare. Afternoon swim, an espresso, and the long walk back along the cliff path.",
@@ -57,10 +57,10 @@ export const portofinoLooks: Look[] = [
   },
   {
     day: "Day 3",
-    title: "Day Club",
-    subtitle: "Bold prints. Great music. Unforgettable energy.",
+    title: "Pool Club, Shopping & Aperitivo",
+    subtitle: "Poolside cocktails, boutique shopping & marina aperitivo.",
     caption:
-      "Mediterranean prints in blue and citron — a long shirtdress that moves like a holiday. Statement earrings catching the light, sandals that mean business by evening.",
+      "Poolside cocktails, boutique shopping through town, and evening aperitivo overlooking the marina.",
     image: dayclub,
     itinerary:
       "Pool day at Eight Club Portofino. Late afternoon aperitivo at Langosteria. Boutique browsing along Via Roma.",
@@ -75,10 +75,10 @@ export const portofinoLooks: Look[] = [
   },
   {
     day: "Day 4",
-    title: "Dinner in Portofino",
-    subtitle: "Sunset aperitivo. Candlelight. Italian elegance.",
+    title: "Sunset Cocktails & Dinner With a View",
+    subtitle: "Golden hour cocktails & a destination dinner over the harbor.",
     caption:
-      "A halter silk maxi the color of late-summer apricot. The harbor turns gold, then violet. A small black clutch, a heel that whispers, a single glass of Vermentino.",
+      "Golden hour cocktails followed by a destination dinner overlooking Portofino Harbor.",
     image: dinner,
     itinerary:
       "Sunset drinks at Belmond Hotel Splendido. Dinner at La Terrazza overlooking the marina. Nightcap at the piazza.",
@@ -93,10 +93,10 @@ export const portofinoLooks: Look[] = [
   },
   {
     day: "Day 5",
-    title: "Exploring the Town",
-    subtitle: "Wander. Explore. Gelato stops & beautiful views.",
+    title: "Market Strolls & Coastal Goodbyes",
+    subtitle: "Coffee walks, local shops & one final waterfront lunch.",
     caption:
-      "Crisp blue stripes over white. Tailored shorts, a woven tote, sandals built for cobblestones. A morning of small streets, a long afternoon goodbye.",
+      "Coffee walks, local shops, coastal wandering, and one final waterfront lunch.",
     image: town,
     itinerary:
       "Morning espresso at Caffè Excelsior. Climb to Castello Brown for the harbor view. Gelato at Gelateria Mario. A boat ride to San Fruttuoso.",
@@ -112,11 +112,11 @@ export const portofinoLooks: Look[] = [
 ];
 
 export const itinerary = [
-  { day: "Day 1", title: "Yacht Party & Harbour Views", text: "Private yacht charter, swim stops, sunset drinks at Baratta." },
-  { day: "Day 2", title: "Beach Club & Relax", text: "La Fontelina beach club, lunch at DaV Mare, limoncello & seaside lounging." },
-  { day: "Day 3", title: "Day Club & Shop", text: "Pool day at Eight Club Portofino, explore local boutiques & aperitivo at Langosteria." },
-  { day: "Day 4", title: "Dinner & Sunset", text: "Sunset drinks at Belmond Splendido, dinner at Terrazza with a view." },
-  { day: "Day 5", title: "Explore & Goodbyes", text: "Wander the town, gelato at Gelateria Mario, last views & a cozy coastal lunch." },
+  { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Private yacht charter along the Ligurian coast, swim stops in hidden coves, dockside aperitivo, and sunset drinks overlooking the harbor." },
+  { day: "Day 2", title: "Beach Club & Long Lunches", text: "Slow morning, beach club lounging, seafood lunch, limoncello by the water, and golden hour strolls." },
+  { day: "Day 3", title: "Pool Club, Shopping & Aperitivo", text: "Poolside cocktails, boutique shopping through town, and evening aperitivo overlooking the marina." },
+  { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "Golden hour cocktails followed by a destination dinner overlooking Portofino Harbor." },
+  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Coffee walks, local shops, coastal wandering, and one final waterfront lunch." },
 ];
 
 export const travelTips = [
