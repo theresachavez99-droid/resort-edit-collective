@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Instagram } from "lucide-react";
 
 export function SiteFooter() {
   return (
@@ -25,6 +26,20 @@ export function SiteFooter() {
             Subscribe
           </button>
         </form>
+        <div className="mt-12 flex flex-col items-center gap-3">
+          <a
+            href="https://www.instagram.com/resort.edit"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 eyebrow text-ivory/80 hover:text-gold transition-colors"
+          >
+            <Instagram className="w-[18px] h-[18px]" strokeWidth={1.5} />
+            <span>Instagram: @resort.edit</span>
+          </a>
+          <p className="text-ivory/50 font-serif italic text-sm max-w-md">
+            Follow Resort Edit for destination edits, resort styling, and shoppable vacation looks.
+          </p>
+        </div>
       </div>
       <div className="border-t border-ivory/10">
         <div className="mx-auto max-w-7xl px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-ivory/50 text-xs tracking-widest uppercase">
