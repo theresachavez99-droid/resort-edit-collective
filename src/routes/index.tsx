@@ -222,3 +222,98 @@ function Index() {
     </div>
   );
 }
+
+const hotelImages: Record<string, string> = {
+  splendido: hotelSplendido,
+  eight: hotelEight,
+  piccolo: hotelPiccolo,
+};
+
+function WhereToStay() {
+  const share = async (name: string) => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    if (typeof navigator !== "undefined" && (navigator as any).share) {
+      try {
+        await (navigator as any).share({ title: name, url });
+        return;
+      } catch {
+        /* user cancelled */
+      }
+    }
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(url).catch(() => {});
+    }
+  };
+
+  return (
+    <section className="mt-10">
+      <div className="text-center">
+        <h2 className="font-display text-2xl sm:text-3xl tracking-[0.08em] text-ink">
+          WHERE TO STAY
+        </h2>
+        <p className="mt-2 font-serif italic text-sm text-ink/60">
+          A curated trio of stays — from cliffside icon to intimate hideaway.
+        </p>
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+        {whereToStay.map((h) => {
+          const href = h.affiliate_link || h.booking_link || h.backup_link || "#";
+          return (
+            <article
+              key={h.hotel_name}
+              className="group bg-card border border-border/60 flex flex-col"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <img
+                  src={hotelImages[h.image_url] ?? h.image_url}
+                  alt={h.hotel_name}
+                  loading="lazy"
+                  width={1280}
+                  height={896}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+                <div className="absolute top-3 right-3 flex gap-2">
+                  <button
+                    type="button"
+                    aria-label={`Save ${h.hotel_name}`}
+                    className="h-8 w-8 grid place-items-center bg-card/85 backdrop-blur-sm border border-border/60 text-ink/70 hover:text-ink transition-colors"
+                  >
+                    <Bookmark size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => share(h.hotel_name)}
+                    aria-label={`Share ${h.hotel_name}`}
+                    className="h-8 w-8 grid place-items-center bg-card/85 backdrop-blur-sm border border-border/60 text-ink/70 hover:text-ink transition-colors"
+                  >
+                    <Share2 size={14} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-5 sm:p-6 flex flex-col flex-1">
+                <div className="eyebrow text-[0.6rem] text-gold">{h.destination}</div>
+                <h3 className="mt-2 font-display text-lg sm:text-xl tracking-wide text-ink">
+                  {h.hotel_name}
+                </h3>
+                <p className="mt-2 font-serif text-[0.9rem] text-ink/70 leading-relaxed">
+                  {h.description}
+                </p>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer noopener sponsored"
+                  data-hotel={h.hotel_name}
+                  className="mt-5 inline-block text-center border border-ink/80 py-3 px-4 eyebrow text-[0.7rem] tracking-[0.22em] text-ink hover:bg-ink hover:text-card transition-colors"
+                >
+                  Book This Stay &nbsp;→
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
