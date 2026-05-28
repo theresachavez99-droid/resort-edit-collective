@@ -45,12 +45,12 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 1",
     title: "Yacht Day & Harbor Aperitivo",
-    subtitle: "Sail the Ligurian coast. Salty kisses, sunshine & sunset drinks.",
+    subtitle: "An unhurried day at sea, ending in candlelight on the marina.",
     caption:
-      "Private yacht charter along the Ligurian coast, swim stops in hidden coves, dockside aperitivo, and sunset drinks overlooking the harbor.",
+      "Leave the piazzetta behind by mid-morning. Drift past the lighthouse, drop anchor wherever the water turns the right shade of green, and let the afternoon dissolve into espressos on deck. Back in port by dusk, just in time for a Negroni and the slow Ligurian sunset.",
     image: yacht,
     itinerary:
-      "Private charter from Marina di Portofino at 10am, swim stops along the Promontorio, aperitivo at Lo Scoglio, sunset return.",
+      "Cast off from Marina di Portofino around 10. Two long swim stops along the Promontorio, lunch on board, a pause at Paraggi, and a dockside aperitivo at Lo Scoglio before golden hour.",
     experience: { label: "Charter a Private Yacht", href: "#" },
     shop: [
       { brand: "Melissa Odabash", item: "Bandeau Bikini Top", price: "$165", href: "#" },
@@ -95,12 +95,12 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 2",
     title: "Beach Club & Long Lunches",
-    subtitle: "Slow mornings, seafood lunch & limoncello by the water.",
+    subtitle: "Cabana hours measured in espressos, sea swims and chilled white wine.",
     caption:
-      "Slow morning, beach club lounging, seafood lunch, limoncello by the water, and golden hour strolls.",
+      "The kind of day that doesn't need a plan. A cliffside cabana, a long table beneath the pines, a plate of just-caught crudo, and the gentle pull of the tide between courses. Walk it off along the coastal path as the light softens.",
     image: beach,
     itinerary:
-      "Reserve a cabana at La Fontelina from 11am. Lunch at DaV Mare. Afternoon swim, an espresso, and the long walk back along the cliff path.",
+      "Cabana at La Fontelina from late morning. Lunch at DaV Mare with the sea below. Afternoon swim, an espresso at the bar, and the slow cliff-path walk back into town.",
     experience: { label: "Book La Fontelina", href: "#" },
     shop: [
       { brand: "Dolce & Gabbana", item: "Lemon Print Bikini", price: "$595", href: "#" },
@@ -145,12 +145,12 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 3",
     title: "Pool Club, Shopping & Aperitivo",
-    subtitle: "Poolside cocktails, boutique shopping & marina aperitivo.",
+    subtitle: "A loungewear morning, a stylist's afternoon, a Campari kind of evening.",
     caption:
-      "Poolside cocktails, boutique shopping through town, and evening aperitivo overlooking the marina.",
+      "Trade the boat for a daybed. The kind of slow day that drifts from poolside to the cool of a boutique fitting room, then back into the piazzetta as it begins to fill. Linen still damp from a swim, a new pair of sandals, and Prosecco that arrives before you've asked.",
     image: dayclub,
     itinerary:
-      "Pool day at Eight Club Portofino. Late afternoon aperitivo at Langosteria. Boutique browsing along Via Roma.",
+      "Morning daybed at Eight Club Portofino. A wander through the ateliers on Via Roma. Aperitivo at Langosteria as the boats come in.",
     experience: { label: "Reserve a Daybed", href: "#" },
     shop: [
       { brand: "Alemais", item: "Palermo Top", price: "$550", href: "#" },
@@ -195,12 +195,12 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 4",
     title: "Sunset Cocktails & Dinner With a View",
-    subtitle: "Golden hour cocktails & a destination dinner over the harbor.",
+    subtitle: "Dress for it — the night the whole trip has been building toward.",
     caption:
-      "Golden hour cocktails followed by a destination dinner overlooking Portofino Harbor.",
+      "The one night to dress for. Heels you can manage on cobblestones, a silk that catches the breeze, and the rooftop hush of a hotel built into the cliffside. Dinner arrives one course at a time, and so does the moon over the harbor.",
     image: dinner,
     itinerary:
-      "Sunset drinks at Belmond Hotel Splendido. Dinner at La Terrazza overlooking the marina. Nightcap at the piazza.",
+      "Cocktails on the terrace at Belmond Splendido. Dinner at La Terrazza as the lights come up around the bay. A digestivo down in the piazzetta before bed.",
     experience: { label: "Reserve at Belmond Splendido", href: "#" },
     shop: [
       { brand: "Alemais", item: "Bonita Silk Maxi Dress", price: "$895", href: "#" },
@@ -245,12 +245,12 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 5",
     title: "Market Strolls & Coastal Goodbyes",
-    subtitle: "Coffee walks, local shops & one final waterfront lunch.",
+    subtitle: "The morning to wander, the lunch to linger, the goodbye to take slowly.",
     caption:
-      "Coffee walks, local shops, coastal wandering, and one final waterfront lunch.",
+      "Save the last day for the small rituals — the third espresso, the climb to Castello Brown, the gelato eaten standing up. One unhurried lunch on the water, one last boat ride into the cove, and the kind of departure that already feels like a promise to return.",
     image: town,
     itinerary:
-      "Morning espresso at Caffè Excelsior. Climb to Castello Brown for the harbor view. Gelato at Gelateria Mario. A boat ride to San Fruttuoso.",
+      "Espresso at Caffè Excelsior. The walk up to Castello Brown for the view that defines Portofino. Gelato at Mario, then a boat over to the abbey at San Fruttuoso before lunch.",
     experience: { label: "Book the San Fruttuoso Boat", href: "#" },
     shop: [
       { brand: "Anine Bing", item: "Linen Shirt", price: "$200", href: "#" },
@@ -295,11 +295,11 @@ export const portofinoLooks: Look[] = [
 ];
 
 export const itinerary = [
-  { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Private yacht charter along the Ligurian coast, swim stops in hidden coves, dockside aperitivo, and sunset drinks overlooking the harbor." },
-  { day: "Day 2", title: "Beach Club & Long Lunches", text: "Slow morning, beach club lounging, seafood lunch, limoncello by the water, and golden hour strolls." },
-  { day: "Day 3", title: "Pool Club, Shopping & Aperitivo", text: "Poolside cocktails, boutique shopping through town, and evening aperitivo overlooking the marina." },
-  { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "Golden hour cocktails followed by a destination dinner overlooking Portofino Harbor." },
-  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Coffee walks, local shops, coastal wandering, and one final waterfront lunch." },
+  { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Open water, hidden coves, and a slow return to port just as the light turns gold." },
+  { day: "Day 2", title: "Beach Club & Long Lunches", text: "A cabana at the water's edge, a tablecloth in the shade, and nowhere to be." },
+  { day: "Day 3", title: "Pool Club, Shopping & Aperitivo", text: "From a quiet daybed to the ateliers on Via Roma, then into the piazzetta for a Spritz." },
+  { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "The night you dress for — cocktails on a cliffside terrace, dinner above the harbor lights." },
+  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Small rituals: espresso, the climb to the castello, one last boat ride before lunch." },
 ];
 
 export const travelTips = [
