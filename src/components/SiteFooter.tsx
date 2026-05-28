@@ -14,10 +14,7 @@ export function SiteFooter() {
           The Resort Edit
         </h2>
         <p className="mt-6 text-ivory/70 max-w-xl mx-auto font-serif text-lg italic">
-          Destination style, curated itineraries, resort inspiration, and shoppable edits delivered to your inbox.
-        </p>
-        <p className="mt-4 text-ivory/50 text-sm max-w-lg mx-auto">
-          Get destination edits, style inspiration, and curated escapes.
+          Destination style, itineraries, and shoppable escapes—beautifully edited.
         </p>
         {submitted ? (
           <p className="mt-10 font-serif italic text-lg text-gold max-w-md mx-auto">
@@ -38,7 +35,7 @@ export function SiteFooter() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email for the next edit →"
+              placeholder="Enter your email address →"
               className="flex-1 bg-transparent border border-ivory/30 px-5 py-4 text-sm text-ivory placeholder:text-ivory/40 focus:outline-none focus:border-gold"
             />
             <button className="eyebrow bg-gold text-ink px-6 py-4 hover:bg-ivory transition-colors whitespace-nowrap">
