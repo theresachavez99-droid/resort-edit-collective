@@ -138,7 +138,7 @@ const day1Looks: LookEdit[] = [
   },
   {
     id: "neutral",
-    name: "Quiet Luxury Yacht Wife",
+    name: "Look B — Quiet Luxury Riviera",
     category: "Quiet Luxury",
     fabric: "European linen • Cotton poplin • Gold hardware",
     description: "White linen pants, a cream knit polo, and a quiet leather tote. Cartier on the wrist.",
