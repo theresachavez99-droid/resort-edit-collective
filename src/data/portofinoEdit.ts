@@ -588,6 +588,20 @@ const day5Looks: LookEdit[] = [
 
 const allLooks: LookEdit[][] = [day1Looks, day2Looks, day3Looks, day4Looks, day5Looks];
 
+const lookImages: string[][] = [
+  [d1a, d1b, d1c],
+  [d2a, d2b, d2c],
+  [d3a, d3b, d3c],
+  [d4a, d4b, d4c],
+  [d5a, d5b, d5c],
+];
+
+allLooks.forEach((dayLooks, di) => {
+  dayLooks.forEach((look, li) => {
+    look.image = lookImages[di][li];
+  });
+});
+
 export const portofinoEdit: DayEdit[] = portofinoLooks.map((look, i) => ({
   day: look.day,
   title: look.title,
