@@ -7,6 +7,10 @@ import expYacht from "@/assets/exp-yacht.jpg";
 import expBeach from "@/assets/exp-beachclub.jpg";
 import expTour from "@/assets/exp-tour.jpg";
 import expExperiences from "@/assets/exp-experiences.jpg";
+import hotelSplendido from "@/assets/hotel-splendido.jpg";
+import hotelEight from "@/assets/hotel-eight.jpg";
+import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
+import { Bookmark, Share2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -130,7 +134,7 @@ function Index() {
           </span>
         </Link>
 
-        <section className="mt-6 bg-card grid grid-cols-1 md:grid-cols-4 gap-0">
+        <section className="mt-6 bg-card grid grid-cols-1 md:grid-cols-3 gap-0">
           {/* Itinerary */}
           <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border/60">
             <h3 className="font-display text-xl sm:text-2xl tracking-wide">5-Day Portofino Itinerary</h3>
@@ -142,18 +146,6 @@ function Index() {
                     <div className="eyebrow text-[0.6rem] text-ink">{it.title}</div>
                     <p className="font-serif text-[0.85rem] text-ink/70 leading-snug mt-1">{it.text}</p>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {/* Where to Stay */}
-          <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border/60">
-            <h3 className="font-display text-xl sm:text-2xl tracking-wide">Where to Stay</h3>
-            <ul className="mt-5 space-y-5">
-              {whereToStay.map((s) => (
-                <li key={s.name}>
-                  <div className="eyebrow text-[0.6rem] text-ink">{s.name}</div>
-                  <p className="font-serif text-[0.85rem] text-ink/70 leading-snug mt-1">{s.text}</p>
                 </li>
               ))}
             </ul>
@@ -182,6 +174,9 @@ function Index() {
             />
           </div>
         </section>
+
+        {/* WHERE TO STAY */}
+        <WhereToStay />
 
         {/* BOOK YOUR PORTOFINO EXPERIENCE */}
         <section className="mt-10 text-center">
