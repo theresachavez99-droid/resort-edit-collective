@@ -28,7 +28,7 @@ function PortofinoPage() {
           <span className="hairline" />
         </div>
         <p className="font-serif italic text-xl md:text-2xl text-ink/70 mt-10 leading-relaxed">
-          Five days, five looks, and the quiet pleasures of the Italian Riviera — printed silks at sea, a long cabana lunch, a halter dress at dusk.
+          Five days, five looks, and the quiet pleasures of the Italian Riviera — yacht days, waterfront lunches, and sunset moments beautifully dressed.
         </p>
       </section>
 
