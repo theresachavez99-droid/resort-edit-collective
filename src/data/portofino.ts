@@ -6,6 +6,28 @@ import town from "@/assets/look-town.jpg";
 
 export type ShopItem = { brand: string; item: string; price: string; href: string };
 
+export type Experience = {
+  experience_name: string;
+  experience_image: string;
+  experience_description: string;
+  affiliate_link?: string;
+  backup_link?: string;
+  provider: "Viator" | "GetYourGuide" | "Direct";
+  destination: string;
+  category:
+    | "yacht charter"
+    | "beach club"
+    | "cooking class"
+    | "wine tasting"
+    | "walking tour"
+    | "day trip"
+    | "transfer"
+    | "boat tour"
+    | "spa"
+    | "nightlife"
+    | "shopping";
+};
+
 export type Look = {
   day: string;
   title: string;
@@ -15,6 +37,7 @@ export type Look = {
   itinerary: string;
   experience: { label: string; href: string };
   shop: ShopItem[];
+  experiences: Experience[];
 };
 
 // Replace href="#" with your ShopMy / LTK / Booking.com / Viator affiliate links.
