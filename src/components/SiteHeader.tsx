@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Instagram } from "lucide-react";
 import logo from "@/assets/resort-edit-logo.png";
 
 const nav = [
@@ -29,12 +30,23 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <a
-          href="#newsletter"
-          className="hidden md:inline-block eyebrow text-ivory bg-ink px-5 py-3 hover:bg-gold transition-colors"
-        >
-          Subscribe
-        </a>
+        <div className="hidden md:flex items-center gap-5">
+          <a
+            href="https://www.instagram.com/resort.edit"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Resort Edit on Instagram"
+            className="text-ink/70 hover:text-gold transition-colors"
+          >
+            <Instagram className="w-[18px] h-[18px]" strokeWidth={1.5} />
+          </a>
+          <a
+            href="#newsletter"
+            className="eyebrow text-ivory bg-ink px-5 py-3 hover:bg-gold transition-colors"
+          >
+            Subscribe
+          </a>
+        </div>
       </div>
     </header>
   );
