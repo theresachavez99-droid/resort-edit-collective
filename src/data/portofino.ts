@@ -4,7 +4,50 @@ import dayclub from "@/assets/look-dayclub.jpg";
 import dinner from "@/assets/look-dinner.jpg";
 import town from "@/assets/look-town.jpg";
 
-export type ShopItem = { brand: string; item: string; price: string; href: string };
+/**
+ * Product resilience model.
+ *
+ * Replacement hierarchy (apply in order when primary fails / sells out):
+ *   1. Identical item, different retailer
+ *   2. Closest alternative, same brand
+ *   3. Approved substitute brand at same tier
+ *   4. Item preserving silhouette + fabric + color story
+ *
+ * Preserve: silhouette, fabric story, destination fit, styling energy,
+ * luxury feel, price tier placement, color palette.
+ * Never replace on price alone. Never swap linen → polyester or quiet luxury → trend.
+ *
+ * Display: when `replaced` is true, show an "Updated pick" badge (never
+ * "Sold out" or "Unavailable"). When `inventory_status` is "unavailable"
+ * and no backup resolves, the card is hidden.
+ */
+export type InventoryStatus = "in_stock" | "low" | "unavailable";
+
+export type ShopItem = {
+  brand: string;
+  item: string;
+  price: string;
+  /** Primary affiliate URL (a.k.a. primary_link). */
+  href: string;
+  backup_link_1?: string;
+  backup_link_2?: string;
+  /** ISO date of last URL/inventory verification. */
+  last_verified_date?: string;
+  inventory_status?: InventoryStatus;
+  /** True when shown product was swapped from the original pick. */
+  replaced?: boolean;
+};
+
+/**
+ * Resolve the best live link for a product, walking the backup hierarchy.
+ * Returns null when nothing is usable — caller should hide the card.
+ */
+export function resolveProductLink(item: ShopItem): string | null {
+  if (item.inventory_status === "unavailable") {
+    return item.backup_link_1 || item.backup_link_2 || null;
+  }
+  return item.href || item.backup_link_1 || item.backup_link_2 || null;
+}
 
 export type Experience = {
   experience_name: string;
