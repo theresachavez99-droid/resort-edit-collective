@@ -387,8 +387,20 @@ function PortofinoEditPage() {
                               aria-expanded={isLookOpen}
                               className="w-full text-left px-5 sm:px-6 py-5 cursor-pointer"
                             >
-                              <div className="flex items-start justify-between gap-4">
-                                <div className="min-w-0">
+                              <div className="flex items-start gap-4 sm:gap-5">
+                                {look.image && (
+                                  <div className="shrink-0 w-24 sm:w-32 aspect-[3/4] overflow-hidden bg-muted border border-border/50">
+                                    <img
+                                      src={look.image}
+                                      alt={`${look.name} editorial`}
+                                      loading="lazy"
+                                      width={640}
+                                      height={896}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  </div>
+                                )}
+                                <div className="min-w-0 flex-1">
                                   <div
                                     className={`eyebrow text-[0.6rem] tracking-[0.3em] ${
                                       isLookOpen ? "text-gold" : "text-ink/55"
@@ -417,7 +429,7 @@ function PortofinoEditPage() {
                                   </div>
                                 </div>
                                 <span
-                                  className={`shrink-0 inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.28em] px-3 py-2 border transition-colors ${
+                                  className={`shrink-0 self-start inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.28em] px-3 py-2 border transition-colors ${
                                     isLookOpen
                                       ? "border-gold bg-gold text-ivory"
                                       : "border-ink text-ink"

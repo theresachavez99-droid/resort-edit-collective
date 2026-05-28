@@ -1,4 +1,19 @@
 import { portofinoLooks, type ShopItem } from "./portofino";
+import d1a from "@/assets/edit-d1-a.jpg";
+import d1b from "@/assets/edit-d1-b.jpg";
+import d1c from "@/assets/edit-d1-c.jpg";
+import d2a from "@/assets/edit-d2-a.jpg";
+import d2b from "@/assets/edit-d2-b.jpg";
+import d2c from "@/assets/edit-d2-c.jpg";
+import d3a from "@/assets/edit-d3-a.jpg";
+import d3b from "@/assets/edit-d3-b.jpg";
+import d3c from "@/assets/edit-d3-c.jpg";
+import d4a from "@/assets/edit-d4-a.jpg";
+import d4b from "@/assets/edit-d4-b.jpg";
+import d4c from "@/assets/edit-d4-c.jpg";
+import d5a from "@/assets/edit-d5-a.jpg";
+import d5b from "@/assets/edit-d5-b.jpg";
+import d5c from "@/assets/edit-d5-c.jpg";
 
 export type Tier = "designer" | "mid" | "riviera";
 export type LookKey = "print" | "neutral" | "texture";
@@ -74,6 +89,7 @@ export type LookEdit = {
   fabric: string;
   description: string;
   finishingNote?: string;
+  image?: string;
   tiers: Record<Tier, EditItem[]>;
 };
 
@@ -571,6 +587,20 @@ const day5Looks: LookEdit[] = [
 ];
 
 const allLooks: LookEdit[][] = [day1Looks, day2Looks, day3Looks, day4Looks, day5Looks];
+
+const lookImages: string[][] = [
+  [d1a, d1b, d1c],
+  [d2a, d2b, d2c],
+  [d3a, d3b, d3c],
+  [d4a, d4b, d4c],
+  [d5a, d5b, d5c],
+];
+
+allLooks.forEach((dayLooks, di) => {
+  dayLooks.forEach((look, li) => {
+    look.image = lookImages[di][li];
+  });
+});
 
 export const portofinoEdit: DayEdit[] = portofinoLooks.map((look, i) => ({
   day: look.day,
