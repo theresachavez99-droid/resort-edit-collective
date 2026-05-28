@@ -6,6 +6,28 @@ import town from "@/assets/look-town.jpg";
 
 export type ShopItem = { brand: string; item: string; price: string; href: string };
 
+export type Experience = {
+  experience_name: string;
+  experience_image: string;
+  experience_description: string;
+  affiliate_link?: string;
+  backup_link?: string;
+  provider: "Viator" | "GetYourGuide" | "Direct";
+  destination: string;
+  category:
+    | "yacht charter"
+    | "beach club"
+    | "cooking class"
+    | "wine tasting"
+    | "walking tour"
+    | "day trip"
+    | "transfer"
+    | "boat tour"
+    | "spa"
+    | "nightlife"
+    | "shopping";
+};
+
 export type Look = {
   day: string;
   title: string;
@@ -15,6 +37,7 @@ export type Look = {
   itinerary: string;
   experience: { label: string; href: string };
   shop: ShopItem[];
+  experiences: Experience[];
 };
 
 // Replace href="#" with your ShopMy / LTK / Booking.com / Viator affiliate links.
@@ -36,6 +59,38 @@ export const portofinoLooks: Look[] = [
       { brand: "Celine", item: "Sunglasses", price: "$490", href: "#" },
       { brand: "Jennifer Fisher", item: "Hoop Earrings", price: "$250", href: "#" },
     ],
+    experiences: [
+      {
+        experience_name: "Private Yacht Charter — Portofino Coast",
+        experience_image: yacht,
+        experience_description: "Half-day private charter with swim stops in hidden Ligurian coves.",
+        affiliate_link: "https://www.viator.com/Portofino/d50421",
+        backup_link: "https://www.getyourguide.com/portofino-l1093/",
+        provider: "Viator",
+        destination: "Portofino, Italy",
+        category: "yacht charter",
+      },
+      {
+        experience_name: "Sunset Boat Cruise with Aperitivo",
+        experience_image: dinner,
+        experience_description: "Golden hour cruise along the promontory with chilled prosecco on board.",
+        affiliate_link: "https://www.getyourguide.com/portofino-l1093/sunset-cruise",
+        backup_link: "https://www.viator.com/Portofino/d50421",
+        provider: "GetYourGuide",
+        destination: "Portofino, Italy",
+        category: "boat tour",
+      },
+      {
+        experience_name: "Private Captain Day Experience",
+        experience_image: town,
+        experience_description: "Your own captain for the day — a tailored route from Paraggi to San Fruttuoso.",
+        affiliate_link: "https://www.viator.com/Portofino/d50421/private-captain",
+        backup_link: "https://www.getyourguide.com/portofino-l1093/",
+        provider: "Viator",
+        destination: "Portofino, Italy",
+        category: "yacht charter",
+      },
+    ],
   },
   {
     day: "Day 2",
@@ -53,6 +108,38 @@ export const portofinoLooks: Look[] = [
       { brand: "Loeffler Randall", item: "Raffia Tote", price: "$350", href: "#" },
       { brand: "Anine Bing", item: "Sunglasses", price: "$230", href: "#" },
       { brand: "Shashi", item: "Shell Necklace", price: "$98", href: "#" },
+    ],
+    experiences: [
+      {
+        experience_name: "Paraggi Beach Club Cabana",
+        experience_image: beach,
+        experience_description: "Reserved cabana on the turquoise cove with full service all afternoon.",
+        affiliate_link: "https://www.viator.com/Portofino/d50421/paraggi-beach",
+        backup_link: "https://www.getyourguide.com/portofino-l1093/",
+        provider: "Viator",
+        destination: "Portofino, Italy",
+        category: "beach club",
+      },
+      {
+        experience_name: "Ligurian Seafood Cooking Class",
+        experience_image: town,
+        experience_description: "Hands-on lesson in trofie al pesto and the catch of the day, with wine pairings.",
+        affiliate_link: "https://www.getyourguide.com/portofino-l1093/cooking-class",
+        backup_link: "https://www.viator.com/Portofino/d50421",
+        provider: "GetYourGuide",
+        destination: "Portofino, Italy",
+        category: "cooking class",
+      },
+      {
+        experience_name: "Cinque Terre Wine Tasting Day",
+        experience_image: dayclub,
+        experience_description: "Boutique cellar visits across the cliffs of Cinque Terre with sommelier guide.",
+        affiliate_link: "https://www.viator.com/Portofino/d50421/cinque-terre-wine",
+        backup_link: "https://www.getyourguide.com/portofino-l1093/",
+        provider: "Viator",
+        destination: "Portofino, Italy",
+        category: "wine tasting",
+      },
     ],
   },
   {
@@ -72,6 +159,38 @@ export const portofinoLooks: Look[] = [
       { brand: "Bottega Veneta", item: "Mini Jodie", price: "$1,650", href: "#" },
       { brand: "Melissa Odabash", item: "Sunglasses", price: "$245", href: "#" },
     ],
+    experiences: [
+      {
+        experience_name: "Eight Club Portofino Daybed",
+        experience_image: dayclub,
+        experience_description: "Poolside daybed with bottle service and harbor views all afternoon.",
+        affiliate_link: "https://www.viator.com/Portofino/d50421/eight-club",
+        backup_link: "https://www.eighthotels.com/en/eight-hotel-portofino/",
+        provider: "Direct",
+        destination: "Portofino, Italy",
+        category: "beach club",
+      },
+      {
+        experience_name: "Private Shopping Tour — Via Roma",
+        experience_image: town,
+        experience_description: "A local stylist walks you through the boutiques of Portofino's piazzetta.",
+        affiliate_link: "https://www.getyourguide.com/portofino-l1093/private-shopping",
+        backup_link: "https://www.viator.com/Portofino/d50421",
+        provider: "GetYourGuide",
+        destination: "Portofino, Italy",
+        category: "shopping",
+      },
+      {
+        experience_name: "Splendido Spa Afternoon",
+        experience_image: yacht,
+        experience_description: "Signature massage and pool access at the Belmond Splendido spa.",
+        affiliate_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/spa",
+        backup_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+        provider: "Direct",
+        destination: "Portofino, Italy",
+        category: "spa",
+      },
+    ],
   },
   {
     day: "Day 4",
@@ -90,6 +209,38 @@ export const portofinoLooks: Look[] = [
       { brand: "Jennifer Fisher", item: "Drop Earrings", price: "$275", href: "#" },
       { brand: "Tom Ford", item: "Sunglasses", price: "$420", href: "#" },
     ],
+    experiences: [
+      {
+        experience_name: "Sunset Cocktails at La Terrazza",
+        experience_image: dinner,
+        experience_description: "Reserved harbor-view table for golden hour cocktails at the Splendido.",
+        affiliate_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/dining",
+        backup_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+        provider: "Direct",
+        destination: "Portofino, Italy",
+        category: "nightlife",
+      },
+      {
+        experience_name: "Chef's Table Dinner Experience",
+        experience_image: town,
+        experience_description: "Tasting menu with paired Italian wines at a celebrated harbor restaurant.",
+        affiliate_link: "https://www.getyourguide.com/portofino-l1093/chefs-table",
+        backup_link: "https://www.viator.com/Portofino/d50421",
+        provider: "GetYourGuide",
+        destination: "Portofino, Italy",
+        category: "wine tasting",
+      },
+      {
+        experience_name: "Private Driver to Santa Margherita",
+        experience_image: dayclub,
+        experience_description: "Chauffeured transfer for the evening — door-to-door along the coast road.",
+        affiliate_link: "https://www.viator.com/Portofino/d50421/private-transfer",
+        backup_link: "https://www.getyourguide.com/portofino-l1093/",
+        provider: "Viator",
+        destination: "Portofino, Italy",
+        category: "transfer",
+      },
+    ],
   },
   {
     day: "Day 5",
@@ -107,6 +258,38 @@ export const portofinoLooks: Look[] = [
       { brand: "Re/Done", item: "Denim Shorts", price: "$195", href: "#" },
       { brand: "Isabel Marant", item: "Sandals", price: "$495", href: "#" },
       { brand: "Celine", item: "Sunglasses", price: "$490", href: "#" },
+    ],
+    experiences: [
+      {
+        experience_name: "San Fruttuoso Abbey Boat Tour",
+        experience_image: yacht,
+        experience_description: "Short boat ride to the hidden 10th-century abbey reachable only by sea.",
+        affiliate_link: "https://www.viator.com/Portofino/d50421/san-fruttuoso",
+        backup_link: "https://www.getyourguide.com/portofino-l1093/",
+        provider: "Viator",
+        destination: "Portofino, Italy",
+        category: "boat tour",
+      },
+      {
+        experience_name: "Castello Brown Walking Tour",
+        experience_image: town,
+        experience_description: "Guided climb to the cliffside castello with the best view in Portofino.",
+        affiliate_link: "https://www.getyourguide.com/portofino-l1093/castello-brown",
+        backup_link: "https://www.viator.com/Portofino/d50421",
+        provider: "GetYourGuide",
+        destination: "Portofino, Italy",
+        category: "walking tour",
+      },
+      {
+        experience_name: "Cinque Terre Day Trip",
+        experience_image: beach,
+        experience_description: "Full-day excursion through the five villages with a local guide.",
+        affiliate_link: "https://www.viator.com/Portofino/d50421/cinque-terre",
+        backup_link: "https://www.getyourguide.com/portofino-l1093/",
+        provider: "Viator",
+        destination: "Portofino, Italy",
+        category: "day trip",
+      },
     ],
   },
 ];
