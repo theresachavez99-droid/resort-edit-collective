@@ -65,15 +65,44 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-ivory/10">
-        <div className="mx-auto max-w-7xl px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-ivory/50 text-xs tracking-widest uppercase">
-          <span>© {new Date().getFullYear()} Resort Edit</span>
-          <div className="flex gap-8">
-            <Link to="/" className="hover:text-gold">Journal</Link>
-            <Link to="/destinations" className="hover:text-gold">Destinations</Link>
-            <Link to="/brands" className="hover:text-gold">Brands</Link>
-            <Link to="/about" className="hover:text-gold">About</Link>
+        <div className="mx-auto max-w-7xl px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-10 text-ivory/70 text-sm">
+          <div>
+            <p className="eyebrow text-gold-soft mb-4">Explore</p>
+            <ul className="space-y-2 font-serif">
+              <li><Link to="/destinations" className="hover:text-gold">Destinations</Link></li>
+              <li><Link to="/resort-edits" className="hover:text-gold">Resort Edits</Link></li>
+              <li><Link to="/brands" className="hover:text-gold">Brands We Love</Link></li>
+              <li><Link to="/" className="hover:text-gold">Journal</Link></li>
+            </ul>
           </div>
-          <span className="italic font-serif normal-case tracking-normal text-sm">Curated escapes. Styled your way.</span>
+          <div>
+            <p className="eyebrow text-gold-soft mb-4">About</p>
+            <ul className="space-y-2 font-serif">
+              <li><Link to="/about" className="hover:text-gold">Our Story</Link></li>
+              <li><Link to="/about" className="hover:text-gold">Founder</Link></li>
+              <li><Link to="/about" className="hover:text-gold">Contact</Link></li>
+              <li><Link to="/about" className="hover:text-gold">Collaborations</Link></li>
+            </ul>
+          </div>
+          <div>
+            <p className="eyebrow text-gold-soft mb-4">The Edit</p>
+            <p className="font-serif italic text-ivory/60 leading-relaxed">
+              Mediterranean luxury, destination-first style, and shoppable escapes — delivered weekly.
+            </p>
+            <a href="#newsletter" className="mt-4 inline-block eyebrow text-gold hover:text-ivory">Join the Edit →</a>
+          </div>
+          <div>
+            <p className="eyebrow text-gold-soft mb-4">Disclosure</p>
+            <p className="font-serif italic text-ivory/60 leading-relaxed text-[0.85rem]">
+              Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
+            </p>
+          </div>
+        </div>
+        <div className="border-t border-ivory/10">
+          <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-ivory/50 text-xs tracking-widest uppercase">
+            <span>© {new Date().getFullYear()} Resort Edit</span>
+            <span className="italic font-serif normal-case tracking-normal text-sm">Curated escapes. Styled your way.</span>
+          </div>
         </div>
       </div>
     </footer>
