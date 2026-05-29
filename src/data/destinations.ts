@@ -5,6 +5,7 @@ import phuket from "@/assets/dest-phuket.jpg";
 import ibiza from "@/assets/dest-ibiza.jpg";
 import tulum from "@/assets/dest-tulum.jpg";
 import mallorca from "@/assets/dest-mallorca.jpg";
+import stbarths from "@/assets/dest-stbarths.jpg";
 
 export type TravelType =
   | "Mediterranean"
