@@ -10,16 +10,27 @@ import expExperiences from "@/assets/exp-experiences.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
+import destPortofino from "@/assets/dest-portofino.jpg";
+import destCapri from "@/assets/dest-capri.jpg";
+import destIbiza from "@/assets/dest-ibiza.jpg";
+import destSttropez from "@/assets/dest-sttropez.jpg";
+import destMykonos from "@/assets/dest-mykonos.jpg";
+import destPositano from "@/assets/dest-positano.jpg";
+import lookBeach from "@/assets/look-beach.jpg";
+import lookYacht from "@/assets/look-yacht.jpg";
+import lookDinner from "@/assets/look-dinner.jpg";
+import lookDayclub from "@/assets/look-dayclub.jpg";
+import lookTown from "@/assets/look-town.jpg";
 import { Bookmark, Share2 } from "lucide-react";
 import { trackOutbound } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Resort Edit — 5 Days in Portofino" },
-      { name: "description", content: "A style & itinerary guide to five days in Portofino. Shop the looks, book the experiences." },
-      { property: "og:title", content: "Resort Edit — 5 Days in Portofino" },
-      { property: "og:description", content: "Curated escapes. Styled your way." },
+      { title: "Resort Edit — Destination guides. Styled beautifully." },
+      { name: "description", content: "Curated itineraries, resort looks, hotels and experiences — designed for women who want to dress for the destination." },
+      { property: "og:title", content: "Resort Edit — Destination guides. Styled beautifully." },
+      { property: "og:description", content: "Curated itineraries, resort looks, hotels and experiences." },
       { property: "og:image", content: heroMuse },
     ],
   }),
@@ -28,16 +39,32 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const experiences = [
-    { label: "Book a Yacht", image: expYacht },
-    { label: "Reserve a Beach Club", image: expBeach },
-    { label: "Book a Tour", image: expTour },
-    { label: "View Experiences", image: expExperiences },
+    { label: "Charter the Day", image: expYacht },
+    { label: "Reserve Beach Clubs", image: expBeach },
+    { label: "Plan Experiences", image: expTour },
+    { label: "Stay Beautifully", image: expExperiences },
+  ];
+  const browseDestinations = [
+    { name: "Portofino", image: destPortofino, href: "/portofino" },
+    { name: "Capri", image: destCapri, href: "/destinations/capri" },
+    { name: "Ibiza", image: destIbiza, href: "/destinations/ibiza" },
+    { name: "Saint-Tropez", image: destSttropez, href: "/destinations/sttropez" },
+    { name: "Mykonos", image: destMykonos, href: "/destinations" },
+    { name: "Positano", image: destPositano, href: "/destinations" },
+  ];
+  const browseOccasions = [
+    { name: "Beach Club", image: lookBeach },
+    { name: "Yacht Day", image: lookYacht },
+    { name: "Dinner Glam", image: lookDinner },
+    { name: "Travel Day", image: expTour },
+    { name: "Poolside", image: lookDayclub },
+    { name: "Exploring Town", image: lookTown },
   ];
   return (
     <div className="bg-ivory">
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-4 md:pt-6 pb-10">
         {/* HERO */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center py-6 md:py-10">
           <div className="relative aspect-[3/4] overflow-hidden bg-muted order-1">
             <img
               src={heroMuse}
@@ -47,26 +74,103 @@ function Index() {
               className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
-          <div className="order-2 text-left md:pl-2">
-            <p className="eyebrow text-gold text-[0.7rem]">A Style &amp; Itinerary Guide</p>
-            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl tracking-[0.06em] mt-4 text-ink leading-[0.95]">
-              5 DAYS IN
+          <div className="order-2 text-left md:pl-4">
+            <p className="eyebrow text-gold text-[0.7rem]">The Resort Edit</p>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.02em] mt-6 md:mt-8 text-ink leading-[1.02]">
+              Destination guides.
               <br />
-              PORTOFINO
+              <span className="italic font-serif text-gold">Styled beautifully.</span>
             </h1>
-            <p className="font-serif italic text-3xl md:text-4xl text-gold mt-5">La Dolce Vita</p>
-            <p className="mt-6 font-display text-lg md:text-xl tracking-[0.02em] text-ink leading-snug">
-              Luxury labels. Destination style. Resort fashion across price points.
+            <p className="mt-8 md:mt-10 font-serif text-base md:text-lg text-ink/70 leading-relaxed max-w-md">
+              Curated itineraries, resort looks, hotels and experiences — designed
+              for women who want to dress for the destination.
             </p>
-            <p className="mt-4 font-serif italic text-ink/65 text-base leading-relaxed max-w-md">
-              Curated from international resort favorites, iconic labels, and
-              destination brands we love.
-            </p>
+            <div className="mt-10 md:mt-12 flex flex-wrap gap-4">
+              <Link
+                to="/destinations"
+                className="inline-block bg-ink text-ivory eyebrow text-[0.7rem] tracking-[0.25em] px-7 py-4 hover:bg-gold transition-colors"
+              >
+                Browse Destinations →
+              </Link>
+              <Link
+                to="/portofino"
+                className="inline-block border border-ink text-ink eyebrow text-[0.7rem] tracking-[0.25em] px-7 py-4 hover:bg-ink hover:text-ivory transition-colors"
+              >
+                Shop the Looks →
+              </Link>
+            </div>
           </div>
         </section>
 
+        {/* BROWSE BY DESTINATION */}
+        <section className="mt-16 md:mt-24">
+          <div className="flex items-baseline justify-between mb-6">
+            <div>
+              <p className="eyebrow text-gold text-[0.7rem]">Browse</p>
+              <h2 className="font-display text-2xl sm:text-3xl tracking-[0.04em] text-ink mt-2">
+                By Destination
+              </h2>
+            </div>
+            <Link to="/destinations" className="eyebrow text-[0.65rem] text-ink/60 hover:text-gold transition-colors hidden sm:inline">
+              View All →
+            </Link>
+          </div>
+          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            {browseDestinations.map((d) => (
+              <li key={d.name}>
+                <a
+                  href={d.href}
+                  className="group block relative aspect-[3/4] overflow-hidden bg-ink"
+                >
+                  <img
+                    src={d.image}
+                    alt={d.name}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-ivory">
+                    <h3 className="font-display text-base sm:text-lg tracking-wide">{d.name}</h3>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* BROWSE BY OCCASION */}
+        <section className="mt-16 md:mt-20">
+          <div className="mb-6">
+            <p className="eyebrow text-gold text-[0.7rem]">Browse</p>
+            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.04em] text-ink mt-2">
+              By Occasion
+            </h2>
+          </div>
+          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            {browseOccasions.map((o) => (
+              <li key={o.name}>
+                <Link
+                  to="/portofino"
+                  className="group block relative aspect-[3/4] overflow-hidden bg-ink"
+                >
+                  <img
+                    src={o.image}
+                    alt={o.name}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-ivory">
+                    <h3 className="font-display text-base sm:text-lg tracking-wide">{o.name}</h3>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         {/* TRUST / POSITIONING BAND */}
-        <section className="mt-10 border-y border-border/60 py-6 text-center">
+        <section className="mt-16 md:mt-20 border-y border-border/60 py-6 text-center">
           <p className="eyebrow text-[0.6rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
             Zimmermann <span className="text-gold">·</span> Johanna Ortiz{" "}
             <span className="text-gold">·</span> SIR <span className="text-gold">·</span>{" "}
@@ -79,7 +183,7 @@ function Index() {
         </section>
 
         {/* 5-DAY GRID */}
-        <section className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        <section className="mt-12 md:mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {portofinoLooks.map((look, i) => (
             <article key={look.title} className="bg-card flex flex-col">
               {/* Day banner */}
@@ -152,14 +256,14 @@ function Index() {
         {/* BOTTOM CARD: ITINERARY + TIPS + IMAGE */}
         <Link
           to="/portofino-edit"
-          className="mt-6 block border border-gold/60 bg-card text-center py-4 px-4 hover:bg-gold/5 transition-colors"
+          className="mt-8 md:mt-10 block border border-gold/60 bg-card text-center py-4 px-4 hover:bg-gold/5 transition-colors"
         >
           <span className="eyebrow text-gold text-[0.65rem] sm:text-[0.75rem] tracking-[0.25em] uppercase">
-            Explore This Resort Edit Across Price Points &nbsp;→
+            Explore Portofino Across Price Points &nbsp;→
           </span>
         </Link>
 
-        <section className="mt-6 bg-card grid grid-cols-1 md:grid-cols-3 gap-0">
+        <section className="mt-8 md:mt-10 bg-card grid grid-cols-1 md:grid-cols-3 gap-0">
           {/* Itinerary */}
           <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border/60">
             <h3 className="font-display text-xl sm:text-2xl tracking-wide">5-Day Portofino Itinerary</h3>
@@ -204,11 +308,11 @@ function Index() {
         <WhereToStay />
 
         {/* BOOK YOUR PORTOFINO EXPERIENCE */}
-        <section className="mt-10 text-center">
+        <section className="mt-16 md:mt-20 text-center">
           <h2 className="font-display text-2xl sm:text-3xl tracking-[0.08em] text-ink">
-            BOOK YOUR PORTOFINO EXPERIENCE
+            PLAN YOUR PORTOFINO EXPERIENCE
           </h2>
-          <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
             {experiences.map((exp) => (
               <a
                 key={exp.label}
@@ -224,8 +328,8 @@ function Index() {
                   className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-ink/10 group-hover:bg-ink/0 transition-colors" />
-                <span className="absolute left-0 right-0 bottom-0 bg-gold text-ivory eyebrow text-[0.6rem] sm:text-[0.65rem] h-9 sm:h-10 px-3 flex items-center justify-center text-center whitespace-nowrap">
-                  {exp.label}
+                <span className="absolute left-0 right-0 bottom-0 bg-gold text-ivory eyebrow text-[0.6rem] sm:text-[0.65rem] h-10 sm:h-11 px-3 flex items-center justify-center text-center whitespace-nowrap tracking-[0.22em]">
+                  {exp.label} →
                 </span>
               </a>
             ))}
@@ -235,9 +339,9 @@ function Index() {
         {/* FOOTER BAR */}
         <Link
           to="/portofino"
-          className="mt-6 block bg-gold text-ivory text-center py-5 eyebrow hover:bg-ink transition-colors"
+          className="mt-10 md:mt-12 block bg-gold text-ivory text-center py-5 eyebrow hover:bg-ink transition-colors"
         >
-          Explore the Full Portofino Edit &nbsp;→
+          Explore Portofino &nbsp;→
         </Link>
 
         <p className="mt-6 text-center eyebrow text-[0.55rem] text-ink/50">
