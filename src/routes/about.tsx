@@ -22,6 +22,8 @@ function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-3xl px-6 py-28 text-center">
+        <span className="eyebrow text-gold">Who We Are</span>
+        <div className="my-8 h-px w-16 bg-gold mx-auto" />
         <p className="font-serif italic text-2xl md:text-3xl leading-relaxed text-ink">
           Resort Edit is a digital publication for women who travel with intention and dress with conviction. We believe in the long lunch, the perfect kaftan, the small black book of addresses worth the flight.
         </p>
