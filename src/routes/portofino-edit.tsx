@@ -14,6 +14,7 @@ import {
   Layers,
   Sparkles,
 } from "lucide-react";
+import { EditorialDisclosure } from "@/components/EditorialDisclosure";
 import {
   portofinoEdit,
   tiers,
@@ -573,9 +574,7 @@ function PortofinoEditPage() {
         >
           Return to the Portofino Edit
         </Link>
-        <p className="mt-6 text-center eyebrow text-[0.55rem] text-ink/50">
-          Prices are subject to change. Links may earn a small commission at no extra cost to you.
-        </p>
+        <EditorialDisclosure className="mt-10" />
       </div>
     </div>
   );
