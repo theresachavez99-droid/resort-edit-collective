@@ -193,7 +193,13 @@ function Index() {
 
         {/* 5-DAY GRID */}
         <section className="mt-12 md:mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-          {portofinoLooks.map((look, i) => (
+          {portofinoLooks.map((look, i) => {
+            // Per-image focal points so the model's face lands at the same
+            // vertical position across all five Day cards. Tuned to each
+            // source image so the cards read as one cohesive editorial set.
+            const objectPositions = ["50% 15%", "50% 27%", "50% 34%", "50% 77%", "50% 100%"];
+            const objectPosition = objectPositions[i] ?? "50% 25%";
+            return (
             <article key={look.title} className="bg-card flex flex-col">
               {/* Day banner */}
               <div className="bg-gold text-ivory text-center py-2.5 px-2">
@@ -201,14 +207,15 @@ function Index() {
                 <div className="eyebrow text-[0.6rem] sm:text-[0.65rem] mt-0.5">{look.title}</div>
               </div>
               {/* Image */}
-              <div className="aspect-[2/5] overflow-hidden bg-muted">
+              <div className="aspect-[4/5] overflow-hidden bg-muted">
                 <img
                   src={look.image}
                   alt={`${look.title} look`}
                   loading="lazy"
                   width={832}
                   height={1216}
-                  className="h-full w-full object-cover object-top"
+                  className="h-full w-full object-cover"
+                  style={{ objectPosition }}
                 />
               </div>
               {/* Caption */}
@@ -259,7 +266,8 @@ function Index() {
                 </ul>
               </div>
             </article>
-          ))}
+            );
+          })}
         </section>
 
         {/* BOTTOM CARD: ITINERARY + TIPS + IMAGE */}
