@@ -25,9 +25,9 @@ const occasions = [
 ] as const;
 
 const collections = [
-  { label: "Designer", note: "The Row, Khaite, Zimmermann." },
+  { label: "Luxury", note: "The Row, Khaite, Zimmermann." },
   { label: "Mid-Luxe", note: "Faithfull, Posse, Sir." },
-  { label: "Riviera Finds", note: "Boutique discoveries & under-the-radar labels." },
+  { label: "Destination Finds", note: "Riviera, Beach Club, Island, Après — curated to where you're going." },
 ] as const;
 
 function ResortEditsPage() {
