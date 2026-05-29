@@ -14,7 +14,8 @@ type Props = {
 export function DestinationLink({ d, className, children, ...rest }: Props) {
   if (d.href) {
     return (
-      <Link to={d.href} className={className} {...rest}>
+      // Hand-curated bespoke route paths (e.g. "/portofino") — typed as string at the data layer.
+      <Link to={d.href as "/"} className={className} {...rest}>
         {children}
       </Link>
     );

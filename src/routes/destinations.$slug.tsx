@@ -90,7 +90,7 @@ function DestinationPage() {
             {d.shopEdits.map((e: { label: string; href: string }) => (
               <Link
                 key={e.href}
-                to={e.href}
+                to={e.href as "/"}
                 className="eyebrow border border-ink/20 px-5 py-4 hover:bg-ink hover:text-ivory transition-colors text-ink"
               >
                 {e.label} →
