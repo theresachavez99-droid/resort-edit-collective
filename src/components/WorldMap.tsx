@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { destinations, destinationHref, type Destination } from "@/data/destinations";
+import { DestinationLink } from "@/components/DestinationLink";
 
 // Equirectangular projection into a 1000x500 viewbox.
 function project(lat: number, lng: number) {
@@ -64,11 +65,7 @@ export function WorldMap() {
               onBlur={() => setActive((a) => (a?.slug === d.slug ? null : a))}
               className="cursor-pointer"
             >
-              <Link
-                to={d.href ?? "/destinations/$slug"}
-                params={d.href ? undefined : { slug: d.slug }}
-                aria-label={`${d.name} — ${d.region}`}
-              >
+              <DestinationLink d={d} aria-label={`${d.name} — ${d.region}`}>
                 {/* halo */}
                 <circle r={isActive ? 14 : 9} fill="var(--gold)" opacity={isActive ? 0.18 : 0.12} />
                 {/* pin */}
@@ -90,7 +87,7 @@ export function WorldMap() {
                 >
                   {d.name}
                 </text>
-              </Link>
+              </DestinationLink>
             </g>
           );
         })}
@@ -99,17 +96,13 @@ export function WorldMap() {
       {/* Active pin caption */}
       <div className="mt-4 min-h-[3.5rem] text-center px-6">
         {active ? (
-          <Link
-            to={active.href ?? "/destinations/$slug"}
-            params={active.href ? undefined : { slug: active.slug }}
-            className="inline-block group"
-          >
+          <DestinationLink d={active} className="inline-block group">
             <span className="eyebrow text-gold">{active.region}</span>
             <h3 className="font-display text-2xl md:text-3xl mt-1 tracking-wide text-ink group-hover:text-gold transition-colors">
               {active.name} →
             </h3>
             <p className="font-serif italic text-ink/70 mt-1">{active.tagline}</p>
-          </Link>
+          </DestinationLink>
         ) : (
           <p className="font-serif italic text-ink/50">
             Hover or tap a pin to preview a destination.

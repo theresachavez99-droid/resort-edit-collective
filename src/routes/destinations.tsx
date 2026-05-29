@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   destinations,
@@ -8,6 +8,7 @@ import {
   type TravelType,
 } from "@/data/destinations";
 import { WorldMap } from "@/components/WorldMap";
+import { DestinationLink } from "@/components/DestinationLink";
 
 export const Route = createFileRoute("/destinations")({
   head: () => ({
@@ -100,12 +101,7 @@ function DestinationsPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
                 {inGroup.map((d) => (
-                  <Link
-                    key={d.slug}
-                    to={d.href ?? "/destinations/$slug"}
-                    params={d.href ? undefined : { slug: d.slug }}
-                    className="group block"
-                  >
+                  <DestinationLink key={d.slug} d={d} className="group block">
                     <div className="relative overflow-hidden bg-muted aspect-[4/5]">
                       <img
                         src={d.image}
@@ -125,7 +121,7 @@ function DestinationsPage() {
                       </div>
                     </div>
                     <p className="font-serif italic text-ink/70 mt-4">{d.tagline}</p>
-                  </Link>
+                  </DestinationLink>
                 ))}
               </div>
             </div>

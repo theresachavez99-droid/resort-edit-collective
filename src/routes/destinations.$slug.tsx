@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { destinations, getDestination, type Destination } from "@/data/destinations";
+import { DestinationLink } from "@/components/DestinationLink";
 
 export const Route = createFileRoute("/destinations/$slug")({
   loader: ({ params }) => {
@@ -39,29 +40,6 @@ export const Route = createFileRoute("/destinations/$slug")({
   ),
   component: DestinationPage,
 });
-
-function DestinationLink({
-  d,
-  className,
-  children,
-}: {
-  d: Destination;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  if (d.href) {
-    return (
-      <Link to={d.href} className={className}>
-        {children}
-      </Link>
-    );
-  }
-  return (
-    <Link to="/destinations/$slug" params={{ slug: d.slug }} className={className}>
-      {children}
-    </Link>
-  );
-}
 
 function DestinationPage() {
   const { destination: d } = Route.useLoaderData() as { destination: Destination };
