@@ -18,11 +18,7 @@ function AboutPage() {
     <div>
       <section className="relative h-[60vh] min-h-[420px]">
         <img src={heroImg} alt="Portofino harbor" width={1920} height={1280} className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-ink/30" />
-        <div className="relative h-full flex flex-col items-center justify-center text-center text-ivory px-6">
-          <span className="eyebrow">About the House</span>
-          <h1 className="font-display text-5xl md:text-7xl mt-6 tracking-wide">Resort Edit</h1>
-        </div>
+        <h1 className="sr-only">About Resort Edit</h1>
       </section>
 
       <section className="mx-auto max-w-3xl px-6 py-28 text-center">
