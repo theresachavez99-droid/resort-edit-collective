@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { brandCategories } from "@/data/brands";
+import { EditorialDisclosure } from "@/components/EditorialDisclosure";
 
 export const Route = createFileRoute("/brands")({
   head: () => ({
