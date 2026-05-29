@@ -23,7 +23,7 @@ export function WorldMap() {
         viewBox="0 0 1000 460"
         role="img"
         aria-label="World map of Resort Edit destinations"
-        className="w-full h-auto block max-h-[360px]"
+        className="w-full h-auto block max-h-[280px]"
         preserveAspectRatio="xMidYMid meet"
       >
         {/* Thin-line continent silhouettes — muted sand, stroke-only */}
