@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import logo from "@/assets/resort-edit-logo.png";
 import stillLife from "@/assets/portofino-stilllife.jpg";
+import heroMuse from "@/assets/hero-muse-portofino.jpg";
 import { portofinoLooks, itinerary, travelTips, whereToStay, resolveProductLink } from "@/data/portofino";
 import expYacht from "@/assets/exp-yacht.jpg";
 import expBeach from "@/assets/exp-beachclub.jpg";
@@ -34,26 +34,39 @@ function Index() {
   ];
   return (
     <div className="bg-ivory">
-      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-10 md:pt-16 pb-10">
-        {/* MASTHEAD */}
-        <header className="text-center">
-          <img src={logo} alt="Resort Edit — Curated Escapes. Styled Your Way." className="mx-auto w-[280px] sm:w-[360px] md:w-[440px] h-auto" />
-          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl tracking-[0.08em] mt-6 text-ink">
-            5 DAYS IN PORTOFINO
-          </h1>
-          <p className="eyebrow text-gold mt-4">A Style &amp; Itinerary Guide</p>
-        </header>
+      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-4 md:pt-6 pb-10">
+        {/* HERO */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+          <div className="relative aspect-[3/4] overflow-hidden bg-muted order-1">
+            <img
+              src={heroMuse}
+              alt="Resort Edit muse on a Portofino terrace at golden hour"
+              width={896}
+              height={1216}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+          <div className="order-2 text-left md:pl-2">
+            <p className="eyebrow text-gold text-[0.7rem]">A Style &amp; Itinerary Guide</p>
+            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl tracking-[0.06em] mt-4 text-ink leading-[0.95]">
+              5 DAYS IN
+              <br />
+              PORTOFINO
+            </h1>
+            <p className="font-serif italic text-3xl md:text-4xl text-gold mt-5">La Dolce Vita</p>
+            <p className="mt-6 font-display text-lg md:text-xl tracking-[0.02em] text-ink leading-snug">
+              Luxury labels. Destination style. Resort fashion across price points.
+            </p>
+            <p className="mt-4 font-serif italic text-ink/65 text-base leading-relaxed max-w-md">
+              Curated from international resort favorites, iconic labels, and
+              destination brands we love.
+            </p>
+          </div>
+        </section>
 
         {/* TRUST / POSITIONING BAND */}
-        <section className="mt-10 border-y border-border/60 py-8 text-center">
-          <h2 className="font-display text-xl sm:text-2xl md:text-3xl tracking-[0.04em] text-ink max-w-3xl mx-auto leading-snug">
-            Luxury labels. Riviera finds. Resort style across price points.
-          </h2>
-          <p className="mt-4 font-serif italic text-ink/65 text-base max-w-2xl mx-auto">
-            Curated from international resort favorites, quiet luxury labels, and
-            vacation brands we love.
-          </p>
-          <p className="mt-5 eyebrow text-[0.6rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
+        <section className="mt-10 border-y border-border/60 py-6 text-center">
+          <p className="eyebrow text-[0.6rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
             Zimmermann <span className="text-gold">·</span> Johanna Ortiz{" "}
             <span className="text-gold">·</span> SIR <span className="text-gold">·</span>{" "}
             Farm Rio <span className="text-gold">·</span> Melissa Odabash{" "}
