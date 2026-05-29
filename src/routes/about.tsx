@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import heroImg from "@/assets/hero-about-muse.jpg";
+import heroImg from "@/assets/hero-portofino.jpg";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -16,21 +16,12 @@ export const Route = createFileRoute("/about")({
 function AboutPage() {
   return (
     <div>
-      <section className="relative h-[70vh] min-h-[480px]">
-        <img
-          src={heroImg}
-          alt="Resort Edit muse on a Portofino terrace at golden hour"
-          width={1920}
-          height={1280}
-          className="absolute inset-0 h-full w-full object-cover object-[30%_center] md:object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-ink/10 to-transparent" />
-        <div className="relative h-full flex flex-col items-center justify-end text-center text-ivory px-6 pb-16 md:pb-24">
-          <span className="eyebrow tracking-[0.3em]">Who We Are</span>
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl mt-5 tracking-wide">Resort Edit</h1>
-          <p className="font-serif italic text-base md:text-lg mt-5 max-w-xl leading-relaxed text-ivory/90">
-            Destination style, curated escapes, and shoppable inspiration for women who dress for the destination.
-          </p>
+      <section className="relative h-[60vh] min-h-[420px]">
+        <img src={heroImg} alt="Portofino harbor" width={1920} height={1280} className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-ink/30" />
+        <div className="relative h-full flex flex-col items-center justify-center text-center text-ivory px-6">
+          <span className="eyebrow">About the House</span>
+          <h1 className="font-display text-5xl md:text-7xl mt-6 tracking-wide">Resort Edit</h1>
         </div>
       </section>
 
