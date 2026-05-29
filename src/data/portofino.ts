@@ -29,6 +29,8 @@ export type ShopItem = {
   price: string;
   /** Primary affiliate URL (a.k.a. primary_link). */
   href: string;
+  /** Product thumbnail image URL (optional — falls back to brand monogram). */
+  image?: string;
   backup_link_1?: string;
   backup_link_2?: string;
   /** ISO date of last URL/inventory verification. */
