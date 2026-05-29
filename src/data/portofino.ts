@@ -36,6 +36,8 @@ export type ShopItem = {
   inventory_status?: InventoryStatus;
   /** True when shown product was swapped from the original pick. */
   replaced?: boolean;
+  /** CMS-only flag (e.g. "needs exact product link"). Never rendered on frontend. */
+  cms_flag?: string;
 };
 
 /**
