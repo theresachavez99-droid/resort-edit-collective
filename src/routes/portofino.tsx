@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { portofinoLooks, itinerary, travelTips, resolveProductLink } from "@/data/portofino";
-import { trackOutbound } from "@/lib/utils";
+import { ProductCard } from "@/components/ProductCard";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
 
@@ -72,43 +72,14 @@ function PortofinoPage() {
                   {/* Shop the Look */}
                   <div className="mt-10">
                     <span className="eyebrow text-ink">Shop the Look</span>
-                    <ul className="mt-5 divide-y divide-border/70">
-                       {look.shop
-                         .filter((item) => resolveProductLink(item) !== null)
-                         .map((item) => {
-                           const href = resolveProductLink(item) ?? "#";
-                           return (
-                             <li key={item.item}>
-                               <a
-                                 href={href}
-                                 target="_blank"
-                                 rel="noopener noreferrer sponsored"
-                                 onClick={() =>
-                                   trackOutbound({ brand: item.brand, item: item.item, href })
-                                 }
-                                 className="py-3 flex items-baseline justify-between gap-4 group transition-colors hover:bg-gold/5 -mx-2 px-2 rounded-sm"
-                               >
-                                 <div>
-                                   <div className="eyebrow text-ink/90 group-hover:text-gold transition-colors flex items-center gap-2">
-                                     <span>{item.brand}</span>
-                                     {item.replaced && (
-                                       <span className="eyebrow text-[0.55rem] tracking-[0.2em] text-gold border border-gold/50 px-1.5 py-px">
-                                         Updated Pick
-                                       </span>
-                                     )}
-                                   </div>
-                                   <div className="font-serif italic text-ink/70">{item.item}</div>
-                                 </div>
-                                 <div className="flex items-center gap-5 shrink-0">
-                                   <span className="font-serif text-ink/80">{item.price}</span>
-                                   <span className="eyebrow text-gold group-hover:text-ink transition-colors">
-                                     Shop →
-                                   </span>
-                                 </div>
-                               </a>
-                             </li>
-                           );
-                         })}
+                    <ul className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      {look.shop
+                        .filter((item) => resolveProductLink(item) !== null)
+                        .map((item) => (
+                          <li key={item.item}>
+                            <ProductCard item={item} variant="editorial" />
+                          </li>
+                        ))}
                     </ul>
                   </div>
 
