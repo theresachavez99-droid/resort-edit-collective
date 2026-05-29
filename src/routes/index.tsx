@@ -118,8 +118,8 @@ function Index() {
           <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             {browseDestinations.map((d) => (
               <li key={d.name}>
-                <Link
-                  to={d.href}
+                <a
+                  href={d.href}
                   className="group block relative aspect-[3/4] overflow-hidden bg-ink"
                 >
                   <img
@@ -132,7 +132,7 @@ function Index() {
                   <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-ivory">
                     <h3 className="font-display text-base sm:text-lg tracking-wide">{d.name}</h3>
                   </div>
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
