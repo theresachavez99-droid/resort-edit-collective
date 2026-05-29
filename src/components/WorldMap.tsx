@@ -23,7 +23,7 @@ export function WorldMap() {
         viewBox="0 0 1000 460"
         role="img"
         aria-label="World map of Resort Edit destinations"
-        className="w-full h-auto block max-h-[360px]"
+        className="w-full h-auto block max-h-[280px]"
         preserveAspectRatio="xMidYMid meet"
       >
         {/* Thin-line continent silhouettes — muted sand, stroke-only */}
@@ -76,21 +76,16 @@ export function WorldMap() {
         })}
       </svg>
 
-      {/* Active pin caption */}
-      <div className="mt-2 min-h-[3.5rem] text-center px-6">
+      {/* Subtle active pin caption — only appears on hover */}
+      <div className="mt-1 h-10 text-center px-6 transition-opacity duration-300" aria-live="polite">
         {active ? (
           <DestinationLink d={active} className="inline-block group">
-            <span className="eyebrow text-gold">{active.region}</span>
-            <h3 className="font-display text-xl md:text-2xl mt-1 tracking-wide text-ink group-hover:text-gold transition-colors">
-              {active.name} →
-            </h3>
-            <p className="font-serif italic text-ink/70 mt-1">{active.tagline}</p>
+            <span className="font-display text-lg tracking-wide text-ink group-hover:text-gold transition-colors">
+              {active.name}
+            </span>
+            <span className="font-serif italic text-ink/55 ml-2">— {active.region}</span>
           </DestinationLink>
-        ) : (
-          <p className="font-serif italic text-ink/50">
-            Hover or tap a pin to preview a destination.
-          </p>
-        )}
+        ) : null}
       </div>
     </div>
   );
