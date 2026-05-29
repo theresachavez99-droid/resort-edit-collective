@@ -6,22 +6,23 @@ import logoMark from "@/assets/resort-edit-mark.png";
 const nav = [
   { to: "/destinations", label: "Destinations" },
   { to: "/resort-edits", label: "Resort Edits" },
-  { to: "/brands", label: "Brands We Love" },
+  { to: "/portofino", label: "Shop the Looks" },
 ] as const;
 
 const mobileExtras = [
+  { to: "/brands", label: "Brands We Love" },
   { to: "/about", label: "About" },
 ] as const;
 
 const navLinkClass =
-  "text-[0.72rem] uppercase tracking-[0.18em] font-medium text-ink hover:text-gold transition-colors whitespace-nowrap py-2";
+  "text-[0.72rem] uppercase tracking-[0.24em] font-medium text-ink hover:text-gold transition-colors whitespace-nowrap py-2";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md border-b border-[#D9C9A8]/60" style={{ backgroundColor: "#F5EBDD" }}>
-      <div className="mx-auto max-w-7xl px-5 md:px-8 py-1.5 md:py-2 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
+      <div className="mx-auto max-w-7xl px-5 md:px-8 py-1 md:py-1.5 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
         {/* Mobile: hamburger left */}
         <button
           type="button"
