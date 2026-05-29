@@ -1,7 +1,6 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Instagram, Menu, X } from "lucide-react";
 import { useState } from "react";
-import logo from "@/assets/resort-edit-logo.png";
 import logoMark from "@/assets/resort-edit-mark.png";
 
 const nav = [
@@ -19,12 +18,10 @@ const navLinkClass =
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const { pathname } = useLocation();
-  const isHome = pathname === "/";
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md border-b border-[#D9C9A8]/60" style={{ backgroundColor: "#F5EBDD" }}>
-      <div className="mx-auto max-w-7xl px-5 md:px-8 py-1 md:py-1.5 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-6">
+      <div className="mx-auto max-w-7xl px-5 md:px-8 py-0.5 md:py-1 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-6">
         {/* Mobile: hamburger left */}
         <button
           type="button"
@@ -41,9 +38,9 @@ export function SiteHeader() {
           className="flex items-center leading-none justify-center md:justify-start"
         >
           <img
-            src={isHome ? logo : logoMark}
+            src={logoMark}
             alt="Resort Edit — Curated escapes. Styled your way."
-            className={isHome ? "h-28 md:h-32 w-auto" : "h-14 md:h-16 w-auto"}
+            className="h-20 md:h-24 w-auto"
           />
         </Link>
 
