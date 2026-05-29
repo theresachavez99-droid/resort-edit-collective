@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { destinations, getDestination, destinationHref } from "@/data/destinations";
+import { destinations, getDestination, type Destination } from "@/data/destinations";
 
 export const Route = createFileRoute("/destinations/$slug")({
   loader: ({ params }) => {
@@ -40,11 +40,34 @@ export const Route = createFileRoute("/destinations/$slug")({
   component: DestinationPage,
 });
 
+function DestinationLink({
+  d,
+  className,
+  children,
+}: {
+  d: Destination;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (d.href) {
+    return (
+      <Link to={d.href} className={className}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <Link to="/destinations/$slug" params={{ slug: d.slug }} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 function DestinationPage() {
-  const { destination: d } = Route.useLoaderData();
-  const related = d.related
-    .map((slug) => destinations.find((x) => x.slug === slug))
-    .filter((x): x is NonNullable<typeof x> => Boolean(x));
+  const { destination: d } = Route.useLoaderData() as { destination: Destination };
+  const related: Destination[] = d.related
+    .map((slug: string) => destinations.find((x) => x.slug === slug))
+    .filter((x): x is Destination => Boolean(x));
 
   return (
     <article>
@@ -74,7 +97,7 @@ function DestinationPage() {
           <span className="eyebrow text-gold">What to wear</span>
           <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-wide">The packing list</h2>
           <ul className="mt-8 space-y-3">
-            {d.whatToWear.map((item) => (
+            {d.whatToWear.map((item: string) => (
               <li key={item} className="font-serif text-lg text-ink/85 flex items-baseline gap-3">
                 <span className="hairline" />
                 {item}
@@ -86,7 +109,7 @@ function DestinationPage() {
           <span className="eyebrow text-gold">Shop the edits</span>
           <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-wide">Curated to pack</h2>
           <div className="mt-8 flex flex-col gap-3">
-            {d.shopEdits.map((e) => (
+            {d.shopEdits.map((e: { label: string; href: string }) => (
               <Link
                 key={e.href}
                 to={e.href}
@@ -107,7 +130,7 @@ function DestinationPage() {
             <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-wide">A weekend in {d.name}</h2>
           </div>
           <div className="mt-12 grid md:grid-cols-2 gap-10">
-            {d.itinerary.map((it) => (
+            {d.itinerary.map((it: { day: string; plan: string }) => (
               <div key={it.day} className="border-l-2 border-gold pl-6">
                 <span className="eyebrow text-gold">{it.day}</span>
                 <p className="font-serif text-lg italic text-ink/85 mt-3">{it.plan}</p>
@@ -124,7 +147,7 @@ function DestinationPage() {
           <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-wide">Where to eat & lounge</h2>
         </div>
         <div className="mt-12 grid md:grid-cols-2 gap-8">
-          {d.dining.map((dn) => (
+          {d.dining.map((dn: Destination["dining"][number]) => (
             <div key={dn.name} className="border border-border/60 p-8 bg-card">
               <span className="eyebrow text-gold">{dn.type}</span>
               <h3 className="font-display text-2xl mt-3 tracking-wide">{dn.name}</h3>
@@ -144,12 +167,7 @@ function DestinationPage() {
             </div>
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {related.map((r) => (
-                <Link
-                  key={r.slug}
-                  to={r.href ?? "/destinations/$slug"}
-                  params={r.href ? undefined : { slug: r.slug }}
-                  className="group block"
-                >
+                <DestinationLink key={r.slug} d={r} className="group block">
                   <div className="relative overflow-hidden aspect-[4/5]">
                     <img
                       src={r.image}
@@ -163,7 +181,7 @@ function DestinationPage() {
                       <h3 className="font-display text-2xl mt-2 text-ivory">{r.name}</h3>
                     </div>
                   </div>
-                </Link>
+                </DestinationLink>
               ))}
             </div>
             <div className="text-center mt-14">
@@ -177,6 +195,3 @@ function DestinationPage() {
     </article>
   );
 }
-
-// keep helper referenced for tree-shake friendliness
-void destinationHref;
