@@ -4,6 +4,7 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Italiana&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -66,6 +67,7 @@
   --font-display: "Italiana", "Cormorant Garamond", serif;
   --font-serif: "Cormorant Garamond", "Times New Roman", serif;
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-script: "Pinyon Script", "Allura", cursive;
 
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
@@ -172,6 +174,7 @@
 
 @utility font-display { font-family: var(--font-display); }
 @utility font-serif { font-family: var(--font-serif); }
+@utility font-script { font-family: var(--font-script); }
 @utility eyebrow {
   font-family: var(--font-sans);
   font-size: 0.7rem;
