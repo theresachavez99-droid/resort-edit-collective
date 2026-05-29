@@ -1,21 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { portofinoLooks, itinerary, travelTips, whereToStay } from "@/data/portofino";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SiteHeader } from "@/components/SiteHeader";
+import { Anchor, Umbrella, Camera, Compass, Palmtree } from "lucide-react";
+import heroImg from "@/assets/hero-portofino.jpg";
 import portofinoImg from "@/assets/dest-portofino.jpg";
-import stillLife from "@/assets/portofino-stilllife.jpg";
-import lookA from "@/assets/edit-d2-a.jpg";
-import lookB from "@/assets/edit-d4-a.jpg";
-import lookC from "@/assets/edit-d1-a.jpg";
-import hotelSplendido from "@/assets/hotel-splendido.jpg";
-import hotelEight from "@/assets/hotel-eight.jpg";
-import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
-import { Anchor, Umbrella, Camera, Compass } from "lucide-react";
 import yachtImg from "@/assets/look-yacht.jpg";
 import beachImg from "@/assets/look-beach.jpg";
 import dayclubImg from "@/assets/look-dayclub.jpg";
 import dinnerImg from "@/assets/look-dinner.jpg";
 import townImg from "@/assets/look-town.jpg";
+import lookAImg from "@/assets/edit-d2-a.jpg";
+import lookBImg from "@/assets/edit-d4-a.jpg";
+import lookCImg from "@/assets/edit-d1-a.jpg";
+import tipImg from "@/assets/portofino-stilllife.jpg";
+import hotelSplendido from "@/assets/hotel-splendido.jpg";
+import hotelEight from "@/assets/hotel-eight.jpg";
+import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
