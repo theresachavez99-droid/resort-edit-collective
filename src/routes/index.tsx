@@ -184,6 +184,115 @@ const hotelImages: Record<string, string> = {
   piccolo: hotelPiccolo,
 };
 
+function DayEditorial({ look, index }: { look: (typeof portofinoLooks)[number]; index: number }) {
+  const dayLabel = `Day ${index + 1}`;
+  const tip = vacationTips[dayLabel] ?? "Slow down. Sip something cold. Stay a little longer.";
+  const products = look.shop
+    .map((item) => ({ item, href: resolveProductLink(item) }))
+    .filter((p): p is { item: typeof look.shop[number]; href: string } => p.href !== null)
+    .slice(0, 3);
+
+  return (
+    <article className="bg-card">
+      {/* HEADER */}
+      <header className="text-center px-4 pt-8 sm:pt-10">
+        <div className="eyebrow text-gold text-[0.65rem]">{dayLabel}</div>
+        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
+          {look.title}
+        </h2>
+        <div className="font-script text-gold text-4xl sm:text-5xl md:text-6xl leading-none mt-2">
+          Portofino
+        </div>
+        <div className="mt-5 flex items-center justify-center gap-4 max-w-2xl mx-auto">
+          <span className="h-px flex-1 bg-ink/30" />
+          <span className="eyebrow text-[0.6rem] sm:text-[0.65rem] text-ink/80 whitespace-nowrap">
+            {look.subtitle}
+          </span>
+          <span className="h-px flex-1 bg-ink/30" />
+        </div>
+      </header>
+
+      {/* BODY: hero image left, shop the looks right */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 px-4 sm:px-6">
+        {/* LEFT — Editorial hero image */}
+        <figure className="flex flex-col">
+          <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+            <img
+              src={look.image}
+              alt={`${look.title} — Portofino style`}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover object-top"
+            />
+          </div>
+          <figcaption className="mt-4">
+            <div className="flex items-center gap-2 text-ink">
+              <MapPin size={14} className="text-gold" />
+              <span className="eyebrow text-[0.6rem] sm:text-[0.65rem]">
+                {look.title}, Portofino
+              </span>
+            </div>
+            <p className="eyebrow text-[0.6rem] sm:text-[0.65rem] text-ink/60 mt-2 tracking-[0.3em]">
+              Sun. Style. La Dolce Vita.
+            </p>
+          </figcaption>
+        </figure>
+
+        {/* RIGHT — Shop the Looks */}
+        <div className="flex flex-col">
+          <div className="text-center mb-5">
+            <span className="eyebrow text-gold text-[0.7rem] tracking-[0.35em]">
+              Shop the Looks
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-3 sm:gap-4">
+            {products.map((p, idx) => (
+              <a
+                key={p.item.item}
+                href={p.href}
+                target="_blank"
+                rel="noreferrer noopener sponsored"
+                className="group flex flex-col bg-ivory border border-border/60"
+              >
+                <div className="text-center pt-3 pb-2 px-1">
+                  <div className="eyebrow text-[0.55rem] text-ink/60">Look {idx + 1}</div>
+                  <div className="font-serif italic text-[0.78rem] sm:text-[0.85rem] text-ink mt-0.5 leading-tight">
+                    {p.item.item}
+                  </div>
+                </div>
+                <div className="aspect-[3/4] bg-cream border-y border-border/40 flex items-center justify-center overflow-hidden">
+                  <span className="font-script text-gold/60 text-2xl">edit</span>
+                </div>
+                <div className="px-2 pt-3 pb-3 text-center">
+                  <div className="eyebrow text-[0.55rem] text-ink leading-snug">
+                    {p.item.brand}
+                  </div>
+                  <div className="font-serif text-[0.78rem] text-ink/70 mt-1">
+                    {p.item.price}
+                  </div>
+                  <div className="mt-2 eyebrow text-[0.55rem] text-gold underline underline-offset-4 group-hover:text-ink transition-colors">
+                    Shop Here
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* VACATION TIP */}
+      <div className="mt-8 mx-4 sm:mx-6 mb-8 sm:mb-10 border border-gold/60 px-4 sm:px-6 py-4 flex items-center gap-4">
+        <Sun size={20} className="text-gold shrink-0" />
+        <div className="leading-tight">
+          <div className="eyebrow text-gold text-[0.6rem] sm:text-[0.65rem]">Vacation Tip</div>
+          <div className="font-serif italic text-[0.9rem] sm:text-[1rem] text-ink mt-1">
+            {tip}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function WhereToStay() {
   const share = async (name: string) => {
     const url = typeof window !== "undefined" ? window.location.href : "";
