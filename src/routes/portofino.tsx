@@ -143,92 +143,43 @@ const DAY_IMG: Record<string, string> = {
 function EditorialHero() {
   return (
     <section className="bg-ivory">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 pt-6 md:pt-10 pb-10 md:pb-14">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-stretch">
-          {/* Dominant image */}
-          <div className="lg:col-span-7">
-            <div className="relative aspect-[4/5] lg:aspect-[5/6] overflow-hidden bg-muted shadow-[0_30px_80px_-40px_rgba(20,15,10,0.35)]">
+      <div className="mx-auto max-w-7xl px-6 pt-6 md:pt-8 pb-10 md:pb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          <div>
+            <div className="relative aspect-[4/5] overflow-hidden bg-muted">
               <img
                 src={portofinoImg}
                 alt="Portofino harbor, woman in printed resort wear"
                 className="h-full w-full object-cover"
               />
-              <div className="absolute top-5 left-5 bg-ivory/95 text-ink px-4 py-2 eyebrow text-[10px]">
-                Italian Riviera · Edition 01
-              </div>
             </div>
           </div>
-
-          {/* Editorial copy */}
-          <div className="lg:col-span-5 flex flex-col justify-center lg:pl-2">
-            <span className="eyebrow text-gold text-[11px] tracking-[0.32em]">
+          <div className="lg:pt-10">
+            <span className="eyebrow text-gold text-[11px] tracking-[0.3em]">
               A Style &amp; Itinerary Guide
             </span>
-            <h1 className="font-display mt-7 leading-[0.86] tracking-[0.005em]">
-              <span className="block text-6xl md:text-7xl text-ink">5 DAYS IN</span>
-              <span className="block text-[5.5rem] md:text-[10rem] lg:text-[11rem] text-ink mt-2 -ml-[0.04em]">
+            <h1 className="font-display mt-6 leading-[0.92] tracking-[0.01em]">
+              <span className="block text-4xl md:text-5xl text-ink">5 DAYS IN</span>
+              <span className="block text-6xl md:text-8xl lg:text-[8.5rem] text-ink mt-1">
                 PORTOFINO
               </span>
-              <span className="font-script text-gold text-[3.75rem] md:text-[6rem] lg:text-[7.5rem] block mt-3 leading-[0.9]">
+              <span className="font-script text-gold text-5xl md:text-7xl lg:text-[5.5rem] block mt-2 leading-[0.95]">
                 La Dolce Vita
               </span>
             </h1>
-            <div className="mt-10 h-px w-20 bg-gold" />
-            <p className="mt-7 font-sans uppercase tracking-[0.22em] text-ink text-base md:text-lg font-semibold leading-snug max-w-md">
+            <p className="mt-10 font-sans uppercase tracking-[0.18em] text-ink text-sm md:text-base font-semibold leading-relaxed max-w-md">
               Luxury labels. Riviera finds.<br />Resort style across price points.
             </p>
-            <p className="mt-5 font-serif italic text-ink/70 text-lg md:text-xl leading-relaxed max-w-md">
+            <p className="mt-5 font-serif text-ink/70 text-base md:text-lg leading-relaxed max-w-md">
               Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-ink/70 eyebrow text-[10px]">
-              <span>Zimmermann</span>
-              <span className="text-gold">·</span>
-              <span>Johanna Ortiz</span>
-              <span className="text-gold">·</span>
-              <span>Sir</span>
-              <span className="text-gold">·</span>
-              <span>Faithfull the Brand</span>
-              <span className="text-gold">·</span>
+            <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-ink/65 eyebrow text-[10px]">
+              <span>Zimmermann</span><span className="text-ink/30">·</span>
+              <span>Johanna Ortiz</span><span className="text-ink/30">·</span>
+              <span>Sir</span><span className="text-ink/30">·</span>
+              <span>Faithfull the Brand</span><span className="text-ink/30">·</span>
               <span>More</span>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ResortEditTipFeature() {
-  return (
-    <section className="bg-ink text-ivory">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-14 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
-          <div className="md:col-span-7">
-            <div className="relative aspect-[16/9] overflow-hidden">
-              <img
-                src={stillLife}
-                alt="Portofino still life — quilted bag and prosecco at sunset"
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-ink/40 via-transparent to-transparent" />
-            </div>
-          </div>
-          <div className="md:col-span-5">
-            <div className="text-gold text-4xl leading-none">✦</div>
-            <span className="eyebrow text-gold mt-5 block tracking-[0.32em]">Resort Edit Tip</span>
-            <p className="font-display text-4xl md:text-5xl lg:text-6xl text-ivory mt-6 leading-[1.05] tracking-[0.01em]">
-              Book a cabana.<br />
-              Sip limoncello.<br />
-              <span className="font-script text-gold text-5xl md:text-7xl block mt-3 leading-none">
-                Stay until sunset.
-              </span>
-            </p>
-            <a
-              href="#long-form"
-              className="mt-9 inline-block bg-gold text-ink eyebrow text-[11px] px-7 py-4 hover:bg-ivory transition-colors"
-            >
-              Explore Portofino →
-            </a>
           </div>
         </div>
       </div>
