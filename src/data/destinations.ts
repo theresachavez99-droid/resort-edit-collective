@@ -235,3 +235,22 @@ export function getDestination(slug: string): Destination | undefined {
 export function destinationHref(d: Destination): string {
   return d.href ?? `/destinations/${d.slug}`;
 }
+
+/**
+ * Third shopping tier label, adapted to destination context.
+ * First two tiers are always "Luxury" and "Mid-Luxe"; the third stays curated
+ * to where the guest is going (Riviera Finds, Beach Club Finds, etc.).
+ */
+const destinationTierLabels: Record<string, string> = {
+  portofino: "Riviera Finds",
+  capri: "Island Finds",
+  sttropez: "Riviera Finds",
+  mallorca: "Island Finds",
+  ibiza: "Beach Club Finds",
+  tulum: "Jungle Finds",
+  phuket: "Andaman Finds",
+};
+
+export function getDestinationTierLabel(slug: string): string {
+  return destinationTierLabels[slug] ?? "Destination Finds";
+}
