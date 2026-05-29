@@ -20,7 +20,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-ivory/90 backdrop-blur-md border-b border-border/60">
+    <header className="sticky top-0 z-40 backdrop-blur-md border-b border-[#D9C9A8]/60" style={{ backgroundColor: "#F5EBDD" }}>
       <div className="mx-auto max-w-7xl px-5 md:px-8 py-2 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-6">
         {/* Mobile: hamburger left */}
         <button
@@ -35,12 +35,13 @@ export function SiteHeader() {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center leading-none justify-center md:justify-start md:max-w-[200px] lg:max-w-[220px] overflow-hidden"
+          className="flex items-center leading-none justify-center md:justify-start rounded-md px-3 py-1.5 md:px-4 md:py-2 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-[#E8D9BC]/70"
+          style={{ backgroundColor: "#FFF9EF" }}
         >
           <img
             src={logo}
             alt="Resort Edit — Curated escapes. Styled your way."
-            className="h-20 md:h-24 w-auto md:scale-110 md:origin-left"
+            className="h-24 md:h-28 w-auto"
           />
         </Link>
 
