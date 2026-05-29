@@ -40,7 +40,7 @@ function DestinationsPage() {
     <div>
       <section className="text-center pt-20 md:pt-28 pb-10 px-6 max-w-3xl mx-auto">
         <span className="eyebrow text-gold">The Atlas</span>
-        <h1 className="font-display text-5xl md:text-7xl mt-6 tracking-wide">Destinations</h1>
+        <h1 className="font-display text-5xl md:text-7xl mt-6 tracking-wide">Explore the Edit by Destination</h1>
         <div className="mt-5 flex items-center justify-center gap-3">
           <span className="hairline" />
           <span className="font-serif italic text-ink/70">An interactive map of where to go next.</span>
