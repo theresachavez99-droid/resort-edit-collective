@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ResortEditsRouteImport } from './routes/resort-edits'
 import { Route as PortofinoEditRouteImport } from './routes/portofino-edit'
 import { Route as PortofinoRouteImport } from './routes/portofino'
 import { Route as DestinationsRouteImport } from './routes/destinations'
@@ -22,6 +23,11 @@ import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResortEditsRoute = ResortEditsRouteImport.update({
+  id: '/resort-edits',
+  path: '/resort-edits',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortofinoEditRoute = PortofinoEditRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRoute
   '/portofino-edit': typeof PortofinoEditRoute
+  '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRoute
   '/portofino-edit': typeof PortofinoEditRoute
+  '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRoute
   '/portofino-edit': typeof PortofinoEditRoute
+  '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
+    | '/resort-edits'
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
+    | '/resort-edits'
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
+    | '/resort-edits'
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   DestinationsRoute: typeof DestinationsRouteWithChildren
   PortofinoRoute: typeof PortofinoRoute
   PortofinoEditRoute: typeof PortofinoEditRoute
+  ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resort-edits': {
+      id: '/resort-edits'
+      path: '/resort-edits'
+      fullPath: '/resort-edits'
+      preLoaderRoute: typeof ResortEditsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portofino-edit': {
@@ -243,8 +263,19 @@ const rootRouteChildren: RootRouteChildren = {
   DestinationsRoute: DestinationsRouteWithChildren,
   PortofinoRoute: PortofinoRoute,
   PortofinoEditRoute: PortofinoEditRoute,
+  ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
