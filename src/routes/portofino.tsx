@@ -1,8 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { portofinoLooks, itinerary, travelTips } from "@/data/portofino";
+import { portofinoLooks, itinerary, travelTips, whereToStay } from "@/data/portofino";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import portofinoImg from "@/assets/dest-portofino.jpg";
+import stillLife from "@/assets/portofino-stilllife.jpg";
+import lookA from "@/assets/edit-d2-a.jpg";
+import lookB from "@/assets/edit-d4-a.jpg";
+import lookC from "@/assets/edit-d1-a.jpg";
+import hotelSplendido from "@/assets/hotel-splendido.jpg";
+import hotelEight from "@/assets/hotel-eight.jpg";
+import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
+import { Anchor, Umbrella, Camera, Compass } from "lucide-react";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
@@ -85,11 +93,21 @@ function bucketShop(shop: ReturnType<typeof Number> extends never ? never : (typ
 function PortofinoPage() {
   return (
     <div>
-      <Hero />
-      <SnapshotBar />
+      <EditorialHero />
+      <FiveDayGrid />
+      <ShopTheLooks />
+      <WhereToStay />
+      <BookExperience />
       <StickyNav />
       <section className="bg-ivory">
-        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28 space-y-28 md:space-y-36">
+        <div id="long-form" className="mx-auto max-w-7xl px-6 py-20 md:py-28 space-y-28 md:space-y-36">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="eyebrow text-gold">The Long-Form Edit</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-3 tracking-wide">Day by day, in full.</h2>
+            <p className="font-serif italic text-ink/65 mt-4 leading-relaxed">
+              Five chapters. Every look, every reservation, every shoppable detail.
+            </p>
+          </div>
           {portofinoLooks.map((look, idx) => (
             <DayModule key={look.day} look={look} idx={idx} />
           ))}
