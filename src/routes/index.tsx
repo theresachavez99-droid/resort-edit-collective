@@ -68,38 +68,44 @@ function Index() {
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-4 md:pt-6 pb-10">
         {/* HERO */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center py-6 md:py-10">
-          <div className="relative aspect-[3/4] overflow-hidden bg-muted order-1">
+          <div className="relative aspect-[3/4] overflow-hidden bg-muted order-1 group">
             <img
               src={heroMuse}
               alt="Resort Edit muse on a Portofino terrace at golden hour"
               width={896}
               height={1216}
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
             />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/65 via-ink/15 to-transparent p-5 sm:p-6">
+              <p className="eyebrow text-ivory text-[0.65rem] tracking-[0.3em]">Portofino Edit</p>
+              <p className="mt-1.5 font-serif italic text-ivory/85 text-[0.85rem] sm:text-sm">
+                Hotels &nbsp;·&nbsp; Beach Clubs &nbsp;·&nbsp; What to Wear
+              </p>
+            </div>
           </div>
           <div className="order-2 text-left md:pl-4">
             <p className="eyebrow text-gold text-[0.7rem]">The Resort Edit</p>
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.02em] mt-6 md:mt-8 text-ink leading-[1.02]">
               Destination guides.
               <br />
-              <span className="italic font-serif text-gold">Styled beautifully.</span>
+              <span className="italic font-serif text-gold">Styled for the journey.</span>
             </h1>
             <p className="mt-8 md:mt-10 font-serif text-base md:text-lg text-ink/70 leading-relaxed max-w-md">
-              Curated itineraries, resort looks, hotels and experiences — designed
-              for women who want to dress for the destination.
+              Curated itineraries, resort looks, hotels and experiences —
+              thoughtfully designed for women who dress for the destination.
             </p>
-            <div className="mt-10 md:mt-12 flex flex-wrap gap-4">
+            <div className="mt-10 md:mt-12 flex flex-wrap items-center gap-6 sm:gap-8">
               <Link
                 to="/destinations"
-                className="inline-block bg-ink text-ivory eyebrow text-[0.7rem] tracking-[0.25em] px-7 py-4 hover:bg-gold transition-colors"
+                className="inline-block bg-ink text-ivory eyebrow text-[0.7rem] tracking-[0.28em] px-8 py-4 hover:bg-gold transition-colors"
               >
-                Browse Destinations →
+                Explore Destinations →
               </Link>
               <Link
-                to="/portofino"
-                className="inline-block border border-ink text-ink eyebrow text-[0.7rem] tracking-[0.25em] px-7 py-4 hover:bg-ink hover:text-ivory transition-colors"
+                to="/resort-edits"
+                className="eyebrow text-[0.7rem] tracking-[0.28em] text-ink/80 hover:text-gold transition-colors border-b border-ink/30 hover:border-gold pb-1"
               >
-                Shop the Looks →
+                Browse Resort Edits
               </Link>
             </div>
           </div>
