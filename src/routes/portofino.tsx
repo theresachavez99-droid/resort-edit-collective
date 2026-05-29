@@ -11,6 +11,11 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { Anchor, Umbrella, Camera, Compass } from "lucide-react";
+import yachtImg from "@/assets/look-yacht.jpg";
+import beachImg from "@/assets/look-beach.jpg";
+import dayclubImg from "@/assets/look-dayclub.jpg";
+import dinnerImg from "@/assets/look-dinner.jpg";
+import townImg from "@/assets/look-town.jpg";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
@@ -126,20 +131,6 @@ const DAY_OVERVIEW = [
   { day: "DAY 4", title: "SUNSET COCKTAILS\n& DINNER WITH A VIEW", caption: "Golden hour, candlelight, harbor glow.", image: "look-dinner" },
   { day: "DAY 5", title: "MARKET STROLLS &\nCOASTAL GOODBYES", caption: "Quiet rituals and a long last lunch.", image: "look-town" },
 ];
-
-const LOOK_IMAGES: Record<string, string> = {
-  "look-yacht": "/src/assets/look-yacht.jpg",
-  "look-beach": "/src/assets/look-beach.jpg",
-  "look-dayclub": "/src/assets/look-dayclub.jpg",
-  "look-dinner": "/src/assets/look-dinner.jpg",
-  "look-town": "/src/assets/look-town.jpg",
-};
-
-import yachtImg from "@/assets/look-yacht.jpg";
-import beachImg from "@/assets/look-beach.jpg";
-import dayclubImg from "@/assets/look-dayclub.jpg";
-import dinnerImg from "@/assets/look-dinner.jpg";
-import townImg from "@/assets/look-town.jpg";
 
 const DAY_IMG: Record<string, string> = {
   "look-yacht": yachtImg,
