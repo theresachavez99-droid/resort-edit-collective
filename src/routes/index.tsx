@@ -204,7 +204,7 @@ function Index() {
               { width: 116.6, left: -3.6, top: -12.1 },  // yacht
               { width: 106.0, left: -9.4, top: -5.8 },   // beach
               { width: 100.0, left: -2.0, top: -1.0 },   // dayclub
-              { width: 120.6, left: -22.4, top: -23.6 }, // dinner
+              { width: 105.0, left: -2.5, top: -8.0 },   // dinner
               { width: 140.0, left: -53.6, top: -54.3 }, // town
             ];
             const frame = frames[i] ?? frames[0];
