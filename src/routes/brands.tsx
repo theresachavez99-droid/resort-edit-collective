@@ -83,6 +83,23 @@ function BrandsPage() {
         <p className="mt-24 text-center eyebrow text-[0.55rem] text-ink/50 max-w-xl mx-auto">
           Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
         </p>
+
+        {/* Partner CTA */}
+        <section className="mt-20 border border-border/60 bg-cream/60 px-8 py-14 text-center">
+          <span className="eyebrow text-gold">Partnerships</span>
+          <h2 className="font-display text-3xl md:text-4xl tracking-wide mt-4 text-ink">
+            Partner with Resort Edit
+          </h2>
+          <p className="mt-4 font-serif italic text-ink/70 max-w-xl mx-auto">
+            Brand collaborations, featured edits, and curated placements for labels we love.
+          </p>
+          <Link
+            to="/about"
+            className="mt-8 inline-block eyebrow bg-ink text-ivory px-8 py-4 rounded-sm hover:bg-gold transition-colors"
+          >
+            Get in touch →
+          </Link>
+        </section>
       </div>
     </div>
   );
