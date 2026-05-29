@@ -194,11 +194,20 @@ function Index() {
         {/* 5-DAY GRID */}
         <section className="mt-12 md:mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {portofinoLooks.map((look, i) => {
-            // Per-image focal points so the model's face lands at the same
-            // vertical position across all five Day cards. Tuned to each
-            // source image so the cards read as one cohesive editorial set.
-            const objectPositions = ["50% 15%", "50% 27%", "50% 34%", "50% 77%", "50% 100%"];
-            const objectPosition = objectPositions[i] ?? "50% 25%";
+            // Per-image framing so the model's head, eye line, torso and hem
+            // sit at the same vertical position across all five Day cards.
+            // The source images have the model at different scales and offsets,
+            // so we zoom + position each image individually inside a shared
+            // 4:5 frame. Tuned so the cards read as one cohesive editorial set.
+            // Order matches portofinoLooks: yacht, beach, dayclub, dinner, town.
+            const frames = [
+              { width: 116.6, left: -3.6, top: -12.1 },  // yacht
+              { width: 106.0, left: -9.4, top: -5.8 },   // beach
+              { width: 100.0, left: -2.0, top: -1.0 },   // dayclub
+              { width: 120.6, left: -22.4, top: -23.6 }, // dinner
+              { width: 140.0, left: -53.6, top: -54.3 }, // town
+            ];
+            const frame = frames[i] ?? frames[0];
             return (
             <article key={look.title} className="bg-card flex flex-col">
               {/* Day banner */}
@@ -207,15 +216,20 @@ function Index() {
                 <div className="eyebrow text-[0.6rem] sm:text-[0.65rem] mt-0.5">{look.title}</div>
               </div>
               {/* Image */}
-              <div className="aspect-[4/5] overflow-hidden bg-muted">
+              <div className="relative aspect-[4/5] overflow-hidden bg-muted">
                 <img
                   src={look.image}
                   alt={`${look.title} look`}
                   loading="lazy"
-                  width={832}
-                  height={1216}
-                  className="h-full w-full object-cover"
-                  style={{ objectPosition }}
+                  width={848}
+                  height={1264}
+                  className="absolute max-w-none"
+                  style={{
+                    width: `${frame.width}%`,
+                    height: "auto",
+                    left: `${frame.left}%`,
+                    top: `${frame.top}%`,
+                  }}
                 />
               </div>
               {/* Caption */}
