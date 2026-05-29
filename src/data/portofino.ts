@@ -289,7 +289,7 @@ export const portofinoLooks: Look[] = [
   },
   {
     day: "Day 3",
-    title: "Pool & Shopping in Town",
+    title: "POOL & SHOPPING IN TOWN",
     subtitle: "Poolside ease, Via Roma, Campari hour.",
     caption:
       "Drift from a sun-warmed daybed into the cool of the ateliers along Via Roma, landing in the piazzetta just as the yachts come in and the Prosecco starts to pour.",
@@ -581,7 +581,7 @@ export const portofinoLooks: Look[] = [
 export const itinerary = [
   { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Open water, hidden coves, harbor sunset." },
   { day: "Day 2", title: "Beach Club & Long Lunches", text: "Terrace tables, long lunches, seaside glamour." },
-  { day: "Day 3", title: "Pool & Shopping in Town", text: "Poolside ease, Via Roma, Campari hour." },
+  { day: "Day 3", title: "POOL & SHOPPING IN TOWN", text: "Poolside ease, Via Roma, Campari hour." },
   { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "Golden hour, candlelight, waterfront tables." },
   { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Morning strolls, market baskets, one last lunch." },
 ];
