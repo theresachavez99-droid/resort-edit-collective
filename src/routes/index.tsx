@@ -10,7 +10,15 @@ import expExperiences from "@/assets/exp-experiences.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
-import { Bookmark, Share2 } from "lucide-react";
+import { Bookmark, Share2, Sun, MapPin } from "lucide-react";
+
+const vacationTips: Record<string, string> = {
+  "Day 1": "Charter the boat. Swim the coves. Toast at golden hour.",
+  "Day 2": "Book a cabana. Sip limoncello. Stay until sunset.",
+  "Day 3": "Float poolside. Stroll Via Roma. Linger at aperitivo.",
+  "Day 4": "Dress for dusk. Order the Negroni. Watch the harbor light up.",
+  "Day 5": "Walk the market. Order the catch. Leave slowly.",
+};
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -65,69 +73,9 @@ function Index() {
         </section>
 
         {/* 5-DAY GRID */}
-        <section className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        <section className="mt-12 space-y-16 sm:space-y-20">
           {portofinoLooks.map((look, i) => (
-            <article key={look.title} className="bg-card flex flex-col">
-              {/* Day banner */}
-              <div className="bg-gold text-ivory text-center py-2.5 px-2">
-                <div className="eyebrow text-[0.6rem] sm:text-[0.65rem]">Day {i + 1}</div>
-                <div className="eyebrow text-[0.6rem] sm:text-[0.65rem] mt-0.5">{look.title}</div>
-              </div>
-              {/* Image */}
-              <div className="aspect-[2/5] overflow-hidden bg-muted">
-                <img
-                  src={look.image}
-                  alt={`${look.title} look`}
-                  loading="lazy"
-                  width={832}
-                  height={1216}
-                  className="h-full w-full object-cover object-top"
-                />
-              </div>
-              {/* Caption */}
-              <div className="px-3 pt-4 pb-3 text-center">
-                <p className="eyebrow text-[0.55rem] sm:text-[0.6rem] text-ink leading-relaxed">
-                  {look.subtitle}
-                </p>
-              </div>
-              {/* Shop the look */}
-              <div className="px-3 pb-5 mt-1">
-                <div className="text-center mb-3">
-                  <span className="eyebrow text-gold text-[0.6rem]">Shop the Look</span>
-                  <div className="mx-auto mt-1 h-px w-8 bg-gold/60" />
-                </div>
-                <ul className="space-y-3">
-                  {look.shop
-                    .filter((item) => resolveProductLink(item) !== null)
-                    .map((item) => (
-                    <li key={item.item}>
-                      <a
-                        href={resolveProductLink(item) ?? "#"}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="flex gap-2 group"
-                      >
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 bg-cream border border-border/60 flex items-center justify-center">
-                          <span className="eyebrow text-[0.5rem] text-gold">edit</span>
-                        </div>
-                        <div className="text-left leading-tight">
-                          <div className="eyebrow text-[0.55rem] text-ink group-hover:text-gold transition-colors flex items-center gap-1.5">
-                            <span>{item.brand}</span>
-                            {item.replaced && (
-                              <span className="eyebrow text-[0.5rem] tracking-[0.2em] text-gold border border-gold/50 px-1 py-px">
-                                Updated
-                              </span>
-                            )}
-                          </div>
-                          <div className="font-serif text-[0.78rem] text-ink/80 mt-0.5">{item.item}</div>
-                          <div className="font-serif text-[0.78rem] text-gold mt-0.5">{item.price}</div>
-                        </div>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
+            <DayEditorial key={look.title} look={look} index={i} />
           ))}
         </section>
 
