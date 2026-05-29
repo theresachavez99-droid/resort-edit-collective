@@ -149,29 +149,27 @@ function PortofinoEditPage() {
   return (
     <div className="bg-ivory min-h-screen">
       {/* MASTHEAD */}
-      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-8 md:pt-12 pb-6 text-center">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-10 md:pt-16 pb-10 text-center">
         <Link
           to="/"
           className="inline-flex items-center gap-2 eyebrow text-[0.6rem] text-ink/60 hover:text-gold transition-colors"
         >
           <ArrowLeft className="w-3 h-3" /> Back to the Edit
         </Link>
-        <img
-          src={logo}
-          alt="Resort Edit"
-          className="mx-auto mt-6 w-[220px] sm:w-[300px] h-auto"
-        />
-        <p className="eyebrow text-gold mt-4 text-[0.7rem] tracking-[0.3em]">
+        <p className="eyebrow text-gold mt-10 text-[0.7rem] tracking-[0.3em]">
           The Portofino Edit · Three Ways To Vacation
         </p>
-        <h1 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-[0.08em] mt-6 text-ink">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl tracking-[0.08em] mt-6 text-ink">
           One Destination.
           <br className="sm:hidden" /> Multiple Ways To Vacation Beautifully.
         </h1>
-        <p className="font-serif text-[0.95rem] sm:text-base text-ink/70 max-w-2xl mx-auto mt-5 leading-relaxed">
+        <p className="font-serif text-[0.95rem] sm:text-base text-ink/70 max-w-2xl mx-auto mt-6 leading-relaxed">
           Each day, three style directions — print forward, quiet luxury, and
           texture forward — translated across designer, mid-luxe, and accessible
           tiers. Same aesthetic. Different investment.
+        </p>
+        <p className="font-serif italic text-[0.95rem] text-ink/55 max-w-xl mx-auto mt-4">
+          Each look includes options across multiple price points.
         </p>
       </div>
 
@@ -250,22 +248,22 @@ function PortofinoEditPage() {
       </div>
 
       {/* DAYS */}
-      <main className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 space-y-20">
+      <main className="mx-auto max-w-[1280px] px-4 sm:px-6 py-16 md:py-20 space-y-24 md:space-y-32">
         {portofinoEdit.map((day) => {
           const isOpen = openDays[day.day];
           const openLookKey = expandedLook[day.day];
           return (
             <section key={day.day} id={day.day} className="scroll-mt-32">
               {/* Day header */}
-              <header className="flex items-end justify-between gap-4 border-b border-border/60 pb-4 mb-8">
+              <header className="flex items-end justify-between gap-4 border-b border-border/60 pb-6 mb-12">
                 <div>
-                  <div className="eyebrow text-gold text-[0.65rem] tracking-[0.3em]">
+                  <div className="eyebrow text-gold text-[0.8rem] tracking-[0.38em]">
                     {day.day}
                   </div>
-                  <h2 className="font-display text-2xl sm:text-4xl tracking-[0.06em] text-ink mt-2">
+                  <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-[0.06em] text-ink mt-4">
                     {day.title}
                   </h2>
-                  <p className="font-serif italic text-[0.9rem] text-ink/60 mt-2 max-w-xl">
+                  <p className="font-serif italic text-[0.95rem] text-ink/60 mt-3 max-w-xl">
                     {day.subtitle}
                   </p>
                 </div>
@@ -436,15 +434,15 @@ function PortofinoEditPage() {
                                 </div>
 
                                 {/* Look-level CTAs */}
-                                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                                   <a
                                     href="#"
                                     target="_blank"
-                                    rel="noreferrer noopener"
+                                    rel="noopener noreferrer sponsored"
                                     className="eyebrow text-[0.65rem] tracking-[0.28em] inline-flex items-center gap-2 px-6 py-3 bg-ink text-ivory hover:bg-gold transition-colors"
                                   >
                                     <ShoppingBag className="w-3.5 h-3.5" />
-                                    Shop This Look
+                                    Shop Full Look
                                   </a>
                                   <button
                                     onClick={() =>
@@ -455,14 +453,7 @@ function PortofinoEditPage() {
                                     <Heart
                                       className={`w-3.5 h-3.5 ${saved[`look-${day.day}-${look.id}`] ? "fill-gold text-gold" : ""}`}
                                     />
-                                    Save Look
-                                  </button>
-                                  <button
-                                    onClick={shareEdit}
-                                    className="eyebrow text-[0.65rem] tracking-[0.28em] inline-flex items-center gap-2 px-5 py-3 border border-gold/60 text-ink hover:bg-gold/5 transition-colors cursor-pointer"
-                                  >
-                                    <Share2 className="w-3.5 h-3.5" />
-                                    Share Look
+                                    Save Look ♡
                                   </button>
                                 </div>
                               </div>
@@ -474,7 +465,16 @@ function PortofinoEditPage() {
                   </div>
 
                   {/* Day-level actions */}
-                  <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+                  <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
+                    <a
+                      href="#"
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                      className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-6 py-3 bg-gold text-ivory hover:bg-ink transition-colors"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      Shop Full Look
+                    </a>
                     <button
                       onClick={() => toggleSave(`day-${day.day}`)}
                       className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-5 py-3 border border-gold/60 text-ink hover:bg-gold/5 transition-colors cursor-pointer"
@@ -482,24 +482,8 @@ function PortofinoEditPage() {
                       <Heart
                         className={`w-3.5 h-3.5 ${saved[`day-${day.day}`] ? "fill-gold text-gold" : ""}`}
                       />
-                      Save This Edit
+                      Save Look ♡
                     </button>
-                    <button
-                      onClick={shareEdit}
-                      className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-5 py-3 border border-gold/60 text-ink hover:bg-gold/5 transition-colors cursor-pointer"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                      Share Edit
-                    </button>
-                    <a
-                      href="#"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-5 py-3 bg-gold text-ivory hover:bg-ink transition-colors"
-                    >
-                      <ShoppingBag className="w-3.5 h-3.5" />
-                      Shop Entire Day
-                    </a>
                   </div>
                 </>
               )}
@@ -509,14 +493,14 @@ function PortofinoEditPage() {
       </main>
 
       {/* FOOTER */}
-      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pb-16">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pb-10">
         <Link
           to="/"
-          className="block text-center bg-gold text-ivory py-5 eyebrow text-[0.7rem] tracking-[0.3em] hover:bg-ink transition-colors"
+          className="block text-center bg-gold text-ivory py-4 eyebrow text-[0.7rem] tracking-[0.3em] hover:bg-ink transition-colors"
         >
           Return to the Portofino Edit
         </Link>
-        <p className="mt-6 text-center eyebrow text-[0.55rem] text-ink/50">
+        <p className="mt-4 text-center eyebrow text-[0.55rem] text-ink/50">
           Prices are subject to change. Links may earn a small commission at no extra cost to you.
         </p>
       </div>
