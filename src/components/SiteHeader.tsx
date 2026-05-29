@@ -21,7 +21,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md border-b border-[#D9C9A8]/60" style={{ backgroundColor: "#F5EBDD" }}>
-      <div className="mx-auto max-w-7xl px-5 md:px-8 py-0.5 md:py-1 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-6">
+      <div className="mx-auto max-w-7xl px-5 md:px-8 py-1.5 md:py-2 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
         {/* Mobile: hamburger left */}
         <button
           type="button"
@@ -40,7 +40,7 @@ export function SiteHeader() {
           <img
             src={logoMark}
             alt="Resort Edit — Curated escapes. Styled your way."
-            className="h-20 md:h-24 w-auto"
+            className="h-24 sm:h-28 md:h-32 lg:h-32 w-auto"
           />
         </Link>
 
