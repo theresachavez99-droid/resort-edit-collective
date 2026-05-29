@@ -239,20 +239,27 @@ function ResortEditTipFeature() {
 
 function FiveDayGrid() {
   return (
-    <section className="bg-ivory">
-      <div className="mx-auto max-w-7xl px-6 pb-16 md:pb-20">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-5 md:gap-x-6 gap-y-12 border-t border-ink/15 pt-12">
+    <section className="bg-parchment">
+      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-16 md:py-24">
+        <div className="text-center mb-12 md:mb-16">
+          <span className="eyebrow text-gold tracking-[0.32em]">The Itinerary</span>
+          <h2 className="font-display text-5xl md:text-7xl text-ink mt-5 leading-[0.95] tracking-[0.01em]">
+            Five Days, Five Looks
+          </h2>
+          <div className="mt-6 h-px w-24 bg-gold mx-auto" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-4 md:gap-x-6 gap-y-14">
           {DAY_OVERVIEW.map((d, i) => (
             <a
               key={d.day}
               href={`#${DAY_SLUGS[i]}`}
-              className="group block text-center"
+              className="group block text-center bg-ivory pb-6 border border-ink/10 hover:border-gold transition-colors"
             >
-              <div className="eyebrow text-ink text-[10px]">{d.day}</div>
-              <h3 className="mt-3 font-sans font-semibold text-ink text-xs md:text-[13px] leading-snug tracking-[0.14em] uppercase whitespace-pre-line min-h-[2.5rem]">
+              <div className="bg-ink text-gold-soft eyebrow text-[11px] py-3 tracking-[0.32em]">{d.day}</div>
+              <h3 className="mt-5 px-3 font-sans font-bold text-ink text-[13px] md:text-sm leading-snug tracking-[0.14em] uppercase whitespace-pre-line min-h-[2.8rem]">
                 {d.title}
               </h3>
-              <div className="mt-4 relative aspect-[3/4] overflow-hidden bg-parchment">
+              <div className="mt-5 relative aspect-[3/4] overflow-hidden bg-parchment mx-3">
                 <img
                   src={DAY_IMG[d.image]}
                   alt={d.title.replace(/\n/g, " ")}
@@ -260,10 +267,10 @@ function FiveDayGrid() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <p className="mt-4 font-serif italic text-ink/75 text-sm leading-relaxed px-2">
+              <p className="mt-5 font-serif italic text-ink/80 text-[15px] leading-relaxed px-4">
                 {d.caption}
               </p>
-              <span className="mt-4 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 group-hover:text-ink group-hover:border-ink transition-colors">
+              <span className="mt-5 inline-block eyebrow text-gold text-[11px] border-b border-gold pb-1 group-hover:text-ink group-hover:border-ink transition-colors">
                 Explore the Look →
               </span>
             </a>
@@ -283,64 +290,46 @@ const SHOP_LOOKS = [
 function ShopTheLooks() {
   return (
     <section className="bg-ivory">
-      <div className="mx-auto max-w-7xl px-6 py-16 md:py-20 border-t border-ink/15">
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-4">
-            <span className="h-px w-16 bg-gold/60" />
-            <h2 className="font-display text-2xl md:text-3xl tracking-[0.18em] text-ink">SHOP THE LOOKS</h2>
-            <span className="h-px w-16 bg-gold/60" />
-          </div>
+      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-20 md:py-28">
+        <div className="text-center mb-14 md:mb-20">
+          <span className="eyebrow text-gold tracking-[0.32em]">Shoppable Editorial</span>
+          <h2 className="font-display text-5xl md:text-7xl lg:text-8xl text-ink mt-5 leading-[0.95]">
+            Shop The Looks
+          </h2>
+          <p className="font-script text-gold text-4xl md:text-5xl mt-3 leading-none">
+            three signature edits
+          </p>
+          <div className="mt-7 h-px w-24 bg-gold mx-auto" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {SHOP_LOOKS.map((look) => (
             <a
               key={look.id}
               href={look.href}
-              className="group block bg-parchment/60 border border-ink/10 p-5 md:p-6 text-center hover:border-gold transition-colors"
+              className="group block"
             >
-              <div className="eyebrow text-ink text-[10px]">LOOK {look.id}</div>
-              <div className="font-sans font-semibold text-ink text-[12px] uppercase tracking-[0.15em] mt-2">
-                {look.name}
-              </div>
-              <div className="mt-5 relative aspect-[3/4] overflow-hidden bg-ivory">
+              <div className="relative aspect-[3/4] overflow-hidden bg-parchment">
                 <img
                   src={look.image}
                   alt={`Look ${look.id} — ${look.name}`}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
+                <div className="absolute top-0 left-0 bg-ink text-gold-soft eyebrow text-[11px] px-5 py-3 tracking-[0.32em]">
+                  Look {look.id}
+                </div>
               </div>
-              <span className="mt-5 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 group-hover:text-ink group-hover:border-ink transition-colors">
-                Shop the Look →
-              </span>
+              <div className="mt-6 text-center">
+                <h3 className="font-display text-3xl md:text-4xl text-ink tracking-wide leading-tight">
+                  {look.name}
+                </h3>
+                <span className="mt-4 inline-block eyebrow text-gold text-[11px] border-b border-gold pb-1 group-hover:text-ink group-hover:border-ink transition-colors">
+                  Shop the Look →
+                </span>
+              </div>
             </a>
           ))}
-
-          {/* Resort Edit Tip */}
-          <aside className="bg-gold/15 border border-gold/40 p-6 md:p-7 flex flex-col">
-            <div className="text-gold text-3xl leading-none">✦</div>
-            <div className="eyebrow text-gold mt-3">Resort Edit Tip</div>
-            <p className="font-serif italic text-ink text-lg leading-snug mt-4 space-y-1">
-              Book a cabana.<br />
-              Sip limoncello.<br />
-              Stay until sunset.
-            </p>
-            <a
-              href="#long-form"
-              className="mt-6 inline-block bg-gold text-ivory eyebrow text-[10px] px-5 py-3 text-center hover:bg-ink transition-colors"
-            >
-              Explore Portofino
-            </a>
-            <div className="mt-6 relative aspect-[4/3] overflow-hidden bg-ivory">
-              <img
-                src={stillLife}
-                alt="Portofino still life — handbag and prosecco"
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </aside>
         </div>
       </div>
     </section>
