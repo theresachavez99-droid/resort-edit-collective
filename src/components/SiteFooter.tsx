@@ -77,23 +77,22 @@ export function SiteFooter() {
           <div>
             <p className="eyebrow text-gold-soft mb-4">About</p>
             <ul className="space-y-2 font-serif">
-              <li><Link to="/about" className="hover:text-gold">About</Link></li>
+              <li><Link to="/about" className="hover:text-gold">Our Story</Link></li>
               <li><Link to="/about" className="hover:text-gold">Contact</Link></li>
               <li><Link to="/about" className="hover:text-gold">Collaborate</Link></li>
             </ul>
           </div>
           <div>
             <p className="eyebrow text-gold-soft mb-4">The Edit</p>
-            <p className="font-serif italic text-ivory/60 leading-relaxed">
-              Mediterranean luxury, destination-first style, and shoppable escapes — delivered weekly.
-            </p>
-            <a href="#newsletter" className="mt-4 inline-block eyebrow text-gold hover:text-ivory">Join the Edit →</a>
+            <ul className="space-y-2 font-serif">
+              <li><a href="#newsletter" className="hover:text-gold">Join The Edit</a></li>
+            </ul>
           </div>
           <div>
             <p className="eyebrow text-gold-soft mb-4">Disclosure</p>
-            <p className="font-serif italic text-ivory/60 leading-relaxed text-[0.85rem]">
-              Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
-            </p>
+            <ul className="space-y-2 font-serif">
+              <li><Link to="/about" className="hover:text-gold">Affiliate Disclosure</Link></li>
+            </ul>
           </div>
         </div>
         <div className="border-t border-ivory/10">
