@@ -9,7 +9,7 @@ export function SiteFooter() {
 
   return (
     <footer id="newsletter" className="bg-ink text-ivory mt-32">
-      <div className="mx-auto max-w-5xl px-6 py-20 text-center">
+      <div className="mx-auto max-w-5xl px-6 py-12 text-center">
         <img
           src={logo}
           alt="Resort Edit — Curated escapes. Styled your way."
@@ -65,7 +65,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-ivory/10">
-        <div className="mx-auto max-w-7xl px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-10 text-ivory/70 text-sm">
+        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-ivory/70 text-sm">
           <div>
             <p className="eyebrow text-gold-soft mb-4">Explore</p>
             <ul className="space-y-2 font-serif">
@@ -99,7 +99,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="border-t border-ivory/10">
-          <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-ivory/50 text-xs tracking-widest uppercase">
+          <div className="mx-auto max-w-7xl px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-3 text-ivory/50 text-xs tracking-widest uppercase">
             <span>© {new Date().getFullYear()} Resort Edit</span>
             <span className="italic font-serif normal-case tracking-normal text-sm">Curated escapes. Styled your way.</span>
           </div>

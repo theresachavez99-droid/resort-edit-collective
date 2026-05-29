@@ -2,43 +2,21 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Heart,
-  Share2,
   ShoppingBag,
   ChevronDown,
   ArrowLeft,
   Plus,
-  Shirt,
-  Footprints,
-  Gem,
-  Sun,
-  Layers,
-  Sparkles,
 } from "lucide-react";
 import {
   portofinoEdit,
   tiers,
   lookMetas,
-  categoryOrder,
-  categoryLabels,
-  requiredCategories,
   type Tier,
   type LookKey,
-  type AccessoryCategory,
   type EditItem,
 } from "@/data/portofinoEdit";
 import { resolveProductLink } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
-
-const categoryIcons: Record<AccessoryCategory, React.ComponentType<{ className?: string }>> = {
-  clothing: Shirt,
-  shoes: Footprints,
-  bag: ShoppingBag,
-  jewelry: Gem,
-  sunglasses: Sun,
-  layer: Layers,
-  finishing: Sparkles,
-};
-import logo from "@/assets/resort-edit-logo.png";
 
 export const Route = createFileRoute("/portofino-edit")({
   head: () => ({
@@ -69,91 +47,47 @@ function CategorizedItems({
   items: EditItem[];
   finishingNote?: string;
 }) {
-  const grouped = items.reduce<Record<AccessoryCategory, EditItem[]>>(
-    (acc, it) => {
-      // Hide cards that have no resolvable link (inventory unavailable + no backup).
-      if (resolveProductLink(it) === null) return acc;
-      (acc[it.category] ||= []).push(it);
-      return acc;
-    },
-    {} as Record<AccessoryCategory, EditItem[]>,
-  );
+  const visible = items.filter((it) => resolveProductLink(it) !== null);
 
   return (
-    <div className="px-4 py-5 divide-y divide-border/40 flex-1">
-      {categoryOrder.map((cat) => {
-        const list = grouped[cat] ?? [];
-        const isRequired = requiredCategories.includes(cat);
-        const hasNote = cat === "finishing" && finishingNote;
-
-        // Optional cats with nothing to show -> hide entirely
-        if (!isRequired && list.length === 0 && !hasNote) return null;
-
-        const Icon = categoryIcons[cat];
-        return (
-          <div key={cat} className="py-3 first:pt-0 last:pb-0">
-            <div className="flex items-center gap-2 mb-2">
-              <Icon className="w-3 h-3 text-gold/80" />
-              <div className="eyebrow text-[0.55rem] text-ink/60 tracking-[0.28em]">
-                {categoryLabels[cat]}
+    <div className="px-5 py-4 flex-1">
+      <ul className="divide-y divide-border/30">
+        {visible.map((item) => (
+          <li key={item.brand + item.item}>
+            <a
+              href={resolveProductLink(item) ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              onClick={() =>
+                trackOutbound({
+                  brand: item.brand,
+                  item: item.item,
+                  href: resolveProductLink(item),
+                  category: item.category,
+                })
+              }
+              className="grid grid-cols-[1fr_auto] items-baseline gap-3 py-2.5 group/item transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
+            >
+              <div className="min-w-0">
+                <div className="eyebrow text-[0.55rem] tracking-[0.24em] text-ink/55 group-hover/item:text-gold transition-colors truncate">
+                  {item.brand}
+                </div>
+                <div className="font-serif text-[0.82rem] text-ink/85 truncate leading-snug">
+                  {item.item}
+                </div>
               </div>
-            </div>
-
-            {list.length > 0 ? (
-              <ul className="space-y-2">
-                {list.map((item) => (
-                  <li key={item.brand + item.item}>
-                    <a
-                      href={resolveProductLink(item) ?? "#"}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      onClick={() =>
-                        trackOutbound({
-                          brand: item.brand,
-                          item: item.item,
-                          href: resolveProductLink(item),
-                          category: item.category,
-                        })
-                      }
-                      className="flex justify-between gap-3 group/item rounded-sm -mx-1 px-1 py-1 transition-colors hover:bg-gold/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
-                    >
-                      <div className="text-left leading-tight min-w-0">
-                        <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate flex items-center gap-1.5">
-                          <span className="truncate">{item.brand}</span>
-                          {item.replaced && (
-                            <span className="eyebrow text-[0.5rem] tracking-[0.2em] text-gold border border-gold/50 px-1 py-px shrink-0">
-                              Updated Pick
-                            </span>
-                          )}
-                        </div>
-                        <div className="font-serif text-[0.82rem] text-ink/80 mt-0.5 truncate">
-                          {item.item}
-                        </div>
-                      </div>
-                      <div className="font-serif text-[0.82rem] text-gold shrink-0 self-center">
-                        {item.price}
-                      </div>
-                    </a>
-                  </li>
-                ))}
-                {hasNote && (
-                  <li className="font-serif italic text-[0.78rem] text-ink/65 pt-1">
-                    {finishingNote}
-                  </li>
-                )}
-              </ul>
-            ) : hasNote ? (
-              <p className="font-serif italic text-[0.78rem] text-ink/65">
-                {finishingNote}
-              </p>
-            ) : (
-              <p className="font-serif italic text-[0.72rem] text-ink/40">
-                Not needed for this look
-              </p>
-            )}
-          </div>
-        );
-      })}
+              <div className="font-serif text-[0.82rem] text-gold tabular-nums shrink-0">
+                {item.price}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+      {finishingNote && (
+        <p className="mt-3 font-serif italic text-[0.78rem] text-ink/60 leading-relaxed">
+          {finishingNote}
+        </p>
+      )}
     </div>
   );
 }
@@ -215,29 +149,27 @@ function PortofinoEditPage() {
   return (
     <div className="bg-ivory min-h-screen">
       {/* MASTHEAD */}
-      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-8 md:pt-12 pb-6 text-center">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-10 md:pt-16 pb-10 text-center">
         <Link
           to="/"
           className="inline-flex items-center gap-2 eyebrow text-[0.6rem] text-ink/60 hover:text-gold transition-colors"
         >
           <ArrowLeft className="w-3 h-3" /> Back to the Edit
         </Link>
-        <img
-          src={logo}
-          alt="Resort Edit"
-          className="mx-auto mt-6 w-[220px] sm:w-[300px] h-auto"
-        />
-        <p className="eyebrow text-gold mt-4 text-[0.7rem] tracking-[0.3em]">
+        <p className="eyebrow text-gold mt-10 text-[0.7rem] tracking-[0.3em]">
           The Portofino Edit · Three Ways To Vacation
         </p>
-        <h1 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-[0.08em] mt-6 text-ink">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl tracking-[0.08em] mt-6 text-ink">
           One Destination.
           <br className="sm:hidden" /> Multiple Ways To Vacation Beautifully.
         </h1>
-        <p className="font-serif text-[0.95rem] sm:text-base text-ink/70 max-w-2xl mx-auto mt-5 leading-relaxed">
+        <p className="font-serif text-[0.95rem] sm:text-base text-ink/70 max-w-2xl mx-auto mt-6 leading-relaxed">
           Each day, three style directions — print forward, quiet luxury, and
           texture forward — translated across designer, mid-luxe, and accessible
           tiers. Same aesthetic. Different investment.
+        </p>
+        <p className="font-serif italic text-[0.95rem] text-ink/55 max-w-xl mx-auto mt-4">
+          Each look includes options across multiple price points.
         </p>
       </div>
 
@@ -316,22 +248,22 @@ function PortofinoEditPage() {
       </div>
 
       {/* DAYS */}
-      <main className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 space-y-20">
+      <main className="mx-auto max-w-[1280px] px-4 sm:px-6 py-16 md:py-20 space-y-24 md:space-y-32">
         {portofinoEdit.map((day) => {
           const isOpen = openDays[day.day];
           const openLookKey = expandedLook[day.day];
           return (
             <section key={day.day} id={day.day} className="scroll-mt-32">
               {/* Day header */}
-              <header className="flex items-end justify-between gap-4 border-b border-border/60 pb-4 mb-8">
+              <header className="flex items-end justify-between gap-4 border-b border-border/60 pb-6 mb-12">
                 <div>
-                  <div className="eyebrow text-gold text-[0.65rem] tracking-[0.3em]">
+                  <div className="eyebrow text-gold text-[0.8rem] tracking-[0.38em]">
                     {day.day}
                   </div>
-                  <h2 className="font-display text-2xl sm:text-4xl tracking-[0.06em] text-ink mt-2">
+                  <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-[0.06em] text-ink mt-4">
                     {day.title}
                   </h2>
-                  <p className="font-serif italic text-[0.9rem] text-ink/60 mt-2 max-w-xl">
+                  <p className="font-serif italic text-[0.95rem] text-ink/60 mt-3 max-w-xl">
                     {day.subtitle}
                   </p>
                 </div>
@@ -502,15 +434,15 @@ function PortofinoEditPage() {
                                 </div>
 
                                 {/* Look-level CTAs */}
-                                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                                   <a
                                     href="#"
                                     target="_blank"
-                                    rel="noreferrer noopener"
+                                    rel="noopener noreferrer sponsored"
                                     className="eyebrow text-[0.65rem] tracking-[0.28em] inline-flex items-center gap-2 px-6 py-3 bg-ink text-ivory hover:bg-gold transition-colors"
                                   >
                                     <ShoppingBag className="w-3.5 h-3.5" />
-                                    Shop This Look
+                                    Shop Full Look
                                   </a>
                                   <button
                                     onClick={() =>
@@ -521,14 +453,7 @@ function PortofinoEditPage() {
                                     <Heart
                                       className={`w-3.5 h-3.5 ${saved[`look-${day.day}-${look.id}`] ? "fill-gold text-gold" : ""}`}
                                     />
-                                    Save Look
-                                  </button>
-                                  <button
-                                    onClick={shareEdit}
-                                    className="eyebrow text-[0.65rem] tracking-[0.28em] inline-flex items-center gap-2 px-5 py-3 border border-gold/60 text-ink hover:bg-gold/5 transition-colors cursor-pointer"
-                                  >
-                                    <Share2 className="w-3.5 h-3.5" />
-                                    Share Look
+                                    Save Look ♡
                                   </button>
                                 </div>
                               </div>
@@ -540,7 +465,16 @@ function PortofinoEditPage() {
                   </div>
 
                   {/* Day-level actions */}
-                  <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+                  <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
+                    <a
+                      href="#"
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                      className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-6 py-3 bg-gold text-ivory hover:bg-ink transition-colors"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      Shop Full Look
+                    </a>
                     <button
                       onClick={() => toggleSave(`day-${day.day}`)}
                       className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-5 py-3 border border-gold/60 text-ink hover:bg-gold/5 transition-colors cursor-pointer"
@@ -548,24 +482,8 @@ function PortofinoEditPage() {
                       <Heart
                         className={`w-3.5 h-3.5 ${saved[`day-${day.day}`] ? "fill-gold text-gold" : ""}`}
                       />
-                      Save This Edit
+                      Save Look ♡
                     </button>
-                    <button
-                      onClick={shareEdit}
-                      className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-5 py-3 border border-gold/60 text-ink hover:bg-gold/5 transition-colors cursor-pointer"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                      Share Edit
-                    </button>
-                    <a
-                      href="#"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="eyebrow text-[0.65rem] tracking-[0.25em] inline-flex items-center gap-2 px-5 py-3 bg-gold text-ivory hover:bg-ink transition-colors"
-                    >
-                      <ShoppingBag className="w-3.5 h-3.5" />
-                      Shop Entire Day
-                    </a>
                   </div>
                 </>
               )}
@@ -575,14 +493,14 @@ function PortofinoEditPage() {
       </main>
 
       {/* FOOTER */}
-      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pb-16">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pb-10">
         <Link
           to="/"
-          className="block text-center bg-gold text-ivory py-5 eyebrow text-[0.7rem] tracking-[0.3em] hover:bg-ink transition-colors"
+          className="block text-center bg-gold text-ivory py-4 eyebrow text-[0.7rem] tracking-[0.3em] hover:bg-ink transition-colors"
         >
           Return to the Portofino Edit
         </Link>
-        <p className="mt-6 text-center eyebrow text-[0.55rem] text-ink/50">
+        <p className="mt-4 text-center eyebrow text-[0.55rem] text-ink/50">
           Prices are subject to change. Links may earn a small commission at no extra cost to you.
         </p>
       </div>
