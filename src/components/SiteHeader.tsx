@@ -35,12 +35,12 @@ export function SiteHeader() {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center leading-none justify-center md:justify-start md:max-w-[200px] lg:max-w-[220px] overflow-hidden"
+          className="flex items-center leading-none justify-center md:justify-start -my-2"
         >
           <img
             src={logo}
             alt="Resort Edit — Curated escapes. Styled your way."
-            className="h-20 md:h-24 w-auto md:scale-110 md:origin-left"
+            className="h-28 md:h-32 lg:h-36 w-auto contrast-[1.05]"
           />
         </Link>
 
