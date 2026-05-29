@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { destinations, destinationHref, type Destination } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
