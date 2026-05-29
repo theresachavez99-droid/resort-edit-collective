@@ -15,7 +15,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 bg-ivory/85 backdrop-blur-md border-b border-border/60">
       <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between gap-6">
         <Link to="/" className="flex items-center leading-none">
-          <img src={logo} alt="Resort Edit" className="h-14 md:h-16 w-auto" />
+          <img
+            src={logo}
+            alt="Resort Edit — Curated escapes. Styled your way."
+            className="h-20 md:h-24 w-auto"
+          />
         </Link>
         <nav className="hidden md:flex items-center gap-10">
           {nav.map((n) => (

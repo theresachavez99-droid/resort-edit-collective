@@ -76,11 +76,11 @@
 
 :root {
   --radius: 0;
-  --ivory: oklch(0.975 0.012 85);
-  --cream: oklch(0.955 0.018 82);
-  --gold: oklch(0.65 0.09 70);
-  --gold-soft: oklch(0.78 0.06 75);
-  --ink: oklch(0.22 0.015 60);
+  --ivory: oklch(0.97 0.018 82);
+  --cream: oklch(0.93 0.028 78);
+  --gold: oklch(0.62 0.11 68);
+  --gold-soft: oklch(0.75 0.075 72);
+  --ink: oklch(0.18 0.018 50);
   --background: var(--ivory);
   --foreground: var(--ink);
   --card: oklch(0.985 0.008 85);

@@ -9,18 +9,16 @@ export function SiteFooter() {
 
   return (
     <footer id="newsletter" className="bg-ink text-ivory mt-32">
-      <div className="mx-auto max-w-5xl px-6 py-24 text-center">
-        <div className="mx-auto inline-block bg-ivory px-10 py-8 md:px-14 md:py-10">
-          <img
-            src={logo}
-            alt="Resort Edit — Curated escapes. Styled your way."
-            loading="lazy"
-            width={1024}
-            height={1024}
-            className="mx-auto h-40 md:h-52 w-auto"
-          />
-        </div>
-        <p className="mt-8 eyebrow text-gold-soft tracking-[0.4em]">The Next Edit</p>
+      <div className="mx-auto max-w-5xl px-6 py-20 text-center">
+        <img
+          src={logo}
+          alt="Resort Edit — Curated escapes. Styled your way."
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="mx-auto h-48 md:h-64 w-auto"
+        />
+        <p className="mt-6 eyebrow text-gold-soft tracking-[0.4em]">The Next Edit</p>
         <p className="mt-4 text-ivory/70 max-w-xl mx-auto font-serif text-lg italic">
           Destination style, itineraries, and shoppable escapes—delivered to your inbox.
         </p>
