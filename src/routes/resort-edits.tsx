@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { destinations } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/resort-edits")({
   head: () => ({
@@ -9,8 +10,9 @@ export const Route = createFileRoute("/resort-edits")({
       { name: "description", content: "Curated vacation style guides, packing edits, and shoppable looks — browse by destination, occasion, or collection." },
       { property: "og:title", content: "Resort Edits — Resort Edit" },
       { property: "og:description", content: "Curated vacation style guides, packing edits, and shoppable looks." },
+      { property: "og:url", content: absoluteUrl("/resort-edits") },
     ],
-    links: [{ rel: "canonical", href: "/resort-edits" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/resort-edits") }],
   }),
   component: ResortEditsPage,
 });

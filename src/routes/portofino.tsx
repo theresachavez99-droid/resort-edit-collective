@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { portofinoLooks, itinerary, travelTips, resolveProductLink } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import portofinoImg from "@/assets/dest-portofino.jpg";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
@@ -10,8 +11,10 @@ export const Route = createFileRoute("/portofino")({
       { name: "description", content: "Five complete resort looks and a five-day itinerary for Portofino — yacht days, beach cabanas, sunset dinners and quiet harbor mornings." },
       { property: "og:title", content: "5 Days in Portofino — Resort Edit" },
       { property: "og:description", content: "A luxury style and travel guide to the Italian Riviera." },
-      { property: "og:image", content: portofinoImg },
+      { property: "og:image", content: absoluteUrl(portofinoImg) },
+      { property: "og:url", content: absoluteUrl("/portofino") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/portofino") }],
   }),
   component: PortofinoPage,
 });

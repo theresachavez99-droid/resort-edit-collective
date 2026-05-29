@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { brandCategories } from "@/data/brands";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/brands")({
   head: () => ({
@@ -16,7 +17,9 @@ export const Route = createFileRoute("/brands")({
         content:
           "Resort icons, quiet luxury, swim & beach club, accessories, and Riviera finds.",
       },
+      { property: "og:url", content: absoluteUrl("/brands") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/brands") }],
   }),
   component: BrandsPage,
 });

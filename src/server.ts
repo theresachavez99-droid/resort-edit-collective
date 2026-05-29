@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { SITE_HOST, SITE_URL } from "./lib/site";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -69,6 +70,8 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const redirect = buildCanonicalRedirect(request);
+      if (redirect) return redirect;
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
@@ -78,3 +81,38 @@ export default {
     }
   },
 };
+
+// Internal preview/published hosts we should NOT redirect away from.
+const PASSTHROUGH_HOST_SUFFIXES = [".lovable.app", ".lovable.dev", "localhost"];
+
+function buildCanonicalRedirect(request: Request): Response | null {
+  let url: URL;
+  try {
+    url = new URL(request.url);
+  } catch {
+    return null;
+  }
+
+  const host = (request.headers.get("host") ?? url.host).toLowerCase();
+  const forwardedProto = (
+    request.headers.get("x-forwarded-proto") ?? url.protocol.replace(":", "")
+  ).toLowerCase();
+
+  const isPassthrough = PASSTHROUGH_HOST_SUFFIXES.some(
+    (s) => host === s || host.endsWith(s),
+  );
+  if (isPassthrough) return null;
+
+  const isCanonicalHost = host === SITE_HOST;
+  const isHttps = forwardedProto === "https";
+  if (isCanonicalHost && isHttps) return null;
+
+  const target = `${SITE_URL}${url.pathname}${url.search}`;
+  return new Response(null, {
+    status: 301,
+    headers: {
+      location: target,
+      "cache-control": "public, max-age=3600",
+    },
+  });
+}

@@ -23,6 +23,7 @@ import lookDayclub from "@/assets/look-dayclub.jpg";
 import lookTown from "@/assets/look-town.jpg";
 import { Bookmark, Share2 } from "lucide-react";
 import { trackOutbound } from "@/lib/utils";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -31,8 +32,10 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Curated itineraries, resort looks, hotels and experiences — designed for women who want to dress for the destination." },
       { property: "og:title", content: "Resort Edit — Destination guides. Styled beautifully." },
       { property: "og:description", content: "Curated itineraries, resort looks, hotels and experiences." },
-      { property: "og:image", content: heroMuse },
+      { property: "og:image", content: absoluteUrl(heroMuse) },
+      { property: "og:url", content: SITE_URL },
     ],
+    links: [{ rel: "canonical", href: SITE_URL }],
   }),
   component: Index,
 });

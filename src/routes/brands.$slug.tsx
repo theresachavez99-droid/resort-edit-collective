@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { brandCategories } from "@/data/brands";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/brands/$slug")({
   loader: ({ params }) => {
@@ -19,7 +20,12 @@ export const Route = createFileRoute("/brands/$slug")({
               loaderData.brand.blurb ??
               `Shop ${loaderData.brand.name} on Resort Edit — a curated ${loaderData.category.toLowerCase()} favorite.`,
           },
+          { property: "og:title", content: `${loaderData.brand.name} — Resort Edit` },
+          { property: "og:url", content: absoluteUrl(`/brands/${loaderData.brand.slug}`) },
         ]
+      : [],
+    links: loaderData
+      ? [{ rel: "canonical", href: absoluteUrl(`/brands/${loaderData.brand.slug}`) }]
       : [],
   }),
   component: BrandPage,

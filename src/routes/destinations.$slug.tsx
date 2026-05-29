@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { destinations, getDestination, type Destination } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/destinations/$slug")({
   loader: ({ params }) => {
@@ -17,12 +18,12 @@ export const Route = createFileRoute("/destinations/$slug")({
         { name: "description", content: `${d.name}, ${d.country}: ${d.tagline}` },
         { property: "og:title", content: `${d.name} — Resort Edit` },
         { property: "og:description", content: d.tagline },
-        { property: "og:image", content: d.image },
-        { property: "og:url", content: `/destinations/${d.slug}` },
+        { property: "og:image", content: absoluteUrl(d.image) },
+        { property: "og:url", content: absoluteUrl(`/destinations/${d.slug}`) },
         { property: "og:type", content: "article" },
-        { name: "twitter:image", content: d.image },
+        { name: "twitter:image", content: absoluteUrl(d.image) },
       ],
-      links: [{ rel: "canonical", href: `/destinations/${d.slug}` }],
+      links: [{ rel: "canonical", href: absoluteUrl(`/destinations/${d.slug}`) }],
     };
   },
   notFoundComponent: () => (

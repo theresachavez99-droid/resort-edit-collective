@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { destinations, destinationHref } from "@/data/destinations";
 import { WorldMap } from "@/components/WorldMap";
 import { DestinationLink } from "@/components/DestinationLink";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/destinations")({
   head: () => ({
@@ -10,9 +11,9 @@ export const Route = createFileRoute("/destinations")({
       { name: "description", content: "An interactive atlas of curated escapes — from Portofino and Capri to Tulum and Phuket. Luxury travel guides for the worldly woman." },
       { property: "og:title", content: "Destinations — Resort Edit" },
       { property: "og:description", content: "An interactive atlas of editorial travel guides from the Mediterranean to the tropics." },
-      { property: "og:url", content: "/destinations" },
+      { property: "og:url", content: absoluteUrl("/destinations") },
     ],
-    links: [{ rel: "canonical", href: "/destinations" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/destinations") }],
   }),
   component: DestinationsPage,
 });
