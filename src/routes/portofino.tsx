@@ -344,19 +344,17 @@ const HOTEL_IMG: Record<string, string> = {
 
 function WhereToStay() {
   return (
-    <section className="bg-ivory">
-      <div className="mx-auto max-w-7xl px-6 py-16 md:py-20 border-t border-ink/15">
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-4">
-            <span className="h-px w-16 bg-gold/60" />
-            <h2 className="font-display text-2xl md:text-3xl tracking-[0.18em] text-ink">WHERE TO STAY</h2>
-            <span className="h-px w-16 bg-gold/60" />
-          </div>
+    <section className="bg-parchment">
+      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-20 md:py-28">
+        <div className="text-center mb-14">
+          <span className="eyebrow text-gold tracking-[0.32em]">The Address Book</span>
+          <h2 className="font-display text-5xl md:text-7xl text-ink mt-5 leading-[0.95]">Where To Stay</h2>
+          <div className="mt-6 h-px w-24 bg-gold mx-auto" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {whereToStay.map((h) => (
-            <article key={h.hotel_name} className="grid grid-cols-5 gap-5 bg-parchment/60 border border-ink/10 p-4">
-              <div className="col-span-2 relative aspect-[4/5] overflow-hidden bg-ivory">
+            <article key={h.hotel_name} className="bg-ivory border border-ink/10 hover:border-gold transition-colors flex flex-col">
+              <div className="relative aspect-[4/3] overflow-hidden bg-parchment">
                 <img
                   src={HOTEL_IMG[h.image_url] ?? portofinoImg}
                   alt={h.hotel_name}
@@ -364,15 +362,15 @@ function WhereToStay() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="col-span-3 flex flex-col">
-                <div className="eyebrow text-gold text-[10px]">{h.destination}</div>
-                <h3 className="font-display text-xl md:text-2xl text-ink mt-2 leading-tight">{h.hotel_name}</h3>
-                <p className="font-serif italic text-ink/70 text-sm mt-2 leading-relaxed flex-1">{h.description}</p>
+              <div className="p-6 md:p-7 flex flex-col flex-1">
+                <div className="eyebrow text-gold text-[10px] tracking-[0.32em]">{h.destination}</div>
+                <h3 className="font-display text-2xl md:text-3xl text-ink mt-3 leading-tight">{h.hotel_name}</h3>
+                <p className="font-serif italic text-ink/75 text-[15px] mt-3 leading-relaxed flex-1">{h.description}</p>
                 <a
                   href={h.affiliate_link || h.booking_link || "#"}
                   target="_blank"
                   rel="noopener noreferrer sponsored"
-                  className="mt-4 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 hover:text-ink hover:border-ink transition-colors self-start"
+                  className="mt-5 inline-block eyebrow text-gold text-[11px] border-b border-gold pb-1 hover:text-ink hover:border-ink transition-colors self-start"
                 >
                   Book This Stay →
                 </a>
@@ -393,19 +391,22 @@ function BookExperience() {
     { icon: Compass, label: "View Experiences", href: "#travel-guide" },
   ];
   return (
-    <section className="bg-ivory">
-      <div className="mx-auto max-w-7xl px-6 pt-6 pb-10">
-        <h2 className="text-center font-display text-xl md:text-2xl tracking-[0.18em] text-ink py-6">
-          BOOK YOUR PORTOFINO EXPERIENCE
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+    <section className="bg-ink text-ivory">
+      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-14 md:py-16">
+        <div className="text-center">
+          <span className="eyebrow text-gold tracking-[0.32em]">Reserve Your Stay</span>
+          <h2 className="font-display text-4xl md:text-5xl text-ivory mt-4 leading-tight">
+            Book Your Portofino Experience
+          </h2>
+        </div>
+        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {ctas.map((c) => (
             <a
               key={c.label}
               href={c.href}
-              className="bg-gold text-ivory hover:bg-ink transition-colors py-5 px-4 flex items-center justify-center gap-3 eyebrow text-[11px]"
+              className="bg-gold text-ink hover:bg-ivory transition-colors py-6 px-4 flex items-center justify-center gap-3 eyebrow text-[11px] tracking-[0.2em]"
             >
-              <c.icon className="h-4 w-4" />
+              <c.icon className="h-5 w-5" />
               <span>{c.label}</span>
             </a>
           ))}
