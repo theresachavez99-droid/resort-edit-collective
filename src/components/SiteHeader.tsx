@@ -27,7 +27,7 @@ export function SiteHeader() {
           aria-label="Toggle navigation"
           className="md:hidden text-ink p-1 -ml-1"
         >
-          {open ? <Menu className="w-5 h-5" strokeWidth={1.5} /> : <Menu className="w-5 h-5" strokeWidth={1.5} />}
+          {open ? <X className="w-5 h-5" strokeWidth={1.5} /> : <Menu className="w-5 h-5" strokeWidth={1.5} />}
         </button>
 
         {/* Logo */}
