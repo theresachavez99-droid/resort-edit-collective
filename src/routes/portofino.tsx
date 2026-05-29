@@ -119,6 +119,275 @@ function PortofinoPage() {
   );
 }
 
+const DAY_OVERVIEW = [
+  { day: "DAY 1", title: "YACHT DAY &\nHARBOUR APERITIVO", caption: "Open water, hidden coves, and a night in Portofino.", image: "look-yacht" },
+  { day: "DAY 2", title: "BEACH CLUB &\nLONG LUNCHES", caption: "Slow mornings, seafood lunches, seaside glamour.", image: "look-beach" },
+  { day: "DAY 3", title: "POOL CLUB &\nSHOPPING", caption: "Poolside ease, via Roma, Capresi luxe.", image: "look-dayclub" },
+  { day: "DAY 4", title: "SUNSET COCKTAILS\n& DINNER WITH A VIEW", caption: "Golden hour, candlelight, harbor glow.", image: "look-dinner" },
+  { day: "DAY 5", title: "MARKET STROLLS &\nCOASTAL GOODBYES", caption: "Quiet rituals and a long last lunch.", image: "look-town" },
+];
+
+const LOOK_IMAGES: Record<string, string> = {
+  "look-yacht": "/src/assets/look-yacht.jpg",
+  "look-beach": "/src/assets/look-beach.jpg",
+  "look-dayclub": "/src/assets/look-dayclub.jpg",
+  "look-dinner": "/src/assets/look-dinner.jpg",
+  "look-town": "/src/assets/look-town.jpg",
+};
+
+import yachtImg from "@/assets/look-yacht.jpg";
+import beachImg from "@/assets/look-beach.jpg";
+import dayclubImg from "@/assets/look-dayclub.jpg";
+import dinnerImg from "@/assets/look-dinner.jpg";
+import townImg from "@/assets/look-town.jpg";
+
+const DAY_IMG: Record<string, string> = {
+  "look-yacht": yachtImg,
+  "look-beach": beachImg,
+  "look-dayclub": dayclubImg,
+  "look-dinner": dinnerImg,
+  "look-town": townImg,
+};
+
+function EditorialHero() {
+  return (
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-6 pt-10 md:pt-14 pb-12 md:pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          {/* Image */}
+          <div className="lg:col-span-6">
+            <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+              <img
+                src={portofinoImg}
+                alt="Portofino harbor, woman in printed resort wear"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Editorial copy */}
+          <div className="lg:col-span-6 lg:pl-4">
+            <span className="eyebrow text-gold">A Style &amp; Itinerary Guide</span>
+            <h1 className="font-display mt-6 leading-[0.92] tracking-[0.01em]">
+              <span className="block text-5xl md:text-6xl text-ink">5 DAYS IN</span>
+              <span className="block text-6xl md:text-[7.5rem] text-ink mt-1">PORTOFINO</span>
+              <span className="font-script text-gold text-5xl md:text-7xl block mt-2 leading-none">
+                La Dolce Vita
+              </span>
+            </h1>
+            <p className="mt-10 font-sans uppercase tracking-[0.18em] text-ink text-sm md:text-base font-medium leading-relaxed">
+              Luxury labels. Riviera finds. Resort style across price points.
+            </p>
+            <p className="mt-5 font-serif italic text-ink/70 text-lg leading-relaxed max-w-md">
+              Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-ink/65 eyebrow text-[10px]">
+              <span>Zimmermann</span>
+              <span className="text-gold/60">·</span>
+              <span>Johanna Ortiz</span>
+              <span className="text-gold/60">·</span>
+              <span>Sir</span>
+              <span className="text-gold/60">·</span>
+              <span>Faithfull the Brand</span>
+              <span className="text-gold/60">·</span>
+              <span>More</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FiveDayGrid() {
+  return (
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-6 pb-16 md:pb-20">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-5 md:gap-x-6 gap-y-12 border-t border-ink/15 pt-12">
+          {DAY_OVERVIEW.map((d, i) => (
+            <a
+              key={d.day}
+              href={`#${DAY_SLUGS[i]}`}
+              className="group block text-center"
+            >
+              <div className="eyebrow text-ink text-[10px]">{d.day}</div>
+              <h3 className="mt-3 font-sans font-semibold text-ink text-xs md:text-[13px] leading-snug tracking-[0.14em] uppercase whitespace-pre-line min-h-[2.5rem]">
+                {d.title}
+              </h3>
+              <div className="mt-4 relative aspect-[3/4] overflow-hidden bg-parchment">
+                <img
+                  src={DAY_IMG[d.image]}
+                  alt={d.title.replace(/\n/g, " ")}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <p className="mt-4 font-serif italic text-ink/75 text-sm leading-relaxed px-2">
+                {d.caption}
+              </p>
+              <span className="mt-4 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 group-hover:text-ink group-hover:border-ink transition-colors">
+                Explore the Look →
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const SHOP_LOOKS = [
+  { id: "A", name: "Lemon Print Set", image: lookA, href: "#day-2" },
+  { id: "B", name: "Lace Chic", image: lookB, href: "#day-4" },
+  { id: "C", name: "Blue Majolica Set", image: lookC, href: "#day-1" },
+];
+
+function ShopTheLooks() {
+  return (
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-6 py-16 md:py-20 border-t border-ink/15">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-4">
+            <span className="h-px w-16 bg-gold/60" />
+            <h2 className="font-display text-2xl md:text-3xl tracking-[0.18em] text-ink">SHOP THE LOOKS</h2>
+            <span className="h-px w-16 bg-gold/60" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8 items-stretch">
+          {SHOP_LOOKS.map((look) => (
+            <a
+              key={look.id}
+              href={look.href}
+              className="group block bg-parchment/60 border border-ink/10 p-5 md:p-6 text-center hover:border-gold transition-colors"
+            >
+              <div className="eyebrow text-ink text-[10px]">LOOK {look.id}</div>
+              <div className="font-sans font-semibold text-ink text-[12px] uppercase tracking-[0.15em] mt-2">
+                {look.name}
+              </div>
+              <div className="mt-5 relative aspect-[3/4] overflow-hidden bg-ivory">
+                <img
+                  src={look.image}
+                  alt={`Look ${look.id} — ${look.name}`}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <span className="mt-5 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 group-hover:text-ink group-hover:border-ink transition-colors">
+                Shop the Look →
+              </span>
+            </a>
+          ))}
+
+          {/* Resort Edit Tip */}
+          <aside className="bg-gold/15 border border-gold/40 p-6 md:p-7 flex flex-col">
+            <div className="text-gold text-3xl leading-none">✦</div>
+            <div className="eyebrow text-gold mt-3">Resort Edit Tip</div>
+            <p className="font-serif italic text-ink text-lg leading-snug mt-4 space-y-1">
+              Book a cabana.<br />
+              Sip limoncello.<br />
+              Stay until sunset.
+            </p>
+            <a
+              href="#long-form"
+              className="mt-6 inline-block bg-gold text-ivory eyebrow text-[10px] px-5 py-3 text-center hover:bg-ink transition-colors"
+            >
+              Explore Portofino
+            </a>
+            <div className="mt-6 relative aspect-[4/3] overflow-hidden bg-ivory">
+              <img
+                src={stillLife}
+                alt="Portofino still life — handbag and prosecco"
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const HOTEL_IMG: Record<string, string> = {
+  splendido: hotelSplendido,
+  eight: hotelEight,
+  piccolo: hotelPiccolo,
+};
+
+function WhereToStay() {
+  return (
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-6 py-16 md:py-20 border-t border-ink/15">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-4">
+            <span className="h-px w-16 bg-gold/60" />
+            <h2 className="font-display text-2xl md:text-3xl tracking-[0.18em] text-ink">WHERE TO STAY</h2>
+            <span className="h-px w-16 bg-gold/60" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {whereToStay.map((h) => (
+            <article key={h.hotel_name} className="grid grid-cols-5 gap-5 bg-parchment/60 border border-ink/10 p-4">
+              <div className="col-span-2 relative aspect-[4/5] overflow-hidden bg-ivory">
+                <img
+                  src={HOTEL_IMG[h.image_url] ?? portofinoImg}
+                  alt={h.hotel_name}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="col-span-3 flex flex-col">
+                <div className="eyebrow text-gold text-[10px]">{h.destination}</div>
+                <h3 className="font-display text-xl md:text-2xl text-ink mt-2 leading-tight">{h.hotel_name}</h3>
+                <p className="font-serif italic text-ink/70 text-sm mt-2 leading-relaxed flex-1">{h.description}</p>
+                <a
+                  href={h.affiliate_link || h.booking_link || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  className="mt-4 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 hover:text-ink hover:border-ink transition-colors self-start"
+                >
+                  Book This Stay →
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BookExperience() {
+  const ctas = [
+    { icon: Anchor, label: "Book a Yacht", href: "#day-1" },
+    { icon: Umbrella, label: "Reserve a Beach Club", href: "#day-2" },
+    { icon: Camera, label: "Book a Tour", href: "#day-5" },
+    { icon: Compass, label: "View Experiences", href: "#travel-guide" },
+  ];
+  return (
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-6 pt-6 pb-10">
+        <h2 className="text-center font-display text-xl md:text-2xl tracking-[0.18em] text-ink py-6">
+          BOOK YOUR PORTOFINO EXPERIENCE
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          {ctas.map((c) => (
+            <a
+              key={c.label}
+              href={c.href}
+              className="bg-gold text-ivory hover:bg-ink transition-colors py-5 px-4 flex items-center justify-center gap-3 eyebrow text-[11px]"
+            >
+              <c.icon className="h-4 w-4" />
+              <span>{c.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Hero() {
   return (
     <section className="relative">
