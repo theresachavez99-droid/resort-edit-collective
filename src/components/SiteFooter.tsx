@@ -72,16 +72,14 @@ export function SiteFooter() {
               <li><Link to="/destinations" className="hover:text-gold">Destinations</Link></li>
               <li><Link to="/resort-edits" className="hover:text-gold">Resort Edits</Link></li>
               <li><Link to="/brands" className="hover:text-gold">Brands We Love</Link></li>
-              <li><Link to="/" className="hover:text-gold">Journal</Link></li>
             </ul>
           </div>
           <div>
             <p className="eyebrow text-gold-soft mb-4">About</p>
             <ul className="space-y-2 font-serif">
-              <li><Link to="/about" className="hover:text-gold">Our Story</Link></li>
-              <li><Link to="/about" className="hover:text-gold">Founder</Link></li>
+              <li><Link to="/about" className="hover:text-gold">About</Link></li>
               <li><Link to="/about" className="hover:text-gold">Contact</Link></li>
-              <li><Link to="/about" className="hover:text-gold">Collaborations</Link></li>
+              <li><Link to="/about" className="hover:text-gold">Collaborate</Link></li>
             </ul>
           </div>
           <div>
