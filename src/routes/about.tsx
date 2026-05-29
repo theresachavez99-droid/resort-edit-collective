@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/about-hero.png";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -8,7 +9,9 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: "Resort Edit is a luxury editorial publication for travel and fashion — curated for the sophisticated, worldly woman." },
       { property: "og:title", content: "About Resort Edit" },
       { property: "og:description", content: "A luxury digital publication for travel and fashion." },
+      { property: "og:url", content: absoluteUrl("/about") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/about") }],
   }),
   component: AboutPage,
 });

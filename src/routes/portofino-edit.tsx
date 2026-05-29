@@ -17,6 +17,7 @@ import {
 } from "@/data/portofinoEdit";
 import { resolveProductLink } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/portofino-edit")({
   head: () => ({
@@ -33,7 +34,9 @@ export const Route = createFileRoute("/portofino-edit")({
         content:
           "Same aesthetic. Different investment. Three looks per vacation day in Portofino.",
       },
+      { property: "og:url", content: absoluteUrl("/portofino-edit") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/portofino-edit") }],
   }),
   component: PortofinoEditPage,
 });
