@@ -456,8 +456,8 @@ export const portofinoLooks: Look[] = [
         brand: "Jennifer Fisher",
         item: "Statement Earrings",
         price: "$425",
-        href: "https://jenniferfisherjewelry.com"
-        image: "https://cdn.shopify.com/s/files/1/1961/1013/files/2_NatashaHoops_Silver_B_8e73fb07-eec1-4037-b975-5e622abeaff9.jpg",,
+        href: "https://jenniferfisherjewelry.com",
+        image: "https://cdn.shopify.com/s/files/1/1961/1013/files/2_NatashaHoops_Silver_B_8e73fb07-eec1-4037-b975-5e622abeaff9.jpg",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
