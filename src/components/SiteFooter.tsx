@@ -34,10 +34,7 @@ export function SiteFooter() {
           </a>
         </div>
         <div>
-          <p className="eyebrow text-gold-soft mb-3">Disclosure</p>
-          <p className="font-serif italic text-ivory/55 leading-relaxed text-[0.8rem]">
-            Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
-          </p>
+          <EditorialDisclosure tone="dark" className="my-0 max-w-none" />
         </div>
       </div>
       <div className="border-t border-ivory/10">
