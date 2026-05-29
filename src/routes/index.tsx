@@ -23,7 +23,6 @@ import lookDinner from "@/assets/look-dinner.jpg";
 import lookDayclub from "@/assets/look-dayclub.jpg";
 import lookTown from "@/assets/look-town.jpg";
 import { Bookmark, Share2 } from "lucide-react";
-import { trackOutbound } from "@/lib/utils";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
