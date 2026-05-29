@@ -99,6 +99,7 @@ function PortofinoPage() {
   return (
     <div>
       <EditorialHero />
+      <ResortEditTipFeature />
       <FiveDayGrid />
       <ShopTheLooks />
       <WhereToStay />
