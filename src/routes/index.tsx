@@ -73,8 +73,11 @@ function Index() {
           </p>
         </section>
 
+        {/* Editorial disclosure above shoppable 5-day grid */}
+        <EditorialDisclosure className="mt-12" />
+
         {/* 5-DAY GRID */}
-        <section className="mt-12 space-y-16 sm:space-y-20">
+        <section className="mt-4 space-y-16 sm:space-y-20">
           {portofinoLooks.map((look, i) => (
             <DayEditorial key={look.title} look={look} index={i} />
           ))}
