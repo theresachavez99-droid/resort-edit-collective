@@ -224,7 +224,7 @@ function Index() {
                   className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-ink/10 group-hover:bg-ink/0 transition-colors" />
-                <span className="absolute left-3 right-3 sm:left-4 sm:right-4 bottom-3 sm:bottom-4 bg-gold text-ivory eyebrow text-[0.6rem] sm:text-[0.65rem] h-9 sm:h-10 px-3 flex items-center justify-center text-center whitespace-nowrap">
+                <span className="absolute left-0 right-0 bottom-0 bg-gold text-ivory eyebrow text-[0.6rem] sm:text-[0.65rem] h-9 sm:h-10 px-3 flex items-center justify-center text-center whitespace-nowrap">
                   {exp.label}
                 </span>
               </a>
