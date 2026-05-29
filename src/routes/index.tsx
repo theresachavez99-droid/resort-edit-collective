@@ -34,9 +34,9 @@ function Index() {
   ];
   return (
     <div className="bg-ivory">
-      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-4 md:pt-6 pb-10">
+      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-2 md:pt-3 pb-10">
         {/* HERO */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+        <section className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-5 md:gap-10 items-center">
           <div className="relative aspect-[3/4] overflow-hidden bg-muted order-1">
             <img
               src={heroMuse}
@@ -47,19 +47,25 @@ function Index() {
             />
           </div>
           <div className="order-2 text-left md:pl-2">
-            <p className="eyebrow text-gold text-[0.7rem]">A Style &amp; Itinerary Guide</p>
-            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl tracking-[0.06em] mt-4 text-ink leading-[0.95]">
+            <p className="eyebrow text-gold text-[0.72rem] tracking-[0.28em]">A Style &amp; Itinerary Guide</p>
+            <h1 className="font-display text-6xl sm:text-7xl md:text-8xl tracking-[0.04em] mt-5 text-ink leading-[0.92]">
               5 DAYS IN
               <br />
               PORTOFINO
             </h1>
-            <p className="font-serif italic text-3xl md:text-4xl text-gold mt-5">La Dolce Vita</p>
-            <p className="mt-6 font-display text-lg md:text-xl tracking-[0.02em] text-ink leading-snug">
+            <p className="font-serif italic text-4xl md:text-5xl text-gold mt-6">La Dolce Vita</p>
+            <p className="mt-7 font-display text-lg md:text-xl tracking-[0.02em] text-ink leading-snug">
               Luxury labels. Destination style. Resort fashion across price points.
             </p>
-            <p className="mt-4 font-serif italic text-ink/65 text-base leading-relaxed max-w-md">
+            <p className="mt-4 font-serif italic text-ink/70 text-base leading-relaxed max-w-md">
               Curated from international resort favorites, iconic labels, and
               destination brands we love.
+            </p>
+            <p className="mt-6 eyebrow text-[0.62rem] tracking-[0.28em] text-ink/70 leading-relaxed">
+              Zimmermann <span className="text-gold">·</span> Johanna Ortiz{" "}
+              <span className="text-gold">·</span> SIR <span className="text-gold">·</span>{" "}
+              Faithfull the Brand <span className="text-gold">·</span>{" "}
+              <Link to="/brands" className="text-gold hover:underline">more</Link>
             </p>
           </div>
         </section>
