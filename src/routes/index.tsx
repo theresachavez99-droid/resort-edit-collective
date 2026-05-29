@@ -110,7 +110,7 @@ function Index() {
                   <span className="eyebrow text-gold text-[0.6rem]">Shop the Look</span>
                   <div className="mx-auto mt-1 h-px w-8 bg-gold/60" />
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {look.shop
                     .filter((item) => resolveProductLink(item) !== null)
                     .map((item) => (
@@ -118,7 +118,7 @@ function Index() {
                       <a
                         href={resolveProductLink(item) ?? "#"}
                         target="_blank"
-                        rel="noreferrer noopener"
+                        rel="noopener noreferrer sponsored"
                         onClick={() =>
                           trackOutbound({
                             brand: item.brand,
@@ -126,11 +126,8 @@ function Index() {
                             href: resolveProductLink(item),
                           })
                         }
-                        className="flex gap-2 group rounded-sm -mx-1 px-1 py-1 transition-colors hover:bg-gold/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
+                        className="block group rounded-sm -mx-1 px-1 py-1.5 transition-colors hover:bg-gold/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
                       >
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 bg-cream border border-border/60 flex items-center justify-center">
-                          <span className="eyebrow text-[0.5rem] text-gold">edit</span>
-                        </div>
                         <div className="text-left leading-tight">
                           <div className="eyebrow text-[0.55rem] text-ink group-hover:text-gold transition-colors flex items-center gap-1.5">
                             <span>{item.brand}</span>
@@ -140,7 +137,7 @@ function Index() {
                               </span>
                             )}
                           </div>
-                          <div className="font-serif text-[0.78rem] text-ink/80 mt-0.5">{item.item}</div>
+                          <div className="font-serif text-[0.82rem] text-ink/85 mt-1">{item.item}</div>
                           <div className="font-serif text-[0.78rem] text-gold mt-0.5">{item.price}</div>
                         </div>
                       </a>
