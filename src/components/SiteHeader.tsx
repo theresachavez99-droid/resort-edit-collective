@@ -14,14 +14,14 @@ const mobileExtras = [
 ] as const;
 
 const navLinkClass =
-  "text-[0.78rem] uppercase tracking-[0.22em] font-medium text-ink hover:text-gold transition-colors";
+  "text-[0.72rem] uppercase tracking-[0.18em] font-medium text-ink hover:text-gold transition-colors whitespace-nowrap py-2";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 bg-ivory/90 backdrop-blur-md border-b border-border/60">
-      <div className="mx-auto max-w-7xl px-5 md:px-8 py-3 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
+      <div className="mx-auto max-w-7xl px-5 md:px-8 py-2 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-6">
         {/* Mobile: hamburger left */}
         <button
           type="button"
@@ -35,17 +35,17 @@ export function SiteHeader() {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center leading-none justify-center md:justify-start"
+          className="flex items-center leading-none justify-center md:justify-start md:max-w-[200px] lg:max-w-[220px] overflow-hidden"
         >
           <img
             src={logo}
             alt="Resort Edit — Curated escapes. Styled your way."
-            className="h-28 md:h-36 w-auto"
+            className="h-20 md:h-24 w-auto md:scale-110 md:origin-left"
           />
         </Link>
 
         {/* Desktop nav (centered between logo and CTA) */}
-        <nav className="hidden md:flex items-center justify-end gap-7 lg:gap-9">
+        <nav className="hidden md:flex items-center justify-end gap-5 lg:gap-7 flex-nowrap">
           {nav.map((n) => (
             <Link
               key={n.to}
@@ -60,10 +60,10 @@ export function SiteHeader() {
         </nav>
 
         {/* Right cluster */}
-        <div className="flex items-center gap-3 md:gap-5 justify-end">
+        <div className="flex items-center gap-4 md:gap-6 justify-end">
           <a
             href="#newsletter"
-            className="text-[0.7rem] uppercase tracking-[0.22em] font-medium text-ivory bg-ink rounded-sm px-3.5 py-2.5 md:px-4 md:py-3 hover:bg-gold transition-colors whitespace-nowrap"
+            className="text-[0.68rem] uppercase tracking-[0.18em] font-medium text-ivory bg-ink rounded-md px-3 py-2 md:px-3.5 md:py-2 hover:bg-gold transition-colors whitespace-nowrap"
           >
             Join the Edit
           </a>
@@ -72,9 +72,9 @@ export function SiteHeader() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Resort Edit on Instagram"
-            className="hidden md:inline-flex text-ink/80 hover:text-gold transition-colors pl-2"
+            className="hidden md:inline-flex items-center text-ink/80 hover:text-gold transition-colors"
           >
-            <Instagram className="w-4 h-4" strokeWidth={1.5} />
+            <Instagram className="w-[18px] h-[18px]" strokeWidth={1.5} />
           </a>
         </div>
       </div>
