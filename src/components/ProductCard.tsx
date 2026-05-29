@@ -13,15 +13,6 @@ export function ProductCard({ item, variant = "compact" }: { item: ShopItem; var
   const href = resolveProductLink(item);
   if (!href) return null;
 
-  const monogram = item.brand
-    .replace(/&/g, "")
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
-
   return (
     <a
       href={href}
@@ -39,8 +30,13 @@ export function ProductCard({ item, variant = "compact" }: { item: ShopItem; var
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-cream to-ivory">
-            <span className="font-display text-gold/70 text-2xl tracking-[0.2em]">{monogram}</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-cream via-ivory to-cream px-4 text-center">
+            <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80 mb-2">
+              {item.brand}
+            </span>
+            <span className="font-serif italic text-ink/60 text-[0.78rem] leading-snug">
+              {item.item}
+            </span>
           </div>
         )}
         {item.replaced && (
