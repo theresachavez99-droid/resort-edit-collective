@@ -25,11 +25,17 @@ function AboutPage() {
         <span className="eyebrow text-gold">Who We Are</span>
         <div className="my-8 h-px w-16 bg-gold mx-auto" />
         <p className="font-serif italic text-2xl md:text-3xl leading-relaxed text-ink">
-          Resort Edit is a digital publication for women who travel with intention and dress with conviction. We believe in the long lunch, the perfect kaftan, the small black book of addresses worth the flight.
+          Resort Edit is for women who travel with intention and dress beautifully wherever they go.
         </p>
         <div className="my-12 h-px w-24 bg-gold mx-auto" />
         <p className="font-serif text-lg leading-relaxed text-ink/80">
-          Each edit is a complete world — a destination, an itinerary, a wardrobe. We share the boutiques, beach clubs and quiet hotels we'd send a friend to, alongside the resortwear we'd actually pack. Our taste leans Mediterranean, our standards are exacting, and our recommendations are the ones we live by.
+          Each edit is a destination, an itinerary, and a wardrobe designed to travel together.
+        </p>
+        <p className="font-serif text-lg leading-relaxed text-ink/80 mt-6">
+          We share the hotels worth extending your trip for, the experiences worth planning around, and the pieces we'd actually pack — from investment resortwear to elevated finds across price points.
+        </p>
+        <p className="font-serif text-lg leading-relaxed text-ink/80 mt-6">
+          From beach clubs to city strolls, long lunches to late dinners, Resort Edit will help you travel well, pack better, and dress for the destination.
         </p>
         <p className="mt-8 eyebrow text-gold">Curated escapes. Styled your way.</p>
       </section>
