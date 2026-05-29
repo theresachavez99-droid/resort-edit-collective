@@ -4,10 +4,12 @@ import { useState } from "react";
 import logo from "@/assets/resort-edit-logo.png";
 
 const nav = [
-  { to: "/", label: "Journal" },
   { to: "/destinations", label: "Destinations" },
-  { to: "/portofino", label: "Shop Edits" },
-  { to: "/brands", label: "Brands" },
+  { to: "/resort-edits", label: "Resort Edits" },
+  { to: "/brands", label: "Brands We Love" },
+] as const;
+
+const mobileExtras = [
   { to: "/about", label: "About" },
 ] as const;
 
@@ -81,7 +83,7 @@ export function SiteHeader() {
       {open && (
         <div className="md:hidden border-t border-border/60 bg-ivory">
           <nav className="flex flex-col px-6 py-4">
-            {nav.map((n) => (
+            {[...nav, ...mobileExtras].map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
