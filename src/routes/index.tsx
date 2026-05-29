@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-stilllife.jpg";
 import heroMuse from "@/assets/hero-muse-portofino.jpg";
 import { portofinoLooks, itinerary, travelTips, whereToStay, resolveProductLink } from "@/data/portofino";
+import { ProductCard } from "@/components/ProductCard";
 import expYacht from "@/assets/exp-yacht.jpg";
 import expBeach from "@/assets/exp-beachclub.jpg";
 import expTour from "@/assets/exp-tour.jpg";
@@ -22,7 +23,6 @@ import lookDinner from "@/assets/look-dinner.jpg";
 import lookDayclub from "@/assets/look-dayclub.jpg";
 import lookTown from "@/assets/look-town.jpg";
 import { Bookmark, Share2 } from "lucide-react";
-import { trackOutbound } from "@/lib/utils";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
@@ -244,39 +244,14 @@ function Index() {
                   <span className="eyebrow text-gold text-[0.6rem]">Shop the Look</span>
                   <div className="mx-auto mt-1 h-px w-8 bg-gold/60" />
                 </div>
-                <ul className="space-y-4">
+                <ul className="grid grid-cols-2 gap-3">
                   {look.shop
                     .filter((item) => resolveProductLink(item) !== null)
                     .map((item) => (
-                    <li key={item.item}>
-                      <a
-                        href={resolveProductLink(item) ?? "#"}
-                        target="_blank"
-                        rel="noopener noreferrer sponsored"
-                        onClick={() =>
-                          trackOutbound({
-                            brand: item.brand,
-                            item: item.item,
-                            href: resolveProductLink(item),
-                          })
-                        }
-                        className="block group rounded-sm -mx-1 px-1 py-1.5 transition-colors hover:bg-gold/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
-                      >
-                        <div className="text-left leading-tight">
-                          <div className="eyebrow text-[0.55rem] text-ink group-hover:text-gold transition-colors flex items-center gap-1.5">
-                            <span>{item.brand}</span>
-                            {item.replaced && (
-                              <span className="eyebrow text-[0.5rem] tracking-[0.2em] text-gold border border-gold/50 px-1 py-px">
-                                Updated
-                              </span>
-                            )}
-                          </div>
-                          <div className="font-serif text-[0.82rem] text-ink/85 mt-1">{item.item}</div>
-                          <div className="font-serif text-[0.78rem] text-gold mt-0.5">{item.price}</div>
-                        </div>
-                      </a>
-                    </li>
-                  ))}
+                      <li key={item.item}>
+                        <ProductCard item={item} variant="compact" />
+                      </li>
+                    ))}
                 </ul>
               </div>
             </article>
