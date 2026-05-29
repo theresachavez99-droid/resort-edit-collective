@@ -20,7 +20,7 @@ export const Route = createFileRoute("/destinations")({
 const vibeBySlug: Record<string, string> = {
   portofino: "Coastal Glam",
   capri: "Mediterranean Escape",
-  "st-tropez": "Beach Clubs",
+  sttropez: "Beach Clubs",
   ibiza: "Island Luxury",
   mallorca: "Mediterranean Escape",
   tulum: "Dinner Destinations",
