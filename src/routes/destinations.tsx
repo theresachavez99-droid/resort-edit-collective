@@ -133,7 +133,7 @@ function DestinationsPage() {
       </section>
 
       {/* JOIN THE EDIT CTA */}
-      <section className="bg-ink text-ivory py-14 md:py-16 px-6 text-center">
+      <section id="newsletter" className="bg-ink text-ivory py-14 md:py-16 px-6 text-center">
         <span className="eyebrow text-gold-soft">Join the Edit</span>
         <h2 className="font-display text-3xl md:text-5xl tracking-wide mt-3 max-w-2xl mx-auto leading-tight">
           Get the next destination before everyone else.
@@ -141,12 +141,25 @@ function DestinationsPage() {
         <p className="mt-4 font-serif italic text-ivory/70 max-w-xl mx-auto">
           New destinations, resort edits, and curated escapes delivered first.
         </p>
-        <a
-          href="#newsletter"
-          className="mt-7 inline-block eyebrow bg-gold text-ink px-7 py-3.5 rounded-md hover:bg-ivory transition-colors"
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
         >
-          Join the Edit →
-        </a>
+          <input
+            type="email"
+            required
+            inputMode="email"
+            autoComplete="email"
+            placeholder="Your email address"
+            className="flex-1 bg-transparent border border-ivory/30 px-5 py-3.5 text-sm text-ivory placeholder:text-ivory/40 focus:outline-none focus:border-gold rounded-md"
+          />
+          <button
+            type="submit"
+            className="eyebrow bg-gold text-ink px-6 py-3.5 rounded-md hover:bg-ivory transition-colors whitespace-nowrap"
+          >
+            Join the Edit →
+          </button>
+        </form>
       </section>
     </div>
   );
