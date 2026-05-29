@@ -11,6 +11,7 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { Bookmark, Share2 } from "lucide-react";
+import { trackOutbound } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -118,7 +119,14 @@ function Index() {
                         href={resolveProductLink(item) ?? "#"}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="flex gap-2 group"
+                        onClick={() =>
+                          trackOutbound({
+                            brand: item.brand,
+                            item: item.item,
+                            href: resolveProductLink(item),
+                          })
+                        }
+                        className="flex gap-2 group rounded-sm -mx-1 px-1 py-1 transition-colors hover:bg-gold/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
                       >
                         <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 bg-cream border border-border/60 flex items-center justify-center">
                           <span className="eyebrow text-[0.5rem] text-gold">edit</span>
