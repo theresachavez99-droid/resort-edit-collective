@@ -189,27 +189,20 @@ function EditorialHero() {
 
 function FiveDayGrid() {
   return (
-    <section className="bg-parchment">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-16 md:py-24">
-        <div className="text-center mb-12 md:mb-16">
-          <span className="eyebrow text-gold tracking-[0.32em]">The Itinerary</span>
-          <h2 className="font-display text-5xl md:text-7xl text-ink mt-5 leading-[0.95] tracking-[0.01em]">
-            Five Days, Five Looks
-          </h2>
-          <div className="mt-6 h-px w-24 bg-gold mx-auto" />
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-4 md:gap-x-6 gap-y-14">
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 pb-10 md:pb-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
           {DAY_OVERVIEW.map((d, i) => (
             <a
               key={d.day}
               href={`#${DAY_SLUGS[i]}`}
-              className="group block text-center bg-ivory pb-6 border border-ink/10 hover:border-gold transition-colors"
+              className="group block text-center bg-ivory border border-ink/15 hover:border-gold transition-colors pt-5 pb-6 px-4"
             >
-              <div className="bg-ink text-gold-soft eyebrow text-[11px] py-3 tracking-[0.32em]">{d.day}</div>
-              <h3 className="mt-5 px-3 font-sans font-bold text-ink text-[13px] md:text-sm leading-snug tracking-[0.14em] uppercase whitespace-pre-line min-h-[2.8rem]">
+              <div className="eyebrow text-ink text-[10px] tracking-[0.3em]">{d.day}</div>
+              <h3 className="mt-3 font-sans font-semibold text-ink text-[12px] md:text-[13px] leading-snug tracking-[0.14em] uppercase whitespace-pre-line min-h-[2.6rem]">
                 {d.title}
               </h3>
-              <div className="mt-5 relative aspect-[3/4] overflow-hidden bg-parchment mx-3">
+              <div className="mt-4 relative aspect-[3/4] overflow-hidden bg-parchment">
                 <img
                   src={DAY_IMG[d.image]}
                   alt={d.title.replace(/\n/g, " ")}
@@ -217,10 +210,10 @@ function FiveDayGrid() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <p className="mt-5 font-serif italic text-ink/80 text-[15px] leading-relaxed px-4">
+              <p className="mt-4 font-serif italic text-ink/75 text-sm leading-relaxed">
                 {d.caption}
               </p>
-              <span className="mt-5 inline-block eyebrow text-gold text-[11px] border-b border-gold pb-1 group-hover:text-ink group-hover:border-ink transition-colors">
+              <span className="mt-4 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 group-hover:text-ink group-hover:border-ink transition-colors">
                 Explore the Look →
               </span>
             </a>
