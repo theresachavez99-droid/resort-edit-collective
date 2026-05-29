@@ -11,6 +11,7 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { Bookmark, Share2 } from "lucide-react";
+import { trackOutbound } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -118,7 +119,6 @@ function Index() {
                         href={resolveProductLink(item) ?? "#"}
                         target="_blank"
                         rel="noreferrer noopener"
-                        rel-noopener
                         onClick={() =>
                           trackOutbound({
                             brand: item.brand,

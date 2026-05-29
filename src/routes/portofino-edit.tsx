@@ -27,6 +27,7 @@ import {
   type EditItem,
 } from "@/data/portofinoEdit";
 import { resolveProductLink } from "@/data/portofino";
+import { trackOutbound } from "@/lib/utils";
 
 const categoryIcons: Record<AccessoryCategory, React.ComponentType<{ className?: string }>> = {
   clothing: Shirt,
@@ -106,7 +107,15 @@ function CategorizedItems({
                       href={resolveProductLink(item) ?? "#"}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="flex justify-between gap-3 group/item"
+                      onClick={() =>
+                        trackOutbound({
+                          brand: item.brand,
+                          item: item.item,
+                          href: resolveProductLink(item),
+                          category: item.category,
+                        })
+                      }
+                      className="flex justify-between gap-3 group/item rounded-sm -mx-1 px-1 py-1 transition-colors hover:bg-gold/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
                     >
                       <div className="text-left leading-tight min-w-0">
                         <div className="eyebrow text-[0.55rem] text-ink group-hover/item:text-gold transition-colors truncate flex items-center gap-1.5">
