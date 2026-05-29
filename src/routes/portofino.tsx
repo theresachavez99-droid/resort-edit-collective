@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { portofinoLooks, itinerary, travelTips } from "@/data/portofino";
+import { portofinoLooks, itinerary, travelTips, resolveProductLink } from "@/data/portofino";
+import { trackOutbound } from "@/lib/utils";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 
 export const Route = createFileRoute("/portofino")({
