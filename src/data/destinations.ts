@@ -5,7 +5,6 @@ import phuket from "@/assets/dest-phuket.jpg";
 import ibiza from "@/assets/dest-ibiza.jpg";
 import tulum from "@/assets/dest-tulum.jpg";
 import mallorca from "@/assets/dest-mallorca.jpg";
-import stbarths from "@/assets/dest-stbarths.jpg";
 
 export type TravelType =
   | "Mediterranean"
@@ -192,31 +191,6 @@ export const destinations: Destination[] = [
       { name: "Casa Jaguar", type: "Bar", note: "Lantern-lit garden, the right last stop of the night." },
     ],
     related: ["phuket", "capri"],
-  },
-  {
-    slug: "stbarths",
-    name: "St. Barths",
-    country: "French West Indies",
-    region: "Caribbean",
-    regionGroup: "Caribbean & Latin America",
-    travelType: "Island",
-    tagline: "Barefoot French luxury above a turquoise cove.",
-    image: stbarths,
-    lat: 17.9,
-    lng: -62.833,
-    overview:
-      "A pocket of French chic in the Caribbean — hillside villas, white-sand coves, and long lunches that drift into rosé-soaked afternoons.",
-    whatToWear: ["White linen dresses", "Gold chain jewelry", "Designer swim", "Raffia clutches"],
-    shopEdits: [{ label: "Coming soon: The St. Barths Edit", href: "/destinations/stbarths" }],
-    itinerary: [
-      { day: "Day 1", plan: "Morning at Shell Beach, long lunch at Nikki Beach, sunset at Eden Rock." },
-      { day: "Day 2", plan: "Boat day around Colombier, dinner and dancing at Bonito." },
-    ],
-    dining: [
-      { name: "Nikki Beach", type: "Beach Club", note: "The original St. Barths long lunch." },
-      { name: "Bonito", type: "Restaurant", note: "Hilltop Latin American kitchen with a harbor view." },
-    ],
-    related: ["tulum", "mallorca"],
   },
   {
     slug: "phuket",

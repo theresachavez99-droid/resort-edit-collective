@@ -1,19 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/SiteHeader";
-import { Palmtree, Anchor, Umbrella, Camera, Compass } from "lucide-react";
-import heroImg from "@/assets/dest-portofino.jpg";
-import yachtImg from "@/assets/look-yacht.jpg";
-import beachImg from "@/assets/look-beach.jpg";
-import dayclubImg from "@/assets/look-dayclub.jpg";
-import dinnerImg from "@/assets/look-dinner.jpg";
-import townImg from "@/assets/look-town.jpg";
-import lookAImg from "@/assets/edit-d2-a.jpg";
-import lookBImg from "@/assets/edit-d4-a.jpg";
-import lookCImg from "@/assets/edit-d1-a.jpg";
-import tipImg from "@/assets/portofino-stilllife.jpg";
-import hotelSplendido from "@/assets/hotel-splendido.jpg";
-import hotelEight from "@/assets/hotel-eight.jpg";
-import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
+import { createFileRoute } from "@tanstack/react-router";
+import { portofinoLooks, itinerary, travelTips } from "@/data/portofino";
+import portofinoImg from "@/assets/dest-portofino.jpg";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
@@ -22,213 +9,196 @@ export const Route = createFileRoute("/portofino")({
       { name: "description", content: "Five complete resort looks and a five-day itinerary for Portofino — yacht days, beach cabanas, sunset dinners and quiet harbor mornings." },
       { property: "og:title", content: "5 Days in Portofino — Resort Edit" },
       { property: "og:description", content: "A luxury style and travel guide to the Italian Riviera." },
-      { property: "og:image", content: heroImg },
+      { property: "og:image", content: portofinoImg },
     ],
   }),
   component: PortofinoPage,
 });
 
-const DAYS = [
-  { n: "DAY 1", title: "YACHT DAY &\nHARBOUR APERITIVO", img: yachtImg, caption: "Open water, hidden coves, and a night in Portofino." },
-  { n: "DAY 2", title: "BEACH CLUB &\nLONG LUNCHES", img: beachImg, caption: "Slow mornings, seafood lunches, seaside glamour." },
-  { n: "DAY 3", title: "POOL CLUB &\nSHOPPING", img: dayclubImg, caption: "Poolside ease, Via Roma, Campagn luxe." },
-  { n: "DAY 4", title: "SUNSET COCKTAILS\n& DINNER WITH A VIEW", img: dinnerImg, caption: "Golden hour, candlelight, harbor glow." },
-  { n: "DAY 5", title: "MARKET STROLLS &\nCOASTAL GOODBYES", img: townImg, caption: "Quiet rituals and a long last lunch." },
-];
-
-const LOOKS = [
-  { tag: "LOOK A", title: "LEMON PRINT SET", img: lookAImg },
-  { tag: "LOOK B", title: "LACE CHIC", img: lookBImg },
-  { tag: "LOOK C", title: "BLUE MAJOLICA SET", img: lookCImg },
-];
-
-const HOTELS = [
-  {
-    name: "Splendido, A Belmond Hotel",
-    img: hotelSplendido,
-    text: "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied views on the Riviera.",
-  },
-  {
-    name: "Eight Hotel Portofino",
-    img: hotelEight,
-    text: "Quietly chic and steps from the piazzetta. A modern Italian retreat for travelers who want to live like a local in the heart of town.",
-  },
-  {
-    name: "Hotel Piccolo Portofino",
-    img: hotelPiccolo,
-    text: "An intimate seaside hideaway tucked into a private cove. Sun-bleached terraces, turquoise water, and the kind of service that anticipates everything.",
-  },
-];
-
-const BOOKINGS = [
-  { icon: Anchor, label: "BOOK A YACHT" },
-  { icon: Umbrella, label: "RESERVE A BEACH CLUB" },
-  { icon: Camera, label: "BOOK A TOUR" },
-  { icon: Compass, label: "VIEW EXPERIENCES" },
-];
-
-function SectionRule({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-6 justify-center mb-10">
-      <span className="h-px flex-1 max-w-[18rem] bg-gold/50" />
-      <h2 className="font-display text-2xl md:text-3xl tracking-[0.18em] uppercase text-ink whitespace-nowrap">
-        {children}
-      </h2>
-      <span className="h-px flex-1 max-w-[18rem] bg-gold/50" />
-    </div>
-  );
-}
-
 function PortofinoPage() {
   return (
-    <div className="bg-ivory min-h-screen">
-      <SiteHeader />
-
-      {/* HERO */}
-      <section className="mx-auto max-w-7xl px-5 md:px-8 pt-6 md:pt-10 pb-12 md:pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center">
-          <div className="aspect-[4/5] overflow-hidden">
-            <img src={heroImg} alt="Portofino harbor in Mediterranean style" className="w-full h-full object-cover" />
-          </div>
-          <div className="md:pl-4">
-            <p className="eyebrow text-gold mb-6">A Style &amp; Itinerary Guide</p>
-            <h1 className="font-display text-ink leading-[0.95] tracking-tight">
-              <span className="block text-4xl md:text-5xl">5 DAYS IN</span>
-              <span className="block text-6xl md:text-[5.5rem] mt-1">PORTOFINO</span>
-            </h1>
-            <p className="font-script text-gold text-5xl md:text-[4.25rem] leading-none mt-2 mb-8">La Dolce Vita</p>
-            <p className="eyebrow text-ink text-[0.85rem] tracking-[0.22em] mb-5 max-w-md">
-              Luxury Labels. Riviera Finds. Resort Style Across Price Points.
-            </p>
-            <p className="font-serif text-ink/80 text-lg leading-relaxed max-w-md mb-6">
-              Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
-            </p>
-            <p className="text-[0.7rem] tracking-[0.28em] uppercase text-ink/60">
-              Zimmermann · Johanna Ortiz · Sir · Faithfull the Brand · More
-            </p>
-          </div>
+    <div>
+      {/* HEADER */}
+      <section className="text-center pt-24 pb-16 px-6 max-w-4xl mx-auto">
+        <span className="eyebrow text-gold">Featured Edit</span>
+        <h1 className="font-display text-5xl md:text-8xl mt-6 tracking-[0.05em] leading-[1]">5 Days in Portofino</h1>
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <span className="hairline" />
+          <span className="eyebrow text-ink/60">A Style & Itinerary Guide</span>
+          <span className="hairline" />
         </div>
+        <p className="font-serif italic text-xl md:text-2xl text-ink/70 mt-10 leading-relaxed">
+          Five days, five looks, and the quiet pleasures of the Italian Riviera — yacht days, waterfront lunches, and sunset moments beautifully dressed.
+        </p>
       </section>
 
-      {/* FIVE-DAY CARD ROW */}
-      <section className="mx-auto max-w-7xl px-5 md:px-8 pb-16">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-5">
-          {DAYS.map((d) => (
-            <article key={d.n} className="bg-ivory border border-gold/25 p-4 flex flex-col">
-              <p className="eyebrow text-gold text-center mb-2">{d.n}</p>
-              <h3 className="font-display text-ink text-[0.85rem] md:text-[0.95rem] tracking-[0.14em] uppercase text-center leading-snug whitespace-pre-line mb-4 min-h-[3.5rem]">
-                {d.title}
-              </h3>
-              <div className="aspect-[3/4] overflow-hidden mb-4">
-                <img src={d.img} alt={d.title} className="w-full h-full object-cover" />
-              </div>
-              <p className="font-serif italic text-ink/75 text-sm text-center leading-snug mb-4 flex-1">
-                {d.caption}
-              </p>
-              <a href="#looks" className="eyebrow text-gold text-center hover:text-ink transition-colors">
-                Explore the Look →
-              </a>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* SHOP THE LOOKS + TIP */}
-      <section id="looks" className="mx-auto max-w-7xl px-5 md:px-8 pb-16">
-        <SectionRule>Shop the Looks</SectionRule>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-          {LOOKS.map((l) => (
-            <article key={l.tag} className="bg-ivory border border-gold/25 p-5 flex flex-col">
-              <p className="eyebrow text-ink/70 text-center mb-1">{l.tag}</p>
-              <h3 className="font-display tracking-[0.18em] text-ink text-sm uppercase text-center mb-5">
-                {l.title}
-              </h3>
-              <div className="aspect-[3/4] overflow-hidden mb-5 bg-parchment">
-                <img src={l.img} alt={l.title} className="w-full h-full object-cover" />
-              </div>
-              <a href="#" className="eyebrow text-gold text-center mt-auto hover:text-ink transition-colors">
-                Shop the Look →
-              </a>
-            </article>
-          ))}
-
-          {/* Resort Edit Tip */}
-          <aside className="flex flex-col gap-5">
-            <div className="bg-cream border border-gold/30 p-6 flex flex-col">
-              <Palmtree className="w-8 h-8 text-gold mb-3" strokeWidth={1.25} />
-              <p className="eyebrow text-gold mb-2">Resort Edit Tip</p>
-              <p className="font-serif text-ink text-lg leading-snug mb-5">
-                Book a cabana.<br />
-                Sip limoncello.<br />
-                Stay until sunset.
-              </p>
-              <Link
-                to="/portofino"
-                className="block text-center bg-gold text-ivory eyebrow tracking-[0.22em] py-3 px-4 hover:bg-ink transition-colors"
+      {/* LOOKS */}
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-6xl px-6 space-y-32">
+          {portofinoLooks.map((look, idx) => {
+            const reverse = idx % 2 === 1;
+            return (
+              <article
+                key={look.title}
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center ${reverse ? "lg:[&>div:first-child]:order-2" : ""}`}
               >
-                Explore Portofino
-              </Link>
-            </div>
-            <div className="aspect-[4/3] overflow-hidden border border-gold/20">
-              <img src={tipImg} alt="Portofino harbor still life" className="w-full h-full object-cover" />
-            </div>
-          </aside>
+                <div className="relative">
+                  <div className="aspect-[3/4] overflow-hidden bg-muted">
+                    <img
+                      src={look.image}
+                      alt={`${look.title} editorial look`}
+                      loading="lazy"
+                      width={1024}
+                      height={1408}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute -top-4 -left-4 bg-gold text-ivory px-5 py-2 eyebrow">
+                    {look.day}
+                  </div>
+                </div>
+
+                <div>
+                  <span className="eyebrow text-gold">Look No. 0{idx + 1}</span>
+                  <h2 className="font-display text-4xl md:text-6xl mt-4 tracking-wide">{look.title}</h2>
+                  <p className="font-serif italic text-lg text-ink/60 mt-3">{look.subtitle}</p>
+                  <div className="my-6 h-px w-16 bg-gold" />
+                  <p className="font-serif text-lg leading-relaxed text-ink/85">{look.caption}</p>
+
+                  {/* Shop the Look */}
+                  <div className="mt-10">
+                    <span className="eyebrow text-ink">Shop the Look</span>
+                    <ul className="mt-5 divide-y divide-border/70">
+                      {look.shop.map((item) => (
+                        <li key={item.item} className="py-3 flex items-baseline justify-between gap-4">
+                          <div>
+                            <div className="eyebrow text-ink/90">{item.brand}</div>
+                            <div className="font-serif italic text-ink/70">{item.item}</div>
+                          </div>
+                          <div className="flex items-center gap-5 shrink-0">
+                            <span className="font-serif text-ink/80">{item.price}</span>
+                            <a
+                              href={item.href}
+                              target="_blank"
+                              rel="noopener noreferrer sponsored"
+                              className="eyebrow text-gold hover:text-ink transition-colors"
+                            >
+                              Shop →
+                            </a>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Itinerary */}
+                  <div className="mt-10 bg-ivory border border-border/60 p-6">
+                    <span className="eyebrow text-gold">The Itinerary</span>
+                    <p className="font-serif italic text-ink/80 mt-3 leading-relaxed">{look.itinerary}</p>
+                    <a
+                      href={look.experience.href}
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                      className="mt-6 inline-block eyebrow text-ivory bg-ink px-6 py-3 hover:bg-gold transition-colors"
+                    >
+                      {look.experience.label} →
+                    </a>
+                  </div>
+
+                  {/* Book This Experience */}
+                  <div className="mt-10">
+                    <span className="eyebrow text-ink">Book This Experience</span>
+                    <p className="font-serif italic text-ink/60 mt-2 text-sm">
+                      Curated, bookable moments to complete the day.
+                    </p>
+                    <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-5">
+                      {look.experiences.map((exp) => {
+                        const href = exp.affiliate_link || exp.backup_link || "#";
+                        return (
+                          <a
+                            key={exp.experience_name}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer sponsored"
+                            className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
+                          >
+                            <div className="aspect-[4/3] overflow-hidden bg-muted">
+                              <img
+                                src={exp.experience_image}
+                                alt={exp.experience_name}
+                                loading="lazy"
+                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                            </div>
+                            <div className="p-4">
+                              <span className="eyebrow text-gold text-[10px]">{exp.price_tier}</span>
+                              <h4 className="font-display text-base tracking-wide mt-2 leading-snug">
+                                {exp.experience_name}
+                              </h4>
+                              <p className="font-serif italic text-ink/65 text-xs mt-2 leading-relaxed">
+                                {exp.experience_description}
+                              </p>
+                              <span className="mt-4 inline-block eyebrow text-[10px] text-ink group-hover:text-gold transition-colors">
+                                Book This Experience →
+                              </span>
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      {/* WHERE TO STAY */}
-      <section className="mx-auto max-w-7xl px-5 md:px-8 pb-16">
-        <SectionRule>Where to Stay</SectionRule>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {HOTELS.map((h) => (
-            <article key={h.name} className="bg-ivory border border-gold/25 grid grid-cols-[2fr_3fr] overflow-hidden">
-              <div className="overflow-hidden">
-                <img src={h.img} alt={h.name} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-5 flex flex-col">
-                <p className="eyebrow text-gold mb-2">Portofino, Italy</p>
-                <h3 className="font-display text-ink text-xl leading-tight mb-3">{h.name}</h3>
-                <p className="font-serif text-ink/75 text-[0.92rem] leading-snug mb-4 flex-1">{h.text}</p>
-                <a href="#" className="eyebrow text-gold hover:text-ink transition-colors">
-                  Book This Stay →
-                </a>
-              </div>
-            </article>
-          ))}
+      {/* ITINERARY & TIPS */}
+      <section className="py-28">
+        <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div>
+            <span className="eyebrow text-gold">The Plan</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">5-Day Portofino Itinerary</h2>
+            <ol className="mt-10 space-y-7">
+              {itinerary.map((d) => (
+                <li key={d.day} className="grid grid-cols-[80px_1fr] gap-5">
+                  <span className="eyebrow text-gold pt-1">{d.day}</span>
+                  <div>
+                    <h3 className="font-display text-xl tracking-wide">{d.title}</h3>
+                    <p className="font-serif italic text-ink/70 mt-1 text-sm leading-relaxed">{d.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div>
+            <span className="eyebrow text-gold">The Notes</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">Portofino Travel Tips</h2>
+            <dl className="mt-10 space-y-6">
+              {travelTips.map((t) => (
+                <div key={t.title} className="border-l-2 border-gold pl-5">
+                  <dt className="eyebrow text-ink">{t.title}</dt>
+                  <dd className="font-serif italic text-ink/70 mt-2 leading-relaxed">{t.text}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </section>
 
-      {/* BOOKING CTA STRIP */}
-      <section className="mx-auto max-w-7xl px-5 md:px-8 pb-16">
-        <h2 className="font-display text-ink text-center text-2xl md:text-3xl tracking-[0.18em] uppercase mb-6">
-          Book Your Portofino Experience
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {BOOKINGS.map((b) => (
-            <a
-              key={b.label}
-              href="#"
-              className="flex items-center justify-center gap-3 bg-gold text-ivory eyebrow tracking-[0.22em] py-5 hover:bg-ink transition-colors"
-            >
-              <b.icon className="w-4 h-4" strokeWidth={1.5} />
-              <span>{b.label}</span>
-            </a>
-          ))}
+      {/* BOOK CTA */}
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <span className="eyebrow text-gold">Make It Yours</span>
+          <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">Book the Portofino Experience</h2>
+          <p className="font-serif italic text-ink/70 mt-5 text-lg">From a private yacht charter to a candlelit dinner at Splendido — every address in this edit, ready to reserve.</p>
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <a href="#" target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-ivory bg-ink px-7 py-4 hover:bg-gold transition-colors">Book Belmond Splendido</a>
+            <a href="#" target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-ink border border-ink px-7 py-4 hover:bg-ink hover:text-ivory transition-colors">Reserve Experiences</a>
+          </div>
         </div>
       </section>
-
-      {/* MINIMAL FOOTER */}
-      <footer className="border-t border-gold/30 bg-ivory">
-        <div className="mx-auto max-w-7xl px-5 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-[0.7rem] tracking-[0.2em] uppercase text-ink/65">
-          <span>© {new Date().getFullYear()} Resort Edit</span>
-          <span>Curated Escapes. Styled Your Way.</span>
-          <span className="normal-case tracking-normal font-serif italic text-ink/60 text-[0.78rem] text-center md:text-right max-w-md">
-            Prices are subject to change. Links may earn a small commission at no extra cost to you.
-          </span>
-        </div>
-      </footer>
     </div>
   );
 }

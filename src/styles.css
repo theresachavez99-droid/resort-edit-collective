@@ -4,7 +4,6 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Italiana&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -67,44 +66,39 @@
   --font-display: "Italiana", "Cormorant Garamond", serif;
   --font-serif: "Cormorant Garamond", "Times New Roman", serif;
   --font-sans: "Inter", system-ui, sans-serif;
-  --font-script: "Pinyon Script", "Allura", cursive;
 
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
   --color-ivory: var(--ivory);
   --color-cream: var(--cream);
   --color-ink: var(--ink);
-  --color-parchment: var(--parchment);
-  --color-terracotta: var(--terracotta);
 }
 
 :root {
   --radius: 0;
-  --ivory: oklch(0.972 0.018 82);
-  --cream: oklch(0.895 0.032 78);
-  --parchment: oklch(0.93 0.028 78);
-  --gold: oklch(0.585 0.135 65);
-  --gold-soft: oklch(0.72 0.09 70);
-  --terracotta: oklch(0.55 0.095 45);
-  --ink: oklch(0.14 0.02 50);
+  --ivory: oklch(0.97 0.018 82);
+  --cream: oklch(0.93 0.028 78);
+  --gold: oklch(0.62 0.11 68);
+  --gold-soft: oklch(0.75 0.075 72);
+  --ink: oklch(0.18 0.018 50);
   --background: var(--ivory);
   --foreground: var(--ink);
-  --card: oklch(0.93 0.028 78);
+  --card: oklch(0.985 0.008 85);
   --card-foreground: var(--ink);
   --popover: var(--ivory);
   --popover-foreground: var(--ink);
   --primary: var(--gold);
   --primary-foreground: var(--ivory);
-  --secondary: var(--parchment);
+  --secondary: var(--cream);
   --secondary-foreground: var(--ink);
-  --muted: oklch(0.9 0.02 78);
-  --muted-foreground: oklch(0.38 0.022 65);
+  --muted: oklch(0.93 0.015 80);
+  --muted-foreground: oklch(0.45 0.02 70);
   --accent: var(--gold-soft);
   --accent-foreground: var(--ink);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.78 0.028 72);
-  --input: oklch(0.82 0.025 74);
+  --border: oklch(0.88 0.02 75);
+  --input: oklch(0.88 0.02 75);
   --ring: var(--gold);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -178,7 +172,6 @@
 
 @utility font-display { font-family: var(--font-display); }
 @utility font-serif { font-family: var(--font-serif); }
-@utility font-script { font-family: var(--font-script); }
 @utility eyebrow {
   font-family: var(--font-sans);
   font-size: 0.7rem;
