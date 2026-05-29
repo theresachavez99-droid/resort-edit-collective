@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { brandCategories } from "@/data/brands";
+import { EditorialDisclosure } from "@/components/EditorialDisclosure";
 
 export const Route = createFileRoute("/brands")({
   head: () => ({
@@ -80,9 +81,7 @@ function BrandsPage() {
           ))}
         </div>
 
-        <p className="mt-24 text-center eyebrow text-[0.55rem] text-ink/50 max-w-xl mx-auto">
-          Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
-        </p>
+        <EditorialDisclosure className="mt-24" />
 
         {/* Partner CTA */}
         <section className="mt-20 border border-border/60 bg-cream/60 px-8 py-14 text-center">

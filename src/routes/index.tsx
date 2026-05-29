@@ -11,6 +11,7 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { Bookmark, Share2, Sun, MapPin } from "lucide-react";
+import { EditorialDisclosure } from "@/components/EditorialDisclosure";
 
 const vacationTips: Record<string, string> = {
   "Day 1": "Charter the boat. Swim the coves. Toast at golden hour.",
@@ -72,8 +73,11 @@ function Index() {
           </p>
         </section>
 
+        {/* Editorial disclosure above shoppable 5-day grid */}
+        <EditorialDisclosure className="mt-12" />
+
         {/* 5-DAY GRID */}
-        <section className="mt-12 space-y-16 sm:space-y-20">
+        <section className="mt-4 space-y-16 sm:space-y-20">
           {portofinoLooks.map((look, i) => (
             <DayEditorial key={look.title} look={look} index={i} />
           ))}
@@ -170,9 +174,7 @@ function Index() {
           Explore the Full Portofino Edit &nbsp;→
         </Link>
 
-        <p className="mt-6 text-center eyebrow text-[0.55rem] text-ink/50">
-          Prices are subject to change. Links may earn a small commission at no extra cost to you.
-        </p>
+        <EditorialDisclosure className="mt-10" />
       </div>
     </div>
   );
