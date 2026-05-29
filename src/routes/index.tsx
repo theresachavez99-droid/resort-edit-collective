@@ -345,6 +345,40 @@ function Index() {
           </div>
         </section>
 
+        {/* NEWSLETTER — editorial */}
+        <section
+          id="newsletter"
+          className="mt-20 md:mt-28 border-y border-gold/30 py-14 md:py-20 text-center"
+        >
+          <p className="eyebrow text-gold text-[0.7rem] tracking-[0.32em]">The Resort Edit</p>
+          <h2 className="mt-4 font-display text-3xl sm:text-4xl md:text-5xl tracking-[0.02em] text-ink">
+            Join the <span className="italic font-serif text-gold">Edit</span>
+          </h2>
+          <p className="mt-5 font-serif text-base md:text-lg text-ink/70 leading-relaxed max-w-xl mx-auto">
+            Curated destination guides and resort inspiration for women who
+            dress for the destination.
+          </p>
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="mt-10 flex flex-col sm:flex-row gap-3 max-w-md mx-auto px-4"
+          >
+            <input
+              type="email"
+              required
+              inputMode="email"
+              autoComplete="email"
+              placeholder="Your email address"
+              className="flex-1 bg-transparent border-b border-ink/30 px-1 py-3 text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:border-gold transition-colors"
+            />
+            <button
+              type="submit"
+              className="eyebrow text-[0.7rem] tracking-[0.28em] bg-ink text-ivory px-7 py-3 hover:bg-gold transition-colors whitespace-nowrap"
+            >
+              Subscribe →
+            </button>
+          </form>
+        </section>
+
         {/* FOOTER BAR */}
         <Link
           to="/portofino"
