@@ -184,7 +184,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 2",
     title: "Beach Club & Long Lunches",
-    subtitle: "Slow mornings, seafood lunches, seaside glamour.",
+    subtitle: "Terrace tables, long lunches, seaside glamour.",
     caption:
       "Trade the morning for a cliffside cabana above Paraggi, then linger over crudo beneath the pines until the coastal path back into town turns gold.",
     image: beach,
@@ -365,7 +365,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 4",
     title: "Sunset Cocktails & Dinner With a View",
-    subtitle: "Golden hour, candlelight, dinner with a view.",
+    subtitle: "Golden hour, candlelight, waterfront tables.",
     caption:
       "A silk dress, a rooftop cocktail high above the cliffs, and a long Italian dinner unfolding as the lights of the harbor blink on one by one.",
     image: dinner,
@@ -457,7 +457,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 5",
     title: "Market Strolls & Coastal Goodbyes",
-    subtitle: "Harbor sunrise, market strolls, one last lunch.",
+    subtitle: "Morning strolls, market baskets, one last lunch.",
     caption:
       "Climb the path to Castello Brown for one last look over the harbor, then drift down to a waterside table where lunch turns into the kind of farewell that already feels like a return.",
     image: town,
@@ -551,10 +551,10 @@ export const portofinoLooks: Look[] = [
 
 export const itinerary = [
   { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Open water, hidden coves, harbor sunset." },
-  { day: "Day 2", title: "Beach Club & Long Lunches", text: "Slow mornings, seafood lunches, seaside glamour." },
+  { day: "Day 2", title: "Beach Club & Long Lunches", text: "Terrace tables, long lunches, seaside glamour." },
   { day: "Day 3", title: "Pool Club, Shopping & Aperitivo", text: "Poolside ease, Via Roma, Campari hour." },
-  { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "Golden hour, candlelight, dinner with a view." },
-  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Harbor sunrise, market strolls, one last lunch." },
+  { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "Golden hour, candlelight, waterfront tables." },
+  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Morning strolls, market baskets, one last lunch." },
 ];
 
 export const travelTips = [
