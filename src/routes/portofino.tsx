@@ -99,7 +99,6 @@ function PortofinoPage() {
   return (
     <div>
       <EditorialHero />
-      <ResortEditTipFeature />
       <FiveDayGrid />
       <ShopTheLooks />
       <WhereToStay />
@@ -144,52 +143,41 @@ const DAY_IMG: Record<string, string> = {
 function EditorialHero() {
   return (
     <section className="bg-ivory">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 pt-6 md:pt-10 pb-10 md:pb-14">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-stretch">
-          {/* Dominant image */}
-          <div className="lg:col-span-7">
-            <div className="relative aspect-[4/5] lg:aspect-[5/6] overflow-hidden bg-muted shadow-[0_30px_80px_-40px_rgba(20,15,10,0.35)]">
+      <div className="mx-auto max-w-7xl px-6 pt-6 md:pt-8 pb-10 md:pb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          <div>
+            <div className="relative aspect-[4/5] overflow-hidden bg-muted">
               <img
                 src={portofinoImg}
                 alt="Portofino harbor, woman in printed resort wear"
                 className="h-full w-full object-cover"
               />
-              <div className="absolute top-5 left-5 bg-ivory/95 text-ink px-4 py-2 eyebrow text-[10px]">
-                Italian Riviera · Edition 01
-              </div>
             </div>
           </div>
-
-          {/* Editorial copy */}
-          <div className="lg:col-span-5 flex flex-col justify-center lg:pl-2">
-            <span className="eyebrow text-gold text-[11px] tracking-[0.32em]">
+          <div className="lg:pt-10">
+            <span className="eyebrow text-gold text-[11px] tracking-[0.3em]">
               A Style &amp; Itinerary Guide
             </span>
-            <h1 className="font-display mt-7 leading-[0.86] tracking-[0.005em]">
-              <span className="block text-6xl md:text-7xl text-ink">5 DAYS IN</span>
-              <span className="block text-[5.5rem] md:text-[10rem] lg:text-[11rem] text-ink mt-2 -ml-[0.04em]">
+            <h1 className="font-display mt-6 leading-[0.92] tracking-[0.01em]">
+              <span className="block text-4xl md:text-5xl text-ink">5 DAYS IN</span>
+              <span className="block text-6xl md:text-8xl lg:text-[8.5rem] text-ink mt-1">
                 PORTOFINO
               </span>
-              <span className="font-script text-gold text-[3.75rem] md:text-[6rem] lg:text-[7.5rem] block mt-3 leading-[0.9]">
+              <span className="font-script text-gold text-5xl md:text-7xl lg:text-[5.5rem] block mt-2 leading-[0.95]">
                 La Dolce Vita
               </span>
             </h1>
-            <div className="mt-10 h-px w-20 bg-gold" />
-            <p className="mt-7 font-sans uppercase tracking-[0.22em] text-ink text-base md:text-lg font-semibold leading-snug max-w-md">
+            <p className="mt-10 font-sans uppercase tracking-[0.18em] text-ink text-sm md:text-base font-semibold leading-relaxed max-w-md">
               Luxury labels. Riviera finds.<br />Resort style across price points.
             </p>
-            <p className="mt-5 font-serif italic text-ink/70 text-lg md:text-xl leading-relaxed max-w-md">
+            <p className="mt-5 font-serif text-ink/70 text-base md:text-lg leading-relaxed max-w-md">
               Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-ink/70 eyebrow text-[10px]">
-              <span>Zimmermann</span>
-              <span className="text-gold">·</span>
-              <span>Johanna Ortiz</span>
-              <span className="text-gold">·</span>
-              <span>Sir</span>
-              <span className="text-gold">·</span>
-              <span>Faithfull the Brand</span>
-              <span className="text-gold">·</span>
+            <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-ink/65 eyebrow text-[10px]">
+              <span>Zimmermann</span><span className="text-ink/30">·</span>
+              <span>Johanna Ortiz</span><span className="text-ink/30">·</span>
+              <span>Sir</span><span className="text-ink/30">·</span>
+              <span>Faithfull the Brand</span><span className="text-ink/30">·</span>
               <span>More</span>
             </div>
           </div>
@@ -199,67 +187,22 @@ function EditorialHero() {
   );
 }
 
-function ResortEditTipFeature() {
-  return (
-    <section className="bg-ink text-ivory">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-14 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
-          <div className="md:col-span-7">
-            <div className="relative aspect-[16/9] overflow-hidden">
-              <img
-                src={stillLife}
-                alt="Portofino still life — quilted bag and prosecco at sunset"
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-ink/40 via-transparent to-transparent" />
-            </div>
-          </div>
-          <div className="md:col-span-5">
-            <div className="text-gold text-4xl leading-none">✦</div>
-            <span className="eyebrow text-gold mt-5 block tracking-[0.32em]">Resort Edit Tip</span>
-            <p className="font-display text-4xl md:text-5xl lg:text-6xl text-ivory mt-6 leading-[1.05] tracking-[0.01em]">
-              Book a cabana.<br />
-              Sip limoncello.<br />
-              <span className="font-script text-gold text-5xl md:text-7xl block mt-3 leading-none">
-                Stay until sunset.
-              </span>
-            </p>
-            <a
-              href="#long-form"
-              className="mt-9 inline-block bg-gold text-ink eyebrow text-[11px] px-7 py-4 hover:bg-ivory transition-colors"
-            >
-              Explore Portofino →
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function FiveDayGrid() {
   return (
-    <section className="bg-parchment">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-16 md:py-24">
-        <div className="text-center mb-12 md:mb-16">
-          <span className="eyebrow text-gold tracking-[0.32em]">The Itinerary</span>
-          <h2 className="font-display text-5xl md:text-7xl text-ink mt-5 leading-[0.95] tracking-[0.01em]">
-            Five Days, Five Looks
-          </h2>
-          <div className="mt-6 h-px w-24 bg-gold mx-auto" />
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-4 md:gap-x-6 gap-y-14">
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 pb-10 md:pb-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
           {DAY_OVERVIEW.map((d, i) => (
             <a
               key={d.day}
               href={`#${DAY_SLUGS[i]}`}
-              className="group block text-center bg-ivory pb-6 border border-ink/10 hover:border-gold transition-colors"
+              className="group block text-center bg-ivory border border-ink/15 hover:border-gold transition-colors pt-5 pb-6 px-4"
             >
-              <div className="bg-ink text-gold-soft eyebrow text-[11px] py-3 tracking-[0.32em]">{d.day}</div>
-              <h3 className="mt-5 px-3 font-sans font-bold text-ink text-[13px] md:text-sm leading-snug tracking-[0.14em] uppercase whitespace-pre-line min-h-[2.8rem]">
+              <div className="eyebrow text-ink text-[10px] tracking-[0.3em]">{d.day}</div>
+              <h3 className="mt-3 font-sans font-semibold text-ink text-[12px] md:text-[13px] leading-snug tracking-[0.14em] uppercase whitespace-pre-line min-h-[2.6rem]">
                 {d.title}
               </h3>
-              <div className="mt-5 relative aspect-[3/4] overflow-hidden bg-parchment mx-3">
+              <div className="mt-4 relative aspect-[3/4] overflow-hidden bg-parchment">
                 <img
                   src={DAY_IMG[d.image]}
                   alt={d.title.replace(/\n/g, " ")}
@@ -267,10 +210,10 @@ function FiveDayGrid() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <p className="mt-5 font-serif italic text-ink/80 text-[15px] leading-relaxed px-4">
+              <p className="mt-4 font-serif italic text-ink/75 text-sm leading-relaxed">
                 {d.caption}
               </p>
-              <span className="mt-5 inline-block eyebrow text-gold text-[11px] border-b border-gold pb-1 group-hover:text-ink group-hover:border-ink transition-colors">
+              <span className="mt-4 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 group-hover:text-ink group-hover:border-ink transition-colors">
                 Explore the Look →
               </span>
             </a>
@@ -290,46 +233,64 @@ const SHOP_LOOKS = [
 function ShopTheLooks() {
   return (
     <section className="bg-ivory">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-20 md:py-28">
-        <div className="text-center mb-14 md:mb-20">
-          <span className="eyebrow text-gold tracking-[0.32em]">Shoppable Editorial</span>
-          <h2 className="font-display text-5xl md:text-7xl lg:text-8xl text-ink mt-5 leading-[0.95]">
-            Shop The Looks
-          </h2>
-          <p className="font-script text-gold text-4xl md:text-5xl mt-3 leading-none">
-            three signature edits
-          </p>
-          <div className="mt-7 h-px w-24 bg-gold mx-auto" />
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-10 md:py-14">
+        <div className="text-center mb-8 md:mb-10">
+          <div className="flex items-center justify-center gap-4">
+            <span className="h-px w-14 bg-gold/60" />
+            <h2 className="font-display text-2xl md:text-3xl tracking-[0.18em] text-ink">SHOP THE LOOKS</h2>
+            <span className="h-px w-14 bg-gold/60" />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
           {SHOP_LOOKS.map((look) => (
             <a
               key={look.id}
               href={look.href}
-              className="group block"
+              className="group block bg-ivory border border-ink/15 hover:border-gold transition-colors pt-5 pb-6 px-4 text-center"
             >
-              <div className="relative aspect-[3/4] overflow-hidden bg-parchment">
+              <div className="eyebrow text-ink text-[10px] tracking-[0.3em]">LOOK {look.id}</div>
+              <div className="mt-2 font-sans font-semibold text-ink text-[12px] uppercase tracking-[0.14em]">
+                {look.name}
+              </div>
+              <div className="mt-5 relative aspect-[3/4] overflow-hidden bg-parchment">
                 <img
                   src={look.image}
                   alt={`Look ${look.id} — ${look.name}`}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute top-0 left-0 bg-ink text-gold-soft eyebrow text-[11px] px-5 py-3 tracking-[0.32em]">
-                  Look {look.id}
-                </div>
               </div>
-              <div className="mt-6 text-center">
-                <h3 className="font-display text-3xl md:text-4xl text-ink tracking-wide leading-tight">
-                  {look.name}
-                </h3>
-                <span className="mt-4 inline-block eyebrow text-gold text-[11px] border-b border-gold pb-1 group-hover:text-ink group-hover:border-ink transition-colors">
-                  Shop the Look →
-                </span>
-              </div>
+              <span className="mt-5 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 group-hover:text-ink group-hover:border-ink transition-colors">
+                Shop the Look →
+              </span>
             </a>
           ))}
+
+          {/* Resort Edit Tip — 4th column */}
+          <aside className="bg-gold/20 border border-gold/40 p-5 md:p-6 flex flex-col">
+            <div className="text-gold text-3xl leading-none">🌴</div>
+            <div className="eyebrow text-gold mt-3 tracking-[0.3em]">Resort Edit Tip</div>
+            <p className="font-serif italic text-ink text-lg leading-snug mt-4">
+              Book a cabana.<br />
+              Sip limoncello.<br />
+              Stay until sunset.
+            </p>
+            <a
+              href="#long-form"
+              className="mt-5 inline-block bg-gold text-ivory eyebrow text-[10px] px-5 py-3 text-center hover:bg-ink transition-colors tracking-[0.2em]"
+            >
+              Explore Portofino
+            </a>
+            <div className="mt-5 relative aspect-[4/3] overflow-hidden bg-ivory">
+              <img
+                src={stillLife}
+                alt="Portofino still life — handbag and prosecco"
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </aside>
         </div>
       </div>
     </section>
@@ -344,17 +305,19 @@ const HOTEL_IMG: Record<string, string> = {
 
 function WhereToStay() {
   return (
-    <section className="bg-parchment">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-20 md:py-28">
-        <div className="text-center mb-14">
-          <span className="eyebrow text-gold tracking-[0.32em]">The Address Book</span>
-          <h2 className="font-display text-5xl md:text-7xl text-ink mt-5 leading-[0.95]">Where To Stay</h2>
-          <div className="mt-6 h-px w-24 bg-gold mx-auto" />
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-10 md:py-14 border-t border-ink/15">
+        <div className="text-center mb-8 md:mb-10">
+          <div className="flex items-center justify-center gap-4">
+            <span className="h-px w-14 bg-gold/60" />
+            <h2 className="font-display text-2xl md:text-3xl tracking-[0.18em] text-ink">WHERE TO STAY</h2>
+            <span className="h-px w-14 bg-gold/60" />
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           {whereToStay.map((h) => (
-            <article key={h.hotel_name} className="bg-ivory border border-ink/10 hover:border-gold transition-colors flex flex-col">
-              <div className="relative aspect-[4/3] overflow-hidden bg-parchment">
+            <article key={h.hotel_name} className="grid grid-cols-5 gap-4 bg-ivory border border-ink/15 hover:border-gold transition-colors p-3">
+              <div className="col-span-2 relative aspect-[4/5] overflow-hidden bg-parchment">
                 <img
                   src={HOTEL_IMG[h.image_url] ?? portofinoImg}
                   alt={h.hotel_name}
@@ -362,15 +325,15 @@ function WhereToStay() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="p-6 md:p-7 flex flex-col flex-1">
-                <div className="eyebrow text-gold text-[10px] tracking-[0.32em]">{h.destination}</div>
-                <h3 className="font-display text-2xl md:text-3xl text-ink mt-3 leading-tight">{h.hotel_name}</h3>
-                <p className="font-serif italic text-ink/75 text-[15px] mt-3 leading-relaxed flex-1">{h.description}</p>
+              <div className="col-span-3 flex flex-col py-2 pr-2">
+                <div className="eyebrow text-gold text-[10px] tracking-[0.3em]">{h.destination}</div>
+                <h3 className="font-display text-xl md:text-2xl text-ink mt-2 leading-tight">{h.hotel_name}</h3>
+                <p className="font-serif italic text-ink/75 text-[13px] mt-2 leading-relaxed flex-1">{h.description}</p>
                 <a
                   href={h.affiliate_link || h.booking_link || "#"}
                   target="_blank"
                   rel="noopener noreferrer sponsored"
-                  className="mt-5 inline-block eyebrow text-gold text-[11px] border-b border-gold pb-1 hover:text-ink hover:border-ink transition-colors self-start"
+                  className="mt-3 inline-block eyebrow text-gold text-[10px] border-b border-gold pb-0.5 hover:text-ink hover:border-ink transition-colors self-start"
                 >
                   Book This Stay →
                 </a>
@@ -391,22 +354,19 @@ function BookExperience() {
     { icon: Compass, label: "View Experiences", href: "#travel-guide" },
   ];
   return (
-    <section className="bg-ink text-ivory">
-      <div className="mx-auto max-w-[1400px] px-4 md:px-8 py-14 md:py-16">
-        <div className="text-center">
-          <span className="eyebrow text-gold tracking-[0.32em]">Reserve Your Stay</span>
-          <h2 className="font-display text-4xl md:text-5xl text-ivory mt-4 leading-tight">
-            Book Your Portofino Experience
-          </h2>
-        </div>
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+    <section className="bg-ivory">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 pt-4 pb-8">
+        <h2 className="text-center font-display text-xl md:text-2xl tracking-[0.18em] text-ink py-5">
+          BOOK YOUR PORTOFINO EXPERIENCE
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-1.5">
           {ctas.map((c) => (
             <a
               key={c.label}
               href={c.href}
-              className="bg-gold text-ink hover:bg-ivory transition-colors py-6 px-4 flex items-center justify-center gap-3 eyebrow text-[11px] tracking-[0.2em]"
+              className="bg-gold text-ivory hover:bg-ink transition-colors py-5 px-4 flex items-center justify-center gap-3 eyebrow text-[11px] tracking-[0.2em]"
             >
-              <c.icon className="h-5 w-5" />
+              <c.icon className="h-4 w-4" />
               <span>{c.label}</span>
             </a>
           ))}
