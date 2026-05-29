@@ -2,43 +2,21 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Heart,
-  Share2,
   ShoppingBag,
   ChevronDown,
   ArrowLeft,
   Plus,
-  Shirt,
-  Footprints,
-  Gem,
-  Sun,
-  Layers,
-  Sparkles,
 } from "lucide-react";
 import {
   portofinoEdit,
   tiers,
   lookMetas,
-  categoryOrder,
-  categoryLabels,
-  requiredCategories,
   type Tier,
   type LookKey,
-  type AccessoryCategory,
   type EditItem,
 } from "@/data/portofinoEdit";
 import { resolveProductLink } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
-
-const categoryIcons: Record<AccessoryCategory, React.ComponentType<{ className?: string }>> = {
-  clothing: Shirt,
-  shoes: Footprints,
-  bag: ShoppingBag,
-  jewelry: Gem,
-  sunglasses: Sun,
-  layer: Layers,
-  finishing: Sparkles,
-};
-import logo from "@/assets/resort-edit-logo.png";
 
 export const Route = createFileRoute("/portofino-edit")({
   head: () => ({
