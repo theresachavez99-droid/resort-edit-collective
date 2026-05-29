@@ -194,20 +194,18 @@ function Index() {
         {/* 5-DAY GRID */}
         <section className="mt-12 md:mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {portofinoLooks.map((look, i) => {
-            // Per-image framing so the model's head, eye line, torso and hem
-            // sit at the same vertical position across all five Day cards.
-            // The source images have the model at different scales and offsets,
-            // so we zoom + position each image individually inside a shared
-            // 4:5 frame. Tuned so the cards read as one cohesive editorial set.
+            // Per-image object-position so the model's head sits near the top
+            // of the shared 4:5 frame across all five cards. object-cover
+            // guarantees the image fills the container with no empty space.
             // Order matches portofinoLooks: yacht, beach, dayclub, dinner, town.
-            const frames = [
-              { width: 116.6, left: -3.6, top: -12.1 },  // yacht
-              { width: 106.0, left: -9.4, top: -5.8 },   // beach
-              { width: 100.0, left: -2.0, top: -1.0 },   // dayclub
-              { width: 105.0, left: -2.5, top: -8.0 },   // dinner
-              { width: 105.0, left: -2.5, top: -6.0 },   // town
+            const objectPositions = [
+              "50% 18%", // yacht
+              "50% 12%", // beach
+              "50% 15%", // dayclub
+              "50% 22%", // dinner
+              "50% 20%", // town
             ];
-            const frame = frames[i] ?? frames[0];
+            const objectPosition = objectPositions[i] ?? "50% 20%";
             return (
             <article key={look.title} className="bg-card flex flex-col">
               {/* Day banner */}
@@ -223,13 +221,8 @@ function Index() {
                   loading="lazy"
                   width={848}
                   height={1264}
-                  className="absolute max-w-none"
-                  style={{
-                    width: `${frame.width}%`,
-                    height: "auto",
-                    left: `${frame.left}%`,
-                    top: `${frame.top}%`,
-                  }}
+                  className="absolute inset-0 block h-full w-full object-cover"
+                  style={{ objectPosition }}
                 />
               </div>
               {/* Caption */}
