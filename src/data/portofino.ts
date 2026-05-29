@@ -289,7 +289,7 @@ export const portofinoLooks: Look[] = [
   },
   {
     day: "Day 3",
-    title: "Pool & Shopping in Town",
+    title: "POOL & SHOPPING IN TOWN",
     subtitle: "Poolside ease, Via Roma, Campari hour.",
     caption:
       "Drift from a sun-warmed daybed into the cool of the ateliers along Via Roma, landing in the piazzetta just as the yachts come in and the Prosecco starts to pour.",
