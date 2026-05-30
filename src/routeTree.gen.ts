@@ -17,6 +17,7 @@ import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PortofinoDayChar123dayChar125RouteImport } from './routes/portofino.day-{$day}'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 
@@ -60,6 +61,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortofinoDayChar123dayChar125Route =
+  PortofinoDayChar123dayChar125RouteImport.update({
+    id: '/day-{$day}',
+    path: '/day-{$day}',
+    getParentRoute: () => PortofinoRoute,
+  } as any)
 const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -76,24 +83,26 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
-  '/portofino': typeof PortofinoRoute
+  '/portofino': typeof PortofinoRouteWithChildren
   '/portofino-edit': typeof PortofinoEditRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
-  '/portofino': typeof PortofinoRoute
+  '/portofino': typeof PortofinoRouteWithChildren
   '/portofino-edit': typeof PortofinoEditRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -101,12 +110,13 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
-  '/portofino': typeof PortofinoRoute
+  '/portofino': typeof PortofinoRouteWithChildren
   '/portofino-edit': typeof PortofinoEditRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
+    | '/portofino/day-{$day}'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
+    | '/portofino/day-{$day}'
   id:
     | '__root__'
     | '/'
@@ -145,6 +157,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
+    | '/portofino/day-{$day}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -152,7 +165,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BrandsRoute: typeof BrandsRouteWithChildren
   DestinationsRoute: typeof DestinationsRouteWithChildren
-  PortofinoRoute: typeof PortofinoRoute
+  PortofinoRoute: typeof PortofinoRouteWithChildren
   PortofinoEditRoute: typeof PortofinoEditRoute
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -216,6 +229,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portofino/day-{$day}': {
+      id: '/portofino/day-{$day}'
+      path: '/day-{$day}'
+      fullPath: '/portofino/day-{$day}'
+      preLoaderRoute: typeof PortofinoDayChar123dayChar125RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
     '/destinations/$slug': {
       id: '/destinations/$slug'
       path: '/$slug'
@@ -256,12 +276,24 @@ const DestinationsRouteWithChildren = DestinationsRoute._addFileChildren(
   DestinationsRouteChildren,
 )
 
+interface PortofinoRouteChildren {
+  PortofinoDayChar123dayChar125Route: typeof PortofinoDayChar123dayChar125Route
+}
+
+const PortofinoRouteChildren: PortofinoRouteChildren = {
+  PortofinoDayChar123dayChar125Route: PortofinoDayChar123dayChar125Route,
+}
+
+const PortofinoRouteWithChildren = PortofinoRoute._addFileChildren(
+  PortofinoRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   BrandsRoute: BrandsRouteWithChildren,
   DestinationsRoute: DestinationsRouteWithChildren,
-  PortofinoRoute: PortofinoRoute,
+  PortofinoRoute: PortofinoRouteWithChildren,
   PortofinoEditRoute: PortofinoEditRoute,
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -269,3 +301,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
