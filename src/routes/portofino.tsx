@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { portofinoLooks } from "@/data/portofino";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
 import d1a from "@/assets/edit-d1-a.jpg";
