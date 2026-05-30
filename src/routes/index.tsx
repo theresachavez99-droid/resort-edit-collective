@@ -68,19 +68,19 @@ function Index() {
           </div>
           <div className="lg:pt-10 lg:pl-2">
             <p className="eyebrow text-gold text-[0.7rem] tracking-[0.3em]">A Style &amp; Itinerary Guide</p>
-            <h1 className="font-display mt-6 text-5xl sm:text-6xl lg:text-[5.5rem] xl:text-[6.5rem] leading-[0.95] tracking-[0.01em] text-ink">
+            <h1 className="font-display mt-6 text-[2.6rem] sm:text-[3.2rem] lg:text-[4.75rem] xl:text-[5.6rem] leading-[0.95] tracking-[0.01em] text-ink">
               5 DAYS IN
               <br />
               PORTOFINO
             </h1>
             <p
-              className="font-serif italic text-5xl sm:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.9] tracking-[-0.015em] -mt-2 -ml-1"
-              style={{ color: "oklch(0.52 0.13 62)" }}
+              className="font-serif italic text-[2.25rem] sm:text-[2.75rem] lg:text-[3.5rem] xl:text-[3.9rem] leading-[0.95] tracking-[-0.01em] mt-1 -ml-0.5"
+              style={{ color: "oklch(0.62 0.12 66)" }}
             >
               La Dolce Vita
             </p>
-            <div className="my-10 h-px w-32 bg-gold/80" />
-            <p className="font-display text-ink uppercase font-semibold text-lg sm:text-xl lg:text-[1.55rem] tracking-[0.12em] leading-[1.15] max-w-[65%]">
+            <div className="mt-14 mb-12 h-px w-32 bg-gold/80" />
+            <p className="font-serif text-ink font-semibold text-base sm:text-lg lg:text-[1.2rem] tracking-[0.01em] leading-[1.55] max-w-[60%]">
               Luxury Labels. Riviera Finds. Resort Style Across Price Points.
             </p>
             <p className="mt-6 font-serif text-base lg:text-lg text-ink/70 leading-relaxed max-w-lg">
