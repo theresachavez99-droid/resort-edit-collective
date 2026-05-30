@@ -194,7 +194,7 @@ function PortofinoDayPage() {
               return (
                 <Link
                   key={d}
-                  to="/portofino/day-$day"
+                  to="/portofino/day-{$day}"
                   params={{ day: d.replace("day-", "") }}
                   className="group inline-flex flex-col items-center"
                 >
