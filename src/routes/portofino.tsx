@@ -76,22 +76,41 @@ function PortofinoPage() {
           </p>
         </div>
 
-        <div className="mx-auto max-w-7xl px-6 space-y-28 md:space-y-36">
-          {portofinoLooks.map((look) => {
-            const images = lookImages[look.day] ?? [look.image, look.image, look.image];
-            const titles = lookTitlesByDay[look.day] ?? ["Look 1", "Look 2", "Look 3"];
-            const tip = tipByDay[look.day] ?? "";
-
-            return (
-              <DayLooks
-                key={look.day}
-                look={look}
-                images={images}
-                titles={titles}
-                tip={tip}
-              />
-            );
-          })}
+        <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {dayNav.map((d) => (
+            <Link
+              key={d.slug}
+              to="/portofino/day-{$day}"
+              params={{ day: d.slug.replace("day-", "") }}
+              className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
+            >
+              <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                <img
+                  src={d.image}
+                  alt={`${d.label} — ${d.title}`}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+                <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.6rem]">
+                  {d.label.toUpperCase()}
+                </div>
+              </div>
+              <div className="p-6">
+                <span className="eyebrow text-gold text-[0.6rem] tracking-[0.35em]">
+                  {d.label.toUpperCase()}
+                </span>
+                <h3 className="font-display text-2xl tracking-wide mt-2 leading-snug">
+                  {d.title}
+                </h3>
+                <p className="font-serif italic text-ink/65 mt-3 leading-relaxed">
+                  {d.caption}
+                </p>
+                <span className="mt-5 inline-block eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
+                  View {d.label} Looks →
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
