@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram } from "lucide-react";
 import { useState } from "react";
-import logo from "@/assets/resort-edit-logo.png";
+import logo from "@/assets/resort-edit-logo-ivory.png";
 
 export function SiteFooter() {
   const [submitted, setSubmitted] = useState(false);
@@ -9,17 +9,16 @@ export function SiteFooter() {
 
   return (
     <footer id="newsletter" className="bg-ink text-ivory mt-32">
-      <div className="mx-auto max-w-5xl px-6 pt-10 md:pt-14 pb-9 md:pb-11 text-center flex flex-col items-center">
+      <div className="mx-auto max-w-5xl px-6 pt-9 md:pt-12 pb-9 md:pb-11 text-center flex flex-col items-center">
         <img
           src={logo}
           alt="Resort Edit"
           loading="lazy"
           width={1024}
           height={1024}
-          style={{ mixBlendMode: "screen" }}
-          className="h-72 md:h-[22rem] w-auto -my-12 md:-my-16 select-none"
+          className="w-[320px] max-w-full h-auto select-none"
         />
-        <h2 className="mt-2 font-display text-3xl md:text-5xl tracking-wide text-ivory">
+        <h2 className="mt-6 font-display text-3xl md:text-5xl tracking-wide text-ivory">
           The Next Edit
         </h2>
         <p className="mt-3 text-ivory/85 max-w-xl font-serif text-lg md:text-xl italic">
