@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { destinations, destinationHref } from "@/data/destinations";
-import { WorldMap } from "@/components/WorldMap";
 import { DestinationLink } from "@/components/DestinationLink";
 import { absoluteUrl } from "@/lib/site";
 
@@ -38,75 +38,171 @@ const editsBySlug: Record<string, number> = {
   phuket: 15,
 };
 
+const FEATURED_SLUGS = ["portofino", "capri", "sttropez", "mallorca", "ibiza", "tulum"] as const;
+
+type FilterKey = "All" | "Italian Riviera" | "Beach Clubs" | "Island Escapes" | "Mediterranean" | "Tropical";
+
+const FILTERS: FilterKey[] = [
+  "All",
+  "Italian Riviera",
+  "Beach Clubs",
+  "Island Escapes",
+  "Mediterranean",
+  "Tropical",
+];
+
+const filterTagsBySlug: Record<string, FilterKey[]> = {
+  portofino: ["Italian Riviera", "Mediterranean"],
+  capri: ["Italian Riviera", "Island Escapes", "Mediterranean"],
+  sttropez: ["Beach Clubs", "Mediterranean"],
+  mallorca: ["Island Escapes", "Mediterranean"],
+  ibiza: ["Beach Clubs", "Island Escapes", "Mediterranean"],
+  tulum: ["Tropical"],
+};
+
 function DestinationsPage() {
-  const featured = destinations;
+  const featured = useMemo(
+    () =>
+      FEATURED_SLUGS.map((slug) => destinations.find((d) => d.slug === slug)!).filter(Boolean),
+    [],
+  );
+  const [filter, setFilter] = useState<FilterKey>("All");
+  const visible = useMemo(
+    () =>
+      filter === "All"
+        ? featured
+        : featured.filter((d) => filterTagsBySlug[d.slug]?.includes(filter)),
+    [featured, filter],
+  );
+  const heroImage = featured[0]?.image;
 
   return (
     <div className="bg-ivory">
-      {/* HERO + MAP — tight editorial atlas */}
-      <section className="bg-ivory pt-12 md:pt-16 pb-6 md:pb-8 px-6">
-        <div className="mx-auto max-w-6xl text-center">
-          <span className="eyebrow text-gold">The Atlas</span>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-[5.5rem] mt-3 md:mt-4 tracking-wide text-ink leading-[1.02]">
-            Where in the World
-          </h1>
-          <p className="mt-4 md:mt-5 font-serif italic text-ink/65 text-lg md:text-xl">
-            Curated escapes, styled destination by destination.
-          </p>
-        </div>
-        <div className="mx-auto max-w-6xl mt-6 md:mt-8 hidden md:block">
-          <WorldMap />
+      {/* HERO — split editorial, no map */}
+      <section className="bg-ivory border-b border-border/40">
+        <div className="mx-auto max-w-[1400px] grid grid-cols-1 lg:grid-cols-2">
+          <div className="px-6 lg:px-12 py-10 md:py-14 lg:py-16 flex flex-col justify-center">
+            <span className="eyebrow text-gold">The Atlas</span>
+            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl mt-3 tracking-wide text-ink leading-[1.02]">
+              Where to Dress Next
+            </h1>
+            <p className="mt-5 font-serif italic text-ink/65 text-lg md:text-xl max-w-md">
+              Curated escapes, styled destination by destination.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <a
+                href="/resort-edits"
+                className="eyebrow bg-ink text-ivory px-6 py-3.5 rounded-md hover:bg-gold hover:text-ink transition-colors"
+              >
+                Explore Resort Edits →
+              </a>
+              <a
+                href="#destinations"
+                className="eyebrow border border-ink/30 text-ink px-6 py-3.5 rounded-md hover:border-gold hover:text-gold transition-colors"
+              >
+                Shop by Destination
+              </a>
+            </div>
+          </div>
+          <div className="relative min-h-[320px] md:min-h-[420px] lg:min-h-[560px] bg-ink overflow-hidden">
+            {heroImage ? (
+              <img
+                src={heroImage}
+                alt="Featured destination"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : null}
+            <div className="absolute inset-0 bg-gradient-to-tr from-ink/30 via-transparent to-transparent" />
+          </div>
         </div>
       </section>
 
-      {/* FEATURED DESTINATIONS — horizontal editorial carousel */}
-      <section className="bg-cream/30 border-t border-border/40 py-10 md:py-14">
-        <div className="mx-auto max-w-[1400px] px-6 flex items-baseline justify-between mb-5 md:mb-7">
-          <span className="eyebrow text-gold">Featured Destinations</span>
-          <a href="#all" className="eyebrow text-ink/60 hover:text-gold transition-colors hidden md:inline">
-            View All Destinations →
-          </a>
+      {/* FILTER ROW */}
+      <section id="destinations" className="bg-ivory border-b border-border/40">
+        <div className="mx-auto max-w-[1400px] px-6 py-5 md:py-6 flex items-center gap-5 md:gap-8">
+          <span className="eyebrow text-gold whitespace-nowrap hidden md:inline">Filter by</span>
+          <div className="flex-1 overflow-x-auto no-scrollbar">
+            <ul className="flex items-center gap-2 md:gap-3 min-w-max">
+              {FILTERS.map((f) => {
+                const active = f === filter;
+                return (
+                  <li key={f}>
+                    <button
+                      type="button"
+                      onClick={() => setFilter(f)}
+                      aria-pressed={active}
+                      className={`eyebrow px-4 py-2 rounded-full border transition-colors whitespace-nowrap ${
+                        active
+                          ? "bg-gold/90 border-gold text-ink font-semibold"
+                          : "bg-transparent border-ink/15 text-ink/70 hover:border-gold/60 hover:bg-cream/40"
+                      }`}
+                    >
+                      {f}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
-        <div className="overflow-x-auto no-scrollbar">
-          <ul className="flex gap-4 md:gap-5 px-6 min-w-max pb-2">
-            {featured.map((d) => {
-              const vibe = vibeBySlug[d.slug] ?? d.travelType;
-              const count = editsBySlug[d.slug] ?? 10;
-              return (
-                <li key={d.slug} className="w-[220px] md:w-[240px] lg:w-[260px] shrink-0">
-                  <DestinationLink d={d} className="group block relative overflow-hidden aspect-[3/4] bg-ink rounded-sm">
-                    <img
-                      src={d.image}
-                      alt={d.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-all duration-[1400ms] ease-out group-hover:scale-[1.06] group-hover:brightness-[0.85]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/15 to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 p-5 text-ivory">
-                      <h3 className="font-display text-2xl md:text-3xl tracking-wide leading-tight">
-                        {d.name}
-                      </h3>
-                      <p className="font-serif italic text-ivory/85 mt-1 text-sm">{vibe}</p>
-                      <div className="mt-4 flex items-center justify-between border-t border-ivory/25 pt-3">
-                        <span className="eyebrow text-ivory/80 text-[0.65rem]">{count} edits</span>
-                        <span
-                          aria-hidden
-                          className="text-ivory transition-transform duration-500 group-hover:translate-x-1"
-                        >
-                          →
-                        </span>
+      </section>
+
+      {/* FEATURED DESTINATIONS — large grid */}
+      <section className="bg-ivory py-10 md:py-14">
+        <div className="mx-auto max-w-[1400px] px-6">
+          <div className="flex items-baseline justify-between mb-6 md:mb-8">
+            <h2 className="font-display text-3xl md:text-4xl tracking-wide text-ink">
+              Featured Destinations
+            </h2>
+            <span className="eyebrow text-ink/50 hidden md:inline">
+              {visible.length} {visible.length === 1 ? "destination" : "destinations"}
+            </span>
+          </div>
+          {visible.length === 0 ? (
+            <p className="font-serif italic text-ink/55 py-12 text-center">
+              No destinations match that filter yet.
+            </p>
+          ) : (
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {visible.map((d) => {
+                const vibe = vibeBySlug[d.slug] ?? d.travelType;
+                const count = editsBySlug[d.slug] ?? 10;
+                return (
+                  <li key={d.slug}>
+                    <DestinationLink
+                      d={d}
+                      className="group block relative overflow-hidden aspect-[4/5] bg-ink rounded-sm"
+                    >
+                      <img
+                        src={d.image}
+                        alt={d.name}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-all duration-[1400ms] ease-out group-hover:scale-[1.06] group-hover:brightness-[0.85]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
+                      <div className="absolute inset-x-0 bottom-0 p-6 text-ivory">
+                        <p className="eyebrow text-gold-soft text-[0.7rem]">{vibe}</p>
+                        <h3 className="font-display text-3xl md:text-4xl tracking-wide leading-tight mt-2">
+                          {d.name}
+                        </h3>
+                        <div className="mt-5 flex items-center justify-between border-t border-ivory/25 pt-3">
+                          <span className="eyebrow text-ivory/80 text-[0.65rem]">{count} edits</span>
+                          <span className="eyebrow text-ivory transition-transform duration-500 group-hover:translate-x-1">
+                            Explore →
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </DestinationLink>
-                </li>
-              );
-            })}
-          </ul>
+                    </DestinationLink>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
       </section>
 
       {/* CURRENTLY EDITING — premium pills with thumbnails */}
-      <section id="all" className="border-t border-border/40 bg-ivory">
+      <section id="all" className="border-t border-border/40 bg-cream/30">
         <div className="mx-auto max-w-[1400px] px-6 py-5 md:py-7 flex items-center gap-5 md:gap-8">
           <span className="eyebrow text-gold whitespace-nowrap hidden md:inline">Currently Editing</span>
           <div className="flex-1 overflow-x-auto no-scrollbar">
