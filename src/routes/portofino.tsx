@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { portofinoLooks } from "@/data/portofino";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
 import d1a from "@/assets/edit-d1-a.jpg";
@@ -27,8 +26,6 @@ export const Route = createFileRoute("/portofino")({
 });
 
 function PortofinoPage() {
-  const allExperiences = portofinoLooks.flatMap((l) => l.experiences);
-
   const dayNav: Array<{
     slug: string;
     label: string;
@@ -41,6 +38,57 @@ function PortofinoPage() {
     { slug: "day-3", label: "Day 3", title: "Day Club & Shopping", caption: "Poolside ease, via Roma, Capri luxe.", image: d3a },
     { slug: "day-4", label: "Day 4", title: "Dinner & Sunset", caption: "Golden hour, candlelight, harbor glow.", image: d4a },
     { slug: "day-5", label: "Day 5", title: "Espresso & A Long Last Lunch", caption: "Espresso rituals and one last long lunch.", image: d5a },
+  ];
+
+  const experiences: Array<{
+    name: string;
+    tier: "Signature Experience" | "Elevated Find" | "Riviera Find";
+    description: string;
+    image: string;
+    href: string;
+  }> = [
+    {
+      name: "Private Yacht Charter — Portofino Coast",
+      tier: "Signature Experience",
+      description: "Your own boat, your own pace, and hidden swim coves along the promontory.",
+      image: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1400&q=80",
+      href: "https://www.viator.com/Portofino/d50421",
+    },
+    {
+      name: "Splendido Spa Afternoon",
+      tier: "Signature Experience",
+      description: "A signature ritual and quiet pool access at Portofino's most storied address.",
+      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1400&q=80",
+      href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/spa",
+    },
+    {
+      name: "Small Group Sunset Cruise",
+      tier: "Elevated Find",
+      description: "Golden hour along the Ligurian coast with a glass of chilled prosecco in hand.",
+      image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1400&q=80",
+      href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise",
+    },
+    {
+      name: "Ligurian Cooking Class",
+      tier: "Elevated Find",
+      description: "An intimate afternoon learning trofie al pesto with the day's catch.",
+      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=80",
+      href: "https://www.getyourguide.com/portofino-l1093/cooking-class",
+    },
+    {
+      name: "Cinque Terre Wine Tasting",
+      tier: "Riviera Find",
+      description: "Sommelier-led cellar visits along the terraced cliffs of the Ligurian coast.",
+      image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1400&q=80",
+      href: "https://www.getyourguide.com/portofino-l1093/cinque-terre-wine",
+    },
+    {
+      name: "San Fruttuoso Abbey by Sea",
+      tier: "Riviera Find",
+      description: "A quiet crossing to a 10th-century abbey reachable only by water.",
+      image: "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1400&q=80",
+      href: "https://www.viator.com/Portofino/d50421/san-fruttuoso",
+    },
   ];
 
   const day1Previews = [
@@ -180,7 +228,7 @@ function PortofinoPage() {
       </section>
 
       {/* EXPERIENCES */}
-      <section className="py-24 md:py-32">
+      <section className="bg-ivory py-24 md:py-32">
         <div className="mx-auto max-w-3xl px-6 text-center mb-16">
           <span className="eyebrow text-gold">The Experiences</span>
           <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">
@@ -188,43 +236,67 @@ function PortofinoPage() {
           </h2>
           <div className="mx-auto my-6 h-px w-16 bg-gold" />
           <p className="font-serif italic text-lg text-ink/65 leading-relaxed">
-            Curated by day — yacht charters, cliffside cabanas, candlelit dinners.
+            Six concierge-curated experiences along the Ligurian coast.
           </p>
         </div>
-        <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {allExperiences.map((exp) => {
-            const href = exp.affiliate_link || exp.backup_link || "#";
-            return (
+        {/* Desktop / tablet: 3-up grid with generous spacing */}
+        <div className="mx-auto max-w-6xl px-6 hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+          {experiences.map((exp) => (
+            <a
+              key={exp.name}
+              href={exp.href}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="group block bg-cream border border-border/40 hover:border-gold transition-colors"
+            >
+              <div className="aspect-[4/6] overflow-hidden bg-muted">
+                <img
+                  src={exp.image}
+                  alt={exp.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div className="p-6">
+                <span className="eyebrow text-gold text-[9px] tracking-[0.3em]">{exp.tier}</span>
+                <h4 className="font-display text-2xl tracking-wide mt-3 leading-snug">
+                  {exp.name}
+                </h4>
+                <p className="font-serif italic text-ink/65 text-[15px] mt-3 leading-relaxed">
+                  {exp.description}
+                </p>
+                <span className="mt-6 inline-block eyebrow text-[11px] tracking-[0.28em] text-ink border-b border-gold/70 pb-1 group-hover:text-gold transition-colors">
+                  Book This Experience →
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+        {/* Mobile: horizontal scroll */}
+        <div className="sm:hidden -mx-0 px-6 overflow-x-auto">
+          <div className="flex gap-5 snap-x snap-mandatory">
+            {experiences.map((exp) => (
               <a
-                key={exp.experience_name}
-                href={href}
+                key={exp.name}
+                href={exp.href}
                 target="_blank"
                 rel="noopener noreferrer sponsored"
-                className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
+                className="snap-start shrink-0 w-[82%] bg-cream border border-border/40"
               >
-                <div className="aspect-[4/5] overflow-hidden bg-muted">
-                  <img
-                    src={exp.experience_image}
-                    alt={exp.experience_name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                <div className="aspect-[4/6] overflow-hidden bg-muted">
+                  <img src={exp.image} alt={exp.name} loading="lazy" className="h-full w-full object-cover" />
                 </div>
                 <div className="p-5">
-                  <span className="eyebrow text-gold text-[10px]">{exp.price_tier}</span>
-                  <h4 className="font-display text-lg tracking-wide mt-2 leading-snug">
-                    {exp.experience_name}
-                  </h4>
-                  <p className="font-serif italic text-ink/65 text-sm mt-2 leading-relaxed">
-                    {exp.experience_description}
-                  </p>
-                  <span className="mt-4 inline-block eyebrow text-[10px] text-ink group-hover:text-gold transition-colors">
+                  <span className="eyebrow text-gold text-[9px] tracking-[0.3em]">{exp.tier}</span>
+                  <h4 className="font-display text-xl tracking-wide mt-3 leading-snug">{exp.name}</h4>
+                  <p className="font-serif italic text-ink/65 text-[14px] mt-2 leading-relaxed">{exp.description}</p>
+                  <span className="mt-5 inline-block eyebrow text-[11px] tracking-[0.28em] text-ink border-b border-gold/70 pb-1">
                     Book This Experience →
                   </span>
                 </div>
               </a>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </section>
 
