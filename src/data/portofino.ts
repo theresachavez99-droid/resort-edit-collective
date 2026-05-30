@@ -69,6 +69,20 @@ export type ShopItem = {
    * to the price-split fallback.
    */
   lookIndex?: 1 | 2 | 3;
+  /**
+   * Marks a required look slot for which no exact product URL could be
+   * sourced from an approved affiliate partner. The renderer shows a
+   * non-clickable placeholder card with the literal copy
+   * "Not available through approved affiliate partners" so the look
+   * stack stays visually complete without ever shipping a placeholder URL.
+   */
+  not_available?: boolean;
+  /**
+   * Optional category label (e.g. "Outfit", "Shoes", "Bag", "Earrings",
+   * "Necklace", "Bracelet", "Ring", "Sunglasses", "Hair Detail",
+   * "Optional Layer"). Rendered as the card eyebrow when set.
+   */
+  category?: string;
 };
 
 /**
@@ -192,6 +206,121 @@ export const portofinoLooks: Look[] = [
         image: "https://is4.revolveassets.com/images/p4/n/uv/DRAF-WY62_V1.jpg",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+      },
+      // -----------------------------------------------------------------
+      // DAY 1 · LOOK 2 — "Riviera Lunch"
+      // Italian Riviera lunch energy with effortless polish.
+      // Sourced strictly from user-supplied product names; each card uses
+      // an EXACT product URL from an approved affiliate partner with a
+      // thumbnail pulled from that same product page. Where no exact
+      // match could be sourced, the card renders the literal
+      // "Not available through approved affiliate partners" copy rather
+      // than a placeholder URL.
+      // -----------------------------------------------------------------
+      {
+        brand: "FARM Rio",
+        item: "Flowers Arch Pleated Cotton Maxi Dress",
+        price: "$295",
+        category: "Outfit",
+        href: "https://www.mytheresa.com/us/en/women/farm-rio-flowers-arch-pleated-cotton-maxi-dress-white-p01194979",
+        image: "https://www.mytheresa.com/image/1094/1238/100/5d/P01194979.jpg",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Ancient Greek Sandals",
+        item: "Eleftheria Braided Leather Sandals",
+        price: "$295",
+        category: "Shoes",
+        href: "https://www.farfetch.com/shopping/women/ancient-greek-sandals-eleftheria-braided-leather-sandals-item-17740915.aspx",
+        backup_link_1: "https://www.mytheresa.com/us/en/women/ancient-greek-sandals-eleftheria-leather-sandals-black-p00211686",
+        image: "https://cdn-images.farfetch-contents.com/17/74/09/15/17740915_37490226_1000.jpg",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Ferragamo",
+        item: "Gancini Raffia Tote",
+        price: "—",
+        category: "Bag",
+        href: "",
+        not_available: true,
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Jennifer Fisher",
+        item: "Puffy Shell Earrings",
+        price: "—",
+        category: "Earrings",
+        href: "",
+        not_available: true,
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Missoma",
+        item: "Ridge Heart Rope Necklace",
+        price: "—",
+        category: "Necklace",
+        href: "",
+        not_available: true,
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Monica Vinader",
+        item: "Alta Capture Charm Bracelet — 18k Gold Vermeil",
+        price: "$295",
+        category: "Bracelet",
+        href: "https://www.monicavinader.com/us/alta-capture-charm-bracelet/gold-vermeil-alta-charm-bracelet",
+        image: "https://cfs3.monicavinader.com/images/pdp-full/23591658-gp-bl-cbho-non-f1.jpg",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Mejuri",
+        item: "Dôme Ring — Sterling Silver",
+        price: "$118",
+        category: "Ring",
+        href: "https://mejuri.com/products/dome-ring",
+        image: "https://cdn.shopify.com/s/files/1/0631/8568/2616/files/0-Reshoot_DomeRing_SS_OffFigureAngledView_PDP.png?v=1776124810",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Saint Laurent",
+        item: "SL 613 Havana Rectangle Sunglasses",
+        price: "$495",
+        category: "Sunglasses",
+        href: "https://www.ysl.com/en-us/pr/sl-613-758444Y99562359.html",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Resort Edit Styling Note",
+        item: "Low relaxed bun with face-framing pieces",
+        price: "Styling",
+        category: "Hair Detail",
+        href: "",
+        not_available: true,
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
+      },
+      {
+        brand: "Resort Edit Styling Note",
+        item: "Cream oversized linen button-down",
+        price: "Styling",
+        category: "Optional Layer",
+        href: "",
+        not_available: true,
+        last_verified_date: "2026-05-30",
+        lookIndex: 2,
       },
     ],
     experiences: [

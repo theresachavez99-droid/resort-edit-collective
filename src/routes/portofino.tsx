@@ -48,7 +48,7 @@ function PortofinoPage() {
     "Day 5": [d5a, d5b, d5c],
   };
   const lookTitlesByDay: Record<string, [string, string, string]> = {
-    "Day 1": ["Harbor Hero", "Marina Edit", "Riviera Daywear"],
+    "Day 1": ["Harbor Hero", "Riviera Lunch", "Riviera Daywear"],
     "Day 2": ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
     "Day 3": ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
     "Day 4": ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
@@ -281,7 +281,13 @@ function DayLooks({
   tip: string;
 }) {
   const [active, setActive] = useState(0);
-  const liveItems = look.shop.filter((i) => resolveProductLink(i) !== null);
+  // Keep items that resolve to a real affiliate URL AND items explicitly
+  // marked `not_available` — the latter render a non-clickable placeholder
+  // card with the literal "Not available through approved affiliate
+  // partners" copy so the look stack stays visually complete.
+  const liveItems = look.shop.filter(
+    (i) => i.not_available || resolveProductLink(i) !== null,
+  );
   // Build three "looks" from the day's shop list.
   //
   // Items can be explicitly assigned to a look via `lookIndex` (1|2|3).
@@ -363,6 +369,48 @@ function DayLooks({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
             {items.map((item) => {
+              // Not-available card: same dimensions, non-clickable, shows
+              // the literal compliance copy in place of brand/price/Shop.
+              if (item.not_available) {
+                return (
+                  <div
+                    key={`${item.brand}-${item.item}`}
+                    className="group flex flex-col bg-ivory border border-border/60 h-full"
+                    aria-disabled="true"
+                  >
+                    <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
+                      <div className="flex flex-col items-center justify-center text-center px-4">
+                        {item.category && (
+                          <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80 mb-2">
+                            {item.category}
+                          </span>
+                        )}
+                        <span className="font-serif italic text-ink/60 text-[0.78rem] leading-snug">
+                          {item.brand} — {item.item}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col flex-1 p-4">
+                      {item.category && (
+                        <div className="eyebrow text-ink/50 text-[0.55rem] tracking-[0.3em]">
+                          {item.category}
+                        </div>
+                      )}
+                      <div className="eyebrow text-ink text-[0.55rem] tracking-[0.3em] mt-1">
+                        {item.brand}
+                      </div>
+                      <div className="font-serif italic text-ink/85 text-[0.95rem] leading-snug mt-1.5">
+                        {item.item}
+                      </div>
+                      <div className="mt-auto pt-4">
+                        <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink/55">
+                          Not available through approved affiliate partners
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
               const href = resolveProductLink(item)!;
               return (
                 <a
@@ -403,6 +451,11 @@ function DayLooks({
                     )}
                   </div>
                   <div className="flex flex-col flex-1 p-4">
+                    {item.category && (
+                      <div className="eyebrow text-gold text-[0.55rem] tracking-[0.3em] mb-1">
+                        {item.category}
+                      </div>
+                    )}
                     <div className="eyebrow text-ink text-[0.55rem] tracking-[0.3em]">
                       {item.brand}
                     </div>
