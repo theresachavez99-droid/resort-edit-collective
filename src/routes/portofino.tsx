@@ -39,6 +39,57 @@ export const Route = createFileRoute("/portofino")({
 function PortofinoPage() {
   const allExperiences = portofinoLooks.flatMap((l) => l.experiences);
 
+  const tierLabels = ["Designer", "Mid-Luxe", "Riviera Finds"] as const;
+  const lookImages: Record<string, [string, string, string]> = {
+    "Day 1": [d1a, d1b, d1c],
+    "Day 2": [d2a, d2b, d2c],
+    "Day 3": [d3a, d3b, d3c],
+    "Day 4": [d4a, d4b, d4c],
+    "Day 5": [d5a, d5b, d5c],
+  };
+  const lookTitlesByDay: Record<string, [string, string, string]> = {
+    "Day 1": ["Harbor Hero", "Marina Edit", "Riviera Daywear"],
+    "Day 2": ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
+    "Day 3": ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
+    "Day 4": ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
+    "Day 5": ["Last-Day Luxe", "Market Morning", "Coastal Farewell"],
+  };
+  const tipByDay: Record<string, string> = {
+    "Day 1": "Book the yacht. Stay through golden hour.",
+    "Day 2": "Reserve your cabana. Linger past lunch.",
+    "Day 3": "Hit Via Roma early. Aperitivo at sunset.",
+    "Day 4": "Book the cliffside terrace. Stay for digestivos.",
+    "Day 5": "Take the boat to San Fruttuoso. One last swim.",
+  };
+
+  const parsePrice = (p: string) => Number(p.replace(/[^0-9.]/g, "")) || 0;
+  const pickThreeByTier = (shop: ShopItem[]): ShopItem[] => {
+    const live = shop.filter((i) => resolveProductLink(i) !== null);
+    if (live.length === 0) return [];
+    const sorted = [...live].sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+    const top = sorted[0];
+    const bottom = sorted[sorted.length - 1];
+    const mid = sorted[Math.floor(sorted.length / 2)] ?? top;
+    const picks = [top, mid === top || mid === bottom ? sorted[1] ?? top : mid, bottom];
+    // de-dupe while preserving order
+    const seen = new Set<string>();
+    const out: ShopItem[] = [];
+    for (const p of picks) {
+      if (!p || seen.has(p.item)) continue;
+      seen.add(p.item);
+      out.push(p);
+    }
+    // pad if needed
+    for (const p of sorted) {
+      if (out.length === 3) break;
+      if (!seen.has(p.item)) {
+        seen.add(p.item);
+        out.push(p);
+      }
+    }
+    return out.slice(0, 3);
+  };
+
   return (
     <div>
       {/* HERO — Editorial full-bleed */}
