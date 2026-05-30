@@ -1,28 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import stillLife from "@/assets/portofino-stilllife.jpg";
 import heroMuse from "@/assets/hero-muse-portofino.jpg";
-import { portofinoLooks, itinerary, travelTips, whereToStay, resolveProductLink } from "@/data/portofino";
-import { ProductCard } from "@/components/ProductCard";
-import expYacht from "@/assets/exp-yacht.jpg";
-import expBeach from "@/assets/exp-beachclub.jpg";
-import expTour from "@/assets/exp-tour.jpg";
-import expExperiences from "@/assets/exp-experiences.jpg";
+import stillLife from "@/assets/portofino-stilllife.jpg";
+import { portofinoLooks, whereToStay } from "@/data/portofino";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
-import destPortofino from "@/assets/dest-portofino.jpg";
-import destCapri from "@/assets/dest-capri.jpg";
-import destIbiza from "@/assets/dest-ibiza.jpg";
-import destSttropez from "@/assets/dest-sttropez.jpg";
-import destMykonos from "@/assets/dest-mykonos.jpg";
-import destPositano from "@/assets/dest-positano.jpg";
-import lookBeach from "@/assets/look-beach.jpg";
-import lookYacht from "@/assets/look-yacht.jpg";
-import lookDinner from "@/assets/look-dinner.jpg";
-import lookDayclub from "@/assets/look-dayclub.jpg";
-import lookTown from "@/assets/look-town.jpg";
-import { Bookmark, Share2 } from "lucide-react";
+import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
