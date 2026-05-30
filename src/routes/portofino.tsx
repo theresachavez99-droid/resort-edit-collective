@@ -268,3 +268,199 @@ function PortofinoPage() {
     </div>
   );
 }
+
+function DayLooks({
+  look,
+  images,
+  titles,
+  tip,
+}: {
+  look: Look;
+  images: [string, string, string];
+  titles: [string, string, string];
+  tip: string;
+}) {
+  const [active, setActive] = useState(0);
+  const liveItems = look.shop.filter((i) => resolveProductLink(i) !== null);
+  // Build three "looks" from the day's shop list. Look 1 shows the full
+  // curated product list; Looks 2 & 3 are price-tier curations of the same
+  // items so the tabs always have something meaningful to swap to.
+  const parsePrice = (p: string) => Number(p.replace(/[^0-9.]/g, "")) || 0;
+  const sortedDesc = [...liveItems].sort(
+    (a, b) => parsePrice(b.price) - parsePrice(a.price),
+  );
+  const half = Math.ceil(sortedDesc.length / 2);
+  const lookItems: ShopItem[][] = [
+    liveItems,
+    sortedDesc.slice(0, half),
+    sortedDesc.slice(half).length ? sortedDesc.slice(half) : sortedDesc,
+  ];
+  const tierLabels = ["Designer", "Mid-Luxe", "Riviera Finds"] as const;
+  const items = lookItems[active] ?? liveItems;
+
+  return (
+    <article className="space-y-10 md:space-y-14">
+      {/* Day Header */}
+      <header className="max-w-4xl">
+        <span className="eyebrow text-gold tracking-[0.4em]">
+          {look.day.toUpperCase()} — {look.title}
+        </span>
+        <p className="font-serif italic text-lg md:text-xl text-ink/65 mt-4 leading-relaxed">
+          {look.subtitle}
+        </p>
+        <div className="mt-6 h-px w-16 bg-gold" />
+      </header>
+
+      {/* Two-Column: AI model + full product grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        {/* LEFT: AI model image */}
+        <div className="lg:col-span-5">
+          <div className="relative overflow-hidden bg-muted h-full min-h-[420px] lg:min-h-[640px] aspect-[3/4] lg:aspect-auto lg:sticky lg:top-6">
+            <img
+              src={images[active]}
+              alt={`${look.title} — ${titles[active]}`}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
+            />
+            <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-4 py-2 tracking-[0.3em]">
+              {look.day}
+            </div>
+            <div className="absolute bottom-4 left-4 right-4 bg-ivory/95 text-ink px-4 py-3">
+              <span className="eyebrow text-gold text-[0.55rem] tracking-[0.3em]">
+                {tierLabels[active]}
+              </span>
+              <div className="font-display text-xl tracking-wide mt-1">
+                {titles[active]}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT: full product grid + look tabs */}
+        <div className="lg:col-span-7 flex flex-col">
+          <div className="flex items-baseline justify-between mb-5">
+            <span className="eyebrow text-ink tracking-[0.35em]">
+              Shop {look.day.toUpperCase()} · Look {active + 1}
+            </span>
+            <span className="eyebrow text-ink/40 text-[0.55rem]">
+              {items.length} {items.length === 1 ? "Piece" : "Pieces"}
+            </span>
+          </div>
+          <h3 className="font-display text-2xl md:text-3xl tracking-wide mb-6">
+            {titles[active]}
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+            {items.map((item) => {
+              const href = resolveProductLink(item)!;
+              return (
+                <a
+                  key={item.item}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  onClick={() =>
+                    trackOutbound({ brand: item.brand, item: item.item, href })
+                  }
+                  className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors h-full"
+                >
+                  <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={`${item.brand} ${item.item}`}
+                        loading="lazy"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                        }}
+                        className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-center px-4">
+                        <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80 mb-2">
+                          {item.brand}
+                        </span>
+                        <span className="font-serif italic text-ink/60 text-[0.78rem] leading-snug">
+                          {item.item}
+                        </span>
+                      </div>
+                    )}
+                    {item.replaced && (
+                      <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.2em] text-gold bg-ivory/90 border border-gold/50 px-1.5 py-0.5">
+                        Updated
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col flex-1 p-4">
+                    <div className="eyebrow text-ink text-[0.55rem] tracking-[0.3em]">
+                      {item.brand}
+                    </div>
+                    <div className="font-serif italic text-ink/85 text-[0.95rem] leading-snug mt-1.5">
+                      {item.item}
+                    </div>
+                    <div className="font-serif text-gold text-[0.95rem] mt-1.5">
+                      {item.price}
+                    </div>
+                    <div className="mt-auto pt-4">
+                      <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
+                        Shop →
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+
+          {/* Look tabs */}
+          <div
+            role="tablist"
+            aria-label={`${look.day} looks`}
+            className="mt-8 grid grid-cols-3 gap-0 border border-ink"
+          >
+            {titles.map((t, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={t}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActive(i)}
+                  className={`eyebrow text-[0.6rem] tracking-[0.35em] py-4 px-3 transition-colors ${
+                    isActive
+                      ? "bg-ink text-ivory"
+                      : "bg-ivory text-ink hover:bg-cream"
+                  }`}
+                >
+                  Look {i + 1}
+                  <span className="hidden md:inline">
+                    {" "}
+                    · {t}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Resort Edit Tip Banner */}
+      {tip && (
+        <div className="bg-cream border-y border-gold/40 px-6 py-5 md:py-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+          <span className="eyebrow text-gold tracking-[0.35em] text-[0.65rem]">
+            Resort Edit Tip
+          </span>
+          <p className="font-serif italic text-ink/80 text-base md:text-lg">{tip}</p>
+        </div>
+      )}
+
+      {/* Destination Footer Callout */}
+      <div className="flex items-center justify-center gap-3 text-ink/70">
+        <MapPin className="h-4 w-4 text-gold" />
+        <span className="eyebrow tracking-[0.4em] text-ink">Portofino, Italy</span>
+        <span className="text-ink/30">·</span>
+        <span className="font-serif italic text-ink/65">Sun. Style. Aperitivo.</span>
+      </div>
+    </article>
+  );
+}
