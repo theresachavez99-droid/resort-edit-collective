@@ -239,17 +239,17 @@ function PortofinoPage() {
             Six concierge-curated experiences along the Ligurian coast.
           </p>
         </div>
-        {/* Desktop / tablet: 3-up grid with generous spacing */}
-        <div className="mx-auto max-w-6xl px-6 hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+        {/* Desktop / tablet: 3 cols × 2 rows, 32px gap */}
+        <div className="mx-auto max-w-6xl px-6 hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {experiences.map((exp) => (
             <a
               key={exp.name}
               href={exp.href}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="group block bg-cream border border-border/40 hover:border-gold transition-colors"
+              className="group block bg-cream border-2 border-ink/15 hover:border-gold hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(0,0,0,0.35)] transition-all duration-300"
             >
-              <div className="aspect-[4/6] overflow-hidden bg-muted">
+              <div className="aspect-[3/5] overflow-hidden bg-muted">
                 <img
                   src={exp.image}
                   alt={exp.name}
@@ -257,15 +257,15 @@ function PortofinoPage() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <div className="p-6">
+              <div className="p-5">
                 <span className="eyebrow text-gold text-[9px] tracking-[0.3em]">{exp.tier}</span>
-                <h4 className="font-display text-2xl tracking-wide mt-3 leading-snug">
+                <h4 className="font-display text-xl tracking-wide mt-2 leading-snug">
                   {exp.name}
                 </h4>
-                <p className="font-serif italic text-ink/65 text-[15px] mt-3 leading-relaxed">
+                <p className="font-serif italic text-ink/65 text-[14px] mt-2 leading-snug">
                   {exp.description}
                 </p>
-                <span className="mt-6 inline-block eyebrow text-[11px] tracking-[0.28em] text-ink border-b border-gold/70 pb-1 group-hover:text-gold transition-colors">
+                <span className="mt-4 inline-block eyebrow text-[11px] tracking-[0.28em] text-ink border-b border-gold/70 pb-1 group-hover:text-gold transition-colors">
                   Book This Experience →
                 </span>
               </div>
@@ -281,16 +281,16 @@ function PortofinoPage() {
                 href={exp.href}
                 target="_blank"
                 rel="noopener noreferrer sponsored"
-                className="snap-start shrink-0 w-[82%] bg-cream border border-border/40"
+                className="snap-start shrink-0 w-[82%] bg-cream border-2 border-ink/15"
               >
-                <div className="aspect-[4/6] overflow-hidden bg-muted">
+                <div className="aspect-[3/5] overflow-hidden bg-muted">
                   <img src={exp.image} alt={exp.name} loading="lazy" className="h-full w-full object-cover" />
                 </div>
                 <div className="p-5">
                   <span className="eyebrow text-gold text-[9px] tracking-[0.3em]">{exp.tier}</span>
-                  <h4 className="font-display text-xl tracking-wide mt-3 leading-snug">{exp.name}</h4>
-                  <p className="font-serif italic text-ink/65 text-[14px] mt-2 leading-relaxed">{exp.description}</p>
-                  <span className="mt-5 inline-block eyebrow text-[11px] tracking-[0.28em] text-ink border-b border-gold/70 pb-1">
+                  <h4 className="font-display text-lg tracking-wide mt-2 leading-snug">{exp.name}</h4>
+                  <p className="font-serif italic text-ink/65 text-[14px] mt-2 leading-snug">{exp.description}</p>
+                  <span className="mt-4 inline-block eyebrow text-[11px] tracking-[0.28em] text-ink border-b border-gold/70 pb-1">
                     Book This Experience →
                   </span>
                 </div>
