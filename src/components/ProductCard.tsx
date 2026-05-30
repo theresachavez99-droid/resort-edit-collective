@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { type ShopItem, resolveProductLink } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 
@@ -12,6 +13,8 @@ type Variant = "compact" | "editorial";
 export function ProductCard({ item, variant = "compact" }: { item: ShopItem; variant?: Variant }) {
   const href = resolveProductLink(item);
   if (!href) return null;
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = Boolean(item.image) && !imageFailed;
 
   return (
     <a
@@ -21,13 +24,14 @@ export function ProductCard({ item, variant = "compact" }: { item: ShopItem; var
       onClick={() => trackOutbound({ brand: item.brand, item: item.item, href })}
       className="group flex flex-col text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
     >
-      <div className="relative aspect-square overflow-hidden bg-ivory border border-border/60">
-        {item.image ? (
+      <div className="relative aspect-square overflow-hidden bg-cream border border-border/60 flex items-center justify-center">
+        {showImage ? (
           <img
             src={item.image}
             alt={`${item.brand} ${item.item}`}
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            onError={() => setImageFailed(true)}
+            className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-cream via-ivory to-cream px-4 text-center">
