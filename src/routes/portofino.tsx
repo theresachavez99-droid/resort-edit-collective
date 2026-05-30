@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
 import d1a from "@/assets/edit-d1-a.jpg";
@@ -32,13 +33,59 @@ function PortofinoPage() {
     title: string;
     caption: string;
     image: string;
+    previews: Array<{ n: number; title: string; caption: string; image: string }>;
   }> = [
-    { slug: "day-1", label: "Day 1", title: "Yacht Day & Harbor Aperitivo", caption: "Open water, tan lines and hidden coves.", image: d1a },
-    { slug: "day-2", label: "Day 2", title: "Beach Club Lunch", caption: "Slow mornings, long lunches, seaside glamour.", image: d2a },
-    { slug: "day-3", label: "Day 3", title: "Day Club & Shopping", caption: "Poolside ease, via Roma, Capri luxe.", image: d3a },
-    { slug: "day-4", label: "Day 4", title: "Dinner & Sunset", caption: "Golden hour, candlelight, harbor glow.", image: d4a },
-    { slug: "day-5", label: "Day 5", title: "Espresso & A Long Last Lunch", caption: "Espresso rituals and one last long lunch.", image: d5a },
+    {
+      slug: "day-1", label: "Day 1", title: "Yacht Day & Harbor Aperitivo",
+      caption: "Open water, tan lines and hidden coves.", image: d1a,
+      previews: [
+        { n: 1, title: "Harbor Hero", caption: "Designer · yacht-day polish.", image: d1a },
+        { n: 2, title: "Riviera Lunch", caption: "Mid-luxe · harborfront aperitivo.", image: d1b },
+        { n: 3, title: "Riviera Daywear", caption: "Riviera finds · effortless ease.", image: d1c },
+      ],
+    },
+    {
+      slug: "day-2", label: "Day 2", title: "Beach Club Lunch",
+      caption: "Slow mornings, long lunches, seaside glamour.", image: d2a,
+      previews: [
+        { n: 1, title: "Cabana Designer", caption: "Designer · beach club polish.", image: d2a },
+        { n: 2, title: "Long Lunch Mid-Luxe", caption: "Mid-luxe · linen and gold.", image: d2a },
+        { n: 3, title: "Seaside Finds", caption: "Riviera finds · easy glamour.", image: d2a },
+      ],
+    },
+    {
+      slug: "day-3", label: "Day 3", title: "Day Club & Shopping",
+      caption: "Poolside ease, via Roma, Capri luxe.", image: d3a,
+      previews: [
+        { n: 1, title: "Via Roma Designer", caption: "Designer · boutique strolls.", image: d3a },
+        { n: 2, title: "Poolside Mid-Luxe", caption: "Mid-luxe · daybed ease.", image: d3a },
+        { n: 3, title: "Capri Finds", caption: "Riviera finds · sun-drenched.", image: d3a },
+      ],
+    },
+    {
+      slug: "day-4", label: "Day 4", title: "Dinner & Sunset",
+      caption: "Golden hour, candlelight, harbor glow.", image: d4a,
+      previews: [
+        { n: 1, title: "Sunset Designer", caption: "Designer · candlelit drama.", image: d4a },
+        { n: 2, title: "Harbor Mid-Luxe", caption: "Mid-luxe · golden hour.", image: d4a },
+        { n: 3, title: "Evening Finds", caption: "Riviera finds · soft glow.", image: d4a },
+      ],
+    },
+    {
+      slug: "day-5", label: "Day 5", title: "Espresso & A Long Last Lunch",
+      caption: "Espresso rituals and one last long lunch.", image: d5a,
+      previews: [
+        { n: 1, title: "Farewell Designer", caption: "Designer · final flourish.", image: d5a },
+        { n: 2, title: "Café Mid-Luxe", caption: "Mid-luxe · espresso ease.", image: d5a },
+        { n: 3, title: "Last Lunch Finds", caption: "Riviera finds · sun-soaked send-off.", image: d5a },
+      ],
+    },
   ];
+
+  const [selectedDay, setSelectedDay] = useState<string>("day-1");
+  const activeDay = dayNav.find((d) => d.slug === selectedDay) ?? dayNav[0];
+  const activeDayNumber = activeDay.slug.replace("day-", "");
+  const activePreviews = activeDay.previews;
 
   const experiences: Array<{
     name: string;
@@ -89,12 +136,6 @@ function PortofinoPage() {
       image: "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1400&q=80",
       href: "https://www.viator.com/Portofino/d50421/san-fruttuoso",
     },
-  ];
-
-  const day1Previews = [
-    { n: 1, title: "Harbor Hero", caption: "Designer · yacht-day polish.", image: d1a },
-    { n: 2, title: "Riviera Lunch", caption: "Mid-luxe · harborfront aperitivo.", image: d1b },
-    { n: 3, title: "Riviera Daywear", caption: "Riviera finds · effortless ease.", image: d1c },
   ];
 
   return (
