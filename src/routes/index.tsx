@@ -31,11 +31,11 @@ export const Route = createFileRoute("/")({
 });
 
 const days = [
-  { n: 1, title: "Yacht Day & Harbour Aperitivo", desc: "Open water, hidden coves, and a night in Portofino.", image: lookYacht, pos: "50% 18%" },
-  { n: 2, title: "Beach Club & Long Lunches", desc: "Slow mornings, seafood lunches, seaside glamour.", image: lookBeach, pos: "50% 12%" },
-  { n: 3, title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capresi luxe.", image: lookDayclub, pos: "50% 15%" },
+  { n: 1, title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines, and hidden coves.", image: lookYacht, pos: "50% 18%" },
+  { n: 2, title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach, pos: "50% 12%" },
+  { n: 3, title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: lookDayclub, pos: "50% 15%" },
   { n: 4, title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner, pos: "50% 22%" },
-  { n: 5, title: "Market Strolls & Coastal Goodbyes", desc: "Quiet rituals and a long last lunch.", image: lookTown, pos: "50% 20%" },
+  { n: 5, title: "Market Strolls & Coastal Goodbyes", desc: "Espresso rituals and one last long lunch.", image: lookTown, pos: "50% 20%" },
 ];
 
 const looks = [
