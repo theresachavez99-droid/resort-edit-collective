@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-label="Oradina Vicenza Layered Necklace">
+<rect width="420" height="520" fill="#fbf8ef"/>
+<rect x="24" y="24" width="372" height="472" fill="#fffdf7" stroke="#d6c49a" stroke-width="2"/>
+<g transform="translate(0 18)"><path d="M120 130 Q210 250 300 130" stroke="#c9a84c" stroke-width="4" fill="none"/><path d="M140 145 Q210 230 280 145" stroke="#c9a84c" stroke-width="3" fill="none"/><path d="M160 160 Q210 215 260 160" stroke="#c9a84c" stroke-width="2" fill="none"/><circle cx="210" cy="252" r="14" fill="#f6df98" stroke="#c9a84c" stroke-width="3"/><circle cx="170" cy="225" r="6" fill="#c9a84c"/><circle cx="250" cy="225" r="6" fill="#c9a84c"/></g>
+<text x="210" y="426" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#2b241c">Vicenza Layered Necklace</text>
+<text x="210" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" letter-spacing="3" fill="#b9995a">ORADINA</text>
+</svg>
