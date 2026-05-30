@@ -3,6 +3,19 @@ import beach from "@/assets/look-beach.jpg";
 import dayclub from "@/assets/look-dayclub.jpg";
 import dinner from "@/assets/look-dinner.jpg";
 import town from "@/assets/look-town.jpg";
+import productAnineBingSilkScarf from "@/assets/products/anine-bing-silk-scarf.svg";
+import productCelineTriompheSunglasses from "@/assets/products/celine-triomphe-sunglasses.svg";
+import productDgMajolicaBikini from "@/assets/products/dg-majolica-bikini.jpg";
+import productDgMajolicaSarong from "@/assets/products/dg-majolica-sarong.svg";
+import productDior30MontaigneSunglasses from "@/assets/products/dior-30montaigne-sunglasses.svg";
+import productDragonSantaCroceTote from "@/assets/products/dragon-santa-croce-tote.jpg";
+import productGianvitoPortofinoSandal from "@/assets/products/gianvito-portofino-sandal.svg";
+import productGoldLariatNecklace from "@/assets/products/gold-lariat-necklace.svg";
+import productHereuWovenTote from "@/assets/products/hereu-woven-tote.svg";
+import productLoeweBasketBag from "@/assets/products/loewe-basket-bag.svg";
+import productLoroPianaPocketBag from "@/assets/products/loro-piana-pocket-bag.svg";
+import productPosseStripedCropTop from "@/assets/products/posse-striped-crop-top.svg";
+import productVcaFrivolePendant from "@/assets/products/vca-frivole-pendant.svg";
 
 /**
  * Product resilience model.
@@ -106,7 +119,7 @@ export const portofinoLooks: Look[] = [
         item: "Majolica-Print Triangle Bikini",
         price: "$595",
         href: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-triangle-bikini-multicolor-158058990004838.html",
-        image: "https://www.farfetch-contents.com/19/82/89/72/19828972_44563887_1000.jpg",
+        image: productDgMajolicaBikini,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -115,7 +128,7 @@ export const portofinoLooks: Look[] = [
         item: "Majolica Beachwear Sarong",
         price: "$495",
         href: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-beachwear-sarong-multicolor-158058990001138.html",
-        image: "https://www.farfetch-contents.com/19/82/89/74/19828974_44563895_1000.jpg",
+        image: productDgMajolicaSarong,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -151,7 +164,7 @@ export const portofinoLooks: Look[] = [
         item: "Small Anagram Basket Bag — Palm Leaf & Calfskin",
         price: "$890",
         href: "https://www.loewe.com/usa/en/women/bags/basket-bags/small-anagram-basket-bag-in-palm-leaf-and-calfskin/A223P95X05.html",
-        image: "https://cdn-images.farfetch-contents.com/19/24/35/93/19243593_43762567_1000.jpg",
+        image: productLoeweBasketBag,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -244,7 +257,7 @@ export const portofinoLooks: Look[] = [
         item: "Silk Scarf — Cream",
         price: "$95",
         href: "https://www.aninebing.com/products/silk-scarf-cream-and-black",
-        image: "https://cdn.shopify.com/s/files/1/0630/4999/0366/files/scarf-cream.jpg",
+        image: productAnineBingSilkScarf,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -253,7 +266,7 @@ export const portofinoLooks: Look[] = [
         item: "Castell Woven Leather Tote — Tan",
         price: "$695",
         href: "https://hereustudio.com/products/castell-woven-leather-tote-bag-tan",
-        image: "https://cdn-images.farfetch-contents.com/17/65/43/21/17654321_36251478_1000.jpg",
+        image: productHereuWovenTote,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
