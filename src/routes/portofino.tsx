@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
+import { TierNavBar } from "@/components/TierPortofinoView";
 import d1a from "@/assets/edit-d1-a.jpg";
 import d1b from "@/assets/edit-d1-b.jpg";
 import d1c from "@/assets/edit-d1-c.jpg";
@@ -255,21 +256,24 @@ function PortofinoPage() {
       </section>
 
       {/* SHOP BY PRICE TIER */}
-      <section className="bg-cream py-24 md:py-28 border-y border-border/40">
+      <section className="bg-cream py-20 md:py-24 border-y border-border/40">
         <div className="mx-auto max-w-3xl px-6 text-center">
           <span className="eyebrow text-gold">Shop By Price Point</span>
           <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">
-            Explore This Edit Across Price Points
+            Choose Your Tier
           </h2>
           <div className="mx-auto my-6 h-px w-16 bg-gold" />
           <p className="font-serif italic text-lg text-ink/65 leading-relaxed">
-            Same aesthetic. Different investment. Three styling pathways across designer, mid-luxe, and Riviera finds.
+            Same aesthetic. Different investment. Pick a tier to load matching products, shoppable links, and pricing.
           </p>
+          <div className="mt-10">
+            <TierNavBar />
+          </div>
           <Link
             to="/portofino-edit"
-            className="mt-10 inline-block eyebrow text-ivory bg-ink px-8 py-4 hover:bg-gold transition-colors"
+            className="mt-8 inline-block eyebrow text-[0.65rem] tracking-[0.3em] text-ink/65 border-b border-ink/30 hover:text-gold hover:border-gold transition-colors pb-1"
           >
-            Open The Price-Point Edit →
+            Or view the full side-by-side edit →
           </Link>
         </div>
       </section>
