@@ -21,6 +21,7 @@ import productOradinaVicenzaNecklace from "@/assets/products/oradina-vicenza-nec
 import productBenAmunLaurenEarrings from "@/assets/products/ben-amun-lauren-earrings.jpg";
 import productCultGaiaEosClutch from "@/assets/products/cult-gaia-eos-clutch.svg";
 import productAquazzuraTequilaSandal from "@/assets/products/aquazzura-tequila-sandal.jpg";
+import productRetrofeteAnatEucalyptus from "@/assets/products/retrofete-anat-eucalyptus.jpg";
 
 /**
  * Product resilience model.
@@ -426,11 +427,11 @@ export const portofinoLooks: Look[] = [
     experience: { label: "Reserve at Belmond Splendido", href: "#" },
     shop: [
       {
-        brand: "ETRO",
-        item: "Paisley Print Silk Twill Halterneck Maxi Dress",
-        price: "$3,990",
-        href: "https://www.net-a-porter.com/en-us/shop/product/etro/clothing/maxi-dresses/paisley-print-silk-twill-halterneck-maxi-dress/46376663162954037",
-        image: productEtroPaisleyHalterMaxi,
+        brand: "Retrofête",
+        item: "Anat Dress in Eucalyptus",
+        price: "$695",
+        href: "https://www.revolve.com/retrofete-anat-dress-in-eucalyptus/dp/ROFR-WD993/",
+        image: productRetrofeteAnatEucalyptus,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-30",
       },
