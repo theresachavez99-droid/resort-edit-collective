@@ -12,7 +12,6 @@ import productDragonSantaCroceTote from "@/assets/products/dragon-santa-croce-to
 import productGianvitoPortofinoSandal from "@/assets/products/gianvito-portofino-sandal.svg";
 import productGoldLariatNecklace from "@/assets/products/gold-lariat-necklace.svg";
 import productHereuWovenTote from "@/assets/products/hereu-woven-tote.svg";
-import productLoeweBasketBag from "@/assets/products/loewe-basket-bag.svg";
 import productLoroPianaPocketBag from "@/assets/products/loro-piana-pocket-bag.svg";
 import productPosseStripedCropTop from "@/assets/products/posse-striped-crop-top.svg";
 import productVcaFrivolePendant from "@/assets/products/vca-frivole-pendant.svg";
