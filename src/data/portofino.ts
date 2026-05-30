@@ -62,6 +62,13 @@ export type ShopItem = {
   replaced?: boolean;
   /** CMS-only flag (e.g. "needs exact product link"). Never rendered on frontend. */
   cms_flag?: string;
+  /**
+   * Optional explicit grouping into one of the three "looks" rendered per day.
+   * When set, the renderer puts this item into that look's tab instead of
+   * using the default price-tier split. Untagged items still fall through
+   * to the price-split fallback.
+   */
+  lookIndex?: 1 | 2 | 3;
 };
 
 /**
