@@ -113,8 +113,8 @@ function Index() {
               <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
                 <img src={d.image} alt={d.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: d.pos }} />
               </div>
-              <div className="px-4 pt-5 pb-5 text-center flex-1 flex flex-col">
-                <p className="font-serif italic text-[0.9rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
+              <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
+                <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
                 <Link to="/portofino" className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors">
                   Explore the Look →
                 </Link>
