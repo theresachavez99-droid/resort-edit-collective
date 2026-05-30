@@ -369,6 +369,48 @@ function DayLooks({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
             {items.map((item) => {
+              // Not-available card: same dimensions, non-clickable, shows
+              // the literal compliance copy in place of brand/price/Shop.
+              if (item.not_available) {
+                return (
+                  <div
+                    key={`${item.brand}-${item.item}`}
+                    className="group flex flex-col bg-ivory border border-border/60 h-full"
+                    aria-disabled="true"
+                  >
+                    <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
+                      <div className="flex flex-col items-center justify-center text-center px-4">
+                        {item.category && (
+                          <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80 mb-2">
+                            {item.category}
+                          </span>
+                        )}
+                        <span className="font-serif italic text-ink/60 text-[0.78rem] leading-snug">
+                          {item.brand} — {item.item}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col flex-1 p-4">
+                      {item.category && (
+                        <div className="eyebrow text-ink/50 text-[0.55rem] tracking-[0.3em]">
+                          {item.category}
+                        </div>
+                      )}
+                      <div className="eyebrow text-ink text-[0.55rem] tracking-[0.3em] mt-1">
+                        {item.brand}
+                      </div>
+                      <div className="font-serif italic text-ink/85 text-[0.95rem] leading-snug mt-1.5">
+                        {item.item}
+                      </div>
+                      <div className="mt-auto pt-4">
+                        <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink/55">
+                          Not available through approved affiliate partners
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
               const href = resolveProductLink(item)!;
               return (
                 <a
@@ -409,6 +451,11 @@ function DayLooks({
                     )}
                   </div>
                   <div className="flex flex-col flex-1 p-4">
+                    {item.category && (
+                      <div className="eyebrow text-gold text-[0.55rem] tracking-[0.3em] mb-1">
+                        {item.category}
+                      </div>
+                    )}
                     <div className="eyebrow text-ink text-[0.55rem] tracking-[0.3em]">
                       {item.brand}
                     </div>
