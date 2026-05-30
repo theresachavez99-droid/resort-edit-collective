@@ -115,7 +115,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 1",
     title: "Yacht Day & Harbor Aperitivo",
-    subtitle: "Open water, hidden coves, harbor sunset.",
+    subtitle: "Open water, tan lines, and hidden coves.",
     caption:
       "Drift past the lighthouse into glassy green water, then ease back to the marina as the piazzetta fills with candlelight and Negronis.",
     image: yacht,
@@ -226,7 +226,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 2",
     title: "Beach Club & Long Lunches",
-    subtitle: "Terrace tables, long lunches, seaside glamour.",
+    subtitle: "Slow mornings, long lunches, seaside glamour.",
     caption:
       "Trade the morning for a cliffside cabana above Paraggi, then linger over crudo beneath the pines until the coastal path back into town turns gold.",
     image: beach,
@@ -328,7 +328,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 3",
     title: "POOL & SHOPPING IN TOWN",
-    subtitle: "Poolside ease, Via Roma, Campari hour.",
+    subtitle: "Poolside ease, via Roma, Capri luxe.",
     caption:
       "Drift from a sun-warmed daybed into the cool of the ateliers along Via Roma, landing in the piazzetta just as the yachts come in and the Prosecco starts to pour.",
     image: dayclub,
@@ -430,7 +430,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 4",
     title: "Sunset Cocktails & Dinner With a View",
-    subtitle: "Golden hour, candlelight, waterfront tables.",
+    subtitle: "Golden hour, candlelight, harbor glow.",
     caption:
       "A silk dress, a rooftop cocktail high above the cliffs, and a long Italian dinner unfolding as the lights of the harbor blink on one by one.",
     image: dinner,
@@ -523,7 +523,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 5",
     title: "Market Strolls & Coastal Goodbyes",
-    subtitle: "Morning strolls, market baskets, one last lunch.",
+    subtitle: "Espresso rituals and one last long lunch.",
     caption:
       "Climb the path to Castello Brown for one last look over the harbor, then drift down to a waterside table where lunch turns into the kind of farewell that already feels like a return.",
     image: town,
