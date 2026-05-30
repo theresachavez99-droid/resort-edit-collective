@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-label="Anine Bing Silk Scarf">
+<rect width="420" height="520" fill="#fbf8ef"/>
+<rect x="24" y="24" width="372" height="472" fill="#fffdf7" stroke="#d6c49a" stroke-width="2"/>
+<g transform="translate(0 18)"><path d="M132 126 C202 86 270 98 308 154 C244 172 235 238 275 306 C208 344 145 322 112 266 C168 248 176 184 132 126Z" fill="#f4ecdc" stroke="#b9995a" stroke-width="5"/><path d="M150 145 C190 172 238 174 286 154" fill="none" stroke="#111111" stroke-width="4"/><path d="M128 264 C176 238 226 250 264 306" fill="none" stroke="#111111" stroke-width="4"/></g>
+<text x="210" y="426" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="24" fill="#2b241c">Silk Scarf</text>
+<text x="210" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" letter-spacing="3" fill="#b9995a">ANINE BING</text>
+</svg>

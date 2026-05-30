@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-label="Gianvito Rossi Portofino Sandal">
+<rect width="420" height="520" fill="#fbf8ef"/>
+<rect x="24" y="24" width="372" height="472" fill="#fffdf7" stroke="#d6c49a" stroke-width="2"/>
+<g transform="translate(0 18)"><path d="M96 288 C158 280 202 240 242 200 C270 172 294 174 312 202 C286 250 260 286 220 312 C184 336 130 328 86 308 Z" fill="#f3ddc7" stroke="#9b7447" stroke-width="5"/><path d="M286 220 L322 318" stroke="#9b7447" stroke-width="8" stroke-linecap="round"/><path d="M146 285 C184 290 222 276 254 242" fill="none" stroke="#9b7447" stroke-width="4"/></g>
+<text x="210" y="426" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="24" fill="#2b241c">Portofino Sandal</text>
+<text x="210" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" letter-spacing="3" fill="#b9995a">GIANVITO ROSSI</text>
+</svg>

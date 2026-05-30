@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-label="Posse Striped Crop Top">
+<rect width="420" height="520" fill="#fbf8ef"/>
+<rect x="24" y="24" width="372" height="472" fill="#fffdf7" stroke="#d6c49a" stroke-width="2"/>
+<g transform="translate(0 18)"><path d="M138 110 C166 136 254 136 282 110 C296 176 304 252 292 330 L128 330 C116 252 124 176 138 110Z" fill="#f7f0df" stroke="#335f86" stroke-width="5"/><path d="M136 160 H284 M130 205 H290 M128 250 H292 M128 295 H292" stroke="#335f86" stroke-width="8"/><path d="M178 114 C176 148 244 148 242 114" fill="none" stroke="#335f86" stroke-width="5"/></g>
+<text x="210" y="426" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="24" fill="#2b241c">Striped Crop Top</text>
+<text x="210" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" letter-spacing="3" fill="#b9995a">POSSE</text>
+</svg>
