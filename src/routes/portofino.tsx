@@ -1,26 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { MapPin } from "lucide-react";
-import { useState } from "react";
-import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
-import { trackOutbound } from "@/lib/utils";
+import { portofinoLooks } from "@/data/portofino";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
 import d1a from "@/assets/edit-d1-a.jpg";
-import d1b from "@/assets/edit-d1-b.jpg";
-import d1c from "@/assets/edit-d1-c.jpg";
 import d2a from "@/assets/edit-d2-a.jpg";
-import d2b from "@/assets/edit-d2-b.jpg";
-import d2c from "@/assets/edit-d2-c.jpg";
 import d3a from "@/assets/edit-d3-a.jpg";
-import d3b from "@/assets/edit-d3-b.jpg";
-import d3c from "@/assets/edit-d3-c.jpg";
 import d4a from "@/assets/edit-d4-a.jpg";
-import d4b from "@/assets/edit-d4-b.jpg";
-import d4c from "@/assets/edit-d4-c.jpg";
 import d5a from "@/assets/edit-d5-a.jpg";
-import d5b from "@/assets/edit-d5-b.jpg";
-import d5c from "@/assets/edit-d5-c.jpg";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
