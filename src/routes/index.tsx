@@ -58,11 +58,11 @@ const ctas = [
 ];
 
 function Index() {
+  const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
   return (
-    <div className="bg-ivory">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 pt-6 lg:pt-10 pb-16">
-        {/* HERO — split screen */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+    <div className="bg-ivory w-full">
+      {/* HERO — split screen, full bleed */}
+      <section className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start`}>
           <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-muted">
             <img src={heroMuse} alt="Portofino editorial muse" className="absolute inset-0 h-full w-full object-cover" />
           </div>
@@ -95,10 +95,10 @@ function Index() {
               </Link>
             </div>
           </div>
-        </section>
+      </section>
 
-        {/* 5-DAY CARDS */}
-        <section className="mt-16 lg:mt-24 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
+      {/* 5-DAY CARDS */}
+      <section className={`${wrap} mt-16 lg:mt-24 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5`}>
           {days.map((d) => (
             <article key={d.n} className="bg-card border border-border/50 flex flex-col">
               <div className="text-center pt-5 px-3">
@@ -118,10 +118,10 @@ function Index() {
               </div>
             </article>
           ))}
-        </section>
+      </section>
 
-        {/* SHOP THE LOOKS + TIP */}
-        <section className="mt-20 lg:mt-28">
+      {/* SHOP THE LOOKS + TIP */}
+      <section className={`${wrap} mt-20 lg:mt-28`}>
           <div className="flex items-center gap-4 justify-center mb-10">
             <div className="h-px w-16 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">SHOP THE LOOKS</h2>
@@ -160,10 +160,10 @@ function Index() {
               </div>
             </aside>
           </div>
-        </section>
+      </section>
 
-        {/* WHERE TO STAY */}
-        <section className="mt-20 lg:mt-28">
+      {/* WHERE TO STAY */}
+      <section className={`${wrap} mt-20 lg:mt-28`}>
           <div className="flex items-center gap-4 justify-center mb-10">
             <div className="h-px w-16 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE TO STAY</h2>
@@ -187,14 +187,14 @@ function Index() {
               </article>
             ))}
           </div>
-        </section>
+      </section>
 
-        {/* BOTTOM CTA BAR */}
-        <section className="mt-20 lg:mt-24">
-          <h2 className="text-center font-display text-xl sm:text-2xl tracking-[0.2em] text-ink mb-6">
+      {/* BOTTOM CTA BAR — edge to edge */}
+      <section className="mt-20 lg:mt-24">
+        <h2 className={`${wrap} text-center font-display text-xl sm:text-2xl tracking-[0.2em] text-ink mb-6`}>
             BOOK YOUR PORTOFINO EXPERIENCE
           </h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
             {ctas.map(({ label, Icon }) => (
               <a
                 key={label}
@@ -206,12 +206,11 @@ function Index() {
               </a>
             ))}
           </div>
-        </section>
+      </section>
 
-        <p className="mt-10 text-center eyebrow text-[0.55rem] tracking-[0.24em] text-ink/50">
+      <p className={`${wrap} mt-10 pb-16 text-center eyebrow text-[0.55rem] tracking-[0.24em] text-ink/50`}>
           Prices are subject to change. Links may earn a small commission at no extra cost to you.
         </p>
-      </div>
     </div>
   );
 }
