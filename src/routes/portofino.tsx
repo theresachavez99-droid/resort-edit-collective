@@ -4,6 +4,8 @@ import { portofinoLooks } from "@/data/portofino";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
 import d1a from "@/assets/edit-d1-a.jpg";
+import d1b from "@/assets/edit-d1-b.jpg";
+import d1c from "@/assets/edit-d1-c.jpg";
 import d2a from "@/assets/edit-d2-a.jpg";
 import d3a from "@/assets/edit-d3-a.jpg";
 import d4a from "@/assets/edit-d4-a.jpg";
@@ -41,75 +43,119 @@ function PortofinoPage() {
     { slug: "day-5", label: "Day 5", title: "Espresso & A Long Last Lunch", caption: "Espresso rituals and one last long lunch.", image: d5a },
   ];
 
+  const day1Previews = [
+    { n: 1, title: "Harbor Hero", caption: "Designer · yacht-day polish.", image: d1a },
+    { n: 2, title: "Riviera Lunch", caption: "Mid-luxe · harborfront aperitivo.", image: d1b },
+    { n: 3, title: "Riviera Daywear", caption: "Riviera finds · effortless ease.", image: d1c },
+  ];
+
   return (
     <div>
       {/* HERO — Editorial full-bleed */}
-      <section className="relative h-[78vh] min-h-[560px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[70vh] min-h-[480px] w-full overflow-hidden bg-ink">
         <img
           src={portofinoImg}
           alt="Portofino harbor — editorial hero"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-16 md:pb-24 text-ivory">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-12 md:pb-16 text-ivory">
           <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
-          <h1 className="font-display text-5xl md:text-8xl mt-6 tracking-[0.05em] leading-[1]">
+          <h1 className="font-display text-5xl md:text-7xl mt-5 tracking-[0.05em] leading-[1]">
             5 Days in Portofino
           </h1>
-          <p className="font-serif italic text-lg md:text-2xl text-ivory/85 mt-6 max-w-2xl leading-relaxed">
-            Five days. Five looks. Dressed for the Italian Riviera.
+          <p className="font-serif italic text-base md:text-xl text-ivory/85 mt-4 max-w-2xl leading-relaxed">
+            Curated destination dressing for the Italian Riviera.
           </p>
         </div>
       </section>
 
-      {/* DAY 1–5 — multi-look shopping experience */}
-      <section className="bg-ivory py-20 md:py-28">
-        <div className="mx-auto max-w-3xl px-6 text-center mb-16 md:mb-20">
+      {/* FIVE DAYS, THREE WAYS + Day nav + Day 1 preview */}
+      <section className="bg-ivory pt-12 md:pt-14 pb-14 md:pb-16">
+        <div className="mx-auto max-w-3xl px-6 text-center mb-8 md:mb-10">
           <span className="eyebrow text-gold">The Wardrobe</span>
-          <h2 className="font-display text-4xl md:text-6xl mt-4 tracking-[0.05em]">
+          <h2 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.05em]">
             Five Days, Three Ways
           </h2>
-          <div className="mx-auto my-6 h-px w-16 bg-gold" />
-          <p className="font-serif italic text-lg text-ink/65 leading-relaxed">
-            Every day, three shoppable looks — Designer, Mid-Luxe, and Riviera Finds.
+          <div className="mx-auto my-4 h-px w-12 bg-gold" />
+          <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+            Three shoppable looks per day: Designer / Mid-Luxe / Riviera Finds.
           </p>
         </div>
 
-        <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {dayNav.map((d) => (
-            <Link
-              key={d.slug}
-              to="/portofino/day-{$day}"
-              params={{ day: d.slug.replace("day-", "") }}
-              className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-                <img
-                  src={d.image}
-                  alt={`${d.label} — ${d.title}`}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                />
-                <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.6rem]">
-                  {d.label.toUpperCase()}
+        {/* Horizontal day pill navigation */}
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+            {dayNav.map((d) => (
+              <Link
+                key={d.slug}
+                to="/portofino/day-{$day}"
+                params={{ day: d.slug.replace("day-", "") }}
+                className="eyebrow tracking-[0.3em] text-[0.65rem] px-5 py-3 border border-ink/20 text-ink hover:bg-ink hover:text-ivory transition-colors"
+                title={d.title}
+              >
+                {d.label.toUpperCase()}
+              </Link>
+            ))}
+          </div>
+          <p className="text-center font-serif italic text-ink/55 text-sm mt-4">
+            Showing Day 1 · Yacht Day & Harbor Aperitivo — open water, tan lines and hidden coves.
+          </p>
+        </div>
+
+        {/* Featured Preview Strip — Day 1 looks */}
+        <div className="mx-auto max-w-6xl px-6 mt-10 md:mt-12">
+          <div className="hidden md:grid grid-cols-3 gap-5">
+            {day1Previews.map((p) => (
+              <Link
+                key={p.n}
+                to="/portofino/day-{$day}"
+                params={{ day: "1" }}
+                className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                  <img src={p.image} alt={`Day 1 Look ${p.n} — ${p.title}`} loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+                  <div className="absolute top-3 left-3 bg-ivory/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.55rem]">
+                    LOOK {p.n}
+                  </div>
                 </div>
-              </div>
-              <div className="p-6">
-                <span className="eyebrow text-gold text-[0.6rem] tracking-[0.35em]">
-                  {d.label.toUpperCase()}
-                </span>
-                <h3 className="font-display text-2xl tracking-wide mt-2 leading-snug">
-                  {d.title}
-                </h3>
-                <p className="font-serif italic text-ink/65 mt-3 leading-relaxed">
-                  {d.caption}
-                </p>
-                <span className="mt-5 inline-block eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
-                  View {d.label} Looks →
-                </span>
-              </div>
-            </Link>
-          ))}
+                <div className="p-4">
+                  <h3 className="font-display text-xl tracking-wide leading-snug">{p.title}</h3>
+                  <p className="font-serif italic text-ink/65 text-sm mt-1.5 leading-relaxed">{p.caption}</p>
+                  <span className="mt-3 inline-block eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
+                    View Look →
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+          {/* Mobile horizontal scroll */}
+          <div className="md:hidden -mx-6 px-6 overflow-x-auto">
+            <div className="flex gap-4 snap-x snap-mandatory">
+              {day1Previews.map((p) => (
+                <Link
+                  key={p.n}
+                  to="/portofino/day-{$day}"
+                  params={{ day: "1" }}
+                  className="snap-start shrink-0 w-[78%] bg-ivory border border-border/60"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                    <img src={p.image} alt={`Day 1 Look ${p.n}`} loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover" />
+                    <div className="absolute top-3 left-3 bg-ivory/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.55rem]">
+                      LOOK {p.n}
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-display text-lg tracking-wide">{p.title}</h3>
+                    <p className="font-serif italic text-ink/65 text-sm mt-1.5">{p.caption}</p>
+                    <span className="mt-3 inline-block eyebrow text-[0.6rem] tracking-[0.35em] text-ink">View Look →</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
