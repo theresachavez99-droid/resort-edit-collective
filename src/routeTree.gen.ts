@@ -17,7 +17,7 @@ import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PortofinoDayDayRouteImport } from './routes/portofino.day-$day'
+import { Route as PortofinoDayChar123dayChar125RouteImport } from './routes/portofino.day-{$day}'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 
@@ -61,11 +61,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PortofinoDayDayRoute = PortofinoDayDayRouteImport.update({
-  id: '/day-$day',
-  path: '/day-$day',
-  getParentRoute: () => PortofinoRoute,
-} as any)
+const PortofinoDayChar123dayChar125Route =
+  PortofinoDayChar123dayChar125RouteImport.update({
+    id: '/day-{$day}',
+    path: '/day-{$day}',
+    getParentRoute: () => PortofinoRoute,
+  } as any)
 const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -88,7 +89,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/portofino/day-$day': typeof PortofinoDayDayRoute
+  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -101,7 +102,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/portofino/day-$day': typeof PortofinoDayDayRoute
+  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -115,7 +116,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/portofino/day-$day': typeof PortofinoDayDayRoute
+  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -130,7 +131,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/portofino/day-$day'
+    | '/portofino/day-{$day}'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -143,7 +144,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/portofino/day-$day'
+    | '/portofino/day-{$day}'
   id:
     | '__root__'
     | '/'
@@ -156,7 +157,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/portofino/day-$day'
+    | '/portofino/day-{$day}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -228,11 +229,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/portofino/day-$day': {
-      id: '/portofino/day-$day'
-      path: '/day-$day'
-      fullPath: '/portofino/day-$day'
-      preLoaderRoute: typeof PortofinoDayDayRouteImport
+    '/portofino/day-{$day}': {
+      id: '/portofino/day-{$day}'
+      path: '/day-{$day}'
+      fullPath: '/portofino/day-{$day}'
+      preLoaderRoute: typeof PortofinoDayChar123dayChar125RouteImport
       parentRoute: typeof PortofinoRoute
     }
     '/destinations/$slug': {
@@ -276,11 +277,11 @@ const DestinationsRouteWithChildren = DestinationsRoute._addFileChildren(
 )
 
 interface PortofinoRouteChildren {
-  PortofinoDayDayRoute: typeof PortofinoDayDayRoute
+  PortofinoDayChar123dayChar125Route: typeof PortofinoDayChar123dayChar125Route
 }
 
 const PortofinoRouteChildren: PortofinoRouteChildren = {
-  PortofinoDayDayRoute: PortofinoDayDayRoute,
+  PortofinoDayChar123dayChar125Route: PortofinoDayChar123dayChar125Route,
 }
 
 const PortofinoRouteWithChildren = PortofinoRoute._addFileChildren(

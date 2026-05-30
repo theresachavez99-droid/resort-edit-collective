@@ -97,7 +97,7 @@ function isDaySlug(s: string): s is DaySlug {
   return (DAY_ORDER as string[]).includes(s);
 }
 
-export const Route = createFileRoute("/portofino/day-$day")({
+export const Route = createFileRoute("/portofino/day-{$day}")({
   beforeLoad: ({ params }) => {
     if (!isDaySlug(`day-${params.day}`)) throw notFound();
   },
