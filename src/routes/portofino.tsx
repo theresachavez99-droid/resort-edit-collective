@@ -28,27 +28,19 @@ export const Route = createFileRoute("/portofino")({
 function PortofinoPage() {
   const allExperiences = portofinoLooks.flatMap((l) => l.experiences);
 
-  const lookImages: Record<string, [string, string, string]> = {
-    "Day 1": [d1a, d1b, d1c],
-    "Day 2": [d2a, d2b, d2c],
-    "Day 3": [d3a, d3b, d3c],
-    "Day 4": [d4a, d4b, d4c],
-    "Day 5": [d5a, d5b, d5c],
-  };
-  const lookTitlesByDay: Record<string, [string, string, string]> = {
-    "Day 1": ["Harbor Hero", "Riviera Lunch", "Riviera Daywear"],
-    "Day 2": ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
-    "Day 3": ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
-    "Day 4": ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
-    "Day 5": ["Last-Day Luxe", "Market Morning", "Coastal Farewell"],
-  };
-  const tipByDay: Record<string, string> = {
-    "Day 1": "Book the yacht. Stay through golden hour.",
-    "Day 2": "Reserve your cabana. Linger past lunch.",
-    "Day 3": "Hit Via Roma early. Aperitivo at sunset.",
-    "Day 4": "Book the cliffside terrace. Stay for digestivos.",
-    "Day 5": "Take the boat to San Fruttuoso. One last swim.",
-  };
+  const dayNav: Array<{
+    slug: string;
+    label: string;
+    title: string;
+    caption: string;
+    image: string;
+  }> = [
+    { slug: "day-1", label: "Day 1", title: "Yacht Day & Harbor Aperitivo", caption: "Open water, tan lines and hidden coves.", image: d1a },
+    { slug: "day-2", label: "Day 2", title: "Beach Club Lunch", caption: "Slow mornings, long lunches, seaside glamour.", image: d2a },
+    { slug: "day-3", label: "Day 3", title: "Day Club & Shopping", caption: "Poolside ease, via Roma, Capri luxe.", image: d3a },
+    { slug: "day-4", label: "Day 4", title: "Dinner & Sunset", caption: "Golden hour, candlelight, harbor glow.", image: d4a },
+    { slug: "day-5", label: "Day 5", title: "Espresso & A Long Last Lunch", caption: "Espresso rituals and one last long lunch.", image: d5a },
+  ];
 
   return (
     <div>
