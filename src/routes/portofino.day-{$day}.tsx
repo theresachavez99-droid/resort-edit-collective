@@ -43,7 +43,7 @@ const DAY_META: Record<DaySlug, {
   },
   "day-2": {
     dayKey: "Day 2",
-    title: "Day 2 · Beach Club & Long Lunch",
+    title: "Day 2 · Beach Club Lunch",
     caption: "Slow mornings, long lunches, seaside glamour.",
     images: [d2a, d2b, d2c],
     lookTitles: ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
@@ -55,7 +55,7 @@ const DAY_META: Record<DaySlug, {
   },
   "day-3": {
     dayKey: "Day 3",
-    title: "Day 3 · Piazzetta & Via Roma",
+    title: "Day 3 · Day Club & Shopping",
     caption: "Poolside ease, via Roma, Capri luxe.",
     images: [d3a, d3b, d3c],
     lookTitles: ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
@@ -67,7 +67,7 @@ const DAY_META: Record<DaySlug, {
   },
   "day-4": {
     dayKey: "Day 4",
-    title: "Day 4 · Sunset Dinner & Harbor Glow",
+    title: "Day 4 · Dinner & Sunset",
     caption: "Golden hour, candlelight, harbor glow.",
     images: [d4a, d4b, d4c],
     lookTitles: ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
@@ -79,7 +79,7 @@ const DAY_META: Record<DaySlug, {
   },
   "day-5": {
     dayKey: "Day 5",
-    title: "Day 5 · Espresso & One Last Lunch",
+    title: "Day 5 · Espresso & A Long Last Lunch",
     caption: "Espresso rituals and one last long lunch.",
     images: [d5a, d5b, d5c],
     lookTitles: ["Last-Day Luxe", "Market Morning", "Coastal Farewell"],
