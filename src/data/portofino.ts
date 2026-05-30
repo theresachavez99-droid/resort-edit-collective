@@ -22,6 +22,8 @@ import productBenAmunLaurenEarrings from "@/assets/products/ben-amun-lauren-earr
 import productCultGaiaEosClutch from "@/assets/products/cult-gaia-eos-clutch.svg";
 import productAquazzuraTequilaSandal from "@/assets/products/aquazzura-tequila-sandal.jpg";
 import productRetrofeteAnatEucalyptus from "@/assets/products/retrofete-anat-eucalyptus.jpg";
+import productAquazzuraTequilaCrystal from "@/assets/products/aquazzura-tequila-crystal-powder-pink.jpg";
+import productLoefflerRandallRayneChampagne from "@/assets/products/loeffler-randall-rayne-champagne.jpg";
 
 /**
  * Product resilience model.
@@ -454,20 +456,20 @@ export const portofinoLooks: Look[] = [
         last_verified_date: "2026-05-30",
       },
       {
-        brand: "Cult Gaia",
-        item: "Eos Champagne Metallic Woven Clutch",
-        price: "$498",
-        href: "https://cultgaia.com/products/eos-clutch-champagne",
-        image: productCultGaiaEosClutch,
+        brand: "Loeffler Randall",
+        item: "Rayne Pleated Bow Frame Clutch — Champagne Metallic",
+        price: "$395",
+        href: "https://www.bloomingdales.com/shop/product/loeffler-randall-rayne-small-pleated-bow-frame-clutch?ID=4607288",
+        image: productLoefflerRandallRayneChampagne,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-30",
       },
       {
         brand: "Aquazzura",
-        item: "Tequila Sandal 85 — Powder Pink",
-        price: "$895",
-        href: "https://www.aquazzura.com/us_en/tequila-sandal-85-powder-pink-tqlmids0-nap-pwp",
-        image: productAquazzuraTequilaSandal,
+        item: "Tequila Crystal Embellished Sandal — Powder Pink",
+        price: "$1,295",
+        href: "https://www.saksfifthavenue.com/product/Aquazzura-Tequila-Crystal-Embellished-Leather-Sandals-0400099378466.html",
+        image: productAquazzuraTequilaCrystal,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-30",
       },
