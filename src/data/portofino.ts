@@ -249,6 +249,7 @@ export const portofinoLooks: Look[] = [
         image: "https://us.aguabyaguabendita.com/cdn/shop/files/Secreto-Primavera-Canna-Bikini-top-19250-1_1024x1024.jpg?v=1747842398",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 1,
       },
       {
         brand: "Agua by Agua Bendita",
@@ -258,6 +259,7 @@ export const portofinoLooks: Look[] = [
         image: "https://us.aguabyaguabendita.com/cdn/shop/files/Secreto-Magenta-Canna-Bikini-bottom-19251-1_1024x1024.jpg?v=1747842368",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 1,
       },
       {
         brand: "Faithfull the Brand",
@@ -267,6 +269,7 @@ export const portofinoLooks: Look[] = [
         image: "https://is4.revolveassets.com/images/p4/n/z/FAIB-WD451_V1.jpg",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 2,
       },
       {
         brand: "Krewe",
@@ -276,6 +279,7 @@ export const portofinoLooks: Look[] = [
         image: "https://www.krewe.com/cdn/shop/files/Sasha-Selene-Front-Web.jpg?v=1713968782&width=2048",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 2,
       },
       {
         brand: "Anine Bing",
@@ -285,6 +289,7 @@ export const portofinoLooks: Look[] = [
         image: productAnineBingSilkScarf,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 1,
       },
       {
         brand: "Hereu",
@@ -294,26 +299,17 @@ export const portofinoLooks: Look[] = [
         image: productHereuWovenTote,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 2,
       },
       // -----------------------------------------------------------------
       // DAY 2 · LOOK 2 — "Long-Lunch Linen"
-      // Full accessory stack: outfit · shoes · bag · earrings · necklace ·
-      // bracelet · ring · sunglasses · hair detail · optional layer.
+      // Completes the accessory stack started above (dress = outfit,
+      // tote = bag, Krewe = sunglasses): adds shoes, earrings, necklace,
+      // bracelet, ring, hair detail, optional layer.
       // Built on cobblestone-friendly luxury shoes, sculptural jewelry
       // (single statement pieces, no necklace-stacking), and a relaxed
       // linen shirt as the optional layer (never cropped over a maxi).
       // -----------------------------------------------------------------
-      {
-        brand: "Faithfull the Brand",
-        item: "Marie-Louise Linen Midi Dress — Outfit",
-        price: "$229",
-        href: "https://www.revolve.com/faithfull-the-brand-marie-louise-midi-dress/dp/FAIB-WD451/",
-        backup_link_1: "https://www.shopbop.com/marie-louise-midi-dress-faithfull/vp/v=1/1599568945.htm",
-        image: "https://is4.revolveassets.com/images/p4/n/z/FAIB-WD451_V1.jpg",
-        inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
-        lookIndex: 2,
-      },
       {
         brand: "Aquazzura",
         item: "Maxi Almost Bare 15 Leather Sandals — Shoes",
@@ -321,17 +317,6 @@ export const portofinoLooks: Look[] = [
         href: "https://www.mytheresa.com/us/en/women/aquazzura-maxi-almost-bare-15-leather-sandals",
         backup_link_1: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/flat-sandals/maxi-almost-bare-leather-sandals",
         backup_link_2: "https://www.farfetch.com/shopping/women/aquazzura-maxi-almost-bare-flat-sandals-item.aspx",
-        inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
-        lookIndex: 2,
-      },
-      {
-        brand: "Hereu",
-        item: "Castell Woven Leather Tote — Bag",
-        price: "$695",
-        href: "https://www.net-a-porter.com/en-us/shop/product/hereu/bags/tote-bags/castell-woven-leather-tote",
-        backup_link_1: "https://www.farfetch.com/shopping/women/hereu-castell-woven-tote-item.aspx",
-        image: productHereuWovenTote,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 2,
@@ -376,17 +361,6 @@ export const portofinoLooks: Look[] = [
         href: "https://www.shopbop.com/molten-heavy-stacking-ring-missoma/vp/v=1/1576781299.htm",
         backup_link_1: "https://www.revolve.com/missoma-molten-stacking-ring/dp/MISR-WL56/",
         backup_link_2: "https://www.nordstrom.com/s/missoma-molten-stacking-ring/6512893",
-        inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
-        lookIndex: 2,
-      },
-      {
-        brand: "Krewe",
-        item: "Sasha Selene 24K Sunglasses",
-        price: "$295",
-        href: "https://www.krewe.com/products/sasha-selene-24k-sunglasses",
-        backup_link_1: "https://www.nordstrom.com/s/krewe-sasha-selene-sunglasses/6209118",
-        image: "https://www.krewe.com/cdn/shop/files/Sasha-Selene-Front-Web.jpg?v=1713968782&width=2048",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 2,
