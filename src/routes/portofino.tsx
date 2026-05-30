@@ -282,18 +282,29 @@ function DayLooks({
 }) {
   const [active, setActive] = useState(0);
   const liveItems = look.shop.filter((i) => resolveProductLink(i) !== null);
-  // Build three "looks" from the day's shop list. Look 1 shows the full
-  // curated product list; Looks 2 & 3 are price-tier curations of the same
-  // items so the tabs always have something meaningful to swap to.
+  // Build three "looks" from the day's shop list.
+  //
+  // Items can be explicitly assigned to a look via `lookIndex` (1|2|3).
+  // For any look slot with no explicit items, fall back to the legacy
+  // price-tier split across the (untagged) live items so every tab has
+  // something meaningful to swap to.
   const parsePrice = (p: string) => Number(p.replace(/[^0-9.]/g, "")) || 0;
-  const sortedDesc = [...liveItems].sort(
+  const untagged = liveItems.filter((i) => !i.lookIndex);
+  const sortedDesc = [...untagged].sort(
     (a, b) => parsePrice(b.price) - parsePrice(a.price),
   );
   const half = Math.ceil(sortedDesc.length / 2);
-  const lookItems: ShopItem[][] = [
-    liveItems,
+  const fallback: ShopItem[][] = [
+    untagged.length ? untagged : liveItems,
     sortedDesc.slice(0, half),
     sortedDesc.slice(half).length ? sortedDesc.slice(half) : sortedDesc,
+  ];
+  const tagged = (n: 1 | 2 | 3) =>
+    liveItems.filter((i) => i.lookIndex === n);
+  const lookItems: ShopItem[][] = [
+    tagged(1).length ? tagged(1) : fallback[0],
+    tagged(2).length ? tagged(2) : fallback[1],
+    tagged(3).length ? tagged(3) : fallback[2],
   ];
   const tierLabels = ["Designer", "Mid-Luxe", "Riviera Finds"] as const;
   const items = lookItems[active] ?? liveItems;

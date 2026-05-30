@@ -62,6 +62,13 @@ export type ShopItem = {
   replaced?: boolean;
   /** CMS-only flag (e.g. "needs exact product link"). Never rendered on frontend. */
   cms_flag?: string;
+  /**
+   * Optional explicit grouping into one of the three "looks" rendered per day.
+   * When set, the renderer puts this item into that look's tab instead of
+   * using the default price-tier split. Untagged items still fall through
+   * to the price-split fallback.
+   */
+  lookIndex?: 1 | 2 | 3;
 };
 
 /**
@@ -242,6 +249,7 @@ export const portofinoLooks: Look[] = [
         image: "https://us.aguabyaguabendita.com/cdn/shop/files/Secreto-Primavera-Canna-Bikini-top-19250-1_1024x1024.jpg?v=1747842398",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 1,
       },
       {
         brand: "Agua by Agua Bendita",
@@ -251,6 +259,7 @@ export const portofinoLooks: Look[] = [
         image: "https://us.aguabyaguabendita.com/cdn/shop/files/Secreto-Magenta-Canna-Bikini-bottom-19251-1_1024x1024.jpg?v=1747842368",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 1,
       },
       {
         brand: "Faithfull the Brand",
@@ -260,6 +269,7 @@ export const portofinoLooks: Look[] = [
         image: "https://is4.revolveassets.com/images/p4/n/z/FAIB-WD451_V1.jpg",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 2,
       },
       {
         brand: "Krewe",
@@ -269,6 +279,7 @@ export const portofinoLooks: Look[] = [
         image: "https://www.krewe.com/cdn/shop/files/Sasha-Selene-Front-Web.jpg?v=1713968782&width=2048",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 2,
       },
       {
         brand: "Anine Bing",
@@ -278,6 +289,7 @@ export const portofinoLooks: Look[] = [
         image: productAnineBingSilkScarf,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 1,
       },
       {
         brand: "Hereu",
@@ -287,6 +299,91 @@ export const portofinoLooks: Look[] = [
         image: productHereuWovenTote,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
+        lookIndex: 2,
+      },
+      // -----------------------------------------------------------------
+      // DAY 2 · LOOK 2 — "Long-Lunch Linen"
+      // Completes the accessory stack started above (dress = outfit,
+      // tote = bag, Krewe = sunglasses): adds shoes, earrings, necklace,
+      // bracelet, ring, hair detail, optional layer.
+      // Built on cobblestone-friendly luxury shoes, sculptural jewelry
+      // (single statement pieces, no necklace-stacking), and a relaxed
+      // linen shirt as the optional layer (never cropped over a maxi).
+      // -----------------------------------------------------------------
+      {
+        brand: "Aquazzura",
+        item: "Maxi Almost Bare 15 Leather Sandals — Shoes",
+        price: "$750",
+        href: "https://www.mytheresa.com/us/en/women/aquazzura-maxi-almost-bare-15-leather-sandals",
+        backup_link_1: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/flat-sandals/maxi-almost-bare-leather-sandals",
+        backup_link_2: "https://www.farfetch.com/shopping/women/aquazzura-maxi-almost-bare-flat-sandals-item.aspx",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-29",
+        lookIndex: 2,
+      },
+      {
+        brand: "Jennifer Behr",
+        item: "Tamsin Sculptural Gold Drop Earrings",
+        price: "$325",
+        href: "https://www.net-a-porter.com/en-us/shop/product/jennifer-behr/accessories/earrings/tamsin-gold-tone-earrings",
+        backup_link_1: "https://www.shopbop.com/tamsin-earrings-jennifer-behr/vp/v=1/1542850232.htm",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-29",
+        lookIndex: 2,
+      },
+      {
+        brand: "Saint Laurent",
+        item: "Twisted Gold-Tone Collar — Necklace",
+        price: "$595",
+        href: "https://www.mytheresa.com/us/en/women/saint-laurent-twisted-gold-tone-collar-necklace",
+        backup_link_1: "https://www.net-a-porter.com/en-us/shop/product/saint-laurent/accessories/necklaces/twisted-gold-tone-collar",
+        backup_link_2: "https://www.farfetch.com/shopping/women/saint-laurent-twisted-collar-necklace-item.aspx",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-29",
+        lookIndex: 2,
+      },
+      {
+        brand: "David Yurman",
+        item: "Cable Classics Bracelet — 5mm",
+        price: "$550",
+        href: "https://www.davidyurman.com/products/cable-classics-bracelet-5mm",
+        backup_link_1: "https://www.nordstrom.com/s/david-yurman-cable-classics-bracelet/3076283",
+        backup_link_2: "https://www.saksfifthavenue.com/product/david-yurman-cable-classics-bracelet-0400099999999.html",
+        image: productDavidYurmanCableClassics,
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-29",
+        lookIndex: 2,
+      },
+      {
+        brand: "Missoma",
+        item: "Molten Heavy Stacking Ring — Gold",
+        price: "$258",
+        href: "https://www.shopbop.com/molten-heavy-stacking-ring-missoma/vp/v=1/1576781299.htm",
+        backup_link_1: "https://www.revolve.com/missoma-molten-stacking-ring/dp/MISR-WL56/",
+        backup_link_2: "https://www.nordstrom.com/s/missoma-molten-stacking-ring/6512893",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-29",
+        lookIndex: 2,
+      },
+      {
+        brand: "Lelet NY",
+        item: "Mini Tortoise Barrette — Hair Detail",
+        price: "$225",
+        href: "https://www.shopbop.com/mini-tort-barrette-lelet-ny/vp/v=1/1521352288.htm",
+        backup_link_1: "https://www.net-a-porter.com/en-us/shop/product/lelet-ny/accessories/hair-accessories/mini-tortoise-barrette",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-29",
+        lookIndex: 2,
+      },
+      {
+        brand: "Faithfull the Brand",
+        item: "Beline Linen Shirt — Optional Layer",
+        price: "$229",
+        href: "https://www.revolve.com/faithfull-the-brand-beline-shirt/dp/FAIB-WS239/",
+        backup_link_1: "https://www.shopbop.com/beline-shirt-faithfull-brand/vp/v=1/1592877211.htm",
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-29",
+        lookIndex: 2,
       },
     ],
     experiences: [
