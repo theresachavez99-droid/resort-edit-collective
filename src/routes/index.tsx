@@ -73,12 +73,15 @@ function Index() {
               <br />
               PORTOFINO
             </h1>
-            <p className="mt-5 font-serif italic text-gold text-3xl sm:text-4xl lg:text-5xl leading-tight">
+            <p
+              className="font-serif italic text-5xl sm:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.9] tracking-[-0.015em] -mt-2 -ml-1"
+              style={{ color: "oklch(0.52 0.13 62)" }}
+            >
               La Dolce Vita
             </p>
-            <div className="my-8 h-px w-20 bg-gold/70" />
-            <p className="eyebrow text-ink text-[0.85rem] tracking-[0.22em] leading-relaxed">
-              Luxury labels. Riviera finds.<br />Resort style across price points.
+            <div className="my-10 h-px w-32 bg-gold/80" />
+            <p className="font-display text-ink uppercase font-semibold text-lg sm:text-xl lg:text-[1.55rem] tracking-[0.12em] leading-[1.15] max-w-[65%]">
+              Luxury Labels. Riviera Finds. Resort Style Across Price Points.
             </p>
             <p className="mt-6 font-serif text-base lg:text-lg text-ink/70 leading-relaxed max-w-lg">
               Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
