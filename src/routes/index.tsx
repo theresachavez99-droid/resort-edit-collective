@@ -66,47 +66,47 @@ function Index() {
           <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-muted">
             <img src={heroMuse} alt="Portofino editorial muse" className="absolute inset-0 h-full w-full object-cover" />
           </div>
-          <div className="lg:pl-2 max-w-[680px]">
-            <p className="eyebrow text-gold text-[0.7rem] tracking-[0.3em]">A Style &amp; Itinerary Guide</p>
-            <h1 className="font-display mt-4 text-[2.6rem] sm:text-[3.2rem] lg:text-[4.75rem] xl:text-[5.6rem] leading-[0.95] tracking-[0.01em] text-ink">
+          <div className="lg:pl-2 max-w-[750px]">
+            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">A Style &amp; Itinerary Guide</p>
+            <h1 className="font-display mt-3 text-[3.4rem] sm:text-[4.2rem] lg:text-[6.2rem] xl:text-[7.4rem] leading-[0.9] tracking-[0.01em] text-ink">
               5 DAYS IN
               <br />
               PORTOFINO
             </h1>
             <p
-              className="font-serif italic text-[2.25rem] sm:text-[2.75rem] lg:text-[3.5rem] xl:text-[3.9rem] leading-[0.95] tracking-[-0.01em] mt-1 -ml-0.5"
+              className="font-serif italic text-[2.7rem] sm:text-[3.3rem] lg:text-[4.2rem] xl:text-[4.7rem] leading-[0.95] tracking-[-0.01em] mt-1 -ml-0.5 max-w-[85%]"
               style={{ color: "oklch(0.62 0.12 66)" }}
             >
               La Dolce Vita
             </p>
-            <div className="mt-7 mb-5 h-px w-32 bg-gold/80" />
-            <p className="font-serif text-ink font-semibold text-base sm:text-lg lg:text-[1.2rem] tracking-[0.01em] leading-[1.55] max-w-[80%]">
+            <div className="mt-5 mb-4 h-px w-32 bg-gold/80" />
+            <p className="font-serif text-ink font-semibold text-lg sm:text-xl lg:text-[1.4rem] tracking-[0.01em] leading-[1.5] max-w-[85%]">
               Luxury Labels. Riviera Finds. Resort Style Across Price Points.
             </p>
-            <p className="mt-3 font-serif text-base lg:text-lg text-ink/70 leading-relaxed max-w-xl">
+            <p className="mt-3 font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
               Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
             </p>
-            <p className="mt-5 eyebrow text-[0.65rem] tracking-[0.28em] text-ink/65">
+            <p className="mt-4 eyebrow text-[0.72rem] tracking-[0.28em] text-ink/70">
               Zimmermann <span className="text-gold">·</span> Johanna Ortiz <span className="text-gold">·</span> SIR <span className="text-gold">·</span> Faithfull the Brand <span className="text-gold">·</span> <Link to="/brands" className="hover:text-gold">More</Link>
             </p>
-            <div className="mt-6 flex flex-wrap gap-4">
-              <Link to="/portofino" className="bg-ink text-ivory eyebrow text-[0.72rem] tracking-[0.28em] px-10 py-[18px] hover:bg-gold transition-colors">
+            <div className="mt-5 flex flex-wrap gap-4">
+              <Link to="/portofino" className="bg-ink text-ivory eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-gold transition-colors">
                 Explore the Edit →
               </Link>
-              <Link to="/portofino-edit" className="eyebrow text-[0.72rem] tracking-[0.28em] text-ink border border-ink/40 px-10 py-[18px] hover:border-gold hover:text-gold transition-colors">
+              <Link to="/portofino-edit" className="eyebrow text-[0.82rem] tracking-[0.28em] text-ink border border-ink/40 px-12 py-[22px] hover:border-gold hover:text-gold transition-colors">
                 Shop by Price Point
               </Link>
             </div>
-            <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-ink/75">
-              <span className="eyebrow text-[0.7rem] tracking-[0.24em]">
+            <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 text-ink/80">
+              <span className="eyebrow text-[0.92rem] tracking-[0.26em]">
                 5 Days <span className="text-gold">·</span> 15 Looks <span className="text-gold">·</span> 6 Experiences
               </span>
-              <span className="hidden md:inline h-3 w-px bg-ink/20" aria-hidden />
-              <span className="font-serif italic text-[0.95rem] text-ink/70">
+              <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
+              <span className="font-serif italic text-[1.2rem] text-ink/75">
                 Designer / Mid-Luxe / Riviera Finds
               </span>
-              <span className="hidden md:inline h-3 w-px bg-ink/20" aria-hidden />
-              <span className="eyebrow text-[0.65rem] tracking-[0.28em] text-gold">
+              <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
+              <span className="eyebrow text-[0.82rem] tracking-[0.3em] text-gold">
                 ★ Most Saved Edit
               </span>
             </div>
