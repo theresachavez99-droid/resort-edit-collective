@@ -48,7 +48,7 @@ function PortofinoPage() {
     "Day 5": [d5a, d5b, d5c],
   };
   const lookTitlesByDay: Record<string, [string, string, string]> = {
-    "Day 1": ["Harbor Hero", "Marina Edit", "Riviera Daywear"],
+    "Day 1": ["Harbor Hero", "Riviera Lunch", "Riviera Daywear"],
     "Day 2": ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
     "Day 3": ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
     "Day 4": ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
