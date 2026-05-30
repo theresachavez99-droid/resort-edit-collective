@@ -128,7 +128,7 @@ export const portofinoLooks: Look[] = [
         brand: "Dolce & Gabbana",
         item: "Majolica-Print Triangle Bikini",
         price: "$595",
-        href: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-triangle-bikini-multicolor-158058990004838.html",
+        href: "https://www.farfetch.com/shopping/women/dolce-gabbana-majolica-print-triangle-bikini-item-34814361.aspx",
         image: productDgMajolicaBikini,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
