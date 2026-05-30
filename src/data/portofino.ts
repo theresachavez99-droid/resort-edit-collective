@@ -24,6 +24,8 @@ import productAquazzuraTequilaSandal from "@/assets/products/aquazzura-tequila-s
 import productRetrofeteAnatEucalyptus from "@/assets/products/retrofete-anat-eucalyptus.jpg";
 import productAquazzuraTequilaCrystal from "@/assets/products/aquazzura-tequila-crystal-powder-pink.jpg";
 import productLoefflerRandallRayneChampagne from "@/assets/products/loeffler-randall-rayne-champagne.jpg";
+import productKendraScottDaphneGold from "@/assets/products/kendra-scott-daphne-gold.jpg";
+import productDavidYurmanCableClassics from "@/assets/products/david-yurman-cable-classics.jpg";
 
 /**
  * Product resilience model.
@@ -438,20 +440,20 @@ export const portofinoLooks: Look[] = [
         last_verified_date: "2026-05-30",
       },
       {
-        brand: "Ben-Amun",
-        item: "Lauren Hammered Gold Drop Earrings",
-        price: "$185",
-        href: "https://www.ben-amun.com/products/lauren-earrings",
-        image: productBenAmunLaurenEarrings,
+        brand: "Kendra Scott",
+        item: "Daphne Gold Drop Earrings in Ivory Mother-of-Pearl",
+        price: "$78",
+        href: "https://www.kendrascott.com/jewelry/earrings/daphne-gold-drop-earrings-in-ivory-mother-of-pearl/196088555492.html",
+        image: productKendraScottDaphneGold,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-30",
       },
       {
-        brand: "Oradina",
-        item: "Vicenza Layered Necklace",
-        price: "$298",
-        href: "https://oradina.com/products/vicenza-necklace",
-        image: productOradinaVicenzaNecklace,
+        brand: "David Yurman",
+        item: "Cable Classics Bracelet with 18k Yellow Gold, 4mm",
+        price: "$595",
+        href: "https://www.nordstrom.com/s/david-yurman-cable-classics-sterling-silver-18k-yellow-gold-bracelet-4mm/3625630",
+        image: productDavidYurmanCableClassics,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-30",
       },
