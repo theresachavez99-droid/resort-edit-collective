@@ -281,7 +281,13 @@ function DayLooks({
   tip: string;
 }) {
   const [active, setActive] = useState(0);
-  const liveItems = look.shop.filter((i) => resolveProductLink(i) !== null);
+  // Keep items that resolve to a real affiliate URL AND items explicitly
+  // marked `not_available` — the latter render a non-clickable placeholder
+  // card with the literal "Not available through approved affiliate
+  // partners" copy so the look stack stays visually complete.
+  const liveItems = look.shop.filter(
+    (i) => i.not_available || resolveProductLink(i) !== null,
+  );
   // Build three "looks" from the day's shop list.
   //
   // Items can be explicitly assigned to a look via `lookIndex` (1|2|3).
