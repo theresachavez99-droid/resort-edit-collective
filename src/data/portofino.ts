@@ -16,6 +16,11 @@ import productLoeweBasketBag from "@/assets/products/loewe-basket-bag.svg";
 import productLoroPianaPocketBag from "@/assets/products/loro-piana-pocket-bag.svg";
 import productPosseStripedCropTop from "@/assets/products/posse-striped-crop-top.svg";
 import productVcaFrivolePendant from "@/assets/products/vca-frivole-pendant.svg";
+import productEtroPaisleyHalterMaxi from "@/assets/products/etro-paisley-halter-maxi.svg";
+import productOradinaVicenzaNecklace from "@/assets/products/oradina-vicenza-necklace.svg";
+import productBenAmunLaurenEarrings from "@/assets/products/ben-amun-lauren-earrings.jpg";
+import productCultGaiaEosClutch from "@/assets/products/cult-gaia-eos-clutch.svg";
+import productAquazzuraTequilaSandal from "@/assets/products/aquazzura-tequila-sandal.jpg";
 
 /**
  * Product resilience model.
