@@ -69,6 +69,20 @@ export type ShopItem = {
    * to the price-split fallback.
    */
   lookIndex?: 1 | 2 | 3;
+  /**
+   * Marks a required look slot for which no exact product URL could be
+   * sourced from an approved affiliate partner. The renderer shows a
+   * non-clickable placeholder card with the literal copy
+   * "Not available through approved affiliate partners" so the look
+   * stack stays visually complete without ever shipping a placeholder URL.
+   */
+  not_available?: boolean;
+  /**
+   * Optional category label (e.g. "Outfit", "Shoes", "Bag", "Earrings",
+   * "Necklace", "Bracelet", "Ring", "Sunglasses", "Hair Detail",
+   * "Optional Layer"). Rendered as the card eyebrow when set.
+   */
+  category?: string;
 };
 
 /**
