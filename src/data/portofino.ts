@@ -146,7 +146,7 @@ export const portofinoLooks: Look[] = [
         brand: "Biankina",
         item: "Marseille Espadrille Wedges — Beige Tan",
         price: "$295",
-        href: "https://biankina.com/products/marseille-eco-canvas-vegan-espadrille-wedges-beige-tan",
+        href: "https://biankina.com/products/marseille-eco-canvas-vegan-espadrille-wedges-beige-tan?ref=Resortedit",
         image: "https://biankina.com/cdn/shop/files/marseille-eco-canvas-vegan-espadrille-wedges-beige-tan-biankina-481366_1200x1200.jpg?v=1713884035",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
