@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { MapPin } from "lucide-react";
-import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
+import { useState } from "react";
+import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
@@ -39,7 +40,6 @@ export const Route = createFileRoute("/portofino")({
 function PortofinoPage() {
   const allExperiences = portofinoLooks.flatMap((l) => l.experiences);
 
-  const tierLabels = ["Designer", "Mid-Luxe", "Riviera Finds"] as const;
   const lookImages: Record<string, [string, string, string]> = {
     "Day 1": [d1a, d1b, d1c],
     "Day 2": [d2a, d2b, d2c],
@@ -60,34 +60,6 @@ function PortofinoPage() {
     "Day 3": "Hit Via Roma early. Aperitivo at sunset.",
     "Day 4": "Book the cliffside terrace. Stay for digestivos.",
     "Day 5": "Take the boat to San Fruttuoso. One last swim.",
-  };
-
-  const parsePrice = (p: string) => Number(p.replace(/[^0-9.]/g, "")) || 0;
-  const pickThreeByTier = (shop: ShopItem[]): ShopItem[] => {
-    const live = shop.filter((i) => resolveProductLink(i) !== null);
-    if (live.length === 0) return [];
-    const sorted = [...live].sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
-    const top = sorted[0];
-    const bottom = sorted[sorted.length - 1];
-    const mid = sorted[Math.floor(sorted.length / 2)] ?? top;
-    const picks = [top, mid === top || mid === bottom ? sorted[1] ?? top : mid, bottom];
-    // de-dupe while preserving order
-    const seen = new Set<string>();
-    const out: ShopItem[] = [];
-    for (const p of picks) {
-      if (!p || seen.has(p.item)) continue;
-      seen.add(p.item);
-      out.push(p);
-    }
-    // pad if needed
-    for (const p of sorted) {
-      if (out.length === 3) break;
-      if (!seen.has(p.item)) {
-        seen.add(p.item);
-        out.push(p);
-      }
-    }
-    return out.slice(0, 3);
   };
 
   return (
@@ -126,121 +98,18 @@ function PortofinoPage() {
 
         <div className="mx-auto max-w-7xl px-6 space-y-28 md:space-y-36">
           {portofinoLooks.map((look) => {
-            const picks = pickThreeByTier(look.shop);
             const images = lookImages[look.day] ?? [look.image, look.image, look.image];
             const titles = lookTitlesByDay[look.day] ?? ["Look 1", "Look 2", "Look 3"];
             const tip = tipByDay[look.day] ?? "";
 
             return (
-              <article key={look.day} className="space-y-10 md:space-y-14">
-                {/* Day Header */}
-                <header className="max-w-4xl">
-                  <span className="eyebrow text-gold tracking-[0.4em]">
-                    {look.day.toUpperCase()} — {look.title}
-                  </span>
-                  <p className="font-serif italic text-lg md:text-xl text-ink/65 mt-4 leading-relaxed">
-                    {look.subtitle}
-                  </p>
-                  <div className="mt-6 h-px w-16 bg-gold" />
-                </header>
-
-                {/* Two-Column Hero: destination + 3 look cards */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                  {/* LEFT: destination image */}
-                  <div className="lg:col-span-5">
-                    <div className="relative overflow-hidden bg-muted h-full min-h-[420px] lg:min-h-full aspect-[3/4] lg:aspect-auto">
-                      <img
-                        src={look.image}
-                        alt={`${look.title} — destination`}
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover"
-                      />
-                      <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-4 py-2 tracking-[0.3em]">
-                        {look.day}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* RIGHT: 3 look cards */}
-                  <div className="lg:col-span-7">
-                    <div className="flex items-baseline justify-between mb-6">
-                      <span className="eyebrow text-ink tracking-[0.35em]">Shop The Looks</span>
-                      <span className="eyebrow text-ink/40 text-[0.55rem]">3 Looks</span>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-6">
-                      {picks.map((item, i) => {
-                        const href = resolveProductLink(item)!;
-                        const tier = tierLabels[i];
-                        const lookTitle = titles[i];
-                        const cardImage = images[i];
-                        return (
-                          <a
-                            key={item.item}
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer sponsored"
-                            onClick={() =>
-                              trackOutbound({ brand: item.brand, item: item.item, href })
-                            }
-                            className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors h-full"
-                          >
-                            <div className="relative aspect-[3/4] overflow-hidden bg-muted">
-                              <img
-                                src={cardImage}
-                                alt={`${lookTitle} — ${item.brand} ${item.item}`}
-                                loading="lazy"
-                                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                              />
-                            </div>
-                            <div className="flex flex-col flex-1 p-4 md:p-5">
-                              <span className="eyebrow text-gold text-[0.55rem] tracking-[0.3em]">
-                                {tier}
-                              </span>
-                              <h3 className="font-display text-lg md:text-xl tracking-wide mt-2 leading-snug">
-                                {lookTitle}
-                              </h3>
-                              <div className="mt-3 space-y-0.5">
-                                <div className="eyebrow text-ink text-[0.55rem] tracking-[0.25em]">
-                                  {item.brand}
-                                </div>
-                                <div className="font-serif italic text-ink/75 text-[0.9rem] leading-snug">
-                                  {item.item}
-                                </div>
-                                <div className="font-serif text-gold text-[0.95rem]">
-                                  {item.price}
-                                </div>
-                              </div>
-                              <div className="mt-auto pt-5">
-                                <span className="inline-block w-full text-center eyebrow text-[0.6rem] tracking-[0.35em] text-ivory bg-ink py-3 group-hover:bg-gold transition-colors">
-                                  Shop Here →
-                                </span>
-                              </div>
-                            </div>
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Resort Edit Tip Banner */}
-                {tip && (
-                  <div className="bg-cream border-y border-gold/40 px-6 py-5 md:py-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
-                    <span className="eyebrow text-gold tracking-[0.35em] text-[0.65rem]">
-                      Resort Edit Tip
-                    </span>
-                    <p className="font-serif italic text-ink/80 text-base md:text-lg">{tip}</p>
-                  </div>
-                )}
-
-                {/* Destination Footer Callout */}
-                <div className="flex items-center justify-center gap-3 text-ink/70">
-                  <MapPin className="h-4 w-4 text-gold" />
-                  <span className="eyebrow tracking-[0.4em] text-ink">Portofino, Italy</span>
-                  <span className="text-ink/30">·</span>
-                  <span className="font-serif italic text-ink/65">Sun. Style. Aperitivo.</span>
-                </div>
-              </article>
+              <DayLooks
+                key={look.day}
+                look={look}
+                images={images}
+                titles={titles}
+                tip={tip}
+              />
             );
           })}
         </div>
