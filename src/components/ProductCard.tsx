@@ -22,24 +22,27 @@ export function ProductCard({ item, variant = "compact" }: { item: ShopItem; var
       target="_blank"
       rel="noopener noreferrer sponsored"
       onClick={() => trackOutbound({ brand: item.brand, item: item.item, href })}
-      className="group flex flex-col text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
+      className="group flex flex-col text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60 min-h-[260px]"
     >
-      <div className="relative aspect-square overflow-hidden bg-cream border border-border/60 rounded-[10px] flex items-center justify-center p-3">
+      <div className="relative aspect-square w-full min-h-[120px] sm:min-h-[140px] overflow-hidden bg-cream border border-border/60 rounded-[10px] flex items-center justify-center p-[10px]">
         {showImage ? (
           <img
             src={item.image}
             alt={`${item.brand} ${item.item}`}
             loading="lazy"
             onError={() => setImageFailed(true)}
-            className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
+            className="absolute inset-0 h-full w-full object-contain p-[10px] transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-cream via-ivory to-cream px-4 text-center">
-            <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80 mb-2">
-              {item.brand}
-            </span>
-            <span className="font-serif italic text-ink/60 text-[0.78rem] leading-snug">
-              {item.item}
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-cream via-ivory to-cream px-4 text-center gap-2">
+            <div
+              aria-hidden
+              className="w-14 h-14 rounded-full border border-gold/40 flex items-center justify-center font-serif text-gold text-lg"
+            >
+              {item.brand.charAt(0)}
+            </div>
+            <span className="eyebrow text-[0.5rem] tracking-[0.28em] text-ink/50">
+              Product image unavailable
             </span>
           </div>
         )}
