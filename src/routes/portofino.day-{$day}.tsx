@@ -3,6 +3,11 @@ import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
 import portofinoImg from "@/assets/dest-portofino.jpg";
+import heroYacht from "@/assets/look-yacht.jpg";
+import heroBeach from "@/assets/look-beach.jpg";
+import heroDayclub from "@/assets/look-dayclub.jpg";
+import heroDinner from "@/assets/look-dinner.jpg";
+import heroTown from "@/assets/look-town.jpg";
 import d1a from "@/assets/edit-d1-a.jpg";
 import d1b from "@/assets/edit-d1-b.jpg";
 import d1c from "@/assets/edit-d1-c.jpg";
@@ -25,6 +30,8 @@ const DAY_META: Record<DaySlug, {
   dayKey: string;
   title: string;
   caption: string;
+  hero: string;
+  heroPos: string;
   images: [string, string, string];
   lookTitles: [string, string, string];
   lookMoods: [string, string, string];
@@ -33,6 +40,8 @@ const DAY_META: Record<DaySlug, {
     dayKey: "Day 1",
     title: "Day 1 · Yacht Day & Harbor Aperitivo",
     caption: "Open water, tan lines and hidden coves.",
+    hero: heroYacht,
+    heroPos: "50% 18%",
     images: [d1a, d1b, d1c],
     lookTitles: ["Harbor Hero", "Riviera Lunch", "Riviera Daywear"],
     lookMoods: [
@@ -45,6 +54,8 @@ const DAY_META: Record<DaySlug, {
     dayKey: "Day 2",
     title: "Day 2 · Beach Club Lunch",
     caption: "Slow mornings, long lunches, seaside glamour.",
+    hero: heroBeach,
+    heroPos: "50% 12%",
     images: [d2a, d2b, d2c],
     lookTitles: ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
     lookMoods: [
@@ -57,6 +68,8 @@ const DAY_META: Record<DaySlug, {
     dayKey: "Day 3",
     title: "Day 3 · Day Club & Shopping",
     caption: "Poolside ease, via Roma, Capri luxe.",
+    hero: heroDayclub,
+    heroPos: "50% 15%",
     images: [d3a, d3b, d3c],
     lookTitles: ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
     lookMoods: [
@@ -69,6 +82,8 @@ const DAY_META: Record<DaySlug, {
     dayKey: "Day 4",
     title: "Day 4 · Dinner & Sunset",
     caption: "Golden hour, candlelight, harbor glow.",
+    hero: heroDinner,
+    heroPos: "50% 22%",
     images: [d4a, d4b, d4c],
     lookTitles: ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
     lookMoods: [
@@ -81,6 +96,8 @@ const DAY_META: Record<DaySlug, {
     dayKey: "Day 5",
     title: "Day 5 · Espresso & A Long Last Lunch",
     caption: "Espresso rituals and one last long lunch.",
+    hero: heroTown,
+    heroPos: "50% 20%",
     images: [d5a, d5b, d5c],
     lookTitles: ["Last-Day Luxe", "Market Morning", "Coastal Farewell"],
     lookMoods: [
@@ -133,34 +150,36 @@ function PortofinoDayPage() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative h-[62vh] min-h-[460px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[78vh] min-h-[560px] w-full overflow-hidden bg-ink">
         <img
-          src={portofinoImg}
-          alt="Portofino harbor"
+          src={meta.hero}
+          alt={meta.title}
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: meta.heroPos }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/25 to-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/65" />
         <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-14 md:pb-20 text-ivory">
           <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
-          <h1 className="font-display text-5xl md:text-7xl mt-6 tracking-[0.05em] leading-[1]">
-            5 Days in Portofino
+          <h1 className="font-display text-4xl md:text-6xl mt-6 tracking-[0.04em] leading-[1.05] max-w-4xl">
+            {meta.title}
           </h1>
-          <p className="font-serif italic text-lg md:text-xl text-ivory/85 mt-5 max-w-2xl leading-relaxed">
-            Five days. Five edits. Dressed for the Italian Riviera.
+          <div className="mx-auto my-6 h-px w-16 bg-gold/80" />
+          <p className="font-serif italic text-lg md:text-xl text-ivory/85 max-w-2xl leading-relaxed">
+            {meta.caption}
           </p>
         </div>
       </section>
 
-      {/* SECTION HEADER */}
+      {/* THREE WAYS HEADER */}
       <section className="bg-ivory pt-20 md:pt-28">
         <div className="mx-auto max-w-4xl px-6 text-center">
-          <span className="eyebrow text-gold tracking-[0.4em]">The Day</span>
-          <h2 className="font-display text-4xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
-            {meta.title}
+          <span className="eyebrow text-gold tracking-[0.4em]">{meta.dayKey} · The Edit</span>
+          <h2 className="font-display text-3xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
+            Three Ways To Wear The Mood
           </h2>
           <div className="mx-auto my-6 h-px w-16 bg-gold" />
-          <p className="font-serif italic text-lg md:text-xl text-ink/65 leading-relaxed">
-            {meta.caption}
+          <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed max-w-2xl mx-auto">
+            Three looks, one aesthetic — styled to match the editorial above.
           </p>
         </div>
       </section>
