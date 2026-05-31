@@ -62,7 +62,7 @@ export function SiteFooter() {
         </a>
       </div>
       <div className="border-t border-ivory/10">
-        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-ivory/70 text-sm">
+        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-2 md:grid-cols-3 gap-8 text-ivory/70 text-sm">
           <div>
             <p className="eyebrow text-gold-soft mb-4">Explore</p>
             <ul className="space-y-2 font-serif">
@@ -77,12 +77,6 @@ export function SiteFooter() {
               <li><Link to="/about" className="hover:text-gold">Our Story</Link></li>
               <li><Link to="/about" className="hover:text-gold">Contact</Link></li>
               <li><Link to="/about" className="hover:text-gold">Collaborate</Link></li>
-            </ul>
-          </div>
-          <div>
-            <p className="eyebrow text-gold-soft mb-4">The Edit</p>
-            <ul className="space-y-2 font-serif">
-              <li><a href="#newsletter" className="hover:text-gold">Join The Edit</a></li>
             </ul>
           </div>
           <div>

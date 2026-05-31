@@ -63,12 +63,6 @@ export function SiteHeader() {
         {/* Right cluster */}
         <div className="flex items-center gap-4 md:gap-6 justify-end">
           <a
-            href="#newsletter"
-            className="text-[0.68rem] uppercase tracking-[0.18em] font-medium text-ivory bg-ink rounded-md px-3 py-2 md:px-3.5 md:py-2 hover:bg-gold transition-colors whitespace-nowrap"
-          >
-            Join the Edit
-          </a>
-          <a
             href="https://www.instagram.com/resort.edit"
             target="_blank"
             rel="noopener noreferrer"
