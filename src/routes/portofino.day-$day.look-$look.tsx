@@ -34,6 +34,50 @@ function isDaySlug(v: string): v is DaySlug {
   return v === "day-1" || v === "day-2" || v === "day-3" || v === "day-4" || v === "day-5";
 }
 
+// Parse a price string ("$1,495", "$295", "—") to a number for tier-bucketing.
+function parsePrice(p: string): number {
+  const n = Number(String(p).replace(/[^0-9.]/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
+
+/**
+ * Pick the shop items for a given day + look + tier from the sourced catalog.
+ *
+ * Strategy:
+ *  - Start from portofinoLooks[dayIdx].shop (real affiliate items).
+ *  - Keep only "live" items: a usable href OR an explicit not_available card.
+ *  - If any item carries an explicit `lookIndex`, scope to that look; otherwise
+ *    use the whole day's catalog (fallback for days not yet tagged per-look).
+ *  - Split the resulting set into three price-tier buckets (top / middle /
+ *    bottom third) and return the bucket matching the user's selected tier.
+ */
+function selectLookItems(
+  dayIdx: number,
+  lookNum: 1 | 2 | 3,
+  tier: TierSlug,
+): ShopItem[] {
+  const day = portofinoLooks[dayIdx];
+  if (!day) return [];
+  const live = day.shop.filter(
+    (it) => it.not_available || resolveProductLink(it) !== null,
+  );
+  const tagged = live.filter((it) => it.lookIndex === lookNum);
+  const anyTagged = live.some((it) => it.lookIndex);
+  const pool = anyTagged ? tagged : live;
+  if (!pool.length) return [];
+
+  const sortedDesc = [...pool].sort(
+    (a, b) => parsePrice(b.price) - parsePrice(a.price),
+  );
+  const third = Math.max(1, Math.ceil(sortedDesc.length / 3));
+  const buckets: Record<TierSlug, ShopItem[]> = {
+    luxury: sortedDesc.slice(0, third),
+    "mid-luxe": sortedDesc.slice(third, third * 2),
+    "riviera-finds": sortedDesc.slice(third * 2),
+  };
+  return buckets[tier] ?? [];
+}
+
 export const Route = createFileRoute("/portofino/day-$day/look-$look")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     tier: isTierSlug(search.tier) ? search.tier : "luxury",
