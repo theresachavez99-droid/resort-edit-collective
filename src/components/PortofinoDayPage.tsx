@@ -386,10 +386,8 @@ function LookModule({
               alt={`${dayLabel} ${title}`}
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: "center top" }}
             />
-            <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
-              {dayLabel} · Look {lookNum}
-            </div>
             {/* Inspired-By thumbnail — top-right */}
             <div className="absolute top-3 right-3 flex flex-col items-end">
               <span className="eyebrow text-[0.5rem] tracking-[0.32em] text-ivory bg-ink/70 px-2 py-1 mb-1">
