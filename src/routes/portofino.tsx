@@ -3,6 +3,11 @@ import { useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
+import lookYacht from "@/assets/look-yacht.jpg";
+import lookBeach from "@/assets/look-beach.jpg";
+import lookDayclub from "@/assets/look-dayclub.jpg";
+import lookDinner from "@/assets/look-dinner.jpg";
+import lookTown from "@/assets/look-town.jpg";
 import d1a from "@/assets/edit-d1-a.jpg";
 import d1b from "@/assets/edit-d1-b.jpg";
 import d1c from "@/assets/edit-d1-c.jpg";
@@ -67,6 +72,7 @@ type DayRow = {
   title: string;
   caption: string;
   image: string;
+  imagePos: string;
   looks: LookCard[];
 };
 
@@ -75,7 +81,8 @@ const DAYS: DayRow[] = [
     slug: "day-1", href: DAY_PATHS["day-1"], label: "Day 1",
     title: "Yacht Day & Harbour Aperitivo",
     caption: "Open water, tan lines, and hidden coves.",
-    image: d1a,
+    image: lookYacht,
+    imagePos: "50% 18%",
     looks: [
       { slug: "look-a", label: "Look A", title: "Mediterranean Glam", image: d1a },
       { slug: "look-b", label: "Look B", title: "Riviera Chic", image: d1b },
@@ -86,7 +93,8 @@ const DAYS: DayRow[] = [
     slug: "day-2", href: DAY_PATHS["day-2"], label: "Day 2",
     title: "Beach Club & Long Lunches",
     caption: "Slow mornings, long lunches, seaside glamour.",
-    image: d2a,
+    image: lookBeach,
+    imagePos: "50% 12%",
     looks: [
       { slug: "look-a", label: "Look A", title: "Lemon Print Cabana", image: d2a },
       { slug: "look-b", label: "Look B", title: "Coastal Minimalist", image: d2b },
@@ -97,7 +105,8 @@ const DAYS: DayRow[] = [
     slug: "day-3", href: DAY_PATHS["day-3"], label: "Day 3",
     title: "Pool Lounging & Shopping",
     caption: "Poolside ease, via Roma, Capri luxe.",
-    image: d3a,
+    image: lookDayclub,
+    imagePos: "50% 15%",
     looks: [
       { slug: "look-a", label: "Look A", title: "Printed Set", image: d3a },
       { slug: "look-b", label: "Look B", title: "White Linen Ease", image: d3b },
@@ -108,7 +117,8 @@ const DAYS: DayRow[] = [
     slug: "day-4", href: DAY_PATHS["day-4"], label: "Day 4",
     title: "Sunset Cocktails & Dinner With A View",
     caption: "Golden hour, candlelight, harbor glow.",
-    image: d4a,
+    image: lookDinner,
+    imagePos: "50% 22%",
     looks: [
       { slug: "look-a", label: "Look A", title: "Sunset Print Dress", image: d4a },
       { slug: "look-b", label: "Look B", title: "Champagne Satin", image: d4b },
@@ -119,7 +129,8 @@ const DAYS: DayRow[] = [
     slug: "day-5", href: DAY_PATHS["day-5"], label: "Day 5",
     title: "Market Strolls & Coastal Goodbyes",
     caption: "Espresso rituals and one last long lunch.",
-    image: d5a,
+    image: lookTown,
+    imagePos: "50% 20%",
     looks: [
       { slug: "look-a", label: "Look A", title: "Coastal Chic", image: d5a },
       { slug: "look-b", label: "Look B", title: "Olive Safari", image: d5b },
@@ -212,6 +223,7 @@ function PortofinoPage() {
                       alt={`${d.label} — ${d.title}`}
                       loading="lazy"
                       className="absolute inset-0 h-full w-full object-cover"
+                      style={{ objectPosition: d.imagePos }}
                     />
                     <div className="absolute top-3 left-3 bg-ivory/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.55rem]">
                       {d.label.toUpperCase()}
@@ -243,16 +255,23 @@ function PortofinoPage() {
                       search={{ tier }}
                       className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
                     >
+                      {/* Reserved header — keeps label off the model */}
+                      <div className="min-h-[48px] px-3 pt-3 pb-2 border-b border-border/40 text-center">
+                        <span className="block eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
+                          {look.label.toUpperCase()}
+                        </span>
+                        <span className="block eyebrow text-[0.6rem] tracking-[0.22em] text-ink mt-1 leading-snug">
+                          {look.title.toUpperCase()}
+                        </span>
+                      </div>
                       <div className="relative aspect-[4/5] overflow-hidden bg-muted">
                         <img
                           src={look.image}
                           alt={`${d.label} ${look.label} — ${look.title}`}
                           loading="lazy"
                           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                          style={{ objectPosition: "center top" }}
                         />
-                        <div className="absolute top-3 left-3 bg-ivory/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.5rem]">
-                          {look.label.toUpperCase()} — {look.title.toUpperCase()}
-                        </div>
                       </div>
                       <div className="p-3 md:p-4 text-center">
                         <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink group-hover:text-gold transition-colors">
