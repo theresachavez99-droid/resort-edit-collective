@@ -253,8 +253,35 @@ function LookDetailPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-5 gap-y-10">
               {items.map((item) => {
                 const href = resolveProductLink(item);
-                if (!href) return null;
-                const specCat = inferSpecCategory(item);
+                const specCat = shopItemCategory(item);
+                // Render "not available" placeholder card per affiliate rule.
+                if (!href) {
+                  if (!item.not_available) return null;
+                  return (
+                    <div
+                      key={item.brand + item.item}
+                      className="flex flex-col text-center bg-ivory border border-dashed border-border/60 p-3"
+                    >
+                      <span className="eyebrow text-ink/40 text-[0.55rem] tracking-[0.3em]">
+                        {specCat}
+                      </span>
+                      <div className="relative aspect-square w-full bg-cream border border-border/60 rounded-[6px] mt-2 flex items-center justify-center overflow-hidden">
+                        <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center font-serif text-ink/40 text-base">
+                          {item.brand.charAt(0)}
+                        </div>
+                      </div>
+                      <div className="mt-3 space-y-1">
+                        <div className="eyebrow text-[0.55rem] text-ink/55">{item.brand}</div>
+                        <div className="font-serif text-[0.82rem] text-ink/70 leading-snug line-clamp-2">
+                          {item.item}
+                        </div>
+                        <div className="font-serif italic text-[0.7rem] text-ink/45 pt-1 leading-snug">
+                          Not available through approved affiliate partners
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
                 return (
                   <a
                     key={item.brand + item.item}
