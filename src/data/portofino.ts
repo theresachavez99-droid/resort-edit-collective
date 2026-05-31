@@ -136,7 +136,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 1",
     title: "Yacht Day & Harbor Aperitivo",
-    subtitle: "Open water, tan lines, and hidden coves.",
+    subtitle: "Open water, tan lines & hidden coves.",
     caption:
       "Drift past the lighthouse into glassy green water, then ease back to the marina as the piazzetta fills with candlelight and Negronis.",
     image: yacht,
@@ -370,7 +370,7 @@ export const portofinoLooks: Look[] = [
     title: "Beach Club & Long Lunches",
     subtitle: "Slow mornings, long lunches, seaside glamour.",
     caption:
-      "Trade the morning for a cliffside cabana above Paraggi, then linger over crudo beneath the pines until the coastal path back into town turns gold.",
+      "Trade the morning for a cliffside cabana above Paraggi, then linger over a long lunch beneath the pines until the coastal path back into town turns gold.",
     image: beach,
     itinerary:
       "Cabana at La Fontelina from late morning. Lunch at DaV Mare with the sea below. Afternoon swim, an espresso at the bar, and the slow cliff-path walk back into town.",
@@ -755,7 +755,7 @@ export const portofinoLooks: Look[] = [
   {
     day: "Day 5",
     title: "Market Strolls & Coastal Goodbyes",
-    subtitle: "Espresso rituals and one last long lunch.",
+    subtitle: "Espresso, linen, and one long last lunch.",
     caption:
       "Climb the path to Castello Brown for one last look over the harbor, then drift down to a waterside table where lunch turns into the kind of farewell that already feels like a return.",
     image: town,
@@ -857,11 +857,11 @@ export const portofinoLooks: Look[] = [
 ];
 
 export const itinerary = [
-  { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Open water, tan lines, and hidden coves." },
+  { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Open water, tan lines & hidden coves." },
   { day: "Day 2", title: "Beach Club & Long Lunches", text: "Slow mornings, long lunches, seaside glamour." },
   { day: "Day 3", title: "POOL & SHOPPING IN TOWN", text: "Poolside ease, via Roma, Capri luxe." },
   { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "Golden hour, candlelight, harbor glow." },
-  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Espresso rituals and one last long lunch." },
+  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Espresso, linen, and one long last lunch." },
 ];
 
 export const travelTips = [
