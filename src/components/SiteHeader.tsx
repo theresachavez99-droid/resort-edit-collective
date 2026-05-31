@@ -15,7 +15,19 @@ const mobileExtras = [
 ] as const;
 
 const navLinkClass =
-  "text-ink hover:text-gold transition-colors whitespace-nowrap py-2 [font-size:16px] [font-weight:500] [letter-spacing:0.12em] [line-height:1]";
+  "text-ink hover:text-gold transition-colors whitespace-nowrap py-2";
+
+const navLinkStyle = {
+  fontSize: "16px",
+  fontWeight: 500,
+  letterSpacing: "0.12em",
+  lineHeight: 1,
+} as const;
+
+const instagramIconStyle = {
+  width: "22px",
+  height: "22px",
+} as const;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -53,6 +65,7 @@ export function SiteHeader() {
               key={n.to}
               to={n.to}
               className={navLinkClass}
+              style={navLinkStyle}
               activeProps={{ className: `${navLinkClass} text-gold` }}
               activeOptions={{ exact: false }}
             >
@@ -70,7 +83,7 @@ export function SiteHeader() {
             aria-label="Resort Edit on Instagram"
             className="hidden md:inline-flex items-center text-ink/80 hover:text-gold transition-colors"
           >
-            <Instagram className="w-[22px] h-[22px]" strokeWidth={1.5} />
+            <Instagram style={instagramIconStyle} strokeWidth={1.5} />
           </a>
         </div>
       </div>
@@ -85,6 +98,7 @@ export function SiteHeader() {
                 to={n.to}
                 onClick={() => setOpen(false)}
                 className={`${navLinkClass} py-3 border-b border-border/40 last:border-0`}
+                style={navLinkStyle}
                 activeProps={{ className: `${navLinkClass} text-gold py-3 border-b border-border/40 last:border-0` }}
                 activeOptions={{ exact: false }}
               >
@@ -96,8 +110,9 @@ export function SiteHeader() {
               target="_blank"
               rel="noopener noreferrer"
               className={`${navLinkClass} py-3 inline-flex items-center gap-2`}
+              style={navLinkStyle}
             >
-              <Instagram className="w-4 h-4" strokeWidth={1.5} /> Instagram
+              <Instagram style={instagramIconStyle} strokeWidth={1.5} /> Instagram
             </a>
           </nav>
         </div>
