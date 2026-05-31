@@ -19,6 +19,7 @@ import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
+import { DAY_PATHS, type DaySlug } from "./portofino.day-{$day}";
 
 export const Route = createFileRoute("/portofino")({
   validateSearch: (search: Record<string, unknown>) => {
@@ -53,7 +54,8 @@ function PortofinoPage() {
   const activeTier = tierOptions.find((t) => t.slug === selectedTier) ?? tierOptions[0];
 
   const dayNav: Array<{
-    slug: string;
+    slug: DaySlug;
+    href: (typeof DAY_PATHS)[DaySlug];
     label: string;
     title: string;
     caption: string;
@@ -61,7 +63,7 @@ function PortofinoPage() {
     previews: Array<{ n: number; title: string; caption: string; image: string }>;
   }> = [
     {
-      slug: "day-1", label: "Day 1", title: "Yacht Day & Harbor Aperitivo",
+      slug: "day-1", href: DAY_PATHS["day-1"], label: "Day 1", title: "Yacht Day & Harbor Aperitivo",
       caption: "Open water, tan lines and hidden coves.", image: d1a,
       previews: [
         { n: 1, title: "Harbor Hero", caption: "Designer · yacht-day polish.", image: d1a },
@@ -70,7 +72,7 @@ function PortofinoPage() {
       ],
     },
     {
-      slug: "day-2", label: "Day 2", title: "Beach Club Lunch",
+      slug: "day-2", href: DAY_PATHS["day-2"], label: "Day 2", title: "Beach Club Lunch",
       caption: "Slow mornings, long lunches, seaside glamour.", image: d2a,
       previews: [
         { n: 1, title: "Cabana Designer", caption: "Designer · beach club polish.", image: d2a },
@@ -79,7 +81,7 @@ function PortofinoPage() {
       ],
     },
     {
-      slug: "day-3", label: "Day 3", title: "Day Club & Shopping",
+      slug: "day-3", href: DAY_PATHS["day-3"], label: "Day 3", title: "Day Club & Shopping",
       caption: "Poolside ease, via Roma, Capri luxe.", image: d3a,
       previews: [
         { n: 1, title: "Via Roma Designer", caption: "Designer · boutique strolls.", image: d3a },
@@ -88,7 +90,7 @@ function PortofinoPage() {
       ],
     },
     {
-      slug: "day-4", label: "Day 4", title: "Dinner & Sunset",
+      slug: "day-4", href: DAY_PATHS["day-4"], label: "Day 4", title: "Dinner & Sunset",
       caption: "Golden hour, candlelight, harbor glow.", image: d4a,
       previews: [
         { n: 1, title: "Sunset Designer", caption: "Designer · candlelit drama.", image: d4a },
@@ -97,7 +99,7 @@ function PortofinoPage() {
       ],
     },
     {
-      slug: "day-5", label: "Day 5", title: "Espresso & A Long Last Lunch",
+      slug: "day-5", href: DAY_PATHS["day-5"], label: "Day 5", title: "Espresso & A Long Last Lunch",
       caption: "Espresso rituals and one last long lunch.", image: d5a,
       previews: [
         { n: 1, title: "Farewell Designer", caption: "Designer · final flourish.", image: d5a },
@@ -107,9 +109,8 @@ function PortofinoPage() {
     },
   ];
 
-  const [selectedDay, setSelectedDay] = useState<string>("day-1");
+  const [selectedDay, setSelectedDay] = useState<DaySlug>("day-1");
   const activeDay = dayNav.find((d) => d.slug === selectedDay) ?? dayNav[0];
-  const activeDayNumber = activeDay.slug.replace("day-", "");
   const activePreviews = activeDay.previews;
 
   const experiences: Array<{
@@ -275,8 +276,7 @@ function PortofinoPage() {
             {activePreviews.map((p) => (
               <Link
                 key={p.n}
-                to="/portofino/day-{$day}"
-                params={{ day: activeDayNumber }}
+                to={activeDay.href}
                 className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-muted">
@@ -305,8 +305,7 @@ function PortofinoPage() {
               {activePreviews.map((p) => (
                 <Link
                   key={p.n}
-                  to="/portofino/day-{$day}"
-                  params={{ day: activeDayNumber }}
+                  to={activeDay.href}
                   className="snap-start shrink-0 w-[78%] bg-ivory border border-border/60"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-muted">
