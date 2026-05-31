@@ -19,12 +19,12 @@ export const Route = createFileRoute("/about")({
 function AboutPage() {
   return (
     <div>
-      <section className="relative h-[60vh] min-h-[420px]">
+      <section className="relative h-[38vh] md:h-[48vh] min-h-[300px] max-h-[480px]">
         <img src={heroImg} alt="Portofino harbor" width={1920} height={1280} className="absolute inset-0 h-full w-full object-cover" />
         <h1 className="sr-only">About Resort Edit</h1>
       </section>
 
-      <section className="mx-auto max-w-3xl px-6 py-28 text-center">
+      <section className="mx-auto max-w-3xl px-6 py-16 md:py-20 text-center">
         <span className="eyebrow text-gold">Who We Are</span>
         <div className="my-8 h-px w-16 bg-gold mx-auto" />
         <p className="font-serif italic text-2xl md:text-3xl leading-relaxed text-ink">

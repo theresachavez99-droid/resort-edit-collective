@@ -233,7 +233,7 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
   return (
     <div>
       {/* HERO */}
-      <section className="relative h-[78vh] min-h-[560px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[38vh] md:h-[50vh] min-h-[320px] max-h-[520px] w-full overflow-hidden bg-ink">
         <img
           src={meta.hero}
           alt={meta.title}
@@ -241,13 +241,13 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
           style={{ objectPosition: meta.heroPos }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/65" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-14 md:pb-20 text-ivory">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
           <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
-          <h1 className="font-display text-4xl md:text-6xl mt-6 tracking-[0.04em] leading-[1.05] max-w-4xl">
+          <h1 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.04em] leading-[1.05] max-w-4xl">
             {meta.title}
           </h1>
-          <div className="mx-auto my-6 h-px w-16 bg-gold/80" />
-          <p className="font-serif italic text-lg md:text-xl text-ivory/85 max-w-2xl leading-relaxed">
+          <div className="mx-auto my-3 h-px w-16 bg-gold/80" />
+          <p className="font-serif italic text-base md:text-lg text-ivory/85 max-w-2xl leading-snug">
             {meta.caption}
           </p>
         </div>
