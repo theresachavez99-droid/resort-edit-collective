@@ -4,17 +4,14 @@ import { useState } from "react";
 import logoMark from "@/assets/resort-edit-mark.png";
 
 const nav = [
-  { to: "/", label: "Home" },
   { to: "/destinations", label: "Destinations" },
   { to: "/portofino-concierge", label: "Concierge" },
-  { to: "/portofino", label: "Shop the Looks" },
+  { to: "/resort-edits", label: "Resort Edits" },
+  { to: "/brands", label: "Brands We Love" },
   { to: "/about", label: "About" },
 ] as const;
 
-const mobileExtras = [
-  { to: "/resort-edits", label: "Resort Edits" },
-  { to: "/brands", label: "Brands We Love" },
-] as const;
+const mobileExtras = [] as const;
 
 const navLinkClass =
   "text-ink hover:text-gold transition-colors whitespace-nowrap py-2";
