@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Heart, ShoppingBag, ExternalLink } from "lucide-react";
 import { useEffect, useMemo } from "react";
-import { portofinoEdit, categoryOrder, type AccessoryCategory } from "@/data/portofinoEdit";
+import { portofinoEdit, type AccessoryCategory } from "@/data/portofinoEdit";
 import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
