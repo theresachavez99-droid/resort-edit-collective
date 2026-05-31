@@ -416,6 +416,61 @@ function CueRow({ label, value }: { label: string; value: string }) {
   );
 }
 
+function EditorialReferenceCard({
+  image,
+  imagePos,
+  dayKey,
+  tagline,
+  palette,
+  silhouette,
+  textures,
+}: {
+  image: string;
+  imagePos: string;
+  dayKey: string;
+  tagline: string;
+  palette: string;
+  silhouette: string;
+  textures: string;
+}) {
+  return (
+    <section className="bg-cream border-y border-border/40 py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-10 md:gap-14 items-center">
+          <figure className="relative aspect-[4/5] overflow-hidden bg-muted">
+            <img
+              src={image}
+              alt={`${dayKey} editorial reference`}
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: imagePos }}
+            />
+            <figcaption className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
+              {dayKey} · Reference
+            </figcaption>
+          </figure>
+          <div>
+            <span className="eyebrow text-gold tracking-[0.42em] text-[0.7rem]">
+              Editorial Reference
+            </span>
+            <h2 className="font-display text-3xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
+              Three Ways To Wear The Mood
+            </h2>
+            <div className="mt-5 h-px w-16 bg-gold" />
+            <p className="font-serif italic text-xl md:text-2xl text-ink/80 leading-relaxed mt-6 max-w-xl">
+              {tagline}
+            </p>
+            <dl className="mt-8 space-y-4 border-t border-border/60 pt-6 max-w-xl">
+              <CueRow label="Palette" value={palette} />
+              <CueRow label="Silhouette" value={silhouette} />
+              <CueRow label="Textures" value={textures} />
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ProductCardCompact({ item }: { item: ShopItem }) {
   if (item.not_available) {
     return (
