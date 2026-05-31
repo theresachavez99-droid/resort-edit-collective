@@ -15,7 +15,7 @@ const mobileExtras = [
 ] as const;
 
 const navLinkClass =
-  "text-[0.82rem] uppercase tracking-[0.16em] font-semibold text-ink hover:text-gold transition-colors whitespace-nowrap py-2 leading-none";
+  "text-ink hover:text-gold transition-colors whitespace-nowrap py-2 [font-size:16px] [font-weight:500] [letter-spacing:0.12em] [line-height:1]";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
