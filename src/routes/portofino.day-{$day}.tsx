@@ -33,6 +33,7 @@ const DAY_META: Record<DaySlug, {
   hero: string;
   heroPos: string;
   editorial: { palette: string; silhouette: string; textures: string; mood: string };
+  tagline: string;
   images: [string, string, string];
   lookTitles: [string, string, string];
   lookMoods: [string, string, string];
@@ -54,6 +55,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Crisp poplin, fine knit, woven raffia",
       mood: "Yacht-deck glamour with sun on your shoulders.",
     },
+    tagline: "Blue-and-white yacht glamour with raffia textures.",
     images: [d1a, d1b, d1c],
     lookTitles: ["Harbor Hero", "Riviera Lunch", "Riviera Daywear"],
     lookMoods: [
@@ -79,6 +81,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Crochet, linen, sun-warmed cotton",
       mood: "Cabana ease, long lunches, salt in the air.",
     },
+    tagline: "Sun-bleached cabana ease with linen and crochet.",
     images: [d2a, d2b, d2c],
     lookTitles: ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
     lookMoods: [
@@ -104,6 +107,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Silk, fine knit, soft leather",
       mood: "Piazzetta polish, window-shopping in gold light.",
     },
+    tagline: "Piazzetta polish in soft neutrals and gold light.",
     images: [d3a, d3b, d3c],
     lookTitles: ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
     lookMoods: [
@@ -129,6 +133,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Satin, silk, fine knit",
       mood: "Harborfront glamour at golden hour.",
     },
+    tagline: "Harbor glamour with warm sunset dressing.",
     images: [d4a, d4b, d4c],
     lookTitles: ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
     lookMoods: [
@@ -154,6 +159,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Cotton, silk, leather",
       mood: "Slow Italian morning, espresso in hand.",
     },
+    tagline: "Slow Italian mornings in espresso, cream and gold.",
     images: [d5a, d5b, d5c],
     lookTitles: ["Last-Day Luxe", "Market Morning", "Coastal Farewell"],
     lookMoods: [
@@ -231,56 +237,16 @@ function PortofinoDayPage() {
         </div>
       </section>
 
-      {/* EDITORIAL REFERENCE */}
-      <section className="bg-cream border-b border-border/40 py-20 md:py-28">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="text-center mb-12">
-            <span className="eyebrow text-gold tracking-[0.4em]">Editorial Reference</span>
-            <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-[0.04em]">
-              The Mood
-            </h2>
-            <div className="mx-auto mt-5 h-px w-12 bg-gold" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
-            <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-              <img
-                src={meta.hero}
-                alt={`${meta.dayKey} editorial reference`}
-                className="absolute inset-0 h-full w-full object-cover"
-                style={{ objectPosition: meta.heroPos }}
-              />
-              <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
-                {meta.dayKey} · Reference
-              </div>
-            </div>
-            <div>
-              <p className="font-serif italic text-xl md:text-2xl text-ink/80 leading-relaxed">
-                {meta.editorial.mood}
-              </p>
-              <dl className="mt-8 space-y-5 border-t border-border/60 pt-6">
-                <CueRow label="Palette" value={meta.editorial.palette} />
-                <CueRow label="Silhouette" value={meta.editorial.silhouette} />
-                <CueRow label="Textures" value={meta.editorial.textures} />
-                <CueRow label="Destination Mood" value={meta.caption} />
-              </dl>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* THREE WAYS HEADER */}
-      <section className="bg-ivory pt-20 md:pt-28">
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <span className="eyebrow text-gold tracking-[0.4em]">{meta.dayKey} · The Edit</span>
-          <h2 className="font-display text-3xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
-            Three Ways To Wear The Mood
-          </h2>
-          <div className="mx-auto my-6 h-px w-16 bg-gold" />
-          <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed max-w-2xl mx-auto">
-            Three looks, one aesthetic — styled to match the editorial above.
-          </p>
-        </div>
-      </section>
+      {/* EDITORIAL REFERENCE CARD */}
+      <EditorialReferenceCard
+        image={meta.hero}
+        imagePos={meta.heroPos}
+        dayKey={meta.dayKey}
+        tagline={meta.tagline}
+        palette={meta.editorial.palette}
+        silhouette={meta.editorial.silhouette}
+        textures={meta.editorial.textures}
+      />
 
       {/* LOOK MODULES */}
       <section className="bg-ivory pt-16 md:pt-20 pb-24 md:pb-32">
@@ -405,29 +371,33 @@ function LookModule({
             <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
               {dayLabel} · Look {lookNum}
             </div>
+            {/* Inspired-By thumbnail — top-right */}
+            <div className="absolute top-3 right-3 flex flex-col items-end">
+              <span className="eyebrow text-[0.5rem] tracking-[0.32em] text-ivory bg-ink/70 px-2 py-1 mb-1">
+                Inspired By
+              </span>
+              <div className="relative w-14 h-14 md:w-16 md:h-16 overflow-hidden border-2 border-ivory shadow-lg bg-muted">
+                <img
+                  src={referenceImage}
+                  alt="Editorial reference"
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover"
+                  style={{ objectPosition: referencePos }}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* RIGHT 60% — inspired-by + product grid */}
+        {/* RIGHT 60% — cues + product grid */}
         <div className="lg:col-span-6">
-          <div className="flex items-start gap-4 border border-gold/30 bg-cream/60 p-4 mb-6">
-            <div className="relative w-16 h-20 shrink-0 overflow-hidden bg-muted">
-              <img
-                src={referenceImage}
-                alt="Editorial reference"
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
-                style={{ objectPosition: referencePos }}
-              />
-            </div>
-            <div className="flex-1">
-              <div className="eyebrow text-gold text-[0.55rem] tracking-[0.35em]">Inspired By</div>
-              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 font-serif text-[0.78rem] text-ink/75 leading-snug">
-                <div><span className="text-ink/50">Palette · </span>{inspired.palette}</div>
-                <div><span className="text-ink/50">Silhouette · </span>{inspired.silhouette}</div>
-                <div><span className="text-ink/50">Textures · </span>{inspired.textures}</div>
-                <div><span className="text-ink/50">Mood · </span>{inspired.mood}</div>
-              </div>
+          <div className="border border-gold/30 bg-cream/60 p-4 mb-6">
+            <div className="eyebrow text-gold text-[0.55rem] tracking-[0.35em]">Inspired By</div>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 font-serif text-[0.78rem] text-ink/75 leading-snug">
+              <div><span className="text-ink/50">Palette · </span>{inspired.palette}</div>
+              <div><span className="text-ink/50">Silhouette · </span>{inspired.silhouette}</div>
+              <div><span className="text-ink/50">Textures · </span>{inspired.textures}</div>
+              <div><span className="text-ink/50">Mood · </span>{inspired.mood}</div>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
@@ -447,6 +417,61 @@ function CueRow({ label, value }: { label: string; value: string }) {
       <dt className="eyebrow text-gold text-[0.6rem] tracking-[0.35em]">{label}</dt>
       <dd className="font-serif text-ink/80 text-base leading-relaxed">{value}</dd>
     </div>
+  );
+}
+
+function EditorialReferenceCard({
+  image,
+  imagePos,
+  dayKey,
+  tagline,
+  palette,
+  silhouette,
+  textures,
+}: {
+  image: string;
+  imagePos: string;
+  dayKey: string;
+  tagline: string;
+  palette: string;
+  silhouette: string;
+  textures: string;
+}) {
+  return (
+    <section className="bg-cream border-y border-border/40 py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-10 md:gap-14 items-center">
+          <figure className="relative aspect-[4/5] overflow-hidden bg-muted">
+            <img
+              src={image}
+              alt={`${dayKey} editorial reference`}
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: imagePos }}
+            />
+            <figcaption className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
+              {dayKey} · Reference
+            </figcaption>
+          </figure>
+          <div>
+            <span className="eyebrow text-gold tracking-[0.42em] text-[0.7rem]">
+              Editorial Reference
+            </span>
+            <h2 className="font-display text-3xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
+              Three Ways To Wear The Mood
+            </h2>
+            <div className="mt-5 h-px w-16 bg-gold" />
+            <p className="font-serif italic text-xl md:text-2xl text-ink/80 leading-relaxed mt-6 max-w-xl">
+              {tagline}
+            </p>
+            <dl className="mt-8 space-y-4 border-t border-border/60 pt-6 max-w-xl">
+              <CueRow label="Palette" value={palette} />
+              <CueRow label="Silhouette" value={silhouette} />
+              <CueRow label="Textures" value={textures} />
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
