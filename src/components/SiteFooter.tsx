@@ -16,7 +16,7 @@ export function SiteFooter() {
           loading="lazy"
           width={1024}
           height={1024}
-          className="w-[320px] max-w-full h-auto select-none"
+          className="w-[320px] max-w-full h-auto select-none mb-2"
         />
         <h2 className="mt-6 font-display text-3xl md:text-5xl tracking-wide text-ivory">
           The Next Edit
@@ -89,7 +89,7 @@ export function SiteFooter() {
         <div className="border-t border-ivory/10">
           <div className="mx-auto max-w-7xl px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-3 text-ivory/50 text-xs tracking-widest uppercase">
             <span>© {new Date().getFullYear()} Resort Edit</span>
-            <span className="italic font-serif normal-case tracking-normal text-sm">Curated escapes. Styled your way.</span>
+            <span className="italic font-serif normal-case tracking-normal text-sm">The Resort Edit</span>
           </div>
         </div>
       </div>
