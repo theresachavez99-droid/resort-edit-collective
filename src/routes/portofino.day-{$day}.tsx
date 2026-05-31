@@ -231,6 +231,43 @@ function PortofinoDayPage() {
         </div>
       </section>
 
+      {/* EDITORIAL REFERENCE */}
+      <section className="bg-cream border-b border-border/40 py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center mb-12">
+            <span className="eyebrow text-gold tracking-[0.4em]">Editorial Reference</span>
+            <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-[0.04em]">
+              The Mood
+            </h2>
+            <div className="mx-auto mt-5 h-px w-12 bg-gold" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
+            <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+              <img
+                src={meta.hero}
+                alt={`${meta.dayKey} editorial reference`}
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: meta.heroPos }}
+              />
+              <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
+                {meta.dayKey} · Reference
+              </div>
+            </div>
+            <div>
+              <p className="font-serif italic text-xl md:text-2xl text-ink/80 leading-relaxed">
+                {meta.editorial.mood}
+              </p>
+              <dl className="mt-8 space-y-5 border-t border-border/60 pt-6">
+                <CueRow label="Palette" value={meta.editorial.palette} />
+                <CueRow label="Silhouette" value={meta.editorial.silhouette} />
+                <CueRow label="Textures" value={meta.editorial.textures} />
+                <CueRow label="Destination Mood" value={meta.caption} />
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* THREE WAYS HEADER */}
       <section className="bg-ivory pt-20 md:pt-28">
         <div className="mx-auto max-w-4xl px-6 text-center">
@@ -257,6 +294,9 @@ function PortofinoDayPage() {
               title={meta.lookTitles[i]}
               mood={meta.lookMoods[i]}
               dayLabel={meta.dayKey}
+              inspired={meta.inspired[i]}
+              referenceImage={meta.hero}
+              referencePos={meta.heroPos}
             />
           ))}
         </div>
