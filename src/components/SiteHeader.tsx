@@ -40,7 +40,7 @@ export function SiteHeader() {
         >
           <img
             src={logoMark}
-            alt="Resort Edit — Curated escapes. Styled your way."
+            alt="Resort Edit"
             className="h-24 sm:h-28 md:h-32 lg:h-32 w-auto"
           />
         </Link>
