@@ -518,11 +518,8 @@ function EditorialReferenceCard({
               src={image}
               alt={`${dayKey} editorial reference`}
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: imagePos }}
+              style={{ objectPosition: "center top" }}
             />
-            <figcaption className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
-              {dayKey} · Reference
-            </figcaption>
           </figure>
           <div>
             <span className="eyebrow text-gold tracking-[0.42em] text-[0.7rem]">
