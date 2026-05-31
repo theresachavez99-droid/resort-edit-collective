@@ -129,7 +129,8 @@ const DAYS: DayRow[] = [
 ];
 
 function PortofinoPage() {
-  const { tier } = Route.useSearch();
+  const search = Route.useSearch();
+  const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
   const navigate = useNavigate({ from: "/portofino" });
 
   // Restore persisted tier on first mount if URL doesn't already specify one.
