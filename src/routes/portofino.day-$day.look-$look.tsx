@@ -9,7 +9,6 @@ import {
   LOOK_INDEX_OF,
   LOOK_SLUG_LABEL,
   TIER_LABEL,
-  TIER_SLUG_TO_ID,
   TIER_SLUGS,
   isLookSlug,
   isTierSlug,
@@ -69,7 +68,7 @@ function shopItemCategory(item: ShopItem): string {
 function selectLookItems(
   dayIdx: number,
   lookNum: 1 | 2 | 3,
-  tier: TierSlug,
+  _tier: TierSlug,
 ): ShopItem[] {
   const day = portofinoLooks[dayIdx];
   if (!day) return [];
@@ -77,23 +76,15 @@ function selectLookItems(
     (it) => it.not_available || resolveProductLink(it) !== null,
   );
   const tagged = live.filter((it) => it.lookIndex === lookNum);
-  // Prefer items explicitly tagged to THIS look. If none were tagged for it,
-  // fall back to the day's untagged items so the look still renders something
-  // shoppable. If both are empty, fall back to the whole day.
+  // Prefer items explicitly tagged to THIS look. If none are tagged for it,
+  // fall back to the day's untagged items so the look still renders the
+  // complete shoppable outfit. Tier no longer subsets the grid — the detail
+  // page always shows the full outfit; the tier chip is a user preference
+  // persisted across navigation.
   const untagged = live.filter((it) => !it.lookIndex);
   const pool = tagged.length ? tagged : untagged.length ? untagged : live;
-  if (!pool.length) return [];
-
-  const sortedDesc = [...pool].sort(
-    (a, b) => parsePrice(b.price) - parsePrice(a.price),
-  );
-  const third = Math.max(1, Math.ceil(sortedDesc.length / 3));
-  const buckets: Record<TierSlug, ShopItem[]> = {
-    luxury: sortedDesc.slice(0, third),
-    "mid-luxe": sortedDesc.slice(third, third * 2),
-    "riviera-finds": sortedDesc.slice(third * 2),
-  };
-  return buckets[tier] ?? [];
+  // Sort by descending price so the highest-priced (hero) pieces lead.
+  return [...pool].sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
 }
 
 export const Route = createFileRoute("/portofino/day-$day/look-$look")({
@@ -244,7 +235,7 @@ function LookDetailPage() {
             </h2>
             <div className="mx-auto my-3 h-px w-12 bg-gold" />
             <p className="font-serif italic text-ink/65 text-sm md:text-base">
-              Every piece in the muse — only products available in your selected tier.
+              Every piece in the muse — sourced from approved affiliate partners.
             </p>
           </header>
 
