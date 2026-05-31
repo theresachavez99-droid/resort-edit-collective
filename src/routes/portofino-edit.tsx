@@ -16,7 +16,7 @@ import {
   type EditItem,
 } from "@/data/portofinoEdit";
 import { resolveProductLink } from "@/data/portofino";
-import { trackOutbound } from "@/lib/utils";
+import { ProductCard } from "@/components/ProductCard";
 import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/portofino-edit")({
@@ -53,41 +53,14 @@ function CategorizedItems({
   const visible = items.filter((it) => resolveProductLink(it) !== null);
 
   return (
-    <div className="px-5 py-4 flex-1">
-      <ul className="divide-y divide-border/30">
+    <div className="flex-1 px-4 sm:px-5 py-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {visible.map((item) => (
-          <li key={item.brand + item.item}>
-            <a
-              href={resolveProductLink(item) ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              onClick={() =>
-                trackOutbound({
-                  brand: item.brand,
-                  item: item.item,
-                  href: resolveProductLink(item),
-                  category: item.category,
-                })
-              }
-              className="grid grid-cols-[1fr_auto] items-baseline gap-3 py-2.5 group/item transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
-            >
-              <div className="min-w-0">
-                <div className="eyebrow text-[0.55rem] tracking-[0.24em] text-ink/55 group-hover/item:text-gold transition-colors truncate">
-                  {item.brand}
-                </div>
-                <div className="font-serif text-[0.82rem] text-ink/85 truncate leading-snug">
-                  {item.item}
-                </div>
-              </div>
-              <div className="font-serif text-[0.82rem] text-gold tabular-nums shrink-0">
-                {item.price}
-              </div>
-            </a>
-          </li>
+          <ProductCard key={item.brand + item.item} item={item} variant="editorial" />
         ))}
-      </ul>
+      </div>
       {finishingNote && (
-        <p className="mt-3 font-serif italic text-[0.78rem] text-ink/60 leading-relaxed">
+        <p className="mt-5 font-serif italic text-[0.82rem] text-ink/60 leading-relaxed">
           {finishingNote}
         </p>
       )}
@@ -400,22 +373,13 @@ function PortofinoEditPage() {
                             {/* Expanded body */}
                             {isLookOpen && (
                               <div className="border-t border-border/60 px-5 sm:px-6 py-6 bg-ivory/40">
-                                <div
-                                  className={`grid gap-5 sm:gap-6 ${
-                                    visibleTiers.length === 1
-                                      ? "grid-cols-1"
-                                      : visibleTiers.length === 2
-                                        ? "grid-cols-1 md:grid-cols-2"
-                                        : "grid-cols-1 md:grid-cols-3"
-                                  }`}
-                                >
+                                <div className="space-y-8 md:space-y-10">
                                   {visibleTiers.map((tier) => {
                                     const items = look.tiers[tier.id];
-                                    const saveKey = `${day.day}-${look.id}-${tier.id}`;
                                     return (
                                       <article
                                         key={tier.id}
-                                        className="group bg-card border border-border/50 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(141,110,68,0.35)] hover:border-gold/60"
+                                        className="bg-card border border-border/50 flex flex-col"
                                       >
                                         <div className="px-4 py-3 border-b border-border/50 flex items-center justify-between">
                                           <div>

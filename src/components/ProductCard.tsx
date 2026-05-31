@@ -22,16 +22,20 @@ export function ProductCard({ item, variant = "compact" }: { item: ShopItem; var
       target="_blank"
       rel="noopener noreferrer sponsored"
       onClick={() => trackOutbound({ brand: item.brand, item: item.item, href })}
-      className="group flex flex-col text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60 min-h-[260px]"
+      className={`group flex flex-col text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60 min-h-[260px] ${
+        variant === "editorial"
+          ? "h-full bg-ivory border border-border/60 p-3 hover:border-gold/70"
+          : ""
+      }`}
     >
-      <div className="relative aspect-square w-full min-h-[120px] sm:min-h-[140px] overflow-hidden bg-cream border border-border/60 rounded-[10px] flex items-center justify-center p-[10px]">
+      <div className="relative aspect-square w-full min-h-[120px] sm:min-h-[140px] lg:min-h-[160px] bg-cream border border-border/60 rounded-[8px] flex items-center justify-center p-3">
         {showImage ? (
           <img
             src={item.image}
             alt={`${item.brand} ${item.item}`}
             loading="lazy"
             onError={() => setImageFailed(true)}
-            className="absolute inset-0 h-full w-full object-contain p-[10px] transition-transform duration-500 group-hover:scale-[1.03]"
+            className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-cream via-ivory to-cream px-4 text-center gap-2">
