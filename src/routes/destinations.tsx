@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { destinations, destinationHref } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
 import { absoluteUrl } from "@/lib/site";
-import heroPortofino from "@/assets/hero-muse-portofino.jpg";
+import heroCannes from "@/assets/hero-muse-cannes.jpg";
 
 export const Route = createFileRoute("/destinations")({
   head: () => ({
@@ -80,7 +80,7 @@ function DestinationsPage() {
         : featured.filter((d) => filterTagsBySlug[d.slug]?.includes(filter)),
     [featured, filter],
   );
-  const heroImage = heroPortofino;
+  const heroImage = heroCannes;
 
   return (
     <div className="bg-ivory">
