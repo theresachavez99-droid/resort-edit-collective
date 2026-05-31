@@ -140,18 +140,21 @@ function Index() {
       <section className={`${wrap} mt-20 lg:mt-28`}>
           <div className="flex items-center gap-4 justify-center mb-10">
             <div className="h-px w-16 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">SHOP THE LOOKS</h2>
+            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE LOOKS FOR PORTOFINO</h2>
             <div className="h-px w-16 bg-gold/50" />
           </div>
+          <p className="-mt-6 mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+            Additional outfits for long lunches, harbor strolls and last-minute reservations.
+          </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 lg:gap-6">
             {looks.map((l) => (
               <article key={l.title} className="bg-card border border-border/50 flex flex-col">
                 <div className="text-center pt-5 px-3">
                   <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">{l.tag}</div>
-                  <h3 className="mt-3 eyebrow text-[0.78rem] tracking-[0.2em] text-ink">{l.title}</h3>
+                  <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] text-ink">{l.title}</h3>
                 </div>
-                <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
+                <div className="relative aspect-[5/6] mt-4 overflow-hidden bg-muted">
                   <img src={l.image} alt={l.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                 </div>
                 <Link to="/portofino" className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors">
