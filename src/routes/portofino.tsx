@@ -10,6 +10,15 @@ import d2a from "@/assets/edit-d2-a.jpg";
 import d3a from "@/assets/edit-d3-a.jpg";
 import d4a from "@/assets/edit-d4-a.jpg";
 import d5a from "@/assets/edit-d5-a.jpg";
+import expYacht from "@/assets/exp-yacht-charter.jpg";
+import expHarbor from "@/assets/exp-harbor-golden.jpg";
+import expCruise from "@/assets/exp-sunset-cruise.jpg";
+import expCooking from "@/assets/exp-cooking-class.jpg";
+import expWine from "@/assets/exp-wine-tasting.jpg";
+import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
+import hotelSplendido from "@/assets/hotel-splendido.jpg";
+import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
+import hotelEight from "@/assets/hotel-eight.jpg";
 
 export const Route = createFileRoute("/portofino")({
   validateSearch: (search: Record<string, unknown>) => {
@@ -114,42 +123,42 @@ function PortofinoPage() {
       name: "Private Yacht Charter — Portofino Coast",
       tier: "Signature Experience",
       description: "Your own boat, your own pace, and hidden swim coves along the promontory.",
-      image: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1400&q=80",
+      image: expYacht,
       href: "https://www.viator.com/Portofino/d50421",
     },
     {
       name: "Portofino Harbor at Golden Hour",
       tier: "Signature Experience",
       description: "Private aperitivo on the piazzetta as the pastel facades catch the last light.",
-      image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1400&q=80",
+      image: expHarbor,
       href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/spa",
     },
     {
       name: "Small Group Sunset Cruise",
       tier: "Elevated Find",
       description: "Golden hour along the Ligurian coast with a glass of chilled prosecco in hand.",
-      image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1400&q=80",
+      image: expCruise,
       href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise",
     },
     {
       name: "Ligurian Cooking Class",
       tier: "Elevated Find",
       description: "Hands kneading fresh pasta at a long table above the Ligurian coast.",
-      image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=1400&q=80",
+      image: expCooking,
       href: "https://www.getyourguide.com/portofino-l1093/cooking-class",
     },
     {
       name: "Cinque Terre Wine Tasting",
       tier: "Riviera Find",
       description: "Terraced vineyards above the sea — sommelier-led pours of coastal whites.",
-      image: "https://images.unsplash.com/photo-1559638753-049f4d1d6c4a?auto=format&fit=crop&w=1400&q=80",
+      image: expWine,
       href: "https://www.getyourguide.com/portofino-l1093/cinque-terre-wine",
     },
     {
       name: "San Fruttuoso Abbey by Sea",
       tier: "Riviera Find",
       description: "A quiet crossing to a 10th-century abbey reachable only by water.",
-      image: "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1400&q=80",
+      image: expAbbey,
       href: "https://www.viator.com/Portofino/d50421/san-fruttuoso",
     },
   ];
@@ -410,19 +419,22 @@ function PortofinoPage() {
               name: "Belmond Hotel Splendido",
               tier: "Iconic",
               note: "Pastel-pink cliffside legend with the most photographed pool in the Riviera.",
-              href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+              image: hotelSplendido,
+              href: "https://www.booking.com/searchresults.html?ss=Belmond+Hotel+Splendido+Portofino",
             },
             {
               name: "Splendido Mare, A Belmond Hotel",
               tier: "Harborfront",
               note: "Right on the piazzetta — wake to the boats, dine on the waterfront.",
-              href: "https://www.belmond.com/hotels/europe/italy/portofino/splendido-mare/",
+              image: hotelSplendidoMare,
+              href: "https://www.booking.com/searchresults.html?ss=Splendido+Mare+Belmond+Portofino",
             },
             {
               name: "Eight Hotel Portofino",
               tier: "Boutique",
               note: "Quietly elegant, walkable to everything, a more intimate alternative.",
-              href: "https://www.eighthotelportofino.com/",
+              image: hotelEight,
+              href: "https://www.booking.com/searchresults.html?ss=Eight+Hotel+Portofino",
             },
           ].map((h) => (
             <a
@@ -430,14 +442,26 @@ function PortofinoPage() {
               href={h.href}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="group block bg-cream border border-border/60 hover:border-gold transition-colors p-5"
+              className="group block bg-ivory border border-border/60 hover:border-gold transition-colors overflow-hidden"
             >
-              <span className="eyebrow text-gold text-[10px]">{h.tier}</span>
-              <h4 className="font-display text-xl tracking-wide mt-2 leading-snug">{h.name}</h4>
-              <p className="font-serif italic text-ink/70 mt-3 leading-relaxed text-sm">{h.note}</p>
-              <span className="mt-4 inline-block eyebrow text-[10px] text-ink group-hover:text-gold transition-colors">
-                Reserve →
-              </span>
+              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                <img
+                  src={h.image}
+                  alt={h.name}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute top-3 left-3 bg-ivory/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.55rem]">
+                  {h.tier.toUpperCase()}
+                </div>
+              </div>
+              <div className="p-5">
+                <h4 className="font-display text-xl tracking-wide leading-snug">{h.name}</h4>
+                <p className="font-serif italic text-ink/70 mt-2.5 leading-relaxed text-sm">{h.note}</p>
+                <span className="mt-4 inline-block eyebrow text-[10px] tracking-[0.3em] text-ink group-hover:text-gold transition-colors">
+                  Review / Book →
+                </span>
+              </div>
             </a>
           ))}
         </div>
