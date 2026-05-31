@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import { portofinoEdit } from "@/data/portofinoEdit";
-import { resolveProductLink } from "@/data/portofino";
+import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
 import {
@@ -11,7 +11,6 @@ import {
   TIER_LABEL,
   TIER_SLUG_TO_ID,
   TIER_SLUGS,
-  inferSpecCategory,
   isLookSlug,
   isTierSlug,
   persistTier,
@@ -32,6 +31,69 @@ const DAY_INDEX: Record<DaySlug, 0 | 1 | 2 | 3 | 4> = {
 
 function isDaySlug(v: string): v is DaySlug {
   return v === "day-1" || v === "day-2" || v === "day-3" || v === "day-4" || v === "day-5";
+}
+
+// Parse a price string ("$1,495", "$295", "—") to a number for tier-bucketing.
+function parsePrice(p: string): number {
+  const n = Number(String(p).replace(/[^0-9.]/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
+
+/** Resolve a display category label for a sourced ShopItem. */
+function shopItemCategory(item: ShopItem): string {
+  if (item.category) return item.category;
+  const n = item.item.toLowerCase();
+  if (n.includes("sunglass")) return "Sunglasses";
+  if (n.includes("sandal") || n.includes("espadrille") || n.includes("heel") || n.includes("mule")) return "Shoes";
+  if (n.includes("tote") || n.includes("clutch") || n.includes("bag")) return "Bag";
+  if (n.includes("earring") || n.includes("hoop") || n.includes("drop")) return "Earrings";
+  if (n.includes("necklace") || n.includes("pendant") || n.includes("collar") || n.includes("lariat")) return "Necklace";
+  if (n.includes("bracelet") || n.includes("cuff") || n.includes("bangle")) return "Bracelet";
+  if (n.includes("ring")) return "Ring";
+  if (n.includes("scarf") || n.includes("barrette") || n.includes("headband")) return "Hair Detail";
+  if (n.includes("shirt") || n.includes("layer") || n.includes("jacket") || n.includes("kimono")) return "Optional Layer";
+  return "Outfit";
+}
+
+/**
+ * Pick the shop items for a given day + look + tier from the sourced catalog.
+ *
+ * Strategy:
+ *  - Start from portofinoLooks[dayIdx].shop (real affiliate items).
+ *  - Keep only "live" items: a usable href OR an explicit not_available card.
+ *  - If any item carries an explicit `lookIndex`, scope to that look; otherwise
+ *    use the whole day's catalog (fallback for days not yet tagged per-look).
+ *  - Split the resulting set into three price-tier buckets (top / middle /
+ *    bottom third) and return the bucket matching the user's selected tier.
+ */
+function selectLookItems(
+  dayIdx: number,
+  lookNum: 1 | 2 | 3,
+  tier: TierSlug,
+): ShopItem[] {
+  const day = portofinoLooks[dayIdx];
+  if (!day) return [];
+  const live = day.shop.filter(
+    (it) => it.not_available || resolveProductLink(it) !== null,
+  );
+  const tagged = live.filter((it) => it.lookIndex === lookNum);
+  // Prefer items explicitly tagged to THIS look. If none were tagged for it,
+  // fall back to the day's untagged items so the look still renders something
+  // shoppable. If both are empty, fall back to the whole day.
+  const untagged = live.filter((it) => !it.lookIndex);
+  const pool = tagged.length ? tagged : untagged.length ? untagged : live;
+  if (!pool.length) return [];
+
+  const sortedDesc = [...pool].sort(
+    (a, b) => parsePrice(b.price) - parsePrice(a.price),
+  );
+  const third = Math.max(1, Math.ceil(sortedDesc.length / 3));
+  const buckets: Record<TierSlug, ShopItem[]> = {
+    luxury: sortedDesc.slice(0, third),
+    "mid-luxe": sortedDesc.slice(third, third * 2),
+    "riviera-finds": sortedDesc.slice(third * 2),
+  };
+  return buckets[tier] ?? [];
 }
 
 export const Route = createFileRoute("/portofino/day-$day/look-$look")({
@@ -63,10 +125,10 @@ function LookDetailPage() {
   const lookData = dayData?.looks?.[lookIdx];
   if (!dayData || !lookData) throw notFound();
 
-  const tierId = TIER_SLUG_TO_ID[tier];
-  const items = (lookData.tiers[tierId] ?? []).filter(
-    (it: (typeof lookData.tiers)[typeof tierId][number]) => resolveProductLink(it) !== null,
-  );
+  // Source live affiliate products from the sourced catalog (portofinoLooks).
+  // portofinoEdit drives copy (muse name, description, fabric, hero image);
+  // portofinoLooks drives the shoppable grid (exact URLs + retailer thumbnails).
+  const items = selectLookItems(dayIdx, (lookIdx + 1) as 1 | 2 | 3, tier);
 
   // Persist tier across visits so the overview reflects the user's lane.
   useEffect(() => {
@@ -194,8 +256,35 @@ function LookDetailPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-5 gap-y-10">
               {items.map((item) => {
                 const href = resolveProductLink(item);
-                if (!href) return null;
-                const specCat = inferSpecCategory(item);
+                const specCat = shopItemCategory(item);
+                // Render "not available" placeholder card per affiliate rule.
+                if (!href) {
+                  if (!item.not_available) return null;
+                  return (
+                    <div
+                      key={item.brand + item.item}
+                      className="flex flex-col text-center bg-ivory border border-dashed border-border/60 p-3"
+                    >
+                      <span className="eyebrow text-ink/40 text-[0.55rem] tracking-[0.3em]">
+                        {specCat}
+                      </span>
+                      <div className="relative aspect-square w-full bg-cream border border-border/60 rounded-[6px] mt-2 flex items-center justify-center overflow-hidden">
+                        <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center font-serif text-ink/40 text-base">
+                          {item.brand.charAt(0)}
+                        </div>
+                      </div>
+                      <div className="mt-3 space-y-1">
+                        <div className="eyebrow text-[0.55rem] text-ink/55">{item.brand}</div>
+                        <div className="font-serif text-[0.82rem] text-ink/70 leading-snug line-clamp-2">
+                          {item.item}
+                        </div>
+                        <div className="font-serif italic text-[0.7rem] text-ink/45 pt-1 leading-snug">
+                          Not available through approved affiliate partners
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
                 return (
                   <a
                     key={item.brand + item.item}
