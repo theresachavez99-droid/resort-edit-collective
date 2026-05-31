@@ -362,3 +362,152 @@ function LookDetailPage() {
     </div>
   );
 }
+
+/**
+ * Editorial outfit slot. Renders the brand + item as authored in
+ * portofinoEdit and, when the slot has been matched to a real affiliate
+ * product, surfaces the thumbnail and "Shop Now" link. Unmatched slots
+ * stay visible as a brand-monogram placeholder so the full outfit always
+ * reads as a complete look.
+ */
+function OutfitCard({ item }: { item: LookGridItem }) {
+  const href = item.hasLiveSource ? resolveProductLink(item) : null;
+  const specCat = shopItemCategory(item);
+
+  const CardInner = (
+    <>
+      <span
+        className={
+          "eyebrow text-[0.55rem] tracking-[0.3em] " +
+          (href ? "text-gold" : "text-ink/40")
+        }
+      >
+        {specCat}
+      </span>
+      <div className="relative aspect-square w-full bg-cream border border-border/60 rounded-[6px] mt-2 flex items-center justify-center overflow-hidden">
+        {item.image ? (
+          <img
+            src={item.image}
+            alt={`${item.brand} ${item.item}`}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-2 px-3">
+            <div
+              className={
+                "w-12 h-12 rounded-full border flex items-center justify-center font-serif text-base " +
+                (href ? "border-gold/40 text-gold" : "border-ink/20 text-ink/40")
+              }
+            >
+              {item.brand.charAt(0)}
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="mt-3 space-y-0.5">
+        <div className="eyebrow text-[0.55rem] text-ink/70">{item.brand}</div>
+        <div className="font-serif text-[0.82rem] text-ink/85 leading-snug line-clamp-2">
+          {item.item}
+        </div>
+        <div className="font-serif text-[0.78rem] text-gold">{item.price}</div>
+        {href ? (
+          <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold group-hover:text-ink transition-colors pt-1">
+            Shop Now →
+          </div>
+        ) : (
+          <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/40 pt-1">
+            Sourcing
+          </div>
+        )}
+      </div>
+    </>
+  );
+
+  if (!href) {
+    return (
+      <div className="flex flex-col text-center bg-ivory border border-dashed border-border/60 p-3">
+        {CardInner}
+      </div>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer sponsored"
+      onClick={() => trackOutbound({ brand: item.brand, item: item.item, href })}
+      className="group flex flex-col text-center bg-ivory border border-border/60 p-3 hover:border-gold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
+    >
+      {CardInner}
+    </a>
+  );
+}
+
+/**
+ * Sourced affiliate product not claimed by the editorial composition —
+ * e.g. statement pieces like the Aquazzura Tequila Crystal sandal. Always
+ * renders with a live thumbnail.
+ */
+function SourcedCard({ item }: { item: ShopItem }) {
+  const href = resolveProductLink(item);
+  const specCat = shopItemCategory(item);
+
+  if (!href) {
+    if (!item.not_available) return null;
+    return (
+      <div className="flex flex-col text-center bg-ivory border border-dashed border-border/60 p-3">
+        <span className="eyebrow text-ink/40 text-[0.55rem] tracking-[0.3em]">{specCat}</span>
+        <div className="relative aspect-square w-full bg-cream border border-border/60 rounded-[6px] mt-2 flex items-center justify-center overflow-hidden">
+          <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center font-serif text-ink/40 text-base">
+            {item.brand.charAt(0)}
+          </div>
+        </div>
+        <div className="mt-3 space-y-1">
+          <div className="eyebrow text-[0.55rem] text-ink/55">{item.brand}</div>
+          <div className="font-serif text-[0.82rem] text-ink/70 leading-snug line-clamp-2">{item.item}</div>
+          <div className="font-serif italic text-[0.7rem] text-ink/45 pt-1 leading-snug">
+            Not available through approved affiliate partners
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer sponsored"
+      onClick={() => trackOutbound({ brand: item.brand, item: item.item, href })}
+      className="group flex flex-col text-center bg-ivory border border-border/60 p-3 hover:border-gold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
+    >
+      <span className="eyebrow text-gold text-[0.55rem] tracking-[0.3em]">{specCat}</span>
+      <div className="relative aspect-square w-full bg-cream border border-border/60 rounded-[6px] mt-2 flex items-center justify-center overflow-hidden">
+        {item.image ? (
+          <img
+            src={item.image}
+            alt={`${item.brand} ${item.item}`}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-2 px-3">
+            <div className="w-12 h-12 rounded-full border border-gold/40 flex items-center justify-center font-serif text-gold text-base">
+              {item.brand.charAt(0)}
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="mt-3 space-y-0.5">
+        <div className="eyebrow text-[0.55rem] text-ink/70">{item.brand}</div>
+        <div className="font-serif text-[0.82rem] text-ink/85 leading-snug line-clamp-2">{item.item}</div>
+        <div className="font-serif text-[0.78rem] text-gold">{item.price}</div>
+        <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold group-hover:text-ink transition-colors pt-1">
+          Shop Now →
+        </div>
+      </div>
+    </a>
+  );
+}
