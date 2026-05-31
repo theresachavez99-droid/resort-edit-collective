@@ -11,7 +11,6 @@ import {
   TIER_LABEL,
   TIER_SLUG_TO_ID,
   TIER_SLUGS,
-  inferSpecCategory,
   isLookSlug,
   isTierSlug,
   persistTier,
@@ -38,6 +37,22 @@ function isDaySlug(v: string): v is DaySlug {
 function parsePrice(p: string): number {
   const n = Number(String(p).replace(/[^0-9.]/g, ""));
   return Number.isFinite(n) ? n : 0;
+}
+
+/** Resolve a display category label for a sourced ShopItem. */
+function shopItemCategory(item: ShopItem): string {
+  if (item.category) return item.category;
+  const n = item.item.toLowerCase();
+  if (n.includes("sunglass")) return "Sunglasses";
+  if (n.includes("sandal") || n.includes("espadrille") || n.includes("heel") || n.includes("mule")) return "Shoes";
+  if (n.includes("tote") || n.includes("clutch") || n.includes("bag")) return "Bag";
+  if (n.includes("earring") || n.includes("hoop") || n.includes("drop")) return "Earrings";
+  if (n.includes("necklace") || n.includes("pendant") || n.includes("collar") || n.includes("lariat")) return "Necklace";
+  if (n.includes("bracelet") || n.includes("cuff") || n.includes("bangle")) return "Bracelet";
+  if (n.includes("ring")) return "Ring";
+  if (n.includes("scarf") || n.includes("barrette") || n.includes("headband")) return "Hair Detail";
+  if (n.includes("shirt") || n.includes("layer") || n.includes("jacket") || n.includes("kimono")) return "Optional Layer";
+  return "Outfit";
 }
 
 /**
