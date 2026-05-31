@@ -7,7 +7,7 @@ import {
   type Tier,
 } from "@/data/portofinoEdit";
 import { resolveProductLink } from "@/data/portofino";
-import { trackOutbound } from "@/lib/utils";
+import { ProductCard } from "@/components/ProductCard";
 
 export type TierSlug = "luxury" | "mid-luxe" | "riviera-finds";
 
@@ -113,7 +113,7 @@ export function TierPortofinoView({ tierSlug }: { tierSlug: TierSlug }) {
           <p className="font-serif italic text-[0.95rem] text-ink/65 mt-3 max-w-xl">{day.subtitle}</p>
         </header>
 
-        <div className="space-y-10 md:space-y-14">
+        <div className="space-y-16 md:space-y-24">
           {day.looks.map((look) => {
             const items = (look.tiers[tierId] ?? []).filter((it) => resolveProductLink(it) !== null);
             return (
@@ -146,44 +146,11 @@ export function TierPortofinoView({ tierSlug }: { tierSlug: TierSlug }) {
                   {items.length === 0 ? (
                     <p className="mt-6 font-serif italic text-ink/55">No {tierMeta.label} picks for this look yet.</p>
                   ) : (
-                    <ul className="mt-6 divide-y divide-border/40">
-                      {items.map((item) => {
-                        const href = resolveProductLink(item)!;
-                        return (
-                          <li key={item.brand + item.item}>
-                            <a
-                              href={href}
-                              target="_blank"
-                              rel="noopener noreferrer sponsored"
-                              onClick={() =>
-                                trackOutbound({
-                                  brand: item.brand,
-                                  item: item.item,
-                                  href,
-                                  category: item.category,
-                                })
-                              }
-                              className="grid grid-cols-[1fr_auto_auto] items-baseline gap-3 py-3 group"
-                            >
-                              <div className="min-w-0">
-                                <div className="eyebrow text-[0.6rem] tracking-[0.24em] text-ink/55 group-hover:text-gold transition-colors truncate">
-                                  {item.brand}
-                                </div>
-                                <div className="font-serif text-[0.92rem] text-ink/85 truncate leading-snug">
-                                  {item.item}
-                                </div>
-                              </div>
-                              <div className="font-serif text-[0.92rem] text-gold tabular-nums shrink-0">
-                                {item.price}
-                              </div>
-                              <span className="eyebrow text-[0.6rem] tracking-[0.28em] text-ink/70 group-hover:text-gold transition-colors shrink-0">
-                                SHOP →
-                              </span>
-                            </a>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+                      {items.map((item) => (
+                        <ProductCard key={item.brand + item.item} item={item} variant="editorial" />
+                      ))}
+                    </div>
                   )}
                 </div>
               </article>
