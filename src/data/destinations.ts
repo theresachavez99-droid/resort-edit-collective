@@ -1,4 +1,4 @@
-import portofino from "@/assets/hero-portofino.jpg";
+import portofino from "@/assets/dest-portofino.jpg";
 import capri from "@/assets/dest-capri.jpg";
 import sttropez from "@/assets/dest-sttropez.jpg";
 import phuket from "@/assets/dest-phuket.jpg";
