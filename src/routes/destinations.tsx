@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { destinations, destinationHref } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
 import { absoluteUrl } from "@/lib/site";
+import heroPortofino from "@/assets/hero-portofino.jpg";
 
 export const Route = createFileRoute("/destinations")({
   head: () => ({
@@ -74,7 +75,7 @@ function DestinationsPage() {
         : featured.filter((d) => filterTagsBySlug[d.slug]?.includes(filter)),
     [featured, filter],
   );
-  const heroImage = featured[0]?.image;
+  const heroImage = heroPortofino;
 
   return (
     <div className="bg-ivory">
@@ -109,7 +110,7 @@ function DestinationsPage() {
               <img
                 src={heroImage}
                 alt="Featured destination"
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-cover object-[center_right] md:object-right"
               />
             ) : null}
             <div className="absolute inset-0 bg-gradient-to-tr from-ink/30 via-transparent to-transparent" />
