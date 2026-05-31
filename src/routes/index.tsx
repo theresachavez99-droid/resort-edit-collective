@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import heroMuse from "@/assets/hero-muse-portofino.jpg";
-import stillLife from "@/assets/generated/resort-edit/look-dayclub-social-preview.jpg";
+import stillLife from "@/assets/portofino-still-life.jpg";
 import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg";
 import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
 import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
@@ -167,7 +167,7 @@ function Index() {
                 <p className="mt-5 font-serif italic text-lg text-ink/85 leading-relaxed">
                   Book a cabana.<br />Sip limoncello.<br />Stay until sunset.
                 </p>
-                <Link to="/portofino" className="mt-6 inline-block text-center bg-gold text-ivory eyebrow text-[0.65rem] tracking-[0.24em] py-3 px-4 hover:bg-ink transition-colors">
+                <Link to="/portofino-concierge" className="mt-6 inline-block text-center bg-gold text-ivory eyebrow text-[0.65rem] tracking-[0.24em] py-3 px-4 hover:bg-ink transition-colors">
                   Explore Portofino →
                 </Link>
               </div>
