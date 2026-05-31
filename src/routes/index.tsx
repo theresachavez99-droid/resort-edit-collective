@@ -215,8 +215,6 @@ function Index() {
               <a
                 key={label}
                 href={href}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
                 className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
               >
                 <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />
