@@ -32,9 +32,15 @@ const DAY_META: Record<DaySlug, {
   caption: string;
   hero: string;
   heroPos: string;
+  editorial: { palette: string; silhouette: string; textures: string; mood: string };
   images: [string, string, string];
   lookTitles: [string, string, string];
   lookMoods: [string, string, string];
+  inspired: [
+    { palette: string; silhouette: string; textures: string; mood: string },
+    { palette: string; silhouette: string; textures: string; mood: string },
+    { palette: string; silhouette: string; textures: string; mood: string },
+  ];
 }> = {
   "day-1": {
     dayKey: "Day 1",
@@ -42,12 +48,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Open water, tan lines and hidden coves.",
     hero: heroYacht,
     heroPos: "50% 18%",
+    editorial: {
+      palette: "Marine navy, crisp white, raffia tan",
+      silhouette: "Tailored shorts, halter knit, easy maxi",
+      textures: "Crisp poplin, fine knit, woven raffia",
+      mood: "Yacht-deck glamour with sun on your shoulders.",
+    },
     images: [d1a, d1b, d1c],
     lookTitles: ["Harbor Hero", "Riviera Lunch", "Riviera Daywear"],
     lookMoods: [
       "Sun-drenched deck dressing for the slow cruise out of the bay.",
       "Italian Riviera lunch energy with effortless polish.",
       "Easy, sun-warmed pieces for the walk back into town.",
+    ],
+    inspired: [
+      { palette: "Navy + ivory", silhouette: "Halter + tailored short", textures: "Poplin, fine knit", mood: "Deck-side polish" },
+      { palette: "White on white", silhouette: "Easy midi", textures: "Linen, raffia", mood: "Harbor lunch" },
+      { palette: "Cream + tan", silhouette: "Sun dress", textures: "Cotton voile, leather", mood: "Walk back to town" },
     ],
   },
   "day-2": {
@@ -56,12 +73,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Slow mornings, long lunches, seaside glamour.",
     hero: heroBeach,
     heroPos: "50% 12%",
+    editorial: {
+      palette: "Sun-bleached ivory, lemon, soft sand",
+      silhouette: "Crochet set, fluid maxi, breezy linen",
+      textures: "Crochet, linen, sun-warmed cotton",
+      mood: "Cabana ease, long lunches, salt in the air.",
+    },
     images: [d2a, d2b, d2c],
     lookTitles: ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
     lookMoods: [
       "Beach-club polish for the cabana you booked weeks ago.",
       "Pressed linen and quiet luxury at the long table.",
       "Sandy-foot ease for the walk back to the hotel.",
+    ],
+    inspired: [
+      { palette: "Ivory + lemon", silhouette: "Crochet set", textures: "Crochet, raffia", mood: "Cabana polish" },
+      { palette: "Sand neutrals", silhouette: "Pressed linen maxi", textures: "Linen, leather", mood: "Long-lunch quiet luxury" },
+      { palette: "White + tan", silhouette: "Easy slip", textures: "Cotton voile", mood: "Sandy-foot ease" },
     ],
   },
   "day-3": {
@@ -70,12 +98,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Poolside ease, via Roma, Capri luxe.",
     hero: heroDayclub,
     heroPos: "50% 15%",
+    editorial: {
+      palette: "Soft neutrals, blush, gold accents",
+      silhouette: "Slip dress, tailored short, knit set",
+      textures: "Silk, fine knit, soft leather",
+      mood: "Piazzetta polish, window-shopping in gold light.",
+    },
     images: [d3a, d3b, d3c],
     lookTitles: ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
     lookMoods: [
       "Poolside-to-piazzetta polish with editorial restraint.",
       "Window-shopping the boutiques in soft, sun-bleached neutrals.",
       "Golden-hour aperitivo, low-key but considered.",
+    ],
+    inspired: [
+      { palette: "Blush + gold", silhouette: "Silk slip", textures: "Silk, gold", mood: "Piazzetta polish" },
+      { palette: "Sun-bleached neutrals", silhouette: "Knit set", textures: "Fine knit, leather", mood: "Via Roma wander" },
+      { palette: "Cream + cognac", silhouette: "Tailored short", textures: "Cotton, leather", mood: "Aperitivo hour" },
     ],
   },
   "day-4": {
@@ -84,12 +123,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Golden hour, candlelight, harbor glow.",
     hero: heroDinner,
     heroPos: "50% 22%",
+    editorial: {
+      palette: "Sunset orange, burnt amber, candle gold",
+      silhouette: "Sculptural dress, fluid gown, cocktail midi",
+      textures: "Satin, silk, fine knit",
+      mood: "Harborfront glamour at golden hour.",
+    },
     images: [d4a, d4b, d4c],
     lookTitles: ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
     lookMoods: [
       "The dress everyone remembers, walking in at golden hour.",
       "Candlelit cocktail dressing, sculptural and quiet.",
       "Harborfront dinner — relaxed elegance, no effort visible.",
+    ],
+    inspired: [
+      { palette: "Sunset orange", silhouette: "Fluid gown", textures: "Satin, silk", mood: "Golden-hour entrance" },
+      { palette: "Amber + gold", silhouette: "Sculptural midi", textures: "Silk, metal", mood: "Candlelit cocktail" },
+      { palette: "Warm neutral", silhouette: "Slip dress", textures: "Silk, fine knit", mood: "Harborfront ease" },
     ],
   },
   "day-5": {
@@ -98,12 +148,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Espresso rituals and one last long lunch.",
     hero: heroTown,
     heroPos: "50% 20%",
+    editorial: {
+      palette: "Espresso brown, cream, vintage gold",
+      silhouette: "Easy trouser, breezy blouse, sun dress",
+      textures: "Cotton, silk, leather",
+      mood: "Slow Italian morning, espresso in hand.",
+    },
     images: [d5a, d5b, d5c],
     lookTitles: ["Last-Day Luxe", "Market Morning", "Coastal Farewell"],
     lookMoods: [
       "Travel-day dressing that still photographs beautifully.",
       "Slow market morning, espresso in hand.",
       "One last lunch by the water before the boat home.",
+    ],
+    inspired: [
+      { palette: "Cream + gold", silhouette: "Tailored set", textures: "Cotton, silk", mood: "Travel-day polish" },
+      { palette: "Espresso + ivory", silhouette: "Breezy blouse + trouser", textures: "Cotton, leather", mood: "Slow market morning" },
+      { palette: "Sun-bleached white", silhouette: "Easy sun dress", textures: "Linen, raffia", mood: "Last lunch by the water" },
     ],
   },
 };
