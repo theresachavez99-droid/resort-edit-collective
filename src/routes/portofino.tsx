@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { ArrowRight } from "lucide-react";
-import portofinoImg from "@/assets/generated/resort-edit/look-dayclub-desktop-hero.jpg";
+import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { absoluteUrl } from "@/lib/site";
 import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg";
 import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
