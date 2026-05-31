@@ -20,7 +20,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortofinoRivieraFindsRouteImport } from './routes/portofino.riviera-finds'
 import { Route as PortofinoMidLuxeRouteImport } from './routes/portofino.mid-luxe'
 import { Route as PortofinoLuxuryRouteImport } from './routes/portofino.luxury'
-import { Route as PortofinoDayChar123dayChar125RouteImport } from './routes/portofino.day-{$day}'
 import { Route as PortofinoDay5RouteImport } from './routes/portofino.day-5'
 import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
 import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
@@ -84,12 +83,6 @@ const PortofinoLuxuryRoute = PortofinoLuxuryRouteImport.update({
   path: '/luxury',
   getParentRoute: () => PortofinoRoute,
 } as any)
-const PortofinoDayChar123dayChar125Route =
-  PortofinoDayChar123dayChar125RouteImport.update({
-    id: '/day-{$day}',
-    path: '/day-{$day}',
-    getParentRoute: () => PortofinoRoute,
-  } as any)
 const PortofinoDay5Route = PortofinoDay5RouteImport.update({
   id: '/day-5',
   path: '/day-5',
@@ -142,7 +135,6 @@ export interface FileRoutesByFullPath {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
-  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
@@ -163,7 +155,6 @@ export interface FileRoutesByTo {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
-  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
@@ -185,7 +176,6 @@ export interface FileRoutesById {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
-  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
@@ -208,7 +198,6 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
-    | '/portofino/day-{$day}'
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
@@ -229,7 +218,6 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
-    | '/portofino/day-{$day}'
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
@@ -250,7 +238,6 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
-    | '/portofino/day-{$day}'
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
@@ -346,13 +333,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortofinoLuxuryRouteImport
       parentRoute: typeof PortofinoRoute
     }
-    '/portofino/day-{$day}': {
-      id: '/portofino/day-{$day}'
-      path: '/day-{$day}'
-      fullPath: '/portofino/day-{$day}'
-      preLoaderRoute: typeof PortofinoDayChar123dayChar125RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
     '/portofino/day-5': {
       id: '/portofino/day-5'
       path: '/day-5'
@@ -434,7 +414,6 @@ interface PortofinoRouteChildren {
   PortofinoDay3Route: typeof PortofinoDay3Route
   PortofinoDay4Route: typeof PortofinoDay4Route
   PortofinoDay5Route: typeof PortofinoDay5Route
-  PortofinoDayChar123dayChar125Route: typeof PortofinoDayChar123dayChar125Route
   PortofinoLuxuryRoute: typeof PortofinoLuxuryRoute
   PortofinoMidLuxeRoute: typeof PortofinoMidLuxeRoute
   PortofinoRivieraFindsRoute: typeof PortofinoRivieraFindsRoute
@@ -446,7 +425,6 @@ const PortofinoRouteChildren: PortofinoRouteChildren = {
   PortofinoDay3Route: PortofinoDay3Route,
   PortofinoDay4Route: PortofinoDay4Route,
   PortofinoDay5Route: PortofinoDay5Route,
-  PortofinoDayChar123dayChar125Route: PortofinoDayChar123dayChar125Route,
   PortofinoLuxuryRoute: PortofinoLuxuryRoute,
   PortofinoMidLuxeRoute: PortofinoMidLuxeRoute,
   PortofinoRivieraFindsRoute: PortofinoRivieraFindsRoute,
@@ -469,3 +447,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
