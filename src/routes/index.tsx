@@ -31,12 +31,12 @@ export const Route = createFileRoute("/")({
 });
 
 const days = [
-  { n: "1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines, and hidden coves.", image: lookYacht, pos: "50% 18%" },
-  { n: "2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach, pos: "50% 12%" },
-  { n: "3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: lookDayclub, pos: "50% 15%" },
-  { n: "4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner, pos: "50% 22%" },
-  { n: "5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso rituals and one last long lunch.", image: lookTown, pos: "50% 20%" },
-];
+  { n: "1", href: "/portofino/day-1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines, and hidden coves.", image: lookYacht, pos: "50% 18%" },
+  { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach, pos: "50% 12%" },
+  { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: lookDayclub, pos: "50% 15%" },
+  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner, pos: "50% 22%" },
+  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso rituals and one last long lunch.", image: lookTown, pos: "50% 20%" },
+] as const;
 
 const looks = [
   { tag: "Look A", title: "Lemon Print Set", image: editD2a },
@@ -51,10 +51,10 @@ const hotels = [
 ];
 
 const ctas = [
-  { label: "Book a Yacht", Icon: Ship },
-  { label: "Reserve a Beach Club", Icon: Umbrella },
-  { label: "Book a Tour", Icon: Camera },
-  { label: "View Experiences", Icon: Compass },
+  { label: "Book a Yacht", Icon: Ship, href: "https://www.viator.com/Portofino/d50421" },
+  { label: "Reserve a Beach Club", Icon: Umbrella, href: "https://www.getyourguide.com/portofino-l1093/" },
+  { label: "Book a Tour", Icon: Camera, href: "https://www.getyourguide.com/portofino-l1093/" },
+  { label: "View Experiences", Icon: Compass, href: "https://www.viator.com/Portofino/d50421" },
 ];
 
 function Index() {
@@ -128,7 +128,7 @@ function Index() {
               </div>
               <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
-                <Link to="/portofino/day-{$day}" params={{ day: d.n }} className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors">
+                <Link to={d.href} className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors">
                   Explore the Look →
                 </Link>
               </div>
@@ -211,10 +211,12 @@ function Index() {
             BOOK YOUR PORTOFINO EXPERIENCE
           </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-            {ctas.map(({ label, Icon }) => (
+            {ctas.map(({ label, Icon, href }) => (
               <a
                 key={label}
-                href="#"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
                 className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
               >
                 <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />

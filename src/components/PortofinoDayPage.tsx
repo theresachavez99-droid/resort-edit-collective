@@ -1,13 +1,21 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { Link, notFound } from "@tanstack/react-router";
 import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
-import portofinoImg from "@/assets/dest-portofino.jpg";
 import heroYacht from "@/assets/look-yacht.jpg";
 import heroBeach from "@/assets/look-beach.jpg";
 import heroDayclub from "@/assets/look-dayclub.jpg";
 import heroDinner from "@/assets/look-dinner.jpg";
 import heroTown from "@/assets/look-town.jpg";
+import expYacht from "@/assets/exp-yacht-charter.jpg";
+import expHarbor from "@/assets/exp-harbor-golden.jpg";
+import expCruise from "@/assets/exp-sunset-cruise.jpg";
+import expCooking from "@/assets/exp-cooking-class.jpg";
+import expWine from "@/assets/exp-wine-tasting.jpg";
+import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
+import hotelSplendido from "@/assets/hotel-splendido.jpg";
+import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
+import hotelEight from "@/assets/hotel-eight.jpg";
 import d1a from "@/assets/edit-d1-a.jpg";
 import d1b from "@/assets/edit-d1-b.jpg";
 import d1c from "@/assets/edit-d1-c.jpg";
@@ -24,9 +32,9 @@ import d5a from "@/assets/edit-d5-a.jpg";
 import d5b from "@/assets/edit-d5-b.jpg";
 import d5c from "@/assets/edit-d5-c.jpg";
 
-type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
+export type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
 
-const DAY_META: Record<DaySlug, {
+export const DAY_META: Record<DaySlug, {
   dayKey: string;
   title: string;
   caption: string;
@@ -175,41 +183,49 @@ const DAY_META: Record<DaySlug, {
   },
 };
 
-const DAY_ORDER: DaySlug[] = ["day-1", "day-2", "day-3", "day-4", "day-5"];
+export const DAY_ORDER: DaySlug[] = ["day-1", "day-2", "day-3", "day-4", "day-5"];
+export const DAY_PATHS: Record<DaySlug, "/portofino/day-1" | "/portofino/day-2" | "/portofino/day-3" | "/portofino/day-4" | "/portofino/day-5"> = {
+  "day-1": "/portofino/day-1",
+  "day-2": "/portofino/day-2",
+  "day-3": "/portofino/day-3",
+  "day-4": "/portofino/day-4",
+  "day-5": "/portofino/day-5",
+};
 
-function isDaySlug(s: string): s is DaySlug {
-  return (DAY_ORDER as string[]).includes(s);
+const experiences = [
+  { name: "Private Yacht Charter", tier: "Signature Experience", description: "Hidden coves, chilled wine, and the Portofino coast from the water.", image: expYacht, href: "https://www.viator.com/Portofino/d50421" },
+  { name: "Harbor Golden Hour", tier: "Signature Experience", description: "Aperitivo in the piazzetta as the pastel facades catch the last light.", image: expHarbor, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/" },
+  { name: "Sunset Cruise", tier: "Elevated Find", description: "A slow coastal loop with prosecco, salt air, and Ligurian glow.", image: expCruise, href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise" },
+  { name: "Ligurian Cooking Class", tier: "Elevated Find", description: "Pesto, fresh pasta, and a long-table afternoon above the sea.", image: expCooking, href: "https://www.getyourguide.com/portofino-l1093/cooking-class" },
+  { name: "Cinque Terre Wine Tasting", tier: "Riviera Find", description: "Terraced vineyards, coastal whites, and a polished day trip from Portofino.", image: expWine, href: "https://www.getyourguide.com/portofino-l1093/cinque-terre-wine" },
+  { name: "San Fruttuoso by Sea", tier: "Riviera Find", description: "A quiet crossing to the abbey and its tucked-away beach.", image: expAbbey, href: "https://www.viator.com/Portofino/d50421/san-fruttuoso" },
+];
+
+const hotels = [
+  { name: "Splendido, A Belmond Hotel", location: "Portofino hillside", description: "The cliffside grande dame: bougainvillea, polished service, and the most cinematic harbor view.", image: hotelSplendido, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/" },
+  { name: "Splendido Mare", location: "Piazzetta", description: "Elegant, intimate, and right on the harbor for aperitivo-to-dinner evenings.", image: hotelSplendidoMare, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-splendido-mare/" },
+  { name: "Eight Hotel Portofino", location: "Village center", description: "Quiet Italian luxury close to the boutiques, beach paths, and harbor rituals.", image: hotelEight, href: "https://www.eighthotels.com/en/eight-hotel-portofino/" },
+];
+
+export function getPortofinoDayHead(slug: DaySlug) {
+  const meta = DAY_META[slug];
+  const title = `${meta.title} — 5 Days in Portofino | Resort Edit`;
+  const description = meta.caption;
+  const url = DAY_PATHS[slug];
+  return {
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:image", content: absoluteUrl(meta.hero) },
+      { property: "og:url", content: absoluteUrl(url) },
+    ],
+    links: [{ rel: "canonical", href: absoluteUrl(url) }],
+  };
 }
 
-export const Route = createFileRoute("/portofino/day-{$day}")({
-  beforeLoad: ({ params }) => {
-    if (!isDaySlug(`day-${params.day}`)) throw notFound();
-  },
-  head: ({ params }) => {
-    const slug = `day-${params.day}` as DaySlug;
-    const meta = DAY_META[slug];
-    const title = meta
-      ? `${meta.title} — 5 Days in Portofino | Resort Edit`
-      : "Portofino | Resort Edit";
-    const description = meta?.caption ?? "5 Days in Portofino — Resort Edit.";
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:image", content: absoluteUrl(portofinoImg) },
-        { property: "og:url", content: absoluteUrl(`/portofino/${slug}`) },
-      ],
-      links: [{ rel: "canonical", href: absoluteUrl(`/portofino/${slug}`) }],
-    };
-  },
-  component: PortofinoDayPage,
-});
-
-function PortofinoDayPage() {
-  const { day } = Route.useParams();
-  const slug = `day-${day}` as DaySlug;
+export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
   const meta = DAY_META[slug];
   const look = portofinoLooks.find((l) => l.day === meta.dayKey);
   if (!look) throw notFound();
@@ -267,6 +283,9 @@ function PortofinoDayPage() {
           ))}
         </div>
       </section>
+
+      <ExperiencesSection />
+      <HotelsSection />
 
       {/* DAY NAVIGATION */}
       <section className="bg-cream border-y border-border/40 py-16 md:py-20">
@@ -408,6 +427,61 @@ function LookModule({
         </div>
       </div>
     </article>
+  );
+}
+
+function ExperiencesSection() {
+  return (
+    <section className="bg-cream py-18 md:py-24 border-y border-border/40">
+      <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
+        <span className="eyebrow text-gold tracking-[0.38em]">Experiences</span>
+        <h2 className="font-display text-3xl md:text-5xl mt-4 tracking-[0.04em]">Bookable Moments</h2>
+        <div className="mx-auto my-5 h-px w-14 bg-gold" />
+        <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+          Concierge-curated Portofino rituals that match the same editorial mood.
+        </p>
+      </div>
+      <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        {experiences.map((exp) => (
+          <a key={exp.name} href={exp.href} target="_blank" rel="noopener noreferrer sponsored" className="group bg-ivory border border-border/60 hover:border-gold transition-colors">
+            <div className="relative h-48 overflow-hidden bg-muted">
+              <img src={exp.image} alt={exp.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+            </div>
+            <div className="p-5">
+              <span className="eyebrow text-gold text-[0.56rem] tracking-[0.34em]">{exp.tier}</span>
+              <h3 className="font-display text-xl tracking-wide mt-3 text-ink">{exp.name}</h3>
+              <p className="font-serif italic text-sm text-ink/65 leading-relaxed mt-2">{exp.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function HotelsSection() {
+  return (
+    <section className="bg-ivory py-18 md:py-24">
+      <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
+        <span className="eyebrow text-gold tracking-[0.38em]">Hotels</span>
+        <h2 className="font-display text-3xl md:text-5xl mt-4 tracking-[0.04em]">Where To Stay</h2>
+        <div className="mx-auto my-5 h-px w-14 bg-gold" />
+      </div>
+      <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        {hotels.map((hotel) => (
+          <a key={hotel.name} href={hotel.href} target="_blank" rel="noopener noreferrer sponsored" className="group bg-ivory border border-border/60 hover:border-gold transition-colors">
+            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+              <img src={hotel.image} alt={hotel.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+            </div>
+            <div className="p-5">
+              <span className="eyebrow text-gold text-[0.56rem] tracking-[0.34em]">{hotel.location}</span>
+              <h3 className="font-display text-xl tracking-wide mt-3 text-ink">{hotel.name}</h3>
+              <p className="font-serif italic text-sm text-ink/65 leading-relaxed mt-2">{hotel.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
   );
 }
 

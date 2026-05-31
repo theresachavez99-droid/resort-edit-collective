@@ -20,7 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortofinoRivieraFindsRouteImport } from './routes/portofino.riviera-finds'
 import { Route as PortofinoMidLuxeRouteImport } from './routes/portofino.mid-luxe'
 import { Route as PortofinoLuxuryRouteImport } from './routes/portofino.luxury'
-import { Route as PortofinoDayChar123dayChar125RouteImport } from './routes/portofino.day-{$day}'
+import { Route as PortofinoDay5RouteImport } from './routes/portofino.day-5'
+import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
+import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
+import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
+import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 
@@ -79,12 +83,31 @@ const PortofinoLuxuryRoute = PortofinoLuxuryRouteImport.update({
   path: '/luxury',
   getParentRoute: () => PortofinoRoute,
 } as any)
-const PortofinoDayChar123dayChar125Route =
-  PortofinoDayChar123dayChar125RouteImport.update({
-    id: '/day-{$day}',
-    path: '/day-{$day}',
-    getParentRoute: () => PortofinoRoute,
-  } as any)
+const PortofinoDay5Route = PortofinoDay5RouteImport.update({
+  id: '/day-5',
+  path: '/day-5',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay4Route = PortofinoDay4RouteImport.update({
+  id: '/day-4',
+  path: '/day-4',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay3Route = PortofinoDay3RouteImport.update({
+  id: '/day-3',
+  path: '/day-3',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay2Route = PortofinoDay2RouteImport.update({
+  id: '/day-2',
+  path: '/day-2',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay1Route = PortofinoDay1RouteImport.update({
+  id: '/day-1',
+  path: '/day-1',
+  getParentRoute: () => PortofinoRoute,
+} as any)
 const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -107,7 +130,11 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
+  '/portofino/day-1': typeof PortofinoDay1Route
+  '/portofino/day-2': typeof PortofinoDay2Route
+  '/portofino/day-3': typeof PortofinoDay3Route
+  '/portofino/day-4': typeof PortofinoDay4Route
+  '/portofino/day-5': typeof PortofinoDay5Route
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
@@ -123,7 +150,11 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
+  '/portofino/day-1': typeof PortofinoDay1Route
+  '/portofino/day-2': typeof PortofinoDay2Route
+  '/portofino/day-3': typeof PortofinoDay3Route
+  '/portofino/day-4': typeof PortofinoDay4Route
+  '/portofino/day-5': typeof PortofinoDay5Route
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
@@ -140,7 +171,11 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/portofino/day-{$day}': typeof PortofinoDayChar123dayChar125Route
+  '/portofino/day-1': typeof PortofinoDay1Route
+  '/portofino/day-2': typeof PortofinoDay2Route
+  '/portofino/day-3': typeof PortofinoDay3Route
+  '/portofino/day-4': typeof PortofinoDay4Route
+  '/portofino/day-5': typeof PortofinoDay5Route
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
@@ -158,7 +193,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/portofino/day-{$day}'
+    | '/portofino/day-1'
+    | '/portofino/day-2'
+    | '/portofino/day-3'
+    | '/portofino/day-4'
+    | '/portofino/day-5'
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
@@ -174,7 +213,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/portofino/day-{$day}'
+    | '/portofino/day-1'
+    | '/portofino/day-2'
+    | '/portofino/day-3'
+    | '/portofino/day-4'
+    | '/portofino/day-5'
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
@@ -190,7 +233,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/portofino/day-{$day}'
+    | '/portofino/day-1'
+    | '/portofino/day-2'
+    | '/portofino/day-3'
+    | '/portofino/day-4'
+    | '/portofino/day-5'
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
@@ -286,11 +333,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortofinoLuxuryRouteImport
       parentRoute: typeof PortofinoRoute
     }
-    '/portofino/day-{$day}': {
-      id: '/portofino/day-{$day}'
-      path: '/day-{$day}'
-      fullPath: '/portofino/day-{$day}'
-      preLoaderRoute: typeof PortofinoDayChar123dayChar125RouteImport
+    '/portofino/day-5': {
+      id: '/portofino/day-5'
+      path: '/day-5'
+      fullPath: '/portofino/day-5'
+      preLoaderRoute: typeof PortofinoDay5RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-4': {
+      id: '/portofino/day-4'
+      path: '/day-4'
+      fullPath: '/portofino/day-4'
+      preLoaderRoute: typeof PortofinoDay4RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-3': {
+      id: '/portofino/day-3'
+      path: '/day-3'
+      fullPath: '/portofino/day-3'
+      preLoaderRoute: typeof PortofinoDay3RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-2': {
+      id: '/portofino/day-2'
+      path: '/day-2'
+      fullPath: '/portofino/day-2'
+      preLoaderRoute: typeof PortofinoDay2RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-1': {
+      id: '/portofino/day-1'
+      path: '/day-1'
+      fullPath: '/portofino/day-1'
+      preLoaderRoute: typeof PortofinoDay1RouteImport
       parentRoute: typeof PortofinoRoute
     }
     '/destinations/$slug': {
@@ -334,14 +409,22 @@ const DestinationsRouteWithChildren = DestinationsRoute._addFileChildren(
 )
 
 interface PortofinoRouteChildren {
-  PortofinoDayChar123dayChar125Route: typeof PortofinoDayChar123dayChar125Route
+  PortofinoDay1Route: typeof PortofinoDay1Route
+  PortofinoDay2Route: typeof PortofinoDay2Route
+  PortofinoDay3Route: typeof PortofinoDay3Route
+  PortofinoDay4Route: typeof PortofinoDay4Route
+  PortofinoDay5Route: typeof PortofinoDay5Route
   PortofinoLuxuryRoute: typeof PortofinoLuxuryRoute
   PortofinoMidLuxeRoute: typeof PortofinoMidLuxeRoute
   PortofinoRivieraFindsRoute: typeof PortofinoRivieraFindsRoute
 }
 
 const PortofinoRouteChildren: PortofinoRouteChildren = {
-  PortofinoDayChar123dayChar125Route: PortofinoDayChar123dayChar125Route,
+  PortofinoDay1Route: PortofinoDay1Route,
+  PortofinoDay2Route: PortofinoDay2Route,
+  PortofinoDay3Route: PortofinoDay3Route,
+  PortofinoDay4Route: PortofinoDay4Route,
+  PortofinoDay5Route: PortofinoDay5Route,
   PortofinoLuxuryRoute: PortofinoLuxuryRoute,
   PortofinoMidLuxeRoute: PortofinoMidLuxeRoute,
   PortofinoRivieraFindsRoute: PortofinoRivieraFindsRoute,
