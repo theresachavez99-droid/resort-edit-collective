@@ -32,9 +32,15 @@ const DAY_META: Record<DaySlug, {
   caption: string;
   hero: string;
   heroPos: string;
+  editorial: { palette: string; silhouette: string; textures: string; mood: string };
   images: [string, string, string];
   lookTitles: [string, string, string];
   lookMoods: [string, string, string];
+  inspired: [
+    { palette: string; silhouette: string; textures: string; mood: string },
+    { palette: string; silhouette: string; textures: string; mood: string },
+    { palette: string; silhouette: string; textures: string; mood: string },
+  ];
 }> = {
   "day-1": {
     dayKey: "Day 1",
@@ -42,12 +48,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Open water, tan lines and hidden coves.",
     hero: heroYacht,
     heroPos: "50% 18%",
+    editorial: {
+      palette: "Marine navy, crisp white, raffia tan",
+      silhouette: "Tailored shorts, halter knit, easy maxi",
+      textures: "Crisp poplin, fine knit, woven raffia",
+      mood: "Yacht-deck glamour with sun on your shoulders.",
+    },
     images: [d1a, d1b, d1c],
     lookTitles: ["Harbor Hero", "Riviera Lunch", "Riviera Daywear"],
     lookMoods: [
       "Sun-drenched deck dressing for the slow cruise out of the bay.",
       "Italian Riviera lunch energy with effortless polish.",
       "Easy, sun-warmed pieces for the walk back into town.",
+    ],
+    inspired: [
+      { palette: "Navy + ivory", silhouette: "Halter + tailored short", textures: "Poplin, fine knit", mood: "Deck-side polish" },
+      { palette: "White on white", silhouette: "Easy midi", textures: "Linen, raffia", mood: "Harbor lunch" },
+      { palette: "Cream + tan", silhouette: "Sun dress", textures: "Cotton voile, leather", mood: "Walk back to town" },
     ],
   },
   "day-2": {
@@ -56,12 +73,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Slow mornings, long lunches, seaside glamour.",
     hero: heroBeach,
     heroPos: "50% 12%",
+    editorial: {
+      palette: "Sun-bleached ivory, lemon, soft sand",
+      silhouette: "Crochet set, fluid maxi, breezy linen",
+      textures: "Crochet, linen, sun-warmed cotton",
+      mood: "Cabana ease, long lunches, salt in the air.",
+    },
     images: [d2a, d2b, d2c],
     lookTitles: ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
     lookMoods: [
       "Beach-club polish for the cabana you booked weeks ago.",
       "Pressed linen and quiet luxury at the long table.",
       "Sandy-foot ease for the walk back to the hotel.",
+    ],
+    inspired: [
+      { palette: "Ivory + lemon", silhouette: "Crochet set", textures: "Crochet, raffia", mood: "Cabana polish" },
+      { palette: "Sand neutrals", silhouette: "Pressed linen maxi", textures: "Linen, leather", mood: "Long-lunch quiet luxury" },
+      { palette: "White + tan", silhouette: "Easy slip", textures: "Cotton voile", mood: "Sandy-foot ease" },
     ],
   },
   "day-3": {
@@ -70,12 +98,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Poolside ease, via Roma, Capri luxe.",
     hero: heroDayclub,
     heroPos: "50% 15%",
+    editorial: {
+      palette: "Soft neutrals, blush, gold accents",
+      silhouette: "Slip dress, tailored short, knit set",
+      textures: "Silk, fine knit, soft leather",
+      mood: "Piazzetta polish, window-shopping in gold light.",
+    },
     images: [d3a, d3b, d3c],
     lookTitles: ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
     lookMoods: [
       "Poolside-to-piazzetta polish with editorial restraint.",
       "Window-shopping the boutiques in soft, sun-bleached neutrals.",
       "Golden-hour aperitivo, low-key but considered.",
+    ],
+    inspired: [
+      { palette: "Blush + gold", silhouette: "Silk slip", textures: "Silk, gold", mood: "Piazzetta polish" },
+      { palette: "Sun-bleached neutrals", silhouette: "Knit set", textures: "Fine knit, leather", mood: "Via Roma wander" },
+      { palette: "Cream + cognac", silhouette: "Tailored short", textures: "Cotton, leather", mood: "Aperitivo hour" },
     ],
   },
   "day-4": {
@@ -84,12 +123,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Golden hour, candlelight, harbor glow.",
     hero: heroDinner,
     heroPos: "50% 22%",
+    editorial: {
+      palette: "Sunset orange, burnt amber, candle gold",
+      silhouette: "Sculptural dress, fluid gown, cocktail midi",
+      textures: "Satin, silk, fine knit",
+      mood: "Harborfront glamour at golden hour.",
+    },
     images: [d4a, d4b, d4c],
     lookTitles: ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
     lookMoods: [
       "The dress everyone remembers, walking in at golden hour.",
       "Candlelit cocktail dressing, sculptural and quiet.",
       "Harborfront dinner — relaxed elegance, no effort visible.",
+    ],
+    inspired: [
+      { palette: "Sunset orange", silhouette: "Fluid gown", textures: "Satin, silk", mood: "Golden-hour entrance" },
+      { palette: "Amber + gold", silhouette: "Sculptural midi", textures: "Silk, metal", mood: "Candlelit cocktail" },
+      { palette: "Warm neutral", silhouette: "Slip dress", textures: "Silk, fine knit", mood: "Harborfront ease" },
     ],
   },
   "day-5": {
@@ -98,12 +148,23 @@ const DAY_META: Record<DaySlug, {
     caption: "Espresso rituals and one last long lunch.",
     hero: heroTown,
     heroPos: "50% 20%",
+    editorial: {
+      palette: "Espresso brown, cream, vintage gold",
+      silhouette: "Easy trouser, breezy blouse, sun dress",
+      textures: "Cotton, silk, leather",
+      mood: "Slow Italian morning, espresso in hand.",
+    },
     images: [d5a, d5b, d5c],
     lookTitles: ["Last-Day Luxe", "Market Morning", "Coastal Farewell"],
     lookMoods: [
       "Travel-day dressing that still photographs beautifully.",
       "Slow market morning, espresso in hand.",
       "One last lunch by the water before the boat home.",
+    ],
+    inspired: [
+      { palette: "Cream + gold", silhouette: "Tailored set", textures: "Cotton, silk", mood: "Travel-day polish" },
+      { palette: "Espresso + ivory", silhouette: "Breezy blouse + trouser", textures: "Cotton, leather", mood: "Slow market morning" },
+      { palette: "Sun-bleached white", silhouette: "Easy sun dress", textures: "Linen, raffia", mood: "Last lunch by the water" },
     ],
   },
 };
@@ -170,6 +231,43 @@ function PortofinoDayPage() {
         </div>
       </section>
 
+      {/* EDITORIAL REFERENCE */}
+      <section className="bg-cream border-b border-border/40 py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center mb-12">
+            <span className="eyebrow text-gold tracking-[0.4em]">Editorial Reference</span>
+            <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-[0.04em]">
+              The Mood
+            </h2>
+            <div className="mx-auto mt-5 h-px w-12 bg-gold" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
+            <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+              <img
+                src={meta.hero}
+                alt={`${meta.dayKey} editorial reference`}
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: meta.heroPos }}
+              />
+              <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
+                {meta.dayKey} · Reference
+              </div>
+            </div>
+            <div>
+              <p className="font-serif italic text-xl md:text-2xl text-ink/80 leading-relaxed">
+                {meta.editorial.mood}
+              </p>
+              <dl className="mt-8 space-y-5 border-t border-border/60 pt-6">
+                <CueRow label="Palette" value={meta.editorial.palette} />
+                <CueRow label="Silhouette" value={meta.editorial.silhouette} />
+                <CueRow label="Textures" value={meta.editorial.textures} />
+                <CueRow label="Destination Mood" value={meta.caption} />
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* THREE WAYS HEADER */}
       <section className="bg-ivory pt-20 md:pt-28">
         <div className="mx-auto max-w-4xl px-6 text-center">
@@ -196,6 +294,9 @@ function PortofinoDayPage() {
               title={meta.lookTitles[i]}
               mood={meta.lookMoods[i]}
               dayLabel={meta.dayKey}
+              inspired={meta.inspired[i]}
+              referenceImage={meta.hero}
+              referencePos={meta.heroPos}
             />
           ))}
         </div>
@@ -241,6 +342,9 @@ function LookModule({
   title,
   mood,
   dayLabel,
+  inspired,
+  referenceImage,
+  referencePos,
 }: {
   look: Look;
   index: 0 | 1 | 2;
@@ -248,6 +352,9 @@ function LookModule({
   title: string;
   mood: string;
   dayLabel: string;
+  inspired: { palette: string; silhouette: string; textures: string; mood: string };
+  referenceImage: string;
+  referencePos: string;
 }) {
   // Live items: real affiliate URLs OR explicit not_available placeholders.
   const liveItems = look.shop.filter(
@@ -301,8 +408,28 @@ function LookModule({
           </div>
         </div>
 
-        {/* RIGHT 60% — compact 3-col product grid */}
+        {/* RIGHT 60% — inspired-by + product grid */}
         <div className="lg:col-span-6">
+          <div className="flex items-start gap-4 border border-gold/30 bg-cream/60 p-4 mb-6">
+            <div className="relative w-16 h-20 shrink-0 overflow-hidden bg-muted">
+              <img
+                src={referenceImage}
+                alt="Editorial reference"
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: referencePos }}
+              />
+            </div>
+            <div className="flex-1">
+              <div className="eyebrow text-gold text-[0.55rem] tracking-[0.35em]">Inspired By</div>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 font-serif text-[0.78rem] text-ink/75 leading-snug">
+                <div><span className="text-ink/50">Palette · </span>{inspired.palette}</div>
+                <div><span className="text-ink/50">Silhouette · </span>{inspired.silhouette}</div>
+                <div><span className="text-ink/50">Textures · </span>{inspired.textures}</div>
+                <div><span className="text-ink/50">Mood · </span>{inspired.mood}</div>
+              </div>
+            </div>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
             {items.map((item, k) => (
               <ProductCardCompact key={`${item.brand}-${item.item}-${k}`} item={item} />
@@ -311,6 +438,15 @@ function LookModule({
         </div>
       </div>
     </article>
+  );
+}
+
+function CueRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[120px_1fr] gap-4 items-baseline">
+      <dt className="eyebrow text-gold text-[0.6rem] tracking-[0.35em]">{label}</dt>
+      <dd className="font-serif text-ink/80 text-base leading-relaxed">{value}</dd>
+    </div>
   );
 }
 
