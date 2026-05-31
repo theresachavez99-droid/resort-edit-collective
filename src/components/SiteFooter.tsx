@@ -67,6 +67,7 @@ export function SiteFooter() {
             <p className="eyebrow text-gold-soft mb-4">Explore</p>
             <ul className="space-y-2 font-serif">
               <li><Link to="/destinations" className="hover:text-gold">Destinations</Link></li>
+              <li><Link to="/portofino-concierge" className="hover:text-gold">Concierge</Link></li>
               <li><Link to="/resort-edits" className="hover:text-gold">Resort Edits</Link></li>
               <li><Link to="/brands" className="hover:text-gold">Brands We Love</Link></li>
             </ul>
