@@ -86,8 +86,8 @@ function DestinationsPage() {
             <h1 className="font-display text-5xl md:text-6xl lg:text-7xl mt-3 tracking-wide text-ink leading-[1.02]">
               Where to Dress Next
             </h1>
-            <p className="mt-5 font-serif italic text-ink/65 text-lg md:text-xl max-w-md">
-              Curated escapes, styled destination by destination.
+            <p className="mt-5 font-serif italic text-ink/65 text-lg md:text-xl max-w-xl">
+              Style guides for women who dress for the destination.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a
