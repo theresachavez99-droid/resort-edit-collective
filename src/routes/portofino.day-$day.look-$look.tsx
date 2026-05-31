@@ -310,89 +310,41 @@ function LookDetailPage() {
             </h2>
             <div className="mx-auto my-3 h-px w-12 bg-gold" />
             <p className="font-serif italic text-ink/65 text-sm md:text-base">
-              Every piece in the muse — sourced from approved affiliate partners.
+              Every piece in the muse — with live affiliate links where available.
             </p>
           </header>
 
-          {items.length === 0 ? (
+          {outfit.length === 0 && extras.length === 0 ? (
             <p className="text-center font-serif italic text-ink/55 py-10">
               No {TIER_LABEL[tier]} picks for this look yet. Try a different tier.
             </p>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-5 gap-y-10">
-              {items.map((item) => {
-                const href = resolveProductLink(item);
-                const specCat = shopItemCategory(item);
-                // Render "not available" placeholder card per affiliate rule.
-                if (!href) {
-                  if (!item.not_available) return null;
-                  return (
-                    <div
-                      key={item.brand + item.item}
-                      className="flex flex-col text-center bg-ivory border border-dashed border-border/60 p-3"
-                    >
-                      <span className="eyebrow text-ink/40 text-[0.55rem] tracking-[0.3em]">
-                        {specCat}
-                      </span>
-                      <div className="relative aspect-square w-full bg-cream border border-border/60 rounded-[6px] mt-2 flex items-center justify-center overflow-hidden">
-                        <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center font-serif text-ink/40 text-base">
-                          {item.brand.charAt(0)}
-                        </div>
-                      </div>
-                      <div className="mt-3 space-y-1">
-                        <div className="eyebrow text-[0.55rem] text-ink/55">{item.brand}</div>
-                        <div className="font-serif text-[0.82rem] text-ink/70 leading-snug line-clamp-2">
-                          {item.item}
-                        </div>
-                        <div className="font-serif italic text-[0.7rem] text-ink/45 pt-1 leading-snug">
-                          Not available through approved affiliate partners
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
-                return (
-                  <a
-                    key={item.brand + item.item}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer sponsored"
-                    onClick={() => trackOutbound({ brand: item.brand, item: item.item, href })}
-                    className="group flex flex-col text-center bg-ivory border border-border/60 p-3 hover:border-gold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
-                  >
-                    <span className="eyebrow text-gold text-[0.55rem] tracking-[0.3em]">
-                      {specCat}
+            <>
+              {outfit.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-5 gap-y-10">
+                  {outfit.map((item) => (
+                    <OutfitCard key={item.brand + item.item} item={item} />
+                  ))}
+                </div>
+              )}
+
+              {extras.length > 0 && (
+                <div className="mt-14 md:mt-16">
+                  <div className="flex items-center gap-4 justify-center mb-6">
+                    <div className="h-px w-12 bg-gold/40" />
+                    <span className="eyebrow text-gold tracking-[0.32em] text-[0.65rem]">
+                      Also From This Day
                     </span>
-                    <div className="relative aspect-square w-full bg-cream border border-border/60 rounded-[6px] mt-2 flex items-center justify-center overflow-hidden">
-                      {item.image ? (
-                        <img
-                          src={item.image}
-                          alt={`${item.brand} ${item.item}`}
-                          loading="lazy"
-                          className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center gap-2 px-3">
-                          <div className="w-12 h-12 rounded-full border border-gold/40 flex items-center justify-center font-serif text-gold text-base">
-                            {item.brand.charAt(0)}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-3 space-y-0.5">
-                      <div className="eyebrow text-[0.55rem] text-ink/70">{item.brand}</div>
-                      <div className="font-serif text-[0.82rem] text-ink/85 leading-snug line-clamp-2">
-                        {item.item}
-                      </div>
-                      <div className="font-serif text-[0.78rem] text-gold">{item.price}</div>
-                      <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold group-hover:text-ink transition-colors pt-1">
-                        Shop Now →
-                      </div>
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
+                    <div className="h-px w-12 bg-gold/40" />
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-5 gap-y-10">
+                    {extras.map((item) => (
+                      <SourcedCard key={item.brand + item.item} item={item} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {/* BACK */}
