@@ -31,11 +31,11 @@ export const Route = createFileRoute("/")({
 });
 
 const days = [
-  { n: "1", href: "/portofino/day-1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines, and hidden coves.", image: lookYacht, pos: "50% 18%" },
-  { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach, pos: "50% 12%" },
-  { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: lookDayclub, pos: "50% 15%" },
-  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner, pos: "50% 22%" },
-  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso rituals and one last long lunch.", image: lookTown, pos: "50% 20%" },
+  { n: "1", href: "/portofino/day-1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines, and hidden coves.", image: lookYacht },
+  { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
+  { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: lookDayclub },
+  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
+  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso rituals and one last long lunch.", image: lookTown },
 ] as const;
 
 const looks = [
@@ -124,7 +124,7 @@ function Index() {
                 </h3>
               </div>
               <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
-                <img src={d.image} alt={d.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: d.pos }} />
+                <img src={d.image} alt={d.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center top" }} />
               </div>
               <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
