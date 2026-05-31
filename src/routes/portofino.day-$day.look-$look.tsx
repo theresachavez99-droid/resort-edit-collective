@@ -188,10 +188,13 @@ function LookDetailPage() {
   const lookData = dayData?.looks?.[lookIdx];
   if (!dayData || !lookData) throw notFound();
 
-  // Source live affiliate products from the sourced catalog (portofinoLooks).
-  // portofinoEdit drives copy (muse name, description, fabric, hero image);
-  // portofinoLooks drives the shoppable grid (exact URLs + retailer thumbnails).
-  const items = selectLookItems(dayIdx, (lookIdx + 1) as 1 | 2 | 3, tier);
+  // The look detail page renders the FULL editorial outfit (always five
+  // categorised pieces from portofinoEdit), enriched with live affiliate
+  // products + thumbnails from the sourced catalog (portofinoLooks). Any
+  // remaining sourced products that aren't part of the editorial five are
+  // appended as extras so every hero product the editor sourced shows up
+  // with a thumbnail.
+  const { outfit, extras } = buildLookGrid(dayIdx, lookIdx, tier);
 
   // Persist tier across visits so the overview reflects the user's lane.
   useEffect(() => {
