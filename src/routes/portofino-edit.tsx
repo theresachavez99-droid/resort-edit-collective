@@ -376,7 +376,6 @@ function PortofinoEditPage() {
                                 <div className="space-y-8 md:space-y-10">
                                   {visibleTiers.map((tier) => {
                                     const items = look.tiers[tier.id];
-                                    const saveKey = `${day.day}-${look.id}-${tier.id}`;
                                     return (
                                       <article
                                         key={tier.id}
