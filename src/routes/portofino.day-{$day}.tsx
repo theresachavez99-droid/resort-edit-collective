@@ -235,22 +235,7 @@ export const Route = createFileRoute("/portofino/day-{$day}")({
   },
   head: ({ params }) => {
     const slug = `day-${params.day}` as DaySlug;
-    const meta = DAY_META[slug];
-    const title = meta
-      ? `${meta.title} — 5 Days in Portofino | Resort Edit`
-      : "Portofino | Resort Edit";
-    const description = meta?.caption ?? "5 Days in Portofino — Resort Edit.";
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:image", content: absoluteUrl(meta?.hero ?? heroYacht) },
-        { property: "og:url", content: absoluteUrl(`/portofino/${slug}`) },
-      ],
-      links: [{ rel: "canonical", href: absoluteUrl(`/portofino/${slug}`) }],
-    };
+    return isDaySlug(slug) ? getPortofinoDayHead(slug) : getPortofinoDayHead("day-1");
   },
   component: PortofinoDayPage,
 });
@@ -258,6 +243,11 @@ export const Route = createFileRoute("/portofino/day-{$day}")({
 function PortofinoDayPage() {
   const { day } = Route.useParams();
   const slug = `day-${day}` as DaySlug;
+  if (!isDaySlug(slug)) throw notFound();
+  return <PortofinoDayTemplate slug={slug} />;
+}
+
+export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
   const meta = DAY_META[slug];
   const look = portofinoLooks.find((l) => l.day === meta.dayKey);
   if (!look) throw notFound();
