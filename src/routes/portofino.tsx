@@ -268,7 +268,6 @@ function PortofinoPage() {
                 key={p.n}
                 to="/portofino/day-{$day}"
                 params={{ day: activeDayNumber }}
-                search={{ tier: selectedTier }}
                 className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-muted">
@@ -299,7 +298,6 @@ function PortofinoPage() {
                   key={p.n}
                   to="/portofino/day-{$day}"
                   params={{ day: activeDayNumber }}
-                  search={{ tier: selectedTier }}
                   className="snap-start shrink-0 w-[78%] bg-ivory border border-border/60"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-muted">
