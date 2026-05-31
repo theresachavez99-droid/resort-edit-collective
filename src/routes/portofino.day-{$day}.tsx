@@ -150,34 +150,36 @@ function PortofinoDayPage() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative h-[62vh] min-h-[460px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[78vh] min-h-[560px] w-full overflow-hidden bg-ink">
         <img
-          src={portofinoImg}
-          alt="Portofino harbor"
+          src={meta.hero}
+          alt={meta.title}
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: meta.heroPos }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/25 to-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/65" />
         <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-14 md:pb-20 text-ivory">
           <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
-          <h1 className="font-display text-5xl md:text-7xl mt-6 tracking-[0.05em] leading-[1]">
-            5 Days in Portofino
+          <h1 className="font-display text-4xl md:text-6xl mt-6 tracking-[0.04em] leading-[1.05] max-w-4xl">
+            {meta.title}
           </h1>
-          <p className="font-serif italic text-lg md:text-xl text-ivory/85 mt-5 max-w-2xl leading-relaxed">
-            Five days. Five edits. Dressed for the Italian Riviera.
+          <div className="mx-auto my-6 h-px w-16 bg-gold/80" />
+          <p className="font-serif italic text-lg md:text-xl text-ivory/85 max-w-2xl leading-relaxed">
+            {meta.caption}
           </p>
         </div>
       </section>
 
-      {/* SECTION HEADER */}
+      {/* THREE WAYS HEADER */}
       <section className="bg-ivory pt-20 md:pt-28">
         <div className="mx-auto max-w-4xl px-6 text-center">
-          <span className="eyebrow text-gold tracking-[0.4em]">The Day</span>
-          <h2 className="font-display text-4xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
-            {meta.title}
+          <span className="eyebrow text-gold tracking-[0.4em]">{meta.dayKey} · The Edit</span>
+          <h2 className="font-display text-3xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
+            Three Ways To Wear The Mood
           </h2>
           <div className="mx-auto my-6 h-px w-16 bg-gold" />
-          <p className="font-serif italic text-lg md:text-xl text-ink/65 leading-relaxed">
-            {meta.caption}
+          <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed max-w-2xl mx-auto">
+            Three looks, one aesthetic — styled to match the editorial above.
           </p>
         </div>
       </section>
