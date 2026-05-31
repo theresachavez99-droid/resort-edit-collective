@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import portofinoImg from "@/assets/dest-portofino.jpg";
 import { absoluteUrl } from "@/lib/site";
-import { TierNavBar } from "@/components/TierPortofinoView";
 import d1a from "@/assets/edit-d1-a.jpg";
 import d1b from "@/assets/edit-d1-b.jpg";
 import d1c from "@/assets/edit-d1-c.jpg";
@@ -13,6 +12,12 @@ import d4a from "@/assets/edit-d4-a.jpg";
 import d5a from "@/assets/edit-d5-a.jpg";
 
 export const Route = createFileRoute("/portofino")({
+  validateSearch: (search: Record<string, unknown>) => {
+    const t = search.tier;
+    const tier: "luxury" | "mid-luxe" | "riviera-finds" =
+      t === "mid-luxe" || t === "riviera-finds" ? t : "luxury";
+    return { tier };
+  },
   head: () => ({
     meta: [
       { title: "5 Days in Portofino — A Style & Itinerary Guide | Resort Edit" },
@@ -27,7 +32,17 @@ export const Route = createFileRoute("/portofino")({
   component: PortofinoPage,
 });
 
+const tierOptions: Array<{ slug: "luxury" | "mid-luxe" | "riviera-finds"; label: string; caption: string }> = [
+  { slug: "luxury", label: "Luxury", caption: "Designer pieces · investment dressing." },
+  { slug: "mid-luxe", label: "Mid-Luxe", caption: "Contemporary labels · considered spend." },
+  { slug: "riviera-finds", label: "Riviera Finds", caption: "Smart finds · effortless ease." },
+];
+
 function PortofinoPage() {
+  const { tier: selectedTier } = Route.useSearch();
+  const navigate = useNavigate({ from: "/portofino" });
+  const activeTier = tierOptions.find((t) => t.slug === selectedTier) ?? tierOptions[0];
+
   const dayNav: Array<{
     slug: string;
     label: string;
@@ -103,10 +118,10 @@ function PortofinoPage() {
       href: "https://www.viator.com/Portofino/d50421",
     },
     {
-      name: "Splendido Spa Afternoon",
+      name: "Portofino Harbor at Golden Hour",
       tier: "Signature Experience",
-      description: "A signature ritual and quiet pool access at Portofino's most storied address.",
-      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1400&q=80",
+      description: "Private aperitivo on the piazzetta as the pastel facades catch the last light.",
+      image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1400&q=80",
       href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/spa",
     },
     {
@@ -119,15 +134,15 @@ function PortofinoPage() {
     {
       name: "Ligurian Cooking Class",
       tier: "Elevated Find",
-      description: "An intimate afternoon learning trofie al pesto with the day's catch.",
-      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=80",
+      description: "Hands kneading fresh pasta at a long table above the Ligurian coast.",
+      image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=1400&q=80",
       href: "https://www.getyourguide.com/portofino-l1093/cooking-class",
     },
     {
       name: "Cinque Terre Wine Tasting",
       tier: "Riviera Find",
-      description: "Sommelier-led cellar visits along the terraced cliffs of the Ligurian coast.",
-      image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1400&q=80",
+      description: "Terraced vineyards above the sea — sommelier-led pours of coastal whites.",
+      image: "https://images.unsplash.com/photo-1559638753-049f4d1d6c4a?auto=format&fit=crop&w=1400&q=80",
       href: "https://www.getyourguide.com/portofino-l1093/cinque-terre-wine",
     },
     {
@@ -160,16 +175,62 @@ function PortofinoPage() {
         </div>
       </section>
 
-      {/* FIVE DAYS, THREE WAYS + Day nav + Day 1 preview */}
-      <section className="bg-ivory pt-12 md:pt-14 pb-14 md:pb-16">
-        <div className="mx-auto max-w-3xl px-6 text-center mb-8 md:mb-10">
-          <span className="eyebrow text-gold">The Wardrobe</span>
+      {/* STEP 1 — TIER SELECTOR (directly beneath hero) */}
+      <section className="bg-cream pt-12 md:pt-14 pb-10 md:pb-12 border-b border-border/40">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <span className="eyebrow text-gold">Step 1 · Shop By Price Point</span>
           <h2 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.05em]">
-            Five Days, Three Ways
+            Choose Your Tier
           </h2>
           <div className="mx-auto my-4 h-px w-12 bg-gold" />
           <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
-            Three shoppable looks per day: Designer / Mid-Luxe / Riviera Finds.
+            Same aesthetic. Different investment. Pick your shopping lane before you browse the days.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-2 md:gap-3" role="tablist" aria-label="Price tier">
+            {tierOptions.map((t) => {
+              const isActive = selectedTier === t.slug;
+              return (
+                <button
+                  key={t.slug}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() =>
+                    navigate({ search: { tier: t.slug }, replace: true })
+                  }
+                  className={
+                    isActive
+                      ? "eyebrow tracking-[0.3em] text-[0.72rem] px-6 py-3 border bg-gold/90 border-gold text-ink font-bold transition-colors"
+                      : "eyebrow tracking-[0.3em] text-[0.72rem] px-6 py-3 border border-border bg-ivory text-ink hover:bg-gold/20 hover:border-gold/60 transition-colors"
+                  }
+                >
+                  {t.label.toUpperCase()}
+                </button>
+              );
+            })}
+          </div>
+          <p className="font-serif italic text-ink/65 text-sm mt-5">
+            Showing <span className="text-ink not-italic font-medium">{activeTier.label}</span> — {activeTier.caption}
+          </p>
+          <Link
+            to="/portofino-edit"
+            className="mt-5 inline-block eyebrow text-[0.6rem] tracking-[0.3em] text-ink/65 border-b border-ink/30 hover:text-gold hover:border-gold transition-colors pb-1"
+          >
+            Or view all tiers side-by-side →
+          </Link>
+        </div>
+      </section>
+
+      {/* STEP 2 — DAY TABS + LOOK PREVIEWS */}
+      <section className="bg-ivory pt-12 md:pt-14 pb-14 md:pb-16">
+        <div className="mx-auto max-w-3xl px-6 text-center mb-8 md:mb-10">
+          <span className="eyebrow text-gold">Step 2 · The Wardrobe</span>
+          <h2 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.05em]">
+            Pick Your Day
+          </h2>
+          <div className="mx-auto my-4 h-px w-12 bg-gold" />
+          <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+            Three styled looks per day in your selected tier.
           </p>
         </div>
 
@@ -207,6 +268,7 @@ function PortofinoPage() {
                 key={p.n}
                 to="/portofino/day-{$day}"
                 params={{ day: activeDayNumber }}
+                search={{ tier: selectedTier }}
                 className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-muted">
@@ -214,6 +276,9 @@ function PortofinoPage() {
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
                   <div className="absolute top-3 left-3 bg-ivory/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.55rem]">
                     LOOK {p.n}
+                  </div>
+                  <div className="absolute top-3 right-3 bg-gold/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.55rem]">
+                    {activeTier.label.toUpperCase()}
                   </div>
                 </div>
                 <div className="p-4">
@@ -234,6 +299,7 @@ function PortofinoPage() {
                   key={p.n}
                   to="/portofino/day-{$day}"
                   params={{ day: activeDayNumber }}
+                  search={{ tier: selectedTier }}
                   className="snap-start shrink-0 w-[78%] bg-ivory border border-border/60"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-muted">
@@ -255,94 +321,71 @@ function PortofinoPage() {
         </div>
       </section>
 
-      {/* SHOP BY PRICE TIER */}
-      <section className="bg-cream py-20 md:py-24 border-y border-border/40">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <span className="eyebrow text-gold">Shop By Price Point</span>
-          <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">
-            Choose Your Tier
-          </h2>
-          <div className="mx-auto my-6 h-px w-16 bg-gold" />
-          <p className="font-serif italic text-lg text-ink/65 leading-relaxed">
-            Same aesthetic. Different investment. Pick a tier to load matching products, shoppable links, and pricing.
-          </p>
-          <div className="mt-10">
-            <TierNavBar />
-          </div>
-          <Link
-            to="/portofino-edit"
-            className="mt-8 inline-block eyebrow text-[0.65rem] tracking-[0.3em] text-ink/65 border-b border-ink/30 hover:text-gold hover:border-gold transition-colors pb-1"
-          >
-            Or view the full side-by-side edit →
-          </Link>
-        </div>
-      </section>
-
-      {/* EXPERIENCES */}
-      <section className="bg-ivory py-24 md:py-32">
-        <div className="mx-auto max-w-3xl px-6 text-center mb-16">
+      {/* EXPERIENCES — compact concierge cards */}
+      <section className="bg-cream py-16 md:py-20 border-y border-border/40">
+        <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
           <span className="eyebrow text-gold">The Experiences</span>
-          <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">
+          <h3 className="font-display text-3xl md:text-4xl mt-3 tracking-wide">
             Bookable Moments
-          </h2>
-          <div className="mx-auto my-6 h-px w-16 bg-gold" />
-          <p className="font-serif italic text-lg text-ink/65 leading-relaxed">
-            Six concierge-curated experiences along the Ligurian coast.
+          </h3>
+          <div className="mx-auto my-4 h-px w-12 bg-gold" />
+          <p className="font-serif italic text-base text-ink/65 leading-relaxed">
+            Six concierge-curated moments along the Ligurian coast.
           </p>
         </div>
-        {/* Desktop / tablet: 3 cols × 2 rows, 32px gap */}
-        <div className="mx-auto max-w-6xl px-6 hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Desktop / tablet: 3 cols × 2 rows, compact horizontal-feel cards */}
+        <div className="mx-auto max-w-6xl px-6 hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {experiences.map((exp) => (
             <a
               key={exp.name}
               href={exp.href}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="group block bg-cream border-2 border-ink/15 hover:border-gold hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(0,0,0,0.35)] transition-all duration-300"
+              className="group flex bg-ivory border border-ink/15 hover:border-gold transition-colors"
             >
-              <div className="aspect-[3/5] overflow-hidden bg-muted">
+              <div className="w-2/5 shrink-0 overflow-hidden bg-muted">
                 <img
                   src={exp.image}
                   alt={exp.name}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 min-h-[140px]"
                 />
               </div>
-              <div className="p-5">
+              <div className="p-4 flex flex-col flex-1">
                 <span className="eyebrow text-gold text-[9px] tracking-[0.3em]">{exp.tier}</span>
-                <h4 className="font-display text-xl tracking-wide mt-2 leading-snug">
+                <h4 className="font-display text-base tracking-wide mt-1.5 leading-snug">
                   {exp.name}
                 </h4>
-                <p className="font-serif italic text-ink/65 text-[14px] mt-2 leading-snug">
+                <p className="font-serif italic text-ink/65 text-[13px] mt-1.5 leading-snug line-clamp-2">
                   {exp.description}
                 </p>
-                <span className="mt-4 inline-block eyebrow text-[11px] tracking-[0.28em] text-ink border-b border-gold/70 pb-1 group-hover:text-gold transition-colors">
-                  Book This Experience →
+                <span className="mt-auto pt-3 inline-block eyebrow text-[10px] tracking-[0.28em] text-ink group-hover:text-gold transition-colors self-start">
+                  Book →
                 </span>
               </div>
             </a>
           ))}
         </div>
         {/* Mobile: horizontal scroll */}
-        <div className="sm:hidden -mx-0 px-6 overflow-x-auto">
-          <div className="flex gap-5 snap-x snap-mandatory">
+        <div className="sm:hidden px-6 overflow-x-auto">
+          <div className="flex gap-4 snap-x snap-mandatory">
             {experiences.map((exp) => (
               <a
                 key={exp.name}
                 href={exp.href}
                 target="_blank"
                 rel="noopener noreferrer sponsored"
-                className="snap-start shrink-0 w-[82%] bg-cream border-2 border-ink/15"
+                className="snap-start shrink-0 w-[72%] bg-ivory border border-ink/15"
               >
-                <div className="aspect-[3/5] overflow-hidden bg-muted">
+                <div className="aspect-[4/3] overflow-hidden bg-muted">
                   <img src={exp.image} alt={exp.name} loading="lazy" className="h-full w-full object-cover" />
                 </div>
-                <div className="p-5">
+                <div className="p-4">
                   <span className="eyebrow text-gold text-[9px] tracking-[0.3em]">{exp.tier}</span>
-                  <h4 className="font-display text-lg tracking-wide mt-2 leading-snug">{exp.name}</h4>
-                  <p className="font-serif italic text-ink/65 text-[14px] mt-2 leading-snug">{exp.description}</p>
-                  <span className="mt-4 inline-block eyebrow text-[11px] tracking-[0.28em] text-ink border-b border-gold/70 pb-1">
-                    Book This Experience →
+                  <h4 className="font-display text-base tracking-wide mt-1.5 leading-snug">{exp.name}</h4>
+                  <p className="font-serif italic text-ink/65 text-[13px] mt-1.5 leading-snug line-clamp-2">{exp.description}</p>
+                  <span className="mt-3 inline-block eyebrow text-[10px] tracking-[0.28em] text-ink">
+                    Book →
                   </span>
                 </div>
               </a>
@@ -351,19 +394,19 @@ function PortofinoPage() {
         </div>
       </section>
 
-      {/* HOTELS */}
-      <section className="bg-cream py-24 md:py-32">
-        <div className="mx-auto max-w-3xl px-6 text-center mb-16">
+      {/* HOTELS — secondary, reduced padding */}
+      <section className="bg-ivory py-16 md:py-20">
+        <div className="mx-auto max-w-3xl px-6 text-center mb-10">
           <span className="eyebrow text-gold">Where To Stay</span>
-          <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">
+          <h3 className="font-display text-3xl md:text-4xl mt-3 tracking-wide">
             The Hotels
-          </h2>
-          <div className="mx-auto my-6 h-px w-16 bg-gold" />
-          <p className="font-serif italic text-lg text-ink/65 leading-relaxed">
+          </h3>
+          <div className="mx-auto my-4 h-px w-12 bg-gold" />
+          <p className="font-serif italic text-base text-ink/65 leading-relaxed">
             Three addresses on the promontory — each one a different way to wake up in Portofino.
           </p>
         </div>
-        <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
               name: "Belmond Hotel Splendido",
@@ -389,47 +432,16 @@ function PortofinoPage() {
               href={h.href}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="group block bg-ivory border border-border/60 hover:border-gold transition-colors p-7"
+              className="group block bg-cream border border-border/60 hover:border-gold transition-colors p-5"
             >
               <span className="eyebrow text-gold text-[10px]">{h.tier}</span>
-              <h3 className="font-display text-2xl tracking-wide mt-3 leading-snug">{h.name}</h3>
-              <p className="font-serif italic text-ink/70 mt-4 leading-relaxed">{h.note}</p>
-              <span className="mt-6 inline-block eyebrow text-[10px] text-ink group-hover:text-gold transition-colors">
+              <h4 className="font-display text-xl tracking-wide mt-2 leading-snug">{h.name}</h4>
+              <p className="font-serif italic text-ink/70 mt-3 leading-relaxed text-sm">{h.note}</p>
+              <span className="mt-4 inline-block eyebrow text-[10px] text-ink group-hover:text-gold transition-colors">
                 Reserve →
               </span>
             </a>
           ))}
-        </div>
-      </section>
-
-      {/* NEWSLETTER */}
-      <section className="py-24 md:py-32">
-        <div className="mx-auto max-w-2xl px-6 text-center">
-          <span className="eyebrow text-gold">The Newsletter</span>
-          <h2 className="font-display text-4xl md:text-5xl mt-4 tracking-wide">
-            New Edits, Quietly Delivered
-          </h2>
-          <div className="mx-auto my-6 h-px w-16 bg-gold" />
-          <p className="font-serif italic text-lg text-ink/65 leading-relaxed">
-            Resort edits, packing lists, and destination notes — sent only when there's something worth wearing.
-          </p>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="mt-10 flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-          >
-            <input
-              type="email"
-              required
-              placeholder="your@email.com"
-              className="flex-1 bg-ivory border border-border/60 px-5 py-4 font-serif italic text-ink placeholder:text-ink/40 focus:outline-none focus:border-gold"
-            />
-            <button
-              type="submit"
-              className="eyebrow text-ivory bg-ink px-7 py-4 hover:bg-gold transition-colors cursor-pointer"
-            >
-              Subscribe →
-            </button>
-          </form>
         </div>
       </section>
     </div>
