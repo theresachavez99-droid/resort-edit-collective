@@ -7,14 +7,14 @@ import imgYachtCharter from "@/assets/exp-yacht-charter.jpg";
 import imgSunsetCruise from "@/assets/exp-sunset-cruise.jpg";
 import imgYacht from "@/assets/exp-yacht.jpg";
 import imgBeachclub from "@/assets/exp-beachclub.jpg";
-import imgBeach from "@/assets/generated/resort-edit/look-beach-desktop-hero.jpg";
-import imgDayclub from "@/assets/generated/resort-edit/look-dayclub-desktop-hero.jpg";
 import imgTour from "@/assets/exp-tour.jpg";
 import imgAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import imgCooking from "@/assets/exp-cooking-class.jpg";
 import imgWine from "@/assets/exp-wine-tasting.jpg";
-import imgTown from "@/assets/generated/resort-edit/look-town-desktop-hero.jpg";
-import imgDinner from "@/assets/generated/resort-edit/look-dinner-desktop-hero.jpg";
+import imgBeach from "@/assets/concierge-beachclub-umbrellas.jpg";
+import imgDayclub from "@/assets/concierge-aperitivo-tablescape.jpg";
+import imgTown from "@/assets/concierge-shopping-street.jpg";
+import imgDinner from "@/assets/concierge-dinner-terrace.jpg";
 
 export const Route = createFileRoute("/portofino-concierge")({
   head: () => ({
