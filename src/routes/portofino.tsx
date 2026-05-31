@@ -245,11 +245,9 @@ function PortofinoPage() {
                 {/* RIGHT — Three looks */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
                   {d.looks.map((look) => (
-                    <Link
+                    <a
                       key={look.slug}
-                      to="/portofino/day-$day/look-$look"
-                      params={{ day: d.slug, look: look.slug }}
-                      search={{ tier }}
+                      href={`/portofino/${d.slug}/${look.slug}?tier=${tier}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
@@ -277,7 +275,7 @@ function PortofinoPage() {
                           View Full Look →
                         </span>
                       </div>
-                    </Link>
+                    </a>
                   ))}
                 </div>
               </article>
