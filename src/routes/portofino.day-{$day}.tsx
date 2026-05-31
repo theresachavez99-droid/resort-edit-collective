@@ -342,6 +342,9 @@ function LookModule({
   title,
   mood,
   dayLabel,
+  inspired,
+  referenceImage,
+  referencePos,
 }: {
   look: Look;
   index: 0 | 1 | 2;
@@ -349,6 +352,9 @@ function LookModule({
   title: string;
   mood: string;
   dayLabel: string;
+  inspired: { palette: string; silhouette: string; textures: string; mood: string };
+  referenceImage: string;
+  referencePos: string;
 }) {
   // Live items: real affiliate URLs OR explicit not_available placeholders.
   const liveItems = look.shop.filter(
@@ -402,8 +408,28 @@ function LookModule({
           </div>
         </div>
 
-        {/* RIGHT 60% — compact 3-col product grid */}
+        {/* RIGHT 60% — inspired-by + product grid */}
         <div className="lg:col-span-6">
+          <div className="flex items-start gap-4 border border-gold/30 bg-cream/60 p-4 mb-6">
+            <div className="relative w-16 h-20 shrink-0 overflow-hidden bg-muted">
+              <img
+                src={referenceImage}
+                alt="Editorial reference"
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: referencePos }}
+              />
+            </div>
+            <div className="flex-1">
+              <div className="eyebrow text-gold text-[0.55rem] tracking-[0.35em]">Inspired By</div>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 font-serif text-[0.78rem] text-ink/75 leading-snug">
+                <div><span className="text-ink/50">Palette · </span>{inspired.palette}</div>
+                <div><span className="text-ink/50">Silhouette · </span>{inspired.silhouette}</div>
+                <div><span className="text-ink/50">Textures · </span>{inspired.textures}</div>
+                <div><span className="text-ink/50">Mood · </span>{inspired.mood}</div>
+              </div>
+            </div>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
             {items.map((item, k) => (
               <ProductCardCompact key={`${item.brand}-${item.item}-${k}`} item={item} />
@@ -412,6 +438,15 @@ function LookModule({
         </div>
       </div>
     </article>
+  );
+}
+
+function CueRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[120px_1fr] gap-4 items-baseline">
+      <dt className="eyebrow text-gold text-[0.6rem] tracking-[0.35em]">{label}</dt>
+      <dd className="font-serif text-ink/80 text-base leading-relaxed">{value}</dd>
+    </div>
   );
 }
 
