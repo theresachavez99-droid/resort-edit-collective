@@ -39,7 +39,16 @@ const editsBySlug: Record<string, number> = {
   phuket: 15,
 };
 
-const FEATURED_SLUGS = ["portofino", "capri", "sttropez", "mallorca", "ibiza", "tulum"] as const;
+const FEATURED_SLUGS = ["portofino", "phuket"] as const;
+
+const COMING_SOON = [
+  "Cannes",
+  "Mallorca",
+  "St. Barths",
+  "Nantucket",
+  "Capri",
+  "Ibiza",
+] as const;
 
 type FilterKey = "All" | "Italian Riviera" | "Beach Clubs" | "Island Escapes" | "Mediterranean" | "Tropical";
 
@@ -54,11 +63,7 @@ const FILTERS: FilterKey[] = [
 
 const filterTagsBySlug: Record<string, FilterKey[]> = {
   portofino: ["Italian Riviera", "Mediterranean"],
-  capri: ["Italian Riviera", "Island Escapes", "Mediterranean"],
-  sttropez: ["Beach Clubs", "Mediterranean"],
-  mallorca: ["Island Escapes", "Mediterranean"],
-  ibiza: ["Beach Clubs", "Island Escapes", "Mediterranean"],
-  tulum: ["Tropical"],
+  phuket: ["Island Escapes", "Tropical"],
 };
 
 function DestinationsPage() {
@@ -164,7 +169,7 @@ function DestinationsPage() {
               No destinations match that filter yet.
             </p>
           ) : (
-            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 max-w-[1100px] mx-auto">
               {visible.map((d) => {
                 const vibe = vibeBySlug[d.slug] ?? d.travelType;
                 const count = editsBySlug[d.slug] ?? 10;
@@ -202,33 +207,27 @@ function DestinationsPage() {
         </div>
       </section>
 
-      {/* CURRENTLY EDITING — premium pills with thumbnails */}
-      <section id="all" className="border-t border-border/40 bg-cream/30">
-        <div className="mx-auto max-w-[1400px] px-6 py-5 md:py-7 flex items-center gap-5 md:gap-8">
-          <span className="eyebrow text-gold whitespace-nowrap hidden md:inline">Currently Editing</span>
-          <div className="flex-1 overflow-x-auto no-scrollbar">
-            <ul className="flex items-center gap-2 md:gap-3 min-w-max">
-              {featured.map((d) => (
-                <li key={d.slug}>
-                  <DestinationLink
-                    d={d}
-                    className="group flex items-center gap-2.5 pl-1.5 pr-4 py-1.5 rounded-full border border-ink/10 hover:border-gold/60 hover:bg-cream/40 transition-colors"
-                  >
-                    <img
-                      src={d.image}
-                      alt=""
-                      aria-hidden
-                      className="h-7 w-7 rounded-full object-cover"
-                    />
-                    <span className="font-serif text-sm text-ink/80 group-hover:text-ink whitespace-nowrap">
-                      {d.name}
-                    </span>
-                  </DestinationLink>
-                </li>
-              ))}
-              <li className="pl-2 text-ink/40" aria-hidden>→</li>
-            </ul>
+      {/* COMING SOON — editorial chips */}
+      <section id="coming-soon" className="border-t border-border/40 bg-cream/30">
+        <div className="mx-auto max-w-[1100px] px-6 py-14 md:py-20 text-center">
+          <div className="flex items-center gap-4 justify-center mb-5">
+            <div className="h-px w-12 bg-gold/50" />
+            <h2 className="eyebrow text-gold tracking-[0.3em]">Coming Soon</h2>
+            <div className="h-px w-12 bg-gold/50" />
           </div>
+          <p className="font-serif italic text-ink/70 text-lg md:text-xl">
+            The destinations currently on our packing list.
+          </p>
+          <ul className="mt-8 flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
+            {COMING_SOON.map((name) => (
+              <li
+                key={name}
+                className="font-serif text-sm md:text-base text-ink/75 border border-ink/15 rounded-full px-5 py-2 bg-ivory/60"
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </div>
