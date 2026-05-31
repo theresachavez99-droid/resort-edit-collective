@@ -226,9 +226,13 @@ function Index() {
           </div>
       </section>
 
-      <p className={`${wrap} mt-10 pb-16 text-center eyebrow text-[0.55rem] tracking-[0.24em] text-ink/50`}>
-          Prices are subject to change. Links may earn a small commission at no extra cost to you.
+      {/* DISCLOSURE — visually secondary, well below CTAs */}
+      <div className={`${wrap} mt-24 lg:mt-32 pb-16`}>
+        <div className="mx-auto h-px w-16 bg-ink/15" />
+        <p className="mt-8 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
+          Prices and availability may change. Some links may earn a commission at no additional cost to you.
         </p>
+      </div>
     </div>
   );
 }
