@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import heroMuse from "@/assets/hero-muse-portofino.jpg";
+import heroCannes from "@/assets/hero-muse-cannes.jpg";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg";
 import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "A luxury style and itinerary guide to Portofino — five days, five looks, hotels, beach clubs and experiences across price points." },
       { property: "og:title", content: "Resort Edit — 5 Days in Portofino" },
       { property: "og:description", content: "Luxury labels. Riviera finds. Resort style across price points." },
-      { property: "og:image", content: absoluteUrl(heroMuse) },
+      { property: "og:image", content: absoluteUrl(heroCannes) },
       { property: "og:url", content: SITE_URL },
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
@@ -61,12 +62,9 @@ function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
   return (
     <div className="bg-ivory w-full">
-      {/* HERO — balanced 50/50 split */}
-      <section className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center`}>
-          <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-muted">
-            <img src={heroMuse} alt="Portofino editorial muse" className="absolute inset-0 h-full w-full object-cover" />
-          </div>
-          <div className="lg:pl-2 max-w-[750px]">
+      {/* HERO — copy left, image right */}
+      <section className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,55%)] gap-8 lg:gap-12 items-center`}>
+          <div className="order-2 lg:order-1 lg:pl-2 max-w-[750px]">
             <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">A Style &amp; Itinerary Guide</p>
             <h1 className="font-display mt-3 text-[3.4rem] sm:text-[4.2rem] lg:text-[6.2rem] xl:text-[7.4rem] leading-[0.9] tracking-[0.01em] text-ink">
               5 DAYS IN
@@ -110,6 +108,14 @@ function Index() {
                 ★ Most Saved Edit
               </span>
             </div>
+          </div>
+          <div className="order-1 lg:order-2 relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-muted">
+            <img
+              src={heroCannes}
+              alt="Resort Edit muse — Cannes, white linen and luggage"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: "center right" }}
+            />
           </div>
       </section>
 
