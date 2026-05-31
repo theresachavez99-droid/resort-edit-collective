@@ -27,7 +27,6 @@ import expYacht from "@/assets/exp-yacht-charter.jpg";
 import expHarbor from "@/assets/exp-harbor-golden.jpg";
 import expCruise from "@/assets/exp-sunset-cruise.jpg";
 import expCooking from "@/assets/exp-cooking-class.jpg";
-import expWine from "@/assets/exp-wine-tasting.jpg";
 import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
@@ -166,21 +165,6 @@ function PortofinoPage() {
 
   const setTier = (t: TierSlug) =>
     navigate({ search: { tier: t }, replace: true });
-
-  const experiences: Array<{
-    name: string;
-    tier: "Signature Experience" | "Elevated Find" | "Riviera Find";
-    description: string;
-    image: string;
-    href: string;
-  }> = [
-    { name: "Private Yacht Charter — Portofino Coast", tier: "Signature Experience", description: "Your own boat, your own pace, and hidden swim coves along the promontory.", image: expYacht, href: "https://www.viator.com/Portofino/d50421" },
-    { name: "Portofino Harbor at Golden Hour", tier: "Signature Experience", description: "Private aperitivo on the piazzetta as the pastel facades catch the last light.", image: expHarbor, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/spa" },
-    { name: "Small Group Sunset Cruise", tier: "Elevated Find", description: "Golden hour along the Ligurian coast with a glass of chilled prosecco in hand.", image: expCruise, href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise" },
-    { name: "Ligurian Cooking Class", tier: "Elevated Find", description: "Hands kneading fresh pasta at a long table above the Ligurian coast.", image: expCooking, href: "https://www.getyourguide.com/portofino-l1093/cooking-class" },
-    { name: "Cinque Terre Wine Tasting", tier: "Riviera Find", description: "Terraced vineyards above the sea — sommelier-led pours of coastal whites.", image: expWine, href: "https://www.getyourguide.com/portofino-l1093/cinque-terre-wine" },
-    { name: "San Fruttuoso Abbey by Sea", tier: "Riviera Find", description: "A quiet crossing to a 10th-century abbey reachable only by water.", image: expAbbey, href: "https://www.viator.com/Portofino/d50421/san-fruttuoso" },
-  ];
 
   return (
     <div className="pb-28 md:pb-24">
