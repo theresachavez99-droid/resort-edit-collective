@@ -106,8 +106,8 @@ const DAYS: DayRow[] = [
     slug: "day-3", href: DAY_PATHS["day-3"], label: "Day 3",
     title: "Pool Lounging & Shopping",
     caption: "Poolside ease, via Roma, Capri luxe.",
-    image: lookDayclub,
-    imagePos: "50% 15%",
+    image: heroMuse,
+    imagePos: "50% 25%",
     looks: [
       { slug: "look-a", label: "Look A", title: "Printed Set", image: d3a },
       { slug: "look-b", label: "Look B", title: "White Linen Ease", image: d3b },
