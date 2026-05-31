@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import { portofinoEdit } from "@/data/portofinoEdit";
-import { resolveProductLink } from "@/data/portofino";
+import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
 import {
@@ -63,10 +63,10 @@ function LookDetailPage() {
   const lookData = dayData?.looks?.[lookIdx];
   if (!dayData || !lookData) throw notFound();
 
-  const tierId = TIER_SLUG_TO_ID[tier];
-  const items = (lookData.tiers[tierId] ?? []).filter(
-    (it: (typeof lookData.tiers)[typeof tierId][number]) => resolveProductLink(it) !== null,
-  );
+  // Source live affiliate products from the sourced catalog (portofinoLooks).
+  // portofinoEdit drives copy (muse name, description, fabric, hero image);
+  // portofinoLooks drives the shoppable grid (exact URLs + retailer thumbnails).
+  const items = selectLookItems(dayIdx, (lookIdx + 1) as 1 | 2 | 3, tier);
 
   // Persist tier across visits so the overview reflects the user's lane.
   useEffect(() => {
