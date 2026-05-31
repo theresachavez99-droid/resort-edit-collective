@@ -119,10 +119,10 @@ export function TierPortofinoView({ tierSlug }: { tierSlug: TierSlug }) {
             return (
               <article
                 key={look.id}
-                className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-6 lg:gap-10 bg-card border border-border/60"
+                className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 lg:gap-12 bg-card border border-border/60 p-5 sm:p-6 lg:p-8"
               >
                 {/* Left: editorial image */}
-                <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                <div className="relative aspect-[4/5] overflow-hidden bg-muted rounded-lg">
                   {look.image && (
                     <img
                       src={look.image}
@@ -137,7 +137,7 @@ export function TierPortofinoView({ tierSlug }: { tierSlug: TierSlug }) {
                 </div>
 
                 {/* Right: products for this tier */}
-                <div className="p-5 sm:p-6 lg:p-8 flex flex-col">
+                <div className="flex flex-col">
                   <div className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold">{tierMeta.label}</div>
                   <h3 className="font-display text-2xl sm:text-3xl tracking-[0.06em] text-ink mt-2">{look.name}</h3>
                   <p className="font-serif italic text-[0.85rem] text-ink/65 mt-2">{look.fabric}</p>
