@@ -221,7 +221,7 @@ export const Route = createFileRoute("/portofino/day-{$day}")({
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
-        { property: "og:image", content: absoluteUrl(portofinoImg) },
+        { property: "og:image", content: absoluteUrl(meta?.hero ?? heroYacht) },
         { property: "og:url", content: absoluteUrl(`/portofino/${slug}`) },
       ],
       links: [{ rel: "canonical", href: absoluteUrl(`/portofino/${slug}`) }],
@@ -290,6 +290,9 @@ function PortofinoDayPage() {
           ))}
         </div>
       </section>
+
+      <ExperiencesSection />
+      <HotelsSection />
 
       {/* DAY NAVIGATION */}
       <section className="bg-cream border-y border-border/40 py-16 md:py-20">
