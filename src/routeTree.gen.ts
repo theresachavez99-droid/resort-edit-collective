@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResortEditsRouteImport } from './routes/resort-edits'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PortofinoEditRouteImport } from './routes/portofino-edit'
 import { Route as PortofinoRouteImport } from './routes/portofino'
 import { Route as DestinationsRouteImport } from './routes/destinations'
@@ -37,6 +38,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ResortEditsRoute = ResortEditsRouteImport.update({
   id: '/resort-edits',
   path: '/resort-edits',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortofinoEditRoute = PortofinoEditRouteImport.update({
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
   '/portofino-edit': typeof PortofinoEditRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByTo {
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
   '/portofino-edit': typeof PortofinoEditRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
   '/portofino-edit': typeof PortofinoEditRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -198,6 +207,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
+    | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
     | '/brands/$slug'
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
+    | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
     | '/brands/$slug'
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/portofino'
     | '/portofino-edit'
+    | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
     | '/brands/$slug'
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   DestinationsRoute: typeof DestinationsRouteWithChildren
   PortofinoRoute: typeof PortofinoRouteWithChildren
   PortofinoEditRoute: typeof PortofinoEditRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/resort-edits'
       fullPath: '/resort-edits'
       preLoaderRoute: typeof ResortEditsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portofino-edit': {
@@ -462,9 +482,20 @@ const rootRouteChildren: RootRouteChildren = {
   DestinationsRoute: DestinationsRouteWithChildren,
   PortofinoRoute: PortofinoRouteWithChildren,
   PortofinoEditRoute: PortofinoEditRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
