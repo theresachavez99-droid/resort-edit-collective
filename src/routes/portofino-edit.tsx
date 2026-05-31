@@ -17,7 +17,6 @@ import {
 } from "@/data/portofinoEdit";
 import { resolveProductLink } from "@/data/portofino";
 import { ProductCard } from "@/components/ProductCard";
-import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/portofino-edit")({
@@ -55,7 +54,7 @@ function CategorizedItems({
 
   return (
     <div className="flex-1 px-4 sm:px-5 py-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {visible.map((item) => (
           <ProductCard key={item.brand + item.item} item={item} variant="editorial" />
         ))}
@@ -374,22 +373,14 @@ function PortofinoEditPage() {
                             {/* Expanded body */}
                             {isLookOpen && (
                               <div className="border-t border-border/60 px-5 sm:px-6 py-6 bg-ivory/40">
-                                <div
-                                  className={`grid gap-5 sm:gap-6 ${
-                                    visibleTiers.length === 1
-                                      ? "grid-cols-1"
-                                      : visibleTiers.length === 2
-                                        ? "grid-cols-1 md:grid-cols-2"
-                                        : "grid-cols-1 md:grid-cols-3"
-                                  }`}
-                                >
+                                <div className="space-y-8 md:space-y-10">
                                   {visibleTiers.map((tier) => {
                                     const items = look.tiers[tier.id];
                                     const saveKey = `${day.day}-${look.id}-${tier.id}`;
                                     return (
                                       <article
                                         key={tier.id}
-                                        className="group bg-card border border-border/50 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(141,110,68,0.35)] hover:border-gold/60"
+                                        className="bg-card border border-border/50 flex flex-col"
                                       >
                                         <div className="px-4 py-3 border-b border-border/50 flex items-center justify-between">
                                           <div>
