@@ -54,7 +54,7 @@ export const DAY_META: Record<DaySlug, {
   "day-1": {
     dayKey: "Day 1",
     title: "Day 1 · Yacht Day & Harbor Aperitivo",
-    caption: "Open water, tan lines and hidden coves.",
+    caption: "Open water, tan lines & hidden coves.",
     hero: heroYacht,
     heroPos: "50% 18%",
     editorial: {
@@ -158,7 +158,7 @@ export const DAY_META: Record<DaySlug, {
   "day-5": {
     dayKey: "Day 5",
     title: "Day 5 · Espresso & A Long Last Lunch",
-    caption: "Espresso rituals and one last long lunch.",
+    caption: "Espresso, linen, and one long last lunch.",
     hero: heroTown,
     heroPos: "50% 20%",
     editorial: {
@@ -196,7 +196,7 @@ const experiences = [
   { name: "Private Yacht Charter", tier: "Signature Experience", description: "Hidden coves, chilled wine, and the Portofino coast from the water.", image: expYacht, href: "https://www.viator.com/Portofino/d50421" },
   { name: "Harbor Golden Hour", tier: "Signature Experience", description: "Aperitivo in the piazzetta as the pastel facades catch the last light.", image: expHarbor, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/" },
   { name: "Sunset Cruise", tier: "Elevated Find", description: "A slow coastal loop with prosecco, salt air, and Ligurian glow.", image: expCruise, href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise" },
-  { name: "Ligurian Cooking Class", tier: "Elevated Find", description: "Pesto, fresh pasta, and a long-table afternoon above the sea.", image: expCooking, href: "https://www.getyourguide.com/portofino-l1093/cooking-class" },
+  { name: "Dolce & Gabbana Beach Club", tier: "Signature Experience", description: "The most photographed cabanas on the Riviera — book first, post later.", image: expCooking, href: "https://www.dolcegabbana.com/en/" },
   { name: "Cinque Terre Wine Tasting", tier: "Riviera Find", description: "Terraced vineyards, coastal whites, and a polished day trip from Portofino.", image: expWine, href: "https://www.getyourguide.com/portofino-l1093/cinque-terre-wine" },
   { name: "San Fruttuoso by Sea", tier: "Riviera Find", description: "A quiet crossing to the abbey and its tucked-away beach.", image: expAbbey, href: "https://www.viator.com/Portofino/d50421/san-fruttuoso" },
 ];
