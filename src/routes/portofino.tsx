@@ -223,11 +223,8 @@ function PortofinoPage() {
                       alt={`${d.label} — ${d.title}`}
                       loading="lazy"
                       className="absolute inset-0 h-full w-full object-cover"
-                      style={{ objectPosition: d.imagePos }}
+                      style={{ objectPosition: "center top" }}
                     />
-                    <div className="absolute top-3 left-3 bg-ivory/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.55rem]">
-                      {d.label.toUpperCase()}
-                    </div>
                   </div>
                   <div>
                     <h2 className="font-display text-2xl md:text-3xl tracking-[0.05em] text-ink leading-tight">
