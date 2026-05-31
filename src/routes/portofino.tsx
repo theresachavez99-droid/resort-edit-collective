@@ -331,33 +331,33 @@ function PortofinoPage() {
             Six concierge-curated moments along the Ligurian coast.
           </p>
         </div>
-        {/* Desktop / tablet: 3 cols × 2 rows, compact horizontal-feel cards */}
-        <div className="mx-auto max-w-6xl px-6 hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Desktop / tablet: 3 cols × 2 rows, compact concierge cards (image max 180px) */}
+        <div className="mx-auto max-w-5xl px-6 hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {experiences.map((exp) => (
             <a
               key={exp.name}
               href={exp.href}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="group flex bg-ivory border border-ink/15 hover:border-gold transition-colors"
+              className="group block bg-ivory border border-ink/15 hover:border-gold transition-colors"
             >
-              <div className="w-2/5 shrink-0 overflow-hidden bg-muted">
+              <div className="h-[180px] overflow-hidden bg-muted">
                 <img
                   src={exp.image}
                   alt={exp.name}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 min-h-[140px]"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <div className="p-4 flex flex-col flex-1">
+              <div className="p-4">
                 <span className="eyebrow text-gold text-[9px] tracking-[0.3em]">{exp.tier}</span>
-                <h4 className="font-display text-base tracking-wide mt-1.5 leading-snug">
+                <h4 className="font-display text-[15px] tracking-wide mt-1.5 leading-snug">
                   {exp.name}
                 </h4>
-                <p className="font-serif italic text-ink/65 text-[13px] mt-1.5 leading-snug line-clamp-2">
+                <p className="font-serif italic text-ink/65 text-[12.5px] mt-1.5 leading-snug line-clamp-2">
                   {exp.description}
                 </p>
-                <span className="mt-auto pt-3 inline-block eyebrow text-[10px] tracking-[0.28em] text-ink group-hover:text-gold transition-colors self-start">
+                <span className="mt-2.5 inline-block eyebrow text-[10px] tracking-[0.28em] text-ink group-hover:text-gold transition-colors">
                   Book →
                 </span>
               </div>
