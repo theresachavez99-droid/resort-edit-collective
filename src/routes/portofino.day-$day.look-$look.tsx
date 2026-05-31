@@ -49,8 +49,11 @@ export const Route = createFileRoute("/portofino/day-$day/look-$look")({
 });
 
 function LookDetailPage() {
-  const { day, look } = Route.useParams();
-  const { tier } = Route.useSearch();
+  const params = Route.useParams();
+  const search = Route.useSearch();
+  const day = params.day as string;
+  const look = params.look as string;
+  const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
 
   if (!isDaySlug(day) || !isLookSlug(look)) throw notFound();
 
@@ -61,7 +64,9 @@ function LookDetailPage() {
   if (!dayData || !lookData) throw notFound();
 
   const tierId = TIER_SLUG_TO_ID[tier];
-  const items = (lookData.tiers[tierId] ?? []).filter((it) => resolveProductLink(it) !== null);
+  const items = (lookData.tiers[tierId] ?? []).filter(
+    (it: (typeof lookData.tiers)[typeof tierId][number]) => resolveProductLink(it) !== null,
+  );
 
   // Persist tier across visits so the overview reflects the user's lane.
   useEffect(() => {
