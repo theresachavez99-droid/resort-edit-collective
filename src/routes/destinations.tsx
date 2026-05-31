@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { destinations, destinationHref } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
 import { absoluteUrl } from "@/lib/site";
-import heroPortofino from "@/assets/hero-portofino.jpg";
+import heroPortofino from "@/assets/hero-muse-portofino.jpg";
 
 export const Route = createFileRoute("/destinations")({
   head: () => ({
