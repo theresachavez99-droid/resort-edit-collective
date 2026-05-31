@@ -51,10 +51,10 @@ const hotels = [
 ];
 
 const ctas = [
-  { label: "Book a Yacht", Icon: Ship, href: "https://www.viator.com/Portofino/d50421" },
-  { label: "Reserve a Beach Club", Icon: Umbrella, href: "https://www.getyourguide.com/portofino-l1093/" },
-  { label: "Book a Tour", Icon: Camera, href: "https://www.getyourguide.com/portofino-l1093/" },
-  { label: "View Experiences", Icon: Compass, href: "https://www.viator.com/Portofino/d50421" },
+  { label: "Book a Yacht", Icon: Ship, href: "/portofino-concierge#yachts" },
+  { label: "Reserve a Beach Club", Icon: Umbrella, href: "/portofino-concierge#beachclubs" },
+  { label: "Book a Tour", Icon: Camera, href: "/portofino-concierge#tours" },
+  { label: "View Experiences", Icon: Compass, href: "/portofino-concierge#experiences" },
 ];
 
 function Index() {
