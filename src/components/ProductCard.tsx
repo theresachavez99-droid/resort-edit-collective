@@ -24,7 +24,7 @@ export function ProductCard({ item, variant = "compact" }: { item: ShopItem; var
       onClick={() => trackOutbound({ brand: item.brand, item: item.item, href })}
       className="group flex flex-col text-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
     >
-      <div className="relative aspect-square overflow-hidden bg-cream border border-border/60 flex items-center justify-center">
+      <div className="relative aspect-square overflow-hidden bg-cream border border-border/60 rounded-[10px] flex items-center justify-center p-3">
         {showImage ? (
           <img
             src={item.image}
@@ -60,7 +60,7 @@ export function ProductCard({ item, variant = "compact" }: { item: ShopItem; var
         <div
           className={`font-serif text-ink/85 leading-snug ${
             variant === "editorial" ? "text-[0.95rem]" : "text-[0.82rem]"
-          }`}
+          } line-clamp-2`}
         >
           {item.item}
         </div>
