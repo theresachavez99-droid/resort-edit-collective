@@ -69,7 +69,7 @@ export function SiteHeader() {
               className={navLinkClass}
               style={navLinkStyle}
               activeProps={{ className: `${navLinkClass} text-gold` }}
-              activeOptions={{ exact: false }}
+              activeOptions={{ exact: n.to === "/" }}
             >
               {n.label}
             </Link>
@@ -102,7 +102,7 @@ export function SiteHeader() {
                 className={`${navLinkClass} py-3 border-b border-border/40 last:border-0`}
                 style={navLinkStyle}
                 activeProps={{ className: `${navLinkClass} text-gold py-3 border-b border-border/40 last:border-0` }}
-                activeOptions={{ exact: false }}
+                activeOptions={{ exact: n.to === "/" }}
               >
                 {n.label}
               </Link>
