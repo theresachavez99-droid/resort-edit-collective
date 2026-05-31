@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
-import heroMuse from "@/assets/hero-muse-portofino.jpg";
+import heroMuse from "@/assets/hero-portofino-harbor.jpg";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg";
 import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
