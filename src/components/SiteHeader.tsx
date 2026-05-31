@@ -41,7 +41,7 @@ export function SiteHeader() {
           <img
             src={logoMark}
             alt="Resort Edit"
-            className="h-24 sm:h-28 md:h-40 lg:h-44 w-auto block"
+            className="block h-auto w-[150px] md:w-[190px] lg:w-[220px]"
           />
         </Link>
 
