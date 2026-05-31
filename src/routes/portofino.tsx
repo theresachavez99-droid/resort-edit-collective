@@ -32,6 +32,7 @@ import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
+import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { DAY_PATHS, type DaySlug } from "@/components/PortofinoDayPage";
 import {
   TIER_LABEL,
