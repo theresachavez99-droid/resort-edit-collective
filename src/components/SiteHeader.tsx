@@ -22,7 +22,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md border-b border-[#D9C9A8]/60" style={{ backgroundColor: "#F5EBDD" }}>
-      <div className="mx-auto max-w-7xl px-5 md:px-8 py-0 md:py-0.5 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-10">
+      <div className="mx-auto max-w-7xl px-5 md:px-8 py-2 md:py-3 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-10">
         {/* Mobile: hamburger left */}
         <button
           type="button"
@@ -36,12 +36,13 @@ export function SiteHeader() {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center leading-none justify-center md:justify-start [&_img]:contrast-[1.08]"
+          className="flex items-center leading-none justify-center md:justify-start"
         >
           <img
             src={logoMark}
             alt="Resort Edit"
-            className="block h-auto w-[150px] md:w-[190px] lg:w-[220px]"
+            style={{ width: "var(--nav-logo-w)", height: "auto", maxWidth: "none", objectFit: "contain", opacity: 1 }}
+            className="logo-nav block [--nav-logo-w:200px] md:[--nav-logo-w:240px] lg:[--nav-logo-w:280px] [filter:contrast(1.08)]"
           />
         </Link>
 
