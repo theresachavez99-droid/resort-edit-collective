@@ -7,6 +7,7 @@ const nav = [
   { to: "/destinations", label: "Destinations" },
   { to: "/resort-edits", label: "Resort Edits" },
   { to: "/portofino", label: "Shop the Looks" },
+  { to: "/portofino-concierge", label: "Concierge" },
 ] as const;
 
 const mobileExtras = [
