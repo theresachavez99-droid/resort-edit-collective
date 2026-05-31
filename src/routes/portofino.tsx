@@ -19,7 +19,7 @@ import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
-import { DAY_PATHS, type DaySlug } from "./portofino.day-{$day}";
+import { DAY_PATHS, type DaySlug } from "@/components/PortofinoDayPage";
 
 export const Route = createFileRoute("/portofino")({
   validateSearch: (search: Record<string, unknown>) => {
