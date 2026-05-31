@@ -33,6 +33,7 @@ const DAY_META: Record<DaySlug, {
   hero: string;
   heroPos: string;
   editorial: { palette: string; silhouette: string; textures: string; mood: string };
+  tagline: string;
   images: [string, string, string];
   lookTitles: [string, string, string];
   lookMoods: [string, string, string];
@@ -54,6 +55,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Crisp poplin, fine knit, woven raffia",
       mood: "Yacht-deck glamour with sun on your shoulders.",
     },
+    tagline: "Blue-and-white yacht glamour with raffia textures.",
     images: [d1a, d1b, d1c],
     lookTitles: ["Harbor Hero", "Riviera Lunch", "Riviera Daywear"],
     lookMoods: [
@@ -79,6 +81,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Crochet, linen, sun-warmed cotton",
       mood: "Cabana ease, long lunches, salt in the air.",
     },
+    tagline: "Sun-bleached cabana ease with linen and crochet.",
     images: [d2a, d2b, d2c],
     lookTitles: ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy"],
     lookMoods: [
@@ -104,6 +107,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Silk, fine knit, soft leather",
       mood: "Piazzetta polish, window-shopping in gold light.",
     },
+    tagline: "Piazzetta polish in soft neutrals and gold light.",
     images: [d3a, d3b, d3c],
     lookTitles: ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual"],
     lookMoods: [
@@ -129,6 +133,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Satin, silk, fine knit",
       mood: "Harborfront glamour at golden hour.",
     },
+    tagline: "Harbor glamour with warm sunset dressing.",
     images: [d4a, d4b, d4c],
     lookTitles: ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner"],
     lookMoods: [
@@ -154,6 +159,7 @@ const DAY_META: Record<DaySlug, {
       textures: "Cotton, silk, leather",
       mood: "Slow Italian morning, espresso in hand.",
     },
+    tagline: "Slow Italian mornings in espresso, cream and gold.",
     images: [d5a, d5b, d5c],
     lookTitles: ["Last-Day Luxe", "Market Morning", "Coastal Farewell"],
     lookMoods: [
