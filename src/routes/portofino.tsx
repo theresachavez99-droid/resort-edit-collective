@@ -250,6 +250,8 @@ function PortofinoPage() {
                       to="/portofino/day-$day/look-$look"
                       params={{ day: d.slug, look: look.slug }}
                       search={{ tier }}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
                     >
                       {/* Reserved header — keeps label off the model */}
