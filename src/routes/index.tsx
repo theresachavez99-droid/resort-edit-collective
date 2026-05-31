@@ -51,10 +51,10 @@ const hotels = [
 ];
 
 const ctas = [
-  { label: "Book a Yacht", Icon: Ship, href: "/portofino-concierge#yachts" },
-  { label: "Reserve a Beach Club", Icon: Umbrella, href: "/portofino-concierge#beachclubs" },
-  { label: "Book a Tour", Icon: Camera, href: "/portofino-concierge#tours" },
-  { label: "View Experiences", Icon: Compass, href: "/portofino-concierge#experiences" },
+  { label: "Book a Yacht", Icon: Ship, hash: "yachts" },
+  { label: "Reserve a Beach Club", Icon: Umbrella, hash: "beachclubs" },
+  { label: "Book a Tour", Icon: Camera, hash: "tours" },
+  { label: "View Experiences", Icon: Compass, hash: "experiences" },
 ];
 
 function Index() {
@@ -211,15 +211,16 @@ function Index() {
             BOOK YOUR PORTOFINO EXPERIENCE
           </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-            {ctas.map(({ label, Icon, href }) => (
-              <a
+            {ctas.map(({ label, Icon, hash }) => (
+              <Link
                 key={label}
-                href={href}
+                to="/portofino-concierge"
+                hash={hash}
                 className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
               >
                 <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />
                 <span>{label}</span>
-              </a>
+              </Link>
             ))}
           </div>
       </section>
