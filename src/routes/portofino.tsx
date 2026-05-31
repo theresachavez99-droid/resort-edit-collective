@@ -27,11 +27,11 @@ import expYacht from "@/assets/exp-yacht-charter.jpg";
 import expHarbor from "@/assets/exp-harbor-golden.jpg";
 import expCruise from "@/assets/exp-sunset-cruise.jpg";
 import expCooking from "@/assets/exp-cooking-class.jpg";
-import expWine from "@/assets/exp-wine-tasting.jpg";
 import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
+import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { DAY_PATHS, type DaySlug } from "@/components/PortofinoDayPage";
 import {
   TIER_LABEL,
@@ -166,21 +166,6 @@ function PortofinoPage() {
   const setTier = (t: TierSlug) =>
     navigate({ search: { tier: t }, replace: true });
 
-  const experiences: Array<{
-    name: string;
-    tier: "Signature Experience" | "Elevated Find" | "Riviera Find";
-    description: string;
-    image: string;
-    href: string;
-  }> = [
-    { name: "Private Yacht Charter — Portofino Coast", tier: "Signature Experience", description: "Your own boat, your own pace, and hidden swim coves along the promontory.", image: expYacht, href: "https://www.viator.com/Portofino/d50421" },
-    { name: "Portofino Harbor at Golden Hour", tier: "Signature Experience", description: "Private aperitivo on the piazzetta as the pastel facades catch the last light.", image: expHarbor, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/spa" },
-    { name: "Small Group Sunset Cruise", tier: "Elevated Find", description: "Golden hour along the Ligurian coast with a glass of chilled prosecco in hand.", image: expCruise, href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise" },
-    { name: "Ligurian Cooking Class", tier: "Elevated Find", description: "Hands kneading fresh pasta at a long table above the Ligurian coast.", image: expCooking, href: "https://www.getyourguide.com/portofino-l1093/cooking-class" },
-    { name: "Cinque Terre Wine Tasting", tier: "Riviera Find", description: "Terraced vineyards above the sea — sommelier-led pours of coastal whites.", image: expWine, href: "https://www.getyourguide.com/portofino-l1093/cinque-terre-wine" },
-    { name: "San Fruttuoso Abbey by Sea", tier: "Riviera Find", description: "A quiet crossing to a 10th-century abbey reachable only by water.", image: expAbbey, href: "https://www.viator.com/Portofino/d50421/san-fruttuoso" },
-  ];
-
   return (
     <div className="pb-28 md:pb-24">
       {/* HERO */}
@@ -284,75 +269,190 @@ function PortofinoPage() {
         </div>
       </section>
 
-      {/* EXPERIENCES */}
-      <section className="bg-cream py-16 md:py-20 border-y border-border/40">
-        <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
-          <span className="eyebrow text-gold">The Experiences</span>
-          <h3 className="font-display text-3xl md:text-4xl mt-3 tracking-wide">Bookable Moments</h3>
-          <div className="mx-auto my-4 h-px w-12 bg-gold" />
-          <p className="font-serif italic text-base text-ink/65 leading-relaxed">
-            Six concierge-curated moments along the Ligurian coast.
-          </p>
-        </div>
-        <div className="mx-auto max-w-5xl px-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {experiences.map((exp) => (
-            <a
-              key={exp.name}
-              href={exp.href}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              className="group block bg-ivory border border-ink/15 hover:border-gold transition-colors"
-            >
-              <div className="h-[180px] overflow-hidden bg-muted">
-                <img src={exp.image} alt={exp.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              </div>
-              <div className="p-4">
-                <span className="eyebrow text-gold text-[9px] tracking-[0.3em]">{exp.tier}</span>
-                <h4 className="font-display text-[15px] tracking-wide mt-1.5 leading-snug">{exp.name}</h4>
-                <p className="font-serif italic text-ink/65 text-[12.5px] mt-1.5 leading-snug line-clamp-2">{exp.description}</p>
-                <span className="mt-2.5 inline-block eyebrow text-[10px] tracking-[0.28em] text-ink group-hover:text-gold transition-colors">Book →</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
+      {/* PLAN YOUR PORTOFINO STAY — concierge layer */}
+      <section className="bg-cream border-y border-border/40">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-16 md:py-20">
+          {/* Section header */}
+          <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">The Concierge</span>
+            <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-3 text-ink">
+              Plan Your Portofino Stay
+            </h2>
+            <div className="mx-auto my-4 h-px w-12 bg-gold" />
+            <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+              The tables, beach clubs, boats, and reservations worth planning ahead.
+            </p>
+          </div>
 
-      {/* HOTELS */}
-      <section className="bg-ivory py-16 md:py-20">
-        <div className="mx-auto max-w-3xl px-6 text-center mb-10">
-          <span className="eyebrow text-gold">Where To Stay</span>
-          <h3 className="font-display text-3xl md:text-4xl mt-3 tracking-wide">The Hotels</h3>
-          <div className="mx-auto my-4 h-px w-12 bg-gold" />
-          <p className="font-serif italic text-base text-ink/65 leading-relaxed">
-            Three addresses on the promontory — each one a different way to wake up in Portofino.
-          </p>
-        </div>
-        <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { name: "Belmond Hotel Splendido", tier: "Iconic", note: "Pastel-pink cliffside legend with the most photographed pool in the Riviera.", image: hotelSplendido, href: "https://www.booking.com/searchresults.html?ss=Belmond+Hotel+Splendido+Portofino" },
-            { name: "Splendido Mare, A Belmond Hotel", tier: "Harborfront", note: "Right on the piazzetta — wake to the boats, dine on the waterfront.", image: hotelSplendidoMare, href: "https://www.booking.com/searchresults.html?ss=Splendido+Mare+Belmond+Portofino" },
-            { name: "Eight Hotel Portofino", tier: "Boutique", note: "Quietly elegant, walkable to everything, a more intimate alternative.", image: hotelEight, href: "https://www.booking.com/searchresults.html?ss=Eight+Hotel+Portofino" },
-          ].map((h) => (
-            <a
-              key={h.name}
-              href={h.href}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              className="group block bg-ivory border border-border/60 hover:border-gold transition-colors overflow-hidden"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                <img src={h.image} alt={h.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute top-3 left-3 bg-ivory/95 text-ink eyebrow px-2.5 py-1 tracking-[0.3em] text-[0.55rem]">
-                  {h.tier.toUpperCase()}
+          {/* 1. RESORT EDIT FAVORITES */}
+          <div className="mb-16 md:mb-20">
+            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+              <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">RESORT EDIT FAVORITES</h3>
+              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Editor&rsquo;s shortlist</span>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6">
+              {/* Dolce & Gabbana Beach Club — hero card */}
+              <article className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 bg-ivory border border-border/60">
+                <div className="relative aspect-[4/3] sm:aspect-auto sm:min-h-[320px] overflow-hidden bg-muted">
+                  <img src={lookBeach} alt="Dolce & Gabbana Beach Club, Paraggi" loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center" }} />
+                  <div className="absolute top-3 left-3 bg-gold text-ivory eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">
+                    MOST INSTAGRAMMABLE
+                  </div>
                 </div>
+                <div className="p-6 md:p-7 flex flex-col">
+                  <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold">Le Carillon · Paraggi Bay</span>
+                  <h4 className="font-display text-2xl md:text-[1.7rem] tracking-wide mt-2 leading-tight">Dolce &amp; Gabbana Beach Club</h4>
+                  <p className="font-serif italic text-ink/70 text-[0.95rem] mt-3 leading-relaxed flex-1">
+                    Majolica umbrellas, Riviera water, seaside lunches, and the most photographed beach setup in Portofino.
+                  </p>
+                  <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+                    <a href="https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/" target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-[0.62rem] tracking-[0.3em] text-ink hover:text-gold border-b border-ink/40 hover:border-gold pb-1">
+                      Reserve →
+                    </a>
+                    <Link to={DAY_PATHS["day-2"]} className="eyebrow text-[0.62rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 hover:border-ink pb-1">
+                      What To Wear Here →
+                    </Link>
+                  </div>
+                </div>
+              </article>
+
+              {/* Two side favorites */}
+              <div className="grid grid-rows-2 gap-5 md:gap-6">
+                <article className="bg-ivory border border-border/60 p-5 flex flex-col">
+                  <span className="self-start bg-ink text-ivory eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">BOOK FIRST</span>
+                  <h4 className="font-display text-lg tracking-wide mt-3 leading-tight">Private Boat to San Fruttuoso</h4>
+                  <p className="font-serif italic text-ink/65 text-[0.88rem] mt-2 leading-relaxed flex-1">
+                    The abbey, swim stops, and quiet coves most day trippers miss.
+                  </p>
+                  <a href="https://www.viator.com/Portofino/d50421/san-fruttuoso" target="_blank" rel="noopener noreferrer sponsored" className="mt-3 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 pb-1">
+                    Book →
+                  </a>
+                </article>
+                <article className="bg-ivory border border-border/60 p-5 flex flex-col">
+                  <span className="self-start bg-ivory text-ink border border-ink eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">INSIDER FAVORITE</span>
+                  <h4 className="font-display text-lg tracking-wide mt-3 leading-tight">Sunset Aperitivo Reservation</h4>
+                  <p className="font-serif italic text-ink/65 text-[0.88rem] mt-2 leading-relaxed flex-1">
+                    Harbor cocktails before dinner — reserve early.
+                  </p>
+                  <Link to={DAY_PATHS["day-4"]} className="mt-3 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 pb-1">
+                    Plan The Evening →
+                  </Link>
+                </article>
               </div>
-              <div className="p-5">
-                <h4 className="font-display text-xl tracking-wide leading-snug">{h.name}</h4>
-                <p className="font-serif italic text-ink/70 mt-2.5 leading-relaxed text-sm">{h.note}</p>
-                <span className="mt-4 inline-block eyebrow text-[10px] tracking-[0.3em] text-ink group-hover:text-gold transition-colors">Review / Book →</span>
-              </div>
-            </a>
-          ))}
+            </div>
+          </div>
+
+          {/* 2. BOOKABLE MOMENTS */}
+          <div className="mb-16 md:mb-20">
+            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+              <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">BOOKABLE MOMENTS</h3>
+              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Reserve before you go</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              {[
+                { name: "Dolce & Gabbana Beach Club", image: lookBeach, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", look: DAY_PATHS["day-2"] },
+                { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", look: DAY_PATHS["day-1"] },
+                { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", look: DAY_PATHS["day-1"] },
+                { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", look: DAY_PATHS["day-4"] },
+                { name: "Private Driver Transfer", image: expHarbor, desc: "Black-car arrival from Genoa, Milan, or Nice — no parking, no stress.", href: "https://www.getyourguide.com/portofino-l1093/transfers", look: DAY_PATHS["day-5"] },
+                { name: "Reserve Harbor Dinner", image: expCooking, desc: "A candlelit table on the piazzetta — book weeks ahead.", href: "https://www.opentable.com/landmark/restaurants-near-portofino", look: DAY_PATHS["day-4"] },
+              ].map((exp) => (
+                <article key={exp.name} className="bg-ivory border border-border/60 flex flex-col">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                    <img src={exp.image} alt={exp.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                  </div>
+                  <div className="p-4 md:p-5 flex flex-col flex-1">
+                    <h4 className="font-display text-[1.05rem] tracking-wide leading-snug">{exp.name}</h4>
+                    <p className="font-serif italic text-ink/65 text-[0.86rem] mt-2 leading-relaxed flex-1">{exp.desc}</p>
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 border-t border-border/50">
+                      <a href={exp.href} target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink hover:text-gold">
+                        BOOK →
+                      </a>
+                      <Link to={exp.look} className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink">
+                        WHAT TO WEAR HERE →
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. WHERE TO STAY */}
+          <div className="mb-16 md:mb-20">
+            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+              <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">WHERE TO STAY</h3>
+              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Four addresses on the promontory</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+              {[
+                { name: "Splendido, A Belmond Hotel", category: "ULTRA LUXURY", note: "A cliffside grande dame above the harbor — bougainvillea terraces, pastel-pink facade, and the most storied view on the Riviera.", image: hotelSplendido, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/" },
+                { name: "Splendido Mare", category: "HARBORFRONT", note: "On the piazzetta itself. Wake to the boats, dine on the waterfront, walk everywhere that matters.", image: hotelSplendidoMare, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-splendido-mare/" },
+                { name: "Eight Hotel Portofino", category: "BOUTIQUE", note: "Quietly chic, steps from the piazzetta — an intimate Italian retreat for travelers who want to live like a local.", image: hotelEight, href: "https://www.eighthotels.com/en/eight-hotel-portofino/" },
+                { name: "Hotel Piccolo Portofino", category: "ICONIC", note: "An intimate seaside hideaway tucked into a private cove — sun-bleached terraces and turquoise water.", image: hotelPiccolo, href: "https://www.hotelpiccoloportofino.com/" },
+              ].map((h) => (
+                <a key={h.name} href={h.href} target="_blank" rel="noopener noreferrer sponsored" className="group grid grid-cols-[42%_1fr] bg-ivory border border-border/60 hover:border-gold transition-colors">
+                  <div className="relative overflow-hidden bg-muted">
+                    <img src={h.image} alt={h.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="p-5 flex flex-col">
+                    <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-gold">{h.category}</span>
+                    <h4 className="font-display text-lg md:text-xl tracking-wide mt-1.5 leading-snug">{h.name}</h4>
+                    <p className="font-serif italic text-ink/65 text-[0.86rem] mt-2.5 leading-relaxed flex-1">{h.note}</p>
+                    <span className="mt-4 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-ink group-hover:text-gold transition-colors border-b border-ink/30 group-hover:border-gold pb-1">
+                      Book This Stay →
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* 4. INSIDER NOTES */}
+          <div className="mb-16 md:mb-20">
+            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+              <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">INSIDER NOTES</h3>
+              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">From the concierge desk</span>
+            </div>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5">
+              {[
+                "Reserve beach clubs weeks ahead — Paraggi sells out by May.",
+                "Paraggi for beach time. Portofino for dinner.",
+                "Avoid driving into Portofino. Park in Santa Margherita or arrive by boat.",
+                "Wear flats after aperitivo — the cobblestones are unforgiving.",
+                "Dinner reservations matter more than spontaneity here.",
+                "Book boats before restaurants — captains fill up first.",
+                "Santa Margherita is easier for logistics, ten minutes by car.",
+                "The harbor empties after 10pm. That is when locals come out.",
+              ].map((tip, i) => (
+                <li key={i} className="flex gap-4">
+                  <span className="font-display text-gold text-sm pt-0.5 tracking-wider">{String(i + 1).padStart(2, "0")}</span>
+                  <p className="font-serif italic text-ink/75 text-[0.95rem] leading-relaxed">{tip}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 5. GETTING THERE */}
+          <div>
+            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+              <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">GETTING THERE</h3>
+              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Arrival, the easy way</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+              {[
+                { label: "Private Driver", note: "Black-car transfer from Genoa (45 min), Milan (2.5 hr), or Nice (3 hr). The most direct arrival." },
+                { label: "By Boat", note: "Water taxi from Santa Margherita or Rapallo — the entrance the village was designed for." },
+                { label: "Santa Margherita Base", note: "Stay ten minutes away for easier logistics, then come into Portofino for lunch and dinner." },
+                { label: "Train + Transfer", note: "High-speed rail to Santa Margherita Ligure, then taxi or boat into the village." },
+              ].map((g) => (
+                <article key={g.label} className="bg-ivory border border-border/60 p-5">
+                  <span className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">{g.label.toUpperCase()}</span>
+                  <p className="font-serif italic text-ink/70 text-[0.92rem] mt-3 leading-relaxed">{g.note}</p>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
