@@ -15,7 +15,7 @@ const mobileExtras = [
 ] as const;
 
 const navLinkClass =
-  "text-[0.72rem] uppercase tracking-[0.24em] font-medium text-ink hover:text-gold transition-colors whitespace-nowrap py-2";
+  "text-[0.82rem] uppercase tracking-[0.16em] font-semibold text-ink hover:text-gold transition-colors whitespace-nowrap py-2 leading-none";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -70,7 +70,7 @@ export function SiteHeader() {
             aria-label="Resort Edit on Instagram"
             className="hidden md:inline-flex items-center text-ink/80 hover:text-gold transition-colors"
           >
-            <Instagram className="w-[18px] h-[18px]" strokeWidth={1.5} />
+            <Instagram className="w-[22px] h-[22px]" strokeWidth={1.5} />
           </a>
         </div>
       </div>
