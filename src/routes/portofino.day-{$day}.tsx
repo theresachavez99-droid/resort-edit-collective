@@ -2,12 +2,20 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
-import portofinoImg from "@/assets/dest-portofino.jpg";
 import heroYacht from "@/assets/look-yacht.jpg";
 import heroBeach from "@/assets/look-beach.jpg";
 import heroDayclub from "@/assets/look-dayclub.jpg";
 import heroDinner from "@/assets/look-dinner.jpg";
 import heroTown from "@/assets/look-town.jpg";
+import expYacht from "@/assets/exp-yacht-charter.jpg";
+import expHarbor from "@/assets/exp-harbor-golden.jpg";
+import expCruise from "@/assets/exp-sunset-cruise.jpg";
+import expCooking from "@/assets/exp-cooking-class.jpg";
+import expWine from "@/assets/exp-wine-tasting.jpg";
+import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
+import hotelSplendido from "@/assets/hotel-splendido.jpg";
+import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
+import hotelEight from "@/assets/hotel-eight.jpg";
 import d1a from "@/assets/edit-d1-a.jpg";
 import d1b from "@/assets/edit-d1-b.jpg";
 import d1c from "@/assets/edit-d1-c.jpg";
@@ -24,9 +32,9 @@ import d5a from "@/assets/edit-d5-a.jpg";
 import d5b from "@/assets/edit-d5-b.jpg";
 import d5c from "@/assets/edit-d5-c.jpg";
 
-type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
+export type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
 
-const DAY_META: Record<DaySlug, {
+export const DAY_META: Record<DaySlug, {
   dayKey: string;
   title: string;
   caption: string;
