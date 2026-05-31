@@ -51,23 +51,23 @@ function DestinationPage() {
   return (
     <article>
       {/* Hero */}
-      <section className="relative h-[70vh] min-h-[460px]">
+      <section className="relative h-[38vh] md:h-[50vh] min-h-[320px] max-h-[520px]">
         <img src={d.image} alt={d.name} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-ink/35" />
-        <div className="relative h-full flex flex-col items-center justify-center text-center text-ivory px-6">
+        <div className="relative h-full flex flex-col items-center justify-center text-center text-ivory px-6 py-6">
           <span className="eyebrow text-gold-soft">{d.region} · {d.country}</span>
-          <h1 className="font-display text-5xl md:text-7xl mt-6 tracking-wide">{d.name}</h1>
-          <p className="mt-6 font-serif italic text-xl md:text-2xl max-w-2xl">{d.tagline}</p>
+          <h1 className="font-display text-4xl md:text-6xl mt-3 tracking-wide">{d.name}</h1>
+          <p className="mt-3 font-serif italic text-base md:text-xl max-w-2xl">{d.tagline}</p>
         </div>
       </section>
 
       {/* Overview */}
-      <section className="mx-auto max-w-3xl px-6 py-24 text-center">
+      <section className="mx-auto max-w-3xl px-6 py-14 md:py-16 text-center">
         <span className="eyebrow text-gold">The Overview</span>
-        <p className="font-serif text-xl md:text-2xl leading-relaxed text-ink mt-8 italic">
+        <p className="font-serif text-lg md:text-xl leading-relaxed text-ink mt-5 italic">
           {d.overview}
         </p>
-        <div className="my-10 h-px w-16 bg-gold mx-auto" />
+        <div className="my-6 h-px w-16 bg-gold mx-auto" />
       </section>
 
       {/* What to wear + Shop edits */}

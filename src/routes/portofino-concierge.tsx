@@ -169,7 +169,7 @@ function ConciergePage() {
   return (
     <div className="bg-ivory min-h-screen pb-28 md:pb-12">
       {/* HERO */}
-      <section className="relative h-[68vh] min-h-[460px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[38vh] md:h-[45vh] min-h-[300px] max-h-[520px] w-full overflow-hidden bg-ink">
         <img
           src={heroHarbor}
           alt="Portofino harbor at golden hour"
@@ -177,13 +177,13 @@ function ConciergePage() {
           style={{ objectPosition: "center 35%" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/25 to-black/60" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-16 md:pb-24 text-ivory">
-          <span className="eyebrow tracking-[0.4em] text-ivory/80">The Resort Edit · Concierge</span>
-          <h1 className="font-display text-5xl md:text-7xl tracking-[0.04em] mt-5 leading-[1]">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
+          <span className="eyebrow tracking-[0.4em] text-ivory/80 text-[0.65rem] md:text-[0.7rem]">The Resort Edit · Concierge</span>
+          <h1 className="font-display text-4xl md:text-6xl tracking-[0.04em] mt-3 leading-[1]">
             PORTOFINO, EDITED FOR YOU
           </h1>
-          <div className="my-5 h-px w-12 bg-gold" />
-          <p className="font-serif italic text-lg md:text-2xl text-ivory/90 max-w-xl leading-relaxed">
+          <div className="my-3 h-px w-12 bg-gold" />
+          <p className="font-serif italic text-base md:text-xl text-ivory/90 max-w-xl leading-snug">
             The addresses we&rsquo;d send a friend to.
           </p>
         </div>
@@ -247,7 +247,7 @@ function ConciergePage() {
       </Section>
 
       {/* BOTTOM CTA */}
-      <section className="mx-auto max-w-3xl px-4 sm:px-6 py-20 md:py-28 text-center">
+      <section className="mx-auto max-w-3xl px-4 sm:px-6 py-14 md:py-16 text-center">
         <span className="eyebrow text-gold tracking-[0.3em] text-[0.7rem]">Still deciding?</span>
         <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] text-ink mt-5 leading-[1.05]">
           Let the full Portofino edit guide the trip.
@@ -311,31 +311,33 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-24 mx-auto max-w-[1280px] px-4 sm:px-6 pt-20 md:pt-28">
-      <header className="max-w-2xl mb-10 md:mb-14">
+    <section id={id} className="scroll-mt-24 mx-auto max-w-[1280px] px-4 sm:px-6 pt-12 md:pt-16">
+      <header className="max-w-2xl mb-6 md:mb-8">
         <span className="eyebrow text-gold tracking-[0.32em] text-[0.65rem]">{eyebrow}</span>
-        <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] text-ink mt-4 leading-[1.05]">
+        <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.05]">
           {title}
         </h2>
-        <div className="my-4 h-px w-12 bg-gold" />
-        <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">{subtitle}</p>
+        <div className="my-3 h-px w-12 bg-gold" />
+        <p className="font-serif italic text-base text-ink/65 leading-snug">{subtitle}</p>
       </header>
       {children}
     </section>
   );
 }
 
-function CardGrid({ cards, columns = 3, variant }: { cards: Card[]; columns?: 2 | 3; variant?: "tall" }) {
+function CardGrid({ cards, columns = 3 }: { cards: Card[]; columns?: 2 | 3; variant?: "tall" }) {
   const gridCols =
     columns === 3
-      ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      ? "grid-cols-1 md:grid-cols-2"
       : "grid-cols-1 md:grid-cols-2";
-  const aspect = variant === "tall" ? "aspect-[3/4]" : "aspect-[4/5]";
   return (
-    <div className={`grid ${gridCols} gap-6 md:gap-8`}>
+    <div className={`grid ${gridCols} gap-5 md:gap-6`}>
       {cards.map((c) => (
-        <article key={c.title} className="group bg-card border border-border/60 flex flex-col overflow-hidden hover:border-gold transition-colors">
-          <div className={`relative ${aspect} overflow-hidden bg-muted`}>
+        <article
+          key={c.title}
+          className="group bg-card border border-border/60 grid grid-cols-[35%_65%] overflow-hidden hover:border-gold transition-colors min-h-[220px] md:min-h-[260px] md:max-h-[320px]"
+        >
+          <div className="relative overflow-hidden bg-muted">
             <img
               src={c.image}
               alt={c.title}
@@ -348,15 +350,15 @@ function CardGrid({ cards, columns = 3, variant }: { cards: Card[]; columns?: 2 
               </span>
             )}
           </div>
-          <div className="p-6 md:p-7 flex-1 flex flex-col">
-            <h3 className="font-display text-2xl tracking-[0.03em] text-ink leading-tight">{c.title}</h3>
-            <p className="font-serif text-[0.95rem] text-ink/70 leading-relaxed mt-3 flex-1">{c.copy}</p>
+          <div className="p-5 md:p-6 flex flex-col">
+            <h3 className="font-display text-xl md:text-2xl tracking-[0.03em] text-ink leading-tight">{c.title}</h3>
+            <p className="font-serif text-[0.9rem] text-ink/70 leading-relaxed mt-2 flex-1">{c.copy}</p>
             {c.cta && (
               <a
                 href={c.href}
                 target="_blank"
                 rel="noopener noreferrer sponsored"
-                className="mt-5 inline-flex items-center gap-2 self-start eyebrow text-[0.62rem] tracking-[0.3em] text-gold border-b border-gold/60 pb-1 hover:text-ink hover:border-ink transition-colors"
+                className="mt-4 inline-flex items-center gap-2 self-start eyebrow text-[0.62rem] tracking-[0.3em] text-gold border-b border-gold/60 pb-1 hover:text-ink hover:border-ink transition-colors"
               >
                 {c.cta} <ArrowRight className="w-3 h-3" />
               </a>
