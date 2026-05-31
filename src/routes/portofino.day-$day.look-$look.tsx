@@ -9,7 +9,6 @@ import {
   LOOK_INDEX_OF,
   LOOK_SLUG_LABEL,
   TIER_LABEL,
-  TIER_SLUG_TO_ID,
   TIER_SLUGS,
   isLookSlug,
   isTierSlug,
@@ -236,7 +235,7 @@ function LookDetailPage() {
             </h2>
             <div className="mx-auto my-3 h-px w-12 bg-gold" />
             <p className="font-serif italic text-ink/65 text-sm md:text-base">
-              Every piece in the muse — only products available in your selected tier.
+              Every piece in the muse — sourced from approved affiliate partners.
             </p>
           </header>
 
