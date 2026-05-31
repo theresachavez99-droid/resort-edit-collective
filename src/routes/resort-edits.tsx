@@ -127,19 +127,6 @@ function ResortEditsPage() {
         </div>
       </section>
 
-      {/* Join the Edit CTA */}
-      <section className="bg-ink text-ivory py-20 px-6 text-center">
-        <span className="eyebrow text-gold-soft">Join the Edit</span>
-        <h2 className="font-display text-3xl md:text-5xl tracking-wide mt-4 max-w-2xl mx-auto">
-          New edits, exclusive drops, and insider escapes.
-        </h2>
-        <a
-          href="#newsletter"
-          className="mt-8 inline-block eyebrow bg-gold text-ink px-8 py-4 rounded-sm hover:bg-ivory transition-colors"
-        >
-          Get the Edit →
-        </a>
-      </section>
     </div>
   );
 }
