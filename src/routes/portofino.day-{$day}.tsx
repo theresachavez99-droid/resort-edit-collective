@@ -184,6 +184,13 @@ export const DAY_META: Record<DaySlug, {
 };
 
 export const DAY_ORDER: DaySlug[] = ["day-1", "day-2", "day-3", "day-4", "day-5"];
+export const DAY_PATHS: Record<DaySlug, "/portofino/day-1" | "/portofino/day-2" | "/portofino/day-3" | "/portofino/day-4" | "/portofino/day-5"> = {
+  "day-1": "/portofino/day-1",
+  "day-2": "/portofino/day-2",
+  "day-3": "/portofino/day-3",
+  "day-4": "/portofino/day-4",
+  "day-5": "/portofino/day-5",
+};
 
 const experiences = [
   { name: "Private Yacht Charter", tier: "Signature Experience", description: "Hidden coves, chilled wine, and the Portofino coast from the water.", image: expYacht, href: "https://www.viator.com/Portofino/d50421" },
@@ -199,6 +206,24 @@ const hotels = [
   { name: "Splendido Mare", location: "Piazzetta", description: "Elegant, intimate, and right on the harbor for aperitivo-to-dinner evenings.", image: hotelSplendidoMare, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-splendido-mare/" },
   { name: "Eight Hotel Portofino", location: "Village center", description: "Quiet Italian luxury close to the boutiques, beach paths, and harbor rituals.", image: hotelEight, href: "https://www.eighthotels.com/en/eight-hotel-portofino/" },
 ];
+
+export function getPortofinoDayHead(slug: DaySlug) {
+  const meta = DAY_META[slug];
+  const title = `${meta.title} — 5 Days in Portofino | Resort Edit`;
+  const description = meta.caption;
+  const url = DAY_PATHS[slug];
+  return {
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:image", content: absoluteUrl(meta.hero) },
+      { property: "og:url", content: absoluteUrl(url) },
+    ],
+    links: [{ rel: "canonical", href: absoluteUrl(url) }],
+  };
+}
 
 function isDaySlug(s: string): s is DaySlug {
   return (DAY_ORDER as string[]).includes(s);
