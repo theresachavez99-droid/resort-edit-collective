@@ -437,6 +437,61 @@ function LookModule({
   );
 }
 
+function ExperiencesSection() {
+  return (
+    <section className="bg-cream py-18 md:py-24 border-y border-border/40">
+      <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
+        <span className="eyebrow text-gold tracking-[0.38em]">Experiences</span>
+        <h2 className="font-display text-3xl md:text-5xl mt-4 tracking-[0.04em]">Bookable Moments</h2>
+        <div className="mx-auto my-5 h-px w-14 bg-gold" />
+        <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+          Concierge-curated Portofino rituals that match the same editorial mood.
+        </p>
+      </div>
+      <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        {experiences.map((exp) => (
+          <a key={exp.name} href={exp.href} target="_blank" rel="noopener noreferrer sponsored" className="group bg-ivory border border-border/60 hover:border-gold transition-colors">
+            <div className="relative h-48 overflow-hidden bg-muted">
+              <img src={exp.image} alt={exp.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+            </div>
+            <div className="p-5">
+              <span className="eyebrow text-gold text-[0.56rem] tracking-[0.34em]">{exp.tier}</span>
+              <h3 className="font-display text-xl tracking-wide mt-3 text-ink">{exp.name}</h3>
+              <p className="font-serif italic text-sm text-ink/65 leading-relaxed mt-2">{exp.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function HotelsSection() {
+  return (
+    <section className="bg-ivory py-18 md:py-24">
+      <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
+        <span className="eyebrow text-gold tracking-[0.38em]">Hotels</span>
+        <h2 className="font-display text-3xl md:text-5xl mt-4 tracking-[0.04em]">Where To Stay</h2>
+        <div className="mx-auto my-5 h-px w-14 bg-gold" />
+      </div>
+      <div className="mx-auto max-w-6xl px-6 grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        {hotels.map((hotel) => (
+          <a key={hotel.name} href={hotel.href} target="_blank" rel="noopener noreferrer sponsored" className="group bg-ivory border border-border/60 hover:border-gold transition-colors">
+            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+              <img src={hotel.image} alt={hotel.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+            </div>
+            <div className="p-5">
+              <span className="eyebrow text-gold text-[0.56rem] tracking-[0.34em]">{hotel.location}</span>
+              <h3 className="font-display text-xl tracking-wide mt-3 text-ink">{hotel.name}</h3>
+              <p className="font-serif italic text-sm text-ink/65 leading-relaxed mt-2">{hotel.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function CueRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid grid-cols-[120px_1fr] gap-4 items-baseline">
