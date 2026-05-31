@@ -80,7 +80,7 @@ const DAYS: DayRow[] = [
   {
     slug: "day-1", href: DAY_PATHS["day-1"], label: "Day 1",
     title: "Yacht Day & Harbour Aperitivo",
-    caption: "Open water, tan lines, and hidden coves.",
+    caption: "Open water, tan lines & hidden coves.",
     image: lookYacht,
     imagePos: "50% 18%",
     looks: [
@@ -128,7 +128,7 @@ const DAYS: DayRow[] = [
   {
     slug: "day-5", href: DAY_PATHS["day-5"], label: "Day 5",
     title: "Market Strolls & Coastal Goodbyes",
-    caption: "Espresso rituals and one last long lunch.",
+    caption: "Espresso, linen, and one long last lunch.",
     image: lookTown,
     imagePos: "50% 20%",
     looks: [

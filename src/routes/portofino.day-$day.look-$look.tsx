@@ -78,7 +78,7 @@ const DAY_CONTEXT: Record<DaySlug, DayContext> = {
     },
   },
   "day-5": {
-    tagline: "Espressos, boutique browsing & one last aperitivo",
+    tagline: "Espresso, linen & one long last lunch",
     itinerary: ["Morning espresso in the piazza", "Boutique browsing & souvenirs", "Aperitivo hour"],
     wear: {
       when: "A long, slow last day in town — coffees, the cobbled lanes, a final spritz before the train.",
