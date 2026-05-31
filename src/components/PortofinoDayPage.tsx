@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { Link, notFound } from "@tanstack/react-router";
 import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
@@ -223,28 +223,6 @@ export function getPortofinoDayHead(slug: DaySlug) {
     ],
     links: [{ rel: "canonical", href: absoluteUrl(url) }],
   };
-}
-
-function isDaySlug(s: string): s is DaySlug {
-  return (DAY_ORDER as string[]).includes(s);
-}
-
-export const Route = createFileRoute("/portofino/day-{$day}")({
-  beforeLoad: ({ params }) => {
-    if (!isDaySlug(`day-${params.day}`)) throw notFound();
-  },
-  head: ({ params }) => {
-    const slug = `day-${params.day}` as DaySlug;
-    return isDaySlug(slug) ? getPortofinoDayHead(slug) : getPortofinoDayHead("day-1");
-  },
-  component: PortofinoDayPage,
-});
-
-function PortofinoDayPage() {
-  const { day } = Route.useParams();
-  const slug = `day-${day}` as DaySlug;
-  if (!isDaySlug(slug)) throw notFound();
-  return <PortofinoDayTemplate slug={slug} />;
 }
 
 export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
