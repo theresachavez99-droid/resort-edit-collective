@@ -16,6 +16,7 @@ import {
   type EditItem,
 } from "@/data/portofinoEdit";
 import { resolveProductLink } from "@/data/portofino";
+import { ProductCard } from "@/components/ProductCard";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
 
@@ -53,41 +54,14 @@ function CategorizedItems({
   const visible = items.filter((it) => resolveProductLink(it) !== null);
 
   return (
-    <div className="px-5 py-4 flex-1">
-      <ul className="divide-y divide-border/30">
+    <div className="flex-1 px-4 sm:px-5 py-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
         {visible.map((item) => (
-          <li key={item.brand + item.item}>
-            <a
-              href={resolveProductLink(item) ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              onClick={() =>
-                trackOutbound({
-                  brand: item.brand,
-                  item: item.item,
-                  href: resolveProductLink(item),
-                  category: item.category,
-                })
-              }
-              className="grid grid-cols-[1fr_auto] items-baseline gap-3 py-2.5 group/item transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
-            >
-              <div className="min-w-0">
-                <div className="eyebrow text-[0.55rem] tracking-[0.24em] text-ink/55 group-hover/item:text-gold transition-colors truncate">
-                  {item.brand}
-                </div>
-                <div className="font-serif text-[0.82rem] text-ink/85 truncate leading-snug">
-                  {item.item}
-                </div>
-              </div>
-              <div className="font-serif text-[0.82rem] text-gold tabular-nums shrink-0">
-                {item.price}
-              </div>
-            </a>
-          </li>
+          <ProductCard key={item.brand + item.item} item={item} variant="editorial" />
         ))}
-      </ul>
+      </div>
       {finishingNote && (
-        <p className="mt-3 font-serif italic text-[0.78rem] text-ink/60 leading-relaxed">
+        <p className="mt-5 font-serif italic text-[0.82rem] text-ink/60 leading-relaxed">
           {finishingNote}
         </p>
       )}
