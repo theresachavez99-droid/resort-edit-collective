@@ -371,29 +371,33 @@ function LookModule({
             <div className="absolute top-4 left-4 bg-ivory/95 text-ink eyebrow px-3 py-1.5 tracking-[0.3em] text-[0.55rem]">
               {dayLabel} · Look {lookNum}
             </div>
+            {/* Inspired-By thumbnail — top-right */}
+            <div className="absolute top-3 right-3 flex flex-col items-end">
+              <span className="eyebrow text-[0.5rem] tracking-[0.32em] text-ivory bg-ink/70 px-2 py-1 mb-1">
+                Inspired By
+              </span>
+              <div className="relative w-14 h-14 md:w-16 md:h-16 overflow-hidden border-2 border-ivory shadow-lg bg-muted">
+                <img
+                  src={referenceImage}
+                  alt="Editorial reference"
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover"
+                  style={{ objectPosition: referencePos }}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* RIGHT 60% — inspired-by + product grid */}
+        {/* RIGHT 60% — cues + product grid */}
         <div className="lg:col-span-6">
-          <div className="flex items-start gap-4 border border-gold/30 bg-cream/60 p-4 mb-6">
-            <div className="relative w-16 h-20 shrink-0 overflow-hidden bg-muted">
-              <img
-                src={referenceImage}
-                alt="Editorial reference"
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
-                style={{ objectPosition: referencePos }}
-              />
-            </div>
-            <div className="flex-1">
-              <div className="eyebrow text-gold text-[0.55rem] tracking-[0.35em]">Inspired By</div>
-              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 font-serif text-[0.78rem] text-ink/75 leading-snug">
-                <div><span className="text-ink/50">Palette · </span>{inspired.palette}</div>
-                <div><span className="text-ink/50">Silhouette · </span>{inspired.silhouette}</div>
-                <div><span className="text-ink/50">Textures · </span>{inspired.textures}</div>
-                <div><span className="text-ink/50">Mood · </span>{inspired.mood}</div>
-              </div>
+          <div className="border border-gold/30 bg-cream/60 p-4 mb-6">
+            <div className="eyebrow text-gold text-[0.55rem] tracking-[0.35em]">Inspired By</div>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 font-serif text-[0.78rem] text-ink/75 leading-snug">
+              <div><span className="text-ink/50">Palette · </span>{inspired.palette}</div>
+              <div><span className="text-ink/50">Silhouette · </span>{inspired.silhouette}</div>
+              <div><span className="text-ink/50">Textures · </span>{inspired.textures}</div>
+              <div><span className="text-ink/50">Mood · </span>{inspired.mood}</div>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
