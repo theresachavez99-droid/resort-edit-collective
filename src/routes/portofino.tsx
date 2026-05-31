@@ -166,36 +166,36 @@ function PortofinoPage() {
   return (
     <div>
       {/* HERO — Editorial full-bleed */}
-      <section className="relative h-[70vh] min-h-[480px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[42vh] md:h-[56vh] min-h-[300px] md:min-h-[380px] w-full overflow-hidden bg-ink">
         <img
           src={portofinoImg}
           alt="Portofino harbor — editorial hero"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-12 md:pb-16 text-ivory">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
           <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
-          <h1 className="font-display text-5xl md:text-7xl mt-5 tracking-[0.05em] leading-[1]">
+          <h1 className="font-display text-5xl md:text-[5.5rem] mt-2 tracking-[0.05em] leading-[1]">
             5 Days in Portofino
           </h1>
-          <p className="font-serif italic text-base md:text-xl text-ivory/85 mt-4 max-w-2xl leading-relaxed">
+          <p className="font-serif italic text-base md:text-xl text-ivory/85 mt-2 max-w-2xl leading-relaxed">
             Curated destination dressing for the Italian Riviera.
           </p>
         </div>
       </section>
 
       {/* STEP 1 — TIER SELECTOR (directly beneath hero) */}
-      <section className="bg-cream pt-12 md:pt-14 pb-10 md:pb-12 border-b border-border/40">
+      <section className="bg-cream pt-7 md:pt-9 pb-6 md:pb-8 border-b border-border/40">
         <div className="mx-auto max-w-3xl px-6 text-center">
           <span className="eyebrow text-gold">Step 1 · Shop By Price Point</span>
-          <h2 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.05em]">
+          <h2 className="font-display text-3xl md:text-4xl mt-2 tracking-[0.05em]">
             Choose Your Tier
           </h2>
-          <div className="mx-auto my-4 h-px w-12 bg-gold" />
-          <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+          <div className="mx-auto my-3 h-px w-12 bg-gold" />
+          <p className="font-serif italic text-sm md:text-base text-ink/65 leading-relaxed">
             Same aesthetic. Different investment. Pick your shopping lane before you browse the days.
           </p>
-          <div className="mt-7 flex flex-wrap justify-center gap-2 md:gap-3" role="tablist" aria-label="Price tier">
+          <div className="mt-5 flex flex-wrap justify-center gap-2 md:gap-3" role="tablist" aria-label="Price tier">
             {tierOptions.map((t) => {
               const isActive = selectedTier === t.slug;
               return (
@@ -218,12 +218,12 @@ function PortofinoPage() {
               );
             })}
           </div>
-          <p className="font-serif italic text-ink/65 text-sm mt-5">
+          <p className="font-serif italic text-ink/65 text-sm mt-4">
             Showing <span className="text-ink not-italic font-medium">{activeTier.label}</span> — {activeTier.caption}
           </p>
           <Link
             to="/portofino-edit"
-            className="mt-5 inline-block eyebrow text-[0.6rem] tracking-[0.3em] text-ink/65 border-b border-ink/30 hover:text-gold hover:border-gold transition-colors pb-1"
+            className="mt-3 inline-block eyebrow text-[0.6rem] tracking-[0.3em] text-ink/65 border-b border-ink/30 hover:text-gold hover:border-gold transition-colors pb-1"
           >
             Or view all tiers side-by-side →
           </Link>
@@ -231,14 +231,14 @@ function PortofinoPage() {
       </section>
 
       {/* STEP 2 — DAY TABS + LOOK PREVIEWS */}
-      <section className="bg-ivory pt-12 md:pt-14 pb-14 md:pb-16">
-        <div className="mx-auto max-w-3xl px-6 text-center mb-8 md:mb-10">
+      <section className="bg-ivory pt-7 md:pt-9 pb-10 md:pb-12">
+        <div className="mx-auto max-w-3xl px-6 text-center mb-5 md:mb-6">
           <span className="eyebrow text-gold">Step 2 · The Wardrobe</span>
-          <h2 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.05em]">
+          <h2 className="font-display text-3xl md:text-4xl mt-2 tracking-[0.05em]">
             Pick Your Day
           </h2>
-          <div className="mx-auto my-4 h-px w-12 bg-gold" />
-          <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+          <div className="mx-auto my-3 h-px w-12 bg-gold" />
+          <p className="font-serif italic text-sm md:text-base text-ink/65 leading-relaxed">
             Three styled looks per day in your selected tier.
           </p>
         </div>
@@ -264,13 +264,13 @@ function PortofinoPage() {
               </button>
             ))}
           </div>
-          <p className="text-center font-serif italic text-ink/65 text-sm mt-5">
+          <p className="text-center font-serif italic text-ink/65 text-sm mt-4">
             Showing {activeDay.label} · {activeDay.title} — {activeDay.caption.replace(/\.$/, "")}.
           </p>
         </div>
 
         {/* Featured Preview Strip — Active day looks */}
-        <div className="mx-auto max-w-6xl px-6 mt-10 md:mt-12">
+        <div className="mx-auto max-w-6xl px-6 mt-6 md:mt-8">
           <div className="hidden md:grid grid-cols-3 gap-5">
             {activePreviews.map((p) => (
               <Link
