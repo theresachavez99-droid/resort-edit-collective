@@ -77,8 +77,11 @@ function selectLookItems(
     (it) => it.not_available || resolveProductLink(it) !== null,
   );
   const tagged = live.filter((it) => it.lookIndex === lookNum);
-  const anyTagged = live.some((it) => it.lookIndex);
-  const pool = anyTagged ? tagged : live;
+  // Prefer items explicitly tagged to THIS look. If none were tagged for it,
+  // fall back to the day's untagged items so the look still renders something
+  // shoppable. If both are empty, fall back to the whole day.
+  const untagged = live.filter((it) => !it.lookIndex);
+  const pool = tagged.length ? tagged : untagged.length ? untagged : live;
   if (!pool.length) return [];
 
   const sortedDesc = [...pool].sort(
