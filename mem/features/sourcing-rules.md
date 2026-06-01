@@ -63,3 +63,16 @@ Target: Mediterranean, tropical luxury, beach club polished, yacht style, long l
 Avoid: fast fashion energy, clubwear, bodycon overload, Amazon-coded products, overly revealing items, generic basics.
 
 Goal: luxury editorial publication + personal shopper.
+
+## 11. Editorial muse matching rule
+The approved AI editorial image is the styling anchor for every look. All sourced products and outfit alternatives must tangentially emulate it — never literal copies.
+
+Match: silhouette, color palette, print direction, mood, level of polish, destination appropriateness, styling energy, fabric movement, proportion.
+
+- Example: muse in white textured maxi + raffia bag → source similar white textured dresses, raffia textures, resort sandals, jewelry mood. Not random black dresses, unrelated colors, or different destination energy.
+- Print rule: if the editorial image features Mediterranean prints, tile motifs, lemon motifs, blue/white palettes, or tropical prints, prefer products that echo those themes.
+- Fit rule: products should visually feel like they belong in the same suitcase.
+- Layer rule: kaftans, scarves, jewelry, bags, and accessories should support the editorial image, not compete with it.
+- Variation rule: alternative products should feel 70–85% stylistically aligned — never 100% duplicates. Avoid cloning the muse look repeatedly.
+
+Goal: the customer recognizes the editorial image and immediately understands why each sourced product belongs in the look.
