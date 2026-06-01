@@ -1,5 +1,13 @@
 import { useMemo, useState, useEffect } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import {
+  scrapeProductUrl,
+  listSourcedProducts,
+  updateSourcedProductStatus,
+  deleteSourcedProduct,
+} from "@/lib/firecrawl.functions";
 import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
 import { portofinoEdit, categoryLabels, type AccessoryCategory } from "@/data/portofinoEdit";
 import {
@@ -154,7 +162,7 @@ function ProductLibraryPage() {
 }
 
 function ProductLibraryTabs() {
-  const [tab, setTab] = useState<"catalog" | "issues" | "gap">("catalog");
+  const [tab, setTab] = useState<"catalog" | "issues" | "gap" | "sourcing">("catalog");
   return (
     <div className="min-h-screen bg-ivory text-ink">
       <nav className="sticky top-0 z-10 bg-ivory border-b border-border/60 px-6 lg:px-10 py-3 flex gap-2 text-xs">
@@ -163,6 +171,7 @@ function ProductLibraryTabs() {
             ["catalog", "Catalog"],
             ["issues", "Issues"],
             ["gap", "Gap Report"],
+            ["sourcing", "Sourcing (Firecrawl)"],
           ] as const
         ).map(([k, label]) => (
           <button
@@ -182,6 +191,7 @@ function ProductLibraryTabs() {
       {tab === "catalog" && <ProductLibraryGrid />}
       {tab === "issues" && <IssuesView />}
       {tab === "gap" && <GapReport />}
+      {tab === "sourcing" && <SourcingView />}
     </div>
   );
 }
