@@ -141,7 +141,8 @@ function Index() {
                   src={d.image}
                   srcSet={d.imageRetina ? `${d.imageMobile ?? d.image} 1x, ${d.imageRetina} 2x` : undefined}
                   alt={d.title}
-                  loading="lazy"
+                  loading={d.n === "5" ? "eager" : "lazy"}
+                  fetchPriority={d.n === "5" ? "high" : undefined}
                   decoding="async"
                   className="absolute inset-0 h-full w-full object-cover"
                   style={{ objectPosition: d.n === "5" ? "center center" : "center top", imageRendering: "auto" }}
