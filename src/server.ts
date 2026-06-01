@@ -83,7 +83,7 @@ export default {
 };
 
 // Internal preview/published hosts we should NOT redirect away from.
-const PASSTHROUGH_HOST_SUFFIXES = [".lovable.app", ".lovable.dev", "localhost"];
+const PASSTHROUGH_HOST_SUFFIXES = [".lovable.app", ".lovable.dev", ".lovableproject.com", "localhost"];
 
 function buildCanonicalRedirect(request: Request): Response | null {
   let url: URL;
