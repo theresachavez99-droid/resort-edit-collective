@@ -112,3 +112,17 @@ For every product slot:
 
 ## 17. Hard-fail conditions (auto-replace)
 Replace any product immediately when: thumbnail broken, product unavailable, generic/homepage link, duplicate brand overload, weak editorial match, category mismatch, repetitive styling. Never surface low-scoring products.
+
+## 18. Tier rules
+- **Luxury**: designer-first, international sourcing, editorial priority. Target mix 60–80% luxury brands + 20–40% premium.
+- **Mid-Luxe**: luxury aesthetic via contemporary brands with designer accents.
+- **Destination Finds**: editorial match first, price second — must still feel elevated. Never source products that visually cheapen the look.
+
+## 19. Complete-look slot list
+Every look requires: outfit (or swim), shoes, bag, earrings, necklace, bracelet, ring OR hair accessory, sunglasses (daytime only), optional layer, hair detail. No incomplete looks ship.
+
+## 20. Pre-publish validation checklist
+Before any product or page goes live, confirm: working link, working thumbnail, destination fit, luxury perception, variation, editorial alignment, tier alignment, international diversity. Re-rank candidates by Resort Edit standards — never by first-available inventory or easiest-to-source.
+
+## 21. Global application
+All rules in this document apply across every destination, day, look, tier, View Full Look page, alternative look, and future edit automatically. No per-page or per-destination exceptions. New destinations inherit tier rules, muse rules, variation rules, scoring model, replacement logic, affiliate logic, and editorial rules with no manual setup.
