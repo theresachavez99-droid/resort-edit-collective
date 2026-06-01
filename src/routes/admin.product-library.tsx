@@ -220,15 +220,15 @@ function ProductLibraryTabs() {
           </button>
         ))}
       </nav>
-      {tab === "catalog" && <ProductLibraryGrid />}
-      {tab === "issues" && <IssuesView />}
+      {tab === "catalog" && <ProductLibraryGrid onReplace={() => setTab("sourcing")} />}
+      {tab === "issues" && <IssuesView onReplace={() => setTab("sourcing")} />}
       {tab === "gap" && <GapReport />}
       {tab === "sourcing" && <SourcingView />}
     </div>
   );
 }
 
-function ProductLibraryGrid() {
+function ProductLibraryGrid({ onReplace }: { onReplace: () => void }) {
   const rows = useMemo(buildRows, []);
   const [q, setQ] = useState("");
   const [day, setDay] = useState<string>("all");
@@ -328,6 +328,7 @@ function ProductLibraryGrid() {
                 <Tag>{r.category}</Tag>
                 <Tag>{r.status}</Tag>
                 {r.replaced && <Tag>updated</Tag>}
+                {r.issueFlags?.map((flag) => <Tag key={flag}>{flag}</Tag>)}
               </div>
               <div className="text-[0.6rem] text-ink/50 truncate" title={r.href ?? ""}>
                 {r.href ?? "— no link —"}
@@ -343,6 +344,15 @@ function ProductLibraryGrid() {
               >
                 Open Product →
               </a>
+            )}
+            {r.issueFlags?.some((flag) => flag === "needs replacement" || flag === "broken image" || flag === "broken URL" || flag === "missing affiliate URL") && (
+              <button
+                type="button"
+                onClick={onReplace}
+                className="mt-2 inline-block text-center border border-gold text-ink py-1.5 text-[0.7rem] uppercase tracking-wider rounded hover:bg-cream"
+              >
+                Replace Product
+              </button>
             )}
           </div>
         ))}
