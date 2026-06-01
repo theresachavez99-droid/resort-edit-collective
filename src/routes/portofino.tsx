@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useMatch, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
@@ -141,9 +141,12 @@ const DAYS: DayRow[] = [
 ];
 
 function PortofinoPage() {
+  const childMatch = useMatch({ from: "/portofino/day-$day/look-$look", shouldThrow: false });
   const search = Route.useSearch();
   const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
   const navigate = useNavigate({ from: "/portofino" });
+
+  if (childMatch) return <Outlet />;
 
   // Restore persisted tier on first mount if URL doesn't already specify one.
   useEffect(() => {
