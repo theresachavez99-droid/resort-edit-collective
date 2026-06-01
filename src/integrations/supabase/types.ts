@@ -14,7 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      sourced_products: {
+        Row: {
+          affiliate_url: string | null
+          brand: string | null
+          created_at: string
+          currency: string | null
+          day: number | null
+          id: string
+          image_url: string | null
+          look: number | null
+          notes: string | null
+          price: number | null
+          product_name: string | null
+          promoted_at: string | null
+          raw_extraction: Json | null
+          retailer_domain: string | null
+          scraped_at: string | null
+          slot_category: string | null
+          source_url: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_url?: string | null
+          brand?: string | null
+          created_at?: string
+          currency?: string | null
+          day?: number | null
+          id?: string
+          image_url?: string | null
+          look?: number | null
+          notes?: string | null
+          price?: number | null
+          product_name?: string | null
+          promoted_at?: string | null
+          raw_extraction?: Json | null
+          retailer_domain?: string | null
+          scraped_at?: string | null
+          slot_category?: string | null
+          source_url: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_url?: string | null
+          brand?: string | null
+          created_at?: string
+          currency?: string | null
+          day?: number | null
+          id?: string
+          image_url?: string | null
+          look?: number | null
+          notes?: string | null
+          price?: number | null
+          product_name?: string | null
+          promoted_at?: string | null
+          raw_extraction?: Json | null
+          retailer_domain?: string | null
+          scraped_at?: string | null
+          slot_category?: string | null
+          source_url?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

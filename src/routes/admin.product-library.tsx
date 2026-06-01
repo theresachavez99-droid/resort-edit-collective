@@ -1,5 +1,13 @@
 import { useMemo, useState, useEffect } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import {
+  scrapeProductUrl,
+  listSourcedProducts,
+  updateSourcedProductStatus,
+  deleteSourcedProduct,
+} from "@/lib/firecrawl.functions";
 import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
 import { portofinoEdit, categoryLabels, type AccessoryCategory } from "@/data/portofinoEdit";
 import {
@@ -154,7 +162,7 @@ function ProductLibraryPage() {
 }
 
 function ProductLibraryTabs() {
-  const [tab, setTab] = useState<"catalog" | "issues" | "gap">("catalog");
+  const [tab, setTab] = useState<"catalog" | "issues" | "gap" | "sourcing">("catalog");
   return (
     <div className="min-h-screen bg-ivory text-ink">
       <nav className="sticky top-0 z-10 bg-ivory border-b border-border/60 px-6 lg:px-10 py-3 flex gap-2 text-xs">
@@ -163,6 +171,7 @@ function ProductLibraryTabs() {
             ["catalog", "Catalog"],
             ["issues", "Issues"],
             ["gap", "Gap Report"],
+            ["sourcing", "Sourcing (Firecrawl)"],
           ] as const
         ).map(([k, label]) => (
           <button
@@ -182,6 +191,7 @@ function ProductLibraryTabs() {
       {tab === "catalog" && <ProductLibraryGrid />}
       {tab === "issues" && <IssuesView />}
       {tab === "gap" && <GapReport />}
+      {tab === "sourcing" && <SourcingView />}
     </div>
   );
 }
@@ -690,6 +700,304 @@ function Breakdown({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// Sourcing — Firecrawl pipeline (Mode A: specific URLs only)
+// ──────────────────────────────────────────────────────────────
+
+const SLOT_CATEGORIES = [
+  "outfit",
+  "shoes",
+  "bag",
+  "jewelry",
+  "earrings",
+  "necklace",
+  "bracelet",
+  "ring",
+  "sunglasses",
+  "hairDetail",
+  "layer",
+];
+
+function SourcingView() {
+  const qc = useQueryClient();
+  const listFn = useServerFn(listSourcedProducts);
+  const scrapeFn = useServerFn(scrapeProductUrl);
+  const updateFn = useServerFn(updateSourcedProductStatus);
+  const delFn = useServerFn(deleteSourcedProduct);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["sourced_products"],
+    queryFn: () => listFn(),
+    refetchInterval: 5000,
+  });
+
+  const scrape = useMutation({
+    mutationFn: (input: {
+      url: string;
+      day?: number;
+      look?: number;
+      slot_category?: string;
+      affiliate_url?: string;
+      notes?: string;
+    }) => scrapeFn({ data: input }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
+  });
+
+  const update = useMutation({
+    mutationFn: (input: { id: string; status: any; notes?: string }) =>
+      updateFn({ data: input }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
+  });
+
+  const del = useMutation({
+    mutationFn: (id: string) => delFn({ data: { id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
+  });
+
+  const [form, setForm] = useState({
+    url: "",
+    day: "",
+    look: "",
+    slot_category: "",
+    affiliate_url: "",
+    notes: "",
+  });
+
+  const rows = data?.ok ? data.rows : [];
+  const counts = useMemo(() => {
+    const c: Record<string, number> = {};
+    rows.forEach((r: any) => {
+      c[r.status] = (c[r.status] ?? 0) + 1;
+    });
+    return c;
+  }, [rows]);
+
+  return (
+    <div className="p-6 lg:p-10 space-y-8">
+      <div>
+        <h1 className="font-serif text-3xl mb-2">Sourcing — Firecrawl</h1>
+        <p className="text-sm text-ink/70 max-w-3xl">
+          Mode A only: paste a specific product URL from an approved retailer. The page
+          is scraped server-side, structured data is stored in the staging queue, and
+          nothing reaches the live View Full Look pages until you click <strong>Promote</strong>.
+          Live page promotion currently means: mark approved here, then paste the JSON
+          into <code>src/data/portofinoEdit.ts</code> (or <code>src/data/portofino.ts</code>)
+          in your next release.
+        </p>
+      </div>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!form.url) return;
+          scrape.mutate({
+            url: form.url.trim(),
+            day: form.day ? Number(form.day) : undefined,
+            look: form.look ? Number(form.look) : undefined,
+            slot_category: form.slot_category || undefined,
+            affiliate_url: form.affiliate_url.trim() || undefined,
+            notes: form.notes.trim() || undefined,
+          });
+          setForm({ ...form, url: "", affiliate_url: "", notes: "" });
+        }}
+        className="bg-white border border-border/60 rounded p-4 grid grid-cols-1 md:grid-cols-6 gap-3 text-sm"
+      >
+        <input
+          required
+          type="url"
+          placeholder="Product URL (https://...)"
+          value={form.url}
+          onChange={(e) => setForm({ ...form, url: e.target.value })}
+          className="md:col-span-3 border border-border/60 rounded px-2 py-1.5"
+        />
+        <input
+          type="number"
+          min={1}
+          max={5}
+          placeholder="Day"
+          value={form.day}
+          onChange={(e) => setForm({ ...form, day: e.target.value })}
+          className="border border-border/60 rounded px-2 py-1.5"
+        />
+        <input
+          type="number"
+          min={1}
+          max={5}
+          placeholder="Look"
+          value={form.look}
+          onChange={(e) => setForm({ ...form, look: e.target.value })}
+          className="border border-border/60 rounded px-2 py-1.5"
+        />
+        <select
+          value={form.slot_category}
+          onChange={(e) => setForm({ ...form, slot_category: e.target.value })}
+          className="border border-border/60 rounded px-2 py-1.5"
+        >
+          <option value="">Slot category…</option>
+          {SLOT_CATEGORIES.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+        <input
+          type="url"
+          placeholder="Affiliate URL (optional, defaults to source URL)"
+          value={form.affiliate_url}
+          onChange={(e) => setForm({ ...form, affiliate_url: e.target.value })}
+          className="md:col-span-3 border border-border/60 rounded px-2 py-1.5"
+        />
+        <input
+          type="text"
+          placeholder="Notes (optional)"
+          value={form.notes}
+          onChange={(e) => setForm({ ...form, notes: e.target.value })}
+          className="md:col-span-2 border border-border/60 rounded px-2 py-1.5"
+        />
+        <button
+          type="submit"
+          disabled={scrape.isPending || !form.url}
+          className="bg-ink text-ivory rounded px-3 py-1.5 uppercase tracking-wider text-xs disabled:opacity-50"
+        >
+          {scrape.isPending ? "Scraping…" : "Scrape →"}
+        </button>
+        {scrape.data && !scrape.data.ok && (
+          <p className="md:col-span-6 text-xs text-red-600">
+            Error: {scrape.data.error}
+          </p>
+        )}
+      </form>
+
+      <div className="flex flex-wrap gap-3 text-xs">
+        {["queued", "scraped", "approved", "promoted", "failed", "rejected"].map((s) => (
+          <span key={s} className="bg-white border border-border/60 px-2 py-1 rounded">
+            <strong>{counts[s] ?? 0}</strong> · {s}
+          </span>
+        ))}
+        {isLoading && <span className="text-ink/50">loading…</span>}
+      </div>
+
+      <div className="overflow-auto bg-white border border-border/60 rounded">
+        <table className="w-full text-xs">
+          <thead className="bg-cream text-left">
+            <tr>
+              <th className="p-2">Status</th>
+              <th className="p-2">Image</th>
+              <th className="p-2">Brand / Product</th>
+              <th className="p-2">Price</th>
+              <th className="p-2">Slot</th>
+              <th className="p-2">URL</th>
+              <th className="p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r: any) => (
+              <tr key={r.id} className="border-t border-border/40 align-top">
+                <td className="p-2">
+                  <span
+                    className={
+                      "px-1.5 py-0.5 rounded text-[0.65rem] uppercase tracking-wider " +
+                      (r.status === "scraped"
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : r.status === "failed"
+                          ? "bg-red-50 text-red-700 border border-red-200"
+                          : r.status === "promoted"
+                            ? "bg-gold/20 text-ink border border-gold"
+                            : "bg-cream border border-border/40")
+                    }
+                  >
+                    {r.status}
+                  </span>
+                </td>
+                <td className="p-2">
+                  {r.image_url ? (
+                    <img
+                      src={r.image_url}
+                      alt=""
+                      className="w-12 h-12 object-contain bg-cream rounded"
+                    />
+                  ) : (
+                    <span className="text-ink/40">—</span>
+                  )}
+                </td>
+                <td className="p-2">
+                  <div className="font-medium">{r.brand ?? "—"}</div>
+                  <div className="text-ink/70">{r.product_name ?? "—"}</div>
+                  {r.notes && <div className="text-[0.65rem] text-red-600">{r.notes}</div>}
+                </td>
+                <td className="p-2 text-gold">
+                  {r.price ? `${r.currency ?? ""} ${r.price}` : "—"}
+                </td>
+                <td className="p-2 text-ink/70">
+                  {r.day ? `D${r.day}` : "—"}
+                  {r.look ? ` · L${r.look}` : ""}
+                  <div className="text-[0.65rem]">{r.slot_category ?? "—"}</div>
+                </td>
+                <td className="p-2 text-ink/60 truncate max-w-[220px]">
+                  <a
+                    href={r.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                    title={r.source_url}
+                  >
+                    {r.retailer_domain}
+                  </a>
+                </td>
+                <td className="p-2">
+                  <div className="flex flex-wrap gap-1">
+                    {r.status === "scraped" && (
+                      <button
+                        onClick={() =>
+                          update.mutate({ id: r.id, status: "approved" })
+                        }
+                        className="bg-ink text-ivory px-2 py-1 rounded text-[0.65rem] uppercase tracking-wider"
+                      >
+                        Approve
+                      </button>
+                    )}
+                    {r.status === "approved" && (
+                      <button
+                        onClick={() =>
+                          update.mutate({ id: r.id, status: "promoted" })
+                        }
+                        className="bg-gold text-ink px-2 py-1 rounded text-[0.65rem] uppercase tracking-wider"
+                      >
+                        Mark Promoted
+                      </button>
+                    )}
+                    <button
+                      onClick={() =>
+                        update.mutate({ id: r.id, status: "rejected" })
+                      }
+                      className="border border-border/60 px-2 py-1 rounded text-[0.65rem] uppercase tracking-wider"
+                    >
+                      Reject
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm("Delete this row?")) del.mutate(r.id);
+                      }}
+                      className="text-red-600 px-2 py-1 text-[0.65rem] uppercase tracking-wider"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {rows.length === 0 && !isLoading && (
+              <tr>
+                <td colSpan={7} className="p-6 text-center text-ink/50">
+                  No scraped products yet. Paste a URL above to start.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
