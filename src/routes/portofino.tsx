@@ -146,10 +146,9 @@ function PortofinoPage() {
   const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
   const navigate = useNavigate({ from: "/portofino" });
 
-  if (childMatch) return <Outlet />;
-
   // Restore persisted tier on first mount if URL doesn't already specify one.
   useEffect(() => {
+    if (childMatch) return;
     if (typeof window === "undefined") return;
     const hasTierParam = new URLSearchParams(window.location.search).has("tier");
     if (hasTierParam) {
@@ -164,8 +163,11 @@ function PortofinoPage() {
   }, []);
 
   useEffect(() => {
+    if (childMatch) return;
     persistTier(tier);
-  }, [tier]);
+  }, [childMatch, tier]);
+
+  if (childMatch) return <Outlet />;
 
   const setTier = (t: TierSlug) =>
     navigate({ search: { tier: t }, replace: true });
