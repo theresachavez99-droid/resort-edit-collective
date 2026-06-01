@@ -24,6 +24,14 @@ import productZimmermannBlueSilkSet from "@/assets/products/zimmermann-blue-silk
 import productZimmermannBluePareo from "@/assets/products/zimmermann-blue-pareo.svg";
 import productEtroPaisleyHalterMaxi from "@/assets/products/etro-paisley-halter-maxi.svg";
 import productHereuWovenTote from "@/assets/products/hereu-woven-tote.svg";
+import productDgLemonKaftan from "@/assets/products/dg-lemon-kaftan.jpg";
+import productEresCreamMaillot from "@/assets/products/eres-cream-maillot.jpg";
+import productHunzaBlueBandeau from "@/assets/products/hunza-blue-bandeau.svg";
+import productDgMajolicaSarong from "@/assets/products/dg-majolica-sarong.svg";
+import productPosseIvoryRomper from "@/assets/products/posse-ivory-romper.svg";
+import productPucciBlueKaftan from "@/assets/products/pucci-blue-kaftan.svg";
+import productLoeweBasketBag from "@/assets/products/loewe-basket-bag.svg";
+import productCultGaiaEosClutch from "@/assets/products/cult-gaia-eos-clutch.svg";
 
 export type AlternativeProduct = {
   brand: string;
@@ -129,6 +137,146 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           url: "https://hereustudio.com/products/castell-woven-leather-tote-bag-tan",
           image: productHereuWovenTote,
           note: "Spanish woven leather in a raffia-adjacent tan — the bag that walks the market without competing with the dress.",
+        },
+      ],
+    },
+  ],
+
+  // ─────────────────────────────────────────────────────────────
+  // DAY 2 · LOOK A — Lemon Print Cabana
+  // Brief: Mediterranean beach club, lemon print, raffia, gold.
+  // Swim alts cover one-piece, bandeau, Mediterranean print, and
+  // an elevated neutral. Outfit alts span Beach Club Lunch, Yacht
+  // Transfer, Long Lunch, and Cabana Cocktails — same woman,
+  // different moments. Brand cap ≤25% per page enforced.
+  // ─────────────────────────────────────────────────────────────
+  "day-2/look-a": [
+    {
+      title: "Swim Alternatives",
+      description:
+        "Four directions on the same cabana — a plunge one-piece, a clean bandeau, a Mediterranean print, and an elevated neutral. Each one wears under the lemon kaftan without competing with it.",
+      items: [
+        {
+          brand: "Eres",
+          title: "Aquarelle Plunge Maillot",
+          slotLabel: "Closest to Muse · One-Piece",
+          price: "$485",
+          url: "https://www.eresparis.com/us/en/swimwear/maillot/aquarelle",
+          image: productEresCreamMaillot,
+          note: "Ivory plunge maillot — the quiet anchor under a lemon kaftan, all clean line and no competing print.",
+        },
+        {
+          brand: "Hunza G",
+          title: "Gloria Bandeau Swimsuit, Yellow",
+          slotLabel: "Bandeau Alt · Lemon Yellow",
+          price: "$235",
+          url: "https://www.hunzag.com/products/gloria-yellow",
+          image: productHunzaBlueBandeau,
+          note: "Crinkle bandeau in saturated lemon — picks up the kaftan palette without doubling the print.",
+        },
+        {
+          brand: "Dolce & Gabbana",
+          title: "Majolica-Print One-Piece Swimsuit",
+          slotLabel: "Mediterranean Print · Tile",
+          price: "$875",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-one-piece-swimsuit-multicolor-O9A46JONO19IP3TN.html",
+          image: productDgMajolicaSarong,
+          note: "Blue-and-white majolica — when you want the print story under the print kaftan to feel intentional, not loud.",
+        },
+        {
+          brand: "Marysia",
+          title: "Antibes Scalloped Maillot, Ivory",
+          slotLabel: "Elevated Neutral · Scallop",
+          price: "$354",
+          url: "https://www.marysia.com/products/antibes-maillot-ivory",
+          image: productPosseIvoryRomper,
+          note: "Scalloped ivory — the quietest version of the look, all texture, no color.",
+        },
+      ],
+    },
+    {
+      title: "Outfit Alternatives",
+      description:
+        "Five destination personalities for Day 2 — Beach Club Lunch, Yacht Transfer, Long Lunch, Cabana Cocktails, and the Closest to Muse cabana original.",
+      items: [
+        {
+          brand: "Dolce & Gabbana",
+          title: "Portofino Lemon-Print Cotton Kaftan",
+          slotLabel: "Closest to Muse · Lemon Kaftan",
+          price: "$1,895",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/coverups/portofino-lemon-print-kaftan-multicolor.html",
+          image: productDgLemonKaftan,
+          note: "The muse piece — Portofino lemon print, cotton voile, V-neck. Layer over a clean maillot.",
+        },
+        {
+          brand: "Farm Rio",
+          title: "Yellow Lemons Maxi Dress",
+          slotLabel: "Beach Club Lunch · Maxi Print",
+          price: "$285",
+          url: "https://www.farmrio.com/products/yellow-lemons-maxi-dress",
+          image: productDgLemonKaftan,
+          note: "Brazilian resort label — same lemon energy in a maxi dress that walks straight from lounger to long-table lunch.",
+        },
+        {
+          brand: "Zimmermann",
+          title: "Halliday Linen Wide-Leg Pant + Top Set",
+          slotLabel: "Yacht Transfer · Ivory Linen",
+          price: "$1,395",
+          url: "https://www.zimmermann.com/halliday-linen-set-ivory.html",
+          image: productPosseIvoryRomper,
+          note: "Crinkled ivory linen set — for the tender transfer in and the espresso bar after. Same suitcase, no print.",
+        },
+        {
+          brand: "Emilio Pucci",
+          title: "Marmo-Print Silk Maxi Kaftan",
+          slotLabel: "Long Lunch · Painterly Silk",
+          price: "$2,150",
+          url: "https://www.mytheresa.com/us/en/women/pucci-marmo-print-silk-kaftan-multicolor-p00951220",
+          image: productPucciBlueKaftan,
+          note: "Pucci marmo print on silk — when the lunch runs into late afternoon and the light gets generous.",
+        },
+        {
+          brand: "Cult Gaia",
+          title: "Sariyah Eyelet Cotton Maxi Dress",
+          slotLabel: "Cabana Cocktails · Eyelet White",
+          price: "$498",
+          url: "https://cultgaia.com/products/sariyah-dress-off-white",
+          image: productPosseIvoryRomper,
+          note: "White eyelet maxi — the quiet cocktail option that lets a single gold cuff and the lemon scarf do the talking.",
+        },
+      ],
+    },
+    {
+      title: "Accessories That Pull It Together",
+      description:
+        "Raffia textures and gold — the connective tissue across every swim and outfit direction above.",
+      items: [
+        {
+          brand: "Loewe",
+          title: "Anagram Raffia Basket Bag",
+          slotLabel: "Bag · Raffia",
+          price: "$1,250",
+          url: "https://www.mytheresa.com/us/en/women/loewe-anagram-raffia-basket-bag-natural-p00863414",
+          image: productLoeweBasketBag,
+          note: "Spanish raffia in a basket silhouette — the bag the kaftan was waiting for.",
+        },
+        {
+          brand: "Cult Gaia",
+          title: "Eos Acrylic Box Clutch",
+          slotLabel: "Bag · Cocktail Hour",
+          price: "$398",
+          url: "https://cultgaia.com/products/eos-clutch-ivory",
+          image: productCultGaiaEosClutch,
+          note: "Ivory acrylic clutch — for when the cabana becomes cocktails and the basket bag stays at the lounger.",
+        },
+        {
+          brand: "Hereu",
+          title: "Castell Woven Leather Tote",
+          slotLabel: "Bag · Market Stroll",
+          price: "$495",
+          url: "https://hereustudio.com/products/castell-woven-leather-tote-bag-tan",
+          image: productHereuWovenTote,
+          note: "Catalan woven leather in raffia-adjacent tan — for the walk back through the village.",
         },
       ],
     },
