@@ -178,3 +178,25 @@ Reject products that feel: flat, generic, cheap, corporate, fast fashion, overly
 ## Section 32 — Launch priority
 
 Portofino fully polished first. **Fewer looks, stronger quality.** Curated luxury editorial experience > automation volume. Fast launch > perfect automation. Success metric: editorial quality, not page count.
+
+## Section 33 — Editorial reference = style anchor, not replication target
+
+The AI editorial image is a **style anchor**, not a duplication target. One reference image per look. Never use multiple references for a single look. Never search for identical products unless explicitly instructed.
+
+**Look DNA must define:** destination, occasion, time of day, AI editorial reference image, mood/vibe, color story, silhouette, Resort Edit keywords, luxury level, weather/environment, hero brands (if applicable).
+
+**Product-matching priority (in order):**
+1. **Silhouette match** — flowing maxi, fitted knit, structured linen set, caftan, matching resort set, elevated swim silhouette.
+2. **Destination match** — yacht day, pool club, harbor dinner, beach club lunch, sightseeing, market stroll, boat excursion.
+3. **Color story** — majolica blue, citrus, seafoam, neutrals, sunset, black + cream, terracotta.
+4. **Luxury signal** — elevated, expensive, destination-appropriate, editorial, polished, aspirational, vacation-specific.
+5. **Detail match (LOWEST)** — exact print/embroidery/hardware/trim/neckline/accessories.
+
+**Recreate:** styling energy, silhouette, mood, vacation context, color language, luxury level.
+**Do NOT recreate:** exact garments, prints, poses, colors, brands.
+
+**Hero pieces** (dresses, swim, sets, statement shoes/bags) match the reference most closely. **Accessories interpret loosely.**
+
+**Reject:** too literal, costume-like, fast-fashion feeling, flat, generic, overly youthful, too sexy, not age-appropriate (35–49), disconnected from destination context.
+
+**Success metric:** "I understand the vibe and could recreate this." NOT "this is the exact outfit from the image."

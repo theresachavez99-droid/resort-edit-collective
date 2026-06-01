@@ -22,6 +22,7 @@
 - **Hero Lock:** dresses, swimwear, matching sets, statement tops/bottoms, bags, statement shoes require editorial approval before publish. Flexible pieces (earrings, necklaces, bracelets, rings, sunglasses, hats, optional layers) may be sourced + validated automatically.
 - **Sunglasses = day looks only. Hats = only contextually appropriate** (yacht/pool/beach club/boat/outdoor/market/safari/daytime sightseeing/shopping/resort stroll). Never on dinner/cocktail/nightlife/evening/sunset dinner/fine dining/indoor. Vary hat styles — no repeated straw hats.
 - **Launch priority:** Portofino fully polished first. Fewer looks, stronger quality. Editorial quality > automation volume.
+- **Editorial reference = style anchor, not replication target.** One reference image per look. Match priority: silhouette → destination → color story → luxury signal → detail (lowest). Hero pieces (dresses/swim/sets/statement shoes+bags) match closely; accessories interpret loosely. Reject too-literal, costume-like, or fast-fashion-feeling products. Success metric: "I understand the vibe", not "exact outfit from the image."
 
 ## Memories
 - [Sourcing & product rules](mem://features/sourcing-rules) — Retailer priority, Brands We Love allowlist, international mix, replacement logic, Firecrawl workflow, aesthetic guardrails.
