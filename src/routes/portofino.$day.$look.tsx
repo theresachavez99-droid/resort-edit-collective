@@ -99,7 +99,7 @@ function ViewFullLookPage() {
           <div className="flex items-center gap-4 text-[0.85rem]">
             {prevLook ? (
               <Link
-                to="/portofino/day-$day/look-$look"
+                to="/portofino/$day/$look"
                 params={{ day: prevLook.daySlug, look: prevLook.lookSlug }}
                 search={{ tier }}
                 className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
@@ -114,7 +114,7 @@ function ViewFullLookPage() {
             <span className="text-ink/25">|</span>
             {nextLook ? (
               <Link
-                to="/portofino/day-$day/look-$look"
+                to="/portofino/$day/$look"
                 params={{ day: nextLook.daySlug, look: nextLook.lookSlug }}
                 search={{ tier }}
                 className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
@@ -208,7 +208,7 @@ function ViewFullLookPage() {
                   return (
                     <Link
                       key={t}
-                      to="/portofino/day-$day/look-$look"
+                      to="/portofino/$day/$look"
                       params={{ day, look }}
                       search={{ tier: t }}
                       replace
