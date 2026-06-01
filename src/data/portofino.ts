@@ -169,7 +169,8 @@ export const portofinoLooks: Look[] = [
         item: "Marseille Espadrille Wedges — Beige Tan",
         price: "$295",
         href: "https://biankina.com/products/marseille-eco-canvas-vegan-espadrille-wedges-beige-tan?ref=Resortedit",
-        image: "https://biankina.com/cdn/shop/files/marseille-eco-canvas-vegan-espadrille-wedges-beige-tan-biankina-481366_1200x1200.jpg?v=1713884035",
+        image:
+          "https://biankina.com/cdn/shop/files/marseille-eco-canvas-vegan-espadrille-wedges-beige-tan-biankina-481366_1200x1200.jpg?v=1713884035",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -178,7 +179,8 @@ export const portofinoLooks: Look[] = [
         item: "St. Louis Matte Oyster 24K Sunglasses",
         price: "$295",
         href: "https://www.saksfifthavenue.com/product/krewe-st-louis-sunglasses-0400017131385.html",
-        image: "https://www.krewe.com/cdn/shop/products/StLouis-MatteOyster-Front.png?v=1602803050&width=2048",
+        image:
+          "https://www.krewe.com/cdn/shop/products/StLouis-MatteOyster-Front.png?v=1602803050&width=2048",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -187,7 +189,7 @@ export const portofinoLooks: Look[] = [
         item: "Hammered Disc Earrings",
         price: "$165",
         href: "https://www.revolve.com/ben-amun-hammered-disc-earrings/dp/BAMR-WL88/",
-        image: "https://is4.revolveassets.com/images/p4/n/uv/BAMR-WL88_V1.jpg",
+        image: productBenAmunLaurenEarrings,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -205,7 +207,7 @@ export const portofinoLooks: Look[] = [
         item: "Santa Croce Small Woven Leather Bag",
         price: "$485",
         href: "https://www.revolve.com/dragon-diffusion-santa-croce-small-bag/dp/DRAF-WY62/",
-        image: "https://is4.revolveassets.com/images/p4/n/uv/DRAF-WY62_V1.jpg",
+        image: productDragonSantaCroceTote,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -214,9 +216,10 @@ export const portofinoLooks: Look[] = [
         item: "Silk Square Scarf — Ivory Print",
         price: "$150",
         category: "Hair Detail",
-        href: "https://www.aninebing.com/products/silk-scarf-ivory-print",
+        href: "",
         image: productAnineBingSilkScarf,
-        inventory_status: "in_stock",
+        inventory_status: "unavailable",
+        not_available: true,
         last_verified_date: "2026-05-30",
       },
       // -----------------------------------------------------------------
@@ -246,7 +249,8 @@ export const portofinoLooks: Look[] = [
         price: "$295",
         category: "Shoes",
         href: "https://www.farfetch.com/shopping/women/ancient-greek-sandals-eleftheria-braided-leather-sandals-item-17740915.aspx",
-        backup_link_1: "https://www.mytheresa.com/us/en/women/ancient-greek-sandals-eleftheria-leather-sandals-black-p00211686",
+        backup_link_1:
+          "https://www.mytheresa.com/us/en/women/ancient-greek-sandals-eleftheria-leather-sandals-black-p00211686",
         image: "https://cdn-images.farfetch-contents.com/17/74/09/15/17740915_37490226_1000.jpg",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-30",
@@ -270,7 +274,8 @@ export const portofinoLooks: Look[] = [
         price: "$275",
         category: "Earrings",
         href: "https://www.nordstrom.com/s/natasha-mini-hoops-1-inch-nordstrom-exclusive/7909464",
-        image: "https://n.nordstrommedia.com/it/03782d10-d70a-4203-b82f-85ba6a7c08c9.jpeg?crop=pad&w=780&h=1196",
+        image:
+          "https://n.nordstrommedia.com/it/03782d10-d70a-4203-b82f-85ba6a7c08c9.jpeg?crop=pad&w=780&h=1196",
         inventory_status: "in_stock",
         replaced: true,
         last_verified_date: "2026-05-30",
@@ -305,7 +310,8 @@ export const portofinoLooks: Look[] = [
         price: "$118",
         category: "Ring",
         href: "https://mejuri.com/products/dome-ring",
-        image: "https://cdn.shopify.com/s/files/1/0631/8568/2616/files/0-Reshoot_DomeRing_SS_OffFigureAngledView_PDP.png?v=1776124810",
+        image:
+          "https://cdn.shopify.com/s/files/1/0631/8568/2616/files/0-Reshoot_DomeRing_SS_OffFigureAngledView_PDP.png?v=1776124810",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-30",
         lookIndex: 2,
@@ -345,7 +351,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Private Yacht Charter — Portofino Coast",
         experience_image: yacht,
-        experience_description: "Your own boat, your own pace, and hidden swim coves along the promontory.",
+        experience_description:
+          "Your own boat, your own pace, and hidden swim coves along the promontory.",
         affiliate_link: "https://www.viator.com/Portofino/d50421",
         backup_link: "https://www.getyourguide.com/portofino-l1093/",
         provider: "Viator",
@@ -356,7 +363,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Small-Group Sunset Cruise",
         experience_image: dinner,
-        experience_description: "Golden hour along the Ligurian coast with a glass of chilled prosecco in hand.",
+        experience_description:
+          "Golden hour along the Ligurian coast with a glass of chilled prosecco in hand.",
         affiliate_link: "https://www.getyourguide.com/portofino-l1093/sunset-cruise",
         backup_link: "https://www.viator.com/Portofino/d50421",
         provider: "GetYourGuide",
@@ -367,7 +375,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Portofino Coastline Boat Excursion",
         experience_image: town,
-        experience_description: "Riviera energy without the private charter price tag — a shared route past the icons.",
+        experience_description:
+          "Riviera energy without the private charter price tag — a shared route past the icons.",
         affiliate_link: "https://www.viator.com/Portofino/d50421/coastline-excursion",
         backup_link: "https://www.getyourguide.com/portofino-l1093/",
         provider: "Viator",
@@ -393,7 +402,8 @@ export const portofinoLooks: Look[] = [
         item: "Primavera Canna Bikini Top",
         price: "$185",
         href: "https://us.aguabyaguabendita.com/products/secreto-primavera-canna-bikini-top-19250",
-        image: "https://us.aguabyaguabendita.com/cdn/shop/files/Secreto-Primavera-Canna-Bikini-top-19250-1_1024x1024.jpg?v=1747842398",
+        image:
+          "https://us.aguabyaguabendita.com/cdn/shop/files/Secreto-Primavera-Canna-Bikini-top-19250-1_1024x1024.jpg?v=1747842398",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 1,
@@ -403,7 +413,8 @@ export const portofinoLooks: Look[] = [
         item: "Magenta Canna Bikini Bottom",
         price: "$165",
         href: "https://us.aguabyaguabendita.com/products/secreto-magenta-canna-bikini-bottom-19251",
-        image: "https://us.aguabyaguabendita.com/cdn/shop/files/Secreto-Magenta-Canna-Bikini-bottom-19251-1_1024x1024.jpg?v=1747842368",
+        image:
+          "https://us.aguabyaguabendita.com/cdn/shop/files/Secreto-Magenta-Canna-Bikini-bottom-19251-1_1024x1024.jpg?v=1747842368",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 1,
@@ -423,7 +434,8 @@ export const portofinoLooks: Look[] = [
         item: "Sasha Selene 24K Sunglasses",
         price: "$295",
         href: "https://www.krewe.com/products/sasha-selene-24k-sunglasses",
-        image: "https://www.krewe.com/cdn/shop/files/Sasha-Selene-Front-Web.jpg?v=1713968782&width=2048",
+        image:
+          "https://www.krewe.com/cdn/shop/files/Sasha-Selene-Front-Web.jpg?v=1713968782&width=2048",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 2,
@@ -462,8 +474,10 @@ export const portofinoLooks: Look[] = [
         item: "Maxi Almost Bare 15 Leather Sandals — Shoes",
         price: "$750",
         href: "https://www.mytheresa.com/us/en/women/aquazzura-maxi-almost-bare-15-leather-sandals",
-        backup_link_1: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/flat-sandals/maxi-almost-bare-leather-sandals",
-        backup_link_2: "https://www.farfetch.com/shopping/women/aquazzura-maxi-almost-bare-flat-sandals-item.aspx",
+        backup_link_1:
+          "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/flat-sandals/maxi-almost-bare-leather-sandals",
+        backup_link_2:
+          "https://www.farfetch.com/shopping/women/aquazzura-maxi-almost-bare-flat-sandals-item.aspx",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 2,
@@ -473,7 +487,8 @@ export const portofinoLooks: Look[] = [
         item: "Tamsin Sculptural Gold Drop Earrings",
         price: "$325",
         href: "https://www.net-a-porter.com/en-us/shop/product/jennifer-behr/accessories/earrings/tamsin-gold-tone-earrings",
-        backup_link_1: "https://www.shopbop.com/tamsin-earrings-jennifer-behr/vp/v=1/1542850232.htm",
+        backup_link_1:
+          "https://www.shopbop.com/tamsin-earrings-jennifer-behr/vp/v=1/1542850232.htm",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 2,
@@ -483,8 +498,10 @@ export const portofinoLooks: Look[] = [
         item: "Twisted Gold-Tone Collar — Necklace",
         price: "$595",
         href: "https://www.mytheresa.com/us/en/women/saint-laurent-twisted-gold-tone-collar-necklace",
-        backup_link_1: "https://www.net-a-porter.com/en-us/shop/product/saint-laurent/accessories/necklaces/twisted-gold-tone-collar",
-        backup_link_2: "https://www.farfetch.com/shopping/women/saint-laurent-twisted-collar-necklace-item.aspx",
+        backup_link_1:
+          "https://www.net-a-porter.com/en-us/shop/product/saint-laurent/accessories/necklaces/twisted-gold-tone-collar",
+        backup_link_2:
+          "https://www.farfetch.com/shopping/women/saint-laurent-twisted-collar-necklace-item.aspx",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 2,
@@ -495,7 +512,8 @@ export const portofinoLooks: Look[] = [
         price: "$550",
         href: "https://www.davidyurman.com/products/cable-classics-bracelet-5mm",
         backup_link_1: "https://www.nordstrom.com/s/david-yurman-cable-classics-bracelet/3076283",
-        backup_link_2: "https://www.saksfifthavenue.com/product/david-yurman-cable-classics-bracelet-0400099999999.html",
+        backup_link_2:
+          "https://www.saksfifthavenue.com/product/david-yurman-cable-classics-bracelet-0400099999999.html",
         image: productDavidYurmanCableClassics,
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
@@ -517,7 +535,8 @@ export const portofinoLooks: Look[] = [
         item: "Mini Tortoise Barrette — Hair Detail",
         price: "$225",
         href: "https://www.shopbop.com/mini-tort-barrette-lelet-ny/vp/v=1/1521352288.htm",
-        backup_link_1: "https://www.net-a-porter.com/en-us/shop/product/lelet-ny/accessories/hair-accessories/mini-tortoise-barrette",
+        backup_link_1:
+          "https://www.net-a-porter.com/en-us/shop/product/lelet-ny/accessories/hair-accessories/mini-tortoise-barrette",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 2,
@@ -537,7 +556,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Cliffside Cabana Above Paraggi",
         experience_image: beach,
-        experience_description: "A reserved daybed above the turquoise cove, all afternoon, fully attended.",
+        experience_description:
+          "A reserved daybed above the turquoise cove, all afternoon, fully attended.",
         affiliate_link: "https://www.viator.com/Portofino/d50421/paraggi-beach",
         backup_link: "https://www.getyourguide.com/portofino-l1093/",
         provider: "Viator",
@@ -548,7 +568,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Ligurian Seafood Cooking Class",
         experience_image: town,
-        experience_description: "An intimate afternoon learning trofie al pesto with the day's catch and a local vintner.",
+        experience_description:
+          "An intimate afternoon learning trofie al pesto with the day's catch and a local vintner.",
         affiliate_link: "https://www.getyourguide.com/portofino-l1093/cooking-class",
         backup_link: "https://www.viator.com/Portofino/d50421",
         provider: "GetYourGuide",
@@ -559,7 +580,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Cinque Terre Wine Tasting",
         experience_image: dayclub,
-        experience_description: "Small-group cellar visits along the terraced cliffs — sommelier-led, beautifully paced.",
+        experience_description:
+          "Small-group cellar visits along the terraced cliffs — sommelier-led, beautifully paced.",
         affiliate_link: "https://www.getyourguide.com/portofino-l1093/cinque-terre-wine",
         backup_link: "https://www.getyourguide.com/portofino-l1093/",
         provider: "GetYourGuide",
@@ -585,7 +607,8 @@ export const portofinoLooks: Look[] = [
         item: "Illumination Top — Spring 2025",
         price: "$525",
         href: "https://www.net-a-porter.com/en-us/shop/product/zimmermann/clothing/blouses/illumination-cropped-cotton-and-silk-blend-blouse/46376663162848181",
-        image: "https://cdn.modaoperandi.com/assets/images/products/1058425/706197/medium_zimmermann-multi-rebellion-lantern-maxi-skirt.jpg",
+        image:
+          "https://cdn.modaoperandi.com/assets/images/products/1058425/706197/medium_zimmermann-multi-rebellion-lantern-maxi-skirt.jpg",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -594,7 +617,8 @@ export const portofinoLooks: Look[] = [
         item: "Illumination Skirt",
         price: "$695",
         href: "https://www.net-a-porter.com/en-us/shop/product/zimmermann/clothing/midi-skirts/illumination-linen-and-silk-blend-skirt/46376663162848182",
-        image: "https://cdn.modaoperandi.com/assets/images/products/1058425/706197/medium_zimmermann-multi-rebellion-lantern-maxi-skirt.jpg",
+        image:
+          "https://cdn.modaoperandi.com/assets/images/products/1058425/706197/medium_zimmermann-multi-rebellion-lantern-maxi-skirt.jpg",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -621,7 +645,8 @@ export const portofinoLooks: Look[] = [
         item: "Sahara 24K Sunglasses",
         price: "$295",
         href: "https://www.krewe.com/products/sahara-24k-sunglasses",
-        image: "https://www.krewe.com/cdn/shop/files/Sasha-Maple-Front-Web.jpg?v=1774995369&width=2048",
+        image:
+          "https://www.krewe.com/cdn/shop/files/Sasha-Maple-Front-Web.jpg?v=1774995369&width=2048",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -639,9 +664,12 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Splendido Spa Afternoon",
         experience_image: yacht,
-        experience_description: "A signature ritual and quiet pool access at Portofino's most storied address.",
-        affiliate_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/spa",
-        backup_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+        experience_description:
+          "A signature ritual and quiet pool access at Portofino's most storied address.",
+        affiliate_link:
+          "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/spa",
+        backup_link:
+          "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
         provider: "Direct",
         destination: "Portofino, Italy",
         price_tier: "Signature Experience",
@@ -650,7 +678,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Eight Club Portofino Daybed",
         experience_image: dayclub,
-        experience_description: "A poolside daybed with full service and uninterrupted harbor light.",
+        experience_description:
+          "A poolside daybed with full service and uninterrupted harbor light.",
         affiliate_link: "https://www.eighthotels.com/en/eight-hotel-portofino/",
         backup_link: "https://www.viator.com/Portofino/d50421/eight-club",
         provider: "Direct",
@@ -732,9 +761,12 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Sunset Cocktails at La Terrazza",
         experience_image: dinner,
-        experience_description: "A reserved harbor-view table at the Splendido as the bay turns gold.",
-        affiliate_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/dining",
-        backup_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+        experience_description:
+          "A reserved harbor-view table at the Splendido as the bay turns gold.",
+        affiliate_link:
+          "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/dining",
+        backup_link:
+          "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
         provider: "Direct",
         destination: "Portofino, Italy",
         price_tier: "Signature Experience",
@@ -743,7 +775,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Chef's Table at the Harbor",
         experience_image: town,
-        experience_description: "An intimate tasting menu and Italian pairings beside the boats coming in.",
+        experience_description:
+          "An intimate tasting menu and Italian pairings beside the boats coming in.",
         affiliate_link: "https://www.getyourguide.com/portofino-l1093/chefs-table",
         backup_link: "https://www.viator.com/Portofino/d50421",
         provider: "GetYourGuide",
@@ -754,7 +787,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Evening Car to Santa Margherita",
         experience_image: dayclub,
-        experience_description: "A polished door-to-door transfer along the coast road, no logistics required.",
+        experience_description:
+          "A polished door-to-door transfer along the coast road, no logistics required.",
         affiliate_link: "https://www.viator.com/Portofino/d50421/private-transfer",
         backup_link: "https://www.getyourguide.com/portofino-l1093/",
         provider: "Viator",
@@ -789,7 +823,8 @@ export const portofinoLooks: Look[] = [
         item: "Classic Tank — Cream",
         price: "$89",
         href: "https://www.aninebing.com/products/cream-essential-tank-classic",
-        image: "https://cdn.shopify.com/s/files/1/0630/4999/0366/products/G55WqrDtNFU8OflKrPl4At52DEhfoj6c-1.jpg?v=1696262202",
+        image:
+          "https://cdn.shopify.com/s/files/1/0630/4999/0366/products/G55WqrDtNFU8OflKrPl4At52DEhfoj6c-1.jpg?v=1696262202",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -807,7 +842,8 @@ export const portofinoLooks: Look[] = [
         item: "Daphne Pleated Raffia Slide Sandals — Natural",
         price: "$295",
         href: "https://www.shopbop.com/daphne-pleated-knot-flat-sandal/vp/v=1/1577497953.htm",
-        image: "https://loefflerrandall.com/cdn/shop/files/DAPHNE-PLS-NATRL_4266_medium.jpg?v=1738174973",
+        image:
+          "https://loefflerrandall.com/cdn/shop/files/DAPHNE-PLS-NATRL_4266_medium.jpg?v=1738174973",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -825,7 +861,8 @@ export const portofinoLooks: Look[] = [
         item: "Large Essential Necklace — Yellow Gold",
         price: "$525",
         href: "https://jenniferfisherjewelry.com/products/large-essential-necklace-yellow-gold",
-        image: "https://marissacollections.com/cdn/shop/files/jennifer-fisher-jewelryboutiquenecklace-o-yellow-gold-large-essential-necklace.jpg?v=1732499091",
+        image:
+          "https://marissacollections.com/cdn/shop/files/jennifer-fisher-jewelryboutiquenecklace-o-yellow-gold-large-essential-necklace.jpg?v=1732499091",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
@@ -834,7 +871,8 @@ export const portofinoLooks: Look[] = [
       {
         experience_name: "Private Cinque Terre Day",
         experience_image: beach,
-        experience_description: "A guided full day across the five villages, designed for unhurried discovery.",
+        experience_description:
+          "A guided full day across the five villages, designed for unhurried discovery.",
         affiliate_link: "https://www.viator.com/Portofino/d50421/cinque-terre",
         backup_link: "https://www.getyourguide.com/portofino-l1093/",
         provider: "Viator",
@@ -869,11 +907,27 @@ export const portofinoLooks: Look[] = [
 ];
 
 export const itinerary = [
-  { day: "Day 1", title: "Yacht Day & Harbor Aperitivo", text: "Open water, tan lines & hidden coves." },
-  { day: "Day 2", title: "Beach Club & Long Lunches", text: "Slow mornings, long lunches, seaside glamour." },
+  {
+    day: "Day 1",
+    title: "Yacht Day & Harbor Aperitivo",
+    text: "Open water, tan lines & hidden coves.",
+  },
+  {
+    day: "Day 2",
+    title: "Beach Club & Long Lunches",
+    text: "Slow mornings, long lunches, seaside glamour.",
+  },
   { day: "Day 3", title: "POOL & SHOPPING IN TOWN", text: "Poolside ease, via Roma, Capri luxe." },
-  { day: "Day 4", title: "Sunset Cocktails & Dinner With a View", text: "Golden hour, candlelight, harbor glow." },
-  { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", text: "Espresso, linen, and one long last lunch." },
+  {
+    day: "Day 4",
+    title: "Sunset Cocktails & Dinner With a View",
+    text: "Golden hour, candlelight, harbor glow.",
+  },
+  {
+    day: "Day 5",
+    title: "Market Strolls & Coastal Goodbyes",
+    text: "Espresso, linen, and one long last lunch.",
+  },
 ];
 
 export const travelTips = [
@@ -900,7 +954,8 @@ export const whereToStay: Hotel[] = [
     description:
       "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied view on the Riviera.",
     image_url: "splendido",
-    affiliate_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+    affiliate_link:
+      "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
     booking_link: "https://www.booking.com/hotel/it/splendido.html",
     backup_link: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
   },

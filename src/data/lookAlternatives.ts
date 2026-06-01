@@ -13,6 +13,13 @@
  * and a missing alt should simply not appear.
  */
 
+import eresAquarelleOnePiece from "@/assets/products/eres-aquarelle-one-piece.svg";
+import hunzaBlueBandeau from "@/assets/products/hunza-blue-bandeau.svg";
+import posseIvoryRomper from "@/assets/products/posse-ivory-romper.svg";
+import pucciBlueKaftan from "@/assets/products/pucci-blue-kaftan.svg";
+import zimmermannBluePareo from "@/assets/products/zimmermann-blue-pareo.svg";
+import zimmermannBlueSilkSet from "@/assets/products/zimmermann-blue-silk-set.svg";
+
 export type AlternativeProduct = {
   brand: string;
   title: string;
@@ -51,7 +58,7 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           slotLabel: "Swim Alt 1 · One-Piece",
           price: "$640",
           url: "https://www.net-a-porter.com/en-us/shop/product/eres/clothing/one-piece/aquarelle-square-neck-swimsuit/1647597321197131",
-          image: "https://www.net-a-porter.com/variants/images/1647597321197131/in/w2000_q60.jpg",
+          image: eresAquarelleOnePiece,
           note: "Architectural square neckline, Riviera blue. Yacht-elegant, never sporty.",
         },
         {
@@ -60,7 +67,7 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           slotLabel: "Matching Sarong",
           price: "$495",
           url: "https://www.net-a-porter.com/en-us/shop/product/dolcegabbana/clothing/coverups/maiolica-printed-cotton-pareo/46376663163104529",
-          image: "https://www.net-a-porter.com/variants/images/46376663163104529/in/w2000_q60.jpg",
+          image: "https://www.net-a-porter.com/variants/images/46376663163104529/in/w920_q60.jpg",
           note: "Blue and white tile print — knot at the hip over the one-piece.",
         },
         {
@@ -69,7 +76,7 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           slotLabel: "Swim Alt 2 · Bandeau",
           price: "$245",
           url: "https://www.net-a-porter.com/en-us/shop/product/hunza-g/clothing/bandeau/tracy-bandeau-seersucker-swimsuit/1647597338129030",
-          image: "https://www.net-a-porter.com/variants/images/1647597338129030/in/w2000_q60.jpg",
+          image: hunzaBlueBandeau,
           note: "Bandeau silhouette in signature crinkle — yacht appropriate, never juvenile.",
         },
         {
@@ -78,7 +85,7 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           slotLabel: "Matching Sarong",
           price: "$295",
           url: "https://www.net-a-porter.com/en-us/shop/product/zimmermann/clothing/coverups/alight-printed-cotton-pareo/46376663163067275",
-          image: "https://www.net-a-porter.com/variants/images/46376663163067275/in/w2000_q60.jpg",
+          image: zimmermannBluePareo,
           note: "Mediterranean print in tonal blues — pairs with the bandeau or worn alone as a maxi.",
         },
       ],
@@ -94,7 +101,7 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           slotLabel: "Outfit Alt 1 · Closest to Muse",
           price: "$370",
           url: "https://www.net-a-porter.com/en-us/shop/product/posse/clothing/playsuits/hailey-linen-romper/46376663163057411",
-          image: "https://www.net-a-porter.com/variants/images/46376663163057411/in/w2000_q60.jpg",
+          image: posseIvoryRomper,
           note: "White linen romper to layer under a blue printed kaftan — raffia underfoot, gold at the ears.",
         },
         {
@@ -103,7 +110,7 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           slotLabel: "Layer over Alt 1",
           price: "$1,495",
           url: "https://www.mytheresa.com/us/en/women/pucci-marmo-print-silk-twill-kaftan-blue-white-p01095481",
-          image: "https://img.mytheresa.com/1094/1238/100/jpeg/catalog/product/53/P01095481.jpg",
+          image: pucciBlueKaftan,
           note: "Blue-and-white printed silk caftan — the muse layer.",
         },
         {
@@ -112,7 +119,7 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           slotLabel: "Outfit Alt 2 · Riviera Lunch",
           price: "$1,250",
           url: "https://www.mytheresa.com/us/en/women/zimmermann-alight-printed-silk-set-blue-p01089412",
-          image: "https://img.mytheresa.com/1094/1238/100/jpeg/catalog/product/12/P01089412.jpg",
+          image: zimmermannBlueSilkSet,
           note: "Printed silk co-ord for a long Mediterranean lunch — sleek with resort sandals and raffia.",
         },
         {
@@ -121,7 +128,7 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           slotLabel: "Outfit Alt 3 · Beach Club",
           price: "$648",
           url: "https://www.net-a-porter.com/en-us/shop/product/cult-gaia/clothing/coverups/adira-printed-cotton-voile-kaftan/46376663162966810",
-          image: "https://www.net-a-porter.com/variants/images/46376663162966810/in/w2000_q60.jpg",
+          image: "https://www.net-a-porter.com/variants/images/46376663162966810/in/w920_q60.jpg",
           note: "Elevated kaftan to throw over a swim — yacht to lunch in one piece.",
         },
       ],
@@ -129,9 +136,6 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
   ],
 };
 
-export function alternativesFor(
-  daySlug: string,
-  lookSlug: string,
-): AlternativeGroup[] {
+export function alternativesFor(daySlug: string, lookSlug: string): AlternativeGroup[] {
   return LOOK_ALTERNATIVES[`${daySlug}/${lookSlug}`] ?? [];
 }

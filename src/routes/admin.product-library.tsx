@@ -42,11 +42,63 @@ type Row = {
   status: string;
   replaced?: boolean;
   not_available?: boolean;
+  issueFlags?: string[];
   source: "portofino.ts" | "portofinoEdit.ts";
 };
 
 const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD as string) || "resortedit2026";
 const STORAGE_KEY = "admin_product_library_unlocked";
+const APPROVED_RETAILER_DOMAINS = [
+  "farfetch.com",
+  "mytheresa.com",
+  "net-a-porter.com",
+  "shopbop.com",
+  "revolve.com",
+  "nordstrom.com",
+  "saksfifthavenue.com",
+  "bloomingdales.com",
+  "neimanmarcus.com",
+  "ssense.com",
+  "aninebing.com",
+  "biankina.com",
+  "davidyurman.com",
+  "dragondiffusion.com",
+  "hereustudio.com",
+  "jenniferfisherjewelry.com",
+  "kendrascott.com",
+  "krewe.com",
+  "monicavinader.com",
+  "us.aguabyaguabendita.com",
+  "us.loropiana.com",
+  "vancleefarpels.com",
+];
+
+function isApprovedRetailer(href: string | null): boolean {
+  if (!href) return false;
+  try {
+    const host = new URL(href).hostname.replace(/^www\./, "");
+    return APPROVED_RETAILER_DOMAINS.some(
+      (domain) => host === domain || host.endsWith(`.${domain}`),
+    );
+  } catch {
+    return false;
+  }
+}
+
+function productQualityFlags(row: Omit<Row, "issueFlags">): string[] {
+  const flags: string[] = [];
+  const issue = urlIssue(row.href);
+  if (issue?.includes("placeholder")) flags.push("missing affiliate URL");
+  else if (issue?.includes("homepage")) flags.push("generic homepage URL");
+  else if (issue) flags.push("broken URL");
+  if (!row.image) flags.push("broken image");
+  if (row.not_available || row.status === "unavailable" || row.status === "not_available")
+    flags.push("unavailable");
+  if (row.href && !isApprovedRetailer(row.href)) flags.push("non-approved retailer link");
+  if (flags.length && !row.replaced) flags.push("needs replacement");
+  if (row.replaced) flags.push("approved replacement");
+  return Array.from(new Set(flags));
+}
 
 function buildRows(): Row[] {
   const rows: Row[] = [];
@@ -65,9 +117,7 @@ function buildRows(): Row[] {
         day: look.day,
         look: it.lookIndex ? `Look ${it.lookIndex}` : look.title,
         tier: "—",
-        status: it.not_available
-          ? "not_available"
-          : (it.inventory_status ?? "in_stock"),
+        status: it.not_available ? "not_available" : (it.inventory_status ?? "in_stock"),
         replaced: it.replaced,
         not_available: it.not_available,
         source: "portofino.ts",
@@ -92,9 +142,7 @@ function buildRows(): Row[] {
             day: day.day,
             look: `${look.id} — ${look.name}`,
             tier: String(tier),
-            status: it.not_available
-              ? "not_available"
-              : (it.inventory_status ?? "in_stock"),
+            status: it.not_available ? "not_available" : (it.inventory_status ?? "in_stock"),
             replaced: it.replaced,
             not_available: it.not_available,
             source: "portofinoEdit.ts",
@@ -104,7 +152,7 @@ function buildRows(): Row[] {
     });
   });
 
-  return rows;
+  return rows.map((row) => ({ ...row, issueFlags: productQualityFlags(row) }));
 }
 
 function ProductLibraryPage() {
@@ -134,7 +182,9 @@ function ProductLibraryPage() {
           className="w-full max-w-sm space-y-4 bg-white border border-border/60 p-6 rounded-md"
         >
           <h1 className="font-serif text-xl">Product Library — Admin</h1>
-          <p className="text-sm text-ink/70">Enter the admin password to view all sourced products.</p>
+          <p className="text-sm text-ink/70">
+            Enter the admin password to view all sourced products.
+          </p>
           <input
             type="password"
             value={pw}
@@ -151,7 +201,8 @@ function ProductLibraryPage() {
             Unlock
           </button>
           <p className="text-[0.65rem] text-ink/50">
-            Default password is set via <code>VITE_ADMIN_PASSWORD</code>. Change it before publishing.
+            Default password is set via <code>VITE_ADMIN_PASSWORD</code>. Change it before
+            publishing.
           </p>
         </form>
       </div>
@@ -188,15 +239,15 @@ function ProductLibraryTabs() {
           </button>
         ))}
       </nav>
-      {tab === "catalog" && <ProductLibraryGrid />}
-      {tab === "issues" && <IssuesView />}
+      {tab === "catalog" && <ProductLibraryGrid onReplace={() => setTab("sourcing")} />}
+      {tab === "issues" && <IssuesView onReplace={() => setTab("sourcing")} />}
       {tab === "gap" && <GapReport />}
       {tab === "sourcing" && <SourcingView />}
     </div>
   );
 }
 
-function ProductLibraryGrid() {
+function ProductLibraryGrid({ onReplace }: { onReplace: () => void }) {
   const rows = useMemo(buildRows, []);
   const [q, setQ] = useState("");
   const [day, setDay] = useState<string>("all");
@@ -240,14 +291,25 @@ function ProductLibraryGrid() {
         <p className="text-sm text-ink/70">
           All products sourced into the live site, aggregated from{" "}
           <code>src/data/portofino.ts</code> and <code>src/data/portofinoEdit.ts</code>. No
-          Firecrawl-cached data was found in this project — every entry shown below was hand-curated.
+          Firecrawl-cached data was found in this project — every entry shown below was
+          hand-curated.
         </p>
         <div className="flex flex-wrap gap-4 text-xs text-ink/70">
-          <span><strong>{counts.total}</strong> total</span>
-          <span><strong>{counts.withImage}</strong> with image</span>
-          <span><strong>{counts.withLink}</strong> with affiliate link</span>
-          <span><strong>{counts.notAvailable}</strong> marked “not available”</span>
-          <span><strong>{filtered.length}</strong> matching filters</span>
+          <span>
+            <strong>{counts.total}</strong> total
+          </span>
+          <span>
+            <strong>{counts.withImage}</strong> with image
+          </span>
+          <span>
+            <strong>{counts.withLink}</strong> with affiliate link
+          </span>
+          <span>
+            <strong>{counts.notAvailable}</strong> marked “not available”
+          </span>
+          <span>
+            <strong>{filtered.length}</strong> matching filters
+          </span>
         </div>
       </header>
 
@@ -272,7 +334,6 @@ function ProductLibraryGrid() {
           >
             <div className="aspect-square w-full bg-cream border border-border/40 rounded mb-3 flex items-center justify-center overflow-hidden">
               {r.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={r.image}
                   alt={`${r.brand} ${r.item}`}
@@ -296,11 +357,16 @@ function ProductLibraryGrid() {
                 <Tag>{r.category}</Tag>
                 <Tag>{r.status}</Tag>
                 {r.replaced && <Tag>updated</Tag>}
+                {r.issueFlags?.map((flag) => (
+                  <Tag key={flag}>{flag}</Tag>
+                ))}
               </div>
               <div className="text-[0.6rem] text-ink/50 truncate" title={r.href ?? ""}>
                 {r.href ?? "— no link —"}
               </div>
-              <div className="text-[0.55rem] text-ink/40">{r.source} · {r.look}</div>
+              <div className="text-[0.55rem] text-ink/40">
+                {r.source} · {r.look}
+              </div>
             </div>
             {r.href && (
               <a
@@ -311,6 +377,21 @@ function ProductLibraryGrid() {
               >
                 Open Product →
               </a>
+            )}
+            {r.issueFlags?.some(
+              (flag) =>
+                flag === "needs replacement" ||
+                flag === "broken image" ||
+                flag === "broken URL" ||
+                flag === "missing affiliate URL",
+            ) && (
+              <button
+                type="button"
+                onClick={onReplace}
+                className="mt-2 inline-block text-center border border-gold text-ink py-1.5 text-[0.7rem] uppercase tracking-wider rounded hover:bg-cream"
+              >
+                Replace Product
+              </button>
             )}
           </div>
         ))}
@@ -340,7 +421,9 @@ function Select({
       >
         <option value="all">All</option>
         {options.map((o) => (
-          <option key={o} value={o}>{o}</option>
+          <option key={o} value={o}>
+            {o}
+          </option>
         ))}
       </select>
     </label>
@@ -348,9 +431,7 @@ function Select({
 }
 
 function Tag({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="bg-cream border border-border/40 px-1.5 py-px rounded">{children}</span>
-  );
+  return <span className="bg-cream border border-border/40 px-1.5 py-px rounded">{children}</span>;
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -432,7 +513,7 @@ function buildIssues(): Issue[] {
   return issues;
 }
 
-function IssuesView() {
+function IssuesView({ onReplace }: { onReplace: () => void }) {
   const issues = useMemo(buildIssues, []);
   const byProblem = useMemo(() => {
     const map = new Map<string, number>();
@@ -444,16 +525,13 @@ function IssuesView() {
     <div className="p-6 lg:p-10">
       <h1 className="font-serif text-3xl mb-2">Issues</h1>
       <p className="text-sm text-ink/70 mb-4">
-        Every curated product flagged with at least one problem. These items either
-        fall back to the styling-note placeholder on View Full Look pages, or
-        render with a broken image / generic link.
+        Every curated product flagged with at least one problem. These items either fall back to the
+        styling-note placeholder on View Full Look pages, or render with a broken image / generic
+        link.
       </p>
       <div className="flex flex-wrap gap-3 text-xs mb-6">
         {byProblem.map(([p, n]) => (
-          <span
-            key={p}
-            className="bg-white border border-border/60 px-2 py-1 rounded"
-          >
+          <span key={p} className="bg-white border border-border/60 px-2 py-1 rounded">
             <strong>{n}</strong> · {p}
           </span>
         ))}
@@ -471,6 +549,7 @@ function IssuesView() {
               <th className="p-2">Source</th>
               <th className="p-2">Problems</th>
               <th className="p-2">URL</th>
+              <th className="p-2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -492,6 +571,15 @@ function IssuesView() {
                 </td>
                 <td className="p-2 text-ink/50 truncate max-w-[260px]" title={i.href ?? ""}>
                   {i.href ?? "—"}
+                </td>
+                <td className="p-2">
+                  <button
+                    type="button"
+                    onClick={onReplace}
+                    className="border border-gold px-2 py-1 rounded text-[0.65rem] uppercase tracking-wider hover:bg-cream"
+                  >
+                    Replace Product
+                  </button>
                 </td>
               </tr>
             ))}
@@ -570,16 +658,24 @@ function GapReport() {
         <h1 className="font-serif text-3xl">Gap Report</h1>
         <p className="text-sm text-ink/70 mt-2 max-w-3xl">
           What the live <code>/portofino/day-N/look-X</code> pages actually render today,
-          slot-by-slot. Each look has 7 required categories × 3 tiers = 21 slots, across
-          15 looks (5 days × 3 looks) = <strong>{total} total slots</strong>. Anything
-          marked "placeholder" needs Firecrawl sourcing of an exact affiliate product URL
-          + thumbnail.
+          slot-by-slot. Each look has 7 required categories × 3 tiers = 21 slots, across 15 looks (5
+          days × 3 looks) = <strong>{total} total slots</strong>. Anything marked "placeholder"
+          needs Firecrawl sourcing of an exact affiliate product URL + thumbnail.
         </p>
       </header>
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <Stat label="Mapped to real product" value={mapped} sub={`${Math.round((mapped / total) * 100)}%`} good />
-        <Stat label="Placeholder slots (need sourcing)" value={placeholders} sub={`${Math.round((placeholders / total) * 100)}%`} />
+        <Stat
+          label="Mapped to real product"
+          value={mapped}
+          sub={`${Math.round((mapped / total) * 100)}%`}
+          good
+        />
+        <Stat
+          label="Placeholder slots (need sourcing)"
+          value={placeholders}
+          sub={`${Math.round((placeholders / total) * 100)}%`}
+        />
         <Stat label="Total slots in View Full Look" value={total} />
       </section>
 
@@ -599,8 +695,8 @@ function GapReport() {
         </h2>
         <p className="text-xs text-ink/60 mb-3">
           Each row below describes a product to source. Use the rules from{" "}
-          <code>mem/features/look-build-rules.md</code> (approved affiliate priority,
-          exact product URL, image from same retailer).
+          <code>mem/features/look-build-rules.md</code> (approved affiliate priority, exact product
+          URL, image from same retailer).
         </p>
         <div className="overflow-auto bg-white border border-border/60 rounded">
           <table className="w-full text-xs">
@@ -665,9 +761,21 @@ function GapReport() {
   );
 }
 
-function Stat({ label, value, sub, good }: { label: string; value: number; sub?: string; good?: boolean }) {
+function Stat({
+  label,
+  value,
+  sub,
+  good,
+}: {
+  label: string;
+  value: number;
+  sub?: string;
+  good?: boolean;
+}) {
   return (
-    <div className={"bg-white border rounded p-4 " + (good ? "border-green-300" : "border-border/60")}>
+    <div
+      className={"bg-white border rounded p-4 " + (good ? "border-green-300" : "border-border/60")}
+    >
       <div className="text-xs text-ink/60">{label}</div>
       <div className="font-serif text-3xl mt-1">{value}</div>
       {sub && <div className="text-xs text-ink/50">{sub}</div>}
@@ -723,6 +831,22 @@ const SLOT_CATEGORIES = [
 ];
 
 function SourcingView() {
+  type SourcedProductRow = {
+    id: string;
+    status: "queued" | "scraped" | "approved" | "promoted" | "failed" | "rejected";
+    image_url?: string | null;
+    brand?: string | null;
+    product_name?: string | null;
+    notes?: string | null;
+    price?: number | string | null;
+    currency?: string | null;
+    day?: number | null;
+    look?: number | null;
+    slot_category?: string | null;
+    source_url: string;
+    retailer_domain?: string | null;
+  };
+
   const qc = useQueryClient();
   const listFn = useServerFn(listSourcedProducts);
   const scrapeFn = useServerFn(scrapeProductUrl);
@@ -748,7 +872,7 @@ function SourcingView() {
   });
 
   const update = useMutation({
-    mutationFn: (input: { id: string; status: any; notes?: string }) =>
+    mutationFn: (input: { id: string; status: SourcedProductRow["status"]; notes?: string }) =>
       updateFn({ data: input }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
   });
@@ -770,7 +894,7 @@ function SourcingView() {
   const rows = data?.ok ? data.rows : [];
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
-    rows.forEach((r: any) => {
+    (rows as SourcedProductRow[]).forEach((r) => {
       c[r.status] = (c[r.status] ?? 0) + 1;
     });
     return c;
@@ -781,12 +905,12 @@ function SourcingView() {
       <div>
         <h1 className="font-serif text-3xl mb-2">Sourcing — Firecrawl</h1>
         <p className="text-sm text-ink/70 max-w-3xl">
-          Mode A only: paste a specific product URL from an approved retailer. The page
-          is scraped server-side, structured data is stored in the staging queue, and
-          nothing reaches the live View Full Look pages until you click <strong>Promote</strong>.
-          Live page promotion currently means: mark approved here, then paste the JSON
-          into <code>src/data/portofinoEdit.ts</code> (or <code>src/data/portofino.ts</code>)
-          in your next release.
+          Mode A only: paste a specific product URL from an approved retailer. The page is scraped
+          server-side, structured data is stored in the staging queue, and nothing reaches the live
+          View Full Look pages until you click <strong>Promote</strong>. Live page promotion
+          currently means: mark approved here, then paste the JSON into{" "}
+          <code>src/data/portofinoEdit.ts</code> (or <code>src/data/portofino.ts</code>) in your
+          next release.
         </p>
       </div>
 
@@ -839,7 +963,9 @@ function SourcingView() {
         >
           <option value="">Slot category…</option>
           {SLOT_CATEGORIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
+            <option key={c} value={c}>
+              {c}
+            </option>
           ))}
         </select>
         <input
@@ -864,9 +990,7 @@ function SourcingView() {
           {scrape.isPending ? "Scraping…" : "Scrape →"}
         </button>
         {scrape.data && !scrape.data.ok && (
-          <p className="md:col-span-6 text-xs text-red-600">
-            Error: {scrape.data.error}
-          </p>
+          <p className="md:col-span-6 text-xs text-red-600">Error: {scrape.data.error}</p>
         )}
       </form>
 
@@ -893,7 +1017,7 @@ function SourcingView() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((r: any) => (
+            {(rows as SourcedProductRow[]).map((r) => (
               <tr key={r.id} className="border-t border-border/40 align-top">
                 <td className="p-2">
                   <span
@@ -950,9 +1074,7 @@ function SourcingView() {
                   <div className="flex flex-wrap gap-1">
                     {r.status === "scraped" && (
                       <button
-                        onClick={() =>
-                          update.mutate({ id: r.id, status: "approved" })
-                        }
+                        onClick={() => update.mutate({ id: r.id, status: "approved" })}
                         className="bg-ink text-ivory px-2 py-1 rounded text-[0.65rem] uppercase tracking-wider"
                       >
                         Approve
@@ -960,18 +1082,14 @@ function SourcingView() {
                     )}
                     {r.status === "approved" && (
                       <button
-                        onClick={() =>
-                          update.mutate({ id: r.id, status: "promoted" })
-                        }
+                        onClick={() => update.mutate({ id: r.id, status: "promoted" })}
                         className="bg-gold text-ink px-2 py-1 rounded text-[0.65rem] uppercase tracking-wider"
                       >
                         Mark Promoted
                       </button>
                     )}
                     <button
-                      onClick={() =>
-                        update.mutate({ id: r.id, status: "rejected" })
-                      }
+                      onClick={() => update.mutate({ id: r.id, status: "rejected" })}
                       className="border border-border/60 px-2 py-1 rounded text-[0.65rem] uppercase tracking-wider"
                     >
                       Reject
