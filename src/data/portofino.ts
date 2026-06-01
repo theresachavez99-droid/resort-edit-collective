@@ -443,13 +443,15 @@ export const portofinoLooks: Look[] = [
         lookIndex: 2,
       },
       {
-        brand: "Anine Bing",
-        item: "Silk Scarf — Cream",
-        price: "$95",
-        href: "https://www.aninebing.com/products/silk-scarf-cream-and-black",
-        image: productAnineBingSilkScarf,
+        brand: "Dolce & Gabbana",
+        item: "Majolica-Print Silk Twill Bandeau Scarf",
+        price: "$245",
+        href: "https://www.dolcegabbana.com/en-us/fashion/women/accessories/scarves-and-silks/majolica-print-silk-twill-bandeau-print-IS174WGDDHBHA3OO.html",
+        image:
+          "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw3df3d0b8/images/zoom/IS174WGDDHB_HA3OO_0.jpg?sw=740&sh=944",
         inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
+        replaced: true,
+        last_verified_date: "2026-06-01",
         lookIndex: 1,
       },
       {
