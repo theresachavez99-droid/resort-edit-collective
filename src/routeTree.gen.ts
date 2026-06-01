@@ -29,6 +29,7 @@ import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
 import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
+import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
 import { Route as PortofinoDayDayLookLookRouteImport } from './routes/portofino.day-$day.look-$look'
 
@@ -132,6 +133,11 @@ const BrandsSlugRoute = BrandsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BrandsRoute,
 } as any)
+const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
+  id: '/admin/subscribers',
+  path: '/admin/subscribers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminProductLibraryRoute = AdminProductLibraryRouteImport.update({
   id: '/admin/product-library',
   path: '/admin/product-library',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/product-library'
+    | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/product-library'
+    | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/product-library'
+    | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -303,6 +315,7 @@ export interface RootRouteChildren {
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
+  AdminSubscribersRoute: typeof AdminSubscribersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -447,6 +460,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandsSlugRouteImport
       parentRoute: typeof BrandsRoute
     }
+    '/admin/subscribers': {
+      id: '/admin/subscribers'
+      path: '/admin/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AdminSubscribersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/product-library': {
       id: '/admin/product-library'
       path: '/admin/product-library'
@@ -527,6 +547,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
+  AdminSubscribersRoute: AdminSubscribersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
