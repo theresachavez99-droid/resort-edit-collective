@@ -76,3 +76,39 @@ Match: silhouette, color palette, print direction, mood, level of polish, destin
 - Variation rule: alternative products should feel 70–85% stylistically aligned — never 100% duplicates. Avoid cloning the muse look repeatedly.
 
 Goal: the customer recognizes the editorial image and immediately understands why each sourced product belongs in the look.
+
+## 12. Variation + muse diversity
+Muse image is inspiration, never duplication. Target 70–85% alignment, 15–30% differentiation. Forbidden: repeated prints across every slot, repeated brands across every slot, repeated silhouettes, repeated fabrics, identical color stories on every product, the same motif everywhere.
+
+## 13. Brand diversity caps
+- Primary look: max 2 products per brand.
+- Alternative section: max 1–2 products per brand per outfit concept.
+- Entire page: max 25% from any single brand.
+If a brand exceeds the cap, replace automatically.
+
+## 14. Print + texture rotation (Mediterranean)
+Rotate across: tile prints, blue/white stripes, ivory textures, embroidery, eyelet, crochet, linen, raffia, coastal neutrals, subtle florals, geometric/tropical motifs. Rotate fabrics: linen, crochet, raffia, eyelet, silk, cotton voile, woven leather, textured cotton, gauze. Never repeat the same print family across all alternatives.
+
+## 15. Alternative-look personalities
+Each alternative on a look page is a distinct personality — same woman, different moment:
+- ALT 1 = Closest to muse
+- ALT 2 = Softer / elevated long lunch
+- ALT 3 = Beach club interpretation
+- ALT 4 = Yacht interpretation
+- ALT 5 = Market stroll interpretation
+- ALT 6 = Sunset cocktails interpretation
+Match through silhouette, proportion, movement, layering, destination energy, color story, polish — not duplication.
+
+## 16. Top-tier sourcing + scoring engine
+For every product slot:
+1. Source 3–8 candidates from approved affiliate retailers → Brands We Love allowlist → direct brand sites.
+2. Score each candidate (Resort Edit score):
+   - Editorial match (30%) — muse mood, silhouette, layering, movement, destination energy.
+   - Destination fit (25%) — yacht, market stroll, beach club, long lunch, sunset cocktails, Mediterranean/tropical luxury.
+   - Luxury factor (20%) — fabric, construction, designer pedigree, polish.
+   - Variation (15%) — reward texture/print/brand/color diversity; penalize duplicate brands, repeated prints, repetitive silhouettes.
+   - Affiliate + availability (10%) — working link, in stock, affiliate eligible, working thumbnail.
+3. Promote only the highest-scoring winners. If no candidate clears threshold, re-search.
+
+## 17. Hard-fail conditions (auto-replace)
+Replace any product immediately when: thumbnail broken, product unavailable, generic/homepage link, duplicate brand overload, weak editorial match, category mismatch, repetitive styling. Never surface low-scoring products.

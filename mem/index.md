@@ -8,6 +8,9 @@
 - Never auto-publish sourced products or flip site visibility without explicit user confirmation. Admin stays password-gated.
 - All product links open in a new tab and must be product-level URLs from the approved retailer/brand allowlist.
 - Editorial muse image is the styling anchor — sourced products must tangentially emulate it (silhouette, palette, print, mood) at 70–85% alignment, never literal copies.
+- Brand diversity caps: primary look ≤2 products/brand; alternatives ≤1–2 products/brand per concept; entire page ≤25% from any single brand. Rotate prints + textures (tile, stripe, embroidery, eyelet, crochet, linen, raffia, silk, gauze). Never repeat the same print/brand/silhouette across every slot.
+- Alternative looks must each have a distinct personality: Closest to Muse / Yacht / Beach Club / Long Lunch / Market Stroll / Sunset Cocktails. Same woman, different moment — never the same outfit formula twice.
+- Source like a stylist, not a scraper: pull 3–8 candidates per slot, score on editorial match (30%) + destination fit (25%) + luxury factor (20%) + variation (15%) + affiliate/availability (10%), only promote winners. Re-search if below threshold.
 
 ## Memories
 - [Sourcing & product rules](mem://features/sourcing-rules) — Retailer priority, Brands We Love allowlist, international mix, replacement logic, Firecrawl workflow, aesthetic guardrails.
