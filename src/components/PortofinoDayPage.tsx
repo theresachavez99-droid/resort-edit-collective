@@ -6,7 +6,7 @@ import heroYacht from "@/assets/generated/resort-edit/look-yacht-desktop-hero.jp
 import heroBeach from "@/assets/generated/resort-edit/look-beach-desktop-hero.jpg";
 import heroDayclub from "@/assets/generated/resort-edit/look-dayclub-desktop-hero.jpg";
 import heroDinner from "@/assets/generated/resort-edit/look-dinner-desktop-hero.jpg";
-import heroTown from "@/assets/generated/resort-edit/look-town-desktop-hero.jpg";
+import heroDay5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-desktop-hero.jpg";
 import expYacht from "@/assets/exp-yacht-charter.jpg";
 import expHarbor from "@/assets/exp-harbor-golden.jpg";
 import expCruise from "@/assets/exp-sunset-cruise.jpg";
@@ -159,8 +159,8 @@ export const DAY_META: Record<DaySlug, {
     dayKey: "Day 5",
     title: "Day 5 · Espresso & A Long Last Lunch",
     caption: "Espresso, linen, and one long last lunch.",
-    hero: heroTown,
-    heroPos: "50% 20%",
+    hero: heroDay5MarketStrolls,
+    heroPos: "center center",
     editorial: {
       palette: "Espresso brown, cream, vintage gold",
       silhouette: "Easy trouser, breezy blouse, sun dress",
