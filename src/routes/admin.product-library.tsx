@@ -42,11 +42,43 @@ type Row = {
   status: string;
   replaced?: boolean;
   not_available?: boolean;
+  issueFlags?: string[];
   source: "portofino.ts" | "portofinoEdit.ts";
 };
 
 const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD as string) || "resortedit2026";
 const STORAGE_KEY = "admin_product_library_unlocked";
+const APPROVED_RETAILER_DOMAINS = [
+  "farfetch.com", "mytheresa.com", "net-a-porter.com", "shopbop.com", "revolve.com",
+  "nordstrom.com", "saksfifthavenue.com", "bloomingdales.com", "neimanmarcus.com", "ssense.com",
+  "aninebing.com", "biankina.com", "davidyurman.com", "dragondiffusion.com", "hereustudio.com",
+  "jenniferfisherjewelry.com", "kendrascott.com", "krewe.com", "monicavinader.com", "us.aguabyaguabendita.com",
+  "us.loropiana.com", "vancleefarpels.com",
+];
+
+function isApprovedRetailer(href: string | null): boolean {
+  if (!href) return false;
+  try {
+    const host = new URL(href).hostname.replace(/^www\./, "");
+    return APPROVED_RETAILER_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`));
+  } catch {
+    return false;
+  }
+}
+
+function productQualityFlags(row: Omit<Row, "issueFlags">): string[] {
+  const flags: string[] = [];
+  const issue = urlIssue(row.href);
+  if (issue?.includes("placeholder")) flags.push("missing affiliate URL");
+  else if (issue?.includes("homepage")) flags.push("generic homepage URL");
+  else if (issue) flags.push("broken URL");
+  if (!row.image) flags.push("broken image");
+  if (row.not_available || row.status === "unavailable" || row.status === "not_available") flags.push("unavailable");
+  if (row.href && !isApprovedRetailer(row.href)) flags.push("non-approved retailer link");
+  if (flags.length && !row.replaced) flags.push("needs replacement");
+  if (row.replaced) flags.push("approved replacement");
+  return Array.from(new Set(flags));
+}
 
 function buildRows(): Row[] {
   const rows: Row[] = [];
@@ -104,7 +136,7 @@ function buildRows(): Row[] {
     });
   });
 
-  return rows;
+  return rows.map((row) => ({ ...row, issueFlags: productQualityFlags(row) }));
 }
 
 function ProductLibraryPage() {
