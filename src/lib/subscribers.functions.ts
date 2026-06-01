@@ -56,3 +56,68 @@ export const subscribeEmail = createServerFn({ method: "POST" })
     }
     return { ok: true as const, alreadySubscribed: false };
   });
+
+// ───────────────────────────────────────────────────────
+// Admin-only management functions
+// Gated by shared password header (matches /admin/product-library).
+// ───────────────────────────────────────────────────────
+
+const ADMIN_PASSWORD =
+  process.env.ADMIN_PASSWORD || process.env.VITE_ADMIN_PASSWORD || "resortedit2026";
+
+function requireAdmin(password: string | undefined) {
+  if (!password || password !== ADMIN_PASSWORD) {
+    throw new Error("Unauthorized");
+  }
+}
+
+export const listSubscribers = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z.object({ password: z.string().min(1).max(200) }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { data: rows, error } = await supabaseAdmin
+      .from("subscribers")
+      .select(
+        "id,email,source_page,destination,cta_source,status,tags,notes,unsubscribed_at,created_at,updated_at",
+      )
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return { subscribers: rows ?? [] };
+  });
+
+export const updateSubscriber = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z
+      .object({
+        password: z.string().min(1).max(200),
+        id: z.string().uuid(),
+        status: z.enum(["active", "unsubscribed"]).optional(),
+        tags: z.array(z.string().trim().max(64)).max(20).optional(),
+        notes: z.string().max(2000).nullable().optional(),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const patch: {
+      status?: "active" | "unsubscribed";
+      unsubscribed_at?: string | null;
+      tags?: string[];
+      notes?: string | null;
+    } = {};
+    if (data.status !== undefined) {
+      patch.status = data.status;
+      patch.unsubscribed_at =
+        data.status === "unsubscribed" ? new Date().toISOString() : null;
+    }
+    if (data.tags !== undefined) patch.tags = data.tags;
+    if (data.notes !== undefined) patch.notes = data.notes;
+    const { error } = await supabaseAdmin
+      .from("subscribers")
+      .update(patch)
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
