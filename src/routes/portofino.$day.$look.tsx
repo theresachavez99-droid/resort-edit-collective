@@ -381,21 +381,7 @@ function ProductCategoryCard({
   const label = LOOK_CATEGORY_LABEL[category];
 
   if (product.isPlaceholder) {
-    return (
-      <article className="flex h-full flex-col border border-ink/10 bg-cream/25">
-        <div className="aspect-[4/5] w-full bg-ivory/65 flex items-center justify-center px-6 text-center">
-          <p className="font-serif italic text-[0.9rem] text-ink/55 leading-relaxed">
-            {product.title}
-          </p>
-        </div>
-        <div className="flex flex-1 flex-col px-4 py-5 text-center">
-          <p className="eyebrow tracking-[0.28em] text-[0.56rem] text-gold">{label}</p>
-          <p className="font-serif text-[0.82rem] text-ink/45 mt-3 leading-snug">
-            Resort Edit sourcing note
-          </p>
-        </div>
-      </article>
-    );
+    return null;
   }
 
   return (
