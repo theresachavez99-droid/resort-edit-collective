@@ -214,3 +214,25 @@ Score on: silhouette similarity, color harmony, luxury signal, destination fit, 
 Portofino fully polished first. Fewer looks, stronger quality. Curated luxury editorial experience > automation volume. Fast launch > perfect automation.
 
 **Success metric:** Luxury editorial quality > automation volume.
+
+## Section 33 — Editorial reference = style anchor, not replication target
+
+One AI editorial reference image per look. The reference is a **style anchor**, never a duplication target. Do not use multiple references for a single look. Do not search for identical products unless explicitly instructed.
+
+**Look DNA must define:** destination · occasion · time of day · AI editorial reference image · mood/vibe · color story · silhouette · Resort Edit keywords · luxury level · weather/environment · hero brands (if applicable).
+
+**Product-matching priority (highest → lowest):**
+1. Silhouette match (flowing maxi, fitted knit, linen set, caftan, matching resort set, swim silhouette)
+2. Destination match (yacht, pool, harbor dinner, beach club lunch, sightseeing, market stroll, boat excursion)
+3. Color story (majolica blue, citrus, seafoam, neutrals, sunset, black + cream, terracotta)
+4. Luxury signal (elevated, expensive, editorial, polished, aspirational, vacation-specific)
+5. Detail match (exact print, embroidery, hardware, trim, neckline, accessories) — **lowest priority**
+
+**Recreate:** styling energy · silhouette · mood · vacation context · color language · luxury level.
+**Do NOT recreate:** exact garments · prints · poses · colors · brands.
+
+**Hero rule:** dresses, swim, sets, statement shoes, statement bags match the reference most closely. Accessories interpret loosely.
+
+**Reject:** too literal, costume-like, fast-fashion feeling, flat, generic, overly youthful, too sexy, not age-appropriate for women 35–49, disconnected from destination context.
+
+**Success metric:** "I understand the vibe and could recreate this." NOT "this is the exact outfit from the image."
