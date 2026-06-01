@@ -182,7 +182,7 @@ const CATEGORY_TOKENS: Record<LookCategory, string[]> = {
   jewelry: ["earring", "hoop", "drop", "stud", "bracelet", "cuff", "bangle", "necklace", "pendant", "lariat", "ring", "chain"],
   sunglasses: ["sunglass", "shades"],
   outfit: ["dress", "top", "skirt", "pants", "trousers", "polo", "blouse", "shirt", "set", "swimsuit", "bikini", "maillot", "shorts", "jumpsuit", "romper"],
-  layer: ["caftan", "kaftan", "kimono", "jacket", "coverup", "cover-up", "cardigan", "robe", "shawl", "wrap"],
+  layer: ["caftan", "kaftan", "kimono", "jacket", "coverup", "cover-up", "cardigan", "robe", "shawl", "wrap", "sarong", "pareo"],
   hairDetail: ["scarf", "hat", "headband", "barrette", "clip", "hair"],
 };
 
