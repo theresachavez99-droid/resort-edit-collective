@@ -8,7 +8,7 @@ import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg"
 import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
 import heroMuse from "@/assets/hero-muse-portofino.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import lookTown from "@/assets/generated/resort-edit/look-town-card-thumb.jpg";
+import day5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-card-thumb.jpg";
 import d1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
 import d1b from "@/assets/generated/resort-edit/edit-d1-b-card-thumb.jpg";
 import d1c from "@/assets/generated/resort-edit/edit-d1-c-card-thumb.jpg";
@@ -130,8 +130,8 @@ const DAYS: DayRow[] = [
     slug: "day-5", href: DAY_PATHS["day-5"], label: "Day 5",
     title: "Market Strolls & Coastal Goodbyes",
     caption: "Espresso, linen, and one long last lunch.",
-    image: lookTown,
-    imagePos: "50% 20%",
+    image: day5MarketStrolls,
+    imagePos: "center center",
     looks: [
       { slug: "look-a", label: "Look A", title: "Coastal Chic", image: d5a },
       { slug: "look-b", label: "Look B", title: "Olive Safari", image: d5b },
@@ -209,7 +209,7 @@ function PortofinoPage() {
                       alt={`${d.label} — ${d.title}`}
                       loading="lazy"
                       className="absolute inset-0 h-full w-full object-cover"
-                      style={{ objectPosition: "center top" }}
+                      style={{ objectPosition: d.slug === "day-5" ? d.imagePos : "center top" }}
                     />
                   </div>
                   <div>

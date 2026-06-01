@@ -7,7 +7,7 @@ import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg"
 import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
 import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import day5Muse from "@/assets/day5-market-strolls.jpg";
+import day5Muse from "@/assets/generated/resort-edit/day5-market-strolls-card-thumb.jpg";
 import editD2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
 import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
@@ -125,7 +125,7 @@ function Index() {
                 </h3>
               </div>
               <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
-                <img src={d.image} alt={d.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center top" }} />
+                <img src={d.image} alt={d.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: d.n === "5" ? "center center" : "center top" }} />
               </div>
               <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
