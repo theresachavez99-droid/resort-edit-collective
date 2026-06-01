@@ -342,3 +342,354 @@ function Tag({ children }: { children: React.ReactNode }) {
     <span className="bg-cream border border-border/40 px-1.5 py-px rounded">{children}</span>
   );
 }
+
+// ──────────────────────────────────────────────────────────────
+// Issues view — flag every problem product in raw curated data
+// ──────────────────────────────────────────────────────────────
+const BAD_URL_RE = /^#|^\s*$|javascript:/i;
+function urlIssue(href: string | null | undefined): string | null {
+  if (!href || BAD_URL_RE.test(href)) return "missing or placeholder URL (#)";
+  try {
+    const u = new URL(href);
+    if (u.pathname === "/" || u.pathname === "") return "homepage link (no product path)";
+    return null;
+  } catch {
+    return "invalid URL";
+  }
+}
+
+type Issue = {
+  brand: string;
+  item: string;
+  source: string;
+  location: string;
+  problems: string[];
+  href: string | null;
+  image?: string;
+};
+
+function buildIssues(): Issue[] {
+  const issues: Issue[] = [];
+
+  portofinoLooks.forEach((look) => {
+    look.shop.forEach((it: ShopItem) => {
+      const problems: string[] = [];
+      const u = urlIssue(it.href);
+      if (u) problems.push(u);
+      if (!it.image) problems.push("missing image");
+      if (it.not_available) problems.push("marked not_available");
+      if (it.inventory_status === "unavailable") problems.push("inventory unavailable");
+      if (!it.category) problems.push("no category tag");
+      if (problems.length) {
+        issues.push({
+          brand: it.brand,
+          item: it.item,
+          source: "portofino.ts",
+          location: `${look.day} · ${look.title}`,
+          problems,
+          href: it.href ?? null,
+          image: it.image,
+        });
+      }
+    });
+  });
+
+  portofinoEdit.forEach((day) => {
+    day.looks.forEach((look) => {
+      (Object.keys(look.tiers) as Array<keyof typeof look.tiers>).forEach((tier) => {
+        look.tiers[tier].forEach((it) => {
+          const problems: string[] = [];
+          const u = urlIssue(it.href);
+          if (u) problems.push(u);
+          if (!it.image) problems.push("missing image");
+          if (it.not_available) problems.push("marked not_available");
+          if (problems.length) {
+            issues.push({
+              brand: it.brand,
+              item: it.item,
+              source: "portofinoEdit.ts",
+              location: `${day.day} · ${look.name} · ${String(tier)}`,
+              problems,
+              href: it.href ?? null,
+              image: it.image,
+            });
+          }
+        });
+      });
+    });
+  });
+
+  return issues;
+}
+
+function IssuesView() {
+  const issues = useMemo(buildIssues, []);
+  const byProblem = useMemo(() => {
+    const map = new Map<string, number>();
+    issues.forEach((i) => i.problems.forEach((p) => map.set(p, (map.get(p) ?? 0) + 1)));
+    return Array.from(map.entries()).sort((a, b) => b[1] - a[1]);
+  }, [issues]);
+
+  return (
+    <div className="p-6 lg:p-10">
+      <h1 className="font-serif text-3xl mb-2">Issues</h1>
+      <p className="text-sm text-ink/70 mb-4">
+        Every curated product flagged with at least one problem. These items either
+        fall back to the styling-note placeholder on View Full Look pages, or
+        render with a broken image / generic link.
+      </p>
+      <div className="flex flex-wrap gap-3 text-xs mb-6">
+        {byProblem.map(([p, n]) => (
+          <span
+            key={p}
+            className="bg-white border border-border/60 px-2 py-1 rounded"
+          >
+            <strong>{n}</strong> · {p}
+          </span>
+        ))}
+        <span className="px-2 py-1 bg-ink text-ivory rounded">
+          <strong>{issues.length}</strong> total flagged
+        </span>
+      </div>
+      <div className="overflow-auto bg-white border border-border/60 rounded">
+        <table className="w-full text-xs">
+          <thead className="bg-cream text-left">
+            <tr>
+              <th className="p-2">Brand</th>
+              <th className="p-2">Item</th>
+              <th className="p-2">Location</th>
+              <th className="p-2">Source</th>
+              <th className="p-2">Problems</th>
+              <th className="p-2">URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {issues.map((i, idx) => (
+              <tr key={idx} className="border-t border-border/40 align-top">
+                <td className="p-2 font-medium">{i.brand}</td>
+                <td className="p-2">{i.item}</td>
+                <td className="p-2 text-ink/70">{i.location}</td>
+                <td className="p-2 text-ink/60">{i.source}</td>
+                <td className="p-2">
+                  {i.problems.map((p) => (
+                    <span
+                      key={p}
+                      className="inline-block bg-red-50 text-red-700 border border-red-200 px-1.5 py-px rounded mr-1 mb-1"
+                    >
+                      {p}
+                    </span>
+                  ))}
+                </td>
+                <td className="p-2 text-ink/50 truncate max-w-[260px]" title={i.href ?? ""}>
+                  {i.href ?? "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// Gap Report — what View Full Look pages actually render
+// ──────────────────────────────────────────────────────────────
+function GapReport() {
+  type Slot = {
+    day: string;
+    look: string;
+    tier: string;
+    category: LookCategory;
+    state: "mapped" | "placeholder";
+    brand?: string;
+    item?: string;
+    url?: string | null;
+  };
+
+  const slots: Slot[] = useMemo(() => {
+    const out: Slot[] = [];
+    lookbook.forEach((look) => {
+      TIER_SLUGS.forEach((t) => {
+        const products = look.tiers[t].products;
+        LOOK_CATEGORY_ORDER.forEach((cat) => {
+          const p = products[cat];
+          out.push({
+            day: look.day,
+            look: look.lookLabel + " — " + look.title,
+            tier: TIER_LABEL[t],
+            category: cat,
+            state: p.isPlaceholder ? "placeholder" : "mapped",
+            brand: p.isPlaceholder ? undefined : p.brand,
+            item: p.isPlaceholder ? undefined : p.title,
+            url: p.url,
+          });
+        });
+      });
+    });
+    return out;
+  }, []);
+
+  const total = slots.length;
+  const mapped = slots.filter((s) => s.state === "mapped").length;
+  const placeholders = total - mapped;
+
+  const byCategory = useMemo(() => {
+    const m: Record<string, { mapped: number; placeholder: number }> = {};
+    slots.forEach((s) => {
+      m[s.category] ??= { mapped: 0, placeholder: 0 };
+      m[s.category][s.state]++;
+    });
+    return m;
+  }, [slots]);
+
+  const byTier = useMemo(() => {
+    const m: Record<string, { mapped: number; placeholder: number }> = {};
+    slots.forEach((s) => {
+      m[s.tier] ??= { mapped: 0, placeholder: 0 };
+      m[s.tier][s.state]++;
+    });
+    return m;
+  }, [slots]);
+
+  const gaps = slots.filter((s) => s.state === "placeholder");
+
+  return (
+    <div className="p-6 lg:p-10 space-y-8">
+      <header>
+        <h1 className="font-serif text-3xl">Gap Report</h1>
+        <p className="text-sm text-ink/70 mt-2 max-w-3xl">
+          What the live <code>/portofino/day-N/look-X</code> pages actually render today,
+          slot-by-slot. Each look has 7 required categories × 3 tiers = 21 slots, across
+          15 looks (5 days × 3 looks) = <strong>{total} total slots</strong>. Anything
+          marked "placeholder" needs Firecrawl sourcing of an exact affiliate product URL
+          + thumbnail.
+        </p>
+      </header>
+
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Stat label="Mapped to real product" value={mapped} sub={`${Math.round((mapped / total) * 100)}%`} good />
+        <Stat label="Placeholder slots (need sourcing)" value={placeholders} sub={`${Math.round((placeholders / total) * 100)}%`} />
+        <Stat label="Total slots in View Full Look" value={total} />
+      </section>
+
+      <section>
+        <h2 className="font-serif text-xl mb-2">Gap by category</h2>
+        <Breakdown data={byCategory} labelMap={LOOK_CATEGORY_LABEL} />
+      </section>
+
+      <section>
+        <h2 className="font-serif text-xl mb-2">Gap by tier</h2>
+        <Breakdown data={byTier} />
+      </section>
+
+      <section>
+        <h2 className="font-serif text-xl mb-2">
+          Missing slots ({gaps.length}) — Firecrawl sourcing queue
+        </h2>
+        <p className="text-xs text-ink/60 mb-3">
+          Each row below describes a product to source. Use the rules from{" "}
+          <code>mem/features/look-build-rules.md</code> (approved affiliate priority,
+          exact product URL, image from same retailer).
+        </p>
+        <div className="overflow-auto bg-white border border-border/60 rounded">
+          <table className="w-full text-xs">
+            <thead className="bg-cream text-left">
+              <tr>
+                <th className="p-2">Day</th>
+                <th className="p-2">Look</th>
+                <th className="p-2">Tier</th>
+                <th className="p-2">Category needed</th>
+              </tr>
+            </thead>
+            <tbody>
+              {gaps.map((g, i) => (
+                <tr key={i} className="border-t border-border/40">
+                  <td className="p-2">{g.day}</td>
+                  <td className="p-2">{g.look}</td>
+                  <td className="p-2">{g.tier}</td>
+                  <td className="p-2 font-medium">{LOOK_CATEGORY_LABEL[g.category]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="font-serif text-xl mb-2">Mapped slots ({mapped})</h2>
+        <div className="overflow-auto bg-white border border-border/60 rounded">
+          <table className="w-full text-xs">
+            <thead className="bg-cream text-left">
+              <tr>
+                <th className="p-2">Day</th>
+                <th className="p-2">Look</th>
+                <th className="p-2">Tier</th>
+                <th className="p-2">Category</th>
+                <th className="p-2">Brand</th>
+                <th className="p-2">Item</th>
+                <th className="p-2">URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {slots
+                .filter((s) => s.state === "mapped")
+                .map((s, i) => (
+                  <tr key={i} className="border-t border-border/40">
+                    <td className="p-2">{s.day}</td>
+                    <td className="p-2">{s.look}</td>
+                    <td className="p-2">{s.tier}</td>
+                    <td className="p-2">{LOOK_CATEGORY_LABEL[s.category]}</td>
+                    <td className="p-2">{s.brand}</td>
+                    <td className="p-2">{s.item}</td>
+                    <td className="p-2 text-ink/50 truncate max-w-[220px]" title={s.url ?? ""}>
+                      {s.url ?? "—"}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function Stat({ label, value, sub, good }: { label: string; value: number; sub?: string; good?: boolean }) {
+  return (
+    <div className={"bg-white border rounded p-4 " + (good ? "border-green-300" : "border-border/60")}>
+      <div className="text-xs text-ink/60">{label}</div>
+      <div className="font-serif text-3xl mt-1">{value}</div>
+      {sub && <div className="text-xs text-ink/50">{sub}</div>}
+    </div>
+  );
+}
+
+function Breakdown({
+  data,
+  labelMap,
+}: {
+  data: Record<string, { mapped: number; placeholder: number }>;
+  labelMap?: Record<string, string>;
+}) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+      {Object.entries(data).map(([k, v]) => {
+        const total = v.mapped + v.placeholder;
+        const pct = total === 0 ? 0 : Math.round((v.mapped / total) * 100);
+        return (
+          <div key={k} className="bg-white border border-border/60 rounded p-3 text-xs">
+            <div className="font-medium">{labelMap?.[k] ?? k}</div>
+            <div className="text-ink/60 mt-1">
+              {v.mapped} mapped · {v.placeholder} gaps
+            </div>
+            <div className="h-1.5 bg-cream rounded mt-2 overflow-hidden">
+              <div className="h-full bg-gold" style={{ width: pct + "%" }} />
+            </div>
+            <div className="text-ink/50 mt-1">{pct}% filled</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
