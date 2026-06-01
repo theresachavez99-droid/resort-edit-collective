@@ -101,10 +101,16 @@ export const updateSubscriber = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     requireAdmin(data.password);
-    const patch: Record<string, unknown> = {};
+    const patch: {
+      status?: "active" | "unsubscribed";
+      unsubscribed_at?: string | null;
+      tags?: string[];
+      notes?: string | null;
+    } = {};
     if (data.status !== undefined) {
       patch.status = data.status;
-      patch.unsubscribed_at = data.status === "unsubscribed" ? new Date().toISOString() : null;
+      patch.unsubscribed_at =
+        data.status === "unsubscribed" ? new Date().toISOString() : null;
     }
     if (data.tags !== undefined) patch.tags = data.tags;
     if (data.notes !== undefined) patch.notes = data.notes;
