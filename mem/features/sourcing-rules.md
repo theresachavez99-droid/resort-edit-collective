@@ -126,3 +126,17 @@ Before any product or page goes live, confirm: working link, working thumbnail, 
 
 ## 21. Global application
 All rules in this document apply across every destination, day, look, tier, View Full Look page, alternative look, and future edit automatically. No per-page or per-destination exceptions. New destinations inherit tier rules, muse rules, variation rules, scoring model, replacement logic, affiliate logic, and editorial rules with no manual setup.
+## 22. Mandatory pipeline order (products-first architecture)
+The order is non-negotiable: **Look DNA → Source → Validate → Score → Wardrobe → Muse → Publish.** AI muse imagery is generated FROM sourced products; products are never sourced to match a fantasy image. Any flow that generates a muse before sourcing is invalid and must be redone.
+
+## 23. Look DNA (`src/data/lookDNA.ts`)
+Every look starts with a DNA entry: `destination`, `activity`, `mood`, `palette`, `silhouette`, `printLanguage`, `resortEnergy`, `ageAlignment`, `stylingNotes`, `isWaterLook`, `tier`. The DNA is the sourcing brief — no sourcing begins without it. `buildWardrobeBlueprint(dna)` derives the required slot list. Water looks unlock swim (3 bikinis / 3 bandeaus / 3 one-pieces) + cover-ups. Non-water looks disable swim entirely and expand into dresses / separates (3 options).
+
+## 24. Scoring (`src/lib/productScoring.ts`)
+Every candidate is scored on 7 categories (1–5 each): printMatch, silhouetteMatch, destinationEnergy, luxuryFeel, imageQuality, availability, editorialMatch. Weighted total must be ≥ 3.6. Critical categories (editorialMatch, imageQuality, availability) may never score below 3. Any single category ≤ 2 is an automatic reject. Below threshold → re-search.
+
+## 25. Validation layer (`src/lib/productValidation.functions.ts`)
+`validateCandidateProduct` runs before a product enters the data layer. Rejects: homepage / collection / search-page URLs, broken URLs, missing images, SVG drawings, renderings, local `/assets/products/*.svg` placeholders, any `data:image/svg` payload. Uses Firecrawl `/v2/scrape` to verify reachability and pull `og:image`. No product may be added to `lookFallbacks.ts` or `lookAlternatives.ts` without clearing this validator.
+
+## 26. Wardrobe rules engine
+Derived from `LookDNA.isWaterLook`. Water looks require: 3 bikinis + 3 bandeaus + 3 one-pieces + 3 cover-ups + shoes + bag + full jewelry + sunglasses + hair detail. Non-water looks require: 3 outfits (dresses or separates) + sandals + wedge/heel + bag + full jewelry + sunglasses + hair detail. Swim is forbidden on non-water looks, enforced by the blueprint's `forbidden` array.

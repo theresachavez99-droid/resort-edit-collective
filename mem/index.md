@@ -15,6 +15,9 @@
 - Complete-look slot list: outfit/swim, shoes, bag, earrings, necklace, bracelet, ring OR hair accessory, sunglasses (day only), optional layer, hair detail. Never ship an incomplete look.
 - Pre-publish validation (every slot, every page): working link, working thumbnail, destination fit, luxury perception, variation, editorial alignment, tier alignment, international diversity. Re-rank by Resort Edit standards — never by first-available or easiest-to-source.
 - All rules apply globally: every destination, day, look, tier, alternative, and future edit inherits them automatically. No per-page exceptions.
+- Sourcing pipeline order is HARD: Look DNA → source → validate → score → wardrobe → muse → publish. Muse images are generated FROM sourced products, never the reverse. Reject any flow that sources to match a fantasy image.
+- Every look must have a `LookDNA` entry in `src/data/lookDNA.ts` before sourcing. Wardrobe slot list is derived from `isWaterLook`: water unlocks swim (3 bikinis / 3 bandeaus / 3 one-pieces / cover-ups), non-water disables swim and expands into dresses/separates.
+- Every candidate product passes `validateCandidateProduct` (Firecrawl URL check + og:image + placeholder reject) and `evaluateScore` (7-category 1–5 scoring, weighted total ≥ 3.6, critical floors on editorialMatch/imageQuality/availability). Below threshold → reject and re-search.
 
 ## Memories
 - [Sourcing & product rules](mem://features/sourcing-rules) — Retailer priority, Brands We Love allowlist, international mix, replacement logic, Firecrawl workflow, aesthetic guardrails.
