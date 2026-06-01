@@ -518,7 +518,7 @@ function EditorialReferenceCard({
               src={image}
               alt={`${dayKey} editorial reference`}
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: "center top" }}
+              style={{ objectPosition: imagePos }}
             />
           </figure>
           <div>
