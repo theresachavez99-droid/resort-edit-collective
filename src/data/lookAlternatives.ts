@@ -13,13 +13,6 @@
  * and a missing alt should simply not appear.
  */
 
-import eresAquarelleOnePiece from "@/assets/products/eres-aquarelle-one-piece.svg";
-import hunzaBlueBandeau from "@/assets/products/hunza-blue-bandeau.svg";
-import posseIvoryRomper from "@/assets/products/posse-ivory-romper.svg";
-import pucciBlueKaftan from "@/assets/products/pucci-blue-kaftan.svg";
-import zimmermannBluePareo from "@/assets/products/zimmermann-blue-pareo.svg";
-import zimmermannBlueSilkSet from "@/assets/products/zimmermann-blue-silk-set.svg";
-
 export type AlternativeProduct = {
   brand: string;
   title: string;
@@ -53,13 +46,14 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
         "Two Mediterranean swim options with their matching sarongs — both engineered to walk straight from the swim ladder into a long lunch without a costume change.",
       items: [
         {
-          brand: "Eres",
-          title: "Aquarelle Square-Neck One-Piece",
+          brand: "Dolce & Gabbana",
+          title: "Majolica-Print One-Piece Swimsuit",
           slotLabel: "Swim Alt 1 · One-Piece",
-          price: "$640",
-          url: "https://www.net-a-porter.com/en-us/shop/product/eres/clothing/one-piece/aquarelle-square-neck-swimsuit/1647597321197131",
-          image: eresAquarelleOnePiece,
-          note: "Architectural square neckline, Riviera blue. Yacht-elegant, never sporty.",
+          price: "$875",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-one-piece-swimsuit-multicolor-O9A46JONO19IP3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw1d7aff2d/images/zoom/O9A46JONO19_IP3TN_0.jpg?sw=740&sh=944",
+          note: "Blue-and-white majolica with a polished one-piece silhouette — the closest Riviera match to the muse.",
         },
         {
           brand: "Dolce & Gabbana",
@@ -71,22 +65,24 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           note: "Blue and white tile print — knot at the hip over the one-piece.",
         },
         {
-          brand: "Hunza G",
-          title: "Tracy Crinkle Bandeau Swimsuit",
+          brand: "Dolce & Gabbana",
+          title: "Majolica-Print Padded Bikini",
           slotLabel: "Swim Alt 2 · Bandeau",
-          price: "$245",
-          url: "https://www.net-a-porter.com/en-us/shop/product/hunza-g/clothing/bandeau/tracy-bandeau-seersucker-swimsuit/1647597338129030",
-          image: hunzaBlueBandeau,
-          note: "Bandeau silhouette in signature crinkle — yacht appropriate, never juvenile.",
+          price: "$945",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-padded-bikini-multicolor-O8A27JONO19IP3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw59508ef3/images/zoom/O8A27JONO19_IP3TN_0.jpg?sw=740&sh=944",
+          note: "A balconette-leaning bandeau shape with the same Mediterranean tile story.",
         },
         {
-          brand: "Zimmermann",
-          title: "Alight Printed Cotton Pareo",
-          slotLabel: "Matching Sarong",
-          price: "$295",
-          url: "https://www.net-a-porter.com/en-us/shop/product/zimmermann/clothing/coverups/alight-printed-cotton-pareo/46376663163067275",
-          image: zimmermannBluePareo,
-          note: "Mediterranean print in tonal blues — pairs with the bandeau or worn alone as a maxi.",
+          brand: "Dolce & Gabbana",
+          title: "Short Majolica-Print Chiffon Caftan",
+          slotLabel: "Matching Coverup",
+          price: "$1,995",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/dresses/short-majolica-print-chiffon-caftan-multicolor-F6F1ITHI1BLHA3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwadda0c95/images/zoom/F6F1ITHI1BL_HA3TN_0.jpg?sw=740&sh=944",
+          note: "Light chiffon, blue-white majolica, yacht-to-lunch without losing polish.",
         },
       ],
     },
