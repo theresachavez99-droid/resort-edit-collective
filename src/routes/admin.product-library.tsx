@@ -334,7 +334,6 @@ function ProductLibraryGrid({ onReplace }: { onReplace: () => void }) {
           >
             <div className="aspect-square w-full bg-cream border border-border/40 rounded mb-3 flex items-center justify-center overflow-hidden">
               {r.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={r.image}
                   alt={`${r.brand} ${r.item}`}
@@ -832,6 +831,22 @@ const SLOT_CATEGORIES = [
 ];
 
 function SourcingView() {
+  type SourcedProductRow = {
+    id: string;
+    status: "queued" | "scraped" | "approved" | "promoted" | "failed" | "rejected";
+    image_url?: string | null;
+    brand?: string | null;
+    product_name?: string | null;
+    notes?: string | null;
+    price?: number | string | null;
+    currency?: string | null;
+    day?: number | null;
+    look?: number | null;
+    slot_category?: string | null;
+    source_url: string;
+    retailer_domain?: string | null;
+  };
+
   const qc = useQueryClient();
   const listFn = useServerFn(listSourcedProducts);
   const scrapeFn = useServerFn(scrapeProductUrl);
@@ -857,7 +872,8 @@ function SourcingView() {
   });
 
   const update = useMutation({
-    mutationFn: (input: { id: string; status: any; notes?: string }) => updateFn({ data: input }),
+    mutationFn: (input: { id: string; status: SourcedProductRow["status"]; notes?: string }) =>
+      updateFn({ data: input }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
   });
 
@@ -878,7 +894,7 @@ function SourcingView() {
   const rows = data?.ok ? data.rows : [];
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
-    rows.forEach((r: any) => {
+    (rows as SourcedProductRow[]).forEach((r) => {
       c[r.status] = (c[r.status] ?? 0) + 1;
     });
     return c;
@@ -1001,7 +1017,7 @@ function SourcingView() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((r: any) => (
+            {(rows as SourcedProductRow[]).map((r) => (
               <tr key={r.id} className="border-t border-border/40 align-top">
                 <td className="p-2">
                   <span
