@@ -330,14 +330,14 @@ function buildPortofinoLookbook(): Look[] {
       for (const tierSlug of TIER_SLUGS) {
         const tierId = TIER_SLUG_TO_ID[tierSlug];
         const consumed = new Set<string>();
-        // Only feed look-tagged items into this look; untagged stay in the
-        // shared pool and may be used as backfill.
+        // Only feed products mapped to this exact look. Legacy untagged Day
+        // products belong to Look A; they must not leak into Look B/C.
         const lookTagged = liveItems.filter((l) => {
           if (!l.lookIndex) return false;
           const idxToSlug: Record<number, LookSlug> = { 1: "look-a", 2: "look-b", 3: "look-c" };
           return idxToSlug[l.lookIndex] === lookSlug;
         });
-        const untagged = liveItems.filter((l) => !l.lookIndex);
+        const untagged = lookSlug === "look-a" ? liveItems.filter((l) => !l.lookIndex) : [];
         const pool = [...lookTagged, ...untagged];
         tiers[tierSlug] = {
           slug: tierSlug,
