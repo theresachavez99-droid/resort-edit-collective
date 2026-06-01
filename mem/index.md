@@ -11,6 +11,10 @@
 - Brand diversity caps: primary look ≤2 products/brand; alternatives ≤1–2 products/brand per concept; entire page ≤25% from any single brand. Rotate prints + textures (tile, stripe, embroidery, eyelet, crochet, linen, raffia, silk, gauze). Never repeat the same print/brand/silhouette across every slot.
 - Alternative looks must each have a distinct personality: Closest to Muse / Yacht / Beach Club / Long Lunch / Market Stroll / Sunset Cocktails. Same woman, different moment — never the same outfit formula twice.
 - Source like a stylist, not a scraper: pull 3–8 candidates per slot, score on editorial match (30%) + destination fit (25%) + luxury factor (20%) + variation (15%) + affiliate/availability (10%), only promote winners. Re-search if below threshold.
+- Tier mix targets: Luxury = 60–80% luxury + 20–40% premium, designer-first international. Mid-Luxe = luxury aesthetic via contemporary brands with designer accents. Destination Finds = editorial match first, must still feel elevated — never cheapen the look.
+- Complete-look slot list: outfit/swim, shoes, bag, earrings, necklace, bracelet, ring OR hair accessory, sunglasses (day only), optional layer, hair detail. Never ship an incomplete look.
+- Pre-publish validation (every slot, every page): working link, working thumbnail, destination fit, luxury perception, variation, editorial alignment, tier alignment, international diversity. Re-rank by Resort Edit standards — never by first-available or easiest-to-source.
+- All rules apply globally: every destination, day, look, tier, alternative, and future edit inherits them automatically. No per-page exceptions.
 
 ## Memories
 - [Sourcing & product rules](mem://features/sourcing-rules) — Retailer priority, Brands We Love allowlist, international mix, replacement logic, Firecrawl workflow, aesthetic guardrails.
