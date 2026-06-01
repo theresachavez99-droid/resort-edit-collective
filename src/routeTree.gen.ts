@@ -29,6 +29,7 @@ import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
 import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
+import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
 import { Route as PortofinoDayDayLookLookRouteImport } from './routes/portofino.day-$day.look-$look'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -131,6 +132,11 @@ const BrandsSlugRoute = BrandsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BrandsRoute,
 } as any)
+const AdminProductLibraryRoute = AdminProductLibraryRouteImport.update({
+  id: '/admin/product-library',
+  path: '/admin/product-library',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortofinoDayDayLookLookRoute = PortofinoDayDayLookLookRouteImport.update({
   id: '/day-$day/look-$look',
   path: '/day-$day/look-$look',
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/product-library': typeof AdminProductLibraryRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/product-library': typeof AdminProductLibraryRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -195,6 +203,7 @@ export interface FileRoutesById {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/product-library': typeof AdminProductLibraryRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -220,6 +229,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
+    | '/admin/product-library'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -243,6 +253,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
+    | '/admin/product-library'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
+    | '/admin/product-library'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -290,6 +302,7 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminProductLibraryRoute: typeof AdminProductLibraryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -434,6 +447,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandsSlugRouteImport
       parentRoute: typeof BrandsRoute
     }
+    '/admin/product-library': {
+      id: '/admin/product-library'
+      path: '/admin/product-library'
+      fullPath: '/admin/product-library'
+      preLoaderRoute: typeof AdminProductLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portofino/day-$day/look-$look': {
       id: '/portofino/day-$day/look-$look'
       path: '/day-$day/look-$look'
@@ -506,6 +526,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminProductLibraryRoute: AdminProductLibraryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
