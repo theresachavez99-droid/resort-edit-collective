@@ -141,7 +141,7 @@ const DAYS: DayRow[] = [
 ];
 
 function PortofinoPage() {
-  const childMatch = useMatch({ from: "/portofino/day-$day/look-$look", shouldThrow: false });
+  const childMatch = useMatch({ from: "/portofino/$day/$look", shouldThrow: false });
   const search = Route.useSearch();
   const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
   const navigate = useNavigate({ from: "/portofino" });
