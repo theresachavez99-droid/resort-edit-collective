@@ -126,3 +126,47 @@ Before any product or page goes live, confirm: working link, working thumbnail, 
 
 ## 21. Global application
 All rules in this document apply across every destination, day, look, tier, View Full Look page, alternative look, and future edit automatically. No per-page or per-destination exceptions. New destinations inherit tier rules, muse rules, variation rules, scoring model, replacement logic, affiliate logic, and editorial rules with no manual setup.
+---
+
+## Section 22 — Products-first pipeline (mandatory order)
+
+The order of operations is non-negotiable:
+
+1. **Create Look DNA** (`src/data/lookDNA.ts`)
+2. **Source products** (Firecrawl + approved retailer/brand allowlist)
+3. **Validate** (`src/lib/productValidation.functions.ts` — URL + image + reachability)
+4. **Score** (`src/lib/productScoring.ts` — 7-category 1–5, weighted total ≥ 3.6)
+5. **Build wardrobe** (`buildWardrobeBlueprint(dna)` — water vs non-water rules)
+6. **Generate AI muse** image FROM the sourced products
+7. **Publish** look page
+
+Muse images must never precede sourcing. Products are not chosen to match a fantasy image — the muse emulates real sourced products.
+
+## Section 23 — Look DNA schema
+
+Fields: `destination`, `activity`, `mood`, `palette[]`, `silhouette`, `printLanguage`, `resortEnergy`, `ageAlignment`, `stylingNotes[]`, `isWaterLook`, `tier`.
+
+The DNA IS the sourcing brief. Searches use silhouette + print language, never "Portofino outfit".
+
+## Section 24 — Product scoring
+
+7 categories, 1–5 each: `printMatch`, `silhouetteMatch`, `destinationEnergy`, `luxuryFeel`, `imageQuality`, `availability`, `editorialMatch`. Weighted total threshold: **3.6**. Critical floors (≥ 3): `editorialMatch`, `imageQuality`, `availability`. Hard-fail floor (≤ 2 in any category): automatic reject.
+
+## Section 25 — Validation pipeline
+
+`validateCandidateProduct({ url, score? })` rejects:
+
+- broken URL or HTTP ≥ 400
+- homepage / collection / search / sale / category URL
+- missing `og:image`
+- SVG drawings, renderings, local `/assets/products/*.svg` placeholders
+- `data:image/svg` payloads
+- score below threshold (when score is provided)
+
+No product enters `lookFallbacks.ts` / `lookAlternatives.ts` without passing.
+
+## Section 26 — Wardrobe rules engine
+
+**Water looks** (yacht, beach, pool, boat): 3 bikinis · 3 bandeaus · 3 one-pieces · 3 cover-ups · 3 sandals · 2 bags · earrings · necklace · bracelet/ring · sunglasses · hair detail.
+
+**Non-water looks**: 3 outfits (dresses or separates) · 2 sandals · 2 wedges/heels · 2 bags · full jewelry · sunglasses · hair detail. Swim categories are **explicitly forbidden** and the renderer must not surface them.
