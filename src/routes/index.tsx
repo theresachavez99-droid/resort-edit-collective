@@ -125,7 +125,7 @@ function Index() {
                 </h3>
               </div>
               <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
-                <img src={d.image} alt={d.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center top" }} />
+                <img src={d.image} alt={d.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: d.n === "5" ? "center center" : "center top" }} />
               </div>
               <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
