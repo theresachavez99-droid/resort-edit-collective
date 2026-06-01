@@ -136,9 +136,6 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
   ],
 };
 
-export function alternativesFor(
-  daySlug: string,
-  lookSlug: string,
-): AlternativeGroup[] {
+export function alternativesFor(daySlug: string, lookSlug: string): AlternativeGroup[] {
   return LOOK_ALTERNATIVES[`${daySlug}/${lookSlug}`] ?? [];
 }
