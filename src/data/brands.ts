@@ -22,7 +22,6 @@ const b = (name: string, blurb?: string): Brand => ({
 
 export const brandCategories: BrandCategory[] = [
   {
-  {
     title: "Mediterranean Icons",
     description:
       "The Italian, Greek, and Iberian houses that wrote the language of resort — prints, ateliers, and seaside polish from Capri to Comporta.",
