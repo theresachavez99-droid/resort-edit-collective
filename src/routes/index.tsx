@@ -7,7 +7,9 @@ import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg"
 import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
 import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import day5Muse from "@/assets/generated/resort-edit/day5-market-strolls-card-thumb.jpg";
+import day5Muse from "@/assets/generated/resort-edit/day5-market-strolls-hires-card-20260601.jpg";
+import day5MuseMobile from "@/assets/generated/resort-edit/day5-market-strolls-hires-mobile-20260601.jpg";
+import day5MuseRetina from "@/assets/generated/resort-edit/day5-market-strolls-hires-retina-2x-20260601.jpg";
 import editD2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
 import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
@@ -31,13 +33,23 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const days = [
+type DayCard = {
+  n: "1" | "2" | "3" | "4" | "5";
+  href: "/portofino/day-1" | "/portofino/day-2" | "/portofino/day-3" | "/portofino/day-4" | "/portofino/day-5";
+  title: string;
+  desc: string;
+  image: string;
+  imageMobile?: string;
+  imageRetina?: string;
+};
+
+const days: DayCard[] = [
   { n: "1", href: "/portofino/day-1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
   { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
   { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
   { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
-  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse },
-] as const;
+  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse, imageMobile: day5MuseMobile, imageRetina: day5MuseRetina },
+];
 
 const looks = [
   { tag: "Look A", title: "Lemon Print Set", image: editD2a },
@@ -125,7 +137,15 @@ function Index() {
                 </h3>
               </div>
               <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
-                <img src={d.image} alt={d.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: d.n === "5" ? "center center" : "center top" }} />
+                <img
+                  src={d.image}
+                  srcSet={d.imageRetina ? `${d.imageMobile ?? d.image} 1x, ${d.imageRetina} 2x` : undefined}
+                  alt={d.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                  style={{ objectPosition: d.n === "5" ? "center center" : "center top", imageRendering: "auto" }}
+                />
               </div>
               <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
