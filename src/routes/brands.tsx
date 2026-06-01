@@ -9,13 +9,13 @@ export const Route = createFileRoute("/brands")({
       {
         name: "description",
         content:
-          "The luxury, quiet luxury, swim, and resort labels behind every Resort Edit look. Curated international brands across price points.",
+          "The international resort houses, swim ateliers, and destination labels behind every Resort Edit look — Italian, Greek, Iberian, Latin American, and Australian.",
       },
       { property: "og:title", content: "Brands We Love — Resort Edit" },
       {
         property: "og:description",
         content:
-          "Resort icons, quiet luxury, swim & beach club, accessories, and Riviera finds.",
+          "Mediterranean icons, swim & beach club, resortwear & kaftans, raffia, jewelry, and destination finds.",
       },
       { property: "og:url", content: absoluteUrl("/brands") },
     ],
@@ -34,9 +34,9 @@ function BrandsPage() {
             Brands We Love
           </h1>
           <p className="mt-6 font-serif italic text-ink/70 text-lg leading-relaxed">
-            A living index of the international resort labels, quiet luxury houses,
-            and vacation brands we return to season after season — organized so you
-            can shop the way we style.
+            A living index of the international resort ateliers, swim houses, and
+            destination labels we return to season after season — from Capri to
+            Cartagena, Sydney to Saint-Tropez.
           </p>
         </header>
 
