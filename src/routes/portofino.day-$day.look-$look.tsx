@@ -274,8 +274,8 @@ function ViewFullLookPage() {
 }
 
 // ──────────────────────────────────────────────────────────────
-// Product card — editorial: image-led, generous whitespace,
-// brand · name · price · Shop link. No borders, no chrome.
+// Product card — editorial: image-led, refined border,
+// brand · name · price · Shop link. No broken image or raw URL output.
 // ──────────────────────────────────────────────────────────────
 function ProductCategoryCard({
   category,
@@ -288,16 +288,16 @@ function ProductCategoryCard({
 
   if (product.isPlaceholder) {
     return (
-      <article className="flex flex-col">
-        <div className="aspect-[4/5] w-full bg-cream/40 flex items-center justify-center px-6 text-center">
-          <p className="font-serif italic text-[0.92rem] text-ink/55 leading-relaxed">
+      <article className="flex h-full flex-col border border-ink/10 bg-cream/25">
+        <div className="aspect-[4/5] w-full bg-ivory/65 flex items-center justify-center px-6 text-center">
+          <p className="font-serif italic text-[0.9rem] text-ink/55 leading-relaxed">
             {product.title}
           </p>
         </div>
-        <div className="mt-5 text-center">
-          <p className="eyebrow tracking-[0.32em] text-[0.6rem] text-ink/45">{label}</p>
-          <p className="font-serif italic text-[0.78rem] text-ink/40 mt-2 leading-snug">
-            Sourcing in progress
+        <div className="flex flex-1 flex-col px-4 py-5 text-center">
+          <p className="eyebrow tracking-[0.28em] text-[0.56rem] text-gold">{label}</p>
+          <p className="font-serif text-[0.82rem] text-ink/45 mt-3 leading-snug">
+            Resort Edit sourcing note
           </p>
         </div>
       </article>
@@ -305,7 +305,7 @@ function ProductCategoryCard({
   }
 
   return (
-    <article className="group flex flex-col">
+    <article className="group flex h-full flex-col border border-ink/10 bg-ivory transition-colors hover:border-gold/60">
       <a
         href={product.url!}
         target="_blank"
@@ -313,7 +313,7 @@ function ProductCategoryCard({
         onClick={() =>
           trackOutbound({ brand: product.brand, item: product.title, href: product.url! })
         }
-        className="relative aspect-[4/5] w-full bg-cream/30 overflow-hidden flex items-center justify-center"
+        className="relative aspect-[4/5] w-full bg-cream/30 overflow-hidden flex items-center justify-center border-b border-ink/10"
       >
         <img
           src={product.image!}
@@ -328,12 +328,12 @@ function ProductCategoryCard({
         )}
       </a>
 
-      <div className="pt-5 flex flex-col items-center text-center">
-        <p className="eyebrow tracking-[0.3em] text-[0.58rem] text-ink/45">{label}</p>
-        <p className="eyebrow tracking-[0.24em] text-[0.7rem] text-ink uppercase mt-2 leading-snug">
+      <div className="flex flex-1 flex-col items-center px-4 py-5 text-center">
+        <p className="eyebrow tracking-[0.28em] text-[0.56rem] text-gold">{label}</p>
+        <p className="eyebrow tracking-[0.18em] text-[0.68rem] text-ink uppercase mt-2 leading-snug">
           {product.brand}
         </p>
-        <p className="font-serif italic text-[0.95rem] text-ink/75 leading-snug mt-1.5 max-w-[16rem]">
+        <p className="font-serif italic text-[0.94rem] text-ink/75 leading-snug mt-1.5 max-w-[15rem]">
           {product.title}
         </p>
         <p className="font-serif text-[0.95rem] text-ink mt-2">{product.price}</p>
@@ -344,10 +344,10 @@ function ProductCategoryCard({
           onClick={() =>
             trackOutbound({ brand: product.brand, item: product.title, href: product.url! })
           }
-          className="mt-4 eyebrow tracking-[0.32em] text-[0.62rem] text-ink border-b border-ink/40 hover:border-gold hover:text-gold transition-colors pb-0.5"
+          className="mt-auto pt-5 eyebrow tracking-[0.24em] text-[0.58rem] text-ink border-b border-gold hover:text-gold transition-colors pb-0.5"
           aria-label={`Shop ${product.brand} ${product.title} (opens in new tab)`}
         >
-          SHOP
+          SHOP PIECE →
         </a>
       </div>
     </article>
