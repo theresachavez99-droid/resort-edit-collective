@@ -4,6 +4,7 @@ import dayclub from "@/assets/generated/resort-edit/look-dayclub-detail-thumb.jp
 import dinner from "@/assets/generated/resort-edit/look-dinner-detail-thumb.jpg";
 import town from "@/assets/generated/resort-edit/look-town-detail-thumb.jpg";
 import day5MarketStrollsDetail from "@/assets/generated/resort-edit/day5-market-strolls-detail-thumb.jpg";
+import day5MarketStrollsExperience from "@/assets/generated/resort-edit/day5-market-strolls-experience-thumb.jpg";
 import productAnineBingSilkScarf from "@/assets/products/anine-bing-silk-scarf.svg";
 import productCelineTriompheSunglasses from "@/assets/products/celine-triomphe-sunglasses.svg";
 import productDgMajolicaBikini from "@/assets/products/dg-majolica-bikini.jpg";
@@ -844,7 +845,7 @@ export const portofinoLooks: Look[] = [
       },
       {
         experience_name: "Castello Brown Cliff Walk",
-        experience_image: town,
+        experience_image: day5MarketStrollsExperience,
         experience_description: "A short guided climb to the view that defines the Riviera.",
         affiliate_link: "https://www.getyourguide.com/portofino-l1093/castello-brown",
         backup_link: "https://www.viator.com/Portofino/d50421",
