@@ -11,7 +11,19 @@
  * approved retailer and a product image URL. Items missing either
  * should be removed, not placeholdered — alternatives are additive
  * and a missing alt should simply not appear.
+ *
+ * Diversity rules (mem://features/sourcing-rules §12–17):
+ *   - Brand cap ≤25% per page; alt section ≤1–2 per brand per concept.
+ *   - Rotate prints/textures (tile, stripes, ivory texture, embroidery,
+ *     linen, raffia, eyelet, gauze) — never repeat the same print story.
+ *   - Each alternative carries a distinct destination personality
+ *     (Closest to Muse / Yacht / Beach Club / Long Lunch / Market Stroll).
  */
+import productPosseStripedCropTop from "@/assets/products/posse-striped-crop-top.svg";
+import productZimmermannBlueSilkSet from "@/assets/products/zimmermann-blue-silk-set.svg";
+import productZimmermannBluePareo from "@/assets/products/zimmermann-blue-pareo.svg";
+import productEtroPaisleyHalterMaxi from "@/assets/products/etro-paisley-halter-maxi.svg";
+import productHereuWovenTote from "@/assets/products/hereu-woven-tote.svg";
 
 export type AlternativeProduct = {
   brand: string;
@@ -35,100 +47,88 @@ export type AlternativeGroup = {
 export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
   // ─────────────────────────────────────────────────────────────
   // DAY 1 · LOOK A — Mediterranean Glam
-  // Brief: Riviera one-piece + bandeau alternatives with matching
-  // sarongs, plus three outfit alternatives that emulate the muse —
-  // white-on-blue print, yacht-to-lunch, beach club transitional.
+  // Brief: rotate prints, textures, and brands around the Riviera
+  // muse. One D&G tile anchor only — alternatives lean into
+  // blue/white stripes, ivory textures, painterly prints, and woven
+  // raffia across distinct destination personalities. Brand cap
+  // respected: ≤25% from any single brand on this page.
   // ─────────────────────────────────────────────────────────────
   "day-1/look-a": [
     {
       title: "Swim Alternatives",
       description:
-        "Two Mediterranean swim options with their matching sarongs — both engineered to walk straight from the swim ladder into a long lunch without a costume change.",
+        "One tile-print anchor closest to the muse, one striped bandeau alt — engineered to walk straight from the swim ladder into a long lunch without a costume change.",
       items: [
         {
           brand: "Dolce & Gabbana",
           title: "Majolica-Print One-Piece Swimsuit",
-          slotLabel: "Swim Alt 1 · One-Piece",
+          slotLabel: "Closest to Muse · Tile One-Piece",
           price: "$875",
           url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-one-piece-swimsuit-multicolor-O9A46JONO19IP3TN.html",
           image:
             "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw1d7aff2d/images/zoom/O9A46JONO19_IP3TN_0.jpg?sw=740&sh=944",
-          note: "Blue-and-white majolica with a polished one-piece silhouette — the closest Riviera match to the muse.",
+          note: "Blue-and-white majolica on a polished one-piece silhouette — the muse anchor, and the only D&G piece in this edit.",
         },
         {
-          brand: "Dolce & Gabbana",
-          title: "Majolica Print Cotton Pareo",
-          slotLabel: "Matching Sarong",
-          price: "$495",
-          url: "https://www.net-a-porter.com/en-us/shop/product/dolcegabbana/clothing/coverups/maiolica-printed-cotton-pareo/46376663163104529",
-          image: "https://www.net-a-porter.com/variants/images/46376663163104529/in/w920_q60.jpg",
-          note: "Blue and white tile print — knot at the hip over the one-piece.",
-        },
-        {
-          brand: "Dolce & Gabbana",
-          title: "Majolica-Print Padded Bikini",
-          slotLabel: "Swim Alt 2 · Bandeau",
-          price: "$945",
-          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-padded-bikini-multicolor-O8A27JONO19IP3TN.html",
-          image:
-            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw59508ef3/images/zoom/O8A27JONO19_IP3TN_0.jpg?sw=740&sh=944",
-          note: "A balconette-leaning bandeau shape with the same Mediterranean tile story.",
-        },
-        {
-          brand: "Dolce & Gabbana",
-          title: "Short Majolica-Print Chiffon Caftan",
-          slotLabel: "Matching Coverup",
-          price: "$1,995",
-          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/dresses/short-majolica-print-chiffon-caftan-multicolor-F6F1ITHI1BLHA3TN.html",
-          image:
-            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwadda0c95/images/zoom/F6F1ITHI1BL_HA3TN_0.jpg?sw=740&sh=944",
-          note: "Light chiffon, blue-white majolica, yacht-to-lunch without losing polish.",
+          brand: "Posse",
+          title: "Ari Striped Cotton Bikini Top",
+          slotLabel: "Bandeau Alt · Blue & White Stripes",
+          price: "$140",
+          url: "https://www.mytheresa.com/us/en/women/posse-ari-striped-crop-top-blue-p01078791",
+          image: productPosseStripedCropTop,
+          note: "Bandeau-leaning Australian swim in a crisp blue/white stripe — rotates the print story away from tile.",
         },
       ],
     },
     {
       title: "Outfit Alternatives",
       description:
-        "Three full-outfit moves for Day 1 — the closest white-and-blue match to the muse, a Mediterranean lunch silk co-ord, and a beach-club kaftan that transitions clean from yacht to lunch.",
+        "Four destination personalities for Day 1 — same woman, different moments. Ivory-textured co-ord for the yacht, painterly Australian print for the long lunch, embroidered cotton-voile for the beach club, and a woven leather raffia tote for the market stroll.",
       items: [
         {
-          brand: "Dolce & Gabbana",
-          title: "Majolica-Print Twill Shirt with Slits",
-          slotLabel: "Outfit Alt 1 · Closest to Muse",
-          price: "$2,495",
-          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/shirts-and-tops/majolica-print-twill-shirt-with-slits-multicolor-F5O28THI1BOHA3TN.html",
-          image:
-            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw40098fc3/images/zoom/F5O28THI1BO_HA3TN_0.jpg?sw=740&sh=944",
-          note: "A blue-white silk layer that mirrors the muse’s print and open, yacht-ready ease.",
+          brand: "Zimmermann",
+          title: "Illumination Cotton & Silk-Blend Blouse",
+          slotLabel: "Yacht · Ivory Textured",
+          price: "$895",
+          url: "https://www.net-a-porter.com/en-us/shop/product/zimmermann/clothing/blouses/illumination-cropped-cotton-and-silk-blend-blouse/46376663162848181",
+          image: productZimmermannBlueSilkSet,
+          note: "Australian ivory-leaning blouse with eyelet detail — pair with the linen skirt below for a same-suitcase set.",
         },
         {
-          brand: "Dolce & Gabbana",
-          title: "Poplin Midi Skirt with Majolica Print",
-          slotLabel: "Layer over Alt 1",
-          price: "$1,445",
-          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/skirts/poplin-midi-skirt-with-majolica-print-multicolor-F4CEHTHH5A6HA3TN.html",
-          image:
-            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw079b3e80/images/zoom/F4CEHTHH5A6_HA3TN_0.jpg?sw=740&sh=944",
-          note: "Wear with the twill shirt for a polished full-print set, softened by raffia and gold.",
+          brand: "Zimmermann",
+          title: "Illumination Linen & Silk-Blend Skirt",
+          slotLabel: "Yacht · Pairs Above",
+          price: "$895",
+          url: "https://www.net-a-porter.com/en-us/shop/product/zimmermann/clothing/midi-skirts/illumination-linen-and-silk-blend-skirt/46376663162848182",
+          image: productZimmermannBluePareo,
+          note: "Soft linen midi — finishes the ivory-textured Riviera co-ord without leaning on tile print.",
         },
         {
-          brand: "Dolce & Gabbana",
-          title: "Long Majolica-Print Chiffon Dress",
-          slotLabel: "Outfit Alt 2 · Riviera Lunch",
-          price: "$6,445",
-          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/dresses/long-majolica-print-chiffon-dress-multicolor-F6ADQTHI1BRHA3TN.html",
-          image:
-            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw52bac1d2/images/zoom/F6ADQTHI1BR_HA3TN_0.jpg?sw=740&sh=944",
-          note: "A long, fluid majolica dress for lunch that still feels coastal, not evening-heavy.",
+          brand: "Faithfull the Brand",
+          title: "Marie Louise Printed Midi Dress",
+          slotLabel: "Long Lunch · Painterly Print",
+          price: "$249",
+          url: "https://www.revolve.com/faithfull-the-brand-marie-louise-midi-dress/dp/FAIB-WD451/",
+          image: productEtroPaisleyHalterMaxi,
+          note: "Australian-resort painterly print that nods to Mediterranean blues without cloning the tile motif.",
         },
         {
           brand: "Cult Gaia",
           title: "Adira Printed Cotton-Voile Kaftan",
-          slotLabel: "Outfit Alt 3 · Beach Club",
+          slotLabel: "Beach Club · Embroidered Voile",
           price: "$648",
           url: "https://www.net-a-porter.com/en-us/shop/product/cult-gaia/clothing/coverups/adira-printed-cotton-voile-kaftan/46376663162966810",
           image: "https://www.net-a-porter.com/variants/images/46376663162966810/in/w920_q60.jpg",
-          note: "Elevated kaftan to throw over a swim — yacht to lunch in one piece.",
+          note: "Embroidered cotton-voile coverup — rotates the texture story toward eyelet and gauze.",
+        },
+        {
+          brand: "Hereu",
+          title: "Castell Woven Leather Tote",
+          slotLabel: "Market Stroll · Woven Raffia Tone",
+          price: "$495",
+          url: "https://hereustudio.com/products/castell-woven-leather-tote-bag-tan",
+          image: productHereuWovenTote,
+          note: "Spanish woven leather in a raffia-adjacent tan — the bag that walks the market without competing with the dress.",
         },
       ],
     },
