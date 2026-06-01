@@ -200,3 +200,28 @@ The AI editorial image is a **style anchor**, not a duplication target. One refe
 **Reject:** too literal, costume-like, fast-fashion feeling, flat, generic, overly youthful, too sexy, not age-appropriate (35–49), disconnected from destination context.
 
 **Success metric:** "I understand the vibe and could recreate this." NOT "this is the exact outfit from the image."
+
+---
+
+## 34. Feminine styling rules (women 35–49)
+
+Resort Edit styling is feminine, polished destination dressing. Every look + slot is evaluated against this lens.
+
+**Prioritize:** feminine silhouettes, movement + drape, soft structure, elevated resortwear, elegant proportions, texture + craftsmanship, refined styling, destination appropriateness.
+
+**Avoid:** masculine silhouettes, harsh shapes, oversized accessories, aggressive styling, overly trendy pieces, flashy logo-heavy accessories, overly sexy styling, pieces that overpower the outfit.
+
+### Bags
+- **Prioritize:** woven textures, refined raffia, smaller-scale bags, feminine shoulder bags, structured top handles, elegant vacation bags.
+- **Avoid:** oversized beach totes, loud logos, bulky bags, masculine shapes, bags that overpower the silhouette.
+
+### Sunglasses
+- **Prioritize:** softer shapes, feminine frames, oval frames, rounded cat-eye, tortoise finishes, brown gradients, elegant proportions.
+- **Avoid:** oversized celebrity frames, aggressive shapes, overly sporty styles, thick heavy frames.
+
+### Hats (only when contextually appropriate)
+- **Preferred:** structured woven visor, medium-brim raffia, feminine woven hats, refined sun hats.
+- **Avoid:** giant floppy hats, overly bohemian, western-inspired, oversized beach hats.
+
+### Styling formula
+Statement hero piece + feminine silhouette + neutral balance + refined accessories + destination context.
