@@ -362,6 +362,63 @@ function buildPortofinoLookbook(): Look[] {
       });
     }
   }
+  // ── Safety net pass ──────────────────────────────────────────
+  // Per sourcing rules: no View Full Look page may ship with 0
+  // sourced pieces or a placeholder where a real product is
+  // available elsewhere. Apply, in order:
+  //   1. Curated fallback library (Day × Look × Tier × Category).
+  //   2. Cross-tier borrow — pull a sibling tier's real product
+  //      into the empty slot so the grid is never empty.
+  for (const look of out) {
+    for (const tierSlug of TIER_SLUGS) {
+      const tier = look.tiers[tierSlug];
+      for (const cat of LOOK_CATEGORY_ORDER) {
+        if (!tier.products[cat].isPlaceholder) continue;
+        const fb = fallbackFor(look.daySlug, look.lookSlug, tierSlug, cat);
+        if (fb && !fb.isPlaceholder && fb.url && fb.image) {
+          tier.products[cat] = { ...fb, replaced: true };
+        }
+      }
+    }
+    // Cross-tier borrow — runs after every tier had a chance at curated.
+    for (const tierSlug of TIER_SLUGS) {
+      const tier = look.tiers[tierSlug];
+      for (const cat of LOOK_CATEGORY_ORDER) {
+        if (!tier.products[cat].isPlaceholder) continue;
+        for (const other of TIER_SLUGS) {
+          if (other === tierSlug) continue;
+          const sibling = look.tiers[other].products[cat];
+          if (!sibling.isPlaceholder && sibling.url && sibling.image) {
+            tier.products[cat] = { ...sibling, replaced: true };
+            break;
+          }
+        }
+      }
+    }
+  }
+  // ── Publish guard ────────────────────────────────────────────
+  // Refuse to ship a look that has zero sourced pieces in any tier.
+  // Throws at module load so the build fails before publish.
+  const empty: string[] = [];
+  for (const look of out) {
+    for (const tierSlug of TIER_SLUGS) {
+      const sourced = LOOK_CATEGORY_ORDER.filter(
+        (c) => !look.tiers[tierSlug].products[c].isPlaceholder,
+      ).length;
+      if (sourced === 0) {
+        empty.push(`${look.daySlug}/${look.lookSlug} · ${tierSlug}`);
+      }
+    }
+  }
+  if (empty.length > 0) {
+    const msg =
+      "Lookbook publish blocked — 0 sourced pieces for: " + empty.join(", ");
+    if (import.meta.env.DEV) {
+      console.error("[lookbook]", msg);
+    } else {
+      throw new Error(msg);
+    }
+  }
   return out;
 }
 
