@@ -7,7 +7,7 @@ import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg"
 import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
 import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import lookTown from "@/assets/generated/resort-edit/look-town-card-thumb.jpg";
+import day5Muse from "@/assets/day5-market-strolls.jpg";
 import editD2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
 import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
@@ -36,7 +36,7 @@ const days = [
   { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
   { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
   { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
-  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: lookTown },
+  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse },
 ] as const;
 
 const looks = [
