@@ -75,7 +75,7 @@ function buildRows(): Row[] {
             category: categoryLabels[cat] ?? String(cat),
             destination: "Portofino",
             day: day.day,
-            look: `${look.shortLabel ?? look.id} — ${look.name}`,
+            look: `${look.id} — ${look.name}`,
             tier: String(tier),
             status: it.not_available
               ? "not_available"
