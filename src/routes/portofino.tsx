@@ -8,7 +8,7 @@ import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg"
 import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
 import heroMuse from "@/assets/hero-muse-portofino.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import day5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-card-thumb.jpg";
+import day5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-hires-card-20260601.jpg";
 import d1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
 import d1b from "@/assets/generated/resort-edit/edit-d1-b-card-thumb.jpg";
 import d1c from "@/assets/generated/resort-edit/edit-d1-c-card-thumb.jpg";
@@ -208,8 +208,9 @@ function PortofinoPage() {
                       src={d.image}
                       alt={`${d.label} — ${d.title}`}
                       loading="lazy"
+                      decoding="async"
                       className="absolute inset-0 h-full w-full object-cover"
-                      style={{ objectPosition: d.slug === "day-5" ? d.imagePos : "center top" }}
+                      style={{ objectPosition: d.slug === "day-5" ? d.imagePos : "center top", imageRendering: "auto" }}
                     />
                   </div>
                   <div>
