@@ -474,7 +474,7 @@ function buildIssues(): Issue[] {
   return issues;
 }
 
-function IssuesView() {
+function IssuesView({ onReplace }: { onReplace: () => void }) {
   const issues = useMemo(buildIssues, []);
   const byProblem = useMemo(() => {
     const map = new Map<string, number>();
@@ -513,6 +513,7 @@ function IssuesView() {
               <th className="p-2">Source</th>
               <th className="p-2">Problems</th>
               <th className="p-2">URL</th>
+              <th className="p-2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -534,6 +535,15 @@ function IssuesView() {
                 </td>
                 <td className="p-2 text-ink/50 truncate max-w-[260px]" title={i.href ?? ""}>
                   {i.href ?? "—"}
+                </td>
+                <td className="p-2">
+                  <button
+                    type="button"
+                    onClick={onReplace}
+                    className="border border-gold px-2 py-1 rounded text-[0.65rem] uppercase tracking-wider hover:bg-cream"
+                  >
+                    Replace Product
+                  </button>
                 </td>
               </tr>
             ))}
