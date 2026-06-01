@@ -23,6 +23,10 @@ import {
   type LookProduct,
 } from "@/data/lookbook";
 import { lookEditorialFor } from "@/data/lookEditorial";
+import {
+  alternativesFor,
+  type AlternativeProduct,
+} from "@/data/lookAlternatives";
 
 type Search = { tier: TierSlug };
 type DaySlug = Look["daySlug"];
@@ -72,6 +76,7 @@ function ViewFullLookPage() {
     [products],
   );
   const editorial = lookEditorialFor(day, look);
+  const alternatives = alternativesFor(day, look);
 
   const flatIndex = lookbook.findIndex((l) => l.daySlug === day && l.lookSlug === look);
   const prevLook = flatIndex > 0 ? lookbook[flatIndex - 1] : null;
@@ -235,6 +240,44 @@ function ViewFullLookPage() {
         </div>
       </section>
 
+      {/* ───────────────────────── EDITOR'S ALTERNATIVES ───────────────────────── */}
+      {alternatives.length > 0 && (
+        <section className="mx-auto max-w-[1480px] px-4 sm:px-8 lg:px-10 mt-24 md:mt-32">
+          <div className="border-t border-ink/15 pt-12">
+            <div className="inline-flex items-center gap-2 text-gold">
+              <ShoppingBag className="h-4 w-4" strokeWidth={1.4} />
+              <span className="eyebrow tracking-[0.34em] text-[0.62rem]">EDITOR'S ALTERNATIVES</span>
+            </div>
+            <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+              Other Ways to Wear It
+            </h2>
+            <p className="font-serif text-[0.98rem] text-ink/60 mt-3 max-w-2xl leading-relaxed">
+              Same destination, same energy — additional sourced options for the days you want to swap a piece in or out without leaving the look behind.
+            </p>
+          </div>
+
+          <div className="mt-12 space-y-16">
+            {alternatives.map((group) => (
+              <div key={group.title}>
+                <div className="flex flex-col gap-2 border-b border-ink/15 pb-5">
+                  <p className="eyebrow tracking-[0.32em] text-[0.58rem] text-gold">{group.title.toUpperCase()}</p>
+                  {group.description && (
+                    <p className="font-serif italic text-[1rem] text-ink/70 leading-relaxed max-w-3xl">
+                      {group.description}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-10">
+                  {group.items.map((item) => (
+                    <AlternativeCard key={item.brand + item.title} item={item} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ───────────────────────── BOTTOM · GET THE NEXT EDIT ───────────────────────── */}
       <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-28 md:mt-36">
         <div className="border-t border-ink/15 pt-14 grid grid-cols-1 md:grid-cols-[minmax(0,180px)_minmax(0,1fr)] gap-8 md:gap-12 items-center">
@@ -270,6 +313,57 @@ function ViewFullLookPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// Alternative card — same editorial card style as the primary grid,
+// but with a custom slot label (e.g. "Swim Alt 1 · One-Piece") and
+// an optional stylist note instead of a fixed category.
+// ──────────────────────────────────────────────────────────────
+function AlternativeCard({ item }: { item: AlternativeProduct }) {
+  return (
+    <article className="group flex h-full flex-col border border-ink/10 bg-ivory transition-colors hover:border-gold/60">
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        onClick={() => trackOutbound({ brand: item.brand, item: item.title, href: item.url })}
+        className="relative aspect-[4/5] w-full bg-cream/30 overflow-hidden flex items-center justify-center border-b border-ink/10"
+      >
+        <img
+          src={item.image}
+          alt={`${item.brand} ${item.title}`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+      </a>
+      <div className="flex flex-1 flex-col items-center px-4 py-5 text-center">
+        <p className="eyebrow tracking-[0.28em] text-[0.56rem] text-gold">{item.slotLabel}</p>
+        <p className="eyebrow tracking-[0.18em] text-[0.68rem] text-ink uppercase mt-2 leading-snug">
+          {item.brand}
+        </p>
+        <p className="font-serif italic text-[0.94rem] text-ink/75 leading-snug mt-1.5 max-w-[15rem]">
+          {item.title}
+        </p>
+        <p className="font-serif text-[0.95rem] text-ink mt-2">{item.price}</p>
+        {item.note && (
+          <p className="font-serif text-[0.82rem] text-ink/55 mt-3 leading-relaxed max-w-[16rem]">
+            {item.note}
+          </p>
+        )}
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          onClick={() => trackOutbound({ brand: item.brand, item: item.title, href: item.url })}
+          className="mt-auto pt-5 eyebrow tracking-[0.24em] text-[0.58rem] text-ink border-b border-gold hover:text-gold transition-colors pb-0.5"
+          aria-label={`Shop ${item.brand} ${item.title} (opens in new tab)`}
+        >
+          SHOP PIECE →
+        </a>
+      </div>
+    </article>
   );
 }
 
