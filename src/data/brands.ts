@@ -22,65 +22,113 @@ const b = (name: string, blurb?: string): Brand => ({
 
 export const brandCategories: BrandCategory[] = [
   {
-    title: "Resort Icons",
-    description:
-      "The labels that defined modern resort dressing — print-forward, romantic, unmistakably destination.",
-    brands: [
-      b("Zimmermann", "Romantic Australian-born resort, broderie & paneled prints."),
-      b("Johanna Ortiz", "Latin maximalism, ruffles, painterly florals."),
-      b("Alemais", "Folk-art prints with a collector's eye."),
-      b("Farm Rio", "Rio-energy florals & tropical optimism."),
-      b("Agua by Agua Bendita", "Embroidered Colombian craft, slow resort."),
-    ],
-  },
   {
-    title: "Quiet Luxury",
+    title: "Mediterranean Icons",
     description:
-      "Restrained palettes, exquisite fabric, the wardrobe of the woman who doesn't need a logo.",
+      "The Italian, Greek, and Iberian houses that wrote the language of resort — prints, ateliers, and seaside polish from Capri to Comporta.",
     brands: [
-      b("Toteme", "Scandinavian minimalism, perfect tailoring."),
-      b("The Row", "The reference point for quiet luxury."),
-      b("Khaite", "Sculptural American refinement."),
-      b("Loro Piana", "Cashmere, linen, and considered ease."),
-      b("Anine Bing", "Modern essentials with rock-and-roll polish."),
-      b("Veronica Beard", "Tailoring built for travel."),
+      b("Pucci", "Florentine prints, Capri-coded since 1947."),
+      b("Etro", "Milanese paisleys and pan-Mediterranean color."),
+      b("La DoubleJ", "Milan via Sicily — vintage prints, modern cut."),
+      b("Missoni Mare", "Varese-knit zigzags, eternal Riviera."),
+      b("Emporio Sirenuse", "Made in Positano, embroidered by the cliffside."),
+      b("Loretta Caponi", "Florentine hand-embroidery, generational craft."),
+      b("Loewe", "Madrid house, raffia and leather at its sharpest."),
     ],
   },
   {
     title: "Swim & Beach Club",
     description:
-      "Swim, coverups, and cabana-ready pieces for long lunches by the water.",
+      "Swim, one-pieces, and bandeaus from the houses that dress the cabana lineup along Pampelonne, Paraggi, and Cala Jondal.",
     brands: [
       b("Melissa Odabash", "The Riviera swim authority."),
-      b("Eres", "French swimwear, sculpted and discreet."),
+      b("Eres", "Paris-made, sculpted, discreet."),
+      b("Oséree", "Milanese lamé and crochet — golden hour swim."),
       b("Hunza G", "Crinkle one-pieces, iconic and forever."),
+      b("Maygel Coronel", "Venezuelan one-pieces with sculptural lines."),
+      b("Marysia", "Scalloped silhouettes with a watercolor hand."),
+      b("Bond-Eye", "Australian recycled-knit minimalism."),
+      b("MC2 Saint Barth", "St. Barth-born prints, vacation shorthand."),
+      b("Stefania Frangista", "Athens swim with bohemian-glam embellishment."),
+    ],
+  },
+  {
+    title: "Resortwear & Kaftans",
+    description:
+      "Sundresses, kaftans, and easy separates from the Latin, Australian, and European ateliers we travel with.",
+    brands: [
+      b("Johanna Ortiz", "Bogotá-born maximalism, painterly florals, ruffles."),
+      b("Agua by Agua Bendita", "Embroidered Colombian craft, slow resort."),
+      b("Silvia Tcherassi", "Cartagena couturier, breezy architectural cuts."),
+      b("PatBO", "São Paulo embroidery and beachside glamour."),
+      b("Zimmermann", "Romantic Australian-born resort, broderie & paneled prints."),
+      b("Alemais", "Sydney folk-art prints with a collector's eye."),
       b("Faithfull the Brand", "Bali-born sundresses & matching sets."),
       b("Posse", "Linen separates engineered for golden hour."),
-      b("Sir.", "Australian softness, perfectly cut."),
+      b("SIR.", "Australian softness, perfectly cut."),
+      b("Camilla", "Sydney kaftans, kaleidoscopic and unmistakable."),
+      b("Devotion Twins", "Athens-made, hand-stitched Greek romance."),
+      b("CeliaB", "Barcelona resort with hand-beaded craft."),
+      b("Mimi Liberté", "Saint-Tropez-spirited French resort."),
     ],
   },
   {
-    title: "Accessories",
-    description: "Raffia, sculptural leather, hand-woven, and the heirloom jewelry that anchors a look.",
-    brands: [
-      b("Cult Gaia", "Sculptural raffia, resin, and resort-ready bags."),
-      b("Dragon Diffusion", "Hand-woven Italian leather totes."),
-      b("Ancient Greek Sandals", "Athens-made leather sandals, forever season."),
-      b("Jennifer Fisher", "Statement gold, modern heirloom."),
-      b("Celine", "Sunglasses, leather, the Riviera shorthand."),
-    ],
-  },
-  {
-    title: "Riviera Finds",
+    title: "Accessories & Raffia",
     description:
-      "Discoveries from boutique racks, Italian ateliers, and the small labels we keep close.",
+      "Hand-woven baskets, sculptural raffia, and the Italian leather we carry from boat to bar.",
     brands: [
+      b("Dragon Diffusion", "Hand-woven Italian leather totes."),
+      b("Cult Gaia", "Sculptural raffia, resin, and resort-ready bags."),
+      b("Heimat Atlantica", "Galician artisans, woven seashell totes."),
+      b("Kayu", "Filipino-woven straw, San Francisco-edited."),
+      b("Aranaz", "Manila-made beaded and embroidered minaudières."),
+      b("Poolside", "Tropical straw totes, packable and pristine."),
+      b("Lalingi", "Hand-painted Spanish raffia clutches."),
+    ],
+  },
+  {
+    title: "Jewelry We Pack",
+    description:
+      "Saltwater-proof gold, statement resin, and the heirlooms we layer from morning espresso through the late lunch.",
+    brands: [
+      b("Jennifer Meyer", "Soft Los Angeles gold, everyday fine."),
+      b("Missoma", "London-born layering, gold-vermeil mainstays."),
+      b("Gas Bijoux", "Saint-Tropez-made, sun-warmed Mediterranean shapes."),
+      b("Ben-Amun", "Hand-set resin and pearl statement pieces."),
+      b("Completedworks", "London sculptural fine, quietly modern."),
+      b("Mejuri", "Toronto fine basics, the second-skin layer."),
+      b("Brinker & Eliza", "Hand-knotted beads with a downtown wink."),
+      b("Oradina", "14k everyday gold, travel-friendly."),
+      b("Jenny Bird", "Modern Canadian sculpture for the lobe and wrist."),
+    ],
+  },
+  {
+    title: "Shoes for Long Lunches",
+    description:
+      "Greek leather, Spanish espadrilles, and the heel we keep in the carry-on for dinner at the port.",
+    brands: [
+      b("Ancient Greek Sandals", "Athens-made leather, forever season."),
+      b("K. Jacques", "Saint-Tropez sandals hand-cut since 1933."),
+      b("Aquazzura", "Florence-made heels with cinematic poise."),
+      b("Castañer", "Catalan espadrilles, the original."),
+      b("Emme Parsons", "Architectural sandals, made in Italy."),
+      b("Loeffler Randall", "Bow-and-knot flats with editorial polish."),
+      b("Biankina", "Italian-made resort flats in chalky pastels."),
+      b("Amanu", "Custom Los Angeles leather, fitted to the foot."),
+    ],
+  },
+  {
+    title: "Destination Finds",
+    description:
+      "Smaller ateliers and boutique discoveries from the racks we love — the labels we'd send a friend straight to.",
+    brands: [
+      b("Leo Lin", "Sydney atelier, painterly silk drama."),
+      b("Alexis", "Miami resort with sculptural ruffles."),
+      b("Mestiza", "Manila-rooted, hand-finished occasion."),
       b("Kivari", "Vintage-inspired Australian romance."),
-      b("Sézane", "Parisian ease in seasonless palettes."),
-      b("Maje", "French girl polish with a touch of edge."),
-      b("Reformation", "Slip dresses & sundresses with conscience."),
-      b("Mango", "The well-edited high-street resort piece."),
-      b("Rails", "Soft shirting that travels everywhere."),
+      b("Farm Rio", "Rio-energy florals & tropical optimism."),
+      b("Rhode", "Linen-forward New York for hot-weather travel."),
+      b("Faithfull the Brand", "Bali archive prints, off-duty resort."),
     ],
   },
 ];
