@@ -1,12 +1,22 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, ExternalLink, ShoppingBag } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Hand,
+  Heart,
+  MapPin,
+  Shirt,
+  ShoppingBag,
+  Sun,
+  Tag,
+} from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
 import {
   isLookSlug,
   isTierSlug,
-  LOOK_SLUG_LABEL,
   persistTier,
   TIER_LABEL,
   TIER_SLUGS,
@@ -18,6 +28,7 @@ import {
   formatUsd,
   LOOK_CATEGORY_LABEL,
   LOOK_CATEGORY_ORDER,
+  lookbook,
   priceTotalFor,
   type Look,
   type LookCategory,
@@ -73,86 +84,148 @@ function ViewFullLookPage() {
     return out;
   }, [lookData]);
 
-  const shoppableCount = LOOK_CATEGORY_ORDER.filter(
-    (c) => !products[c].isPlaceholder,
-  ).length;
+  const shoppableCount = LOOK_CATEGORY_ORDER.filter((c) => !products[c].isPlaceholder).length;
+
+  const flatIndex = lookbook.findIndex((l) => l.daySlug === day && l.lookSlug === look);
+  const prevLook = flatIndex > 0 ? lookbook[flatIndex - 1] : null;
+  const nextLook =
+    flatIndex >= 0 && flatIndex < lookbook.length - 1 ? lookbook[flatIndex + 1] : null;
 
   return (
-    <div className="bg-ivory min-h-screen pb-28 md:pb-16">
-      {/* BREADCRUMB */}
-      <div className="mx-auto max-w-[1320px] px-4 sm:px-6 pt-6 md:pt-10">
-        <div className="flex flex-wrap items-center justify-between gap-3 eyebrow text-[0.6rem] tracking-[0.3em] text-ink/60">
+    <div className="bg-ivory min-h-screen pb-16">
+      {/* TOP BAR — breadcrumb + prev/next */}
+      <div className="mx-auto max-w-[1320px] px-4 sm:px-8 pt-6 md:pt-8">
+        <div className="flex flex-wrap items-center justify-between gap-3 font-serif text-[0.85rem] text-ink/55">
           <nav aria-label="Breadcrumb" className="flex items-center gap-2">
-            <Link to="/" className="hover:text-gold transition-colors">Home</Link>
-            <span className="text-ink/30">/</span>
-            <Link to="/portofino" search={{ tier }} className="hover:text-gold transition-colors">
-              Portofino
+            <Link to="/" className="hover:text-gold transition-colors">
+              Home
             </Link>
-            <span className="text-ink/30">/</span>
-            <span className="text-ink/80">{lookData.day}</span>
-            <span className="text-ink/30">/</span>
-            <span className="text-gold">{lookData.lookLabel}</span>
+            <ChevronRight className="w-3 h-3 text-ink/30" />
+            <Link to="/portofino" search={{ tier }} className="hover:text-gold transition-colors">
+              5 Days in Portofino
+            </Link>
+            <ChevronRight className="w-3 h-3 text-ink/30" />
+            <span className="text-ink/65">{lookData.day}</span>
+            <ChevronRight className="w-3 h-3 text-ink/30" />
+            <span className="text-gold">View Full Look</span>
           </nav>
-          <Link
-            to="/portofino"
-            search={{ tier }}
-            className="inline-flex items-center gap-2 hover:text-gold transition-colors"
-          >
-            <ArrowLeft className="w-3 h-3" /> Back to Edit
-          </Link>
+          <div className="flex items-center gap-4 text-[0.85rem]">
+            {prevLook ? (
+              <Link
+                to="/portofino/day-$day/look-$look"
+                params={{ day: prevLook.daySlug, look: prevLook.lookSlug }}
+                search={{ tier }}
+                className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" /> Prev Look
+              </Link>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 text-ink/25">
+                <ChevronLeft className="w-3.5 h-3.5" /> Prev Look
+              </span>
+            )}
+            <span className="text-ink/25">|</span>
+            {nextLook ? (
+              <Link
+                to="/portofino/day-$day/look-$look"
+                params={{ day: nextLook.daySlug, look: nextLook.lookSlug }}
+                search={{ tier }}
+                className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
+              >
+                Next Look <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 text-ink/25">
+                Next Look <ChevronRight className="w-3.5 h-3.5" />
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* HERO: LEFT image + title, RIGHT shopping grid */}
-      <section className="mx-auto max-w-[1320px] px-4 sm:px-6 pt-6 md:pt-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-8 lg:gap-12 items-start">
-          {/* LEFT — Look image + occasion copy */}
-          <div className="lg:sticky lg:top-6">
-            <div className="relative overflow-hidden rounded-[14px] bg-muted border border-border/50 shadow-[0_20px_60px_-30px_rgba(60,30,10,0.25)] aspect-[4/5]">
+      {/* HERO TWO-COLUMN */}
+      <section className="mx-auto max-w-[1320px] px-4 sm:px-8 pt-6 md:pt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] gap-10 lg:gap-14 items-start">
+          {/* LEFT — Editorial image + copy */}
+          <div>
+            <div className="relative overflow-hidden bg-muted aspect-[4/5]">
               <img
                 src={lookData.heroImage}
-                alt={`${lookData.day} · ${lookData.lookLabel} — ${lookData.title}`}
+                alt={`${lookData.day} · ${lookData.title}`}
                 className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: "center center" }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/0" />
-              <div className="absolute top-4 left-4 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2.5 py-1 rounded-full">
-                {TIER_LABEL[tier].toUpperCase()} EDIT
-              </div>
-              <div className="absolute left-5 right-5 bottom-5 text-ivory">
-                <p className="eyebrow tracking-[0.32em] text-[0.6rem] text-ivory/85">
-                  {lookData.day.toUpperCase()} · {lookData.lookLabel.toUpperCase()}
-                </p>
-                <h1 className="font-display text-3xl md:text-4xl xl:text-5xl leading-[1.05] tracking-[0.04em] mt-2">
-                  {lookData.title}
-                </h1>
-                <p className="font-serif italic text-[0.95rem] md:text-base text-ivory/90 mt-2 max-w-md">
-                  {lookData.subtitle}
-                </p>
-              </div>
             </div>
-            <p className="font-serif text-[0.95rem] text-ink/75 leading-relaxed mt-5">
+
+            <p className="eyebrow tracking-[0.32em] text-[0.7rem] text-gold mt-6">
+              {lookData.day.toUpperCase()}
+            </p>
+            <h1 className="font-display text-3xl md:text-4xl xl:text-[2.6rem] leading-[1.05] tracking-[0.04em] text-ink mt-3 uppercase">
+              {lookData.title}
+            </h1>
+            <p className="font-serif text-[1rem] text-ink/70 leading-relaxed mt-5 max-w-md">
               {lookData.caption}
             </p>
+
+            <ul className="mt-6 space-y-2.5 font-serif text-[0.95rem] text-ink/75">
+              <li className="flex items-center gap-2.5">
+                <MapPin className="w-4 h-4 text-ink/55" /> {lookData.destination}, Italy
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Sun className="w-4 h-4 text-ink/55" /> {lookData.subtitle}
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Shirt className="w-4 h-4 text-ink/55" /> {lookData.lookLabel}
+              </li>
+            </ul>
+
+            {/* SHOP THE FULL LOOK card */}
+            <div className="mt-8 border border-gold/50 p-5 flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full border border-gold/60 flex items-center justify-center shrink-0">
+                <ShoppingBag className="w-5 h-5 text-gold" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="eyebrow tracking-[0.28em] text-[0.7rem] text-ink font-semibold">
+                  SHOP THE FULL LOOK
+                </p>
+                <p className="font-serif text-[0.85rem] text-ink/70 mt-1 leading-snug">
+                  {shoppableCount} hand-picked pieces to complete your {lookData.destination} look.
+                </p>
+                <a
+                  href="#full-look-grid"
+                  className="inline-block mt-3 border border-gold px-4 py-2 eyebrow tracking-[0.28em] text-[0.65rem] text-gold hover:bg-gold hover:text-ivory transition-colors"
+                >
+                  ADD ALL TO WISHLIST
+                </a>
+              </div>
+              <button
+                type="button"
+                aria-label="Save look"
+                className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-ink/50 hover:text-gold hover:border-gold transition-colors"
+              >
+                <Heart className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
-          {/* RIGHT — Shopping grid */}
-          <div>
-            <header className="flex items-end justify-between gap-4">
+          {/* RIGHT — Product grid */}
+          <div id="full-look-grid">
+            <div className="flex items-end justify-between gap-4 flex-wrap">
               <div>
-                <span className="eyebrow tracking-[0.3em] text-[0.6rem] text-gold">
-                  Shop the full look
-                </span>
-                <h2 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                  {LOOK_CATEGORY_ORDER.length} pieces · {shoppableCount} live now
+                <h2 className="font-display text-3xl md:text-[2.1rem] tracking-[0.05em] text-ink uppercase">
+                  The Full Look
                 </h2>
+                <p className="font-serif text-[0.95rem] text-ink/55 mt-1">
+                  {shoppableCount} curated pieces
+                </p>
               </div>
-              <span className="font-display text-2xl md:text-3xl text-ink tracking-[0.04em]">
+              <span className="font-display text-xl md:text-2xl text-ink tracking-[0.04em]">
                 {formatUsd(totalsByTier[tier])}
               </span>
-            </header>
+            </div>
 
-            {/* Tier toggle */}
-            <div className="mt-4 grid grid-cols-3 gap-1.5 p-1 bg-ivory border border-border/60 rounded-full">
+            {/* Tier toggle (compact) */}
+            <div className="mt-4 inline-flex border border-border">
               {TIER_SLUGS.map((t) => {
                 const active = t === tier;
                 return (
@@ -163,10 +236,8 @@ function ViewFullLookPage() {
                     search={{ tier: t }}
                     replace
                     className={
-                      "text-center eyebrow tracking-[0.22em] text-[0.55rem] py-2 rounded-full transition-colors " +
-                      (active
-                        ? "bg-gold text-ink font-semibold"
-                        : "text-ink/70 hover:text-gold")
+                      "px-3 py-1.5 eyebrow tracking-[0.22em] text-[0.55rem] transition-colors " +
+                      (active ? "bg-ink text-ivory" : "bg-ivory text-ink/65 hover:text-ink")
                     }
                   >
                     {TIER_LABEL[t].toUpperCase()}
@@ -175,72 +246,65 @@ function ViewFullLookPage() {
               })}
             </div>
 
-            {/* Category-organised product grid */}
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* 4-col card grid */}
+            <div className="mt-6 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
               {LOOK_CATEGORY_ORDER.map((cat) => (
-                <ProductCategoryCard
-                  key={cat}
-                  category={cat}
-                  product={products[cat]}
-                />
+                <ProductCategoryCard key={cat} category={cat} product={products[cat]} />
               ))}
-            </div>
-
-            {/* Tier compare strip */}
-            <div className="mt-8 grid grid-cols-3 gap-2">
-              {TIER_SLUGS.map((t) => {
-                const active = t === tier;
-                return (
-                  <Link
-                    key={t}
-                    to="/portofino/day-$day/look-$look"
-                    params={{ day, look }}
-                    search={{ tier: t }}
-                    replace
-                    className={
-                      "rounded-[10px] border p-3 text-center transition-colors " +
-                      (active
-                        ? "bg-gold/15 border-gold"
-                        : "bg-cream/60 border-border/60 hover:border-gold")
-                    }
-                  >
-                    <p className="eyebrow tracking-[0.28em] text-[0.55rem] text-gold">
-                      {TIER_LABEL[t].toUpperCase()}
-                    </p>
-                    <p className="font-display text-lg text-ink mt-1 tracking-[0.04em]">
-                      {formatUsd(totalsByTier[t])}
-                    </p>
-                  </Link>
-                );
-              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* STICKY MOBILE CTA */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-ivory/95 backdrop-blur border-t border-border/60 px-4 py-3 flex items-center gap-3 shadow-[0_-10px_30px_-15px_rgba(60,30,10,0.25)]">
-        <div className="flex-1">
-          <p className="eyebrow tracking-[0.22em] text-[0.55rem] text-ink/60">
-            {TIER_LABEL[tier]} total
-          </p>
-          <p className="font-display text-lg text-ink leading-none">
-            {formatUsd(totalsByTier[tier])}
-          </p>
+      {/* TRUST SIGNAL ROW */}
+      <section className="mx-auto max-w-[1320px] px-4 sm:px-8 mt-16 md:mt-20 border-t border-border/60 pt-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+          {[
+            { Icon: ShoppingBag, title: "Hand-picked pieces", body: "for your itinerary" },
+            { Icon: Hand, title: "Mix & match", body: "for any occasion" },
+            { Icon: Tag, title: "Luxury & affordable", body: "options included" },
+            { Icon: ExternalLink, title: "Direct links open", body: "in new tabs" },
+          ].map(({ Icon, title, body }) => (
+            <div key={title} className="flex items-start gap-3">
+              <Icon className="w-5 h-5 text-ink/60 mt-0.5 shrink-0" strokeWidth={1.5} />
+              <div>
+                <p className="font-serif text-[0.95rem] text-ink leading-snug">{title}</p>
+                <p className="font-serif text-[0.9rem] text-ink/55 leading-snug">{body}</p>
+              </div>
+            </div>
+          ))}
         </div>
-        <a
-          href="#shopping-grid"
-          className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-full bg-gold text-ink eyebrow tracking-[0.2em] text-[0.65rem] font-semibold"
-        >
-          <ShoppingBag className="w-4 h-4" /> Shop {shoppableCount} pieces
-        </a>
-      </div>
+      </section>
+
+      {/* LOVE THIS LOOK */}
+      <section className="mx-auto max-w-[1320px] px-4 sm:px-8 mt-10">
+        <div className="border border-border/60 bg-ivory p-4 md:p-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6">
+          <div className="w-full sm:w-44 aspect-[4/3] sm:aspect-[5/3] overflow-hidden bg-muted shrink-0">
+            <img src={lookData.heroImage} alt="" aria-hidden className="h-full w-full object-cover" />
+          </div>
+          <div className="flex-1">
+            <p className="eyebrow tracking-[0.28em] text-[0.75rem] text-ink font-semibold uppercase">
+              Love this look?
+            </p>
+            <p className="font-serif text-[0.95rem] text-ink/65 mt-1">
+              Browse more looks from all 5 days in {lookData.destination}.
+            </p>
+          </div>
+          <Link
+            to="/portofino"
+            search={{ tier }}
+            className="self-start sm:self-center bg-gold text-ivory px-5 py-3 eyebrow tracking-[0.28em] text-[0.7rem] hover:bg-ink transition-colors"
+          >
+            VIEW ALL DAYS
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
 
 // ──────────────────────────────────────────────────────────────
-// Product card — single component for every category
+// Product card — matches reference: image, brand, name, price, SHOP PRODUCT
 // ──────────────────────────────────────────────────────────────
 function ProductCategoryCard({
   category,
@@ -253,14 +317,16 @@ function ProductCategoryCard({
 
   if (product.isPlaceholder) {
     return (
-      <article className="flex flex-col bg-cream/60 border border-dashed border-border/60 rounded-[12px] p-4 min-h-[260px]">
-        <p className="eyebrow tracking-[0.28em] text-[0.55rem] text-gold">{label}</p>
-        <div className="mt-3 flex-1 flex items-center justify-center text-center px-2">
-          <p className="font-serif italic text-[0.85rem] text-ink/55 leading-relaxed">
+      <article className="flex flex-col bg-cream/40 border border-dashed border-border/60 min-h-[360px]">
+        <div className="px-3 pt-3">
+          <p className="eyebrow tracking-[0.28em] text-[0.55rem] text-ink/45">{label}</p>
+        </div>
+        <div className="flex-1 flex items-center justify-center text-center px-4">
+          <p className="font-serif italic text-[0.85rem] text-ink/50 leading-relaxed">
             {product.title}
           </p>
         </div>
-        <p className="mt-3 eyebrow tracking-[0.22em] text-[0.5rem] text-ink/45 text-center">
+        <p className="px-3 pb-3 eyebrow tracking-[0.22em] text-[0.5rem] text-ink/40 text-center">
           Not available through approved affiliate partners
         </p>
       </article>
@@ -268,16 +334,7 @@ function ProductCategoryCard({
   }
 
   return (
-    <article className="group flex flex-col bg-ivory border border-border/60 rounded-[12px] p-3 hover:border-gold/70 transition-colors min-h-[260px]">
-      <div className="flex items-center justify-between">
-        <p className="eyebrow tracking-[0.28em] text-[0.55rem] text-gold">{label}</p>
-        {product.replaced && (
-          <span className="eyebrow text-[0.5rem] tracking-[0.2em] text-gold bg-cream border border-gold/50 px-1.5 py-px rounded">
-            Updated
-          </span>
-        )}
-      </div>
-
+    <article className="group flex flex-col bg-ivory border border-border/40 hover:border-gold/60 transition-colors">
       <a
         href={product.url!}
         target="_blank"
@@ -285,35 +342,43 @@ function ProductCategoryCard({
         onClick={() =>
           trackOutbound({ brand: product.brand, item: product.title, href: product.url! })
         }
-        className="mt-3 relative aspect-square w-full bg-cream border border-border/60 rounded-[10px] overflow-hidden flex items-center justify-center"
+        className="relative aspect-square w-full bg-cream/40 overflow-hidden flex items-center justify-center"
       >
         <img
           src={product.image!}
           alt={`${product.brand} ${product.title}`}
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
+          className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
         />
+        {product.replaced && (
+          <span className="absolute top-2 right-2 eyebrow text-[0.5rem] tracking-[0.2em] text-gold bg-ivory/95 border border-gold/50 px-1.5 py-px">
+            UPDATED
+          </span>
+        )}
       </a>
 
-      <div className="mt-3 flex flex-col flex-1">
-        <p className="font-serif text-[0.92rem] text-ink leading-snug">{product.brand}</p>
-        <p className="font-serif text-[0.82rem] text-ink/70 leading-snug line-clamp-2">
+      <div className="p-3 md:p-4 flex flex-col flex-1">
+        <p className="eyebrow tracking-[0.22em] text-[0.6rem] text-ink font-semibold uppercase leading-snug line-clamp-2">
+          {product.brand}
+        </p>
+        <p className="font-serif text-[0.92rem] text-ink/70 leading-snug mt-1.5 line-clamp-2 min-h-[2.6em]">
           {product.title}
         </p>
-        <div className="mt-auto pt-2 flex items-center justify-between gap-2">
-          <span className="font-display text-base text-ink tracking-[0.03em]">{product.price}</span>
-          <a
-            href={product.url!}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            onClick={() =>
-              trackOutbound({ brand: product.brand, item: product.title, href: product.url! })
-            }
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gold text-ink eyebrow tracking-[0.2em] text-[0.55rem] hover:bg-gold/85 transition-colors"
-          >
-            Shop <ExternalLink className="w-3 h-3" />
-          </a>
-        </div>
+        <p className="font-serif text-[0.95rem] text-ink mt-2">{product.price}</p>
+
+        <a
+          href={product.url!}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          onClick={() =>
+            trackOutbound({ brand: product.brand, item: product.title, href: product.url! })
+          }
+          className="mt-3 inline-flex items-center justify-center bg-ink text-ivory py-2.5 eyebrow tracking-[0.28em] text-[0.6rem] hover:bg-gold transition-colors"
+          aria-label={`Shop ${product.brand} ${product.title} (opens in new tab)`}
+        >
+          SHOP PRODUCT
+        </a>
+        <span className="sr-only">Category: {label}</span>
       </div>
     </article>
   );
