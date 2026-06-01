@@ -83,7 +83,7 @@ export default {
 };
 
 // Internal preview/published hosts we should NOT redirect away from.
-const PASSTHROUGH_HOST_SUFFIXES = [".lovable.app", ".lovable.dev", "localhost"];
+const PASSTHROUGH_HOST_SUFFIXES = [".lovable.app", ".lovable.dev", ".lovableproject.com", "localhost"];
 
 function buildCanonicalRedirect(request: Request): Response | null {
   let url: URL;
@@ -104,8 +104,10 @@ function buildCanonicalRedirect(request: Request): Response | null {
   if (isPassthrough) return null;
 
   const isCanonicalHost = host === SITE_HOST;
+  const isWwwCanonicalHost = host === `www.${SITE_HOST}`;
   const isHttps = forwardedProto === "https";
   if (isCanonicalHost && isHttps) return null;
+  if (!isCanonicalHost && !isWwwCanonicalHost) return null;
 
   const target = `${SITE_URL}${url.pathname}${url.search}`;
   return new Response(null, {
