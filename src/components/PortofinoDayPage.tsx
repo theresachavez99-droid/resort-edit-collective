@@ -6,7 +6,7 @@ import heroYacht from "@/assets/generated/resort-edit/look-yacht-desktop-hero.jp
 import heroBeach from "@/assets/generated/resort-edit/look-beach-desktop-hero.jpg";
 import heroDayclub from "@/assets/generated/resort-edit/look-dayclub-desktop-hero.jpg";
 import heroDinner from "@/assets/generated/resort-edit/look-dinner-desktop-hero.jpg";
-import heroDay5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-desktop-hero.jpg";
+import heroDay5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-hires-detail-20260601.jpg";
 import expYacht from "@/assets/exp-yacht-charter.jpg";
 import expHarbor from "@/assets/exp-harbor-golden.jpg";
 import expCruise from "@/assets/exp-sunset-cruise.jpg";
