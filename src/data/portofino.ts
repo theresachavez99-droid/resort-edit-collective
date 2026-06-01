@@ -3,6 +3,7 @@ import beach from "@/assets/generated/resort-edit/look-beach-detail-thumb.jpg";
 import dayclub from "@/assets/generated/resort-edit/look-dayclub-detail-thumb.jpg";
 import dinner from "@/assets/generated/resort-edit/look-dinner-detail-thumb.jpg";
 import town from "@/assets/generated/resort-edit/look-town-detail-thumb.jpg";
+import day5MarketStrollsDetail from "@/assets/generated/resort-edit/day5-market-strolls-detail-thumb.jpg";
 import productAnineBingSilkScarf from "@/assets/products/anine-bing-silk-scarf.svg";
 import productCelineTriompheSunglasses from "@/assets/products/celine-triomphe-sunglasses.svg";
 import productDgMajolicaBikini from "@/assets/products/dg-majolica-bikini.jpg";
@@ -758,7 +759,7 @@ export const portofinoLooks: Look[] = [
     subtitle: "Espresso, linen, and one long last lunch.",
     caption:
       "Climb the path to Castello Brown for one last look over the harbor, then drift down to a waterside table where lunch turns into the kind of farewell that already feels like a return.",
-    image: town,
+    image: day5MarketStrollsDetail,
     itinerary:
       "Espresso at Caffè Excelsior. The walk up to Castello Brown for the view that defines Portofino. Gelato at Mario, then a boat over to the abbey at San Fruttuoso before lunch.",
     experience: { label: "Book the San Fruttuoso Boat", href: "#" },
