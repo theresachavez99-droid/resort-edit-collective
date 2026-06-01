@@ -209,6 +209,16 @@ export const portofinoLooks: Look[] = [
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
       },
+      {
+        brand: "Anine Bing",
+        item: "Silk Square Scarf — Ivory Print",
+        price: "$150",
+        category: "Hair Detail",
+        href: "https://www.aninebing.com/products/silk-scarf-ivory-print",
+        image: productAnineBingSilkScarf,
+        inventory_status: "in_stock",
+        last_verified_date: "2026-05-30",
+      },
       // -----------------------------------------------------------------
       // DAY 1 · LOOK 2 — "Riviera Lunch"
       // Italian Riviera lunch energy with effortless polish.
