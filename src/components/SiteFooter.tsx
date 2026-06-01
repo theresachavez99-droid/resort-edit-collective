@@ -1,12 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram } from "lucide-react";
-import { useState } from "react";
 import logo from "@/assets/resort-edit-logo-ivory.png";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 export function SiteFooter() {
-  const [submitted, setSubmitted] = useState(false);
-  const [email, setEmail] = useState("");
-
   return (
     <footer id="newsletter" className="bg-ink text-ivory mt-32">
       <div className="mx-auto max-w-5xl px-6 pt-9 md:pt-12 pb-9 md:pb-11 text-center flex flex-col items-center">
@@ -24,33 +21,7 @@ export function SiteFooter() {
         <p className="mt-3 text-ivory/85 max-w-xl font-serif text-lg md:text-xl italic">
           Destination style, itineraries, and shoppable escapes — delivered to your inbox.
         </p>
-        {submitted ? (
-          <p className="mt-7 font-serif italic text-lg text-gold max-w-md">
-            You're on the list for the next edit.
-          </p>
-        ) : (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSubmitted(true);
-            }}
-            className="mt-7 flex flex-col sm:flex-row gap-2 w-full max-w-xl"
-          >
-            <input
-              type="email"
-              required
-              inputMode="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email address"
-              className="flex-1 h-14 bg-transparent border border-ivory/30 px-5 text-sm text-ivory placeholder:text-ivory/40 focus:outline-none focus:border-gold"
-            />
-            <button className="eyebrow h-14 bg-gold text-ink px-10 hover:bg-ivory transition-colors whitespace-nowrap">
-              Get the Next Edit →
-            </button>
-          </form>
-        )}
+        <NewsletterForm ctaSource="footer" variant="footer" />
         <a
           href="https://www.instagram.com/resort.edit"
           target="_blank"

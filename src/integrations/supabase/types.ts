@@ -80,6 +80,48 @@ export type Database = {
         }
         Relationships: []
       }
+      subscribers: {
+        Row: {
+          created_at: string
+          cta_source: string | null
+          destination: string | null
+          email: string
+          id: string
+          notes: string | null
+          source_page: string | null
+          status: string
+          tags: string[]
+          unsubscribed_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cta_source?: string | null
+          destination?: string | null
+          email: string
+          id?: string
+          notes?: string | null
+          source_page?: string | null
+          status?: string
+          tags?: string[]
+          unsubscribed_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cta_source?: string | null
+          destination?: string | null
+          email?: string
+          id?: string
+          notes?: string | null
+          source_page?: string | null
+          status?: string
+          tags?: string[]
+          unsubscribed_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
