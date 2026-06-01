@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight, MapPin, Shirt, Sun } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Shirt, ShoppingBag, Sun } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
@@ -130,21 +130,19 @@ function ViewFullLookPage() {
         </div>
       </div>
 
-      {/* ───────────────────────── SECTION 1 · EDITORIAL HERO ───────────────────────── */}
-      <section className="mx-auto max-w-[1400px] px-4 sm:px-10 pt-10 md:pt-14">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,45fr)_minmax(0,55fr)] gap-12 lg:gap-20 items-start">
-          {/* LEFT — Full-bleed editorial muse */}
-          <figure className="relative overflow-hidden bg-muted aspect-[4/5] lg:aspect-[4/5.4]">
-            <img
-              src={lookData.heroImage}
-              alt={`${lookData.day} · ${lookData.title}`}
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: "center center" }}
-            />
-          </figure>
+      {/* ───────────────────────── ACTIVE VIEW FULL LOOK · TWO COLUMN TEMPLATE ───────────────────────── */}
+      <section className="mx-auto max-w-[1480px] px-4 sm:px-8 lg:px-10 pt-8 md:pt-12">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,44fr)_minmax(0,56fr)] gap-10 xl:gap-14 items-start">
+          <div className="xl:sticky xl:top-8 xl:self-start">
+            <figure className="relative overflow-hidden border border-ink/10 bg-cream/35 aspect-[4/5] lg:aspect-[4/5.25]">
+              <img
+                src={lookData.heroImage}
+                alt={`${lookData.day} · ${lookData.title}`}
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: "center center" }}
+              />
+            </figure>
 
-          {/* RIGHT — Editorial copy */}
-          <div className="lg:pt-6">
             <p className="eyebrow tracking-[0.42em] text-[0.7rem] text-gold">
               {lookData.day.toUpperCase()}
             </p>
@@ -185,11 +183,26 @@ function ViewFullLookPage() {
                 </p>
               </div>
             )}
+          </div>
 
-            {/* Tier toggle — discreet, editorial */}
-            <div className="mt-10 flex items-center gap-3">
-              <span className="eyebrow tracking-[0.32em] text-[0.6rem] text-ink/45">TIER</span>
-              <div className="inline-flex">
+          <aside className="border-t border-ink/15 xl:border-t-0 xl:border-l xl:pl-12 border-ink/15 pt-10 xl:pt-2">
+            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between border-b border-ink/15 pb-8">
+              <div>
+                <div className="inline-flex items-center gap-2 text-gold">
+                  <ShoppingBag className="h-4 w-4" strokeWidth={1.4} />
+                  <span className="eyebrow tracking-[0.34em] text-[0.62rem]">CURATED EDIT</span>
+                </div>
+                <h2 className="font-display text-[1.65rem] md:text-[2.15rem] tracking-[0.16em] text-ink uppercase mt-3">
+                  Complete the Look
+                </h2>
+                <p className="font-serif text-[0.95rem] text-ink/55 mt-2">
+                  {shoppableCount} sourced pieces · {TIER_LABEL[tier]} · {lookData.destination}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="eyebrow tracking-[0.32em] text-[0.58rem] text-ink/45">TIER</span>
+                <div className="inline-flex border border-ink/15 bg-ivory">
                 {TIER_SLUGS.map((t, i) => {
                   const active = t === tier;
                   return (
@@ -200,39 +213,25 @@ function ViewFullLookPage() {
                       search={{ tier: t }}
                       replace
                       className={
-                        "px-3 py-1 eyebrow tracking-[0.28em] text-[0.6rem] transition-colors " +
+                        "px-3.5 py-2 eyebrow tracking-[0.24em] text-[0.56rem] transition-colors " +
                         (i > 0 ? "border-l border-ink/15 " : "") +
-                        (active ? "text-ink" : "text-ink/40 hover:text-ink/70")
+                        (active ? "bg-gold text-ivory" : "text-ink/45 hover:text-ink")
                       }
                     >
                       {TIER_LABEL[t].toUpperCase()}
                     </Link>
                   );
                 })}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ───────────────────────── SECTION 2 · COMPLETE THE LOOK ───────────────────────── */}
-      <section id="full-look-grid" className="mx-auto max-w-[1400px] px-4 sm:px-10 mt-24 md:mt-32">
-        <header className="text-center max-w-2xl mx-auto">
-          <h2 className="font-display text-[1.7rem] md:text-[2.2rem] tracking-[0.18em] text-ink uppercase">
-            Complete the Look
-          </h2>
-          <p className="font-serif italic text-[1rem] text-ink/55 mt-3">
-            Curated piece by piece.
-          </p>
-          <p className="font-serif text-[0.85rem] text-ink/45 mt-1">
-            {shoppableCount} pieces · {lookData.destination}
-          </p>
-        </header>
-
-        <div className="mt-14 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-14 md:gap-x-10 md:gap-y-16">
-          {LOOK_CATEGORY_ORDER.map((cat) => (
-            <ProductCategoryCard key={cat} category={cat} product={products[cat]} />
-          ))}
+            <div id="full-look-grid" className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8">
+              {LOOK_CATEGORY_ORDER.map((cat) => (
+                <ProductCategoryCard key={cat} category={cat} product={products[cat]} />
+              ))}
+            </div>
+          </aside>
         </div>
       </section>
 
