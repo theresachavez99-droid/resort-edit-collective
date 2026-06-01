@@ -205,7 +205,11 @@ export const updateSourcedProductStatus = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data }) => {
-    const patch: Record<string, unknown> = { status: data.status };
+    const patch: {
+      status: typeof data.status;
+      notes?: string;
+      promoted_at?: string;
+    } = { status: data.status };
     if (data.notes !== undefined) patch.notes = data.notes;
     if (data.status === "promoted") patch.promoted_at = new Date().toISOString();
     const { error } = await supabaseAdmin
