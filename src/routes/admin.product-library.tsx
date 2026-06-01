@@ -2,6 +2,13 @@ import { useMemo, useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
 import { portofinoEdit, categoryLabels, type AccessoryCategory } from "@/data/portofinoEdit";
+import {
+  lookbook,
+  LOOK_CATEGORY_ORDER,
+  LOOK_CATEGORY_LABEL,
+  type LookCategory,
+} from "@/data/lookbook";
+import { TIER_LABEL, TIER_SLUGS } from "@/lib/portofino-spec";
 
 export const Route = createFileRoute("/admin/product-library")({
   head: () => ({
@@ -143,7 +150,40 @@ function ProductLibraryPage() {
     );
   }
 
-  return <ProductLibraryGrid />;
+  return <ProductLibraryTabs />;
+}
+
+function ProductLibraryTabs() {
+  const [tab, setTab] = useState<"catalog" | "issues" | "gap">("catalog");
+  return (
+    <div className="min-h-screen bg-ivory text-ink">
+      <nav className="sticky top-0 z-10 bg-ivory border-b border-border/60 px-6 lg:px-10 py-3 flex gap-2 text-xs">
+        {(
+          [
+            ["catalog", "Catalog"],
+            ["issues", "Issues"],
+            ["gap", "Gap Report"],
+          ] as const
+        ).map(([k, label]) => (
+          <button
+            key={k}
+            onClick={() => setTab(k)}
+            className={
+              "px-3 py-1.5 rounded uppercase tracking-wider " +
+              (tab === k
+                ? "bg-ink text-ivory"
+                : "bg-white border border-border/60 hover:border-gold")
+            }
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
+      {tab === "catalog" && <ProductLibraryGrid />}
+      {tab === "issues" && <IssuesView />}
+      {tab === "gap" && <GapReport />}
+    </div>
+  );
 }
 
 function ProductLibraryGrid() {
