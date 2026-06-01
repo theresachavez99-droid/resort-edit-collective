@@ -139,7 +139,7 @@ function Index() {
               <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
                 <img
                   src={d.image}
-                  srcSet={d.imageRetina ? `${d.imageMobile ?? d.image} 1x, ${d.imageRetina} 2x` : undefined}
+                  srcSet={d.imageRetina ? `${d.image} 1x, ${d.imageRetina} 2x` : undefined}
                   alt={d.title}
                   loading={d.n === "5" ? "eager" : "lazy"}
                   fetchPriority={d.n === "5" ? "high" : undefined}
