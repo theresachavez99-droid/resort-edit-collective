@@ -143,13 +143,14 @@ function placeholder(category: LookCategory, hint?: string): LookProduct {
 
 function defaultStylingNote(category: LookCategory): string {
   switch (category) {
-    case "outfit":     return "Sourcing in progress — a luxury resort piece in your tier";
-    case "shoes":      return "Sourcing in progress — cobblestone-friendly luxury sandal";
-    case "bag":        return "Sourcing in progress — woven or polished leather for day-to-evening";
-    case "jewelry":    return "Sourcing in progress — sculptural gold layering piece";
-    case "sunglasses": return "Sourcing in progress — soft tortoise frame, UV-ready";
-    case "hairDetail": return "Low relaxed bun with face-framing pieces";
-    case "layer":      return "Cream oversized linen button-down";
+    case "outfit":
+    case "shoes":
+    case "bag":
+    case "jewelry":
+    case "sunglasses":
+    case "hairDetail":
+    case "layer":
+      return "Not available through approved affiliate partners";
   }
 }
 
@@ -277,7 +278,9 @@ function buildProducts(
     if (match) consumed.add(keyOf(match));
 
     const cat = candidate.category;
-    if (!slots[cat]) slots[cat] = validateOrPlaceholder(enriched, cat);
+    if (!slots[cat] && isUsableUrl(enriched.url) && enriched.image) {
+      slots[cat] = validateOrPlaceholder(enriched, cat);
+    }
   }
 
   // Backfill empty categories with any unconsumed live item from this day
