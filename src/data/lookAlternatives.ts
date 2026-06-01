@@ -13,13 +13,6 @@
  * and a missing alt should simply not appear.
  */
 
-import eresAquarelleOnePiece from "@/assets/products/eres-aquarelle-one-piece.svg";
-import hunzaBlueBandeau from "@/assets/products/hunza-blue-bandeau.svg";
-import posseIvoryRomper from "@/assets/products/posse-ivory-romper.svg";
-import pucciBlueKaftan from "@/assets/products/pucci-blue-kaftan.svg";
-import zimmermannBluePareo from "@/assets/products/zimmermann-blue-pareo.svg";
-import zimmermannBlueSilkSet from "@/assets/products/zimmermann-blue-silk-set.svg";
-
 export type AlternativeProduct = {
   brand: string;
   title: string;
@@ -53,13 +46,14 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
         "Two Mediterranean swim options with their matching sarongs — both engineered to walk straight from the swim ladder into a long lunch without a costume change.",
       items: [
         {
-          brand: "Eres",
-          title: "Aquarelle Square-Neck One-Piece",
+          brand: "Dolce & Gabbana",
+          title: "Majolica-Print One-Piece Swimsuit",
           slotLabel: "Swim Alt 1 · One-Piece",
-          price: "$640",
-          url: "https://www.net-a-porter.com/en-us/shop/product/eres/clothing/one-piece/aquarelle-square-neck-swimsuit/1647597321197131",
-          image: eresAquarelleOnePiece,
-          note: "Architectural square neckline, Riviera blue. Yacht-elegant, never sporty.",
+          price: "$875",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-one-piece-swimsuit-multicolor-O9A46JONO19IP3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw1d7aff2d/images/zoom/O9A46JONO19_IP3TN_0.jpg?sw=740&sh=944",
+          note: "Blue-and-white majolica with a polished one-piece silhouette — the closest Riviera match to the muse.",
         },
         {
           brand: "Dolce & Gabbana",
@@ -71,22 +65,24 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
           note: "Blue and white tile print — knot at the hip over the one-piece.",
         },
         {
-          brand: "Hunza G",
-          title: "Tracy Crinkle Bandeau Swimsuit",
+          brand: "Dolce & Gabbana",
+          title: "Majolica-Print Padded Bikini",
           slotLabel: "Swim Alt 2 · Bandeau",
-          price: "$245",
-          url: "https://www.net-a-porter.com/en-us/shop/product/hunza-g/clothing/bandeau/tracy-bandeau-seersucker-swimsuit/1647597338129030",
-          image: hunzaBlueBandeau,
-          note: "Bandeau silhouette in signature crinkle — yacht appropriate, never juvenile.",
+          price: "$945",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-padded-bikini-multicolor-O8A27JONO19IP3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw59508ef3/images/zoom/O8A27JONO19_IP3TN_0.jpg?sw=740&sh=944",
+          note: "A balconette-leaning bandeau shape with the same Mediterranean tile story.",
         },
         {
-          brand: "Zimmermann",
-          title: "Alight Printed Cotton Pareo",
-          slotLabel: "Matching Sarong",
-          price: "$295",
-          url: "https://www.net-a-porter.com/en-us/shop/product/zimmermann/clothing/coverups/alight-printed-cotton-pareo/46376663163067275",
-          image: zimmermannBluePareo,
-          note: "Mediterranean print in tonal blues — pairs with the bandeau or worn alone as a maxi.",
+          brand: "Dolce & Gabbana",
+          title: "Short Majolica-Print Chiffon Caftan",
+          slotLabel: "Matching Coverup",
+          price: "$1,995",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/dresses/short-majolica-print-chiffon-caftan-multicolor-F6F1ITHI1BLHA3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwadda0c95/images/zoom/F6F1ITHI1BL_HA3TN_0.jpg?sw=740&sh=944",
+          note: "Light chiffon, blue-white majolica, yacht-to-lunch without losing polish.",
         },
       ],
     },
@@ -96,31 +92,34 @@ export const LOOK_ALTERNATIVES: Record<string, AlternativeGroup[]> = {
         "Three full-outfit moves for Day 1 — the closest white-and-blue match to the muse, a Mediterranean lunch silk co-ord, and a beach-club kaftan that transitions clean from yacht to lunch.",
       items: [
         {
-          brand: "Posse",
-          title: "Hailey Linen Romper — Ivory",
+          brand: "Dolce & Gabbana",
+          title: "Majolica-Print Twill Shirt with Slits",
           slotLabel: "Outfit Alt 1 · Closest to Muse",
-          price: "$370",
-          url: "https://www.net-a-porter.com/en-us/shop/product/posse/clothing/playsuits/hailey-linen-romper/46376663163057411",
-          image: posseIvoryRomper,
-          note: "White linen romper to layer under a blue printed kaftan — raffia underfoot, gold at the ears.",
+          price: "$2,495",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/shirts-and-tops/majolica-print-twill-shirt-with-slits-multicolor-F5O28THI1BOHA3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw40098fc3/images/zoom/F5O28THI1BO_HA3TN_0.jpg?sw=740&sh=944",
+          note: "A blue-white silk layer that mirrors the muse’s print and open, yacht-ready ease.",
         },
         {
-          brand: "Emilio Pucci",
-          title: "Marmo Print Silk Twill Kaftan",
+          brand: "Dolce & Gabbana",
+          title: "Poplin Midi Skirt with Majolica Print",
           slotLabel: "Layer over Alt 1",
-          price: "$1,495",
-          url: "https://www.mytheresa.com/us/en/women/pucci-marmo-print-silk-twill-kaftan-blue-white-p01095481",
-          image: pucciBlueKaftan,
-          note: "Blue-and-white printed silk caftan — the muse layer.",
+          price: "$1,445",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/skirts/poplin-midi-skirt-with-majolica-print-multicolor-F4CEHTHH5A6HA3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw079b3e80/images/zoom/F4CEHTHH5A6_HA3TN_0.jpg?sw=740&sh=944",
+          note: "Wear with the twill shirt for a polished full-print set, softened by raffia and gold.",
         },
         {
-          brand: "Zimmermann",
-          title: "Alight Printed Silk Co-Ord Set",
+          brand: "Dolce & Gabbana",
+          title: "Long Majolica-Print Chiffon Dress",
           slotLabel: "Outfit Alt 2 · Riviera Lunch",
-          price: "$1,250",
-          url: "https://www.mytheresa.com/us/en/women/zimmermann-alight-printed-silk-set-blue-p01089412",
-          image: zimmermannBlueSilkSet,
-          note: "Printed silk co-ord for a long Mediterranean lunch — sleek with resort sandals and raffia.",
+          price: "$6,445",
+          url: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/dresses/long-majolica-print-chiffon-dress-multicolor-F6ADQTHI1BRHA3TN.html",
+          image:
+            "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw52bac1d2/images/zoom/F6ADQTHI1BR_HA3TN_0.jpg?sw=740&sh=944",
+          note: "A long, fluid majolica dress for lunch that still feels coastal, not evening-heavy.",
         },
         {
           brand: "Cult Gaia",

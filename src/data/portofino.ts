@@ -5,10 +5,7 @@ import dinner from "@/assets/generated/resort-edit/look-dinner-detail-thumb.jpg"
 import town from "@/assets/generated/resort-edit/look-town-detail-thumb.jpg";
 import day5MarketStrollsDetail from "@/assets/generated/resort-edit/day5-market-strolls-hires-detail-20260601.jpg";
 import day5MarketStrollsExperience from "@/assets/generated/resort-edit/day5-market-strolls-hires-experience-20260601.jpg";
-import productAnineBingSilkScarf from "@/assets/products/anine-bing-silk-scarf.svg";
 import productCelineTriompheSunglasses from "@/assets/products/celine-triomphe-sunglasses.svg";
-import productDgMajolicaBikini from "@/assets/products/dg-majolica-bikini.jpg";
-import productDgMajolicaSarong from "@/assets/products/dg-majolica-sarong.svg";
 import productDior30MontaigneSunglasses from "@/assets/products/dior-30montaigne-sunglasses.svg";
 import productDragonSantaCroceTote from "@/assets/products/dragon-santa-croce-tote.jpg";
 import productGianvitoPortofinoSandal from "@/assets/products/gianvito-portofino-sandal.svg";
@@ -149,20 +146,24 @@ export const portofinoLooks: Look[] = [
       {
         brand: "Dolce & Gabbana",
         item: "Majolica-Print Triangle Bikini",
-        price: "$595",
-        href: "https://www.farfetch.com/shopping/women/dolce-gabbana-majolica-print-triangle-bikini-item-34814361.aspx",
-        image: productDgMajolicaBikini,
+        price: "$745",
+        href: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/swimwear/majolica-print-triangle-bikini-multicolor-O8A02JONO19IP3TN.html",
+        image:
+          "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwa0985762/images/zoom/O8A02JONO19_IP3TN_0.jpg?sw=740&sh=944",
         inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
+        last_verified_date: "2026-06-01",
+        replaced: true,
       },
       {
         brand: "Dolce & Gabbana",
-        item: "Majolica Beachwear Sarong",
-        price: "$495",
-        href: "https://www.net-a-porter.com/en-us/shop/product/dolcegabbana/clothing/coverups/maiolica-printed-cotton-pareo/46376663163104529",
-        image: productDgMajolicaSarong,
+        item: "Silk Twill Caftan with Majolica Print",
+        price: "$4,195",
+        href: "https://www.dolcegabbana.com/en-us/fashion/women/clothing/dresses/silk-twill-caftan-with-majolica-print-multicolor-F6ALQTHI1BMHA3TN.html",
+        image:
+          "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwf406cbf7/images/zoom/F6ALQTHI1BM_HA3TN_0.jpg?sw=740&sh=944",
         inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
+        last_verified_date: "2026-06-01",
+        replaced: true,
       },
       {
         brand: "Biankina",
@@ -212,15 +213,16 @@ export const portofinoLooks: Look[] = [
         last_verified_date: "2026-05-29",
       },
       {
-        brand: "Anine Bing",
-        item: "Silk Square Scarf — Ivory Print",
-        price: "$150",
+        brand: "Dolce & Gabbana",
+        item: "Majolica-Print Silk Twill Bandeau Scarf",
+        price: "$245",
         category: "Hair Detail",
-        href: "",
-        image: productAnineBingSilkScarf,
-        inventory_status: "unavailable",
-        not_available: true,
-        last_verified_date: "2026-05-30",
+        href: "https://www.dolcegabbana.com/en-us/fashion/women/accessories/scarves-and-silks/majolica-print-silk-twill-bandeau-print-IS174WGDDHBHA3OO.html",
+        image:
+          "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw3df3d0b8/images/zoom/IS174WGDDHB_HA3OO_0.jpg?sw=740&sh=944",
+        inventory_status: "in_stock",
+        replaced: true,
+        last_verified_date: "2026-06-01",
       },
       // -----------------------------------------------------------------
       // DAY 1 · LOOK 2 — "Riviera Lunch"
@@ -441,13 +443,15 @@ export const portofinoLooks: Look[] = [
         lookIndex: 2,
       },
       {
-        brand: "Anine Bing",
-        item: "Silk Scarf — Cream",
-        price: "$95",
-        href: "https://www.aninebing.com/products/silk-scarf-cream-and-black",
-        image: productAnineBingSilkScarf,
+        brand: "Dolce & Gabbana",
+        item: "Majolica-Print Silk Twill Bandeau Scarf",
+        price: "$245",
+        href: "https://www.dolcegabbana.com/en-us/fashion/women/accessories/scarves-and-silks/majolica-print-silk-twill-bandeau-print-IS174WGDDHBHA3OO.html",
+        image:
+          "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw3df3d0b8/images/zoom/IS174WGDDHB_HA3OO_0.jpg?sw=740&sh=944",
         inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
+        replaced: true,
+        last_verified_date: "2026-06-01",
         lookIndex: 1,
       },
       {
