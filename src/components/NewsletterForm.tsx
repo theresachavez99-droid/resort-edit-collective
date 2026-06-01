@@ -37,26 +37,34 @@ export function NewsletterForm({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // TEMP DEBUG — remove after newsletter flow is confirmed working end-to-end.
+    console.log("[newsletter] submit fired", { email, ctaSource });
     if (!email.trim()) return;
     setState({ kind: "loading" });
     try {
       const pathname =
         typeof window !== "undefined" ? window.location.pathname : undefined;
-      const res = await subscribe({
+      const payload = {
         data: {
           email: email.trim(),
           source_page: pathname,
           destination: pathname ? deriveDestination(pathname) : undefined,
           cta_source: ctaSource,
         },
-      });
+      };
+      console.log("[newsletter] calling subscribeEmail", payload);
+      const res = await subscribe(payload);
+      console.log("[newsletter] subscribeEmail result", res);
       if (res.ok) {
         setState({ kind: "success", alreadySubscribed: !!res.alreadySubscribed });
       } else {
         setState({ kind: "error", message: res.error });
       }
-    } catch {
-      setState({ kind: "error", message: "Network error. Please try again." });
+    } catch (err) {
+      console.error("[newsletter] subscribeEmail threw", err);
+      const msg =
+        err instanceof Error ? err.message : "Network error. Please try again.";
+      setState({ kind: "error", message: msg });
     }
   };
 
