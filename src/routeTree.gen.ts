@@ -31,7 +31,7 @@ import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slu
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
-import { Route as PortofinoDayDayLookLookRouteImport } from './routes/portofino.day-$day.look-$look'
+import { Route as PortofinoDayChar123dayChar125LookChar123lookChar125RouteImport } from './routes/portofino.day-{$day}.look-{$look}'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -143,11 +143,12 @@ const AdminProductLibraryRoute = AdminProductLibraryRouteImport.update({
   path: '/admin/product-library',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PortofinoDayDayLookLookRoute = PortofinoDayDayLookLookRouteImport.update({
-  id: '/day-$day/look-$look',
-  path: '/day-$day/look-$look',
-  getParentRoute: () => PortofinoRoute,
-} as any)
+const PortofinoDayChar123dayChar125LookChar123lookChar125Route =
+  PortofinoDayChar123dayChar125LookChar123lookChar125RouteImport.update({
+    id: '/day-{$day}/look-{$look}',
+    path: '/day-{$day}/look-{$look}',
+    getParentRoute: () => PortofinoRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -172,7 +173,7 @@ export interface FileRoutesByFullPath {
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
-  '/portofino/day-$day/look-$look': typeof PortofinoDayDayLookLookRoute
+  '/portofino/day-{$day}/look-{$look}': typeof PortofinoDayChar123dayChar125LookChar123lookChar125Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -197,7 +198,7 @@ export interface FileRoutesByTo {
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
-  '/portofino/day-$day/look-$look': typeof PortofinoDayDayLookLookRoute
+  '/portofino/day-{$day}/look-{$look}': typeof PortofinoDayChar123dayChar125LookChar123lookChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -223,7 +224,7 @@ export interface FileRoutesById {
   '/portofino/luxury': typeof PortofinoLuxuryRoute
   '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
   '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
-  '/portofino/day-$day/look-$look': typeof PortofinoDayDayLookLookRoute
+  '/portofino/day-{$day}/look-{$look}': typeof PortofinoDayChar123dayChar125LookChar123lookChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -250,7 +251,7 @@ export interface FileRouteTypes {
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
-    | '/portofino/day-$day/look-$look'
+    | '/portofino/day-{$day}/look-{$look}'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -275,7 +276,7 @@ export interface FileRouteTypes {
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
-    | '/portofino/day-$day/look-$look'
+    | '/portofino/day-{$day}/look-{$look}'
   id:
     | '__root__'
     | '/'
@@ -300,7 +301,7 @@ export interface FileRouteTypes {
     | '/portofino/luxury'
     | '/portofino/mid-luxe'
     | '/portofino/riviera-finds'
-    | '/portofino/day-$day/look-$look'
+    | '/portofino/day-{$day}/look-{$look}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -474,11 +475,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductLibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/portofino/day-$day/look-$look': {
-      id: '/portofino/day-$day/look-$look'
-      path: '/day-$day/look-$look'
-      fullPath: '/portofino/day-$day/look-$look'
-      preLoaderRoute: typeof PortofinoDayDayLookLookRouteImport
+    '/portofino/day-{$day}/look-{$look}': {
+      id: '/portofino/day-{$day}/look-{$look}'
+      path: '/day-{$day}/look-{$look}'
+      fullPath: '/portofino/day-{$day}/look-{$look}'
+      preLoaderRoute: typeof PortofinoDayChar123dayChar125LookChar123lookChar125RouteImport
       parentRoute: typeof PortofinoRoute
     }
   }
@@ -516,7 +517,7 @@ interface PortofinoRouteChildren {
   PortofinoLuxuryRoute: typeof PortofinoLuxuryRoute
   PortofinoMidLuxeRoute: typeof PortofinoMidLuxeRoute
   PortofinoRivieraFindsRoute: typeof PortofinoRivieraFindsRoute
-  PortofinoDayDayLookLookRoute: typeof PortofinoDayDayLookLookRoute
+  PortofinoDayChar123dayChar125LookChar123lookChar125Route: typeof PortofinoDayChar123dayChar125LookChar123lookChar125Route
 }
 
 const PortofinoRouteChildren: PortofinoRouteChildren = {
@@ -528,7 +529,8 @@ const PortofinoRouteChildren: PortofinoRouteChildren = {
   PortofinoLuxuryRoute: PortofinoLuxuryRoute,
   PortofinoMidLuxeRoute: PortofinoMidLuxeRoute,
   PortofinoRivieraFindsRoute: PortofinoRivieraFindsRoute,
-  PortofinoDayDayLookLookRoute: PortofinoDayDayLookLookRoute,
+  PortofinoDayChar123dayChar125LookChar123lookChar125Route:
+    PortofinoDayChar123dayChar125LookChar123lookChar125Route,
 }
 
 const PortofinoRouteWithChildren = PortofinoRoute._addFileChildren(
@@ -552,3 +554,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

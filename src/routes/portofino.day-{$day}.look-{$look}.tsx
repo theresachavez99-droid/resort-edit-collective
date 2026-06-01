@@ -31,7 +31,7 @@ function isDaySlug(v: string): v is DaySlug {
   return v === "day-1" || v === "day-2" || v === "day-3" || v === "day-4" || v === "day-5";
 }
 
-export const Route = createFileRoute("/portofino/day-$day/look-$look")({
+export const Route = createFileRoute("/portofino/day-{$day}/look-{$look}")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     tier: isTierSlug(search.tier) ? search.tier : "luxury",
   }),
