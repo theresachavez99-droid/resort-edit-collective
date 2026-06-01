@@ -38,6 +38,7 @@ import {
   type LookSlug,
   type TierSlug,
 } from "@/lib/portofino-spec";
+import { fallbackFor } from "./lookFallbacks";
 
 export type LookCategory =
   | "outfit"
