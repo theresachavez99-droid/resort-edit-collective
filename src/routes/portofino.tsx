@@ -209,7 +209,7 @@ function PortofinoPage() {
                       alt={`${d.label} — ${d.title}`}
                       loading="lazy"
                       className="absolute inset-0 h-full w-full object-cover"
-                      style={{ objectPosition: "center top" }}
+                      style={{ objectPosition: d.slug === "day-5" ? d.imagePos : "center top" }}
                     />
                   </div>
                   <div>
