@@ -140,3 +140,41 @@ Every candidate is scored on 7 categories (1–5 each): printMatch, silhouetteMa
 
 ## 26. Wardrobe rules engine
 Derived from `LookDNA.isWaterLook`. Water looks require: 3 bikinis + 3 bandeaus + 3 one-pieces + 3 cover-ups + shoes + bag + full jewelry + sunglasses + hair detail. Non-water looks require: 3 outfits (dresses or separates) + sandals + wedge/heel + bag + full jewelry + sunglasses + hair detail. Swim is forbidden on non-water looks, enforced by the blueprint's `forbidden` array.
+
+## Section 27 — Curated-first workflow (overrides automation)
+
+Resort Edit is a curated luxury editorial, not a scraper. **Firecrawl is NOT the stylist — it is used ONLY for validation and maintenance.** Never use Firecrawl to discover/select products.
+
+**Mandatory order:**
+1. Define Look DNA (destination, occasion, mood, AI editorial reference image, palette, style descriptors, keywords, hero brands, time of day, weather/setting).
+2. Curate products manually from approved retailers/brands.
+3. Use Firecrawl ONLY to validate: URL live, image loads, product exists, in stock, exact PDP, visible pricing, no broken links.
+4. On validation failure → mark `NEEDS REPLACEMENT` and flag for review. **Never auto-replace** with a random product.
+
+## Section 28 — Hero Piece Lock vs Flexible Pieces
+
+**LOCKED hero pieces** (require editorial approval before publish): dresses, swimwear, matching sets, statement tops, statement bottoms, bags, statement shoes.
+
+**FLEXIBLE pieces** (may be sourced and validated automatically): earrings, necklaces, bracelets, rings, sunglasses, hats, optional layers.
+
+## Section 29 — Outfit architecture + sunglasses/hat rules
+
+Every look: outfit · shoes · bag · earrings · necklace · bracelet · ring · **sunglasses (DAY LOOKS ONLY)** · **hat (only when contextually appropriate)** · optional layer.
+
+**Hats — include:** yacht days, pool days, beach clubs, boat excursions, outdoor sightseeing, resort strolls, daytime shopping, outdoor experiences, markets, safari/sanctuary experiences.
+**Hats — exclude:** dinner, cocktail, nightlife, evening events, sunset dinners, fine dining, indoor experiences.
+**Hat variation:** avoid repeating similar straw hats; vary destination-appropriate hat styles.
+
+## Section 30 — Expanded retailer priority
+
+Use in this order, exact PDP only. Never homepage, brand-homepage (unless exact product unavailable elsewhere), collection, search, or category pages:
+
+Farfetch · MyTheresa · Net-a-Porter · Neiman Marcus · Saks · Bloomingdale's · Revolve · Shopbop · FWRD · Moda Operandi · Bergdorf Goodman · Harrods · Luisaviaroma · SSENSE · Intermix · 24S · Everything But Water · Affiliate-approved direct brands.
+
+## Section 31 — Editorial matching rejection list
+
+Reject products that feel: flat, generic, cheap, corporate, fast fashion, overly youthful, too sexy, not vacation appropriate. Score on: silhouette similarity, color harmony, luxury signal, destination fit, editorial energy, age appropriateness (35–49), Mediterranean/destination dressing aesthetic, brand variation.
+
+## Section 32 — Launch priority
+
+Portofino fully polished first. **Fewer looks, stronger quality.** Curated luxury editorial experience > automation volume. Fast launch > perfect automation. Success metric: editorial quality, not page count.
