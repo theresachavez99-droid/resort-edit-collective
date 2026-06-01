@@ -18,6 +18,10 @@
 - Sourcing pipeline order is HARD: Look DNA → source → validate → score → wardrobe → muse → publish. Muse images are generated FROM sourced products, never the reverse. Reject any flow that sources to match a fantasy image.
 - Every look must have a `LookDNA` entry in `src/data/lookDNA.ts` before sourcing. Wardrobe slot list is derived from `isWaterLook`: water unlocks swim (3 bikinis / 3 bandeaus / 3 one-pieces / cover-ups), non-water disables swim and expands into dresses/separates.
 - Every candidate product passes `validateCandidateProduct` (Firecrawl URL check + og:image + placeholder reject) and `evaluateScore` (7-category 1–5 scoring, weighted total ≥ 3.6, critical floors on editorialMatch/imageQuality/availability). Below threshold → reject and re-search.
+- **Curated-first workflow:** Firecrawl is NOT the stylist — used ONLY for validation/maintenance (URL live, image loads, in stock, exact PDP, pricing). Products are hand-curated from the approved retailer/brand list. Validation failure → flag NEEDS REPLACEMENT, never auto-replace.
+- **Hero Lock:** dresses, swimwear, matching sets, statement tops/bottoms, bags, statement shoes require editorial approval before publish. Flexible pieces (earrings, necklaces, bracelets, rings, sunglasses, hats, optional layers) may be sourced + validated automatically.
+- **Sunglasses = day looks only. Hats = only contextually appropriate** (yacht/pool/beach club/boat/outdoor/market/safari/daytime sightseeing/shopping/resort stroll). Never on dinner/cocktail/nightlife/evening/sunset dinner/fine dining/indoor. Vary hat styles — no repeated straw hats.
+- **Launch priority:** Portofino fully polished first. Fewer looks, stronger quality. Editorial quality > automation volume.
 
 ## Memories
 - [Sourcing & product rules](mem://features/sourcing-rules) — Retailer priority, Brands We Love allowlist, international mix, replacement logic, Firecrawl workflow, aesthetic guardrails.
