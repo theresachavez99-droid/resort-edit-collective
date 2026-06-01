@@ -14,6 +14,7 @@ import {
 import { useEffect, useMemo } from "react";
 import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import {
   isLookSlug,
   isTierSlug,
@@ -278,24 +279,30 @@ function ViewFullLookPage() {
 
       {/* LOVE THIS LOOK */}
       <section className="mx-auto max-w-[1320px] px-4 sm:px-8 mt-10">
-        <div className="border border-border/60 bg-ivory p-4 md:p-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6">
-          <div className="w-full sm:w-44 aspect-[4/3] sm:aspect-[5/3] overflow-hidden bg-muted shrink-0">
+        <div className="border border-border/60 bg-ivory p-5 md:p-6 flex flex-col md:flex-row items-stretch md:items-center gap-5 md:gap-8">
+          <div className="w-full md:w-40 aspect-[4/3] md:aspect-[5/3] overflow-hidden bg-muted shrink-0">
             <img src={lookData.heroImage} alt="" aria-hidden className="h-full w-full object-cover" />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <p className="eyebrow tracking-[0.28em] text-[0.75rem] text-ink font-semibold uppercase">
               Love this look?
             </p>
-            <p className="font-serif text-[0.95rem] text-ink/65 mt-1">
-              Browse more looks from all 5 days in {lookData.destination}.
+            <p className="font-serif text-[0.95rem] text-ink/65 mt-1 mb-3">
+              Get the next destination edit in your inbox.
             </p>
+            <NewsletterForm
+              ctaSource="view-full-look-bar"
+              variant="inline-light"
+              buttonLabel="Get the Next Edit"
+              placeholder="Email address"
+            />
           </div>
           <Link
             to="/portofino"
             search={{ tier }}
-            className="self-start sm:self-center bg-gold text-ivory px-5 py-3 eyebrow tracking-[0.28em] text-[0.7rem] hover:bg-ink transition-colors"
+            className="self-start md:self-center text-[0.7rem] eyebrow tracking-[0.28em] text-ink/60 hover:text-gold transition-colors whitespace-nowrap underline-offset-4 hover:underline"
           >
-            VIEW ALL DAYS
+            View all days →
           </Link>
         </div>
       </section>
