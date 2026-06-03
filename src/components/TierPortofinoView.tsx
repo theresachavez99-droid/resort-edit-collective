@@ -20,7 +20,7 @@ export const tierSlugToId: Record<TierSlug, Tier> = {
 export const tierNav: Array<{ slug: TierSlug; label: string }> = [
   { slug: "luxury", label: "Luxury" },
   { slug: "mid-luxe", label: "Mid-Luxe" },
-  { slug: "riviera-finds", label: "Riviera Finds" },
+  { slug: "riviera-finds", label: "Destination Finds" },
 ];
 
 export function TierNavBar({ active }: { active?: TierSlug }) {

@@ -19,7 +19,7 @@
  *   ✗ homepage / "#" URL    → replace with styling-note placeholder
  *   ✗ inventory=unavailable → replace with styling-note placeholder
  *
- * Tiers (Luxury / Mid-Luxe / Riviera Finds) each carry their own
+ * Tiers (Luxury / Mid-Luxe / Destination Finds) each carry their own
  * `products` block so users can switch price tier without leaving the page.
  */
 import { portofinoLooks, type ShopItem } from "./portofino";

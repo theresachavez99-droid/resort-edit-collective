@@ -226,7 +226,7 @@ function PortofinoPage() {
                       {d.caption}
                     </p>
                     <Link
-                      to={d.href}
+                      to={d.slug === "day-1" ? "/destinations/portofino/day-1-yacht-harbour-aperitivo" : d.href}
                       className="mt-3 inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink transition-colors border-b border-gold/60 pb-1"
                     >
                       View Full Day Edit <ArrowRight className="w-3 h-3" />
