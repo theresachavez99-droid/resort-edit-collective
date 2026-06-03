@@ -242,9 +242,9 @@ export function destinationHref(d: Destination): string {
  * to where the guest is going (Riviera Finds, Beach Club Finds, etc.).
  */
 const destinationTierLabels: Record<string, string> = {
-  portofino: "Riviera Finds",
+  portofino: "Destination Finds",
   capri: "Island Finds",
-  sttropez: "Riviera Finds",
+  sttropez: "Destination Finds",
   mallorca: "Island Finds",
   ibiza: "Beach Club Finds",
   tulum: "Jungle Finds",

@@ -38,7 +38,7 @@ export const TIER_SLUG_TO_ID: Record<TierSlug, Tier> = {
 export const TIER_LABEL: Record<TierSlug, string> = {
   luxury: "Luxury",
   "mid-luxe": "Mid-Luxe",
-  "riviera-finds": "Riviera Finds",
+  "riviera-finds": "Destination Finds",
 };
 
 export const TIER_RANGE: Record<TierSlug, string> = {

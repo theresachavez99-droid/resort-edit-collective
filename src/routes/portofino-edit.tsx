@@ -201,7 +201,7 @@ function PortofinoEditPage() {
               const labelMap: Record<Filter, string> = {
                 designer: "Designer",
                 mid: "Mid-Luxe",
-                riviera: "Riviera Finds",
+                riviera: "Destination Finds",
                 all: "Show All",
               };
               const active = filter === f;

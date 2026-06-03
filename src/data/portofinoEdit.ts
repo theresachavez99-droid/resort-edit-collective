@@ -34,7 +34,7 @@ export type LookMeta = {
 export const tiers: TierMeta[] = [
   { id: "designer", label: "Luxury", tagline: "Designer labels and investment pieces.", range: "$300+" },
   { id: "mid", label: "Mid-Luxe", tagline: "Premium contemporary, fashion-forward.", range: "$100–400" },
-  { id: "riviera", label: "Riviera Finds", tagline: "Riviera discoveries — boutique labels and harbor-town gems.", range: "Under $150" },
+  { id: "riviera", label: "Destination Finds", tagline: "Riviera discoveries — boutique labels and harbor-town gems.", range: "Under $150" },
 ];
 
 export const lookMetas: LookMeta[] = [
