@@ -16,6 +16,7 @@ export type YachtProduct = {
   item: string;
   price: string;
   href: string;
+  imageUrl?: string;
   needs_validation?: boolean;
 };
 
@@ -26,8 +27,30 @@ export type YachtLook = {
   subtitle: string;
   /** object-position for the cropped reference thumb (2-row × 5-col grid). */
   refPos: string;
+  /** Standalone AI muse image for this look (resolved as URL). */
+  museImage: string;
   products: YachtProduct[];
 };
+
+import look1Muse from "@/assets/looks/look-1-muse.jpg";
+import look2Muse from "@/assets/looks/look-2-muse.jpg";
+import look3Muse from "@/assets/looks/look-3-muse.jpg";
+import look4Muse from "@/assets/looks/look-4-muse.jpg";
+import look5Muse from "@/assets/looks/look-5-muse.jpg";
+import look6Muse from "@/assets/looks/look-6-muse.jpg";
+import look7Muse from "@/assets/looks/look-7-muse.jpg";
+import look8Muse from "@/assets/looks/look-8-muse.jpg";
+import look9Muse from "@/assets/looks/look-9-muse.jpg";
+import look10Muse from "@/assets/looks/look-10-muse.jpg";
+
+import look1P1 from "@/assets/looks/look-1-p1-swimsuit.jpg";
+import look1P2 from "@/assets/looks/look-1-p2-pareo.jpg";
+import look1P3 from "@/assets/looks/look-1-p3-tote.jpg";
+import look1P4 from "@/assets/looks/look-1-p4-sandals.jpg";
+import look1P5 from "@/assets/looks/look-1-p5-sunglasses.jpg";
+import look1P6 from "@/assets/looks/look-1-p6-earrings.jpg";
+import look1P7 from "@/assets/looks/look-1-p7-cuff.jpg";
+import look1P8 from "@/assets/looks/look-1-p8-necklace.jpg";
 
 const FF = (q: string) =>
   `https://www.farfetch.com/shopping/women/search/?q=${encodeURIComponent(q)}`;
@@ -47,15 +70,16 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Yacht Arrival",
     subtitle: "Blue-and-white deck dressing, raffia, and a printed swimsuit.",
     refPos: "0% 0%",
+    museImage: look1Muse,
     products: [
-      { category: "Swim", brand: "Alexandra Miro", item: "Whitney Belted Printed Swimsuit", price: "$390", href: MT("alexandra miro whitney swimsuit"), needs_validation: true },
-      { category: "Cover-up", brand: "Alexandra Miro", item: "White Bay Pareo Skirt", price: "$295", href: MT("alexandra miro bay pareo"), needs_validation: true },
-      { category: "Bag", brand: "Prada", item: "Raffia Tote", price: "$1,950", href: FF("prada raffia tote"), needs_validation: true },
-      { category: "Shoes", brand: "Ancient Greek Sandals", item: "Classic Leather Sandals", price: "$210", href: NAP("ancient greek sandals"), needs_validation: true },
-      { category: "Sunglasses", brand: "Krewe", item: "Webster Sunglasses", price: "$295", href: "https://krewe.com/collections/sunglasses", needs_validation: true },
-      { category: "Earrings", brand: "Shashi", item: "Lilu Hoop Earrings", price: "$85", href: "https://www.shashijewels.com/collections/earrings", needs_validation: true },
-      { category: "Cuff", brand: "Jenny Bird", item: "Gold Cuff", price: "$148", href: "https://us.jenny-bird.com/collections/bracelets", needs_validation: true },
-      { category: "Necklace", brand: "Éra", item: "Gold Chain Necklace", price: "$220", href: FF("era jewelry necklace"), needs_validation: true },
+      { category: "Swim", brand: "Alexandra Miro", item: "Whitney Belted Printed Swimsuit", price: "$390", href: MT("alexandra miro whitney swimsuit"), imageUrl: look1P1, needs_validation: true },
+      { category: "Cover-up", brand: "Alexandra Miro", item: "White Bay Pareo Skirt", price: "$295", href: MT("alexandra miro bay pareo"), imageUrl: look1P2, needs_validation: true },
+      { category: "Bag", brand: "Prada", item: "Raffia Tote", price: "$1,950", href: FF("prada raffia tote"), imageUrl: look1P3, needs_validation: true },
+      { category: "Shoes", brand: "Ancient Greek Sandals", item: "Classic Leather Sandals", price: "$210", href: NAP("ancient greek sandals"), imageUrl: look1P4, needs_validation: true },
+      { category: "Sunglasses", brand: "Krewe", item: "Webster Sunglasses", price: "$295", href: "https://krewe.com/collections/sunglasses", imageUrl: look1P5, needs_validation: true },
+      { category: "Earrings", brand: "Shashi", item: "Lilu Hoop Earrings", price: "$85", href: "https://www.shashijewels.com/collections/earrings", imageUrl: look1P6, needs_validation: true },
+      { category: "Cuff", brand: "Jenny Bird", item: "Gold Cuff", price: "$148", href: "https://us.jenny-bird.com/collections/bracelets", imageUrl: look1P7, needs_validation: true },
+      { category: "Necklace", brand: "Éra", item: "Gold Chain Necklace", price: "$220", href: FF("era jewelry necklace"), imageUrl: look1P8, needs_validation: true },
     ],
   },
   {
@@ -64,6 +88,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Coastal Cruise",
     subtitle: "Cala Di Volpe print bikini and matching kaftan, raffia tote.",
     refPos: "25% 0%",
+    museImage: look2Muse,
     products: [
       { category: "Swim", brand: "Melissa Odabash", item: "Cala Di Volpe Bikini", price: "$285", href: "https://www.odabash.com/collections/bikinis", needs_validation: true },
       { category: "Cover-up", brand: "Melissa Odabash", item: "Cala Di Volpe Kaftan", price: "$395", href: "https://www.odabash.com/collections/kaftans", needs_validation: true },
@@ -81,6 +106,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Yacht to Lunch",
     subtitle: "Striped poplin shirt, crochet shorts, triangle top.",
     refPos: "50% 0%",
+    museImage: look3Muse,
     products: [
       { category: "Swim", brand: "Vitamin A", item: "Neo Triangle Top", price: "$130", href: "https://vitaminaswim.com/collections/bikini-tops", needs_validation: true },
       { category: "Shirt", brand: "Faithfull the Brand", item: "Cornelia Stripe Shirt", price: "$189", href: REV("faithfull cornelia shirt"), needs_validation: true },
@@ -98,6 +124,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Yacht Glamour",
     subtitle: "Emerald maillot, ivory wrap skirt, raffia tote.",
     refPos: "75% 0%",
+    museImage: look4Muse,
     products: [
       { category: "Swim", brand: "Zimmermann", item: "Emerald One-Piece", price: "$425", href: FF("zimmermann one piece swimsuit"), needs_validation: true },
       { category: "Cover-up", brand: "Heidi Klein", item: "Ivory Wrap Skirt", price: "$295", href: "https://www.heidiklein.com/collections/cover-ups", needs_validation: true },
@@ -115,6 +142,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Sunset Aperitivo",
     subtitle: "Ivory maillot, sheer skirt, leather belt, raffia bag.",
     refPos: "100% 0%",
+    museImage: look5Muse,
     products: [
       { category: "Swim", brand: "Zimmermann", item: "Ivory Swimsuit", price: "$395", href: FF("zimmermann swimsuit ivory"), needs_validation: true },
       { category: "Cover-up", brand: "Zimmermann", item: "Sheer Skirt", price: "$695", href: FF("zimmermann sheer skirt"), needs_validation: true },
@@ -133,6 +161,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Mediterranean Print Moment",
     subtitle: "Maygel Coronel bikini, paisley sarong, woven tote.",
     refPos: "0% 100%",
+    museImage: look6Muse,
     products: [
       { category: "Swim", brand: "Maygel Coronel", item: "Coronel Bikini", price: "$365", href: "https://maygelcoronel.com/collections/swimwear", needs_validation: true },
       { category: "Cover-up", brand: "Melissa Odabash", item: "Printed Sarong", price: "$245", href: "https://www.odabash.com/collections/sarongs", needs_validation: true },
@@ -150,6 +179,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Statement Swim",
     subtitle: "Cobalt bikini with matching pareo and woven shell bag.",
     refPos: "25% 100%",
+    museImage: look7Muse,
     products: [
       { category: "Swim", brand: "Melissa Odabash", item: "Cobalt Swimsuit", price: "$285", href: "https://www.odabash.com/collections/bikinis", needs_validation: true },
       { category: "Cover-up", brand: "Melissa Odabash", item: "Cobalt Pareo", price: "$195", href: "https://www.odabash.com/collections/sarongs", needs_validation: true },
@@ -167,6 +197,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Yacht to Harbor Lunch",
     subtitle: "Bandeau bikini, MC2 Saint Barth printed pants, micro bag.",
     refPos: "50% 100%",
+    museImage: look8Muse,
     products: [
       { category: "Swim", brand: "Melonga", item: "Bandeau Bikini", price: "$245", href: FF("melonga bikini"), needs_validation: true },
       { category: "Pants", brand: "MC2 Saint Barth", item: "Printed Trousers", price: "$285", href: "https://www.mc2saintbarth.com/us_en/woman/clothing/trousers", needs_validation: true },
@@ -184,6 +215,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Italian Lunch Date",
     subtitle: "Coral bandeau, peach Simkhai skirt, Aquazzura sandals.",
     refPos: "75% 100%",
+    museImage: look9Muse,
     products: [
       { category: "Swim", brand: "Heidi Klein", item: "Tramonti Ring Bandeau", price: "$295", href: "https://www.heidiklein.com/collections/swimwear", needs_validation: true },
       { category: "Skirt", brand: "Simkhai", item: "Peach Midi Skirt", price: "$495", href: FF("simkhai skirt"), needs_validation: true },
@@ -201,6 +233,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     title: "Dockside Lunch",
     subtitle: "Coral bandeau, Heidi Klein wrap, Heidi Klein tie top.",
     refPos: "100% 100%",
+    museImage: look10Muse,
     products: [
       { category: "Swim", brand: "Heidi Klein", item: "Tramonti Ring Bandeau", price: "$295", href: "https://www.heidiklein.com/collections/swimwear", needs_validation: true },
       { category: "Cover-up", brand: "Heidi Klein", item: "White Bay Wrap Skirt", price: "$295", href: "https://www.heidiklein.com/collections/cover-ups", needs_validation: true },
