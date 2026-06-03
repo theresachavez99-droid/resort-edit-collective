@@ -18,6 +18,8 @@ import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 
+const DAY_1_FULL_EDIT_ROUTE = "/destinations/portofino/day-1-yacht-harbour-aperitivo" as const;
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -36,7 +38,7 @@ export const Route = createFileRoute("/")({
 type DayCard = {
   n: "1" | "2" | "3" | "4" | "5";
   href:
-    | "/destinations/portofino/day-1-yacht-harbour-aperitivo"
+    | typeof DAY_1_FULL_EDIT_ROUTE
     | "/portofino/day-1"
     | "/portofino/day-2"
     | "/portofino/day-3"
@@ -50,7 +52,7 @@ type DayCard = {
 };
 
 const days: DayCard[] = [
-  { n: "1", href: "/destinations/portofino/day-1-yacht-harbour-aperitivo", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
+  { n: "1", href: DAY_1_FULL_EDIT_ROUTE, title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
   { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
   { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
   { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
@@ -138,6 +140,9 @@ function Index() {
             <Link
               key={d.n}
               to={d.href}
+              onClick={() => {
+                if (d.n === "1") console.log("Opening Day 1 route:", DAY_1_FULL_EDIT_ROUTE);
+              }}
               className="group bg-card border border-border/50 flex flex-col no-underline text-inherit"
             >
               <div className="text-center pt-5 px-3">
@@ -145,6 +150,11 @@ function Index() {
                 <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] leading-snug text-ink min-h-[2.5rem]">
                   {d.title}
                 </h3>
+                {d.n === "1" ? (
+                  <p className="mt-2 font-mono text-[0.5rem] leading-tight text-ink/45 break-words">
+                    DEBUG ROUTE: {DAY_1_FULL_EDIT_ROUTE}
+                  </p>
+                ) : null}
               </div>
               <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
                 <img
