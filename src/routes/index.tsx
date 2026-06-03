@@ -44,7 +44,7 @@ type DayCard = {
 };
 
 const days: DayCard[] = [
-  { n: "1", href: "/portofino/day-1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
+  { n: "1", href: "/destinations/portofino/day-1-yacht-harbour-aperitivo", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
   { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
   { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
   { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
@@ -151,7 +151,7 @@ function Index() {
               <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
                 <Link to={d.href} className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors">
-                  Explore the Look →
+                  {d.n === "1" ? "View Full Day Edit →" : "Explore the Look →"}
                 </Link>
               </div>
             </article>
