@@ -151,11 +151,6 @@ function Index() {
                 <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] leading-snug text-ink min-h-[2.5rem]">
                   {d.title}
                 </h3>
-                {d.n === "1" ? (
-                  <p className="mt-2 font-mono text-[0.5rem] leading-tight text-ink/45 break-words">
-                    DEBUG ROUTE: {DAY_1_FULL_EDIT_ROUTE}
-                  </p>
-                ) : null}
               </div>
               <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
                 <img
