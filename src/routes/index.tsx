@@ -135,7 +135,11 @@ function Index() {
       {/* 5-DAY CARDS */}
       <section className={`${wrap} mt-16 lg:mt-24 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5`}>
           {days.map((d) => (
-            <article key={d.n} className="bg-card border border-border/50 flex flex-col">
+            <Link
+              key={d.n}
+              to={d.href}
+              className="group bg-card border border-border/50 flex flex-col no-underline text-inherit"
+            >
               <div className="text-center pt-5 px-3">
                 <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">Day {d.n}</div>
                 <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] leading-snug text-ink min-h-[2.5rem]">
@@ -156,11 +160,11 @@ function Index() {
               </div>
               <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
-                <Link to={d.href} className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors">
+                <span className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center group-hover:text-ink group-hover:border-ink transition-colors">
                   {d.n === "1" ? "View Full Day Edit →" : "Explore the Look →"}
-                </Link>
+                </span>
               </div>
-            </article>
+            </Link>
           ))}
       </section>
 
