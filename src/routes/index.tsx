@@ -140,6 +140,7 @@ function Index() {
             <Link
               key={d.n}
               to={d.href}
+              data-route-card={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
               onClick={() => {
                 if (d.n === "1") console.log("Opening Day 1 route:", DAY_1_FULL_EDIT_ROUTE);
               }}
@@ -164,14 +165,24 @@ function Index() {
                   loading={d.n === "5" ? "eager" : "lazy"}
                   fetchPriority={d.n === "5" ? "high" : undefined}
                   decoding="async"
+                  data-route-image={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
                   className="absolute inset-0 h-full w-full object-cover"
                   style={{ objectPosition: d.n === "5" ? "center center" : "center top", imageRendering: "auto" }}
                 />
               </div>
               <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
-                <span className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center group-hover:text-ink group-hover:border-ink transition-colors">
-                  {d.n === "1" ? "View Full Day Edit →" : "Explore the Look →"}
+                <span
+                  data-route-cta={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
+                  className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center group-hover:text-ink group-hover:border-ink transition-colors"
+                >
+                  {d.n === "1" ? (
+                    <>
+                      View Full Day Edit <span data-route-arrow={DAY_1_FULL_EDIT_ROUTE}>→</span>
+                    </>
+                  ) : (
+                    "Explore the Look →"
+                  )}
                 </span>
               </div>
             </Link>
