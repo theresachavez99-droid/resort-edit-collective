@@ -239,7 +239,7 @@ export function destinationHref(d: Destination): string {
 /**
  * Third shopping tier label, adapted to destination context.
  * First two tiers are always "Luxury" and "Mid-Luxe"; the third stays curated
- * to where the guest is going (Riviera Finds, Beach Club Finds, etc.).
+ * to where the guest is going (Destination Finds, Beach Club Finds, etc.).
  */
 const destinationTierLabels: Record<string, string> = {
   portofino: "Destination Finds",

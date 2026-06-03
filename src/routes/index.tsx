@@ -94,7 +94,7 @@ function Index() {
             </p>
             <div className="mt-5 mb-4 h-px w-32 bg-gold/80" />
             <p className="font-serif text-ink font-semibold text-lg sm:text-xl lg:text-[1.4rem] tracking-[0.01em] leading-[1.5] max-w-[85%]">
-              Luxury Labels. Riviera Finds. Resort Style Across Price Points.
+              Luxury Labels. Destination Finds. Resort Style Across Price Points.
             </p>
             <p className="mt-3 font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
               Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
@@ -116,7 +116,7 @@ function Index() {
               </span>
               <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
               <span className="font-serif italic text-[1.2rem] text-ink/75">
-                Designer / Mid-Luxe / Riviera Finds
+                Designer / Mid-Luxe / Destination Finds
               </span>
               <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
               <span className="eyebrow text-[0.82rem] tracking-[0.3em] text-gold">
