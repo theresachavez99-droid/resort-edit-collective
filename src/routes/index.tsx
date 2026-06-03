@@ -35,7 +35,13 @@ export const Route = createFileRoute("/")({
 
 type DayCard = {
   n: "1" | "2" | "3" | "4" | "5";
-  href: "/portofino/day-1" | "/portofino/day-2" | "/portofino/day-3" | "/portofino/day-4" | "/portofino/day-5";
+  href:
+    | "/destinations/portofino/day-1-yacht-harbour-aperitivo"
+    | "/portofino/day-1"
+    | "/portofino/day-2"
+    | "/portofino/day-3"
+    | "/portofino/day-4"
+    | "/portofino/day-5";
   title: string;
   desc: string;
   image: string;
