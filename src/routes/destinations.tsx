@@ -71,9 +71,6 @@ function DestinationsPage() {
     from: "/destinations/portofino/day-1-yacht-harbour-aperitivo",
     shouldThrow: false,
   });
-
-  if (dayEditMatch) return <Outlet />;
-
   const featured = useMemo(
     () =>
       FEATURED_SLUGS.map((slug) => destinations.find((d) => d.slug === slug)!).filter(Boolean),
@@ -88,6 +85,8 @@ function DestinationsPage() {
     [featured, filter],
   );
   const heroImage = heroCannes;
+
+  if (dayEditMatch) return <Outlet />;
 
   return (
     <div className="bg-ivory">
