@@ -223,14 +223,14 @@ function LookView({
         className="relative w-full aspect-[3/4] md:aspect-[4/5] bg-ink border border-border/60 overflow-hidden"
         aria-label={`${look.title} editorial muse`}
       >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${REFERENCE_URL})`,
-            backgroundSize: "500% 200%",
-            backgroundPosition: look.refPos,
-            backgroundRepeat: "no-repeat",
-          }}
+        <img
+          key={look.id}
+          src={look.museImage}
+          alt={`${look.title} — editorial muse`}
+          width={960}
+          height={1280}
+          className="absolute inset-0 h-full w-full object-cover"
+          referrerPolicy="no-referrer"
         />
         <div className="absolute top-3 left-3 eyebrow text-[0.55rem] tracking-[0.32em] text-ivory bg-ink/70 px-2 py-1">
           Look {look.number} of {YACHT_TO_LUNCH_LOOKS.length}
@@ -256,8 +256,12 @@ function LookView({
           Shop the Look
         </h3>
         <div className="mt-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-          {hero.map((p) => (
-            <ProductCard key={`${look.id}-${p.brand}-${p.item}`} product={p} />
+          {hero.map((p, i) => (
+            <ProductCard
+              key={`${look.id}-${p.brand}-${p.item}`}
+              product={p}
+              eager={i < 2}
+            />
           ))}
         </div>
       </section>
@@ -315,7 +319,15 @@ function LookView({
   );
 }
 
-function ProductCard({ product }: { product: YachtProduct }) {
+function ProductCard({
+  product,
+  eager = false,
+}: {
+  product: YachtProduct;
+  eager?: boolean;
+}) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const hasImage = Boolean(product.imageUrl) && !imgFailed;
   return (
     <a
       href={product.href}
@@ -326,18 +338,37 @@ function ProductCard({ product }: { product: YachtProduct }) {
       }
       className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors"
     >
-      <div className="relative aspect-square bg-cream flex items-center justify-center px-3">
-        <div className="text-center">
-          <div
-            aria-hidden
-            className="mx-auto w-14 h-14 rounded-full border border-gold/40 flex items-center justify-center font-serif text-gold text-lg"
-          >
-            {product.brand.charAt(0)}
+      <div className="relative aspect-square bg-cream overflow-hidden">
+        {hasImage ? (
+          <img
+            src={product.imageUrl}
+            alt={`${product.brand} ${product.item}`}
+            width={800}
+            height={800}
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            referrerPolicy="no-referrer"
+            onError={() => {
+              console.warn(
+                "[product image failed]",
+                product.brand,
+                product.item,
+                product.imageUrl,
+              );
+              setImgFailed(true);
+            }}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-cream via-ivory to-cream px-4 text-center gap-2">
+            <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold">
+              {product.category}
+            </span>
+            <span className="font-serif italic text-ink/70 text-[0.78rem] leading-snug">
+              Image unavailable — shop item.
+            </span>
           </div>
-          <div className="eyebrow text-[0.5rem] tracking-[0.28em] text-ink/55 mt-2">
-            {product.category}
-          </div>
-        </div>
+        )}
       </div>
       <div className="flex flex-col flex-1 p-3">
         <div className="eyebrow text-ink text-[0.55rem] tracking-[0.3em]">
@@ -349,7 +380,7 @@ function ProductCard({ product }: { product: YachtProduct }) {
         {product.price && (
           <div className="font-serif text-gold text-[0.82rem] mt-1">{product.price}</div>
         )}
-        <div className="mt-auto pt-2 eyebrow text-[0.55rem] tracking-[0.32em] text-ink group-hover:text-gold transition-colors text-center border border-ink/10 rounded mt-2 py-1.5">
+        <div className="mt-auto pt-2 eyebrow text-[0.55rem] tracking-[0.32em] text-ink group-hover:bg-ink group-hover:text-ivory transition-colors text-center border border-ink/20 rounded mt-2 py-1.5">
           Shop →
         </div>
       </div>
