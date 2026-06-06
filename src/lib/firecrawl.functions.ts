@@ -193,14 +193,14 @@ export const listSourcedProducts = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     requireAdmin(data.password);
-  const { data, error } = await supabaseAdmin
-    .from("sourced_products")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(500);
-  if (error) return { ok: false as const, error: error.message, rows: [] };
-  return { ok: true as const, rows: data ?? [] };
-});
+    const { data: rows, error } = await supabaseAdmin
+      .from("sourced_products")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(500);
+    if (error) return { ok: false as const, error: error.message, rows: [] };
+    return { ok: true as const, rows: rows ?? [] };
+  });
 
 export const updateSourcedProductStatus = createServerFn({ method: "POST" })
   .inputValidator((input) =>
