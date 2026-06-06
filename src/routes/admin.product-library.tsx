@@ -843,7 +843,7 @@ const SLOT_CATEGORIES = [
   "layer",
 ];
 
-function SourcingView() {
+function SourcingView({ password }: { password: string }) {
   type SourcedProductRow = {
     id: string;
     status: "queued" | "scraped" | "approved" | "promoted" | "failed" | "rejected";
@@ -868,7 +868,7 @@ function SourcingView() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["sourced_products"],
-    queryFn: () => listFn(),
+    queryFn: () => listFn({ data: { password } }),
     refetchInterval: 5000,
   });
 
@@ -880,18 +880,18 @@ function SourcingView() {
       slot_category?: string;
       affiliate_url?: string;
       notes?: string;
-    }) => scrapeFn({ data: input }),
+    }) => scrapeFn({ data: { password, ...input } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
   });
 
   const update = useMutation({
     mutationFn: (input: { id: string; status: SourcedProductRow["status"]; notes?: string }) =>
-      updateFn({ data: input }),
+      updateFn({ data: { password, ...input } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
   });
 
   const del = useMutation({
-    mutationFn: (id: string) => delFn({ data: { id } }),
+    mutationFn: (id: string) => delFn({ data: { password, id } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
   });
 
