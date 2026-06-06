@@ -124,25 +124,6 @@ function YachtToLunchPage() {
         </div>
       </section>
 
-      {/* LOOK QUICK-NAV */}
-      <div className="mx-auto max-w-[1280px] px-4 md:px-10 mt-14 md:mt-20">
-        <div className="border-y border-gold/30 py-4">
-          <ul className="flex items-center gap-2 md:gap-3 overflow-x-auto no-scrollbar">
-            {YACHT_TO_LUNCH_LOOKS.map((l) => (
-              <li key={l.id} className="shrink-0">
-                <button
-                  type="button"
-                  onClick={() => scrollToLook(l.id)}
-                  className="eyebrow text-[0.6rem] md:text-[0.65rem] tracking-[0.3em] px-3 md:px-4 py-2 rounded-full border border-ink/15 text-ink/70 hover:border-gold hover:text-gold transition-colors whitespace-nowrap"
-                >
-                  {String(l.number).padStart(2, "0")} · {l.chapter}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
       {/* TEN EDITORIAL LOOKS */}
       <div className="mx-auto max-w-[1280px] px-6 md:px-10 mt-16 md:mt-24 space-y-24 md:space-y-32">
         {YACHT_TO_LUNCH_LOOKS.map((look, idx) => (
