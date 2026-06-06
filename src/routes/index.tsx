@@ -291,24 +291,6 @@ function Index() {
           </div>
       </section>
 
-      {/* EMAIL CAPTURE — inline strip on dark brown */}
-      <section className="mt-24 lg:mt-32 bg-ink text-ivory">
-        <div className={`${wrap} py-14 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center`}>
-          <div>
-            <p className="eyebrow text-[0.72rem] tracking-[0.32em] text-gold">THE RESORT EDIT</p>
-            <h2 className="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl tracking-[0.04em] text-ivory leading-[1.05]">
-              Get the next destination before it drops.
-            </h2>
-            <p className="mt-4 font-serif italic text-lg text-ivory/75 max-w-xl">
-              Looks, hotels and experiences — straight to your inbox.
-            </p>
-          </div>
-          <div className="flex justify-start lg:justify-end">
-            <NewsletterForm ctaSource="home_inline_strip" variant="footer" buttonLabel="Join the Edit" />
-          </div>
-        </div>
-      </section>
-
       {/* WHERE TO STAY */}
       <section className={`${wrap} mt-24 lg:mt-32`}>
           <div className="flex items-center gap-4 justify-center mb-10">
@@ -343,9 +325,9 @@ function Index() {
                     href={h.href}
                     target="_blank"
                     rel="noreferrer noopener sponsored"
-                    className="mt-6 inline-flex justify-center bg-ink text-ivory eyebrow text-[0.72rem] tracking-[0.3em] px-6 py-4 hover:bg-gold transition-colors"
+                    className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"
                   >
-                    ENQUIRE →
+                    Read This Stay →
                   </a>
                 </div>
               </article>
@@ -357,6 +339,48 @@ function Index() {
               Rates available on enquiry. Some properties book out months in advance — we recommend reserving before your flights.
             </p>
           </div>
+      </section>
+
+      {/* BOOK YOUR PORTOFINO EXPERIENCE — booking rail */}
+      <section className="mt-24 lg:mt-32">
+        <div className={`${wrap} mb-8`}>
+          <div className="flex items-center gap-4 justify-center">
+            <div className="h-px w-16 bg-gold/50" />
+            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink text-center">BOOK YOUR PORTOFINO EXPERIENCE</h2>
+            <div className="h-px w-16 bg-gold/50" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+          {ctas.map(({ label, Icon, hash }) => (
+            <Link
+              key={label}
+              to="/portofino-concierge"
+              hash={hash}
+              className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
+            >
+              <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />
+              <span>{label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* EMAIL CAPTURE — inline strip on dark brown */}
+      <section className="mt-24 lg:mt-32 bg-ink text-ivory">
+        <div className={`${wrap} py-14 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center`}>
+          <div>
+            <p className="eyebrow text-[0.72rem] tracking-[0.32em] text-gold">THE RESORT EDIT</p>
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl tracking-[0.04em] text-ivory leading-[1.05]">
+              Get the next destination before it drops.
+            </h2>
+            <p className="mt-4 font-serif italic text-lg text-ivory/75 max-w-xl">
+              Looks, hotels and experiences — straight to your inbox.
+            </p>
+          </div>
+          <div className="flex justify-start lg:justify-end">
+            <NewsletterForm ctaSource="home_inline_strip" variant="footer" buttonLabel="Join the Edit" />
+          </div>
+        </div>
       </section>
 
       {/* CONCIERGE STRIP */}
