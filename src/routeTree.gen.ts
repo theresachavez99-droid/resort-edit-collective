@@ -13,7 +13,6 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResortEditsRouteImport } from './routes/resort-edits'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PortofinoEditRouteImport } from './routes/portofino-edit'
-import { Route as PortofinoConciergeRouteImport } from './routes/portofino-concierge'
 import { Route as PortofinoRouteImport } from './routes/portofino'
 import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as BrandsRouteImport } from './routes/brands'
@@ -52,11 +51,6 @@ const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
 const PortofinoEditRoute = PortofinoEditRouteImport.update({
   id: '/portofino-edit',
   path: '/portofino-edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortofinoConciergeRoute = PortofinoConciergeRouteImport.update({
-  id: '/portofino-concierge',
-  path: '/portofino-concierge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortofinoRoute = PortofinoRouteImport.update({
@@ -162,7 +156,6 @@ export interface FileRoutesByFullPath {
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
-  '/portofino-concierge': typeof PortofinoConciergeRoute
   '/portofino-edit': typeof PortofinoEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
@@ -188,7 +181,6 @@ export interface FileRoutesByTo {
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
-  '/portofino-concierge': typeof PortofinoConciergeRoute
   '/portofino-edit': typeof PortofinoEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
@@ -215,7 +207,6 @@ export interface FileRoutesById {
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
-  '/portofino-concierge': typeof PortofinoConciergeRoute
   '/portofino-edit': typeof PortofinoEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
@@ -243,7 +234,6 @@ export interface FileRouteTypes {
     | '/brands'
     | '/destinations'
     | '/portofino'
-    | '/portofino-concierge'
     | '/portofino-edit'
     | '/privacy-policy'
     | '/resort-edits'
@@ -269,7 +259,6 @@ export interface FileRouteTypes {
     | '/brands'
     | '/destinations'
     | '/portofino'
-    | '/portofino-concierge'
     | '/portofino-edit'
     | '/privacy-policy'
     | '/resort-edits'
@@ -295,7 +284,6 @@ export interface FileRouteTypes {
     | '/brands'
     | '/destinations'
     | '/portofino'
-    | '/portofino-concierge'
     | '/portofino-edit'
     | '/privacy-policy'
     | '/resort-edits'
@@ -322,7 +310,6 @@ export interface RootRouteChildren {
   BrandsRoute: typeof BrandsRouteWithChildren
   DestinationsRoute: typeof DestinationsRouteWithChildren
   PortofinoRoute: typeof PortofinoRouteWithChildren
-  PortofinoConciergeRoute: typeof PortofinoConciergeRoute
   PortofinoEditRoute: typeof PortofinoEditRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ResortEditsRoute: typeof ResortEditsRoute
@@ -359,13 +346,6 @@ declare module '@tanstack/react-router' {
       path: '/portofino-edit'
       fullPath: '/portofino-edit'
       preLoaderRoute: typeof PortofinoEditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portofino-concierge': {
-      id: '/portofino-concierge'
-      path: '/portofino-concierge'
-      fullPath: '/portofino-concierge'
-      preLoaderRoute: typeof PortofinoConciergeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portofino': {
@@ -564,7 +544,6 @@ const rootRouteChildren: RootRouteChildren = {
   BrandsRoute: BrandsRouteWithChildren,
   DestinationsRoute: DestinationsRouteWithChildren,
   PortofinoRoute: PortofinoRouteWithChildren,
-  PortofinoConciergeRoute: PortofinoConciergeRoute,
   PortofinoEditRoute: PortofinoEditRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   ResortEditsRoute: ResortEditsRoute,

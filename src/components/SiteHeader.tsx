@@ -5,7 +5,6 @@ import logoMark from "@/assets/resort-edit-mark.png";
 
 const nav = [
   { to: "/destinations", label: "Destinations" },
-  { to: "/portofino-concierge", label: "Concierge" },
   { to: "/resort-edits", label: "Resort Edits" },
   { to: "/brands", label: "Brands We Love" },
   { to: "/about", label: "About" },

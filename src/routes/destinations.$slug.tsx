@@ -208,7 +208,7 @@ function DestinationPage() {
       {/* Related */}
       {d.slug === "portofino" && (
         <>
-          <section className="mx-auto max-w-6xl px-6 py-20">
+          <section id="experiences" className="scroll-mt-24 mx-auto max-w-6xl px-6 py-20">
             <div className="text-center mb-12">
               <span className="eyebrow text-gold">Experiences</span>
               <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-wide">Worth leaving the hotel for</h2>
@@ -216,7 +216,7 @@ function DestinationPage() {
             <PortofinoCardGrid cards={portofinoExperiences} />
           </section>
 
-          <section className="mx-auto max-w-6xl px-6 pb-20">
+          <section id="beachclubs" className="scroll-mt-24 mx-auto max-w-6xl px-6 pb-20">
             <div className="text-center mb-12">
               <span className="eyebrow text-gold">Beach Clubs</span>
               <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-wide">Cabanas worth reserving</h2>
@@ -224,7 +224,7 @@ function DestinationPage() {
             <PortofinoCardGrid cards={portofinoBeachClubs} />
           </section>
 
-          <section className="mx-auto max-w-6xl px-6 pb-20">
+          <section id="on-water" className="scroll-mt-24 mx-auto max-w-6xl px-6 pb-20">
             <div className="text-center mb-12">
               <span className="eyebrow text-gold">On the Water</span>
               <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-wide">Portofino, from the deck</h2>
