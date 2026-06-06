@@ -53,7 +53,7 @@ function YachtToLunchPage() {
     <div className="bg-cream pb-24">
       {/* EDITORIAL HERO */}
       <section className="relative bg-ink text-ivory overflow-hidden">
-        <div className="relative h-[480px] md:h-[640px] lg:h-[720px] w-full">
+        <div className="relative h-[200px] md:h-[300px] lg:h-[320px] w-full">
           <img
             src={heroImage}
             alt="Editorial yacht day in Portofino harbour at golden hour"
@@ -61,26 +61,45 @@ function YachtToLunchPage() {
             width={1920}
             height={1280}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink/40 via-ink/10 to-transparent" />
-          <div className="relative z-10 mx-auto max-w-[1280px] h-full px-6 md:px-12 flex flex-col">
+          <div className="absolute inset-0 bg-gradient-to-r from-ink/35 via-ink/10 to-transparent" />
+          <div className="relative z-10 mx-auto max-w-[1280px] h-full px-6 md:px-12 flex flex-col justify-center">
             <Link
               to="/portofino"
               aria-label="Portofino · Day 1"
-              className="eyebrow text-[0.6rem] md:text-[0.7rem] tracking-[0.45em] text-ivory/90 hover:text-gold-soft mt-6 md:mt-10"
+              className="eyebrow text-[0.55rem] md:text-[0.65rem] tracking-[0.45em] text-ivory/90 hover:text-gold-soft"
             >
               PORTOFINO · DAY 1
             </Link>
-            <div className="mt-auto mb-10 md:mb-20 max-w-xl md:max-w-2xl">
-              <h1 className="font-display text-4xl md:text-6xl lg:text-[4.75rem] tracking-[0.02em] leading-[1.02] text-ivory">
+            <div className="mt-2 md:mt-3 max-w-xl md:max-w-2xl">
+              <h1 className="font-display text-2xl md:text-4xl lg:text-5xl tracking-[0.02em] leading-[1.05] text-ivory">
                 Yacht Day &amp; Harbour Aperitivo
               </h1>
-              <p className="font-serif italic text-base md:text-2xl text-ivory/90 mt-4 md:mt-6">
+              <p className="font-serif italic text-xs md:text-base text-ivory/90 mt-1.5 md:mt-2">
                 Open water, tan lines &amp; hidden coves.
               </p>
             </div>
           </div>
         </div>
       </section>
+
+      {/* LOOK 1–10 TABS (immediately under hero) */}
+      <div className="bg-cream border-b border-gold/20">
+        <div className="mx-auto max-w-[1280px] px-4 md:px-10 py-4">
+          <ul className="flex items-center gap-2 md:gap-3 overflow-x-auto no-scrollbar justify-start md:justify-center">
+            {YACHT_TO_LUNCH_LOOKS.map((l) => (
+              <li key={`tab-${l.id}`} className="shrink-0">
+                <button
+                  type="button"
+                  onClick={() => scrollToLook(l.id)}
+                  className="eyebrow text-[0.6rem] md:text-[0.65rem] tracking-[0.3em] px-4 py-2 rounded-full border border-ink/20 text-ink/75 hover:bg-ink hover:text-ivory hover:border-ink transition-colors whitespace-nowrap"
+                >
+                  LOOK {l.number}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
       {/* EDITORIAL INTRODUCTION */}
       <section className="mx-auto max-w-[860px] px-6 md:px-10 pt-16 md:pt-24 text-center">
