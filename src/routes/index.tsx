@@ -124,7 +124,12 @@ function Index() {
       {/* HERO — balanced 50/50 split */}
       <section className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center`}>
           <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-muted">
-            <img src={heroMuse} alt="Portofino editorial muse" className="absolute inset-0 h-full w-full object-cover" />
+            <img
+              src={heroMuse}
+              alt="Resort Edit muse in a blue and gold majolica print set by a Portofino harbour pool"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: "center 28%" }}
+            />
           </div>
           <div className="lg:pl-2 max-w-[750px]">
             <p className="eyebrow text-ink/55 text-[0.7rem] tracking-[0.42em]">A STYLE &amp; TRAVEL AUTHORITY</p>
@@ -145,7 +150,7 @@ function Index() {
               Luxury Labels. Destination Finds. Resort Style Across Price Points.
             </p>
             <p className="mt-3 font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
-              Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
+              Curated across Zimmermann, Johanna Ortiz, SIR — and labels you haven't discovered yet, at every price point.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               {brandChips.map((b) => (
@@ -168,11 +173,8 @@ function Index() {
               Curated looks, hotels and experiences — for women who dress for the destination.
             </p>
             <div className="mt-5 flex flex-wrap gap-4">
-              <Link to="/portofino" className="bg-ink text-ivory eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-gold transition-colors">
-                Explore the Edit →
-              </Link>
-              <Link to="/portofino-edit" className="eyebrow text-[0.82rem] tracking-[0.28em] text-ink border border-ink/40 px-12 py-[22px] hover:border-gold hover:text-gold transition-colors">
-                Shop the Looks
+              <Link to="/portofino-edit" className="bg-gold text-ivory eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-ink transition-colors">
+                Shop 15 Looks — Day by Day
               </Link>
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 text-ink/80">
