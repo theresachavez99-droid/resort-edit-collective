@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { absoluteUrl } from "@/lib/site";
 import { YACHT_TO_LUNCH_LOOKS, type YachtLook, type YachtProduct } from "@/data/yachtToLunch";
+import heroImage from "@/assets/looks/hero-yacht-editorial.jpg";
 import referenceAsset from "@/assets/yacht-to-lunch-reference.asset.json";
 import { trackOutbound } from "@/lib/utils";
 
@@ -20,13 +21,13 @@ export const Route = createFileRoute(
       { name: "description", content: PAGE_DESC },
       { property: "og:title", content: PAGE_TITLE },
       { property: "og:description", content: PAGE_DESC },
-      { property: "og:image", content: absoluteUrl(REFERENCE_URL) },
+      { property: "og:image", content: absoluteUrl(heroImage) },
       {
         property: "og:url",
         content: absoluteUrl("/destinations/portofino/day-1-yacht-harbour-aperitivo"),
       },
       { property: "og:type", content: "article" },
-      { name: "twitter:image", content: absoluteUrl(REFERENCE_URL) },
+      { name: "twitter:image", content: absoluteUrl(heroImage) },
     ],
     links: [
       {
@@ -39,115 +40,118 @@ export const Route = createFileRoute(
 });
 
 function YachtToLunchPage() {
-  const [activeId, setActiveId] = useState<string>(YACHT_TO_LUNCH_LOOKS[0].id);
   const [refOpen, setRefOpen] = useState(false);
-  const activeIndex = YACHT_TO_LUNCH_LOOKS.findIndex((l) => l.id === activeId);
-  const look = YACHT_TO_LUNCH_LOOKS[activeIndex];
-  const nextLook = YACHT_TO_LUNCH_LOOKS[activeIndex + 1];
-  const prevLook = YACHT_TO_LUNCH_LOOKS[activeIndex - 1];
 
-  const selectLook = (id: string) => {
-    setActiveId(id);
-    if (typeof window !== "undefined") {
-      requestAnimationFrame(() => {
-        document
-          .getElementById("active-look")
-          ?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    }
+  const scrollToLook = (id: string) => {
+    if (typeof window === "undefined") return;
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className="bg-ivory pb-24">
-      {/* HERO — compact on mobile */}
-      <section className="relative bg-ink text-ivory">
-        <div className="absolute inset-0 opacity-40">
+    <div className="bg-cream pb-24">
+      {/* EDITORIAL HERO */}
+      <section className="relative bg-ink text-ivory overflow-hidden">
+        <div className="relative h-[480px] md:h-[640px] lg:h-[720px] w-full">
           <img
-            src={REFERENCE_URL}
-            alt=""
-            aria-hidden
-            className="h-full w-full object-cover"
+            src={heroImage}
+            alt="Editorial yacht day in Portofino harbour at golden hour"
+            className="absolute inset-0 h-full w-full object-cover"
+            width={1920}
+            height={1280}
           />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/60 to-ink/85" />
-        <div className="relative z-10 mx-auto max-w-[1200px] px-5 md:px-8 pt-6 md:pt-14 pb-6 md:pb-14">
-          {/* Breadcrumb */}
-          <nav
-            aria-label="Breadcrumb"
-            className="eyebrow text-[0.55rem] md:text-[0.6rem] tracking-[0.3em] text-ivory/70 flex flex-wrap items-center gap-2"
-          >
-            <Link to="/portofino" className="hover:text-gold-soft">
-              Portofino
-            </Link>
-            <span aria-hidden>→</span>
-            <span className="text-ivory/85">Day 1</span>
-          </nav>
-
-          <span className="eyebrow text-gold-soft tracking-[0.4em] mt-3 md:mt-8 inline-block text-[0.55rem] md:text-[0.65rem]">
-            The Resort Edit · Day 1
-          </span>
-          <h1 className="font-display text-2xl md:text-6xl lg:text-7xl mt-2 md:mt-3 tracking-[0.04em] leading-[1.05] max-w-3xl">
-            Yacht Day &amp; Harbour Aperitivo
-          </h1>
-          <p className="font-serif italic text-sm md:text-2xl text-ivory/85 mt-2 md:mt-4 max-w-2xl">
-            Open water, tan lines &amp; hidden coves.
-          </p>
-          <p className="eyebrow text-[0.55rem] md:text-[0.6rem] tracking-[0.32em] text-ivory/70 mt-3">
-            10 Looks · Tap a look below to shop
-          </p>
+          <div className="absolute inset-0 bg-gradient-to-r from-ink/55 via-ink/15 to-transparent md:from-ink/45" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-ink/10" />
+          <div className="relative z-10 mx-auto max-w-[1280px] h-full px-6 md:px-12 flex flex-col justify-end pb-10 md:pb-20">
+            <nav
+              aria-label="Breadcrumb"
+              className="eyebrow text-[0.55rem] md:text-[0.65rem] tracking-[0.35em] text-ivory/75 flex items-center gap-2"
+            >
+              <Link to="/portofino" className="hover:text-gold-soft">
+                Portofino
+              </Link>
+              <span aria-hidden>·</span>
+              <span className="text-ivory/90">Day 1</span>
+            </nav>
+            <span className="eyebrow text-gold-soft tracking-[0.45em] mt-4 md:mt-6 inline-block text-[0.6rem] md:text-[0.7rem]">
+              The Resort Edit · Day One
+            </span>
+            <h1 className="font-display text-4xl md:text-7xl lg:text-[5.5rem] mt-3 md:mt-5 tracking-[0.02em] leading-[1.02] max-w-4xl">
+              Yacht Day &amp; Harbour Aperitivo
+            </h1>
+            <p className="font-serif italic text-base md:text-2xl lg:text-3xl text-ivory/90 mt-4 md:mt-6 max-w-2xl">
+              Open water, tan lines &amp; hidden coves.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* STICKY LOOK NAV */}
-      <div className="sticky top-0 z-40 bg-ivory/95 backdrop-blur border-b border-border/60">
-        <div className="mx-auto max-w-[1200px] px-3 md:px-6">
-          <ul className="flex items-center gap-1 md:gap-2 overflow-x-auto no-scrollbar py-3">
-            {YACHT_TO_LUNCH_LOOKS.map((l) => {
-              const active = activeId === l.id;
-              return (
-                <li key={l.id} className="shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => selectLook(l.id)}
-                    className={`eyebrow text-[0.6rem] tracking-[0.25em] px-3 md:px-4 py-2 rounded-full border transition-colors whitespace-nowrap ${
-                      active
-                        ? "bg-ink text-ivory border-ink"
-                        : "bg-transparent text-ink/70 border-ink/15 hover:border-gold/60 hover:text-gold"
-                    }`}
-                  >
-                    Look {l.number}
-                  </button>
-                </li>
-              );
-            })}
+      {/* EDITORIAL INTRODUCTION */}
+      <section className="mx-auto max-w-[860px] px-6 md:px-10 pt-16 md:pt-24 text-center">
+        <span className="eyebrow text-gold tracking-[0.4em] text-[0.6rem] md:text-[0.7rem]">
+          The Itinerary
+        </span>
+        <h2 className="font-display text-2xl md:text-4xl lg:text-5xl mt-4 tracking-[0.02em] text-ink leading-tight">
+          Arrival to aperitivo, styled across ten complete looks.
+        </h2>
+        <p className="font-serif italic text-ink/75 text-base md:text-xl mt-5 md:mt-6 leading-relaxed">
+          A day on a private yacht in Portofino, edited from the moment you step onto teak through
+          golden-hour spritzes on the piazzetta. Each look is a complete ecosystem — swim, layer,
+          shoes, bag, jewels — sourced from the houses our muse actually wears.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-ink/55">
+          {["Arrival", "Swim", "Yacht", "Lunch", "Harbour", "Aperitivo", "Sunset"].map((c, i, a) => (
+            <span key={c} className="flex items-center gap-3">
+              <span className="eyebrow text-[0.55rem] md:text-[0.65rem] tracking-[0.4em]">{c}</span>
+              {i < a.length - 1 && <span className="text-gold/50">·</span>}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* LOOK QUICK-NAV */}
+      <div className="mx-auto max-w-[1280px] px-4 md:px-10 mt-14 md:mt-20">
+        <div className="border-y border-gold/30 py-4">
+          <ul className="flex items-center gap-2 md:gap-3 overflow-x-auto no-scrollbar">
+            {YACHT_TO_LUNCH_LOOKS.map((l) => (
+              <li key={l.id} className="shrink-0">
+                <button
+                  type="button"
+                  onClick={() => scrollToLook(l.id)}
+                  className="eyebrow text-[0.6rem] md:text-[0.65rem] tracking-[0.3em] px-3 md:px-4 py-2 rounded-full border border-ink/15 text-ink/70 hover:border-gold hover:text-gold transition-colors whitespace-nowrap"
+                >
+                  {String(l.number).padStart(2, "0")} · {l.chapter}
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
 
-      {/* ACTIVE LOOK */}
-      <section
-        id="active-look"
-        className="mx-auto max-w-[1200px] px-5 md:px-8 pt-6 md:pt-12 scroll-mt-20"
-      >
-        <LookView
-          look={look}
-          prev={prevLook}
-          next={nextLook}
-          onSelect={selectLook}
-        />
-      </section>
+      {/* TEN EDITORIAL LOOKS */}
+      <div className="mx-auto max-w-[1280px] px-6 md:px-10 mt-16 md:mt-24 space-y-24 md:space-y-32">
+        {YACHT_TO_LUNCH_LOOKS.map((look, idx) => (
+          <LookEditorial
+            key={look.id}
+            look={look}
+            reverse={idx % 2 === 1}
+            eager={idx === 0}
+          />
+        ))}
+      </div>
 
       {/* COLLAPSED REFERENCE BOARD */}
-      <section className="mx-auto max-w-[1200px] px-5 md:px-8 mt-16">
+      <section className="mx-auto max-w-[1280px] px-6 md:px-10 mt-24">
         <button
           type="button"
           onClick={() => setRefOpen((v) => !v)}
-          className="w-full border border-border/60 bg-cream/40 px-4 py-3 flex items-center justify-between hover:border-gold transition-colors"
+          className="w-full border border-gold/30 bg-ivory px-5 py-4 flex items-center justify-between hover:border-gold transition-colors"
         >
-          <span className="eyebrow text-[0.6rem] tracking-[0.32em] text-ink/70">
-            {refOpen ? "Hide" : "View"} Reference Board
+          <span className="eyebrow text-[0.6rem] md:text-[0.65rem] tracking-[0.35em] text-ink/70">
+            {refOpen ? "Hide" : "View"} Editorial Reference Board
           </span>
-          <span className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">
+          <span className="eyebrow text-[0.65rem] tracking-[0.32em] text-gold">
             {refOpen ? "−" : "+"}
           </span>
         </button>
@@ -156,7 +160,7 @@ function YachtToLunchPage() {
             href={REFERENCE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 block border border-border/60 bg-cream/40 overflow-hidden"
+            className="mt-3 block border border-gold/20 bg-ivory overflow-hidden"
           >
             <img
               src={REFERENCE_URL}
@@ -169,27 +173,27 @@ function YachtToLunchPage() {
       </section>
 
       {/* DAY NAV */}
-      <section className="mx-auto max-w-[1200px] px-5 md:px-8 mt-20 md:mt-24">
-        <div className="border-t border-border/60 pt-8 md:pt-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section className="mx-auto max-w-[1280px] px-6 md:px-10 mt-20 md:mt-24">
+        <div className="border-t border-gold/30 pt-8 md:pt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
             to="/portofino"
-            className="group block border border-border/60 px-5 py-5 md:px-6 md:py-6 hover:border-gold transition-colors"
+            className="group block border border-ink/15 bg-ivory px-6 py-6 md:px-8 md:py-8 hover:border-gold transition-colors"
           >
             <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 flex items-center gap-2">
               <ArrowLeft className="w-3 h-3" /> Back
             </span>
-            <span className="block font-display text-xl md:text-2xl tracking-[0.05em] mt-2 text-ink group-hover:text-gold transition-colors">
+            <span className="block font-display text-xl md:text-2xl tracking-[0.04em] mt-2 text-ink group-hover:text-gold transition-colors">
               All 5 Days in Portofino
             </span>
           </Link>
           <Link
             to="/portofino/day-2"
-            className="group block border border-border/60 px-5 py-5 md:px-6 md:py-6 hover:border-gold transition-colors md:text-right"
+            className="group block border border-ink/15 bg-ivory px-6 py-6 md:px-8 md:py-8 hover:border-gold transition-colors md:text-right"
           >
             <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 flex items-center md:justify-end gap-2">
               Next Day <ArrowRight className="w-3 h-3" />
             </span>
-            <span className="block font-display text-xl md:text-2xl tracking-[0.05em] mt-2 text-ink group-hover:text-gold transition-colors">
+            <span className="block font-display text-xl md:text-2xl tracking-[0.04em] mt-2 text-ink group-hover:text-gold transition-colors">
               Day 2 · Beach Club &amp; Long Lunches
             </span>
           </Link>
@@ -199,121 +203,78 @@ function YachtToLunchPage() {
   );
 }
 
-function LookView({
+function LookEditorial({
   look,
-  prev,
-  next,
-  onSelect,
+  reverse,
+  eager,
 }: {
   look: YachtLook;
-  prev?: YachtLook;
-  next?: YachtLook;
-  onSelect: (id: string) => void;
+  reverse: boolean;
+  eager: boolean;
 }) {
-  const accessories = look.products.filter((p) =>
-    /earring|necklace|cuff|bracelet|charm|sunglass|belt/i.test(p.category),
-  );
-  const hero = look.products.filter(
-    (p) => !accessories.includes(p),
-  );
   return (
-    <article>
-      {/* Large AI muse image (cropped from reference board) */}
+    <article
+      id={look.id}
+      className="scroll-mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start"
+    >
+      {/* Editorial muse image */}
       <div
-        className="relative w-full aspect-[3/4] md:aspect-[4/5] bg-ink border border-border/60 overflow-hidden"
-        aria-label={`${look.title} editorial muse`}
+        className={`lg:col-span-7 ${
+          reverse ? "lg:order-2" : "lg:order-1"
+        }`}
       >
-        <img
-          key={look.id}
-          src={look.museImage}
-          alt={`${look.title} — editorial muse`}
-          width={960}
-          height={1280}
-          className="absolute inset-0 h-full w-full object-cover"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute top-3 left-3 eyebrow text-[0.55rem] tracking-[0.32em] text-ivory bg-ink/70 px-2 py-1">
-          Look {look.number} of {YACHT_TO_LUNCH_LOOKS.length}
+        <div className="relative w-full aspect-[4/5] bg-ink/5 border border-gold/15 overflow-hidden">
+          <img
+            src={look.museImage}
+            alt={`Look ${look.number}: ${look.title} — editorial muse`}
+            width={1024}
+            height={1280}
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute top-4 left-4 eyebrow text-[0.55rem] md:text-[0.6rem] tracking-[0.35em] text-ivory bg-ink/60 backdrop-blur-sm px-3 py-1.5">
+            {String(look.number).padStart(2, "0")} / 10
+          </div>
         </div>
       </div>
 
-      {/* Title + styling note */}
-      <header className="mt-5 md:mt-7 border-b border-gold/40 pb-4">
-        <span className="eyebrow text-gold tracking-[0.32em] text-[0.6rem]">
-          Look {look.number}
-        </span>
-        <h2 className="font-display text-2xl md:text-4xl mt-2 tracking-[0.04em] text-ink leading-tight">
-          Look {look.number}: {look.title}
-        </h2>
-        <p className="font-serif italic text-ink/70 text-sm md:text-lg mt-2">
-          {look.subtitle}
+      {/* Right column — story + shop */}
+      <div
+        className={`lg:col-span-5 lg:sticky lg:top-6 ${
+          reverse ? "lg:order-1" : "lg:order-2"
+        }`}
+      >
+        <header className="border-b border-gold/30 pb-5">
+          <span className="eyebrow text-gold tracking-[0.4em] text-[0.6rem] md:text-[0.65rem]">
+            Look {String(look.number).padStart(2, "0")} · {look.chapter}
+          </span>
+          <h2 className="font-display text-2xl md:text-4xl mt-3 tracking-[0.02em] text-ink leading-tight">
+            {look.title}
+          </h2>
+          <p className="font-serif italic text-ink/70 text-sm md:text-lg mt-2 leading-relaxed">
+            {look.subtitle}
+          </p>
+        </header>
+        <p className="font-serif text-ink/80 text-[0.95rem] md:text-base mt-5 leading-relaxed">
+          {look.story}
         </p>
-      </header>
 
-      {/* Shop the Look */}
-      <section className="mt-6">
-        <h3 className="eyebrow text-ink tracking-[0.3em] text-[0.65rem]">
-          Shop the Look
-        </h3>
-        <div className="mt-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-          {hero.map((p, i) => (
-            <ProductCard
-              key={`${look.id}-${p.brand}-${p.item}`}
-              product={p}
-              eager={i < 2}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* Complete the Edit */}
-      {accessories.length > 0 && (
         <section className="mt-8">
-          <h3 className="eyebrow text-ink tracking-[0.3em] text-[0.65rem]">
-            Complete the Edit
+          <h3 className="eyebrow text-ink tracking-[0.4em] text-[0.6rem] md:text-[0.65rem] flex items-center gap-3">
+            <span>Shop the Look</span>
+            <span className="flex-1 h-px bg-gold/30" />
           </h3>
-          <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {accessories.map((p) => (
-              <ProductCard key={`${look.id}-acc-${p.brand}-${p.item}`} product={p} />
+          <div className="mt-5 grid grid-cols-2 gap-3 md:gap-4">
+            {look.products.map((p, i) => (
+              <ProductCard
+                key={`${look.id}-${p.brand}-${p.item}-${i}`}
+                product={p}
+                eager={eager && i < 2}
+              />
             ))}
           </div>
         </section>
-      )}
-
-      {/* Prev / Next look */}
-      <div className="mt-8 grid grid-cols-2 gap-3">
-        {prev ? (
-          <button
-            type="button"
-            onClick={() => onSelect(prev.id)}
-            className="group block border border-border/60 px-4 py-4 text-left hover:border-gold transition-colors"
-          >
-            <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 flex items-center gap-2">
-              <ArrowLeft className="w-3 h-3" /> Previous
-            </span>
-            <span className="block font-serif text-ink group-hover:text-gold transition-colors mt-1 text-sm md:text-base">
-              Look {prev.number}: {prev.title}
-            </span>
-          </button>
-        ) : (
-          <span />
-        )}
-        {next ? (
-          <button
-            type="button"
-            onClick={() => onSelect(next.id)}
-            className="group block border border-border/60 px-4 py-4 text-right hover:border-gold transition-colors col-start-2"
-          >
-            <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 flex items-center justify-end gap-2">
-              Next Look <ArrowRight className="w-3 h-3" />
-            </span>
-            <span className="block font-serif text-ink group-hover:text-gold transition-colors mt-1 text-sm md:text-base">
-              Look {next.number}: {next.title}
-            </span>
-          </button>
-        ) : (
-          <span />
-        )}
       </div>
     </article>
   );
@@ -336,15 +297,15 @@ function ProductCard({
       onClick={() =>
         trackOutbound({ brand: product.brand, item: product.item, href: product.href })
       }
-      className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors"
+      className="group flex flex-col bg-ivory border border-gold/15 hover:border-gold transition-colors"
     >
-      <div className="relative aspect-square bg-cream overflow-hidden">
+      <div className="relative aspect-[4/5] bg-cream overflow-hidden">
         {hasImage ? (
           <img
             src={product.imageUrl}
             alt={`${product.brand} ${product.item}`}
             width={800}
-            height={800}
+            height={1000}
             loading={eager ? "eager" : "lazy"}
             decoding="async"
             referrerPolicy="no-referrer"
@@ -360,27 +321,30 @@ function ProductCard({
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-cream via-ivory to-cream px-4 text-center gap-2">
-            <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-cream via-ivory to-cream px-4 text-center gap-3">
+            <span className="eyebrow text-[0.55rem] tracking-[0.35em] text-gold">
               {product.category}
             </span>
-            <span className="font-serif italic text-ink/70 text-[0.78rem] leading-snug">
-              Image unavailable — shop item.
+            <span className="font-display text-ink/85 text-base md:text-lg leading-tight">
+              {product.brand}
+            </span>
+            <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/45">
+              Tap to shop
             </span>
           </div>
         )}
       </div>
-      <div className="flex flex-col flex-1 p-3">
-        <div className="eyebrow text-ink text-[0.55rem] tracking-[0.3em]">
+      <div className="flex flex-col flex-1 p-3 md:p-4">
+        <div className="eyebrow text-ink text-[0.55rem] tracking-[0.35em]">
           {product.brand}
         </div>
-        <div className="font-serif italic text-ink/90 text-[0.82rem] leading-snug mt-1 line-clamp-2">
+        <div className="font-serif italic text-ink/90 text-[0.85rem] md:text-[0.9rem] leading-snug mt-1.5 line-clamp-2">
           {product.item}
         </div>
         {product.price && (
-          <div className="font-serif text-gold text-[0.82rem] mt-1">{product.price}</div>
+          <div className="font-serif text-gold text-[0.85rem] mt-1.5">{product.price}</div>
         )}
-        <div className="mt-auto pt-2 eyebrow text-[0.55rem] tracking-[0.32em] text-ink group-hover:bg-ink group-hover:text-ivory transition-colors text-center border border-ink/20 rounded mt-2 py-1.5">
+        <div className="mt-3 eyebrow text-[0.55rem] tracking-[0.35em] text-ink group-hover:bg-ink group-hover:text-ivory transition-colors text-center border border-ink/20 py-2">
           Shop →
         </div>
       </div>
