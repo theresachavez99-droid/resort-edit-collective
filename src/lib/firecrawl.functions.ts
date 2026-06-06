@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireAdmin } from "./admin-auth.server";
 
 const FIRECRAWL_BASE = "https://api.firecrawl.dev/v2";
 
@@ -81,6 +82,7 @@ export const scrapeProductUrl = createServerFn({ method: "POST" })
   .inputValidator((input) =>
     z
       .object({
+        password: z.string().min(1).max(200),
         url: z.string().url(),
         day: z.number().int().min(1).max(7).optional(),
         look: z.number().int().min(1).max(10).optional(),
@@ -91,6 +93,7 @@ export const scrapeProductUrl = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.password);
     const apiKey = process.env.FIRECRAWL_API_KEY;
     if (!apiKey) return { ok: false as const, error: "FIRECRAWL_API_KEY missing" };
     if (!domainAllowed(data.url)) {
@@ -184,7 +187,12 @@ export const scrapeProductUrl = createServerFn({ method: "POST" })
     }
   });
 
-export const listSourcedProducts = createServerFn({ method: "GET" }).handler(async () => {
+export const listSourcedProducts = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z.object({ password: z.string().min(1).max(200) }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
   const { data, error } = await supabaseAdmin
     .from("sourced_products")
     .select("*")
@@ -198,6 +206,7 @@ export const updateSourcedProductStatus = createServerFn({ method: "POST" })
   .inputValidator((input) =>
     z
       .object({
+        password: z.string().min(1).max(200),
         id: z.string().uuid(),
         status: z.enum(["queued", "scraped", "approved", "promoted", "failed", "rejected"]),
         notes: z.string().max(500).optional(),
@@ -205,6 +214,7 @@ export const updateSourcedProductStatus = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.password);
     const patch: {
       status: typeof data.status;
       notes?: string;
@@ -221,8 +231,14 @@ export const updateSourcedProductStatus = createServerFn({ method: "POST" })
   });
 
 export const deleteSourcedProduct = createServerFn({ method: "POST" })
-  .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
+  .inputValidator((input) =>
+    z.object({
+      password: z.string().min(1).max(200),
+      id: z.string().uuid(),
+    }).parse(input),
+  )
   .handler(async ({ data }) => {
+    requireAdmin(data.password);
     const { error } = await supabaseAdmin.from("sourced_products").delete().eq("id", data.id);
     if (error) return { ok: false as const, error: error.message };
     return { ok: true as const };
