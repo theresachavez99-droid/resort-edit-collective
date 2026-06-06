@@ -134,11 +134,8 @@ function Index() {
               La Dolce Vita
             </p>
             <div className="mt-5 mb-4 h-px w-32 bg-gold/80" />
-            <p className="font-serif text-ink font-semibold text-lg sm:text-xl lg:text-[1.4rem] tracking-[0.01em] leading-[1.5] max-w-[85%]">
-              Luxury Labels. Destination Finds. Resort Style Across Price Points.
-            </p>
-            <p className="mt-3 font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
-              Curated across Zimmermann, Johanna Ortiz, SIR — and labels you haven't discovered yet, at every price point.
+            <p className="font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
+              Curated across Zimmermann, Johanna Ortiz, SIR — and labels you haven't discovered yet.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               {brandChips.map((b) => (
