@@ -33,7 +33,7 @@ Honey/dark blonde, textured beach waves. Glowy bronzed skin, softer features, he
 Sleek black hair. Strong bone structure, dramatic beauty, fashion-campaign energy. Stronger makeup, high jewelry. Cinematic high-contrast luxury campaign light.
 
 ## Muse 4 — Adventure (safari, desert, jungle, excursions)
-Auburn / soft red, looser hair. Athletic elegance, earthy natural beauty. Natural makeup, practical luxury. Natural light, earth tones, organic movement.
+Blonde bombshell. Champagne/expensive blonde (dark blonde acceptable), polished texture — luxury blowout, soft waves, or elevated ponytail. Bronzed skin, athletic elegance, stronger facial structure, natural glam makeup, healthy glow. Styling: ivory, khaki luxury, olive, linen textures, woven accessories, gold jewelry, luxury neutrals. Warm sunlight, cinematic outdoor editorial — luxury safari / wealthy traveler / elevated explorer / outdoor glamour. NOT rugged or survivalist. Differentiation vs Muse 2 (Tropical): Tropical = beachy blonde, playful, colorful; Adventure = polished blonde, luxury explorer, sophisticated neutrals.
 
 ## Muse 5 — Cultural / Asia (Tokyo, Kyoto, Cambodia, Vietnam, heritage)
 Sleek black hair, often in a bun. Refined elegance, polished minimal beauty. Softer makeup, elegant jewelry, timeless styling. Warm light, heritage architecture.
