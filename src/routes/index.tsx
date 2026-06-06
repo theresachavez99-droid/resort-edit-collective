@@ -98,9 +98,9 @@ const hotels = [
 ];
 
 const ctas = [
-  { label: "Book a Yacht", Icon: Ship, hash: "yachts" },
+  { label: "Book a Yacht", Icon: Ship, hash: "on-water" },
   { label: "Reserve a Beach Club", Icon: Umbrella, hash: "beachclubs" },
-  { label: "Book a Tour", Icon: Camera, hash: "tours" },
+  { label: "Book a Tour", Icon: Camera, hash: "experiences" },
   { label: "View Experiences", Icon: Compass, hash: "experiences" },
 ];
 
@@ -253,7 +253,7 @@ function Index() {
                   Book a cabana.<br />Sip limoncello.<br />Stay until sunset.
                 </p>
                 <div className="mt-6 flex flex-col divide-y divide-gold/30 border-t border-gold/30">
-                  <Link to="/portofino-concierge" hash="beachclubs" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
+                  <Link to="/destinations/$slug" params={{ slug: "portofino" }} hash="beachclubs" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
                     <span>Reserve a beach cabana</span><span>→</span>
                   </Link>
                 </div>
@@ -328,7 +328,8 @@ function Index() {
           {ctas.map(({ label, Icon, hash }) => (
             <Link
               key={label}
-              to="/portofino-concierge"
+              to="/destinations/$slug"
+              params={{ slug: "portofino" }}
               hash={hash}
               className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
             >
