@@ -8,6 +8,7 @@ import {
   updateSourcedProductStatus,
   deleteSourcedProduct,
 } from "@/lib/firecrawl.functions";
+import { verifyAdmin } from "@/lib/admin-auth.functions";
 import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
 import { portofinoEdit, categoryLabels, type AccessoryCategory } from "@/data/portofinoEdit";
 import {
@@ -46,8 +47,7 @@ type Row = {
   source: "portofino.ts" | "portofinoEdit.ts";
 };
 
-const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD as string) || "resortedit2026";
-const STORAGE_KEY = "admin_product_library_unlocked";
+const STORAGE_KEY = "admin_product_library_pw";
 const APPROVED_RETAILER_DOMAINS = [
   "farfetch.com",
   "mytheresa.com",
