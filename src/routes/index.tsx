@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import heroMuse from "@/assets/hero-portofino-harbor.jpg";
+import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
 import day3Muse from "@/assets/hero-muse-portofino.jpg";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg";
@@ -18,6 +18,8 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
+
+const heroMuse = heroMuseAsset.url;
 
 const DAY_1_FULL_EDIT_ROUTE = "/destinations/portofino/day-1-yacht-harbour-aperitivo" as const;
 
