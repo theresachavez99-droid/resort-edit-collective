@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
-import { NewsletterForm } from "@/components/NewsletterForm";
 import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
 import day3Muse from "@/assets/hero-muse-portofino.jpg";
 import stillLife from "@/assets/portofino-still-life.jpg";
