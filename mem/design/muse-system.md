@@ -5,6 +5,17 @@ type: design
 ---
 # Resort Edit Muse System
 
+## Identity-lock reference images (CRITICAL)
+Each muse has a single isolated face reference at `src/assets/muses/muse-<slug>.png.asset.json`. These are IDENTITY LOCKS, not inspiration or style guidance — when generating or editing a muse image, pass ONLY that muse's reference (never the full 5-muse collage board, which causes muse drift / multi-face confusion).
+
+- Mediterranean → `src/assets/muses/muse-mediterranean.png.asset.json` — Portofino, Capri, Amalfi, Greece, Mallorca, Sicily, South of France
+- Tropical (Latin) → `src/assets/muses/muse-tropical.png.asset.json` — Tulum, Cancun, Cartagena, Miami, Bali beach days, Puerto Rico, Maldives, Phuket
+- Glam → `src/assets/muses/muse-glam.png.asset.json` — Monaco, Dubai, St. Barths, high-glam evenings
+- Adventure (Blonde) → `src/assets/muses/muse-adventure.png.asset.json` — Safari, desert, luxury lodges, excursions, explore days
+- Cultural / Asia → `src/assets/muses/muse-cultural.png.asset.json` — Tokyo, Kyoto, Cambodia, Vietnam, heritage/temple destinations
+
+Reference priority when generating: face reference VERY HIGH → environment MEDIUM → outfit LOWER. Preserve identity before styling. Regenerate any look if the wrong muse is selected, the face drifts from its reference, it resembles another muse, or identity changes between looks on the same page.
+
 ## Master Face (shared across ALL muses)
 Single anchor face identity used across every muse and every look on the site. Users should recognize the same Resort Edit woman adapted to different destinations — never different random models.
 
