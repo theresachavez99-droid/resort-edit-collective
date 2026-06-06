@@ -61,28 +61,23 @@ function YachtToLunchPage() {
             width={1920}
             height={1280}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink/55 via-ink/15 to-transparent md:from-ink/45" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-ink/10" />
-          <div className="relative z-10 mx-auto max-w-[1280px] h-full px-6 md:px-12 flex flex-col justify-end pb-10 md:pb-20">
-            <nav
-              aria-label="Breadcrumb"
-              className="eyebrow text-[0.55rem] md:text-[0.65rem] tracking-[0.35em] text-ivory/75 flex items-center gap-2"
+          <div className="absolute inset-0 bg-gradient-to-r from-ink/40 via-ink/10 to-transparent" />
+          <div className="relative z-10 mx-auto max-w-[1280px] h-full px-6 md:px-12 flex flex-col">
+            <Link
+              to="/portofino"
+              aria-label="Portofino · Day 1"
+              className="eyebrow text-[0.6rem] md:text-[0.7rem] tracking-[0.45em] text-ivory/90 hover:text-gold-soft mt-6 md:mt-10"
             >
-              <Link to="/portofino" className="hover:text-gold-soft">
-                Portofino
-              </Link>
-              <span aria-hidden>·</span>
-              <span className="text-ivory/90">Day 1</span>
-            </nav>
-            <span className="eyebrow text-gold-soft tracking-[0.45em] mt-4 md:mt-6 inline-block text-[0.6rem] md:text-[0.7rem]">
-              The Resort Edit · Day One
-            </span>
-            <h1 className="font-display text-4xl md:text-7xl lg:text-[5.5rem] mt-3 md:mt-5 tracking-[0.02em] leading-[1.02] max-w-4xl">
-              Yacht Day &amp; Harbour Aperitivo
-            </h1>
-            <p className="font-serif italic text-base md:text-2xl lg:text-3xl text-ivory/90 mt-4 md:mt-6 max-w-2xl">
-              Open water, tan lines &amp; hidden coves.
-            </p>
+              PORTOFINO · DAY 1
+            </Link>
+            <div className="mt-auto mb-10 md:mb-20 max-w-xl md:max-w-2xl">
+              <h1 className="font-display text-4xl md:text-6xl lg:text-[4.75rem] tracking-[0.02em] leading-[1.02] text-ivory">
+                Yacht Day &amp; Harbour Aperitivo
+              </h1>
+              <p className="font-serif italic text-base md:text-2xl text-ivory/90 mt-4 md:mt-6">
+                Open water, tan lines &amp; hidden coves.
+              </p>
+            </div>
           </div>
         </div>
       </section>
