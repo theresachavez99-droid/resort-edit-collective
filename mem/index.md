@@ -1,7 +1,7 @@
 # Project Memory
 
 ## Core
-All destination pages use a fixed recurring muse from the Muse System — same face across every look on a page. Editorial luxury campaign quality, never catalog.
+All muses share ONE Master Face identity across the entire site — only hair, styling, makeup, wardrobe, and environment change between muses. Never vary facial structure, age, or body proportions. Editorial luxury campaign quality, never catalog.
 Portofino uses Muse 1 (Mediterranean): rich glossy brunette, sun-kissed skin, gold jewelry, golden-hour yacht energy.
 
 ## Memories
