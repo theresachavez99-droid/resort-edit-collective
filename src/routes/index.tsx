@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import heroMuse from "@/assets/hero-portofino-harbor.jpg";
 import day3Muse from "@/assets/hero-muse-portofino.jpg";
 import stillLife from "@/assets/portofino-still-life.jpg";
@@ -66,9 +67,33 @@ const looks = [
 ];
 
 const hotels = [
-  { name: "Splendido, A Belmond Hotel", image: hotelSplendido, desc: "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied view on the Riviera.", href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/" },
-  { name: "Eight Hotel Portofino", image: hotelEight, desc: "Quietly chic and steps from the piazzetta. A modern Italian retreat for travelers who want to live like a local in the heart of town.", href: "https://www.eighthotels.com/en/eight-hotel-portofino/" },
-  { name: "Hotel Piccolo Portofino", image: hotelPiccolo, desc: "An intimate seaside hideaway tucked into a private cove. Sun-bleached terraces, turquoise water, and the kind of service that anticipates everything.", href: "https://www.hotelpiccoloportofino.com/" },
+  {
+    name: "Splendido, A Belmond Hotel",
+    image: hotelSplendido,
+    vibe: "ICONIC · CLIFFTOP VIEWS",
+    desc: "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied view on the Riviera.",
+    signals: ["The Resort Edit top pick", "Harbour-facing rooms only", "Private pool terrace & cabanas"],
+    note: "Where to stay if this trip is the trip.",
+    href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+  },
+  {
+    name: "Eight Hotel Portofino",
+    image: hotelEight,
+    vibe: "PIAZZETTA · LOCAL ENERGY",
+    desc: "Quietly chic and steps from the piazzetta. A modern Italian retreat for travelers who want to live like a local in the heart of town.",
+    signals: ["Steps from the piazzetta", "Boutique, under 20 rooms", "Concierge who books the impossible"],
+    note: "For the trip you'll want to repeat next summer.",
+    href: "https://www.eighthotels.com/en/eight-hotel-portofino/",
+  },
+  {
+    name: "Hotel Piccolo Portofino",
+    image: hotelPiccolo,
+    vibe: "HIDDEN · PRIVATE COVE",
+    desc: "An intimate seaside hideaway tucked into a private cove. Sun-bleached terraces, turquoise water, and the kind of service that anticipates everything.",
+    signals: ["Private sea-access terrace", "Quiet side of the harbor", "Sea-view suites only"],
+    note: "For the traveler who wants the harbor without the crowd.",
+    href: "https://www.hotelpiccoloportofino.com/",
+  },
 ];
 
 const ctas = [
@@ -77,6 +102,18 @@ const ctas = [
   { label: "Book a Tour", Icon: Camera, hash: "tours" },
   { label: "View Experiences", Icon: Compass, hash: "experiences" },
 ];
+
+type DestChip = { name: string; to: "/destinations" | "/destinations/$slug"; slug?: string };
+const alsoPlanning: DestChip[] = [
+  { name: "Capri", to: "/destinations/$slug", slug: "capri" },
+  { name: "Amalfi", to: "/destinations" },
+  { name: "Mykonos", to: "/destinations" },
+  { name: "Mallorca", to: "/destinations/$slug", slug: "mallorca" },
+  { name: "Bali", to: "/destinations" },
+  { name: "St Barths", to: "/destinations" },
+];
+
+const brandChips = ["Zimmermann", "Johanna Ortiz", "SIR", "Faithfull the Brand"];
 
 function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
@@ -88,7 +125,8 @@ function Index() {
             <img src={heroMuse} alt="Portofino editorial muse" className="absolute inset-0 h-full w-full object-cover" />
           </div>
           <div className="lg:pl-2 max-w-[750px]">
-            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">A Style &amp; Itinerary Guide</p>
+            <p className="eyebrow text-ink/55 text-[0.7rem] tracking-[0.42em]">A STYLE &amp; TRAVEL AUTHORITY</p>
+            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em] mt-3">A Style &amp; Itinerary Guide</p>
             <h1 className="font-display mt-3 text-[3.4rem] sm:text-[4.2rem] lg:text-[6.2rem] xl:text-[7.4rem] leading-[0.9] tracking-[0.01em] text-ink">
               5 DAYS IN
               <br />
@@ -107,15 +145,32 @@ function Index() {
             <p className="mt-3 font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
               Curated from international resort favorites, quiet luxury labels, and vacation brands we love.
             </p>
-            <p className="mt-4 eyebrow text-[0.72rem] tracking-[0.28em] text-ink/70">
-              Zimmermann <span className="text-gold">·</span> Johanna Ortiz <span className="text-gold">·</span> SIR <span className="text-gold">·</span> Faithfull the Brand <span className="text-gold">·</span> <Link to="/brands" className="hover:text-gold">More</Link>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {brandChips.map((b) => (
+                <Link
+                  key={b}
+                  to="/brands"
+                  className="eyebrow text-[0.66rem] tracking-[0.26em] text-ink/75 border border-ink/25 rounded-full px-3.5 py-1.5 hover:border-gold hover:text-gold transition-colors"
+                >
+                  {b}
+                </Link>
+              ))}
+              <Link
+                to="/brands"
+                className="eyebrow text-[0.66rem] tracking-[0.26em] text-gold border border-gold/40 rounded-full px-3.5 py-1.5 hover:bg-gold hover:text-ivory transition-colors"
+              >
+                More →
+              </Link>
+            </div>
+            <p className="mt-5 font-serif italic text-[1.05rem] lg:text-[1.15rem] text-ink/75 leading-snug max-w-[85%]">
+              Curated looks, hotels and experiences — for women who dress for the destination.
             </p>
             <div className="mt-5 flex flex-wrap gap-4">
               <Link to="/portofino" className="bg-ink text-ivory eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-gold transition-colors">
                 Explore the Edit →
               </Link>
               <Link to="/portofino-edit" className="eyebrow text-[0.82rem] tracking-[0.28em] text-ink border border-ink/40 px-12 py-[22px] hover:border-gold hover:text-gold transition-colors">
-                Shop by Price Point
+                Shop the Looks
               </Link>
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 text-ink/80">
@@ -128,14 +183,56 @@ function Index() {
               </span>
               <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
               <span className="eyebrow text-[0.82rem] tracking-[0.3em] text-gold">
-                ★ Most Saved Edit
+                ★ The Edit We Keep Coming Back To
               </span>
             </div>
           </div>
       </section>
 
+      {/* DESTINATION STRIP — also planning */}
+      <section className={`${wrap} mt-16 lg:mt-20`}>
+        <div className="border-t border-b border-ink/15 py-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 eyebrow text-[0.7rem] tracking-[0.3em] text-ink/70">
+          <span className="text-ink/55">ALSO PLANNING:</span>
+          {alsoPlanning.map((d, i) => (
+            <span key={d.name} className="flex items-center gap-x-4">
+              {d.slug ? (
+                <Link to="/destinations/$slug" params={{ slug: d.slug }} className="hover:text-gold transition-colors">
+                  {d.name}
+                </Link>
+              ) : (
+                <Link to="/destinations" className="hover:text-gold transition-colors">
+                  {d.name}
+                </Link>
+              )}
+              {i < alsoPlanning.length - 1 && <span className="text-gold/60">·</span>}
+            </span>
+          ))}
+          <span className="text-ink/25 mx-2">→</span>
+          <Link to="/destinations" className="text-gold hover:text-ink transition-colors">
+            ALL DESTINATIONS
+          </Link>
+        </div>
+      </section>
+
+      {/* BOOKING BAR — moved to top, immediately under destination strip */}
+      <section className="mt-6 lg:mt-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+          {ctas.map(({ label, Icon, hash }) => (
+            <Link
+              key={label}
+              to="/portofino-concierge"
+              hash={hash}
+              className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
+            >
+              <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />
+              <span>{label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* 5-DAY CARDS */}
-      <section className={`${wrap} mt-16 lg:mt-24 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5`}>
+      <section className={`${wrap} mt-20 lg:mt-28 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5`}>
           {days.map((d) => (
             <Link
               key={d.n}
@@ -173,10 +270,10 @@ function Index() {
                 >
                   {d.n === "1" ? (
                     <>
-                      View Full Day Edit <span data-route-arrow={DAY_1_FULL_EDIT_ROUTE}>→</span>
+                      Shop 10 Looks <span data-route-arrow={DAY_1_FULL_EDIT_ROUTE}>→</span>
                     </>
                   ) : (
-                    "Explore the Look →"
+                    "Get the Look →"
                   )}
                 </span>
               </div>
@@ -185,7 +282,7 @@ function Index() {
       </section>
 
       {/* SHOP THE LOOKS + TIP */}
-      <section className={`${wrap} mt-20 lg:mt-28`}>
+      <section className={`${wrap} mt-24 lg:mt-32`}>
           <div className="flex items-center gap-4 justify-center mb-10">
             <div className="h-px w-16 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE LOOKS FOR PORTOFINO</h2>
@@ -201,12 +298,13 @@ function Index() {
                 <div className="text-center pt-5 px-3">
                   <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">{l.tag}</div>
                   <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] text-ink">{l.title}</h3>
+                  <p className="mt-1 font-serif italic text-[0.82rem] text-ink/55">3 pieces · Shop the Look</p>
                 </div>
                 <div className="relative aspect-[5/6] mt-4 overflow-hidden bg-muted">
                   <img src={l.image} alt={l.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                 </div>
                 <Link to="/portofino" className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors">
-                  Shop the Look →
+                  Get the Look →
                 </Link>
               </article>
             ))}
@@ -218,9 +316,17 @@ function Index() {
                 <p className="mt-5 font-serif italic text-lg text-ink/85 leading-relaxed">
                   Book a cabana.<br />Sip limoncello.<br />Stay until sunset.
                 </p>
-                <Link to="/portofino-concierge" className="mt-6 inline-block text-center bg-gold text-ivory eyebrow text-[0.65rem] tracking-[0.24em] py-3 px-4 hover:bg-ink transition-colors">
-                  Explore Portofino →
-                </Link>
+                <div className="mt-6 flex flex-col divide-y divide-gold/30 border-t border-gold/30">
+                  <Link to="/portofino-concierge" hash="beachclubs" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
+                    <span>Reserve a beach cabana</span><span>→</span>
+                  </Link>
+                  <Link to="/portofino-concierge" hash="yachts" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
+                    <span>Book a private yacht charter</span><span>→</span>
+                  </Link>
+                  <Link to="/portofino-concierge" hash="experiences" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
+                    <span>Find a sunset restaurant</span><span>→</span>
+                  </Link>
+                </div>
               </div>
               <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                 <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
@@ -229,51 +335,93 @@ function Index() {
           </div>
       </section>
 
+      {/* EMAIL CAPTURE — inline strip on dark brown */}
+      <section className="mt-24 lg:mt-32 bg-ink text-ivory">
+        <div className={`${wrap} py-14 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center`}>
+          <div>
+            <p className="eyebrow text-[0.72rem] tracking-[0.32em] text-gold">THE RESORT EDIT</p>
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl tracking-[0.04em] text-ivory leading-[1.05]">
+              Get the next destination before it drops.
+            </h2>
+            <p className="mt-4 font-serif italic text-lg text-ivory/75 max-w-xl">
+              Looks, hotels and experiences — straight to your inbox.
+            </p>
+          </div>
+          <div className="flex justify-start lg:justify-end">
+            <NewsletterForm ctaSource="home_inline_strip" variant="footer" buttonLabel="Join the Edit" />
+          </div>
+        </div>
+      </section>
+
       {/* WHERE TO STAY */}
-      <section className={`${wrap} mt-20 lg:mt-28`}>
+      <section className={`${wrap} mt-24 lg:mt-32`}>
           <div className="flex items-center gap-4 justify-center mb-10">
             <div className="h-px w-16 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE TO STAY</h2>
             <div className="h-px w-16 bg-gold/50" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {hotels.map((h) => (
-              <article key={h.name} className="grid grid-cols-[40%_1fr] bg-card border border-border/50">
-                <div className="relative overflow-hidden bg-muted">
+              <article key={h.name} className="bg-card border border-border/50 flex flex-col">
+                <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-muted">
                   <img src={h.image} alt={h.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                  <span className="absolute left-4 bottom-4 bg-ink/75 text-ivory eyebrow text-[0.6rem] tracking-[0.26em] px-3 py-1.5 backdrop-blur-sm">
+                    {h.vibe}
+                  </span>
                 </div>
-                <div className="p-5 flex flex-col">
-                  <div className="eyebrow text-[0.6rem] tracking-[0.28em] text-gold">Portofino, Italy</div>
-                  <h3 className="mt-2 font-display text-xl tracking-wide text-ink">{h.name}</h3>
-                  <p className="mt-3 font-serif text-[0.85rem] text-ink/70 leading-relaxed flex-1">{h.desc}</p>
-                  <a href={h.href} target="_blank" rel="noreferrer noopener sponsored" className="mt-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-start hover:text-ink hover:border-ink transition-colors">
-                    Book This Stay →
+                <div className="p-6 flex flex-col flex-1">
+                  <div className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">PORTOFINO, ITALY</div>
+                  <h3 className="mt-2 font-display text-2xl tracking-wide text-ink">{h.name}</h3>
+                  <p className="mt-3 font-serif text-[0.95rem] text-ink/75 leading-relaxed">{h.desc}</p>
+                  <ul className="mt-5 space-y-1.5">
+                    {h.signals.map((s) => (
+                      <li key={s} className="flex gap-2 font-serif text-[0.9rem] text-ink/80">
+                        <span className="text-gold">·</span>
+                        <span>{s}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-5 font-serif italic text-[0.9rem] text-ink/60 flex-1">{h.note}</p>
+                  <a
+                    href={h.href}
+                    target="_blank"
+                    rel="noreferrer noopener sponsored"
+                    className="mt-6 inline-flex justify-center bg-ink text-ivory eyebrow text-[0.72rem] tracking-[0.3em] px-6 py-4 hover:bg-gold transition-colors"
+                  >
+                    ENQUIRE →
                   </a>
                 </div>
               </article>
             ))}
           </div>
+
+          <div className="mt-10 pt-6 border-t border-ink/15 text-center">
+            <p className="font-serif italic text-[0.9rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
+              Rates available on enquiry. Some properties book out months in advance — we recommend reserving before your flights.
+            </p>
+          </div>
       </section>
 
-      {/* BOTTOM CTA BAR — edge to edge */}
-      <section className="mt-20 lg:mt-24">
-        <h2 className={`${wrap} text-center font-display text-xl sm:text-2xl tracking-[0.2em] text-ink mb-6`}>
-            BOOK YOUR PORTOFINO EXPERIENCE
-          </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-            {ctas.map(({ label, Icon, hash }) => (
-              <Link
-                key={label}
-                to="/portofino-concierge"
-                hash={hash}
-                className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
-              >
-                <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />
-                <span>{label}</span>
-              </Link>
-            ))}
+      {/* CONCIERGE STRIP */}
+      <section className="mt-24 lg:mt-32 bg-ink text-ivory">
+        <div className={`${wrap} py-14 lg:py-18 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 lg:gap-12 items-center`}>
+          <div>
+            <p className="eyebrow text-[0.72rem] tracking-[0.32em] text-gold">RESORT EDIT CONCIERGE</p>
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl tracking-[0.03em] leading-[1.05]">
+              Not sure which hotel is right for you?
+            </h2>
+            <p className="mt-3 font-serif italic text-lg text-ivory/75 max-w-2xl">
+              Tell us how you travel. We'll tell you exactly where to stay.
+            </p>
           </div>
+          <Link
+            to="/portofino-concierge"
+            className="inline-flex items-center justify-center bg-gold text-ink eyebrow text-[0.78rem] tracking-[0.3em] px-10 py-5 hover:bg-ivory transition-colors whitespace-nowrap"
+          >
+            SPEAK TO THE EDIT →
+          </Link>
+        </div>
       </section>
 
       {/* DISCLOSURE — visually secondary, well below CTAs */}
