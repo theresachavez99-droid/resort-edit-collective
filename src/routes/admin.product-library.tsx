@@ -8,6 +8,7 @@ import {
   updateSourcedProductStatus,
   deleteSourcedProduct,
 } from "@/lib/firecrawl.functions";
+import { verifyAdmin } from "@/lib/admin-auth.functions";
 import { portofinoLooks, resolveProductLink, type ShopItem } from "@/data/portofino";
 import { portofinoEdit, categoryLabels, type AccessoryCategory } from "@/data/portofinoEdit";
 import {
@@ -46,8 +47,7 @@ type Row = {
   source: "portofino.ts" | "portofinoEdit.ts";
 };
 
-const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD as string) || "resortedit2026";
-const STORAGE_KEY = "admin_product_library_unlocked";
+const STORAGE_KEY = "admin_product_library_pw";
 const APPROVED_RETAILER_DOMAINS = [
   "farfetch.com",
   "mytheresa.com",
@@ -159,24 +159,37 @@ function ProductLibraryPage() {
   const [unlocked, setUnlocked] = useState(false);
   const [pw, setPw] = useState("");
   const [error, setError] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const verifyFn = useServerFn(verifyAdmin);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem(STORAGE_KEY) === "1") {
-      setUnlocked(true);
-    }
+    if (typeof window === "undefined") return;
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    verifyFn({ data: { password: saved } })
+      .then(() => {
+        setPw(saved);
+        setUnlocked(true);
+      })
+      .catch(() => sessionStorage.removeItem(STORAGE_KEY));
   }, []);
 
   if (!unlocked) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-ivory p-6">
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            if (pw === ADMIN_PASSWORD) {
-              sessionStorage.setItem(STORAGE_KEY, "1");
+            setError("");
+            setVerifying(true);
+            try {
+              await verifyFn({ data: { password: pw } });
+              sessionStorage.setItem(STORAGE_KEY, pw);
               setUnlocked(true);
-            } else {
+            } catch {
               setError("Incorrect password.");
+            } finally {
+              setVerifying(false);
             }
           }}
           className="w-full max-w-sm space-y-4 bg-white border border-border/60 p-6 rounded-md"
@@ -196,23 +209,23 @@ function ProductLibraryPage() {
           {error && <p className="text-xs text-red-600">{error}</p>}
           <button
             type="submit"
+            disabled={verifying || !pw}
             className="w-full bg-ink text-ivory py-2 text-sm rounded hover:bg-ink/90"
           >
-            Unlock
+            {verifying ? "Verifying…" : "Unlock"}
           </button>
           <p className="text-[0.65rem] text-ink/50">
-            Default password is set via <code>VITE_ADMIN_PASSWORD</code>. Change it before
-            publishing.
+            Password is verified server-side against <code>ADMIN_PASSWORD</code>.
           </p>
         </form>
       </div>
     );
   }
 
-  return <ProductLibraryTabs />;
+  return <ProductLibraryTabs password={pw} />;
 }
 
-function ProductLibraryTabs() {
+function ProductLibraryTabs({ password }: { password: string }) {
   const [tab, setTab] = useState<"catalog" | "issues" | "gap" | "sourcing">("catalog");
   return (
     <div className="min-h-screen bg-ivory text-ink">
@@ -242,7 +255,7 @@ function ProductLibraryTabs() {
       {tab === "catalog" && <ProductLibraryGrid onReplace={() => setTab("sourcing")} />}
       {tab === "issues" && <IssuesView onReplace={() => setTab("sourcing")} />}
       {tab === "gap" && <GapReport />}
-      {tab === "sourcing" && <SourcingView />}
+      {tab === "sourcing" && <SourcingView password={password} />}
     </div>
   );
 }
@@ -830,7 +843,7 @@ const SLOT_CATEGORIES = [
   "layer",
 ];
 
-function SourcingView() {
+function SourcingView({ password }: { password: string }) {
   type SourcedProductRow = {
     id: string;
     status: "queued" | "scraped" | "approved" | "promoted" | "failed" | "rejected";
@@ -855,7 +868,7 @@ function SourcingView() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["sourced_products"],
-    queryFn: () => listFn(),
+    queryFn: () => listFn({ data: { password } }),
     refetchInterval: 5000,
   });
 
@@ -867,18 +880,18 @@ function SourcingView() {
       slot_category?: string;
       affiliate_url?: string;
       notes?: string;
-    }) => scrapeFn({ data: input }),
+    }) => scrapeFn({ data: { password, ...input } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
   });
 
   const update = useMutation({
     mutationFn: (input: { id: string; status: SourcedProductRow["status"]; notes?: string }) =>
-      updateFn({ data: input }),
+      updateFn({ data: { password, ...input } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
   });
 
   const del = useMutation({
-    mutationFn: (id: string) => delFn({ data: { id } }),
+    mutationFn: (id: string) => delFn({ data: { password, id } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sourced_products"] }),
   });
 

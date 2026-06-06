@@ -6,6 +6,7 @@ import {
   isPlaceholderImage,
   type ProductScore,
 } from "./productScoring";
+import { requireAdmin } from "./admin-auth.server";
 
 const FIRECRAWL_BASE = "https://api.firecrawl.dev/v2";
 
@@ -26,6 +27,7 @@ export const validateCandidateProduct = createServerFn({ method: "POST" })
   .inputValidator((input) =>
     z
       .object({
+        password: z.string().min(1).max(200),
         url: z.string().url(),
         score: z
           .object({
@@ -42,6 +44,7 @@ export const validateCandidateProduct = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.password);
     const reasons: string[] = [];
 
     if (isCollectionOrHomepage(data.url)) {

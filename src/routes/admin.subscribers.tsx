@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listSubscribers, updateSubscriber } from "@/lib/subscribers.functions";
+import { verifyAdmin } from "@/lib/admin-auth.functions";
 
 export const Route = createFileRoute("/admin/subscribers")({
   head: () => ({
@@ -14,9 +15,7 @@ export const Route = createFileRoute("/admin/subscribers")({
   component: SubscribersPage,
 });
 
-const ADMIN_PASSWORD =
-  (import.meta.env.VITE_ADMIN_PASSWORD as string) || "resortedit2026";
-const STORAGE_KEY = "admin_subscribers_unlocked";
+const STORAGE_KEY = "admin_subscribers_pw";
 
 type Subscriber = {
   id: string;
@@ -36,25 +35,37 @@ function SubscribersPage() {
   const [unlocked, setUnlocked] = useState(false);
   const [pw, setPw] = useState("");
   const [error, setError] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const verifyFn = useServerFn(verifyAdmin);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem(STORAGE_KEY) === "1") {
-      setUnlocked(true);
-      setPw(ADMIN_PASSWORD);
-    }
+    if (typeof window === "undefined") return;
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    verifyFn({ data: { password: saved } })
+      .then(() => {
+        setPw(saved);
+        setUnlocked(true);
+      })
+      .catch(() => sessionStorage.removeItem(STORAGE_KEY));
   }, []);
 
   if (!unlocked) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-ivory p-6">
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            if (pw === ADMIN_PASSWORD) {
-              sessionStorage.setItem(STORAGE_KEY, "1");
+            setError("");
+            setVerifying(true);
+            try {
+              await verifyFn({ data: { password: pw } });
+              sessionStorage.setItem(STORAGE_KEY, pw);
               setUnlocked(true);
-            } else {
+            } catch {
               setError("Incorrect password.");
+            } finally {
+              setVerifying(false);
             }
           }}
           className="w-full max-w-sm space-y-4 bg-white border border-border/60 p-6 rounded-md"
@@ -74,9 +85,10 @@ function SubscribersPage() {
           {error && <p className="text-xs text-red-600">{error}</p>}
           <button
             type="submit"
+            disabled={verifying || !pw}
             className="w-full bg-ink text-ivory py-2 text-sm rounded hover:bg-ink/90"
           >
-            Unlock
+            {verifying ? "Verifying…" : "Unlock"}
           </button>
         </form>
       </div>
