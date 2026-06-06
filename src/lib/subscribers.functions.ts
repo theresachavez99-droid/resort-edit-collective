@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireAdmin } from "./admin-auth.server";
 
 const subscribeSchema = z.object({
   email: z
@@ -59,17 +60,8 @@ export const subscribeEmail = createServerFn({ method: "POST" })
 
 // ───────────────────────────────────────────────────────
 // Admin-only management functions
-// Gated by shared password header (matches /admin/product-library).
+// Gated by server-side ADMIN_PASSWORD (see admin-auth.server.ts).
 // ───────────────────────────────────────────────────────
-
-const ADMIN_PASSWORD =
-  process.env.ADMIN_PASSWORD || process.env.VITE_ADMIN_PASSWORD || "resortedit2026";
-
-function requireAdmin(password: string | undefined) {
-  if (!password || password !== ADMIN_PASSWORD) {
-    throw new Error("Unauthorized");
-  }
-}
 
 export const listSubscribers = createServerFn({ method: "POST" })
   .inputValidator((input) =>
