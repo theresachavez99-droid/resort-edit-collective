@@ -75,6 +75,13 @@ export function SiteHeader() {
 
         {/* Right cluster */}
         <div className="flex items-center gap-4 md:gap-6 justify-end">
+          <Link
+            to="/portofino-edit"
+            className="hidden md:inline-flex text-gold hover:text-ink transition-colors whitespace-nowrap"
+            style={navLinkStyle}
+          >
+            Shop the Edit
+          </Link>
           <a
             href="https://www.instagram.com/resort.edit"
             target="_blank"
