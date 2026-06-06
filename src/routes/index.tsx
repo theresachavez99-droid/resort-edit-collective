@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
-import { NewsletterForm } from "@/components/NewsletterForm";
 import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
 import day3Muse from "@/assets/hero-muse-portofino.jpg";
 import stillLife from "@/assets/portofino-still-life.jpg";
@@ -122,8 +121,7 @@ function Index() {
             />
           </div>
           <div className="lg:pl-2 max-w-[750px]">
-            <p className="eyebrow text-ink/55 text-[0.7rem] tracking-[0.42em]">A STYLE &amp; TRAVEL AUTHORITY</p>
-            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em] mt-3">A Style &amp; Itinerary Guide</p>
+            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">A Style &amp; Itinerary Guide</p>
             <h1 className="font-display mt-3 text-[3.4rem] sm:text-[4.2rem] lg:text-[6.2rem] xl:text-[7.4rem] leading-[0.9] tracking-[0.01em] text-ink">
               5 DAYS IN
               <br />
@@ -170,10 +168,6 @@ function Index() {
             <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 text-ink/80">
               <span className="eyebrow text-[0.92rem] tracking-[0.26em]">
                 5 Days <span className="text-gold">·</span> 15 Looks <span className="text-gold">·</span> 6 Experiences
-              </span>
-              <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
-              <span className="font-serif italic text-[1.2rem] text-ink/75">
-                Designer / Mid-Luxe / Destination Finds
               </span>
               <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
               <span className="eyebrow text-[0.82rem] tracking-[0.3em] text-gold">
@@ -244,7 +238,6 @@ function Index() {
                 <div className="text-center pt-5 px-3">
                   <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">{l.tag}</div>
                   <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] text-ink">{l.title}</h3>
-                  <p className="mt-1 font-serif italic text-[0.82rem] text-ink/55">3 pieces · Shop the Look</p>
                 </div>
                 <div className="relative aspect-[5/6] mt-4 overflow-hidden bg-muted">
                   <img src={l.image} alt={l.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
@@ -265,12 +258,6 @@ function Index() {
                 <div className="mt-6 flex flex-col divide-y divide-gold/30 border-t border-gold/30">
                   <Link to="/portofino-concierge" hash="beachclubs" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
                     <span>Reserve a beach cabana</span><span>→</span>
-                  </Link>
-                  <Link to="/portofino-concierge" hash="yachts" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
-                    <span>Book a private yacht charter</span><span>→</span>
-                  </Link>
-                  <Link to="/portofino-concierge" hash="experiences" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
-                    <span>Find a sunset restaurant</span><span>→</span>
                   </Link>
                 </div>
               </div>
@@ -352,45 +339,6 @@ function Index() {
               <span>{label}</span>
             </Link>
           ))}
-        </div>
-      </section>
-
-      {/* EMAIL CAPTURE — inline strip on dark brown */}
-      <section className="mt-24 lg:mt-32 bg-ink text-ivory">
-        <div className={`${wrap} py-14 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center`}>
-          <div>
-            <p className="eyebrow text-[0.72rem] tracking-[0.32em] text-gold">THE RESORT EDIT</p>
-            <h2 className="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl tracking-[0.04em] text-ivory leading-[1.05]">
-              Get the next destination before it drops.
-            </h2>
-            <p className="mt-4 font-serif italic text-lg text-ivory/75 max-w-xl">
-              Looks, hotels and experiences — straight to your inbox.
-            </p>
-          </div>
-          <div className="flex justify-start lg:justify-end">
-            <NewsletterForm ctaSource="home_inline_strip" variant="footer" buttonLabel="Join the Edit" />
-          </div>
-        </div>
-      </section>
-
-      {/* CONCIERGE STRIP */}
-      <section className="mt-24 lg:mt-32 bg-ink text-ivory">
-        <div className={`${wrap} py-14 lg:py-18 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 lg:gap-12 items-center`}>
-          <div>
-            <p className="eyebrow text-[0.72rem] tracking-[0.32em] text-gold">RESORT EDIT CONCIERGE</p>
-            <h2 className="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl tracking-[0.03em] leading-[1.05]">
-              Not sure which hotel is right for you?
-            </h2>
-            <p className="mt-3 font-serif italic text-lg text-ivory/75 max-w-2xl">
-              Tell us how you travel. We'll tell you exactly where to stay.
-            </p>
-          </div>
-          <Link
-            to="/portofino-concierge"
-            className="inline-flex items-center justify-center bg-gold text-ink eyebrow text-[0.78rem] tracking-[0.3em] px-10 py-5 hover:bg-ivory transition-colors whitespace-nowrap"
-          >
-            SPEAK TO THE EDIT →
-          </Link>
         </div>
       </section>
 
