@@ -193,50 +193,8 @@ function Index() {
           </div>
       </section>
 
-      {/* DESTINATION STRIP — also planning */}
-      <section className={`${wrap} mt-16 lg:mt-20`}>
-        <div className="border-t border-b border-ink/15 py-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 eyebrow text-[0.7rem] tracking-[0.3em] text-ink/70">
-          <span className="text-ink/55">ALSO PLANNING:</span>
-          {alsoPlanning.map((d, i) => (
-            <span key={d.name} className="flex items-center gap-x-4">
-              {d.slug ? (
-                <Link to="/destinations/$slug" params={{ slug: d.slug }} className="hover:text-gold transition-colors">
-                  {d.name}
-                </Link>
-              ) : (
-                <Link to="/destinations" className="hover:text-gold transition-colors">
-                  {d.name}
-                </Link>
-              )}
-              {i < alsoPlanning.length - 1 && <span className="text-gold/60">·</span>}
-            </span>
-          ))}
-          <span className="text-ink/25 mx-2">→</span>
-          <Link to="/destinations" className="text-gold hover:text-ink transition-colors">
-            ALL DESTINATIONS
-          </Link>
-        </div>
-      </section>
-
-      {/* BOOKING BAR — moved to top, immediately under destination strip */}
-      <section className="mt-6 lg:mt-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-          {ctas.map(({ label, Icon, hash }) => (
-            <Link
-              key={label}
-              to="/portofino-concierge"
-              hash={hash}
-              className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
-            >
-              <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />
-              <span>{label}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* 5-DAY CARDS */}
-      <section className={`${wrap} mt-20 lg:mt-28 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5`}>
+      <section className={`${wrap} mt-16 lg:mt-20 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5`}>
           {days.map((d) => (
             <Link
               key={d.n}
@@ -266,21 +224,15 @@ function Index() {
                   style={{ objectPosition: d.n === "5" ? "center center" : "center top", imageRendering: "auto" }}
                 />
               </div>
-              <div className="px-4 pt-5 pb-[22px] text-center flex-1 flex flex-col">
+              <div className="px-4 pt-5 text-center flex-1 flex flex-col">
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
-                <span
-                  data-route-cta={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
-                  className="mt-5 eyebrow text-[0.65rem] tracking-[0.24em] text-gold border-b border-gold/50 pb-1 self-center group-hover:text-ink group-hover:border-ink transition-colors"
-                >
-                  {d.n === "1" ? (
-                    <>
-                      Shop 10 Looks <span data-route-arrow={DAY_1_FULL_EDIT_ROUTE}>→</span>
-                    </>
-                  ) : (
-                    "Get the Look →"
-                  )}
-                </span>
               </div>
+              <span
+                data-route-cta={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
+                className="mt-5 block bg-gold text-ivory text-center eyebrow text-[0.7rem] tracking-[0.24em] py-4 group-hover:bg-ink transition-colors"
+              >
+                Shop 3 Looks <span data-route-arrow={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}>→</span>
+              </span>
             </Link>
           ))}
       </section>
