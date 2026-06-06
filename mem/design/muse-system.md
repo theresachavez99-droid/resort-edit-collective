@@ -1,15 +1,27 @@
 ---
 name: Resort Edit Muse System
-description: Five fixed recurring muses mapped to destination categories. Use the assigned muse consistently across all 10 looks on a destination page.
+description: Master Face system — one shared face identity across all five destination muses. Only hair, styling, makeup, wardrobe, and environment vary by muse. Use the assigned muse consistently across all 10 looks on a destination page.
 type: design
 ---
 # Resort Edit Muse System
 
+## Master Face (shared across ALL muses)
+Single anchor face identity used across every muse and every look on the site. Users should recognize the same Resort Edit woman adapted to different destinations — never different random models.
+
+- Face shape: oval, refined jawline, balanced proportions, elegant cheekbones, soft-but-defined features.
+- Beauty: luxury editorial, expensive aesthetic, healthy glow, sophisticated (not influencer), polished but effortless.
+- Body: toned feminine proportions, realistic, elegant posture, luxury-traveler energy.
+- Age: consistent across all generations — do not drift older or younger between looks.
+- Photography: luxury campaign quality, editorial fashion, warm natural light, cinematic composition, destination storytelling.
+
+Only vary between muses: hair color, hair styling, makeup intensity, wardrobe, environment.
+Never vary: facial proportions, facial structure, age appearance, body proportions, beauty identity.
+
 Global rules:
 - Fixed recurring muses across the site. Same muse across all 10 looks on a destination page. Use destination-assigned muse only.
-- Preserve facial consistency within a destination page (same face, age, beauty).
+- Preserve the Master Face across the entire site — same face identity in every muse, every look.
 - Editorial luxury campaign quality — not ecommerce catalog.
-- Avoid: generic AI influencer look, over-smoothed faces, catalog posing, awkward hands, inconsistent age, low-detail faces, unrealistic proportions, random face changes across looks, stiff centered poses.
+- Avoid: changing facial structure between looks, older-looking drift, generic AI influencer look, over-smoothed faces, catalog posing, awkward hands, inconsistent age, low-detail faces, unrealistic proportions, random face changes, stiff centered poses, ecommerce model energy.
 
 ## Muse 1 — Mediterranean (Portofino, Capri, Amalfi, Greece, Mallorca, Sicily, South of France)
 Rich brunette, glossy (sleek bun OR soft waves). Strong facial structure, refined symmetry, sun-kissed skin, polished but relaxed. Minimal luxury makeup, gold jewelry. Warm golden-hour light, editorial yacht campaigns. Italian Riviera wealthy-traveler energy.
