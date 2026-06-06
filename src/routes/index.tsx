@@ -105,16 +105,6 @@ const ctas = [
   { label: "View Experiences", Icon: Compass, hash: "experiences" },
 ];
 
-type DestChip = { name: string; to: "/destinations" | "/destinations/$slug"; slug?: string };
-const alsoPlanning: DestChip[] = [
-  { name: "Capri", to: "/destinations/$slug", slug: "capri" },
-  { name: "Amalfi", to: "/destinations" },
-  { name: "Mykonos", to: "/destinations" },
-  { name: "Mallorca", to: "/destinations/$slug", slug: "mallorca" },
-  { name: "Bali", to: "/destinations" },
-  { name: "St Barths", to: "/destinations" },
-];
-
 const brandChips = ["Zimmermann", "Johanna Ortiz", "SIR", "Faithfull the Brand"];
 
 function Index() {
