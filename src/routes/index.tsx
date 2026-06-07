@@ -177,10 +177,7 @@ function Index() {
             <Link
               key={d.n}
               to={d.href}
-              data-route-card={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
-              onClick={() => {
-                if (d.n === "1") console.log("Opening Day 1 route:", DAY_1_FULL_EDIT_ROUTE);
-              }}
+              data-route-card={d.n === "1" ? d.href : undefined}
               className="group bg-card border border-border/50 flex flex-col no-underline text-inherit"
             >
               <div className="text-center pt-5 px-3">
@@ -197,7 +194,7 @@ function Index() {
                   loading={d.n === "5" ? "eager" : "lazy"}
                   fetchPriority={d.n === "5" ? "high" : undefined}
                   decoding="async"
-                  data-route-image={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
+                  data-route-image={d.n === "1" ? d.href : undefined}
                   className="absolute inset-0 h-full w-full object-cover"
                   style={{ objectPosition: d.n === "5" ? "center center" : "center top", imageRendering: "auto" }}
                 />
@@ -206,10 +203,10 @@ function Index() {
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
               </div>
               <span
-                data-route-cta={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
+                data-route-cta={d.n === "1" ? d.href : undefined}
                 className="mt-5 block bg-gold text-ivory text-center eyebrow text-[0.7rem] tracking-[0.24em] py-4 group-hover:bg-ink transition-colors"
               >
-                Shop 3 Looks <span data-route-arrow={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}>→</span>
+                Shop 3 Looks <span data-route-arrow={d.n === "1" ? d.href : undefined}>→</span>
               </span>
             </Link>
           ))}
