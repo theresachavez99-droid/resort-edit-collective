@@ -252,11 +252,6 @@ function Index() {
                 <p className="mt-5 font-serif italic text-lg text-ink/85 leading-relaxed">
                   Book a cabana.<br />Sip limoncello.<br />Stay until sunset.
                 </p>
-                <div className="mt-6 flex flex-col divide-y divide-gold/30 border-t border-gold/30">
-                  <Link to="/destinations/$slug" params={{ slug: "portofino" }} hash="beachclubs" className="py-3 flex items-center justify-between eyebrow text-[0.66rem] tracking-[0.24em] text-ink hover:text-gold transition-colors">
-                    <span>Reserve a beach cabana</span><span>→</span>
-                  </Link>
-                </div>
               </div>
               <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                 <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
@@ -301,7 +296,7 @@ function Index() {
                     rel="noreferrer noopener sponsored"
                     className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"
                   >
-                    Read This Stay →
+                    Explore This Stay →
                   </a>
                 </div>
               </article>
