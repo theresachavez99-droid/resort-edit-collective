@@ -127,7 +127,6 @@ export const brandCategories: BrandCategory[] = [
       b("Kivari", "Vintage-inspired Australian romance."),
       b("Farm Rio", "Rio-energy florals & tropical optimism."),
       b("Rhode", "Linen-forward New York for hot-weather travel."),
-      b("Faithfull the Brand", "Bali archive prints, off-duty resort."),
     ],
   },
 ];
