@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-label="Madison Avenue Ring">
+<rect width="420" height="520" fill="#fbf8ef"/>
+<rect x="24" y="24" width="372" height="472" fill="#fffdf7" stroke="#d6c49a" stroke-width="2"/>
+<g transform="translate(0 30)"><circle cx="210" cy="240" r="90" fill="none" stroke="#c9a84c" stroke-width="14"/><circle cx="210" cy="240" r="90" fill="none" stroke="#8a6b1f" stroke-width="2"/><polygon points="210,128 222,150 246,154 226,170 232,196 210,182 188,196 194,170 174,154 198,150" fill="#f5f2e6" stroke="#a8801f" stroke-width="2"/></g>
+<text x="210" y="426" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#2b241c">Madison Avenue Ring</text>
+<text x="210" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" letter-spacing="3" fill="#b9995a">NORDSTROM</text>
+</svg>

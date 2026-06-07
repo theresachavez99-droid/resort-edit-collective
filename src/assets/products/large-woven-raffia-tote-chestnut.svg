@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-label="Large Woven Raffia Tote Chestnut">
+<rect width="420" height="520" fill="#fbf8ef"/>
+<rect x="24" y="24" width="372" height="472" fill="#fffdf7" stroke="#d6c49a" stroke-width="2"/>
+<g transform="translate(0 14)"><path d="M110 168 L310 168 L292 348 L128 348 Z" fill="#a06a3a" stroke="#5a3a1d" stroke-width="5"/><path d="M156 168 C156 108 264 108 264 168" fill="none" stroke="#5a3a1d" stroke-width="10" stroke-linecap="round"/><g stroke="#5a3a1d" stroke-width="2" opacity="0.7"><path d="M128 200 H292 M130 230 H290 M132 260 H288 M134 290 H286 M136 320 H284"/><path d="M150 168 V348 M190 168 V348 M230 168 V348 M270 168 V348"/></g></g>
+<text x="210" y="426" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#2b241c">Large Woven Raffia Tote</text>
+<text x="210" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" letter-spacing="3" fill="#b9995a">CHESTNUT BROWN</text>
+</svg>

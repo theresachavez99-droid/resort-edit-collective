@@ -27,6 +27,7 @@ import {
   alternativesFor,
   type AlternativeProduct,
 } from "@/data/lookAlternatives";
+import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
 
 type Search = { tier: TierSlug };
 type DaySlug = Look["daySlug"];
@@ -77,6 +78,7 @@ function ViewFullLookPage() {
   );
   const editorial = lookEditorialFor(day, look);
   const alternatives = alternativesFor(day, look);
+  const override = lookOverrideFor(day, look as LookSlug);
 
   const flatIndex = lookbook.findIndex((l) => l.daySlug === day && l.lookSlug === look);
   const prevLook = flatIndex > 0 ? lookbook[flatIndex - 1] : null;
@@ -232,13 +234,39 @@ function ViewFullLookPage() {
             </div>
 
             <div id="full-look-grid" className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8">
-              {LOOK_CATEGORY_ORDER.map((cat) => (
-                <ProductCategoryCard key={cat} category={cat} product={products[cat]} />
-              ))}
+              {override
+                ? override.main.map((item) => (
+                    <OverrideProductCard key={item.brand + item.title} item={item} />
+                  ))
+                : LOOK_CATEGORY_ORDER.map((cat) => (
+                    <ProductCategoryCard key={cat} category={cat} product={products[cat]} />
+                  ))}
             </div>
           </aside>
         </div>
       </section>
+
+      {/* ───────────────────────── THE DETAILS (beauty / finishing) ───────────────────────── */}
+      {override?.details && (
+        <section className="mx-auto max-w-[1100px] px-4 sm:px-8 lg:px-10 mt-20 md:mt-24">
+          <div className="border-t border-ink/15 pt-10">
+            <p className="eyebrow tracking-[0.34em] text-[0.6rem] text-gold">{override.details.title.toUpperCase()}</p>
+            <h2 className="font-display text-[1.35rem] md:text-[1.7rem] tracking-[0.12em] text-ink uppercase mt-2">
+              {override.details.title}
+            </h2>
+            {override.details.subtitle && (
+              <p className="font-serif italic text-[0.95rem] text-ink/60 mt-2 max-w-xl">
+                {override.details.subtitle}
+              </p>
+            )}
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-8">
+              {override.details.items.map((item) => (
+                <OverrideProductCard key={item.brand + item.title} item={item} subtle />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ───────────────────────── EDITOR'S ALTERNATIVES ───────────────────────── */}
       {alternatives.length > 0 && (
@@ -426,6 +454,53 @@ function ProductCategoryCard({
           }
           className="mt-auto pt-5 eyebrow tracking-[0.24em] text-[0.58rem] text-ink border-b border-gold hover:text-gold transition-colors pb-0.5"
           aria-label={`Shop ${product.brand} ${product.title} (opens in new tab)`}
+        >
+          SHOP PIECE →
+        </a>
+      </div>
+    </article>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// Override card — flexible slot for looks that don't fit the
+// rigid 7-category schema (multiple jewelry, beauty details, etc.)
+// ──────────────────────────────────────────────────────────────
+function OverrideProductCard({ item, subtle = false }: { item: OverrideItem; subtle?: boolean }) {
+  return (
+    <article className={
+      "group flex h-full flex-col border bg-ivory transition-colors " +
+      (subtle ? "border-ink/10 hover:border-gold/40" : "border-ink/10 hover:border-gold/60")
+    }>
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        onClick={() => trackOutbound({ brand: item.brand, item: item.title, href: item.url })}
+        className="relative aspect-[4/5] w-full bg-cream/30 overflow-hidden flex items-center justify-center border-b border-ink/10"
+      >
+        <img
+          src={item.image}
+          alt={`${item.brand} ${item.title}`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-contain p-6 md:p-8 transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+      </a>
+      <div className="flex flex-1 flex-col items-center px-4 py-5 text-center">
+        <p className="eyebrow tracking-[0.28em] text-[0.56rem] text-gold">{item.slotLabel}</p>
+        <p className="eyebrow tracking-[0.18em] text-[0.68rem] text-ink uppercase mt-2 leading-snug">
+          {item.brand}
+        </p>
+        <p className="font-serif italic text-[0.94rem] text-ink/75 leading-snug mt-1.5 max-w-[15rem]">
+          {item.title}
+        </p>
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          onClick={() => trackOutbound({ brand: item.brand, item: item.title, href: item.url })}
+          className="mt-auto pt-5 eyebrow tracking-[0.24em] text-[0.58rem] text-ink border-b border-gold hover:text-gold transition-colors pb-0.5"
+          aria-label={`Shop ${item.brand} ${item.title} (opens in new tab)`}
         >
           SHOP PIECE →
         </a>
