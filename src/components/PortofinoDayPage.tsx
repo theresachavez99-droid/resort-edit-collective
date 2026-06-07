@@ -298,12 +298,13 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
       {/* LOOK MODULES */}
       <section className="bg-ivory pt-16 md:pt-20 pb-24 md:pb-32">
         <div className="mx-auto max-w-7xl px-6 space-y-32 md:space-y-40">
-          {[0, 1, 2].map((i) => (
+          {[0, 1, 2, 3, 4].map((i) => (
             <LookModule
               key={i}
               look={look}
-              index={i as 0 | 1 | 2}
+              index={i as 0 | 1 | 2 | 3 | 4}
               image={meta.images[i]}
+              isPlaceholderImage={meta.placeholderSlots?.includes(i) ?? false}
               title={meta.lookTitles[i]}
               mood={meta.lookMoods[i]}
               dayLabel={meta.dayKey}
@@ -355,6 +356,7 @@ function LookModule({
   look,
   index,
   image,
+  isPlaceholderImage,
   title,
   mood,
   dayLabel,
@@ -363,8 +365,9 @@ function LookModule({
   referencePos,
 }: {
   look: Look;
-  index: 0 | 1 | 2;
+  index: 0 | 1 | 2 | 3 | 4;
   image: string;
+  isPlaceholderImage?: boolean;
   title: string;
   mood: string;
   dayLabel: string;
@@ -376,20 +379,22 @@ function LookModule({
   const liveItems = look.shop.filter(
     (i) => i.not_available || resolveProductLink(i) !== null,
   );
-  const lookNum = (index + 1) as 1 | 2 | 3;
+  const lookNum = (index + 1) as 1 | 2 | 3 | 4 | 5;
   const tagged = liveItems.filter((i) => i.lookIndex === lookNum);
 
-  // Fallback: price-tier split for any day not yet explicitly tagged.
+  // Fallback: price-tier split across 5 looks for any day not yet explicitly tagged.
   const parsePrice = (p: string) => Number(p.replace(/[^0-9.]/g, "")) || 0;
   const untagged = liveItems.filter((i) => !i.lookIndex);
   const sortedDesc = [...untagged].sort(
     (a, b) => parsePrice(b.price) - parsePrice(a.price),
   );
-  const third = Math.ceil(sortedDesc.length / 3) || 1;
+  const fifth = Math.ceil(sortedDesc.length / 5) || 1;
   const fallback: ShopItem[][] = [
-    sortedDesc.slice(0, third),
-    sortedDesc.slice(third, third * 2),
-    sortedDesc.slice(third * 2),
+    sortedDesc.slice(0, fifth),
+    sortedDesc.slice(fifth, fifth * 2),
+    sortedDesc.slice(fifth * 2, fifth * 3),
+    sortedDesc.slice(fifth * 3, fifth * 4),
+    sortedDesc.slice(fifth * 4),
   ];
   const items: ShopItem[] = tagged.length ? tagged : (fallback[index] ?? []);
 
@@ -397,7 +402,7 @@ function LookModule({
     <article>
       <header className="mb-8 md:mb-10">
         <span className="eyebrow text-gold tracking-[0.4em] text-[0.65rem]">
-          {dayLabel.toUpperCase()} · LOOK {lookNum}
+          {dayLabel.toUpperCase()} · LOOK {lookNum} / 5
         </span>
         <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] mt-4">
           {title}
