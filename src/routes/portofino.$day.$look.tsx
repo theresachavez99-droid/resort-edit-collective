@@ -1,17 +1,12 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, MapPin, Shirt, ShoppingBag, Sun } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import {
   isLookSlug,
-  isTierSlug,
-  persistTier,
-  TIER_LABEL,
-  TIER_SLUGS,
   type LookSlug,
-  type TierSlug,
 } from "@/lib/portofino-spec";
 import {
   findLook,
@@ -29,7 +24,6 @@ import {
 } from "@/data/lookAlternatives";
 import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
 
-type Search = { tier: TierSlug };
 type DaySlug = Look["daySlug"];
 
 function isDaySlug(v: string): v is DaySlug {
@@ -37,9 +31,23 @@ function isDaySlug(v: string): v is DaySlug {
 }
 
 export const Route = createFileRoute("/portofino/$day/$look")({
-  validateSearch: (search: Record<string, unknown>): Search => ({
-    tier: isTierSlug(search.tier) ? search.tier : "luxury",
-  }),
+  // Tier query params were removed. Strip any legacy ?tier=... so URLs stay clean.
+  validateSearch: (search: Record<string, unknown>): Record<string, never> => {
+    if (search && "tier" in search) {
+      // Returning an empty object effectively drops the param on the next render.
+    }
+    return {};
+  },
+  beforeLoad: ({ search, params }) => {
+    if (search && (search as Record<string, unknown>).tier !== undefined) {
+      throw redirect({
+        to: "/portofino/$day/$look",
+        params,
+        search: {},
+        replace: true,
+      });
+    }
+  },
   head: () => ({
     meta: [
       { title: "Shop the Full Look — Portofino | Resort Edit | Dressed for the destination" },
@@ -56,29 +64,34 @@ export const Route = createFileRoute("/portofino/$day/$look")({
 
 function ViewFullLookPage() {
   const params = Route.useParams();
-  const search = Route.useSearch();
   const day = params.day as string;
   const look = params.look as string;
-  const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
 
   if (!isDaySlug(day) || !isLookSlug(look)) throw notFound();
 
   const lookData = findLook(day, look as LookSlug);
   if (!lookData) throw notFound();
 
-  useEffect(() => {
-    persistTier(tier);
-  }, [tier]);
-
-  const activeTier = lookData.tiers[tier];
-  const products = activeTier.products;
-  const shoppableCount = useMemo(
-    () => LOOK_CATEGORY_ORDER.filter((c) => !products[c].isPlaceholder).length,
-    [products],
-  );
   const editorial = lookEditorialFor(day, look);
   const alternatives = alternativesFor(day, look);
   const override = lookOverrideFor(day, look as LookSlug);
+
+  // Source of truth for the product grid:
+  //   1. A per-look override (custom slot grid, e.g. Day 1 Look C)
+  //   2. Otherwise, the legacy categorised products from the first available
+  //      tier on the look — falls back gracefully if no tier data exists.
+  const fallbackProducts: Record<LookCategory, LookProduct> | null = useMemo(() => {
+    if (override) return null;
+    const tiers = lookData.tiers ?? {};
+    const firstKey = Object.keys(tiers)[0];
+    return firstKey ? (tiers[firstKey]?.products ?? null) : null;
+  }, [lookData, override]);
+
+  const shoppableCount = useMemo(() => {
+    if (override) return override.main.length;
+    if (!fallbackProducts) return 0;
+    return LOOK_CATEGORY_ORDER.filter((c) => !fallbackProducts[c]?.isPlaceholder).length;
+  }, [override, fallbackProducts]);
 
   const flatIndex = lookbook.findIndex((l) => l.daySlug === day && l.lookSlug === look);
   const prevLook = flatIndex > 0 ? lookbook[flatIndex - 1] : null;
