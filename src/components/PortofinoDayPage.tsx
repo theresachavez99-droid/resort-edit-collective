@@ -414,13 +414,12 @@ function LookModule({
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 lg:gap-12 items-start">
         {/* LEFT 40% — model image */}
         <div className="lg:col-span-4">
-          <div className="relative overflow-hidden bg-muted aspect-[3/4] lg:sticky lg:top-6">
+          <div className="relative overflow-hidden bg-cream aspect-[3/4] lg:sticky lg:top-6">
             <img
               src={image}
               alt={`${dayLabel} ${title}`}
               loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: "center top" }}
+              className="absolute inset-0 h-full w-full object-contain"
             />
             {isPlaceholderImage && (
               <span className="absolute top-3 left-3 eyebrow text-[0.55rem] tracking-[0.32em] text-ivory bg-ink/75 px-2.5 py-1 border border-gold/40">
@@ -552,12 +551,11 @@ function EditorialReferenceCard({
     <section className="bg-cream border-y border-border/40 py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-10 md:gap-14 items-center">
-          <figure className="relative aspect-[4/5] overflow-hidden bg-muted">
+          <figure className="relative aspect-[4/5] overflow-hidden bg-cream">
             <img
               src={image}
               alt={`${dayKey} editorial reference`}
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: imagePos }}
+              className="absolute inset-0 h-full w-full object-contain"
             />
           </figure>
           <div>
