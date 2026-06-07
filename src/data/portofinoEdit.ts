@@ -1,5 +1,6 @@
 import { portofinoLooks, type ShopItem } from "./portofino";
-import d1a from "@/assets/generated/resort-edit/edit-d1-a-detail-thumb.jpg";
+import d1aAsset from "@/assets/generated/resort-edit/d1-majolica-yacht.png.asset.json";
+const d1a = d1aAsset.url;
 import d1b from "@/assets/generated/resort-edit/edit-d1-b-detail-thumb.jpg";
 import d1cAsset from "@/assets/generated/resort-edit/edit-d1-c-hero.png.asset.json";
 const d1c = d1cAsset.url;
