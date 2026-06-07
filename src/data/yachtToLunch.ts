@@ -38,12 +38,7 @@ export type YachtLook = {
 
 import look1Muse from "@/assets/looks/look-1-muse.jpg";
 import look2Muse from "@/assets/looks/look-2-muse.jpg";
-import look3Muse from "@/assets/looks/look-3-muse.jpg";
 import look4Muse from "@/assets/looks/look-4-muse.jpg";
-import look5Muse from "@/assets/looks/look-5-muse.jpg";
-import look6Muse from "@/assets/looks/look-6-muse.jpg";
-import look7Muse from "@/assets/looks/look-7-muse.jpg";
-import look8Muse from "@/assets/looks/look-8-muse.jpg";
 import look9Muse from "@/assets/looks/look-9-muse.jpg";
 import look10Muse from "@/assets/looks/look-10-muse.jpg";
 
