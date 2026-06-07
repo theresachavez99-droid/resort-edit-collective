@@ -401,7 +401,7 @@ function LookModule({
     <article>
       <header className="mb-8 md:mb-10">
         <span className="eyebrow text-gold tracking-[0.4em] text-[0.65rem]">
-          {dayLabel.toUpperCase()} · LOOK {lookLetter} / C
+          {dayLabel.toUpperCase()} · LOOK {lookLetter}
         </span>
         <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] mt-4">
           {title}
