@@ -380,6 +380,7 @@ function LookModule({
     (i) => i.not_available || resolveProductLink(i) !== null,
   );
   const lookNum = (index + 1) as 1 | 2 | 3;
+  const lookLetter = (["A", "B", "C"] as const)[index];
   const tagged = liveItems.filter((i) => i.lookIndex === lookNum);
 
   // Fallback: price-tier split across 3 looks for any day not yet explicitly tagged.
@@ -400,7 +401,7 @@ function LookModule({
     <article>
       <header className="mb-8 md:mb-10">
         <span className="eyebrow text-gold tracking-[0.4em] text-[0.65rem]">
-          {dayLabel.toUpperCase()} · LOOK {lookNum} / 3
+          {dayLabel.toUpperCase()} · LOOK {lookLetter} / C
         </span>
         <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] mt-4">
           {title}
