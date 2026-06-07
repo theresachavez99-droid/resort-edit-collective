@@ -7,14 +7,23 @@ export function SiteFooter() {
   return (
     <footer id="newsletter" className="bg-ink text-ivory mt-32">
       <div className="mx-auto max-w-5xl px-6 pt-9 md:pt-12 pb-9 md:pb-11 text-center flex flex-col items-center">
-        <img
-          src={logo}
-          alt="Resort Edit"
-          loading="lazy"
-          width={1024}
-          height={1024}
-          className="w-[320px] max-w-full h-auto select-none mb-2"
-        />
+        <div className="relative inline-block mb-2">
+          <img
+            src={logo}
+            alt="Resort Edit™"
+            loading="lazy"
+            width={1024}
+            height={1024}
+            className="w-[320px] max-w-full h-auto select-none"
+          />
+          <span
+            aria-hidden="true"
+            className="absolute text-ivory/80 font-sans font-light pointer-events-none"
+            style={{ top: "32%", right: "-0.65rem", fontSize: "0.7rem", letterSpacing: "0.05em" }}
+          >
+            ™
+          </span>
+        </div>
         <h2 className="mt-6 font-display text-3xl md:text-5xl tracking-wide text-ivory">
           The Next Edit
         </h2>
