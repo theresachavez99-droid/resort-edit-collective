@@ -8,7 +8,7 @@ import referenceAsset from "@/assets/yacht-to-lunch-reference.asset.json";
 import { trackOutbound } from "@/lib/utils";
 
 const REFERENCE_URL = referenceAsset.url;
-const PAGE_TITLE = "Yacht Day & Harbour Aperitivo — Portofino | Resort Edit";
+const PAGE_TITLE = "Yacht Day & Harbour Aperitivo — Portofino | Resort Edit | Dressed for the destination";
 const PAGE_DESC =
   "Ten complete looks for a yacht day on the Italian Riviera: open water, tan lines, hidden coves, and harbour aperitivo.";
 

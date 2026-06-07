@@ -53,9 +53,9 @@ export const Route = createFileRoute("/portofino")({
   },
   head: () => ({
     meta: [
-      { title: "5 Days in Portofino — A Style & Itinerary Guide | Resort Edit" },
+      { title: "5 Days in Portofino — A Style & Itinerary Guide | Resort Edit | Dressed for the destination" },
       { name: "description", content: "Five complete resort looks and a five-day itinerary for Portofino — yacht days, beach cabanas, sunset dinners and quiet harbor mornings." },
-      { property: "og:title", content: "5 Days in Portofino — Resort Edit" },
+      { property: "og:title", content: "5 Days in Portofino | Resort Edit | Dressed for the destination" },
       { property: "og:description", content: "A luxury style and travel guide to the Italian Riviera." },
       { property: "og:image", content: absoluteUrl(portofinoImg) },
       { property: "og:url", content: absoluteUrl("/portofino") },

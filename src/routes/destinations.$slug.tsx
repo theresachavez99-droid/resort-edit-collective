@@ -80,12 +80,12 @@ export const Route = createFileRoute("/destinations/$slug")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.destination;
-    if (!d) return { meta: [{ title: "Destination — Resort Edit" }] };
+    if (!d) return { meta: [{ title: "Destination | Resort Edit | Dressed for the destination" }] };
     return {
       meta: [
-        { title: `${d.name} — Resort Edit` },
+        { title: `${d.name} | Resort Edit | Dressed for the destination` },
         { name: "description", content: `${d.name}, ${d.country}: ${d.tagline}` },
-        { property: "og:title", content: `${d.name} — Resort Edit` },
+        { property: "og:title", content: `${d.name} | Resort Edit | Dressed for the destination` },
         { property: "og:description", content: d.tagline },
         { property: "og:image", content: absoluteUrl(d.image) },
         { property: "og:url", content: absoluteUrl(`/destinations/${d.slug}`) },

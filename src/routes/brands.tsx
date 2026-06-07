@@ -5,13 +5,13 @@ import { absoluteUrl } from "@/lib/site";
 export const Route = createFileRoute("/brands")({
   head: () => ({
     meta: [
-      { title: "Brands We Love — Resort Edit" },
+      { title: "Brands We Love | Resort Edit | Dressed for the destination" },
       {
         name: "description",
         content:
           "The international resort houses, swim ateliers, and destination labels behind every Resort Edit look — Italian, Greek, Iberian, Latin American, and Australian.",
       },
-      { property: "og:title", content: "Brands We Love — Resort Edit" },
+      { property: "og:title", content: "Brands We Love | Resort Edit | Dressed for the destination" },
       {
         property: "og:description",
         content:
