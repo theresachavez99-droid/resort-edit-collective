@@ -26,14 +26,13 @@ const occasions = [
   { label: "Excursions", note: "Cliff walks, market days, boat hops." },
 ] as const;
 
-const collections = [
-  { label: "Luxury", note: "The Row, Khaite, Zimmermann." },
-  { label: "Mid-Luxe", note: "Faithfull, Posse, Sir." },
-  { label: "Destination Finds", note: "Riviera, Beach Club, Island, Après — curated to where you're going." },
-] as const;
+const LIVE_SLUGS = ["portofino", "mallorca"] as const;
+const COMING_SOON = ["Capri", "St. Tropez", "Ibiza", "Tulum"] as const;
 
 function ResortEditsPage() {
-  const featured = destinations.slice(0, 6);
+  const featured = LIVE_SLUGS
+    .map((slug) => destinations.find((d) => d.slug === slug)!)
+    .filter(Boolean);
 
   return (
     <div className="bg-ivory">
@@ -57,7 +56,7 @@ function ResortEditsPage() {
           <h2 className="font-display text-2xl md:text-3xl tracking-wide">By Destination</h2>
           <Link to="/destinations" className="eyebrow text-gold hover:text-ink">All destinations →</Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-14 max-w-[1100px] mx-auto">
           {featured.map((d) => (
             <DestinationLink key={d.slug} d={d} className="group block">
               <div className="relative overflow-hidden bg-muted aspect-[4/5]">
@@ -76,6 +75,23 @@ function ResortEditsPage() {
               <p className="font-serif italic text-ink/70 mt-4">{d.tagline}</p>
             </DestinationLink>
           ))}
+        </div>
+        <div className="mt-16 text-center">
+          <div className="flex items-center gap-4 justify-center mb-5">
+            <div className="h-px w-12 bg-gold/50" />
+            <h3 className="eyebrow text-gold tracking-[0.3em]">Coming Soon</h3>
+            <div className="h-px w-12 bg-gold/50" />
+          </div>
+          <ul className="flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
+            {COMING_SOON.map((name) => (
+              <li
+                key={name}
+                className="font-serif text-sm md:text-base text-ink/75 border border-ink/15 rounded-full px-5 py-2 bg-ivory/60"
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -100,30 +116,6 @@ function ResortEditsPage() {
               </Link>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* By Collection */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="eyebrow text-gold">By Collection</span>
-          <h2 className="font-display text-3xl md:text-5xl tracking-wide mt-4">Curated Price Points</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {collections.map((c) => (
-            <Link
-              key={c.label}
-              to="/brands"
-              className="group border border-border/60 bg-ivory p-10 hover:border-gold transition-colors"
-            >
-              <span className="eyebrow text-gold">Collection</span>
-              <h3 className="font-display text-3xl tracking-wide mt-3 text-ink group-hover:text-gold transition-colors">
-                {c.label}
-              </h3>
-              <p className="mt-4 font-serif italic text-ink/70">{c.note}</p>
-              <span className="mt-6 inline-block eyebrow text-ink/50 group-hover:text-gold">Browse →</span>
-            </Link>
-          ))}
         </div>
       </section>
 
