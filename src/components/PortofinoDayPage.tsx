@@ -209,7 +209,7 @@ const hotels = [
 
 export function getPortofinoDayHead(slug: DaySlug) {
   const meta = DAY_META[slug];
-  const title = `${meta.title} — 5 Days in Portofino | Resort Edit`;
+  const title = `${meta.title} — 5 Days in Portofino | Resort Edit | Dressed for the destination`;
   const description = meta.caption;
   const url = DAY_PATHS[slug];
   return {

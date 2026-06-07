@@ -7,7 +7,7 @@ export const Route = createFileRoute("/about")({
     meta: [
       { title: "About | Resort Edit | Dressed for the destination" },
       { name: "description", content: "Resort Edit is a luxury editorial publication for travel and fashion — curated for the sophisticated, worldly woman." },
-      { property: "og:title", content: "About Resort Edit" },
+      { property: "og:title", content: "About | Resort Edit | Dressed for the destination" },
       { property: "og:description", content: "A luxury digital publication for travel and fashion." },
       { property: "og:url", content: absoluteUrl("/about") },
     ],

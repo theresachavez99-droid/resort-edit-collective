@@ -25,9 +25,9 @@ const DAY_1_FULL_EDIT_ROUTE = "/destinations/portofino/day-1-yacht-harbour-aperi
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Resort Edit — 5 Days in Portofino, La Dolce Vita" },
+      { title: "Resort Edit | Dressed for the destination — 5 Days in Portofino, La Dolce Vita" },
       { name: "description", content: "A luxury style and itinerary guide to Portofino — five days, five looks, hotels, beach clubs and experiences across price points." },
-      { property: "og:title", content: "Resort Edit — 5 Days in Portofino" },
+      { property: "og:title", content: "Resort Edit | Dressed for the destination — 5 Days in Portofino" },
       { property: "og:description", content: "Luxury labels. Riviera finds. Resort style across price points." },
       { property: "og:image", content: absoluteUrl(heroMuse) },
       { property: "og:url", content: SITE_URL },
