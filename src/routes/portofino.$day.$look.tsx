@@ -82,7 +82,7 @@ function ViewFullLookPage() {
   //      tier on the look — falls back gracefully if no tier data exists.
   const fallbackProducts: Record<LookCategory, LookProduct> | null = useMemo(() => {
     if (override) return null;
-    const tiers = lookData.tiers ?? {};
+    const tiers = (lookData.tiers ?? {}) as Record<string, { products: Record<LookCategory, LookProduct> } | undefined>;
     const firstKey = Object.keys(tiers)[0];
     return firstKey ? (tiers[firstKey]?.products ?? null) : null;
   }, [lookData, override]);
@@ -108,7 +108,7 @@ function ViewFullLookPage() {
               Home
             </Link>
             <ChevronRight className="w-3 h-3 text-ink/30" />
-            <Link to="/portofino" search={{ tier }} className="hover:text-gold transition-colors">
+            <Link to="/portofino" className="hover:text-gold transition-colors">
               5 Days in Portofino
             </Link>
             <ChevronRight className="w-3 h-3 text-ink/30" />
@@ -121,7 +121,6 @@ function ViewFullLookPage() {
               <Link
                 to="/portofino/$day/$look"
                 params={{ day: prevLook.daySlug, look: prevLook.lookSlug }}
-                search={{ tier }}
                 className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
               >
                 <ChevronLeft className="w-3.5 h-3.5" /> Prev Look
@@ -136,7 +135,6 @@ function ViewFullLookPage() {
               <Link
                 to="/portofino/$day/$look"
                 params={{ day: nextLook.daySlug, look: nextLook.lookSlug }}
-                search={{ tier }}
                 className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
               >
                 Next Look <ChevronRight className="w-3.5 h-3.5" />
@@ -216,33 +214,8 @@ function ViewFullLookPage() {
                   Complete the Look
                 </h2>
                 <p className="font-serif text-[0.95rem] text-ink/55 mt-2">
-                  {shoppableCount} sourced pieces · {TIER_LABEL[tier]} · {lookData.destination}
+                  {shoppableCount} sourced pieces · {lookData.destination}
                 </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="eyebrow tracking-[0.32em] text-[0.58rem] text-ink/45">TIER</span>
-                <div className="inline-flex border border-ink/15 bg-ivory">
-                {TIER_SLUGS.map((t, i) => {
-                  const active = t === tier;
-                  return (
-                    <Link
-                      key={t}
-                      to="/portofino/$day/$look"
-                      params={{ day, look }}
-                      search={{ tier: t }}
-                      replace
-                      className={
-                        "px-3.5 py-2 eyebrow tracking-[0.24em] text-[0.56rem] transition-colors " +
-                        (i > 0 ? "border-l border-ink/15 " : "") +
-                        (active ? "bg-gold text-ivory" : "text-ink/45 hover:text-ink")
-                      }
-                    >
-                      {TIER_LABEL[t].toUpperCase()}
-                    </Link>
-                  );
-                })}
-                </div>
               </div>
             </div>
 
@@ -251,9 +224,11 @@ function ViewFullLookPage() {
                 ? override.main.map((item) => (
                     <OverrideProductCard key={item.brand + item.title} item={item} />
                   ))
-                : LOOK_CATEGORY_ORDER.map((cat) => (
-                    <ProductCategoryCard key={cat} category={cat} product={products[cat]} />
-                  ))}
+                : fallbackProducts
+                  ? LOOK_CATEGORY_ORDER.map((cat) => (
+                      <ProductCategoryCard key={cat} category={cat} product={fallbackProducts[cat]} />
+                    ))
+                  : null}
             </div>
           </aside>
         </div>
