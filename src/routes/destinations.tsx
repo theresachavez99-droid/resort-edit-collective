@@ -39,31 +39,24 @@ const editsBySlug: Record<string, number> = {
   phuket: 15,
 };
 
-const FEATURED_SLUGS = ["portofino", "phuket"] as const;
+const FEATURED_SLUGS = ["portofino", "mallorca"] as const;
 
 const COMING_SOON = [
   "Cannes",
-  "Mallorca",
+  "Phuket",
   "St. Barths",
   "Nantucket",
   "Capri",
   "Ibiza",
 ] as const;
 
-type FilterKey = "All" | "Italian Riviera" | "Beach Clubs" | "Island Escapes" | "Mediterranean" | "Tropical";
+type FilterKey = "All" | "Italian Riviera" | "Mediterranean";
 
-const FILTERS: FilterKey[] = [
-  "All",
-  "Italian Riviera",
-  "Beach Clubs",
-  "Island Escapes",
-  "Mediterranean",
-  "Tropical",
-];
+const FILTERS: FilterKey[] = ["All", "Italian Riviera", "Mediterranean"];
 
 const filterTagsBySlug: Record<string, FilterKey[]> = {
   portofino: ["Italian Riviera", "Mediterranean"],
-  phuket: ["Island Escapes", "Tropical"],
+  mallorca: ["Mediterranean"],
 };
 
 function DestinationsPage() {
@@ -107,12 +100,6 @@ function DestinationsPage() {
                 className="eyebrow bg-ink text-ivory px-6 py-3.5 rounded-md hover:bg-gold hover:text-ink transition-colors"
               >
                 Explore Resort Edits →
-              </a>
-              <a
-                href="#destinations"
-                className="eyebrow border border-ink/30 text-ink px-6 py-3.5 rounded-md hover:border-gold hover:text-gold transition-colors"
-              >
-                Shop by Destination
               </a>
             </div>
           </div>
