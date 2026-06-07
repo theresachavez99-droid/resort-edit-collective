@@ -13,14 +13,14 @@ export const Route = createFileRoute("/brands/$slug")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.brand.name} — Resort Edit` },
+          { title: `${loaderData.brand.name} | Resort Edit | Dressed for the destination` },
           {
             name: "description",
             content:
               loaderData.brand.blurb ??
               `Shop ${loaderData.brand.name} on Resort Edit — a curated ${loaderData.category.toLowerCase()} favorite.`,
           },
-          { property: "og:title", content: `${loaderData.brand.name} — Resort Edit` },
+          { property: "og:title", content: `${loaderData.brand.name} | Resort Edit | Dressed for the destination` },
           { property: "og:url", content: absoluteUrl(`/brands/${loaderData.brand.slug}`) },
         ]
       : [],

@@ -8,9 +8,9 @@ import heroCannes from "@/assets/hero-muse-cannes.jpg";
 export const Route = createFileRoute("/destinations")({
   head: () => ({
     meta: [
-      { title: "Destinations — Resort Edit" },
+      { title: "Destinations | Resort Edit | Dressed for the destination" },
       { name: "description", content: "An interactive atlas of curated escapes — from Portofino and Capri to Tulum and Phuket. Luxury travel guides for the worldly woman." },
-      { property: "og:title", content: "Destinations — Resort Edit" },
+      { property: "og:title", content: "Destinations | Resort Edit | Dressed for the destination" },
       { property: "og:description", content: "An interactive atlas of editorial travel guides from the Mediterranean to the tropics." },
       { property: "og:url", content: absoluteUrl("/destinations") },
     ],

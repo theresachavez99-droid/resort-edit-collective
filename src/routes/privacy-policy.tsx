@@ -4,9 +4,9 @@ import { absoluteUrl } from "@/lib/site";
 export const Route = createFileRoute("/privacy-policy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — Resort Edit" },
+      { title: "Privacy Policy | Resort Edit | Dressed for the destination" },
       { name: "description", content: "How Resort Edit collects, uses, and protects your information, including newsletter signups, affiliate links, cookies, and your rights under GDPR and CCPA." },
-      { property: "og:title", content: "Privacy Policy — Resort Edit" },
+      { property: "og:title", content: "Privacy Policy | Resort Edit | Dressed for the destination" },
       { property: "og:description", content: "How Resort Edit collects, uses, and protects your information." },
       { property: "og:url", content: absoluteUrl("/privacy-policy") },
     ],

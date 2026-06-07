@@ -6,9 +6,9 @@ import { absoluteUrl } from "@/lib/site";
 export const Route = createFileRoute("/resort-edits")({
   head: () => ({
     meta: [
-      { title: "Resort Edits — Curated Vacation Style | Resort Edit" },
+      { title: "Resort Edits — Curated Vacation Style | Resort Edit | Dressed for the destination" },
       { name: "description", content: "Curated vacation style guides, packing edits, and shoppable looks — browse by destination, occasion, or collection." },
-      { property: "og:title", content: "Resort Edits — Resort Edit" },
+      { property: "og:title", content: "Resort Edits | Resort Edit | Dressed for the destination" },
       { property: "og:description", content: "Curated vacation style guides, packing edits, and shoppable looks." },
       { property: "og:url", content: absoluteUrl("/resort-edits") },
     ],

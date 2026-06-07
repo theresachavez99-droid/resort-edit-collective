@@ -41,7 +41,7 @@ export const Route = createFileRoute("/portofino/$day/$look")({
   }),
   head: () => ({
     meta: [
-      { title: "Shop the Full Look — Portofino · Resort Edit" },
+      { title: "Shop the Full Look — Portofino | Resort Edit | Dressed for the destination" },
       {
         name: "description",
         content:

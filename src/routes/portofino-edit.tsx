@@ -22,13 +22,13 @@ import { absoluteUrl } from "@/lib/site";
 export const Route = createFileRoute("/portofino-edit")({
   head: () => ({
     meta: [
-      { title: "Portofino Resort Edit — Across Price Points" },
+      { title: "Portofino Resort Edit — Across Price Points | Resort Edit | Dressed for the destination" },
       {
         name: "description",
         content:
           "One destination, three style directions per day — print forward, quiet luxury, texture forward — across designer, mid-luxe, and accessible tiers.",
       },
-      { property: "og:title", content: "Portofino Resort Edit — Across Price Points" },
+      { property: "og:title", content: "Portofino Resort Edit — Across Price Points | Resort Edit | Dressed for the destination" },
       {
         property: "og:description",
         content:
