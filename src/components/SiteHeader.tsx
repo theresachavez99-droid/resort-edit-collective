@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Menu, X } from "lucide-react";
 import { useState } from "react";
-import logoMark from "@/assets/resort-edit-mark.png";
 
 const nav = [
   { to: "/destinations", label: "Destinations" },
@@ -46,14 +45,14 @@ export function SiteHeader() {
         {/* Logo */}
         <Link
           to="/"
+          aria-label="Resort Edit — home"
           className="flex items-center leading-none justify-center md:justify-start"
         >
-          <img
-            src={logoMark}
-            alt="Resort Edit"
-            style={{ width: "var(--nav-logo-w)", height: "auto", maxWidth: "none", objectFit: "contain", opacity: 1 }}
-            className="logo-nav block [--nav-logo-w:200px] md:[--nav-logo-w:240px] lg:[--nav-logo-w:280px] [filter:contrast(1.08)]"
-          />
+          <span
+            className="font-display text-ink tracking-[0.18em] uppercase text-[1.05rem] md:text-[1.2rem] lg:text-[1.3rem] leading-none select-none"
+          >
+            Resort Edit
+          </span>
         </Link>
 
         {/* Desktop nav (centered between logo and CTA) */}
