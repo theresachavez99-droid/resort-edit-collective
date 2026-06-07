@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-label="MC2 Saint Barth Amalia Degrade Trousers">
+<rect width="420" height="520" fill="#fbf8ef"/>
+<rect x="24" y="24" width="372" height="472" fill="#fffdf7" stroke="#d6c49a" stroke-width="2"/>
+<defs><linearGradient id="amalia" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e9d6bf"/><stop offset="55%" stop-color="#a87a52"/><stop offset="100%" stop-color="#4a2e1c"/></linearGradient></defs>
+<g transform="translate(0 6)"><path d="M170 96 H250 L262 142 L256 360 L222 360 L212 200 L202 360 L168 360 L160 142 Z" fill="url(#amalia)" stroke="#3b2415" stroke-width="3"/><path d="M170 132 H250" stroke="#3b2415" stroke-width="2"/></g>
+<text x="210" y="426" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#2b241c">Amalia Degradé Trousers</text>
+<text x="210" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" letter-spacing="3" fill="#b9995a">MC2 SAINT BARTH</text>
+</svg>
