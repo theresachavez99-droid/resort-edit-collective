@@ -424,6 +424,11 @@ function LookModule({
               className="absolute inset-0 h-full w-full object-cover"
               style={{ objectPosition: "center top" }}
             />
+            {isPlaceholderImage && (
+              <span className="absolute top-3 left-3 eyebrow text-[0.55rem] tracking-[0.32em] text-ivory bg-ink/75 px-2.5 py-1 border border-gold/40">
+                Placeholder · Image pending
+              </span>
+            )}
             {/* Inspired-By thumbnail — top-right */}
             <div className="absolute top-3 right-3 flex flex-col items-end">
               <span className="eyebrow text-[0.5rem] tracking-[0.32em] text-ivory bg-ink/70 px-2 py-1 mb-1">
