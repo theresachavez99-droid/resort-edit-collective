@@ -141,7 +141,6 @@ function PortofinoPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
         <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
-          <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
           <h1 className="font-display text-5xl md:text-[5.5rem] mt-2 tracking-[0.05em] leading-[1]">
             5 Days in Portofino
           </h1>
