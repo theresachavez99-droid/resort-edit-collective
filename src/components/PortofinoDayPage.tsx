@@ -220,6 +220,7 @@ export function getPortofinoDayHead(slug: DaySlug) {
       { property: "og:description", content: description },
       { property: "og:image", content: absoluteUrl(meta.hero) },
       { property: "og:url", content: absoluteUrl(url) },
+      { name: "twitter:image", content: absoluteUrl(meta.hero) },
     ],
     links: [{ rel: "canonical", href: absoluteUrl(url) }],
   };
