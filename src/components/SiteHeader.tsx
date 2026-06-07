@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Menu, X } from "lucide-react";
 import { useState } from "react";
+import palmMark from "@/assets/resort-edit-mark.png";
 
 const nav = [
   { to: "/destinations", label: "Destinations" },
@@ -46,8 +47,15 @@ export function SiteHeader() {
         <Link
           to="/"
           aria-label="Resort Edit — home"
-          className="flex items-center leading-none justify-center md:justify-start"
+          className="flex items-center gap-2 leading-none justify-center md:justify-start"
         >
+          <img
+            src={palmMark}
+            alt=""
+            aria-hidden="true"
+            className="h-7 md:h-8 lg:h-9 w-auto select-none"
+            draggable={false}
+          />
           <span
             className="font-display text-ink tracking-[0.18em] uppercase text-[1.05rem] md:text-[1.2rem] lg:text-[1.3rem] leading-none select-none"
           >
