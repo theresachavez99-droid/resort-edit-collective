@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, useMatch } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { absoluteUrl } from "@/lib/site";
@@ -127,8 +127,9 @@ const DAYS: DayRow[] = [
 ];
 
 function PortofinoPage() {
-  const childMatch = useMatch({ from: "/portofino/$day/$look", shouldThrow: false });
-  if (childMatch) return <Outlet />;
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const normalized = pathname.replace(/\/+$/, "");
+  if (normalized !== "/portofino") return <Outlet />;
 
   return (
     <div className="pb-16 md:pb-20">
