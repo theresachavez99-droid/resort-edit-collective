@@ -141,11 +141,11 @@ function ViewFullLookPage() {
       <section className="mx-auto max-w-[1480px] px-4 sm:px-8 lg:px-10 pt-8 md:pt-12">
         <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,44fr)_minmax(0,56fr)] gap-10 xl:gap-14 items-start">
           <div className="xl:sticky xl:top-8 xl:self-start">
-            <figure className="relative overflow-hidden border border-ink/10 bg-cream/35 aspect-[4/5] lg:aspect-[4/5.25]">
+            <figure className="relative overflow-hidden border border-ink/10 bg-cream/35 aspect-[3/4] lg:aspect-[4/5.25]">
               <img
                 src={lookData.heroImage}
                 alt={`${lookData.day} · ${lookData.title}`}
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-contain"
                 style={{ objectPosition: "center center" }}
               />
             </figure>
@@ -309,12 +309,12 @@ function ViewFullLookPage() {
       {/* ───────────────────────── BOTTOM · GET THE NEXT EDIT ───────────────────────── */}
       <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-28 md:mt-36">
         <div className="border-t border-ink/15 pt-14 grid grid-cols-1 md:grid-cols-[minmax(0,180px)_minmax(0,1fr)] gap-8 md:gap-12 items-center">
-          <figure className="w-full aspect-[4/5] md:aspect-[4/5] overflow-hidden bg-muted">
+          <figure className="w-full aspect-[3/4] md:aspect-[3/4] overflow-hidden bg-cream/35 flex items-center justify-center">
             <img
               src={lookData.heroImage}
               alt=""
               aria-hidden
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
             />
           </figure>
           <div className="max-w-xl">

@@ -163,14 +163,14 @@ function PortofinoPage() {
               >
                 {/* LEFT — Editorial muse + day caption */}
                 <div className="space-y-4">
-                  <div className="relative aspect-[3/4] overflow-hidden bg-muted border border-border/60">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-cream/40 border border-border/60 flex items-center justify-center">
                     <img
                       src={d.image}
                       alt={`${d.label} — ${d.title}`}
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 h-full w-full object-cover"
-                      style={{ objectPosition: d.slug === "day-5" ? d.imagePos : "center top", imageRendering: "auto" }}
+                      className="absolute inset-0 h-full w-full object-contain"
+                      style={{ imageRendering: "auto" }}
                     />
                   </div>
                   <div>
@@ -208,13 +208,12 @@ function PortofinoPage() {
                           {look.title.toUpperCase()}
                         </span>
                       </div>
-                      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                      <div className="relative aspect-[3/4] overflow-hidden bg-cream/40 flex items-center justify-center">
                         <img
                           src={look.image}
                           alt={`${d.label} ${look.label} — ${look.title}`}
                           loading="lazy"
-                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                          style={{ objectPosition: "center top" }}
+                          className="absolute inset-0 h-full w-full object-contain transition-transform duration-700 group-hover:scale-[1.04]"
                         />
                       </div>
                       <div className="p-3 md:p-4 text-center">
