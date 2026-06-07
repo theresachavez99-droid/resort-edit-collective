@@ -29,6 +29,7 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Five days in Portofino — looks, hotels, beach clubs, and experiences. Dressed for the destination." },
       { property: "og:image", content: absoluteUrl(heroMuse) },
       { property: "og:url", content: SITE_URL },
+      { name: "twitter:image", content: absoluteUrl(heroMuse) },
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
   }),
