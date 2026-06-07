@@ -1,5 +1,4 @@
-import { createFileRoute, Link, Outlet, useMatch, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, Link, Outlet, useMatch } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { absoluteUrl } from "@/lib/site";
@@ -34,23 +33,9 @@ import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { DAY_PATHS, type DaySlug } from "@/components/PortofinoDayPage";
-import {
-  TIER_LABEL,
-  TIER_RANGE,
-  TIER_TAGLINE,
-  TIER_SLUGS,
-  isTierSlug,
-  persistTier,
-  readStoredTier,
-  type TierSlug,
-  type LookSlug,
-} from "@/lib/portofino-spec";
+import { type LookSlug } from "@/lib/portofino-spec";
 
 export const Route = createFileRoute("/portofino")({
-  validateSearch: (search: Record<string, unknown>) => {
-    const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
-    return { tier };
-  },
   head: () => ({
     meta: [
       { title: "5 Days in Portofino — A Style & Itinerary Guide | Resort Edit | Dressed for the destination" },
@@ -143,38 +128,10 @@ const DAYS: DayRow[] = [
 
 function PortofinoPage() {
   const childMatch = useMatch({ from: "/portofino/$day/$look", shouldThrow: false });
-  const search = Route.useSearch();
-  const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
-  const navigate = useNavigate({ from: "/portofino" });
-
-  // Restore persisted tier on first mount if URL doesn't already specify one.
-  useEffect(() => {
-    if (childMatch) return;
-    if (typeof window === "undefined") return;
-    const hasTierParam = new URLSearchParams(window.location.search).has("tier");
-    if (hasTierParam) {
-      persistTier(tier);
-      return;
-    }
-    const stored = readStoredTier();
-    if (stored && stored !== tier) {
-      navigate({ search: { tier: stored }, replace: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (childMatch) return;
-    persistTier(tier);
-  }, [childMatch, tier]);
-
   if (childMatch) return <Outlet />;
 
-  const setTier = (t: TierSlug) =>
-    navigate({ search: { tier: t }, replace: true });
-
   return (
-    <div className="pb-28 md:pb-24">
+    <div className="pb-16 md:pb-20">
       {/* HERO */}
       <section className="relative h-[42vh] md:h-[56vh] min-h-[300px] md:min-h-[380px] w-full overflow-hidden bg-ink">
         <img
@@ -190,9 +147,6 @@ function PortofinoPage() {
           </h1>
           <p className="font-serif italic text-base md:text-xl text-ivory/85 mt-2 max-w-2xl leading-relaxed">
             — Explore each day. Shop three complete looks. —
-          </p>
-          <p className="eyebrow text-ivory/70 tracking-[0.3em] text-[0.65rem] mt-3">
-            Showing {TIER_LABEL[tier]} Edit · {TIER_RANGE[tier]}
           </p>
         </div>
       </section>
@@ -227,7 +181,7 @@ function PortofinoPage() {
                       {d.caption}
                     </p>
                     <Link
-                      to={d.slug === "day-1" ? "/destinations/portofino/day-1-yacht-harbour-aperitivo" : d.href}
+                      to={d.href}
                       className="mt-3 inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink transition-colors border-b border-gold/60 pb-1"
                     >
                       View Full Day Edit <ArrowRight className="w-3 h-3" />
@@ -240,7 +194,7 @@ function PortofinoPage() {
                   {d.looks.map((look) => (
                     <a
                       key={look.slug}
-                      href={`/portofino/${d.slug}/${look.slug}?tier=${tier}`}
+                      href={`/portofino/${d.slug}/${look.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
@@ -465,80 +419,6 @@ function PortofinoPage() {
       </section>
 
       {/* TIER OPTIONS — bottom of page (spec §8) */}
-      <section id="tier-options" className="bg-cream border-t border-border/60 py-12 md:py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 text-center">
-          <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">Tier Options</span>
-          <h3 className="font-display text-2xl md:text-3xl tracking-[0.06em] mt-2">
-            Choose Your Shopping Lane
-          </h3>
-          <div className="mx-auto my-3 h-px w-12 bg-gold" />
-          <p className="font-serif italic text-ink/65 text-sm md:text-base max-w-xl mx-auto">
-            Same aesthetic. Three investment levels. Your selection updates every product across all five days.
-          </p>
-          <div className="mt-7 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-            {TIER_SLUGS.map((t) => {
-              const active = t === tier;
-              return (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setTier(t)}
-                  aria-pressed={active}
-                  className={
-                    "text-left p-5 border transition-colors " +
-                    (active
-                      ? "bg-gold/90 border-gold text-ink"
-                      : "bg-ivory border-border text-ink hover:border-gold hover:bg-gold/10")
-                  }
-                >
-                  <div className="eyebrow text-[0.65rem] tracking-[0.32em] text-ink/80">
-                    {TIER_LABEL[t].toUpperCase()} EDIT
-                  </div>
-                  <div className="font-serif italic text-[0.95rem] text-ink/80 mt-2 leading-snug">
-                    {TIER_TAGLINE[t]}
-                  </div>
-                  <div className="font-display text-lg mt-3 tracking-wide">
-                    {TIER_RANGE[t]}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* STICKY BOTTOM TIER BAR — always-accessible selector */}
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-ivory/95 backdrop-blur border-t border-border/60 shadow-[0_-4px_18px_-12px_rgba(0,0,0,0.2)]">
-        <div className="mx-auto max-w-[1280px] px-3 sm:px-6 py-2.5 flex items-center gap-2 sm:gap-4">
-          <span className="hidden sm:inline eyebrow text-[0.6rem] tracking-[0.3em] text-ink/55">
-            Shopping Tier
-          </span>
-          <div className="flex-1 flex gap-1.5 sm:gap-2 justify-center sm:justify-start">
-            {TIER_SLUGS.map((t) => {
-              const active = t === tier;
-              return (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setTier(t)}
-                  aria-pressed={active}
-                  className={
-                    "eyebrow tracking-[0.25em] text-[0.6rem] sm:text-[0.65rem] px-3 sm:px-4 py-2 border transition-colors " +
-                    (active
-                      ? "bg-gold/90 border-gold text-ink font-semibold"
-                      : "bg-cream border-border text-ink hover:border-gold hover:text-gold")
-                  }
-                >
-                  {TIER_LABEL[t].toUpperCase()}
-                </button>
-              );
-            })}
-          </div>
-          <span className="hidden md:inline font-serif italic text-ink/55 text-xs">
-            {TIER_RANGE[tier]}
-          </span>
-        </div>
-      </div>
     </div>
   );
 }
