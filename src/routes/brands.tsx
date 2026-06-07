@@ -25,6 +25,8 @@ export const Route = createFileRoute("/brands")({
 });
 
 function BrandsPage() {
+  const slugify = (s: string) =>
+    s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   return (
     <div className="bg-ivory">
       <div className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-24 pb-20">
@@ -40,9 +42,24 @@ function BrandsPage() {
           </p>
         </header>
 
+        <nav aria-label="Brand categories" className="mt-10 border-y border-border/40 py-3">
+          <ul className="flex flex-nowrap md:flex-wrap items-center justify-start md:justify-center gap-x-6 gap-y-2 overflow-x-auto no-scrollbar">
+            {brandCategories.map((cat) => (
+              <li key={cat.title} className="whitespace-nowrap">
+                <a
+                  href={`#${slugify(cat.title)}`}
+                  className="eyebrow text-[0.65rem] text-ink/70 hover:text-gold transition-colors"
+                >
+                  {cat.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
         <div className="mt-20 space-y-20">
           {brandCategories.map((cat) => (
-            <section key={cat.title}>
+            <section key={cat.title} id={slugify(cat.title)} className="scroll-mt-24">
               <div className="flex items-baseline justify-between gap-6 border-b border-border/60 pb-4">
                 <h2 className="font-display text-2xl md:text-3xl tracking-[0.08em] text-ink">
                   {cat.title}
