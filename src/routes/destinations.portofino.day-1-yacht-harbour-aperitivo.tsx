@@ -10,7 +10,7 @@ import { trackOutbound } from "@/lib/utils";
 const REFERENCE_URL = referenceAsset.url;
 const PAGE_TITLE = "Yacht Day & Harbour Aperitivo — Portofino | Resort Edit | Dressed for the destination";
 const PAGE_DESC =
-  "Ten complete looks for a yacht day on the Italian Riviera: open water, tan lines, hidden coves, and harbour aperitivo.";
+  "Five complete looks for a yacht day on the Italian Riviera: arrival, on-water swim, beach club, golden-hour aperitivo, and evening yacht.";
 
 export const Route = createFileRoute(
   "/destinations/portofino/day-1-yacht-harbour-aperitivo",
@@ -107,7 +107,7 @@ function YachtToLunchPage() {
           The Itinerary
         </span>
         <h2 className="font-display text-2xl md:text-4xl lg:text-5xl mt-4 tracking-[0.02em] text-ink leading-tight">
-          Arrival to aperitivo, styled across ten complete looks.
+          Arrival to aperitivo, styled across five complete looks.
         </h2>
         <p className="font-serif italic text-ink/75 text-base md:text-xl mt-5 md:mt-6 leading-relaxed">
           A day on a private yacht in Portofino, edited from the moment you step onto teak through
@@ -229,7 +229,7 @@ function LookEditorial({
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute top-4 left-4 eyebrow text-[0.55rem] md:text-[0.6rem] tracking-[0.35em] text-ivory bg-ink/60 backdrop-blur-sm px-3 py-1.5">
-            {String(look.number).padStart(2, "0")} / 10
+            {String(look.number).padStart(2, "0")} / 05
           </div>
         </div>
       </div>
@@ -242,7 +242,7 @@ function LookEditorial({
       >
         <header className="border-b border-gold/30 pb-5">
           <span className="eyebrow text-gold tracking-[0.4em] text-[0.6rem] md:text-[0.65rem]">
-            Look {String(look.number).padStart(2, "0")} · {look.chapter}
+            Look {String(look.number).padStart(2, "0")} / 05 · {look.chapter}
           </span>
           <h2 className="font-display text-2xl md:text-4xl mt-3 tracking-[0.02em] text-ink leading-tight">
             {look.title}
