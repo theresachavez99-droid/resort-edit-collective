@@ -1,5 +1,4 @@
-import { createFileRoute, Link, Outlet, useMatch, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, Link, Outlet, useMatch } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { absoluteUrl } from "@/lib/site";
@@ -34,23 +33,9 @@ import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { DAY_PATHS, type DaySlug } from "@/components/PortofinoDayPage";
-import {
-  TIER_LABEL,
-  TIER_RANGE,
-  TIER_TAGLINE,
-  TIER_SLUGS,
-  isTierSlug,
-  persistTier,
-  readStoredTier,
-  type TierSlug,
-  type LookSlug,
-} from "@/lib/portofino-spec";
+import { type LookSlug } from "@/lib/portofino-spec";
 
 export const Route = createFileRoute("/portofino")({
-  validateSearch: (search: Record<string, unknown>) => {
-    const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
-    return { tier };
-  },
   head: () => ({
     meta: [
       { title: "5 Days in Portofino — A Style & Itinerary Guide | Resort Edit | Dressed for the destination" },
