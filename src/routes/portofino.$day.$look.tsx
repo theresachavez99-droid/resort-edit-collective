@@ -461,3 +461,50 @@ function ProductCategoryCard({
     </article>
   );
 }
+
+// ──────────────────────────────────────────────────────────────
+// Override card — flexible slot for looks that don't fit the
+// rigid 7-category schema (multiple jewelry, beauty details, etc.)
+// ──────────────────────────────────────────────────────────────
+function OverrideProductCard({ item, subtle = false }: { item: OverrideItem; subtle?: boolean }) {
+  return (
+    <article className={
+      "group flex h-full flex-col border bg-ivory transition-colors " +
+      (subtle ? "border-ink/10 hover:border-gold/40" : "border-ink/10 hover:border-gold/60")
+    }>
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        onClick={() => trackOutbound({ brand: item.brand, item: item.title, href: item.url })}
+        className="relative aspect-[4/5] w-full bg-cream/30 overflow-hidden flex items-center justify-center border-b border-ink/10"
+      >
+        <img
+          src={item.image}
+          alt={`${item.brand} ${item.title}`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-contain p-6 md:p-8 transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+      </a>
+      <div className="flex flex-1 flex-col items-center px-4 py-5 text-center">
+        <p className="eyebrow tracking-[0.28em] text-[0.56rem] text-gold">{item.slotLabel}</p>
+        <p className="eyebrow tracking-[0.18em] text-[0.68rem] text-ink uppercase mt-2 leading-snug">
+          {item.brand}
+        </p>
+        <p className="font-serif italic text-[0.94rem] text-ink/75 leading-snug mt-1.5 max-w-[15rem]">
+          {item.title}
+        </p>
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          onClick={() => trackOutbound({ brand: item.brand, item: item.title, href: item.url })}
+          className="mt-auto pt-5 eyebrow tracking-[0.24em] text-[0.58rem] text-ink border-b border-gold hover:text-gold transition-colors pb-0.5"
+          aria-label={`Shop ${item.brand} ${item.title} (opens in new tab)`}
+        >
+          SHOP PIECE →
+        </a>
+      </div>
+    </article>
+  );
+}
