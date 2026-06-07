@@ -413,11 +413,11 @@ function buildPortofinoLookbook(): Look[] {
   if (empty.length > 0) {
     const msg =
       "Lookbook publish blocked — 0 sourced pieces for: " + empty.join(", ");
-    if (import.meta.env.DEV) {
-      console.error("[lookbook]", msg);
-    } else {
-      throw new Error(msg);
-    }
+    // Never throw at module load — that crashes every page that imports the
+    // lookbook (including all /portofino/$day/$look routes) in production.
+    // Looks with manual overrides (e.g. Look C "Coastal Sophistication")
+    // bypass the rigid 7-slot tier schema, so empty tiers there are expected.
+    console.error("[lookbook]", msg);
   }
   return out;
 }
