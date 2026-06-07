@@ -36,12 +36,12 @@ function AboutPage() {
           Each edit is a destination, an itinerary, and a wardrobe designed to travel together.
         </p>
         <p className="font-serif text-lg leading-relaxed text-ink/80 mt-6">
-          We share the hotels worth extending your trip for, the experiences worth planning around, and the pieces we'd actually pack — from investment resortwear to elevated finds across price points.
+          We share the hotels worth extending your trip for, the experiences worth planning around, and the pieces we'd actually pack — from investment resortwear to the elevated finds we actually reach for.
         </p>
         <p className="font-serif text-lg leading-relaxed text-ink/80 mt-6">
-          From beach clubs to city strolls, long lunches to late dinners, Resort Edit will help you travel well, pack better, and dress for the destination.
+          From beach clubs to city strolls, long lunches to late dinners — this is how to dress for the destination.
         </p>
-        <p className="mt-8 eyebrow text-gold">Curated escapes. Styled your way.</p>
+        <p className="mt-8 eyebrow text-gold">Curated escapes. Dressed for the destination.</p>
       </section>
     </div>
   );
