@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import heroImg from "@/assets/about-hero.png";
+import heroAsset from "@/assets/about-hero-portofino-terrace.png.asset.json";
 import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/about")({
@@ -19,8 +19,9 @@ export const Route = createFileRoute("/about")({
 function AboutPage() {
   return (
     <div>
-      <section className="relative h-[38vh] md:h-[48vh] min-h-[300px] max-h-[480px]">
-        <img src={heroImg} alt="Portofino harbor" width={1920} height={1280} className="absolute inset-0 h-full w-full object-cover" />
+      <section className="relative h-[280px] md:h-[360px]">
+        <img src={heroAsset.url} alt="Golden hour over Portofino harbor with yachts and pastel buildings" width={1920} height={1280} className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/40 via-ink/10 to-transparent" />
         <h1 className="sr-only">About Resort Edit</h1>
       </section>
 
