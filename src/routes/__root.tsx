@@ -11,6 +11,10 @@ import {
 import appCss from "../styles.css?url";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
+import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
+import { absoluteUrl } from "@/lib/site";
+
+const SHARE_IMAGE = absoluteUrl(heroMuseAsset.url);
 
 function NotFoundComponent() {
   return (
@@ -80,10 +84,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Resort Edit | Dressed for the destination." },
       { property: "og:description", content: "Resort Edit | Dressed for the destination. Discover destination guides, resort edits, and brands we love." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/og-image.png" },
+      { property: "og:image", content: SHARE_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@ResortEdit" },
-      { name: "twitter:image", content: "/og-image.png" },
+      { name: "twitter:image", content: SHARE_IMAGE },
       { name: "twitter:title", content: "Resort Edit | Dressed for the destination." },
       { name: "twitter:description", content: "Resort Edit | Dressed for the destination. Discover destination guides, resort edits, and brands we love." },
     ],

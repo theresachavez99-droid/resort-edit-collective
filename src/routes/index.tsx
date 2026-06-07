@@ -20,17 +20,16 @@ import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 const heroMuse = heroMuseAsset.url;
 
-const DAY_1_FULL_EDIT_ROUTE = "/destinations/portofino/day-1-yacht-harbour-aperitivo" as const;
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Resort Edit | Dressed for the destination — 5 Days in Portofino, La Dolce Vita" },
-      { name: "description", content: "A luxury style and itinerary guide to Portofino — five days, five looks, hotels, beach clubs and experiences across price points." },
+      { name: "description", content: "A luxury style and itinerary guide to Portofino — five days, five looks, hotels, beach clubs, and experiences." },
       { property: "og:title", content: "Resort Edit | Dressed for the destination — 5 Days in Portofino" },
-      { property: "og:description", content: "Luxury labels. Riviera finds. Resort style across price points." },
+      { property: "og:description", content: "Five days in Portofino — looks, hotels, beach clubs, and experiences. Dressed for the destination." },
       { property: "og:image", content: absoluteUrl(heroMuse) },
       { property: "og:url", content: SITE_URL },
+      { name: "twitter:image", content: absoluteUrl(heroMuse) },
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
   }),
@@ -40,7 +39,6 @@ export const Route = createFileRoute("/")({
 type DayCard = {
   n: "1" | "2" | "3" | "4" | "5";
   href:
-    | typeof DAY_1_FULL_EDIT_ROUTE
     | "/portofino/day-1"
     | "/portofino/day-2"
     | "/portofino/day-3"
@@ -54,7 +52,7 @@ type DayCard = {
 };
 
 const days: DayCard[] = [
-  { n: "1", href: DAY_1_FULL_EDIT_ROUTE, title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
+  { n: "1", href: "/portofino/day-1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
   { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
   { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
   { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
@@ -180,10 +178,7 @@ function Index() {
             <Link
               key={d.n}
               to={d.href}
-              data-route-card={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
-              onClick={() => {
-                if (d.n === "1") console.log("Opening Day 1 route:", DAY_1_FULL_EDIT_ROUTE);
-              }}
+              data-route-card={d.n === "1" ? d.href : undefined}
               className="group bg-card border border-border/50 flex flex-col no-underline text-inherit"
             >
               <div className="text-center pt-5 px-3">
@@ -200,7 +195,7 @@ function Index() {
                   loading={d.n === "5" ? "eager" : "lazy"}
                   fetchPriority={d.n === "5" ? "high" : undefined}
                   decoding="async"
-                  data-route-image={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
+                  data-route-image={d.n === "1" ? d.href : undefined}
                   className="absolute inset-0 h-full w-full object-cover"
                   style={{ objectPosition: d.n === "5" ? "center center" : "center top", imageRendering: "auto" }}
                 />
@@ -209,10 +204,10 @@ function Index() {
                 <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
               </div>
               <span
-                data-route-cta={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}
+                data-route-cta={d.n === "1" ? d.href : undefined}
                 className="mt-5 block bg-gold text-ivory text-center eyebrow text-[0.7rem] tracking-[0.24em] py-4 group-hover:bg-ink transition-colors"
               >
-                Shop 3 Looks <span data-route-arrow={d.n === "1" ? DAY_1_FULL_EDIT_ROUTE : undefined}>→</span>
+                Shop 3 Looks <span data-route-arrow={d.n === "1" ? d.href : undefined}>→</span>
               </span>
             </Link>
           ))}

@@ -59,6 +59,7 @@ export const Route = createFileRoute("/portofino")({
       { property: "og:description", content: "A luxury style and travel guide to the Italian Riviera." },
       { property: "og:image", content: absoluteUrl(portofinoImg) },
       { property: "og:url", content: absoluteUrl("/portofino") },
+      { name: "twitter:image", content: absoluteUrl(portofinoImg) },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/portofino") }],
   }),
