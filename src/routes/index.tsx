@@ -24,9 +24,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Resort Edit | Dressed for the destination — 5 Days in Portofino, La Dolce Vita" },
-      { name: "description", content: "A luxury style and itinerary guide to Portofino — five days, five looks, hotels, beach clubs, and experiences." },
+      { name: "description", content: "A luxury style and itinerary guide to Portofino — five days, twenty-five looks, hotels, beach clubs, and experiences." },
       { property: "og:title", content: "Resort Edit | Dressed for the destination — 5 Days in Portofino" },
-      { property: "og:description", content: "Five days in Portofino — looks, hotels, beach clubs, and experiences. Dressed for the destination." },
+      { property: "og:description", content: "Five days, twenty-five looks in Portofino — hotels, beach clubs, and experiences. Dressed for the destination." },
       { property: "og:image", content: absoluteUrl(heroMuse) },
       { property: "og:url", content: SITE_URL },
       { name: "twitter:image", content: absoluteUrl(heroMuse) },
@@ -157,12 +157,12 @@ function Index() {
             </p>
             <div className="mt-5 flex flex-wrap gap-4">
               <Link to="/portofino-edit" className="bg-gold text-ivory eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-ink transition-colors">
-                Shop 15 Looks — Day by Day
+                Shop 25 Looks — Day by Day
               </Link>
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 text-ink/80">
               <span className="eyebrow text-[0.92rem] tracking-[0.26em]">
-                5 Days <span className="text-gold">·</span> 15 Looks <span className="text-gold">·</span> 6 Experiences
+                5 Days <span className="text-gold">·</span> 25 Looks <span className="text-gold">·</span> 6 Experiences
               </span>
               <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
               <span className="eyebrow text-[0.82rem] tracking-[0.3em] text-gold">
@@ -207,7 +207,7 @@ function Index() {
                 data-route-cta={d.n === "1" ? d.href : undefined}
                 className="mt-5 block bg-gold text-ivory text-center eyebrow text-[0.7rem] tracking-[0.24em] py-4 group-hover:bg-ink transition-colors"
               >
-                Shop 3 Looks <span data-route-arrow={d.n === "1" ? d.href : undefined}>→</span>
+                Shop 5 Looks <span data-route-arrow={d.n === "1" ? d.href : undefined}>→</span>
               </span>
             </Link>
           ))}
