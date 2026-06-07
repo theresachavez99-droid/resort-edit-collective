@@ -128,38 +128,10 @@ const DAYS: DayRow[] = [
 
 function PortofinoPage() {
   const childMatch = useMatch({ from: "/portofino/$day/$look", shouldThrow: false });
-  const search = Route.useSearch();
-  const tier: TierSlug = isTierSlug(search.tier) ? search.tier : "luxury";
-  const navigate = useNavigate({ from: "/portofino" });
-
-  // Restore persisted tier on first mount if URL doesn't already specify one.
-  useEffect(() => {
-    if (childMatch) return;
-    if (typeof window === "undefined") return;
-    const hasTierParam = new URLSearchParams(window.location.search).has("tier");
-    if (hasTierParam) {
-      persistTier(tier);
-      return;
-    }
-    const stored = readStoredTier();
-    if (stored && stored !== tier) {
-      navigate({ search: { tier: stored }, replace: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (childMatch) return;
-    persistTier(tier);
-  }, [childMatch, tier]);
-
   if (childMatch) return <Outlet />;
 
-  const setTier = (t: TierSlug) =>
-    navigate({ search: { tier: t }, replace: true });
-
   return (
-    <div className="pb-28 md:pb-24">
+    <div className="pb-16 md:pb-20">
       {/* HERO */}
       <section className="relative h-[42vh] md:h-[56vh] min-h-[300px] md:min-h-[380px] w-full overflow-hidden bg-ink">
         <img
@@ -175,9 +147,6 @@ function PortofinoPage() {
           </h1>
           <p className="font-serif italic text-base md:text-xl text-ivory/85 mt-2 max-w-2xl leading-relaxed">
             — Explore each day. Shop three complete looks. —
-          </p>
-          <p className="eyebrow text-ivory/70 tracking-[0.3em] text-[0.65rem] mt-3">
-            Showing {TIER_LABEL[tier]} Edit · {TIER_RANGE[tier]}
           </p>
         </div>
       </section>
@@ -212,7 +181,7 @@ function PortofinoPage() {
                       {d.caption}
                     </p>
                     <Link
-                      to={d.slug === "day-1" ? "/destinations/portofino/day-1-yacht-harbour-aperitivo" : d.href}
+                      to={d.href}
                       className="mt-3 inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink transition-colors border-b border-gold/60 pb-1"
                     >
                       View Full Day Edit <ArrowRight className="w-3 h-3" />
@@ -225,7 +194,7 @@ function PortofinoPage() {
                   {d.looks.map((look) => (
                     <a
                       key={look.slug}
-                      href={`/portofino/${d.slug}/${look.slug}?tier=${tier}`}
+                      href={`/portofino/${d.slug}/${look.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
