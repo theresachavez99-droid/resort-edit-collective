@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
-import day3Muse from "@/assets/hero-muse-portofino.jpg";
+import day3MuseAsset from "@/assets/generated/resort-edit/d3-floral-harbour.png.asset.json";
+const day3Muse = day3MuseAsset.url;
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookYachtAsset from "@/assets/generated/resort-edit/d1-majolica-yacht.png.asset.json";
 const lookYacht = lookYachtAsset.url;
