@@ -171,10 +171,10 @@ const day1Looks: LookEdit[] = [
   },
   {
     id: "texture",
-    name: "Italian Riviera Glam",
+    name: "Coastal Sophistication",
     category: "Texture Forward",
-    fabric: "Open crochet knit • Woven raffia • Tonal linen",
-    description: "Crocheted top, woven raffia bag, tonal cream-on-cream. Texture as the focal point.",
+    fabric: "Espresso swim • Degradé crochet knit • Woven raffia",
+    description: "A brown plunge one-piece under degradé crochet wide-leg trousers, a straw hat, and a raffia tote — yacht-deck polish in warm coastal neutrals.",
     tiers: {
       designer: [
         { brand: "Chloé", item: "Crochet Knit Top", price: "$1,295", href: "#", category: "clothing" },
