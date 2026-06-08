@@ -30,6 +30,8 @@ import imgCloverBracelet from "@/assets/products/by-adina-eden-pave-clover-brace
 import imgLisseClutch from "@/assets/products/cult-gaia-lisse-clutch.svg";
 import imgKreweStLouis from "@/assets/products/krewe-st-louis-matte-oyster-24k.svg";
 import imgPalomaBoater from "@/assets/products/lack-of-color-paloma-sun-boater.svg";
+import imgForgetMeKnot from "@/assets/products/oradina-forget-me-knot-studs.svg";
+import imgRemiBangle from "@/assets/products/jenny-bird-remi-hinge-bangle.svg";
 
 export type OverrideItem = {
   slotLabel: string;
@@ -156,17 +158,17 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
       },
       {
         slotLabel: "EARRINGS",
-        brand: "Jennifer Behr",
-        title: "Lyanna Crystal-Embellished Gold-Tone Quartz Earrings",
-        url: "https://www.net-a-porter.com/en-us/shop/product/jennifer-behr/jewelry-and-watches/drop-earrings/lyanna-crystal-embellished-gold-tone-quartz-earrings/46376663163077673",
-        image: imgLyannaEarrings,
+        brand: "Oradina",
+        title: "14K Gold Forget Me Knot Stud Earrings",
+        url: "https://www.oradina.com/products/forget-me-knot-stud-earrings",
+        image: imgForgetMeKnot,
       },
       {
         slotLabel: "BRACELET",
-        brand: "By Adina Eden",
-        title: "Mini Multi Pavé Outlined Colored Clover Bracelet in Mother of Pearl",
-        url: "https://www.revolve.com/by-adina-eden-mini-multi-pave-outlined-colored-clover-bracelet-in-mother-of-pearl/dp/AJEW-WL288/",
-        image: imgCloverBracelet,
+        brand: "Jenny Bird",
+        title: "Remi Hinge Bangle Bracelet",
+        url: "https://www.nordstrom.com/s/jenny-bird-remi-hinge-bangle-bracelet/6839686",
+        image: imgRemiBangle,
       },
       {
         slotLabel: "BAG",
