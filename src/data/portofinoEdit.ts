@@ -342,10 +342,10 @@ const day3Looks: LookEdit[] = [
   },
   {
     id: "neutral",
-    name: "White Resort Day Club",
-    category: "Quiet Luxury",
-    fabric: "Ivory cotton poplin • Silk lining • Camel leather",
-    description: "A long ivory shirtdress, gold sandals, a structured camel bag. Monochrome and polished.",
+    name: "Floral Riviera Day Club",
+    category: "Print Forward",
+    fabric: "Silk floral print • Raffia weave • Natural straw",
+    description: "A floral off-shoulder mini, raffia espadrille wedges, and a straw boater — soft, sunlit, and made for a long lunch by the water.",
     tiers: {
       designer: [
         { brand: "Toteme", item: "Ivory Shirtdress", price: "$890", href: "#", category: "clothing" },
