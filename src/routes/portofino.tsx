@@ -10,7 +10,8 @@ import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jp
 import day5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-hires-card-20260601.jpg";
 import d1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
 import d1b from "@/assets/generated/resort-edit/edit-d1-b-card-thumb.jpg";
-import d1c from "@/assets/generated/resort-edit/edit-d1-c-card-thumb.jpg";
+import d1cHeroAsset from "@/assets/generated/resort-edit/edit-d1-c-hero.png.asset.json";
+const d1c = d1cHeroAsset.url;
 import d2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
 import d2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import d2c from "@/assets/generated/resort-edit/edit-d2-c-card-thumb.jpg";
