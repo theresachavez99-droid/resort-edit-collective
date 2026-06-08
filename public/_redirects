@@ -1,0 +1,3 @@
+/destinations/portofino/day-1-yacht-harbour-aperitivo   /portofino/day-1   301!
+/destinations/portofino                                  /portofino         301!
+/destinations/portofino/*                                /portofino         301!

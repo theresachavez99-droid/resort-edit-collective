@@ -25,10 +25,10 @@ const heroMuse = heroMuseAsset.url;
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Resort Edit | Dressed for the destination — 5 Days in Portofino, La Dolce Vita" },
-      { name: "description", content: "A luxury style and itinerary guide to Portofino — five days, fifteen looks, hotels, beach clubs, and experiences." },
-      { property: "og:title", content: "Resort Edit | Dressed for the destination — 5 Days in Portofino" },
-      { property: "og:description", content: "Five days, fifteen looks in Portofino — hotels, beach clubs, and experiences. Dressed for the destination." },
+      { title: "Resort Edit | Dressed for the Destination" },
+      { name: "description", content: "Luxury resort style guides and itineraries — curated looks, hotels, and experiences for women who dress for the destination." },
+      { property: "og:title", content: "Resort Edit | Dressed for the Destination" },
+      { property: "og:description", content: "Luxury resort style guides and itineraries — curated looks, hotels, and experiences for women who dress for the destination." },
       { property: "og:image", content: absoluteUrl(heroMuse) },
       { property: "og:url", content: SITE_URL },
       { name: "twitter:image", content: absoluteUrl(heroMuse) },
@@ -61,10 +61,16 @@ const days: DayCard[] = [
   { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse, imageMobile: day5MuseMobile, imageRetina: day5MuseRetina },
 ];
 
-const looks = [
-  { tag: "Look A", title: "Lemon Print Set", image: editD2a },
-  { tag: "Look B", title: "Lace Chic", image: editD2b },
-  { tag: "Look C", title: "Blue Majolica Set", image: editD1a },
+const looks: Array<{
+  tag: string;
+  title: string;
+  image: string;
+  day: "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
+  look: "look-a" | "look-b" | "look-c";
+}> = [
+  { tag: "Look A", title: "Lemon Print Set", image: editD2a, day: "day-2", look: "look-a" },
+  { tag: "Look B", title: "Lace Chic", image: editD2b, day: "day-2", look: "look-b" },
+  { tag: "Look C", title: "Blue Majolica Set", image: editD1a, day: "day-1", look: "look-a" },
 ];
 
 const hotels = [
@@ -98,10 +104,10 @@ const hotels = [
 ];
 
 const ctas = [
-  { label: "Book a Yacht", Icon: Ship, hash: "on-water" },
-  { label: "Reserve a Beach Club", Icon: Umbrella, hash: "beachclubs" },
-  { label: "Book a Tour", Icon: Camera, hash: "experiences" },
-  { label: "View Experiences", Icon: Compass, hash: "experiences" },
+  { label: "Book a Yacht", Icon: Ship },
+  { label: "Reserve a Beach Club", Icon: Umbrella },
+  { label: "Book a Tour", Icon: Camera },
+  { label: "View Experiences", Icon: Compass },
 ];
 
 const brandChips = ["Zimmermann", "Johanna Ortiz", "SIR", "Faithfull the Brand"];
@@ -121,11 +127,11 @@ function Index() {
             />
           </div>
           <div className="lg:pl-2 max-w-[750px]">
-            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">A Style &amp; Itinerary Guide</p>
+            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">Resort Edit</p>
             <h1 className="font-display mt-3 text-[3.4rem] sm:text-[4.2rem] lg:text-[6.2rem] xl:text-[7.4rem] leading-[0.9] tracking-[0.01em] text-ink">
-              5 DAYS IN
+              DRESSED FOR THE
               <br />
-              PORTOFINO
+              DESTINATION.
             </h1>
             <p
               className="font-serif italic text-[2.7rem] sm:text-[3.3rem] lg:text-[4.2rem] xl:text-[4.7rem] leading-[0.95] tracking-[-0.01em] mt-1 -ml-0.5 max-w-[85%]"
@@ -236,7 +242,11 @@ function Index() {
                 <div className="relative aspect-[5/6] mt-4 overflow-hidden bg-muted">
                   <img src={l.image} alt={l.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                 </div>
-                <Link to="/portofino" className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors">
+                <Link
+                  to="/portofino/$day/$look"
+                  params={{ day: l.day, look: l.look }}
+                  className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
+                >
                   Get the Look →
                 </Link>
               </article>
@@ -317,12 +327,10 @@ function Index() {
           </div>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-          {ctas.map(({ label, Icon, hash }) => (
+          {ctas.map(({ label, Icon }) => (
             <Link
               key={label}
-              to="/destinations/$slug"
-              params={{ slug: "portofino" }}
-              hash={hash}
+              to="/portofino"
               className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
             >
               <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />
