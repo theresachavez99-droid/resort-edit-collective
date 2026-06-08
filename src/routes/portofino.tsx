@@ -16,7 +16,8 @@ import d2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
 import d2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import d2c from "@/assets/generated/resort-edit/edit-d2-c-card-thumb.jpg";
 import d3a from "@/assets/generated/resort-edit/edit-d3-a-card-thumb.jpg";
-import d3b from "@/assets/generated/resort-edit/edit-d3-b-card-thumb.jpg";
+import d3bAsset from "@/assets/generated/resort-edit/d3-floral-harbour.png.asset.json";
+const d3b = d3bAsset.url;
 import d3c from "@/assets/generated/resort-edit/edit-d3-c-card-thumb.jpg";
 import d4a from "@/assets/generated/resort-edit/edit-d4-a-card-thumb.jpg";
 import d4b from "@/assets/generated/resort-edit/edit-d4-b-card-thumb.jpg";
@@ -97,7 +98,7 @@ const DAYS: DayRow[] = [
     imagePos: "50% 25%",
     looks: [
       { slug: "look-a", label: "Look A", title: "Printed Set", image: d3a },
-      { slug: "look-b", label: "Look B", title: "White Linen Ease", image: d3b },
+      { slug: "look-b", label: "Look B", title: "Portofino Bloom", image: d3b },
       { slug: "look-c", label: "Look C", title: "Sage Escape", image: d3c },
     ],
   },
