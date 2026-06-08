@@ -158,9 +158,9 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
       },
       {
         slotLabel: "EARRINGS",
-        brand: "Oradina",
+        brand: "Bony Levy",
         title: "14K Gold Forget Me Knot Stud Earrings",
-        url: "https://www.oradina.com/products/forget-me-knot-stud-earrings",
+        url: "https://www.nordstrom.com/s/bony-levy-14k-gold-knot-stud-earrings/6855642",
         image: imgForgetMeKnot,
       },
       {
