@@ -22,6 +22,15 @@ import imgCollette from "@/assets/products/collette-straw-sun-hat.svg";
 import imgMadisonRing from "@/assets/products/madison-avenue-ring.svg";
 import imgGlowDrops from "@/assets/products/st-tropez-tonic-glow-drops.svg";
 
+import imgMichaFloral from "@/assets/products/melissa-odabash-micha-floral.svg";
+import imgSouliersWedge from "@/assets/products/souliers-martinez-summer-raffia-wedge.svg";
+import imgRomanArcNecklace from "@/assets/products/missoma-lucy-williams-roman-arc-necklace.svg";
+import imgLyannaEarrings from "@/assets/products/jennifer-behr-lyanna-quartz-earrings.svg";
+import imgCloverBracelet from "@/assets/products/by-adina-eden-pave-clover-bracelet-mop.svg";
+import imgLisseClutch from "@/assets/products/cult-gaia-lisse-clutch.svg";
+import imgKreweStLouis from "@/assets/products/krewe-st-louis-matte-oyster-24k.svg";
+import imgPalomaBoater from "@/assets/products/lack-of-color-paloma-sun-boater.svg";
+
 export type OverrideItem = {
   slotLabel: string;
   brand: string;
@@ -121,6 +130,66 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
         },
       ],
     },
+  },
+  "day-3/look-b": {
+    main: [
+      {
+        slotLabel: "DRESS",
+        brand: "Melissa Odabash",
+        title: "Micha Floral Off-Shoulder Mini Dress",
+        url: "https://www.neimanmarcus.com/p/melissa-odabash-micha-floral-off-shoulder-mini-dress-prod288540110",
+        image: imgMichaFloral,
+      },
+      {
+        slotLabel: "SHOES",
+        brand: "Souliers Martinez",
+        title: "Summer Raffia Espadrille Wedges (Beige)",
+        url: "https://www.mytheresa.com/us/en/women/souliers-martinez-summer-raffia-espadrille-wedges-beige-p01062265",
+        image: imgSouliersWedge,
+      },
+      {
+        slotLabel: "NECKLACE",
+        brand: "Missoma x Lucy Williams",
+        title: "18ct Gold-Plated Roman Arc Coin Pendant Necklace",
+        url: "https://www.libertylondon.com/us/x-lucy-williams-18ct-gold-plated-engravable-roman-arc-coin-pendant-necklace-R498618006.html",
+        image: imgRomanArcNecklace,
+      },
+      {
+        slotLabel: "EARRINGS",
+        brand: "Jennifer Behr",
+        title: "Lyanna Crystal-Embellished Gold-Tone Quartz Earrings",
+        url: "https://www.net-a-porter.com/en-us/shop/product/jennifer-behr/jewelry-and-watches/drop-earrings/lyanna-crystal-embellished-gold-tone-quartz-earrings/46376663163077673",
+        image: imgLyannaEarrings,
+      },
+      {
+        slotLabel: "BRACELET",
+        brand: "By Adina Eden",
+        title: "Mini Multi Pavé Outlined Colored Clover Bracelet in Mother of Pearl",
+        url: "https://www.revolve.com/by-adina-eden-mini-multi-pave-outlined-colored-clover-bracelet-in-mother-of-pearl/dp/AJEW-WL288/",
+        image: imgCloverBracelet,
+      },
+      {
+        slotLabel: "BAG",
+        brand: "Cult Gaia",
+        title: "Lisse Clutch",
+        url: "https://www.shopbop.com/product/vp/v=1/1593649487.htm",
+        image: imgLisseClutch,
+      },
+      {
+        slotLabel: "SUNGLASSES",
+        brand: "Krewe",
+        title: "St. Louis Matte Oyster 24K Sunglasses",
+        url: "https://www.krewe.com/products/st-louis-matte-oyster-24k-sunglasses",
+        image: imgKreweStLouis,
+      },
+      {
+        slotLabel: "HAT",
+        brand: "Lack of Color",
+        title: "Paloma Sun Straw Boater Hat",
+        url: "https://lackofcolor.com/products/paloma-sun-hat",
+        image: imgPalomaBoater,
+      },
+    ],
   },
 };
 
