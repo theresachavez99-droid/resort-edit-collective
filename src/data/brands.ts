@@ -33,6 +33,8 @@ export const brandCategories: BrandCategory[] = [
       b("Emporio Sirenuse", "Made in Positano, embroidered by the cliffside."),
       b("Loretta Caponi", "Florentine hand-embroidery, generational craft."),
       b("Loewe", "Madrid house, raffia and leather at its sharpest."),
+      b("Dolce & Gabbana", "Sicilian Majolica, lemons, and baroque heat."),
+      b("Borgo de Nor", "London-painted florals with a Mediterranean soul."),
     ],
   },
   {
@@ -49,6 +51,9 @@ export const brandCategories: BrandCategory[] = [
       b("Bond-Eye", "Australian recycled-knit minimalism."),
       b("MC2 Saint Barth", "St. Barth-born prints, vacation shorthand."),
       b("Stefania Frangista", "Athens swim with bohemian-glam embellishment."),
+      b("Vilebrequin", "Saint-Tropez born — the Riviera in swim form."),
+      b("Heidi Klein", "London resort, beach-to-bar polish."),
+      b("Solid & Striped", "Clean American stripes, easy poolside luxe."),
     ],
   },
   {
@@ -69,6 +74,10 @@ export const brandCategories: BrandCategory[] = [
       b("Devotion Twins", "Athens-made, hand-stitched Greek romance."),
       b("CeliaB", "Barcelona resort with hand-beaded craft."),
       b("Mimi Liberté", "Saint-Tropez-spirited French resort."),
+      b("Alexandra Miro", "Capri-print cottons and embroidered ease."),
+      b("Juliet Dunn", "Hand-block prints, sequins, barefoot luxe."),
+      b("Cala de la Cruz", "Sun-bleached linen, Ibiza to Capri."),
+      b("Hannah Artwear", "Collectible silk caftans, artist prints."),
     ],
   },
   {
@@ -83,6 +92,7 @@ export const brandCategories: BrandCategory[] = [
       b("Aranaz", "Manila-made beaded and embroidered minaudières."),
       b("Poolside", "Tropical straw totes, packable and pristine."),
       b("Lalingi", "Hand-painted Spanish raffia clutches."),
+      b("Hereu", "Spanish woven leather, modern artisan."),
     ],
   },
   {
@@ -114,6 +124,8 @@ export const brandCategories: BrandCategory[] = [
       b("Loeffler Randall", "Bow-and-knot flats with editorial polish."),
       b("Biankina", "Italian-made resort flats in chalky pastels."),
       b("Amanu", "Custom Los Angeles leather, fitted to the foot."),
+      b("Manolo Blahnik", "The Capri sandal, the Riviera heel."),
+      b("René Caovilla", "Embellished, serpentine — made for candlelight."),
     ],
   },
   {
