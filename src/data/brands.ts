@@ -78,6 +78,7 @@ export const brandCategories: BrandCategory[] = [
       b("Juliet Dunn", "Hand-block prints, sequins, barefoot luxe."),
       b("Cala de la Cruz", "Sun-bleached linen, Ibiza to Capri."),
       b("Hannah Artwear", "Collectible silk caftans, artist prints."),
+      b("Charo Ruiz Ibiza", "Ibiza-made guipure lace, the white-dress authority."),
     ],
   },
   {
@@ -126,6 +127,7 @@ export const brandCategories: BrandCategory[] = [
       b("Amanu", "Custom Los Angeles leather, fitted to the foot."),
       b("Manolo Blahnik", "The Capri sandal, the Riviera heel."),
       b("René Caovilla", "Embellished, serpentine — made for candlelight."),
+      b("Souliers Martinez", "Spanish espadrille wedges, hand-made in Madrid."),
     ],
   },
   {
