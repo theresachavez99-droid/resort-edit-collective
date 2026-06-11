@@ -1,16 +1,22 @@
 import { portofinoLooks, type ShopItem } from "./portofino";
-import d1aAsset from "@/assets/generated/resort-edit/d1-majolica-yacht.png.asset.json";
-const d1a = d1aAsset.url;
-import d1b from "@/assets/generated/resort-edit/edit-d1-b-detail-thumb.jpg";
-import d1cAsset from "@/assets/generated/resort-edit/edit-d1-c-hero.png.asset.json";
-const d1c = d1cAsset.url;
-import d2a from "@/assets/generated/resort-edit/edit-d2-a-detail-thumb.jpg";
-import d2b from "@/assets/generated/resort-edit/edit-d2-b-detail-thumb.jpg";
-import d2c from "@/assets/generated/resort-edit/edit-d2-c-detail-thumb.jpg";
-import d3a from "@/assets/generated/resort-edit/edit-d3-a-detail-thumb.jpg";
-import d3bAsset from "@/assets/generated/resort-edit/d3-floral-harbour.png.asset.json";
-const d3b = d3bAsset.url;
-import d3c from "@/assets/generated/resort-edit/edit-d3-c-detail-thumb.jpg";
+import cira1Asset from "@/assets/uploads/cira/cira-1.png.asset.json";
+import cira2Asset from "@/assets/uploads/cira/cira-2.png.asset.json";
+import cira3Asset from "@/assets/uploads/cira/cira-3.png.asset.json";
+import cira4Asset from "@/assets/uploads/cira/cira-4.png.asset.json";
+import cira5Asset from "@/assets/uploads/cira/cira-5.png.asset.json";
+import cira6Asset from "@/assets/uploads/cira/cira-6.png.asset.json";
+import cira7Asset from "@/assets/uploads/cira/cira-7.png.asset.json";
+import cira8Asset from "@/assets/uploads/cira/cira-8.png.asset.json";
+import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
+const d1a = cira1Asset.url;
+const d1b = cira2Asset.url;
+const d1c = cira3Asset.url;
+const d2a = cira4Asset.url;
+const d2b = cira5Asset.url;
+const d2c = cira6Asset.url;
+const d3a = cira7Asset.url;
+const d3b = cira8Asset.url;
+const d3c = cira9Asset.url;
 import d4a from "@/assets/generated/resort-edit/edit-d4-a-detail-thumb.jpg";
 import d4b from "@/assets/generated/resort-edit/edit-d4-b-detail-thumb.jpg";
 import d4c from "@/assets/generated/resort-edit/edit-d4-c-detail-thumb.jpg";
@@ -110,7 +116,7 @@ export type DayEdit = {
 const day1Looks: LookEdit[] = [
   {
     id: "print",
-    name: "Mediterranean Glam",
+    name: "Boarding the Boat",
     category: "Print Forward",
     fabric: "Blue tile silk print • Linen blend • Raffia accents",
     description: "A printed silk caftan over a sleek swimsuit. Gold at the ears, citrus on the deck.",
@@ -141,7 +147,7 @@ const day1Looks: LookEdit[] = [
   },
   {
     id: "neutral",
-    name: "Look B — Quiet Luxury Riviera",
+    name: "Midday on Deck",
     category: "Quiet Luxury",
     fabric: "European linen • Cotton poplin • Gold hardware",
     description: "White linen pants, a cream knit polo, and a soft leather tote. Cartier on the wrist.",
@@ -207,7 +213,7 @@ const day1Looks: LookEdit[] = [
 const day2Looks: LookEdit[] = [
   {
     id: "print",
-    name: "Lemon Print Cabana",
+    name: "Beach Club Morning",
     category: "Print Forward",
     fabric: "Lemon print cotton voile • Silk twill scarf • Raffia weave",
     description: "The iconic lemon-print kaftan layered over a solid swimsuit, finished with a knotted silk scarf, woven raffia accessories, and easy resort sandals for seaside lunches and waterfront strolls.",
@@ -240,7 +246,7 @@ const day2Looks: LookEdit[] = [
   },
   {
     id: "neutral",
-    name: "Neutral Resort Luxe",
+    name: "The Long Lunch",
     category: "Quiet Luxury",
     fabric: "Ivory European linen • Matte swim • Burnished leather",
     description: "Ivory linen shirtdress, oat-toned swim underneath, polished leather sandals.",
@@ -273,7 +279,7 @@ const day2Looks: LookEdit[] = [
   },
   {
     id: "texture",
-    name: "Coastal Texture",
+    name: "Seaside Glamour",
     category: "Texture Forward",
     fabric: "Cotton eyelet • Raffia straw • Woven leather slides",
     description: "Eyelet cover-up, raffia hat, woven slides — tonal sand-on-cream texture story.",
@@ -312,7 +318,7 @@ const day2Looks: LookEdit[] = [
 const day3Looks: LookEdit[] = [
   {
     id: "print",
-    name: "Palermo Print Day Club",
+    name: "Poolside",
     category: "Print Forward",
     fabric: "Mediterranean silk print • Cotton poplin • Polished leather",
     description: "A bold Mediterranean print shirtdress, sandals that mean business, statement earrings.",
@@ -343,7 +349,7 @@ const day3Looks: LookEdit[] = [
   },
   {
     id: "neutral",
-    name: "Floral Riviera Day Club",
+    name: "Via Roma Boutiques",
     category: "Print Forward",
     fabric: "Silk floral print • Raffia weave • Natural straw",
     description: "A floral off-shoulder mini, raffia espadrille wedges, and a straw boater — soft, sunlit, and made for a long lunch by the water.",
@@ -373,7 +379,7 @@ const day3Looks: LookEdit[] = [
   },
   {
     id: "texture",
-    name: "Crochet Day Club",
+    name: "Capri Aperitivo",
     category: "Texture Forward",
     fabric: "Open crochet • Woven leather • Raffia weave",
     description: "Crochet midi, woven slides, raffia mini. Tonal cream layered with handworked texture.",
