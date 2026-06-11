@@ -8,6 +8,12 @@ import cira6Asset from "@/assets/uploads/cira/cira-6.png.asset.json";
 import cira7Asset from "@/assets/uploads/cira/cira-7.png.asset.json";
 import cira8Asset from "@/assets/uploads/cira/cira-8.png.asset.json";
 import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
+import cira10Asset from "@/assets/uploads/cira/cira-10.png.asset.json";
+import cira11Asset from "@/assets/uploads/cira/cira-11.png.asset.json";
+import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
+import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
+import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
+import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
 const d1a = cira1Asset.url;
 const d1b = cira2Asset.url;
 const d1c = cira3Asset.url;
@@ -17,12 +23,12 @@ const d2c = cira6Asset.url;
 const d3a = cira7Asset.url;
 const d3b = cira8Asset.url;
 const d3c = cira9Asset.url;
-import d4a from "@/assets/generated/resort-edit/edit-d4-a-detail-thumb.jpg";
-import d4b from "@/assets/generated/resort-edit/edit-d4-b-detail-thumb.jpg";
-import d4c from "@/assets/generated/resort-edit/edit-d4-c-detail-thumb.jpg";
-import d5a from "@/assets/generated/resort-edit/edit-d5-a-detail-thumb.jpg";
-import d5b from "@/assets/generated/resort-edit/edit-d5-b-detail-thumb.jpg";
-import d5c from "@/assets/generated/resort-edit/edit-d5-c-detail-thumb.jpg";
+const d4a = cira10Asset.url;
+const d4b = cira11Asset.url;
+const d4c = cira12Asset.url;
+const d5a = cira13Asset.url;
+const d5b = cira14Asset.url;
+const d5c = cira15Asset.url;
 
 export type Tier = "designer" | "mid" | "riviera";
 export type LookKey = "print" | "neutral" | "texture";
@@ -415,7 +421,7 @@ const day3Looks: LookEdit[] = [
 const day4Looks: LookEdit[] = [
   {
     id: "print",
-    name: "Sunset Print Dress",
+    name: "Sunset Cocktails",
     category: "Print Forward",
     fabric: "Sunset silk print • Silk blend • Jeweled hardware",
     description: "A sunset-print silk maxi, strappy heel, a small jeweled clutch.",
@@ -445,7 +451,7 @@ const day4Looks: LookEdit[] = [
   },
   {
     id: "neutral",
-    name: "Silk Slip Dressing",
+    name: "Dinner with a View",
     category: "Quiet Luxury",
     fabric: "Heavy silk slip • Italian leather • Brushed gold",
     description: "An ivory silk slip, a small black chain bag, a single gold cuff. Quietly powerful.",
@@ -476,7 +482,7 @@ const day4Looks: LookEdit[] = [
   },
   {
     id: "texture",
-    name: "Black Resort Glam",
+    name: "After-Dinner Drinks",
     category: "Texture Forward",
     fabric: "Ribbed knit halter • Heavy satin • Intrecciato leather",
     description: "Textured black knit halter, satin column skirt, sculpted woven clutch. All tone, all texture.",
@@ -513,7 +519,7 @@ const day4Looks: LookEdit[] = [
 const day5Looks: LookEdit[] = [
   {
     id: "print",
-    name: "Riviera Stripe",
+    name: "Morning Espresso & Market",
     category: "Print Forward",
     fabric: "Cotton poplin stripe • Linen blend shorts • Woven leather",
     description: "A signature blue Riviera stripe shirt, white shorts, a woven tote.",
@@ -546,7 +552,7 @@ const day5Looks: LookEdit[] = [
   },
   {
     id: "neutral",
-    name: "Camel & Cream Wander",
+    name: "One Long Last Lunch",
     category: "Quiet Luxury",
     fabric: "Washed European linen • Viscose blend trousers • Smooth leather",
     description: "Camel linen shirt, cream trousers, polished leather sandals, a structured tan tote.",
