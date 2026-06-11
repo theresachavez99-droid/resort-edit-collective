@@ -2,10 +2,12 @@ import { Link, notFound } from "@tanstack/react-router";
 import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
-import heroYachtAsset from "@/assets/generated/resort-edit/d1-majolica-yacht.png.asset.json";
-const heroYacht = heroYachtAsset.url;
-import heroBeach from "@/assets/generated/resort-edit/look-beach-desktop-hero.jpg";
-import heroDayclub from "@/assets/generated/resort-edit/look-dayclub-desktop-hero.jpg";
+import cira1Asset from "@/assets/uploads/cira/cira-1.png.asset.json";
+import cira4Asset from "@/assets/uploads/cira/cira-4.png.asset.json";
+import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
+const heroYacht = cira1Asset.url;
+const heroBeach = cira4Asset.url;
+const heroDayclub = cira9Asset.url;
 import heroDinner from "@/assets/generated/resort-edit/look-dinner-desktop-hero.jpg";
 import heroDay5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-hires-detail-20260601.jpg";
 import expYacht from "@/assets/exp-yacht-charter.jpg";
@@ -17,17 +19,21 @@ import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
-import d1aAsset from "@/assets/generated/resort-edit/d1-majolica-yacht.png.asset.json";
-const d1a = d1aAsset.url;
-import d1b from "@/assets/generated/resort-edit/edit-d1-b-detail-thumb.jpg";
-import d1c from "@/assets/generated/resort-edit/edit-d1-c-detail-thumb.jpg";
-import d2a from "@/assets/generated/resort-edit/edit-d2-a-detail-thumb.jpg";
-import d2b from "@/assets/generated/resort-edit/edit-d2-b-detail-thumb.jpg";
-import d2c from "@/assets/generated/resort-edit/edit-d2-c-detail-thumb.jpg";
-import d3a from "@/assets/generated/resort-edit/edit-d3-a-detail-thumb.jpg";
-import d3bAsset from "@/assets/generated/resort-edit/d3-floral-harbour.png.asset.json";
-const d3b = d3bAsset.url;
-import d3c from "@/assets/generated/resort-edit/edit-d3-c-detail-thumb.jpg";
+import cira2Asset from "@/assets/uploads/cira/cira-2.png.asset.json";
+import cira3Asset from "@/assets/uploads/cira/cira-3.png.asset.json";
+import cira5Asset from "@/assets/uploads/cira/cira-5.png.asset.json";
+import cira6Asset from "@/assets/uploads/cira/cira-6.png.asset.json";
+import cira7Asset from "@/assets/uploads/cira/cira-7.png.asset.json";
+import cira8Asset from "@/assets/uploads/cira/cira-8.png.asset.json";
+const d1a = cira1Asset.url;
+const d1b = cira2Asset.url;
+const d1c = cira3Asset.url;
+const d2a = cira4Asset.url;
+const d2b = cira5Asset.url;
+const d2c = cira6Asset.url;
+const d3a = cira7Asset.url;
+const d3b = cira8Asset.url;
+const d3c = cira9Asset.url;
 import d4a from "@/assets/generated/resort-edit/edit-d4-a-detail-thumb.jpg";
 import d4b from "@/assets/generated/resort-edit/edit-d4-b-detail-thumb.jpg";
 import d4c from "@/assets/generated/resort-edit/edit-d4-c-detail-thumb.jpg";
@@ -64,7 +70,7 @@ export const DAY_META: Record<DaySlug, {
     title: "Day 1 · Yacht Day & Harbor Aperitivo",
     caption: "Open water, tan lines & hidden coves.",
     hero: heroYacht,
-    heroPos: "50% 18%",
+    heroPos: "50% 20%",
     editorial: {
       palette: "Marine navy, crisp white, raffia tan",
       silhouette: "Tailored shorts, halter knit, easy maxi",
@@ -74,7 +80,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Blue-and-white yacht glamour with raffia textures.",
     images: [d1a, d1b, d1c, d1a, d1b],
     placeholderSlots: [3, 4],
-    lookTitles: ["Harbor Hero", "Riviera Lunch", "Riviera Daywear", "Aperitivo Hour", "Harbor Evening"],
+    lookTitles: ["Boarding the Boat", "Midday on Deck", "Harbour Aperitivo", "Aperitivo Hour", "Harbor Evening"],
     lookMoods: [
       "Sun-drenched deck dressing for the slow cruise out of the bay.",
       "Italian Riviera lunch energy with effortless polish.",
@@ -95,7 +101,7 @@ export const DAY_META: Record<DaySlug, {
     title: "Day 2 · Beach Club Lunch",
     caption: "Slow mornings, long lunches, seaside glamour.",
     hero: heroBeach,
-    heroPos: "50% 12%",
+    heroPos: "50% 18%",
     editorial: {
       palette: "Sun-bleached ivory, lemon, soft sand",
       silhouette: "Crochet set, fluid maxi, breezy linen",
@@ -105,7 +111,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Sun-bleached cabana ease with linen and crochet.",
     images: [d2a, d2b, d2c, d2a, d2c],
     placeholderSlots: [3, 4],
-    lookTitles: ["Cabana Statement", "Long-Lunch Linen", "Seaside Easy", "Poolside Aperitivo", "Sunset Walk"],
+    lookTitles: ["Beach Club Morning", "The Long Lunch", "Seaside Glamour", "Poolside Aperitivo", "Sunset Walk"],
     lookMoods: [
       "Beach-club polish for the cabana you booked weeks ago.",
       "Pressed linen and quiet luxury at the long table.",
@@ -126,7 +132,7 @@ export const DAY_META: Record<DaySlug, {
     title: "Day 3 · Day Club & Shopping",
     caption: "Poolside ease, via Roma, Capri luxe.",
     hero: heroDayclub,
-    heroPos: "50% 15%",
+    heroPos: "50% 16%",
     editorial: {
       palette: "Soft neutrals, blush, gold accents",
       silhouette: "Slip dress, tailored short, knit set",
@@ -136,7 +142,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Piazzetta polish in soft neutrals and gold light.",
     images: [d3a, d3b, d3c, d3a, d3b],
     placeholderSlots: [3, 4],
-    lookTitles: ["Piazzetta Polish", "Via Roma Wander", "Aperitivo Casual", "Day Club Lounging", "Boutique-Hour Glam"],
+    lookTitles: ["Poolside", "Via Roma Boutiques", "Capri Aperitivo", "Day Club Lounging", "Boutique-Hour Glam"],
     lookMoods: [
       "Poolside-to-piazzetta polish with editorial restraint.",
       "Window-shopping the boutiques in soft, sun-bleached neutrals.",
