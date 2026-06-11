@@ -11,11 +11,17 @@ import cira6Asset from "@/assets/uploads/cira/cira-6.png.asset.json";
 import cira7Asset from "@/assets/uploads/cira/cira-7.png.asset.json";
 import cira8Asset from "@/assets/uploads/cira/cira-8.png.asset.json";
 import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
+import cira10Asset from "@/assets/uploads/cira/cira-10.png.asset.json";
+import cira11Asset from "@/assets/uploads/cira/cira-11.png.asset.json";
+import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
+import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
+import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
+import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
 const lookYacht = cira1Asset.url;
 const lookBeach = cira4Asset.url;
 const lookDayclub = cira9Asset.url;
-import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import day5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-hires-card-20260601.jpg";
+const lookDinner = cira10Asset.url;
+const day5MarketStrolls = cira13Asset.url;
 const d1a = cira1Asset.url;
 const d1b = cira2Asset.url;
 const d1c = cira3Asset.url;
@@ -25,12 +31,12 @@ const d2c = cira6Asset.url;
 const d3a = cira7Asset.url;
 const d3b = cira8Asset.url;
 const d3c = cira9Asset.url;
-import d4a from "@/assets/generated/resort-edit/edit-d4-a-card-thumb.jpg";
-import d4b from "@/assets/generated/resort-edit/edit-d4-b-card-thumb.jpg";
-import d4c from "@/assets/generated/resort-edit/edit-d4-c-card-thumb.jpg";
-import d5a from "@/assets/generated/resort-edit/edit-d5-a-card-thumb.jpg";
-import d5b from "@/assets/generated/resort-edit/edit-d5-b-card-thumb.jpg";
-import d5c from "@/assets/generated/resort-edit/edit-d5-c-card-thumb.jpg";
+const d4a = cira10Asset.url;
+const d4b = cira11Asset.url;
+const d4c = cira12Asset.url;
+const d5a = cira13Asset.url;
+const d5b = cira14Asset.url;
+const d5c = cira15Asset.url;
 import expYacht from "@/assets/exp-yacht-charter.jpg";
 import expHarbor from "@/assets/exp-harbor-golden.jpg";
 import expCruise from "@/assets/exp-sunset-cruise.jpg";
@@ -115,9 +121,9 @@ const DAYS: DayRow[] = [
     image: lookDinner,
     imagePos: "50% 22%",
     looks: [
-      { slug: "look-a", label: "Look A", title: "Sunset Print Dress", image: d4a },
-      { slug: "look-b", label: "Look B", title: "Champagne Satin", image: d4b },
-      { slug: "look-c", label: "Look C", title: "Terracotta Elegance", image: d4c },
+      { slug: "look-a", label: "Look A", title: "Sunset Cocktails", image: d4a },
+      { slug: "look-b", label: "Look B", title: "Dinner with a View", image: d4b },
+      { slug: "look-c", label: "Look C", title: "After-Dinner Drinks", image: d4c },
     ],
   },
   {
@@ -125,11 +131,11 @@ const DAYS: DayRow[] = [
     title: "Market Strolls & Coastal Goodbyes",
     caption: "Espresso, linen, and one long last lunch.",
     image: day5MarketStrolls,
-    imagePos: "center center",
+    imagePos: "50% 18%",
     looks: [
-      { slug: "look-a", label: "Look A", title: "Coastal Chic", image: d5a },
-      { slug: "look-b", label: "Look B", title: "Olive Safari", image: d5b },
-      { slug: "look-c", label: "Look C", title: "Soft Neutrals", image: d5c },
+      { slug: "look-a", label: "Look A", title: "Morning Espresso & Market", image: d5a },
+      { slug: "look-b", label: "Look B", title: "One Long Last Lunch", image: d5b },
+      { slug: "look-c", label: "Look C", title: "The Slow Departure", image: d5c },
     ],
   },
 ];

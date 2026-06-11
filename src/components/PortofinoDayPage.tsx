@@ -5,11 +5,17 @@ import { absoluteUrl } from "@/lib/site";
 import cira1Asset from "@/assets/uploads/cira/cira-1.png.asset.json";
 import cira4Asset from "@/assets/uploads/cira/cira-4.png.asset.json";
 import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
+import cira10Asset from "@/assets/uploads/cira/cira-10.png.asset.json";
+import cira11Asset from "@/assets/uploads/cira/cira-11.png.asset.json";
+import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
+import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
+import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
+import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
 const heroYacht = cira1Asset.url;
 const heroBeach = cira4Asset.url;
 const heroDayclub = cira9Asset.url;
-import heroDinner from "@/assets/generated/resort-edit/look-dinner-desktop-hero.jpg";
-import heroDay5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-hires-detail-20260601.jpg";
+const heroDinner = cira10Asset.url;
+const heroDay5MarketStrolls = cira13Asset.url;
 import expYacht from "@/assets/exp-yacht-charter.jpg";
 import expHarbor from "@/assets/exp-harbor-golden.jpg";
 import expCruise from "@/assets/exp-sunset-cruise.jpg";
@@ -34,12 +40,12 @@ const d2c = cira6Asset.url;
 const d3a = cira7Asset.url;
 const d3b = cira8Asset.url;
 const d3c = cira9Asset.url;
-import d4a from "@/assets/generated/resort-edit/edit-d4-a-detail-thumb.jpg";
-import d4b from "@/assets/generated/resort-edit/edit-d4-b-detail-thumb.jpg";
-import d4c from "@/assets/generated/resort-edit/edit-d4-c-detail-thumb.jpg";
-import d5a from "@/assets/generated/resort-edit/edit-d5-a-detail-thumb.jpg";
-import d5b from "@/assets/generated/resort-edit/edit-d5-b-detail-thumb.jpg";
-import d5c from "@/assets/generated/resort-edit/edit-d5-c-detail-thumb.jpg";
+const d4a = cira10Asset.url;
+const d4b = cira11Asset.url;
+const d4c = cira12Asset.url;
+const d5a = cira13Asset.url;
+const d5b = cira14Asset.url;
+const d5c = cira15Asset.url;
 
 export type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
 
@@ -163,7 +169,7 @@ export const DAY_META: Record<DaySlug, {
     title: "Day 4 · Dinner & Sunset",
     caption: "Golden hour, candlelight, harbor glow.",
     hero: heroDinner,
-    heroPos: "50% 22%",
+    heroPos: "50% 24%",
     editorial: {
       palette: "Sunset orange, burnt amber, candle gold",
       silhouette: "Sculptural dress, fluid gown, cocktail midi",
@@ -173,7 +179,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Harbor glamour with warm sunset dressing.",
     images: [d4a, d4b, d4c, d4a, d4b],
     placeholderSlots: [3, 4],
-    lookTitles: ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner", "Aperitivo at Splendido", "After-Dinner Stroll"],
+    lookTitles: ["Sunset Cocktails", "Dinner with a View", "After-Dinner Drinks", "Aperitivo at Splendido", "After-Dinner Stroll"],
     lookMoods: [
       "The dress everyone remembers, walking in at golden hour.",
       "Candlelit cocktail dressing, sculptural and quiet.",
@@ -194,7 +200,7 @@ export const DAY_META: Record<DaySlug, {
     title: "Day 5 · Espresso & A Long Last Lunch",
     caption: "Espresso, linen, and one long last lunch.",
     hero: heroDay5MarketStrolls,
-    heroPos: "center center",
+    heroPos: "50% 18%",
     editorial: {
       palette: "Espresso brown, cream, vintage gold",
       silhouette: "Easy trouser, breezy blouse, sun dress",
@@ -204,7 +210,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Slow Italian mornings in espresso, cream and gold.",
     images: [d5a, d5b, d5c, d5a, d5b],
     placeholderSlots: [3, 4],
-    lookTitles: ["Last-Day Luxe", "Market Morning", "Coastal Farewell", "Hotel Terrace Espresso", "Boat-Home Polish"],
+    lookTitles: ["Morning Espresso & Market", "One Long Last Lunch", "The Slow Departure", "Hotel Terrace Espresso", "Boat-Home Polish"],
     lookMoods: [
       "Travel-day dressing that still photographs beautifully.",
       "Slow market morning, espresso in hand.",
