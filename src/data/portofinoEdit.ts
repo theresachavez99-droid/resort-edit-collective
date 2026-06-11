@@ -586,7 +586,7 @@ const day5Looks: LookEdit[] = [
   },
   {
     id: "texture",
-    name: "Linen & Raffia",
+    name: "The Slow Departure",
     category: "Texture Forward",
     fabric: "Crinkled Italian linen • Raffia weave • Woven leather",
     description: "Crinkled linen set, raffia tote, woven slides. Texture from head to toe.",
