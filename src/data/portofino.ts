@@ -1,10 +1,13 @@
 import yacht from "@/assets/generated/resort-edit/look-yacht-detail-thumb.jpg";
 import beach from "@/assets/generated/resort-edit/look-beach-detail-thumb.jpg";
 import dayclub from "@/assets/generated/resort-edit/look-dayclub-detail-thumb.jpg";
-import dinner from "@/assets/generated/resort-edit/look-dinner-detail-thumb.jpg";
+import cira10Asset from "@/assets/uploads/cira/cira-10.png.asset.json";
+import cira11Asset from "@/assets/uploads/cira/cira-11.png.asset.json";
+import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
 import town from "@/assets/generated/resort-edit/look-town-detail-thumb.jpg";
-import day5MarketStrollsDetail from "@/assets/generated/resort-edit/day5-market-strolls-hires-detail-20260601.jpg";
-import day5MarketStrollsExperience from "@/assets/generated/resort-edit/day5-market-strolls-hires-experience-20260601.jpg";
+import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
+import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
+import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
 import productCelineTriompheSunglasses from "@/assets/products/celine-triomphe-sunglasses.svg";
 import productDior30MontaigneSunglasses from "@/assets/products/dior-30montaigne-sunglasses.svg";
 import productDragonSantaCroceTote from "@/assets/products/dragon-santa-croce-tote.jpg";
@@ -24,6 +27,10 @@ import productAquazzuraTequilaCrystal from "@/assets/products/aquazzura-tequila-
 import productLoefflerRandallRayneChampagne from "@/assets/products/loeffler-randall-rayne-champagne.jpg";
 import productKendraScottDaphneGold from "@/assets/products/kendra-scott-daphne-gold.jpg";
 import productDavidYurmanCableClassics from "@/assets/products/david-yurman-cable-classics.jpg";
+
+const dinner = cira10Asset.url;
+const day5MarketStrollsDetail = cira13Asset.url;
+const day5MarketStrollsExperience = cira15Asset.url;
 
 /**
  * Product resilience model.
