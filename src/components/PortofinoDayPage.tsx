@@ -169,7 +169,7 @@ export const DAY_META: Record<DaySlug, {
     title: "Day 4 · Dinner & Sunset",
     caption: "Golden hour, candlelight, harbor glow.",
     hero: heroDinner,
-    heroPos: "50% 22%",
+    heroPos: "50% 24%",
     editorial: {
       palette: "Sunset orange, burnt amber, candle gold",
       silhouette: "Sculptural dress, fluid gown, cocktail midi",
@@ -179,7 +179,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Harbor glamour with warm sunset dressing.",
     images: [d4a, d4b, d4c, d4a, d4b],
     placeholderSlots: [3, 4],
-    lookTitles: ["Sunset Showstopper", "Candlelit Cocktail", "Waterfront Dinner", "Aperitivo at Splendido", "After-Dinner Stroll"],
+    lookTitles: ["Sunset Cocktails", "Dinner with a View", "After-Dinner Drinks", "Aperitivo at Splendido", "After-Dinner Stroll"],
     lookMoods: [
       "The dress everyone remembers, walking in at golden hour.",
       "Candlelit cocktail dressing, sculptural and quiet.",
@@ -200,7 +200,7 @@ export const DAY_META: Record<DaySlug, {
     title: "Day 5 · Espresso & A Long Last Lunch",
     caption: "Espresso, linen, and one long last lunch.",
     hero: heroDay5MarketStrolls,
-    heroPos: "center center",
+    heroPos: "50% 18%",
     editorial: {
       palette: "Espresso brown, cream, vintage gold",
       silhouette: "Easy trouser, breezy blouse, sun dress",
@@ -210,7 +210,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Slow Italian mornings in espresso, cream and gold.",
     images: [d5a, d5b, d5c, d5a, d5b],
     placeholderSlots: [3, 4],
-    lookTitles: ["Last-Day Luxe", "Market Morning", "Coastal Farewell", "Hotel Terrace Espresso", "Boat-Home Polish"],
+    lookTitles: ["Morning Espresso & Market", "One Long Last Lunch", "The Slow Departure", "Hotel Terrace Espresso", "Boat-Home Polish"],
     lookMoods: [
       "Travel-day dressing that still photographs beautifully.",
       "Slow market morning, espresso in hand.",
