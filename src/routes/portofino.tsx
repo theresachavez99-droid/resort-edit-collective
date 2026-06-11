@@ -2,23 +2,29 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { absoluteUrl } from "@/lib/site";
-import lookYacht from "@/assets/generated/resort-edit/look-yacht-card-thumb.jpg";
-import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
-import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
-import heroMuse from "@/assets/hero-muse-portofino.jpg";
+import cira1Asset from "@/assets/uploads/cira/cira-1.png.asset.json";
+import cira2Asset from "@/assets/uploads/cira/cira-2.png.asset.json";
+import cira3Asset from "@/assets/uploads/cira/cira-3.png.asset.json";
+import cira4Asset from "@/assets/uploads/cira/cira-4.png.asset.json";
+import cira5Asset from "@/assets/uploads/cira/cira-5.png.asset.json";
+import cira6Asset from "@/assets/uploads/cira/cira-6.png.asset.json";
+import cira7Asset from "@/assets/uploads/cira/cira-7.png.asset.json";
+import cira8Asset from "@/assets/uploads/cira/cira-8.png.asset.json";
+import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
+const lookYacht = cira1Asset.url;
+const lookBeach = cira4Asset.url;
+const lookDayclub = cira9Asset.url;
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
 import day5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-hires-card-20260601.jpg";
-import d1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
-import d1b from "@/assets/generated/resort-edit/edit-d1-b-card-thumb.jpg";
-import d1cHeroAsset from "@/assets/generated/resort-edit/edit-d1-c-hero.png.asset.json";
-const d1c = d1cHeroAsset.url;
-import d2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
-import d2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
-import d2c from "@/assets/generated/resort-edit/edit-d2-c-card-thumb.jpg";
-import d3a from "@/assets/generated/resort-edit/edit-d3-a-card-thumb.jpg";
-import d3bAsset from "@/assets/generated/resort-edit/d3-floral-harbour.png.asset.json";
-const d3b = d3bAsset.url;
-import d3c from "@/assets/generated/resort-edit/edit-d3-c-card-thumb.jpg";
+const d1a = cira1Asset.url;
+const d1b = cira2Asset.url;
+const d1c = cira3Asset.url;
+const d2a = cira4Asset.url;
+const d2b = cira5Asset.url;
+const d2c = cira6Asset.url;
+const d3a = cira7Asset.url;
+const d3b = cira8Asset.url;
+const d3c = cira9Asset.url;
 import d4a from "@/assets/generated/resort-edit/edit-d4-a-card-thumb.jpg";
 import d4b from "@/assets/generated/resort-edit/edit-d4-b-card-thumb.jpg";
 import d4c from "@/assets/generated/resort-edit/edit-d4-c-card-thumb.jpg";
@@ -71,11 +77,11 @@ const DAYS: DayRow[] = [
     title: "Yacht Day & Harbour Aperitivo",
     caption: "Open water, tan lines & hidden coves.",
     image: lookYacht,
-    imagePos: "50% 18%",
+    imagePos: "50% 20%",
     looks: [
-      { slug: "look-a", label: "Look A", title: "Mediterranean Glam", image: d1a },
-      { slug: "look-b", label: "Look B", title: "Riviera Chic", image: d1b },
-      { slug: "look-c", label: "Look C", title: "Coastal Sophistication", image: d1c },
+      { slug: "look-a", label: "Look A", title: "Boarding the Boat", image: d1a },
+      { slug: "look-b", label: "Look B", title: "Midday on Deck", image: d1b },
+      { slug: "look-c", label: "Look C", title: "Harbour Aperitivo", image: d1c },
     ],
   },
   {
@@ -83,23 +89,23 @@ const DAYS: DayRow[] = [
     title: "Beach Club & Long Lunches",
     caption: "Slow mornings, long lunches, seaside glamour.",
     image: lookBeach,
-    imagePos: "50% 12%",
+    imagePos: "50% 18%",
     looks: [
-      { slug: "look-a", label: "Look A", title: "Lemon Print Cabana", image: d2a },
-      { slug: "look-b", label: "Look B", title: "Coastal Minimalist", image: d2b },
-      { slug: "look-c", label: "Look C", title: "Coral Coast", image: d2c },
+      { slug: "look-a", label: "Look A", title: "Beach Club Morning", image: d2a },
+      { slug: "look-b", label: "Look B", title: "The Long Lunch", image: d2b },
+      { slug: "look-c", label: "Look C", title: "Seaside Glamour", image: d2c },
     ],
   },
   {
     slug: "day-3", href: DAY_PATHS["day-3"], label: "Day 3",
     title: "Pool Lounging & Shopping",
     caption: "Poolside ease, via Roma, Capri luxe.",
-    image: heroMuse,
-    imagePos: "50% 25%",
+    image: lookDayclub,
+    imagePos: "50% 16%",
     looks: [
-      { slug: "look-a", label: "Look A", title: "Printed Set", image: d3a },
-      { slug: "look-b", label: "Look B", title: "Portofino Bloom", image: d3b },
-      { slug: "look-c", label: "Look C", title: "Sage Escape", image: d3c },
+      { slug: "look-a", label: "Look A", title: "Poolside", image: d3a },
+      { slug: "look-b", label: "Look B", title: "Via Roma Boutiques", image: d3b },
+      { slug: "look-c", label: "Look C", title: "Capri Aperitivo", image: d3c },
     ],
   },
   {
