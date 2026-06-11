@@ -14,7 +14,6 @@ import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
 const lookYacht = cira1Asset.url;
 const lookBeach = cira4Asset.url;
 const lookDayclub = cira9Asset.url;
-import heroMuse from "@/assets/hero-muse-portofino.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
 import day5MarketStrolls from "@/assets/generated/resort-edit/day5-market-strolls-hires-card-20260601.jpg";
 const d1a = cira1Asset.url;
