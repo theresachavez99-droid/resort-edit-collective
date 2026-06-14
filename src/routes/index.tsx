@@ -1,17 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
-import day3MuseAsset from "@/assets/generated/resort-edit/d3-floral-harbour.png.asset.json";
-const day3Muse = day3MuseAsset.url;
 import stillLife from "@/assets/portofino-still-life.jpg";
-import lookYachtAsset from "@/assets/generated/resort-edit/d1-majolica-yacht.png.asset.json";
-const lookYacht = lookYachtAsset.url;
-import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
-import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import day5Muse from "@/assets/generated/resort-edit/day5-market-strolls-hires-card-20260601.jpg";
-import day5MuseMobile from "@/assets/generated/resort-edit/day5-market-strolls-hires-mobile-20260601.jpg";
-import day5MuseRetina from "@/assets/generated/resort-edit/day5-market-strolls-hires-retina-2x-20260601.jpg";
 import editD2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
 import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
@@ -19,6 +10,7 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
+import { HomeItinerary } from "@/components/HomeItinerary";
 
 const heroMuse = heroMuseAsset.url;
 
@@ -37,29 +29,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
-
-type DayCard = {
-  n: "1" | "2" | "3" | "4" | "5";
-  href:
-    | "/portofino/day-1"
-    | "/portofino/day-2"
-    | "/portofino/day-3"
-    | "/portofino/day-4"
-    | "/portofino/day-5";
-  title: string;
-  desc: string;
-  image: string;
-  imageMobile?: string;
-  imageRetina?: string;
-};
-
-const days: DayCard[] = [
-  { n: "1", href: "/portofino/day-1", title: "Yacht Day + Harbor Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
-  { n: "2", href: "/portofino/day-2", title: "Beach Club + Long Lunch", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
-  { n: "3", href: "/portofino/day-3", title: "Pool Lounging + Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
-  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails + Dinner", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
-  { n: "5", href: "/portofino/day-5", title: "Market Strolls + Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse, imageMobile: day5MuseMobile, imageRetina: day5MuseRetina },
-];
 
 const looks: Array<{
   tag: string;
@@ -135,7 +104,7 @@ function Index() {
               className="font-serif italic text-[2rem] sm:text-[2.4rem] lg:text-[2.9rem] xl:text-[3.2rem] leading-[1.05] tracking-[-0.01em] mt-3 -ml-0.5 max-w-[95%]"
               style={{ color: "oklch(0.62 0.12 66)" }}
             >
-              Five Days. Fifteen Looks. One Perfect Destination.
+              Five Days. Five Looks. One Perfect Destination.
             </p>
             <div className="mt-5 mb-4 h-px w-32 bg-gold/80" />
             <p className="font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
@@ -162,45 +131,7 @@ function Index() {
         <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
           Five days in Portofino — from yacht mornings and beach club lunches to market strolls and sunset dinners.
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
-          {days.map((d) => (
-            <Link
-              key={d.n}
-              to={d.href}
-              data-route-card={d.n === "1" ? d.href : undefined}
-              className="group bg-card border border-border/50 flex flex-col no-underline text-inherit"
-            >
-              <div className="text-center pt-5 px-3">
-                <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">Day {d.n}</div>
-                <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] leading-snug text-ink min-h-[2.5rem]">
-                  {d.title}
-                </h3>
-              </div>
-              <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
-                <img
-                  src={d.image}
-                  srcSet={d.imageRetina ? `${d.image} 1x, ${d.imageRetina} 2x` : undefined}
-                  alt={d.title}
-                  loading={d.n === "5" ? "eager" : "lazy"}
-                  fetchPriority={d.n === "5" ? "high" : undefined}
-                  decoding="async"
-                  data-route-image={d.n === "1" ? d.href : undefined}
-                  className="absolute inset-0 h-full w-full object-cover"
-                  style={{ objectPosition: d.n === "5" ? "center center" : "center top", imageRendering: "auto" }}
-                />
-              </div>
-              <div className="px-4 pt-5 text-center flex-1 flex flex-col">
-                <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
-              </div>
-              <span
-                data-route-cta={d.n === "1" ? d.href : undefined}
-                className="mt-5 block bg-gold text-ivory text-center eyebrow text-[0.7rem] tracking-[0.24em] py-4 group-hover:bg-ink transition-colors"
-              >
-                Shop 3 Looks <span data-route-arrow={d.n === "1" ? d.href : undefined}>→</span>
-              </span>
-            </Link>
-          ))}
-        </div>
+        <HomeItinerary />
       </section>
 
       {/* SHOP THE LOOKS + TIP */}
