@@ -104,7 +104,7 @@ function Index() {
               className="font-serif italic text-[2rem] sm:text-[2.4rem] lg:text-[2.9rem] xl:text-[3.2rem] leading-[1.05] tracking-[-0.01em] mt-3 -ml-0.5 max-w-[95%]"
               style={{ color: "oklch(0.62 0.12 66)" }}
             >
-              Five Days. Fifteen Looks. One Perfect Destination.
+              Five Days. Five Looks. One Perfect Destination.
             </p>
             <div className="mt-5 mb-4 h-px w-32 bg-gold/80" />
             <p className="font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
@@ -131,45 +131,7 @@ function Index() {
         <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
           Five days in Portofino — from yacht mornings and beach club lunches to market strolls and sunset dinners.
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
-          {days.map((d) => (
-            <Link
-              key={d.n}
-              to={d.href}
-              data-route-card={d.n === "1" ? d.href : undefined}
-              className="group bg-card border border-border/50 flex flex-col no-underline text-inherit"
-            >
-              <div className="text-center pt-5 px-3">
-                <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">Day {d.n}</div>
-                <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] leading-snug text-ink min-h-[2.5rem]">
-                  {d.title}
-                </h3>
-              </div>
-              <div className="relative aspect-[4/5] mt-4 overflow-hidden bg-muted">
-                <img
-                  src={d.image}
-                  srcSet={d.imageRetina ? `${d.image} 1x, ${d.imageRetina} 2x` : undefined}
-                  alt={d.title}
-                  loading={d.n === "5" ? "eager" : "lazy"}
-                  fetchPriority={d.n === "5" ? "high" : undefined}
-                  decoding="async"
-                  data-route-image={d.n === "1" ? d.href : undefined}
-                  className="absolute inset-0 h-full w-full object-cover"
-                  style={{ objectPosition: d.n === "5" ? "center center" : "center top", imageRendering: "auto" }}
-                />
-              </div>
-              <div className="px-4 pt-5 text-center flex-1 flex flex-col">
-                <p className="font-serif italic text-[0.96rem] text-ink/70 leading-relaxed flex-1">{d.desc}</p>
-              </div>
-              <span
-                data-route-cta={d.n === "1" ? d.href : undefined}
-                className="mt-5 block bg-gold text-ivory text-center eyebrow text-[0.7rem] tracking-[0.24em] py-4 group-hover:bg-ink transition-colors"
-              >
-                Shop 3 Looks <span data-route-arrow={d.n === "1" ? d.href : undefined}>→</span>
-              </span>
-            </Link>
-          ))}
-        </div>
+        <HomeItinerary />
       </section>
 
       {/* SHOP THE LOOKS + TIP */}
