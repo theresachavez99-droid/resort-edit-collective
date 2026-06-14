@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Menu, X } from "lucide-react";
 import { useState } from "react";
 import palmMark from "@/assets/resort-edit-mark.png";
+import { SavedCounter } from "@/components/SavedCounter";
 
 const nav = [
   { to: "/destinations", label: "Destinations" },
@@ -82,6 +83,7 @@ export function SiteHeader() {
           >
             Shop the Edit
           </Link>
+          <SavedCounter />
           <a
             href="https://www.instagram.com/resort.edit"
             target="_blank"
