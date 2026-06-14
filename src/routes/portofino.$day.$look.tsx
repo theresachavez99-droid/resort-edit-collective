@@ -532,7 +532,7 @@ function ViewFullLookPage() {
               <span className="eyebrow tracking-[0.34em] text-[0.62rem]">EDITOR'S ALTERNATIVES</span>
             </div>
             <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
-              Other Ways to Wear It
+              More Pieces in This Aesthetic
             </h2>
             <p className="font-serif text-[0.98rem] text-ink/60 mt-3 max-w-2xl leading-relaxed">
               Same destination, same energy — additional sourced options for the days you want to swap a piece in or out without leaving the look behind.
