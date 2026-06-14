@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight, MapPin, Shirt, ShoppingBag, Sun } from "lucide-react";
-import { useMemo } from "react";
+import { Check, ChevronLeft, ChevronRight, MapPin, Shirt, ShoppingBag, Sun } from "lucide-react";
+import { useMemo, useState } from "react";
 import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
 import { NewsletterForm } from "@/components/NewsletterForm";
@@ -23,6 +23,27 @@ import {
   type AlternativeProduct,
 } from "@/data/lookAlternatives";
 import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
+import {
+  CUSTOMIZE_OPTIONS,
+  enrichmentFor,
+  HOTEL_DETAILS,
+} from "@/data/lookEnrichment";
+import hotelSplendido from "@/assets/hotel-splendido.jpg";
+import hotelEight from "@/assets/hotel-eight.jpg";
+import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
+
+const HOTEL_IMAGES = {
+  splendido: hotelSplendido,
+  eight: hotelEight,
+  piccolo: hotelPiccolo,
+} as const;
+
+const DAY_NEXT: Record<string, { day: string; title: string; daySlug: "day-1" | "day-2" | "day-3" | "day-4" | "day-5" }> = {
+  "day-1": { day: "Day 2", title: "Beach Club & Long Lunches", daySlug: "day-2" },
+  "day-2": { day: "Day 3", title: "Pool Lounging & Shopping", daySlug: "day-3" },
+  "day-3": { day: "Day 4", title: "Sunset Cocktails & Dinner", daySlug: "day-4" },
+  "day-4": { day: "Day 5", title: "Market Strolls & Coastal Goodbyes", daySlug: "day-5" },
+};
 
 type DaySlug = Look["daySlug"];
 
