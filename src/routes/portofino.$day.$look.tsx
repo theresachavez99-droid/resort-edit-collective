@@ -274,6 +274,233 @@ function ViewFullLookPage() {
         </div>
       </section>
 
+      {/* ───────────────────────── WHERE YOU'LL ACTUALLY WEAR THIS ───────────────────────── */}
+      <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-24 md:mt-32">
+        <div className="border-t border-ink/15 pt-12">
+          <p className="eyebrow tracking-[0.34em] text-[0.6rem] text-gold">THE DAY</p>
+          <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+            Where You'll Actually Wear This
+          </h2>
+          <p className="font-serif italic text-[1rem] text-ink/65 mt-3 max-w-2xl leading-relaxed">
+            The arc of the day this look was styled for — hour by hour.
+          </p>
+          <ol className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-6">
+            {enrichment.activities.map((a, i) => (
+              <li key={a} className="flex items-baseline gap-4 border-b border-ink/10 pb-4">
+                <span className="eyebrow tracking-[0.32em] text-[0.62rem] text-gold w-6">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="font-serif text-[1.02rem] text-ink/85 leading-relaxed">{a}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ───────────────────────── WHY THIS LOOK WORKS ───────────────────────── */}
+      <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-24 md:mt-32">
+        <div className="border-t border-ink/15 pt-12">
+          <p className="eyebrow tracking-[0.34em] text-[0.6rem] text-gold">EDITORIAL NOTE</p>
+          <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+            Why This Look Works
+          </h2>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 max-w-4xl">
+            {enrichment.whyItWorks.map((p, i) => (
+              <p key={i} className="font-serif text-[1.02rem] text-ink/80 leading-[1.75]">
+                {p}
+              </p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────────────────────── STYLED THREE WAYS ───────────────────────── */}
+      <section className="mx-auto max-w-[1480px] px-4 sm:px-8 lg:px-10 mt-24 md:mt-32">
+        <div className="border-t border-ink/15 pt-12">
+          <div className="inline-flex items-center gap-2 text-gold">
+            <ShoppingBag className="h-4 w-4" strokeWidth={1.4} />
+            <span className="eyebrow tracking-[0.34em] text-[0.62rem]">SHOP THE LOOK</span>
+          </div>
+          <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+            Styled Three Ways
+          </h2>
+          <p className="font-serif italic text-[1rem] text-ink/65 mt-3 max-w-2xl leading-relaxed">
+            Same destination energy, three price points — Designer, Mid-Luxe, and Destination Finds.
+          </p>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {[
+              { label: "Designer Edit", tag: "Investment pieces", to: "/portofino/luxury" as const, note: "The icons: Zimmermann, Eres, Cult Gaia, Gianvito Rossi." },
+              { label: "Mid-Luxe Edit", tag: "Considered & wearable", to: "/portofino/mid-luxe" as const, note: "Editor-loved labels with the same Riviera feel at a softer spend." },
+              { label: "Destination Finds", tag: "Travel-smart picks", to: "/portofino/riviera-finds" as const, note: "Easy hits that perform on the boat, in the heat, and on cobblestone." },
+            ].map((c) => (
+              <Link
+                key={c.label}
+                to={c.to}
+                className="group border border-ink/15 bg-ivory p-8 flex flex-col hover:border-gold transition-colors no-underline text-inherit"
+              >
+                <p className="eyebrow tracking-[0.3em] text-[0.6rem] text-gold">{c.tag}</p>
+                <h3 className="font-display text-[1.4rem] md:text-[1.6rem] tracking-[0.08em] text-ink uppercase mt-3">
+                  {c.label}
+                </h3>
+                <p className="font-serif text-[0.98rem] text-ink/70 mt-4 leading-relaxed flex-1">
+                  {c.note}
+                </p>
+                <span className="mt-6 eyebrow tracking-[0.24em] text-[0.6rem] text-ink border-b border-gold pb-0.5 self-start group-hover:text-gold transition-colors">
+                  EXPLORE EDIT →
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────────────────────── CUSTOMIZE THIS LOOK ───────────────────────── */}
+      <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-24 md:mt-32">
+        <div className="border-t border-ink/15 pt-12">
+          <p className="eyebrow tracking-[0.34em] text-[0.6rem] text-gold">STYLED FOR YOU</p>
+          <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+            Customize This Look
+          </h2>
+          <p className="font-serif italic text-[1rem] text-ink/65 mt-3 max-w-2xl leading-relaxed">
+            Tell us how you like to wear it — we'll surface alternates that match.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-2.5">
+            {CUSTOMIZE_OPTIONS.map((opt) => {
+              const active = customize.has(opt);
+              return (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => toggleCustomize(opt)}
+                  className={
+                    "eyebrow tracking-[0.22em] text-[0.62rem] px-4 py-2.5 border transition-colors " +
+                    (active
+                      ? "bg-ink text-ivory border-ink"
+                      : "bg-ivory text-ink/75 border-ink/25 hover:border-gold hover:text-gold")
+                  }
+                >
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-8 border border-ink/10 bg-cream/30 px-6 py-5">
+            <p className="font-serif italic text-[0.98rem] text-ink/75 leading-relaxed">
+              {customizeActive
+                ? `Matching ${customize.size} preference${customize.size > 1 ? "s" : ""} — alternates appear below in "If This Sells Out" and across the Styled Three Ways edits.`
+                : "Select one or more preferences to surface alternate pieces from the Resort Edit product library."}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ───────────────────────── PACKING INTELLIGENCE ───────────────────────── */}
+      <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-24 md:mt-32">
+        <div className="border-t border-ink/15 pt-12">
+          <p className="eyebrow tracking-[0.34em] text-[0.6rem] text-gold">THE LIST</p>
+          <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+            Packing Intelligence
+          </h2>
+          <p className="font-serif italic text-[1rem] text-ink/65 mt-3 max-w-2xl leading-relaxed">
+            For this activity, bring:
+          </p>
+          <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-3">
+            {enrichment.packing.map((p) => (
+              <li key={p} className="flex items-center gap-3 border-b border-ink/10 py-2.5">
+                <Check className="w-4 h-4 text-gold shrink-0" strokeWidth={1.5} />
+                <span className="font-serif text-[1rem] text-ink/80">{p}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ───────────────────────── IF THIS SELLS OUT ───────────────────────── */}
+      {sellOutItems.length > 0 && (
+        <section className="mx-auto max-w-[1480px] px-4 sm:px-8 lg:px-10 mt-24 md:mt-32">
+          <div className="border-t border-ink/15 pt-12">
+            <p className="eyebrow tracking-[0.34em] text-[0.6rem] text-gold">ALWAYS A PLAN B</p>
+            <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+              If This Sells Out
+            </h2>
+            <p className="font-serif italic text-[1rem] text-ink/65 mt-3 max-w-3xl leading-relaxed">
+              Every Resort Edit look includes approved alternatives selected by our styling engine.
+            </p>
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-10">
+              {sellOutItems.map((item) => (
+                <AlternativeCard key={item.brand + item.title} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ───────────────────────── BOOK THE EXPERIENCE ───────────────────────── */}
+      <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-24 md:mt-32">
+        <div className="border-t border-ink/15 pt-12">
+          <p className="eyebrow tracking-[0.34em] text-[0.6rem] text-gold">COMPLETE THE TRIP</p>
+          <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+            Book the Experience
+          </h2>
+          <p className="font-serif italic text-[1rem] text-ink/65 mt-3 max-w-2xl leading-relaxed">
+            The pieces of the day that turn the outfit into a memory.
+          </p>
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {enrichment.experiences.map((e) => (
+              <Link
+                key={e.label}
+                to={e.href}
+                className="h-16 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center eyebrow tracking-[0.22em] text-[0.7rem] text-center px-4 no-underline"
+              >
+                {e.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────────────────────── BEST PAIRED WITH ───────────────────────── */}
+      <section className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-10 mt-24 md:mt-32">
+        <div className="border-t border-ink/15 pt-12">
+          <p className="eyebrow tracking-[0.34em] text-[0.6rem] text-gold">WHERE WE'D STAY</p>
+          <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
+            Best Paired With
+          </h2>
+          <p className="font-serif italic text-[1rem] text-ink/65 mt-3 max-w-2xl leading-relaxed">
+            The hotels that turn this look into a stay.
+          </p>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {enrichment.hotels.map((key) => {
+              const h = HOTEL_DETAILS[key];
+              return (
+                <a
+                  key={key}
+                  href={h.href}
+                  target="_blank"
+                  rel="noreferrer noopener sponsored"
+                  className="bg-ivory border border-ink/15 hover:border-gold transition-colors flex flex-col no-underline text-inherit"
+                >
+                  <div className="relative aspect-[4/3] bg-cream/30 overflow-hidden">
+                    <img src={HOTEL_IMAGES[key]} alt={h.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                    <span className="absolute left-3 bottom-3 bg-ink/75 text-ivory eyebrow text-[0.55rem] tracking-[0.24em] px-2.5 py-1 backdrop-blur-sm">
+                      {h.tag}
+                    </span>
+                  </div>
+                  <div className="p-5 flex flex-col flex-1">
+                    <p className="eyebrow tracking-[0.3em] text-[0.58rem] text-gold">PORTOFINO, ITALY</p>
+                    <h3 className="font-display text-[1.25rem] tracking-[0.06em] text-ink mt-2">{h.name}</h3>
+                    <p className="font-serif italic text-[0.9rem] text-ink/60 mt-3 flex-1">{h.note}</p>
+                    <span className="mt-4 eyebrow tracking-[0.26em] text-[0.6rem] text-ink border-b border-gold pb-0.5 self-start">
+                      EXPLORE STAY →
+                    </span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* ───────────────────────── THE DETAILS (beauty / finishing) ───────────────────────── */}
       {override?.details && (
         <section className="mx-auto max-w-[1100px] px-4 sm:px-8 lg:px-10 mt-20 md:mt-24">
