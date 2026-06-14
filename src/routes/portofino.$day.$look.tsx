@@ -119,6 +119,25 @@ function ViewFullLookPage() {
   const nextLook =
     flatIndex >= 0 && flatIndex < lookbook.length - 1 ? lookbook[flatIndex + 1] : null;
 
+  const enrichment = enrichmentFor(day, look as LookSlug);
+  const nextDay = DAY_NEXT[day];
+  const nextDayFirstLook = nextDay
+    ? lookbook.find((l) => l.daySlug === nextDay.daySlug && l.lookSlug === "look-a")
+    : undefined;
+
+  const [customize, setCustomize] = useState<Set<string>>(new Set());
+  const toggleCustomize = (opt: string) => {
+    setCustomize((prev) => {
+      const next = new Set(prev);
+      if (next.has(opt)) next.delete(opt);
+      else next.add(opt);
+      return next;
+    });
+  };
+  const customizeActive = customize.size > 0;
+
+  const sellOutItems = useMemo(() => alternatives.flatMap((g) => g.items).slice(0, 4), [alternatives]);
+
   return (
     <div className="bg-ivory min-h-screen pb-24">
       {/* TOP BAR — breadcrumb + prev/next */}
