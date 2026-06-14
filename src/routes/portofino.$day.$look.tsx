@@ -562,6 +562,34 @@ function ViewFullLookPage() {
       )}
 
       {/* ───────────────────────── BOTTOM · GET THE NEXT EDIT ───────────────────────── */}
+      {nextDay && nextDayFirstLook && (
+        <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-24 md:mt-32">
+          <Link
+            to="/portofino/$day/$look"
+            params={{ day: nextDayFirstLook.daySlug, look: nextDayFirstLook.lookSlug }}
+            className="group border-t border-ink/15 pt-12 grid grid-cols-1 md:grid-cols-[minmax(0,220px)_minmax(0,1fr)] gap-8 md:gap-12 items-center no-underline text-inherit"
+          >
+            <figure className="w-full aspect-[3/4] overflow-hidden bg-cream/35">
+              <img
+                src={nextDayFirstLook.heroImage}
+                alt={`${nextDay.day} · ${nextDay.title}`}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+            </figure>
+            <div>
+              <p className="eyebrow tracking-[0.4em] text-[0.65rem] text-gold">CONTINUE THE EDIT</p>
+              <h3 className="font-display text-[2rem] md:text-[2.6rem] tracking-[0.04em] text-ink uppercase mt-3 group-hover:text-gold transition-colors">
+                Continue to {nextDay.day} →
+              </h3>
+              <p className="font-serif italic text-[1.1rem] text-ink/70 mt-3">
+                {nextDay.title}
+              </p>
+            </div>
+          </Link>
+        </section>
+      )}
+
       <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-28 md:mt-36">
         <div className="border-t border-ink/15 pt-14 grid grid-cols-1 md:grid-cols-[minmax(0,180px)_minmax(0,1fr)] gap-8 md:gap-12 items-center">
           <figure className="w-full aspect-[3/4] md:aspect-[3/4] overflow-hidden bg-cream/35 flex items-center justify-center">
