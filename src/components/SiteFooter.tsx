@@ -25,10 +25,10 @@ export function SiteFooter() {
           </span>
         </div>
         <h2 className="mt-6 font-display text-3xl md:text-5xl tracking-wide text-ivory">
-          The Next Edit
+          The Next Destination
         </h2>
         <p className="mt-3 text-ivory/85 max-w-xl font-serif text-lg md:text-xl italic">
-          Destination style, itineraries, and shoppable escapes — delivered to your inbox.
+          A new destination, complete itinerary, curated wardrobe, and insider recommendations delivered to your inbox.
         </p>
         <NewsletterForm ctaSource="footer" variant="footer" />
         <a
