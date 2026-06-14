@@ -127,55 +127,29 @@ function Index() {
             />
           </div>
           <div className="lg:pl-2 max-w-[750px]">
-            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">Resort Edit</p>
+            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">RESORT EDIT™</p>
             <h1 className="font-display mt-3 text-[3.4rem] sm:text-[4.2rem] lg:text-[6.2rem] xl:text-[7.4rem] leading-[0.9] tracking-[0.01em] text-ink">
               DRESSED FOR THE
               <br />
-              DESTINATION.
+              DESTINATION™
             </h1>
             <p
-              className="font-serif italic text-[2.7rem] sm:text-[3.3rem] lg:text-[4.2rem] xl:text-[4.7rem] leading-[0.95] tracking-[-0.01em] mt-1 -ml-0.5 max-w-[85%]"
+              className="font-serif italic text-[2rem] sm:text-[2.4rem] lg:text-[2.9rem] xl:text-[3.2rem] leading-[1.05] tracking-[-0.01em] mt-3 -ml-0.5 max-w-[95%]"
               style={{ color: "oklch(0.62 0.12 66)" }}
             >
-              La Dolce Vita
+              Five Days. Fifteen Looks. One Perfect Destination.
             </p>
             <div className="mt-5 mb-4 h-px w-32 bg-gold/80" />
             <p className="font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
-              Curated across Zimmermann, Johanna Ortiz, SIR — and labels you haven't discovered yet.
+              Curated outfits, hotels, experiences, and insider recommendations designed around how women actually travel.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {brandChips.map((b) => (
-                <Link
-                  key={b}
-                  to="/brands"
-                  className="eyebrow text-[0.66rem] tracking-[0.26em] text-ink/75 border border-ink/25 rounded-full px-3.5 py-1.5 hover:border-gold hover:text-gold transition-colors"
-                >
-                  {b}
-                </Link>
-              ))}
-              <Link
-                to="/brands"
-                className="eyebrow text-[0.66rem] tracking-[0.26em] text-gold border border-gold/40 rounded-full px-3.5 py-1.5 hover:bg-gold hover:text-ivory transition-colors"
-              >
-                More →
-              </Link>
-            </div>
-            <p className="mt-5 font-serif italic text-[1.05rem] lg:text-[1.15rem] text-ink/75 leading-snug max-w-[85%]">
-              Curated looks, hotels and experiences — for women who dress for the destination.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-4">
+            <div className="mt-7 flex flex-wrap gap-4">
               <Link to="/portofino" className="bg-gold text-ivory eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-ink transition-colors">
-                Shop 15 Looks — Day by Day
+                Explore Portofino
               </Link>
-            </div>
-            <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 text-ink/80">
-              <span className="eyebrow text-[0.92rem] tracking-[0.26em]">
-                5 Days <span className="text-gold">·</span> 15 Looks <span className="text-gold">·</span> 6 Experiences
-              </span>
-              <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
-              <span className="eyebrow text-[0.82rem] tracking-[0.3em] text-gold">
-                ★ The Edit We Keep Coming Back To
-              </span>
+              <Link to="/destinations" className="border border-ink text-ink eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-ink hover:text-ivory transition-colors">
+                View All Destinations
+              </Link>
             </div>
           </div>
       </section>
