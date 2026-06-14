@@ -54,11 +54,11 @@ type DayCard = {
 };
 
 const days: DayCard[] = [
-  { n: "1", href: "/portofino/day-1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
-  { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
-  { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
-  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
-  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse, imageMobile: day5MuseMobile, imageRetina: day5MuseRetina },
+  { n: "1", href: "/portofino/day-1", title: "Yacht Day + Harbor Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
+  { n: "2", href: "/portofino/day-2", title: "Beach Club + Long Lunch", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
+  { n: "3", href: "/portofino/day-3", title: "Pool Lounging + Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
+  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails + Dinner", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
+  { n: "5", href: "/portofino/day-5", title: "Market Strolls + Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse, imageMobile: day5MuseMobile, imageRetina: day5MuseRetina },
 ];
 
 const looks: Array<{
@@ -110,8 +110,6 @@ const ctas = [
   { label: "View Experiences", Icon: Compass },
 ];
 
-const brandChips = ["Zimmermann", "Johanna Ortiz", "SIR", "Faithfull the Brand"];
-
 function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
   return (
@@ -154,8 +152,17 @@ function Index() {
           </div>
       </section>
 
-      {/* 5-DAY CARDS */}
-      <section className={`${wrap} mt-16 lg:mt-20 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5`}>
+      {/* PORTOFINO ITINERARY */}
+      <section className={`${wrap} mt-20 lg:mt-28`}>
+        <div className="flex items-center gap-4 justify-center mb-4">
+          <div className="h-px w-16 bg-gold/50" />
+          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">PORTOFINO ITINERARY</h2>
+          <div className="h-px w-16 bg-gold/50" />
+        </div>
+        <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+          Five days in Portofino — from yacht mornings and beach club lunches to market strolls and sunset dinners.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
           {days.map((d) => (
             <Link
               key={d.n}
@@ -193,17 +200,18 @@ function Index() {
               </span>
             </Link>
           ))}
+        </div>
       </section>
 
       {/* SHOP THE LOOKS + TIP */}
       <section className={`${wrap} mt-24 lg:mt-32`}>
-          <div className="flex items-center gap-4 justify-center mb-10">
+          <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE LOOKS FOR PORTOFINO</h2>
+            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE WAYS TO DRESS FOR PORTOFINO</h2>
             <div className="h-px w-16 bg-gold/50" />
           </div>
-          <p className="-mt-6 mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-            Additional outfits for long lunches, harbor strolls and last-minute reservations.
+          <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+            Additional outfit ideas for beach clubs, harbor lunches, shopping afternoons, and sunset reservations.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 lg:gap-6">
@@ -243,11 +251,14 @@ function Index() {
 
       {/* WHERE TO STAY */}
       <section className={`${wrap} mt-24 lg:mt-32`}>
-          <div className="flex items-center gap-4 justify-center mb-10">
+          <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE TO STAY</h2>
+            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
             <div className="h-px w-16 bg-gold/50" />
           </div>
+          <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+            Hotels chosen as part of the destination — where to stay, why it fits, and the experience it delivers.
+          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {hotels.map((h) => (
@@ -294,11 +305,14 @@ function Index() {
       {/* BOOK YOUR PORTOFINO EXPERIENCE — booking rail */}
       <section className="mt-24 lg:mt-32">
         <div className={`${wrap} mb-8`}>
-          <div className="flex items-center gap-4 justify-center">
+          <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink text-center">BOOK YOUR PORTOFINO EXPERIENCE</h2>
             <div className="h-px w-16 bg-gold/50" />
           </div>
+          <p className="text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+            The restaurants, beach clubs, yacht charters, and experiences that complete the trip.
+          </p>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
           {ctas.map(({ label, Icon }) => (
