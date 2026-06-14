@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
-import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
+import heroMuseAsset from "@/assets/hero-lilla-portofino-harbor.png.asset.json";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
 import editD2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
@@ -85,12 +85,13 @@ function Index() {
     <div className="bg-ivory w-full">
       {/* HERO — balanced 50/50 split */}
       <section className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center`}>
-          <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-muted">
+          <div className="relative aspect-[3/4] lg:aspect-[7/10] overflow-hidden bg-muted">
             <img
               src={heroMuse}
-              alt="Resort Edit muse in a blue and gold majolica print set by a Portofino harbour pool"
+              alt="Lilla in a Mediterranean print designer dress overlooking Portofino harbor, Italy."
+              fetchPriority="high"
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: "center 28%" }}
+              style={{ objectPosition: "center center" }}
             />
           </div>
           <div className="lg:pl-2 max-w-[750px]">
