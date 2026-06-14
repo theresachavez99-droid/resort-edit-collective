@@ -54,11 +54,11 @@ type DayCard = {
 };
 
 const days: DayCard[] = [
-  { n: "1", href: "/portofino/day-1", title: "Yacht Day & Harbour Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
-  { n: "2", href: "/portofino/day-2", title: "Beach Club & Long Lunches", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
-  { n: "3", href: "/portofino/day-3", title: "Pool Lounging & Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
-  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails & Dinner With a View", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
-  { n: "5", href: "/portofino/day-5", title: "Market Strolls & Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse, imageMobile: day5MuseMobile, imageRetina: day5MuseRetina },
+  { n: "1", href: "/portofino/day-1", title: "Yacht Day + Harbor Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
+  { n: "2", href: "/portofino/day-2", title: "Beach Club + Long Lunch", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
+  { n: "3", href: "/portofino/day-3", title: "Pool Lounging + Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
+  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails + Dinner", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
+  { n: "5", href: "/portofino/day-5", title: "Market Strolls + Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse, imageMobile: day5MuseMobile, imageRetina: day5MuseRetina },
 ];
 
 const looks: Array<{
@@ -110,8 +110,6 @@ const ctas = [
   { label: "View Experiences", Icon: Compass },
 ];
 
-const brandChips = ["Zimmermann", "Johanna Ortiz", "SIR", "Faithfull the Brand"];
-
 function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
   return (
@@ -127,61 +125,44 @@ function Index() {
             />
           </div>
           <div className="lg:pl-2 max-w-[750px]">
-            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">Resort Edit</p>
+            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">RESORT EDIT™</p>
             <h1 className="font-display mt-3 text-[3.4rem] sm:text-[4.2rem] lg:text-[6.2rem] xl:text-[7.4rem] leading-[0.9] tracking-[0.01em] text-ink">
               DRESSED FOR THE
               <br />
-              DESTINATION.
+              DESTINATION™
             </h1>
             <p
-              className="font-serif italic text-[2.7rem] sm:text-[3.3rem] lg:text-[4.2rem] xl:text-[4.7rem] leading-[0.95] tracking-[-0.01em] mt-1 -ml-0.5 max-w-[85%]"
+              className="font-serif italic text-[2rem] sm:text-[2.4rem] lg:text-[2.9rem] xl:text-[3.2rem] leading-[1.05] tracking-[-0.01em] mt-3 -ml-0.5 max-w-[95%]"
               style={{ color: "oklch(0.62 0.12 66)" }}
             >
-              La Dolce Vita
+              Five Days. Fifteen Looks. One Perfect Destination.
             </p>
             <div className="mt-5 mb-4 h-px w-32 bg-gold/80" />
             <p className="font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
-              Curated across Zimmermann, Johanna Ortiz, SIR — and labels you haven't discovered yet.
+              Curated outfits, hotels, experiences, and insider recommendations designed around how women actually travel.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {brandChips.map((b) => (
-                <Link
-                  key={b}
-                  to="/brands"
-                  className="eyebrow text-[0.66rem] tracking-[0.26em] text-ink/75 border border-ink/25 rounded-full px-3.5 py-1.5 hover:border-gold hover:text-gold transition-colors"
-                >
-                  {b}
-                </Link>
-              ))}
-              <Link
-                to="/brands"
-                className="eyebrow text-[0.66rem] tracking-[0.26em] text-gold border border-gold/40 rounded-full px-3.5 py-1.5 hover:bg-gold hover:text-ivory transition-colors"
-              >
-                More →
-              </Link>
-            </div>
-            <p className="mt-5 font-serif italic text-[1.05rem] lg:text-[1.15rem] text-ink/75 leading-snug max-w-[85%]">
-              Curated looks, hotels and experiences — for women who dress for the destination.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-4">
+            <div className="mt-7 flex flex-wrap gap-4">
               <Link to="/portofino" className="bg-gold text-ivory eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-ink transition-colors">
-                Shop 15 Looks — Day by Day
+                Explore Portofino
               </Link>
-            </div>
-            <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 text-ink/80">
-              <span className="eyebrow text-[0.92rem] tracking-[0.26em]">
-                5 Days <span className="text-gold">·</span> 15 Looks <span className="text-gold">·</span> 6 Experiences
-              </span>
-              <span className="hidden md:inline h-4 w-px bg-ink/25" aria-hidden />
-              <span className="eyebrow text-[0.82rem] tracking-[0.3em] text-gold">
-                ★ The Edit We Keep Coming Back To
-              </span>
+              <Link to="/destinations" className="border border-ink text-ink eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-ink hover:text-ivory transition-colors">
+                View All Destinations
+              </Link>
             </div>
           </div>
       </section>
 
-      {/* 5-DAY CARDS */}
-      <section className={`${wrap} mt-16 lg:mt-20 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5`}>
+      {/* PORTOFINO ITINERARY */}
+      <section className={`${wrap} mt-20 lg:mt-28`}>
+        <div className="flex items-center gap-4 justify-center mb-4">
+          <div className="h-px w-16 bg-gold/50" />
+          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">PORTOFINO ITINERARY</h2>
+          <div className="h-px w-16 bg-gold/50" />
+        </div>
+        <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+          Five days in Portofino — from yacht mornings and beach club lunches to market strolls and sunset dinners.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
           {days.map((d) => (
             <Link
               key={d.n}
@@ -219,17 +200,18 @@ function Index() {
               </span>
             </Link>
           ))}
+        </div>
       </section>
 
       {/* SHOP THE LOOKS + TIP */}
       <section className={`${wrap} mt-24 lg:mt-32`}>
-          <div className="flex items-center gap-4 justify-center mb-10">
+          <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE LOOKS FOR PORTOFINO</h2>
+            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE WAYS TO DRESS FOR PORTOFINO</h2>
             <div className="h-px w-16 bg-gold/50" />
           </div>
-          <p className="-mt-6 mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-            Additional outfits for long lunches, harbor strolls and last-minute reservations.
+          <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+            Additional outfit ideas for beach clubs, harbor lunches, shopping afternoons, and sunset reservations.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 lg:gap-6">
@@ -269,11 +251,14 @@ function Index() {
 
       {/* WHERE TO STAY */}
       <section className={`${wrap} mt-24 lg:mt-32`}>
-          <div className="flex items-center gap-4 justify-center mb-10">
+          <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE TO STAY</h2>
+            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
             <div className="h-px w-16 bg-gold/50" />
           </div>
+          <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+            Hotels chosen as part of the destination — where to stay, why it fits, and the experience it delivers.
+          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {hotels.map((h) => (
@@ -320,11 +305,14 @@ function Index() {
       {/* BOOK YOUR PORTOFINO EXPERIENCE — booking rail */}
       <section className="mt-24 lg:mt-32">
         <div className={`${wrap} mb-8`}>
-          <div className="flex items-center gap-4 justify-center">
+          <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink text-center">BOOK YOUR PORTOFINO EXPERIENCE</h2>
             <div className="h-px w-16 bg-gold/50" />
           </div>
+          <p className="text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+            The restaurants, beach clubs, yacht charters, and experiences that complete the trip.
+          </p>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
           {ctas.map(({ label, Icon }) => (
