@@ -1,17 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
-import day3MuseAsset from "@/assets/generated/resort-edit/d3-floral-harbour.png.asset.json";
-const day3Muse = day3MuseAsset.url;
 import stillLife from "@/assets/portofino-still-life.jpg";
-import lookYachtAsset from "@/assets/generated/resort-edit/d1-majolica-yacht.png.asset.json";
-const lookYacht = lookYachtAsset.url;
-import lookBeach from "@/assets/generated/resort-edit/look-beach-card-thumb.jpg";
-import lookDayclub from "@/assets/generated/resort-edit/look-dayclub-card-thumb.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import day5Muse from "@/assets/generated/resort-edit/day5-market-strolls-hires-card-20260601.jpg";
-import day5MuseMobile from "@/assets/generated/resort-edit/day5-market-strolls-hires-mobile-20260601.jpg";
-import day5MuseRetina from "@/assets/generated/resort-edit/day5-market-strolls-hires-retina-2x-20260601.jpg";
 import editD2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
 import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
@@ -19,6 +10,7 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
+import { HomeItinerary } from "@/components/HomeItinerary";
 
 const heroMuse = heroMuseAsset.url;
 
@@ -37,29 +29,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
-
-type DayCard = {
-  n: "1" | "2" | "3" | "4" | "5";
-  href:
-    | "/portofino/day-1"
-    | "/portofino/day-2"
-    | "/portofino/day-3"
-    | "/portofino/day-4"
-    | "/portofino/day-5";
-  title: string;
-  desc: string;
-  image: string;
-  imageMobile?: string;
-  imageRetina?: string;
-};
-
-const days: DayCard[] = [
-  { n: "1", href: "/portofino/day-1", title: "Yacht Day + Harbor Aperitivo", desc: "Open water, tan lines & hidden coves.", image: lookYacht },
-  { n: "2", href: "/portofino/day-2", title: "Beach Club + Long Lunch", desc: "Slow mornings, long lunches, seaside glamour.", image: lookBeach },
-  { n: "3", href: "/portofino/day-3", title: "Pool Lounging + Shopping", desc: "Poolside ease, via Roma, Capri luxe.", image: day3Muse },
-  { n: "4", href: "/portofino/day-4", title: "Sunset Cocktails + Dinner", desc: "Golden hour, candlelight, harbor glow.", image: lookDinner },
-  { n: "5", href: "/portofino/day-5", title: "Market Strolls + Coastal Goodbyes", desc: "Espresso, linen, and one long last lunch.", image: day5Muse, imageMobile: day5MuseMobile, imageRetina: day5MuseRetina },
-];
 
 const looks: Array<{
   tag: string;
