@@ -25,6 +25,7 @@ import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
+import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } from './routes/destinations.portofino.day-1-yacht-harbour-aperitivo'
@@ -109,6 +110,11 @@ const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
   path: '/admin/subscribers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
+  id: '/admin/product-vault',
+  path: '/admin/product-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminProductLibraryRoute = AdminProductLibraryRouteImport.update({
   id: '/admin/product-library',
   path: '/admin/product-library',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
+  '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
+  '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
+  '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/product-library'
+    | '/admin/product-vault'
     | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/product-library'
+    | '/admin/product-vault'
     | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/product-library'
+    | '/admin/product-vault'
     | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
+  AdminProductVaultRoute: typeof AdminProductVaultRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
 }
 
@@ -383,6 +396,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSubscribersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/product-vault': {
+      id: '/admin/product-vault'
+      path: '/admin/product-vault'
+      fullPath: '/admin/product-vault'
+      preLoaderRoute: typeof AdminProductVaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/product-library': {
       id: '/admin/product-library'
       path: '/admin/product-library'
@@ -465,6 +485,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
+  AdminProductVaultRoute: AdminProductVaultRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
 }
 export const routeTree = rootRouteImport
