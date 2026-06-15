@@ -12,15 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResortEditsRouteImport } from './routes/resort-edits'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
-import { Route as PortofinoEditRouteImport } from './routes/portofino-edit'
 import { Route as PortofinoRouteImport } from './routes/portofino'
 import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PortofinoRivieraFindsRouteImport } from './routes/portofino.riviera-finds'
-import { Route as PortofinoMidLuxeRouteImport } from './routes/portofino.mid-luxe'
-import { Route as PortofinoLuxuryRouteImport } from './routes/portofino.luxury'
 import { Route as PortofinoDay5RouteImport } from './routes/portofino.day-5'
 import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
 import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
@@ -48,11 +44,6 @@ const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PortofinoEditRoute = PortofinoEditRouteImport.update({
-  id: '/portofino-edit',
-  path: '/portofino-edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PortofinoRoute = PortofinoRouteImport.update({
   id: '/portofino',
   path: '/portofino',
@@ -77,21 +68,6 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PortofinoRivieraFindsRoute = PortofinoRivieraFindsRouteImport.update({
-  id: '/riviera-finds',
-  path: '/riviera-finds',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoMidLuxeRoute = PortofinoMidLuxeRouteImport.update({
-  id: '/mid-luxe',
-  path: '/mid-luxe',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoLuxuryRoute = PortofinoLuxuryRouteImport.update({
-  id: '/luxury',
-  path: '/luxury',
-  getParentRoute: () => PortofinoRoute,
 } as any)
 const PortofinoDay5Route = PortofinoDay5RouteImport.update({
   id: '/day-5',
@@ -156,7 +132,6 @@ export interface FileRoutesByFullPath {
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
-  '/portofino-edit': typeof PortofinoEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -169,9 +144,6 @@ export interface FileRoutesByFullPath {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
-  '/portofino/luxury': typeof PortofinoLuxuryRoute
-  '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
-  '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
@@ -181,7 +153,6 @@ export interface FileRoutesByTo {
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
-  '/portofino-edit': typeof PortofinoEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -194,9 +165,6 @@ export interface FileRoutesByTo {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
-  '/portofino/luxury': typeof PortofinoLuxuryRoute
-  '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
-  '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
@@ -207,7 +175,6 @@ export interface FileRoutesById {
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/portofino': typeof PortofinoRouteWithChildren
-  '/portofino-edit': typeof PortofinoEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -220,9 +187,6 @@ export interface FileRoutesById {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
-  '/portofino/luxury': typeof PortofinoLuxuryRoute
-  '/portofino/mid-luxe': typeof PortofinoMidLuxeRoute
-  '/portofino/riviera-finds': typeof PortofinoRivieraFindsRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
@@ -234,7 +198,6 @@ export interface FileRouteTypes {
     | '/brands'
     | '/destinations'
     | '/portofino'
-    | '/portofino-edit'
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
@@ -247,9 +210,6 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
-    | '/portofino/luxury'
-    | '/portofino/mid-luxe'
-    | '/portofino/riviera-finds'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   fileRoutesByTo: FileRoutesByTo
@@ -259,7 +219,6 @@ export interface FileRouteTypes {
     | '/brands'
     | '/destinations'
     | '/portofino'
-    | '/portofino-edit'
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
@@ -272,9 +231,6 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
-    | '/portofino/luxury'
-    | '/portofino/mid-luxe'
-    | '/portofino/riviera-finds'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   id:
@@ -284,7 +240,6 @@ export interface FileRouteTypes {
     | '/brands'
     | '/destinations'
     | '/portofino'
-    | '/portofino-edit'
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
@@ -297,9 +252,6 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
-    | '/portofino/luxury'
-    | '/portofino/mid-luxe'
-    | '/portofino/riviera-finds'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   fileRoutesById: FileRoutesById
@@ -310,7 +262,6 @@ export interface RootRouteChildren {
   BrandsRoute: typeof BrandsRouteWithChildren
   DestinationsRoute: typeof DestinationsRouteWithChildren
   PortofinoRoute: typeof PortofinoRouteWithChildren
-  PortofinoEditRoute: typeof PortofinoEditRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -339,13 +290,6 @@ declare module '@tanstack/react-router' {
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
       preLoaderRoute: typeof PrivacyPolicyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portofino-edit': {
-      id: '/portofino-edit'
-      path: '/portofino-edit'
-      fullPath: '/portofino-edit'
-      preLoaderRoute: typeof PortofinoEditRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portofino': {
@@ -382,27 +326,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/portofino/riviera-finds': {
-      id: '/portofino/riviera-finds'
-      path: '/riviera-finds'
-      fullPath: '/portofino/riviera-finds'
-      preLoaderRoute: typeof PortofinoRivieraFindsRouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/mid-luxe': {
-      id: '/portofino/mid-luxe'
-      path: '/mid-luxe'
-      fullPath: '/portofino/mid-luxe'
-      preLoaderRoute: typeof PortofinoMidLuxeRouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/luxury': {
-      id: '/portofino/luxury'
-      path: '/luxury'
-      fullPath: '/portofino/luxury'
-      preLoaderRoute: typeof PortofinoLuxuryRouteImport
-      parentRoute: typeof PortofinoRoute
     }
     '/portofino/day-5': {
       id: '/portofino/day-5'
@@ -516,9 +439,6 @@ interface PortofinoRouteChildren {
   PortofinoDay3Route: typeof PortofinoDay3Route
   PortofinoDay4Route: typeof PortofinoDay4Route
   PortofinoDay5Route: typeof PortofinoDay5Route
-  PortofinoLuxuryRoute: typeof PortofinoLuxuryRoute
-  PortofinoMidLuxeRoute: typeof PortofinoMidLuxeRoute
-  PortofinoRivieraFindsRoute: typeof PortofinoRivieraFindsRoute
   PortofinoDayLookRoute: typeof PortofinoDayLookRoute
 }
 
@@ -528,9 +448,6 @@ const PortofinoRouteChildren: PortofinoRouteChildren = {
   PortofinoDay3Route: PortofinoDay3Route,
   PortofinoDay4Route: PortofinoDay4Route,
   PortofinoDay5Route: PortofinoDay5Route,
-  PortofinoLuxuryRoute: PortofinoLuxuryRoute,
-  PortofinoMidLuxeRoute: PortofinoMidLuxeRoute,
-  PortofinoRivieraFindsRoute: PortofinoRivieraFindsRoute,
   PortofinoDayLookRoute: PortofinoDayLookRoute,
 }
 
@@ -544,7 +461,6 @@ const rootRouteChildren: RootRouteChildren = {
   BrandsRoute: BrandsRouteWithChildren,
   DestinationsRoute: DestinationsRouteWithChildren,
   PortofinoRoute: PortofinoRouteWithChildren,
-  PortofinoEditRoute: PortofinoEditRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
