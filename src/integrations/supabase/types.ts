@@ -174,13 +174,16 @@ export type Database = {
           approval_status: string
           approved_at: string | null
           brand: string
+          brand_id: string | null
           brand_url: string | null
           category: string
           color_tags: string[]
           created_at: string
           currency: string | null
           destination_tags: string[]
+          direct_product_url: string | null
           id: string
+          image_status: string
           image_url: string | null
           inventory_status: string
           last_verified_at: string | null
@@ -193,6 +196,7 @@ export type Database = {
           resort_edit_score: number | null
           retailer: string | null
           silhouette_tags: string[]
+          source_method: string
           source_sourced_product_id: string | null
           subcategory: string | null
           thumbnail_url: string | null
@@ -204,13 +208,16 @@ export type Database = {
           approval_status?: string
           approved_at?: string | null
           brand: string
+          brand_id?: string | null
           brand_url?: string | null
           category: string
           color_tags?: string[]
           created_at?: string
           currency?: string | null
           destination_tags?: string[]
+          direct_product_url?: string | null
           id?: string
+          image_status?: string
           image_url?: string | null
           inventory_status?: string
           last_verified_at?: string | null
@@ -223,6 +230,7 @@ export type Database = {
           resort_edit_score?: number | null
           retailer?: string | null
           silhouette_tags?: string[]
+          source_method?: string
           source_sourced_product_id?: string | null
           subcategory?: string | null
           thumbnail_url?: string | null
@@ -234,13 +242,16 @@ export type Database = {
           approval_status?: string
           approved_at?: string | null
           brand?: string
+          brand_id?: string | null
           brand_url?: string | null
           category?: string
           color_tags?: string[]
           created_at?: string
           currency?: string | null
           destination_tags?: string[]
+          direct_product_url?: string | null
           id?: string
+          image_status?: string
           image_url?: string | null
           inventory_status?: string
           last_verified_at?: string | null
@@ -253,12 +264,20 @@ export type Database = {
           resort_edit_score?: number | null
           retailer?: string | null
           silhouette_tags?: string[]
+          source_method?: string
           source_sourced_product_id?: string | null
           subcategory?: string | null
           thumbnail_url?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "vault_products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "vault_products_source_sourced_product_id_fkey"
             columns: ["source_sourced_product_id"]
