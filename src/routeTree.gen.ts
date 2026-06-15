@@ -24,6 +24,7 @@ import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
 import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
+import { Route as AdminYachtDayPilotRouteImport } from './routes/admin.yacht-day-pilot'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
@@ -106,6 +107,11 @@ const BrandsSlugRoute = BrandsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BrandsRoute,
 } as any)
+const AdminYachtDayPilotRoute = AdminYachtDayPilotRouteImport.update({
+  id: '/admin/yacht-day-pilot',
+  path: '/admin/yacht-day-pilot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
   id: '/admin/subscribers',
   path: '/admin/subscribers',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/yacht-day-pilot'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/yacht-day-pilot'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/yacht-day-pilot'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/day-1'
@@ -293,6 +305,7 @@ export interface RootRouteChildren {
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
+  AdminYachtDayPilotRoute: typeof AdminYachtDayPilotRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -402,6 +415,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandsSlugRouteImport
       parentRoute: typeof BrandsRoute
     }
+    '/admin/yacht-day-pilot': {
+      id: '/admin/yacht-day-pilot'
+      path: '/admin/yacht-day-pilot'
+      fullPath: '/admin/yacht-day-pilot'
+      preLoaderRoute: typeof AdminYachtDayPilotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/subscribers': {
       id: '/admin/subscribers'
       path: '/admin/subscribers'
@@ -508,6 +528,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
+  AdminYachtDayPilotRoute: AdminYachtDayPilotRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
