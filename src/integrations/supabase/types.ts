@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      brands: {
+        Row: {
+          activities: string[]
+          categories: string[]
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          slug: string
+          status: string
+          tier: string
+          updated_at: string
+          website: string | null
+          why_we_love: string | null
+        }
+        Insert: {
+          activities?: string[]
+          categories?: string[]
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          slug: string
+          status?: string
+          tier?: string
+          updated_at?: string
+          website?: string | null
+          why_we_love?: string | null
+        }
+        Update: {
+          activities?: string[]
+          categories?: string[]
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          slug?: string
+          status?: string
+          tier?: string
+          updated_at?: string
+          website?: string | null
+          why_we_love?: string | null
+        }
+        Relationships: []
+      }
       sourced_products: {
         Row: {
           affiliate_url: string | null
