@@ -5,55 +5,22 @@ import { requireAdmin } from "./admin-auth.server";
 
 const FIRECRAWL_BASE = "https://api.firecrawl.dev/v2";
 
+// Approved Resort Edit retailer allowlist (cost-control gate).
+// See mem://features/sourcing-cost-control. Do not widen without policy update.
 const ALLOWED_DOMAINS = [
-  "net-a-porter.com",
   "mytheresa.com",
-  "matchesfashion.com",
-  "matches.com",
-  "ssense.com",
-  "farfetch.com",
+  "net-a-porter.com",
+  "fwrd.com",
   "shopbop.com",
-  "revolve.com",
-  "nordstrom.com",
-  "selfridges.com",
   "saksfifthavenue.com",
-  "harrods.com",
-  "mejuri.com",
-  "missoma.com",
-  "monica-vinader.com",
-  "monicavinader.com",
-  "astleyclarke.com",
-  "jennifermeyer.com",
-  "anine-bing.com",
-  "aninebing.com",
-  "loeffler-randall.com",
-  "loefflerrandall.com",
-  "stuartweitzman.com",
-  "ancientgreeksandals.com",
-  "lemaire.fr",
-  "totême-studio.com",
-  "toteme-studio.com",
-  "khaite.com",
-  "thereformation.com",
-  "reformation.com",
-  "zimmermann.com",
-  "faithfullthebrand.com",
-  "stauddesign.com",
-  "staud.clothing",
-  "polenebags.com",
-  "polene-paris.com",
-  "demellierlondon.com",
-  "wandlerstore.com",
-  "wandler.com",
-  "jacquemus.com",
-  "celine.com",
-  "loropiana.com",
-  "max-mara.com",
-  "maxmara.com",
-  "amazon.com",
-  "shopstyle.com",
-  "rstyle.me",
-  "go.skimresources.com",
+  "neimanmarcus.com",
+  "nordstrom.com",
+  "bloomingdales.com",
+  "luisaviaroma.com",
+  "modaoperandi.com",
+  "farfetch.com",
+  "ssense.com",
+  "everythingbutwater.com",
 ];
 
 function domainAllowed(url: string): boolean {
@@ -89,6 +56,8 @@ export const scrapeProductUrl = createServerFn({ method: "POST" })
         slot_category: z.string().min(1).max(64).optional(),
         affiliate_url: z.string().url().optional(),
         notes: z.string().max(500).optional(),
+        brand_id: z.string().uuid().optional(),
+        force: z.boolean().optional(),
       })
       .parse(input),
   )
@@ -104,6 +73,58 @@ export const scrapeProductUrl = createServerFn({ method: "POST" })
     }
 
     const host = new URL(data.url).hostname.replace(/^www\./, "");
+
+    // Vault-first cost-control gate (mem://features/sourcing-cost-control).
+    // 1. If brand_id provided, it must be an approved brand.
+    if (data.brand_id) {
+      const { data: brand } = await supabaseAdmin
+        .from("brands")
+        .select("id,status")
+        .eq("id", data.brand_id)
+        .maybeSingle();
+      if (!brand) {
+        return { ok: false as const, error: "Brand not found" };
+      }
+      if (brand.status !== "approved") {
+        return {
+          ok: false as const,
+          error: `Brand status is '${brand.status}'. Only approved brands can be sourced.`,
+        };
+      }
+    }
+
+    // 2. Skip if URL is already cached anywhere (unless caller forces a refresh).
+    if (!data.force) {
+      const { data: vaultHit } = await supabaseAdmin
+        .from("vault_products")
+        .select("id")
+        .or(`affiliate_url.eq.${data.url},direct_product_url.eq.${data.url}`)
+        .limit(1)
+        .maybeSingle();
+      if (vaultHit) {
+        return {
+          ok: false as const,
+          error: "Already in Product Vault — skipping scrape (pass force=true to refresh).",
+          cached: true as const,
+          vault_id: vaultHit.id,
+        };
+      }
+      const { data: sourcedHit } = await supabaseAdmin
+        .from("sourced_products")
+        .select("id,status")
+        .eq("source_url", data.url)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (sourcedHit) {
+        return {
+          ok: false as const,
+          error: `Already scraped (status: ${sourcedHit.status}). Pass force=true to re-scrape.`,
+          cached: true as const,
+          id: sourcedHit.id,
+        };
+      }
+    }
 
     // Insert as queued first so we always have a record
     const { data: queued, error: insErr } = await supabaseAdmin
