@@ -27,6 +27,7 @@ import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
+import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } from './routes/destinations.portofino.day-1-yacht-harbour-aperitivo'
 
@@ -120,6 +121,11 @@ const AdminProductLibraryRoute = AdminProductLibraryRouteImport.update({
   path: '/admin/product-library',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBrandsRoute = AdminBrandsRouteImport.update({
+  id: '/admin/brands',
+  path: '/admin/brands',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
   id: '/$day/$look',
   path: '/$day/$look',
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/brands': typeof AdminBrandsRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/brands': typeof AdminBrandsRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/brands': typeof AdminBrandsRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -210,6 +219,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
+    | '/admin/brands'
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/subscribers'
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
+    | '/admin/brands'
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/subscribers'
@@ -254,6 +265,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/resort-edits'
     | '/sitemap.xml'
+    | '/admin/brands'
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/subscribers'
@@ -277,6 +289,7 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminBrandsRoute: typeof AdminBrandsRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
@@ -410,6 +423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductLibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/brands': {
+      id: '/admin/brands'
+      path: '/admin/brands'
+      fullPath: '/admin/brands'
+      preLoaderRoute: typeof AdminBrandsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portofino/$day/$look': {
       id: '/portofino/$day/$look'
       path: '/$day/$look'
@@ -484,6 +504,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminBrandsRoute: AdminBrandsRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
