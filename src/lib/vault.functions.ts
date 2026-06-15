@@ -110,7 +110,11 @@ export const setVaultProductStatus = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, unknown> = { approval_status: data.approval_status };
+    const patch: {
+      approval_status: (typeof APPROVAL_STATUSES)[number];
+      approved_at?: string;
+      notes?: string | null;
+    } = { approval_status: data.approval_status };
     if (data.approval_status === "approved") patch.approved_at = new Date().toISOString();
     if (data.notes !== undefined) patch.notes = data.notes;
     const { error } = await supabaseAdmin
