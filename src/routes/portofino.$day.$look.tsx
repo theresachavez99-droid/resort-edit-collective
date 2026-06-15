@@ -314,46 +314,6 @@ function ViewFullLookPage() {
         </div>
       </section>
 
-      {/* ───────────────────────── STYLED THREE WAYS ───────────────────────── */}
-      <section className="mx-auto max-w-[1480px] px-4 sm:px-8 lg:px-10 mt-24 md:mt-32">
-        <div className="border-t border-ink/15 pt-12">
-          <div className="inline-flex items-center gap-2 text-gold">
-            <ShoppingBag className="h-4 w-4" strokeWidth={1.4} />
-            <span className="eyebrow tracking-[0.34em] text-[0.62rem]">SHOP THE LOOK</span>
-          </div>
-          <h2 className="font-display text-[1.7rem] md:text-[2.4rem] tracking-[0.12em] text-ink uppercase mt-3">
-            Styled Three Ways
-          </h2>
-          <p className="font-serif italic text-[1rem] text-ink/65 mt-3 max-w-2xl leading-relaxed">
-            Same destination energy, three price points — Designer, Mid-Luxe, and Destination Finds.
-          </p>
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {[
-              { label: "Designer Edit", tag: "Investment pieces", to: "/portofino/luxury" as const, note: "The icons: Zimmermann, Eres, Cult Gaia, Gianvito Rossi." },
-              { label: "Mid-Luxe Edit", tag: "Considered & wearable", to: "/portofino/mid-luxe" as const, note: "Editor-loved labels with the same Riviera feel at a softer spend." },
-              { label: "Destination Finds", tag: "Travel-smart picks", to: "/portofino/riviera-finds" as const, note: "Easy hits that perform on the boat, in the heat, and on cobblestone." },
-            ].map((c) => (
-              <Link
-                key={c.label}
-                to={c.to}
-                className="group border border-ink/15 bg-ivory p-8 flex flex-col hover:border-gold transition-colors no-underline text-inherit"
-              >
-                <p className="eyebrow tracking-[0.3em] text-[0.6rem] text-gold">{c.tag}</p>
-                <h3 className="font-display text-[1.4rem] md:text-[1.6rem] tracking-[0.08em] text-ink uppercase mt-3">
-                  {c.label}
-                </h3>
-                <p className="font-serif text-[0.98rem] text-ink/70 mt-4 leading-relaxed flex-1">
-                  {c.note}
-                </p>
-                <span className="mt-6 eyebrow tracking-[0.24em] text-[0.6rem] text-ink border-b border-gold pb-0.5 self-start group-hover:text-gold transition-colors">
-                  EXPLORE EDIT →
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ───────────────────────── CUSTOMIZE THIS LOOK ───────────────────────── */}
       <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-24 md:mt-32">
         <div className="border-t border-ink/15 pt-12">
@@ -387,7 +347,7 @@ function ViewFullLookPage() {
           <div className="mt-8 border border-ink/10 bg-cream/30 px-6 py-5">
             <p className="font-serif italic text-[0.98rem] text-ink/75 leading-relaxed">
               {customizeActive
-                ? `Matching ${customize.size} preference${customize.size > 1 ? "s" : ""} — alternates appear below in "If This Sells Out" and across the Styled Three Ways edits.`
+                ? `Matching ${customize.size} preference${customize.size > 1 ? "s" : ""} — alternates appear below in "If This Sells Out".`
                 : "Select one or more preferences to surface alternate pieces from the Resort Edit product library."}
             </p>
           </div>

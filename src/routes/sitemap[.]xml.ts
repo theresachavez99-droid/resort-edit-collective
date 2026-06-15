@@ -7,7 +7,6 @@ const entries = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/destinations", changefreq: "weekly", priority: "0.9" },
   { path: "/portofino", changefreq: "monthly", priority: "0.9" },
-  { path: "/portofino-edit", changefreq: "monthly", priority: "0.8" },
   { path: "/resort-edits", changefreq: "weekly", priority: "0.8" },
   { path: "/brands", changefreq: "monthly", priority: "0.7" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },

@@ -122,6 +122,107 @@ export type Database = {
         }
         Relationships: []
       }
+      vault_products: {
+        Row: {
+          activity_tags: string[]
+          affiliate_url: string
+          approval_status: string
+          approved_at: string | null
+          brand: string
+          brand_url: string | null
+          category: string
+          color_tags: string[]
+          created_at: string
+          currency: string | null
+          destination_tags: string[]
+          id: string
+          image_url: string | null
+          inventory_status: string
+          last_verified_at: string | null
+          luxury_score: number | null
+          material_tags: string[]
+          notes: string | null
+          price: number | null
+          print_tags: string[]
+          product_name: string
+          resort_edit_score: number | null
+          retailer: string | null
+          silhouette_tags: string[]
+          source_sourced_product_id: string | null
+          subcategory: string | null
+          thumbnail_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          activity_tags?: string[]
+          affiliate_url: string
+          approval_status?: string
+          approved_at?: string | null
+          brand: string
+          brand_url?: string | null
+          category: string
+          color_tags?: string[]
+          created_at?: string
+          currency?: string | null
+          destination_tags?: string[]
+          id?: string
+          image_url?: string | null
+          inventory_status?: string
+          last_verified_at?: string | null
+          luxury_score?: number | null
+          material_tags?: string[]
+          notes?: string | null
+          price?: number | null
+          print_tags?: string[]
+          product_name: string
+          resort_edit_score?: number | null
+          retailer?: string | null
+          silhouette_tags?: string[]
+          source_sourced_product_id?: string | null
+          subcategory?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          activity_tags?: string[]
+          affiliate_url?: string
+          approval_status?: string
+          approved_at?: string | null
+          brand?: string
+          brand_url?: string | null
+          category?: string
+          color_tags?: string[]
+          created_at?: string
+          currency?: string | null
+          destination_tags?: string[]
+          id?: string
+          image_url?: string | null
+          inventory_status?: string
+          last_verified_at?: string | null
+          luxury_score?: number | null
+          material_tags?: string[]
+          notes?: string | null
+          price?: number | null
+          print_tags?: string[]
+          product_name?: string
+          resort_edit_score?: number | null
+          retailer?: string | null
+          silhouette_tags?: string[]
+          source_sourced_product_id?: string | null
+          subcategory?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_products_source_sourced_product_id_fkey"
+            columns: ["source_sourced_product_id"]
+            isOneToOne: false
+            referencedRelation: "sourced_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
