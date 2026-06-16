@@ -87,8 +87,31 @@ export type QualityGateLike = {
     destination_specificity?: number;
     styling_cohesion?: number;
     accessory_ecosystem?: number;
+    editorial_saveability_mean?: number;
+    resort_edit_test?: number;
+    face_similarity?: number | null;
+    outfit_fidelity?: number | null;
   };
-  thresholds?: { destination_specificity?: number; styling_cohesion?: number; accessory_ecosystem?: number };
+  thresholds?: {
+    destination_specificity?: number;
+    styling_cohesion?: number;
+    accessory_ecosystem?: number;
+    editorial_saveability?: number;
+    resort_edit_test?: number;
+    face_similarity?: number;
+    outfit_fidelity?: number;
+  };
+  muse?: {
+    present?: boolean;
+    identity_locked?: boolean;
+    muse_name?: string | null;
+    requires_continuity?: boolean;
+    face_similarity?: number | null;
+    outfit_fidelity?: number | null;
+    verification_notes?: string | null;
+    identity_mismatch_reason?: string | null;
+    outfit_mismatch_reason?: string | null;
+  };
   evaluated_at?: string;
 };
 
