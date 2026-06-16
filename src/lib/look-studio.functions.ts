@@ -861,6 +861,7 @@ export const approveLook = createServerFn({ method: "POST" })
     requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { generateEditorial, pickReplacements, lookSlug } = await import("./look-editorial.server");
+    const { promoteSourcedToProduct } = await import("./product-identity.server");
 
     const { data: cand, error: cErr } = await supabaseAdmin
       .from("look_candidates")
@@ -884,6 +885,47 @@ export const approveLook = createServerFn({ method: "POST" })
         .in("id", sourcedIds);
       for (const sp of prods ?? []) {
         const slot = (slots ?? []).find((s) => s.sourced_product_id === sp.id)?.slot ?? null;
+
+        // PRODUCT IDENTITY: upsert into products + product_sources and write
+        // product_id onto the slot so approved looks point at the identity,
+        // not the retailer URL. Survives future affiliate onboarding.
+        try {
+          const promoted = await promoteSourcedToProduct(
+            {
+              id: sp.id,
+              brand: sp.brand,
+              brand_id: sp.brand_id ?? null,
+              product_name: sp.product_name,
+              retailer_domain: sp.retailer_domain,
+              source_url: sp.source_url,
+              affiliate_url: sp.affiliate_url,
+              image_url: sp.image_url,
+              price: sp.price != null ? Number(sp.price) : null,
+              currency: sp.currency,
+              slot_category: sp.slot_category,
+              category: sp.category ?? null,
+              subcategory: sp.subcategory ?? null,
+              silhouette: sp.silhouette ?? null,
+              fabric: sp.fabric ?? null,
+              texture: sp.texture ?? null,
+              print_family: sp.print_family ?? null,
+              color_family: sp.color_family ?? null,
+              destination_tags: sp.destination_tags ?? [],
+              activity_tags: sp.activity_tags ?? [],
+            },
+            dna ?? null,
+          );
+          if (promoted?.product_id) {
+            await supabaseAdmin
+              .from("look_candidate_slots")
+              .update({ product_id: promoted.product_id })
+              .eq("candidate_id", cand.id)
+              .eq("sourced_product_id", sp.id);
+          }
+        } catch (e) {
+          console.error("product identity promotion failed", e);
+        }
+
         // Skip if already in vault from this candidate.
         const { data: existing } = await supabaseAdmin
           .from("vault_products")
