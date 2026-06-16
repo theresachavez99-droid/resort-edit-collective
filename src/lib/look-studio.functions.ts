@@ -144,7 +144,7 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
     return {
       ok: true as const,
       dna: LOOK_DNA[data.dna_id] ?? null,
-      candidates: (candidates ?? []) as CandidateRow[],
+      candidates: (candidates ?? []) as unknown as CandidateRow[],
       slots,
       pool: { sourced: sourcedTotal ?? 0, eligible: eligibleTotal ?? 0 },
     };
