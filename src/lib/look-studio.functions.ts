@@ -20,6 +20,18 @@ const pw = z.string().min(1).max(200);
 const GATE_MIN_DESTINATION = 7;
 const GATE_MIN_COHESION = 7;
 const GATE_MIN_ACCESSORY = 7;
+/** Editorial saveability gate: mean of saveability + editorial_uniqueness + luxury_traveler_appeal. */
+const GATE_MIN_SAVEABILITY = 7;
+/** Editorial diversity caps within a single candidate. Max share of slots a single trait may occupy. */
+const DIVERSITY_CAPS = {
+  brand: 0.3,
+  silhouette: 0.4,
+  fabric: 0.4,
+  texture: 0.4,
+  print_family: 0.4,
+  color_family: 0.4,
+  subcategory: 0.3, // "accessory type" — e.g. don't stack 3 raffia bags
+} as const;
 /** Per-DNA sourcing pool floor — below this we surface a warning. */
 export const SOURCING_FLOOR = 150;
 
@@ -287,12 +299,21 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     // Pull candidate-eligible products: not rejected; have image + brand + name.
     const { data: pool, error: poolErr } = await supabaseAdmin
       .from("sourced_products")
-      .select("id, brand, product_name, price, currency, image_url, source_url, affiliate_url, retailer_domain, slot_category, status, auto_approved")
+      .select("id, brand, brand_id, product_name, price, currency, image_url, source_url, affiliate_url, retailer_domain, slot_category, status, auto_approved, category, subcategory, silhouette, fabric, texture, print_family, color_family, destination_tags, activity_tags")
       .neq("status", "rejected")
       .not("image_url", "is", null);
     if (poolErr) throw new Error(poolErr.message);
 
     const eligible = (pool ?? []).filter((p) => p.image_url && p.brand && p.product_name);
+
+    // Hero brands receive a soft sourcing-priority boost when assembling.
+    const { data: heroBrandRows } = await supabaseAdmin
+      .from("brands")
+      .select("id, name")
+      .eq("is_hero", true);
+    const heroBrandIds = new Set((heroBrandRows ?? []).map((b) => b.id));
+    const heroBrandNames = new Set((heroBrandRows ?? []).map((b) => b.name.toLowerCase()));
+
     const requiredSlots = requiredSlotsFor(dna);
     // optional_layer is nice-to-have; tried but not gated.
     const slotsToFill: LookSlot[] = [...requiredSlots, "optional_layer"];
@@ -341,9 +362,19 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       let slotPicks: Array<{ slot: LookSlot; sourced_product_id: string | null }> = [];
       let missing: LookSlot[] = [];
       let attempt = 0;
+      let diversityNotes: string[] = [];
       for (; attempt < 3; attempt++) {
         const seed = Date.now() + i * 1000 + attempt * 991;
-        slotPicks = assembleForBrief(slotsToFill, eligible, dna, brief, seed);
+        const result = assembleForBrief(
+          slotsToFill,
+          eligible,
+          dna,
+          brief,
+          seed,
+          { heroBrandIds, heroBrandNames },
+        );
+        slotPicks = result.picks;
+        diversityNotes = result.notes;
         missing = requiredSlots.filter(
           (s) => !slotPicks.find((p) => p.slot === s && p.sourced_product_id),
         );
@@ -394,14 +425,24 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       const ds = typeof scoring.destination_specificity === "number" ? scoring.destination_specificity : 0;
       const sc = typeof scoring.styling_cohesion === "number" ? scoring.styling_cohesion : 0;
       const ae = typeof scoring.accessory_ecosystem === "number" ? scoring.accessory_ecosystem : 0;
+      const sv = typeof scoring.saveability === "number" ? scoring.saveability : 0;
+      const eu = typeof scoring.editorial_uniqueness === "number" ? scoring.editorial_uniqueness : 0;
+      const la = typeof scoring.luxury_traveler_appeal === "number" ? scoring.luxury_traveler_appeal : 0;
+      const editorialMean = (sv + eu + la) / 3;
       if (ds < GATE_MIN_DESTINATION) reasons.push(`Destination specificity ${ds.toFixed(1)} < ${GATE_MIN_DESTINATION}`);
       if (sc < GATE_MIN_COHESION) reasons.push(`Styling cohesion ${sc.toFixed(1)} < ${GATE_MIN_COHESION}`);
       if (ae < GATE_MIN_ACCESSORY) reasons.push(`Accessory ecosystem ${ae.toFixed(1)} < ${GATE_MIN_ACCESSORY}`);
+      if (editorialMean < GATE_MIN_SAVEABILITY) {
+        reasons.push(
+          `Editorial saveability ${editorialMean.toFixed(1)} < ${GATE_MIN_SAVEABILITY} (saveability ${sv}, uniqueness ${eu}, luxury ${la}) — would not feel at home in a Steven Dann carousel`,
+        );
+      }
       const passed = reasons.length === 0;
 
       const gate = {
         passed,
         reasons,
+        diversity_notes: diversityNotes,
         checks: {
           required_slots_filled: requiredSlots.length - missing.length,
           required_slots_total: requiredSlots.length,
@@ -409,11 +450,13 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
           destination_specificity: ds,
           styling_cohesion: sc,
           accessory_ecosystem: ae,
+          editorial_saveability_mean: editorialMean,
         },
         thresholds: {
           destination_specificity: GATE_MIN_DESTINATION,
           styling_cohesion: GATE_MIN_COHESION,
           accessory_ecosystem: GATE_MIN_ACCESSORY,
+          editorial_saveability: GATE_MIN_SAVEABILITY,
         },
         evaluated_at: new Date().toISOString(),
       };
