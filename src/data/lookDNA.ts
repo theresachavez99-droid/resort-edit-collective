@@ -51,6 +51,10 @@ export type LookDNA = {
   accessories?: string[];
   /** Preferred brands for this DNA. Sourcing prioritizes these, then expands. */
   targetBrands?: string[];
+  /** Editorial signals to avoid — anti-cues that fail the look. */
+  avoidCues?: string[];
+  /** Required environment cues for the muse image (e.g. "polished teak yacht", "Portofino harbor"). */
+  museEnvironmentCues?: string[];
 };
 
 /**
