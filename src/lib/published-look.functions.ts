@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { LOOK_DNA } from "@/data/lookDNA";
 import { LOOK_SLOT_LABELS, LOOK_SCORE_CATEGORIES, LOOK_SCORE_LABELS, composite, type LookScoring, type LookSlot } from "./lookScoring";
+import type { ResolutionStatus, AlternativeProduct } from "./source-resolver.server";
 
 export type PublishedLookProduct = {
   vault_id: string;
@@ -18,6 +19,8 @@ export type PublishedLookProduct = {
   category_fallback_url: string | null;
   product_type: string | null;
   has_backup: boolean;
+  resolution_status: ResolutionStatus | "legacy";
+  alternatives: AlternativeProduct[];
   ai_replacements: Array<{
     brand: string;
     product_name: string;
@@ -78,7 +81,7 @@ export const getPublishedLook = createServerFn({ method: "GET" })
       .eq("candidate_id", cand.id)
       .order("position");
 
-    // PRIMARY READ PATH: slot.product_id -> products + primary product_sources.
+    // PRIMARY READ PATH: slot.product_id -> dynamic source resolver.
     // FALLBACK: vault_products via source_sourced_product_id (legacy slots).
     const productIds = (slotRows ?? [])
       .map((s) => (s as { product_id?: string | null }).product_id)
@@ -91,17 +94,8 @@ export const getPublishedLook = createServerFn({ method: "GET" })
       category: string | null;
       image_url: string | null;
     };
-    type SourceRow = {
-      product_id: string;
-      retailer: string | null;
-      source_url: string;
-      affiliate_url: string | null;
-      price: number | null;
-      currency: string | null;
-      is_primary: boolean;
-    };
     let productMap = new Map<string, ProductRow>();
-    let sourceMap = new Map<string, SourceRow>(); // product_id -> primary source
+    const resolutionMap = new Map<string, Awaited<ReturnType<typeof import("./source-resolver.server").resolveSlotSource>>>();
     if (productIds.length) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sb: any = supabaseAdmin;
@@ -110,13 +104,14 @@ export const getPublishedLook = createServerFn({ method: "GET" })
         .select("id, brand, product_name, category, image_url")
         .in("id", productIds);
       productMap = new Map((prods ?? []).map((p: ProductRow) => [p.id, p]));
-      const { data: srcs } = await sb
-        .from("product_sources")
-        .select("product_id, retailer, source_url, affiliate_url, price, currency, is_primary")
-        .in("product_id", productIds)
-        .order("is_primary", { ascending: false });
-      for (const s of (srcs ?? []) as SourceRow[]) {
-        if (!sourceMap.has(s.product_id)) sourceMap.set(s.product_id, s);
+      const { resolveSlotSource, persistSlotResolution } = await import("./source-resolver.server");
+      for (const slot of slotRows ?? []) {
+        const pid = (slot as { product_id?: string | null }).product_id;
+        if (!pid || resolutionMap.has(pid)) continue;
+        const r = await resolveSlotSource(supabaseAdmin, pid);
+        resolutionMap.set(pid, r);
+        // best-effort cache write; ignore failures
+        try { await persistSlotResolution(supabaseAdmin, slot.id, r); } catch { /* noop */ }
       }
     }
 
@@ -134,27 +129,42 @@ export const getPublishedLook = createServerFn({ method: "GET" })
     const productsRaw: Array<PublishedLookProduct | null> = (slotRows ?? []).map((s) => {
       const pid = (s as { product_id?: string | null }).product_id ?? null;
       const product = pid ? productMap.get(pid) ?? null : null;
-      const source = pid ? sourceMap.get(pid) ?? null : null;
+      const resolution = pid ? resolutionMap.get(pid) ?? null : null;
+      const source = resolution?.source ?? null;
 
-      if (product && source) {
+      if (product && resolution) {
         // Carry across editorial extras (ai_replacements, fallback URLs) from
         // vault when present — these aren't yet on the Product Identity.
         const v = s.sourced_product_id ? vaultMap.get(s.sourced_product_id) : null;
+        // Pick the active commerce URL: live source if any, else the best alternative.
+        const firstAlt = resolution.alternatives.find((a) => a.url) ?? null;
+        const activeUrl = source
+          ? (source.affiliate_url ?? source.source_url)
+          : (firstAlt?.url ?? (v?.affiliate_url as string | undefined) ?? "#");
+        const activeRetailer = source?.retailer ?? firstAlt?.retailer ?? null;
+        const activePrice = source?.price ?? firstAlt?.price ?? null;
+        const activeCurrency = source?.currency ?? firstAlt?.currency ?? "USD";
         return {
           vault_id: pid as string,
           slot: s.slot,
           slot_label: LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot,
           brand: product.brand,
           product_name: product.product_name,
-          retailer: source.retailer ?? null,
-          price: source.price != null ? Number(source.price) : null,
-          currency: source.currency ?? "USD",
+          retailer: activeRetailer,
+          price: activePrice != null ? Number(activePrice) : null,
+          currency: activeCurrency,
           image_url: product.image_url,
-          primary_url: source.affiliate_url ?? source.source_url,
+          primary_url: activeUrl,
           brand_fallback_url: v ? ((v.brand_url as string | null) ?? null) : null,
           category_fallback_url: v ? ((v.category_fallback_url as string | null) ?? null) : null,
           product_type: product.category,
-          has_backup: !!(v && (v.brand_url || v.category_fallback_url)) || !!(v && Array.isArray(v.ai_replacements) && (v.ai_replacements as unknown[]).length > 0),
+          has_backup:
+            resolution.all_sources.length > 1 ||
+            resolution.alternatives.length > 0 ||
+            !!(v && (v.brand_url || v.category_fallback_url)) ||
+            !!(v && Array.isArray(v.ai_replacements) && (v.ai_replacements as unknown[]).length > 0),
+          resolution_status: resolution.status,
+          alternatives: resolution.alternatives,
           ai_replacements: v && Array.isArray(v.ai_replacements)
             ? (v.ai_replacements as PublishedLookProduct["ai_replacements"])
             : [],
@@ -179,6 +189,8 @@ export const getPublishedLook = createServerFn({ method: "GET" })
         category_fallback_url: (v.category_fallback_url as string | null) ?? null,
         product_type: (v.product_type as string | null) ?? null,
         has_backup: !!(v.brand_url || v.category_fallback_url) || (Array.isArray(v.ai_replacements) && (v.ai_replacements as unknown[]).length > 0),
+        resolution_status: "legacy",
+        alternatives: [],
         ai_replacements: Array.isArray(v.ai_replacements)
           ? (v.ai_replacements as PublishedLookProduct["ai_replacements"])
           : [],

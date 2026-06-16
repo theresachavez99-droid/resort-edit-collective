@@ -171,6 +171,9 @@ export type Database = {
           notes: string | null
           position: number
           product_id: string | null
+          resolution_status: string
+          resolved_at: string | null
+          resolved_source_id: string | null
           slot: string
           sourced_product_id: string | null
           updated_at: string
@@ -183,6 +186,9 @@ export type Database = {
           notes?: string | null
           position?: number
           product_id?: string | null
+          resolution_status?: string
+          resolved_at?: string | null
+          resolved_source_id?: string | null
           slot: string
           sourced_product_id?: string | null
           updated_at?: string
@@ -195,6 +201,9 @@ export type Database = {
           notes?: string | null
           position?: number
           product_id?: string | null
+          resolution_status?: string
+          resolved_at?: string | null
+          resolved_source_id?: string | null
           slot?: string
           sourced_product_id?: string | null
           updated_at?: string
@@ -213,6 +222,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "look_candidate_slots_resolved_source_id_fkey"
+            columns: ["resolved_source_id"]
+            isOneToOne: false
+            referencedRelation: "product_sources"
             referencedColumns: ["id"]
           },
           {

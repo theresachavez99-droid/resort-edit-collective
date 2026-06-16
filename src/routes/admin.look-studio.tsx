@@ -18,6 +18,7 @@ import {
   type QualityGateLike,
 } from "@/lib/look-studio.functions";
 import { fillPortofinoInventory, bulkSourceBrand } from "@/lib/brand-crawl.functions";
+import { refreshLookInventory, getDestinationInventoryHealth } from "@/lib/source-availability.functions";
 import {
   IMPROVE_FEEDBACK_PRESETS,
   LOOK_SCORE_CATEGORIES,
@@ -190,6 +191,8 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   const generateFn = useServerFn(generateLookCandidates);
   const planFn = useServerFn(fillPortofinoInventory);
   const sourceFn = useServerFn(bulkSourceBrand);
+  const healthFn = useServerFn(getDestinationInventoryHealth);
+  const refreshOneFn = useServerFn(refreshLookInventory);
   const [sourcingLog, setSourcingLog] = useState<string[]>([]);
   const [sourcingBusy, setSourcingBusy] = useState(false);
 
@@ -220,6 +223,18 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   const floor = pool.floor ?? 150;
   const depthShort = pool.eligible < floor;
   const isPortofino = (dna?.destination ?? "").toLowerCase().includes("portofino");
+
+  const destination = dna?.destination ?? "";
+  const health = useQuery({
+    queryKey: ["inv-health", destination],
+    queryFn: () => healthFn({ data: { password, destination } }),
+    enabled: !!destination,
+    refetchOnWindowFocus: false,
+  });
+  const refresh = useMutation({
+    mutationFn: (candidate_id: string) => refreshOneFn({ data: { password, candidate_id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["inv-health", destination] }),
+  });
 
   async function runPortofinoSourcing() {
     setSourcingBusy(true);
@@ -305,6 +320,54 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
         <pre className="text-[0.65rem] leading-relaxed bg-cream/40 border border-ink/15 p-3 font-mono whitespace-pre-wrap max-h-56 overflow-auto">
           {sourcingLog.join("\n")}
         </pre>
+      )}
+
+      {health.data?.ok && health.data.looks.length > 0 && (
+        <div className="border border-ink/15 bg-cream/20 p-3">
+          <div className="flex items-baseline justify-between mb-2">
+            <h3 className="text-[0.62rem] tracking-[0.3em] uppercase text-ink/65">Inventory health · published looks</h3>
+            <span className="text-[0.6rem] text-ink/45 font-serif italic">Auto-resolves primary → alternate retailer → "If this sells out"</span>
+          </div>
+          <ul className="space-y-1.5">
+            {(health.data.looks as Array<{
+              candidate_id: string;
+              variant: string;
+              slot_count: number;
+              status_counts: Record<string, number>;
+            }>).map((l) => {
+              const c: Record<string, number> = l.status_counts ?? {};
+              const needs = (c.needs_review ?? 0);
+              const alt = (c.using_alternative ?? 0);
+              const swap = (c.switched_to_alternate ?? 0);
+              const ok = (c.primary_active ?? 0);
+              const tone = needs > 0 ? "border-red-700 text-red-800"
+                : alt > 0 ? "border-amber-700 text-amber-800"
+                : swap > 0 ? "border-blue-700 text-blue-800"
+                : "border-emerald-700 text-emerald-800";
+              return (
+                <li key={l.candidate_id} className="flex items-center gap-2 text-[0.7rem]">
+                  <span className="font-mono text-ink/60 w-24 truncate">{l.variant}</span>
+                  <span className={`px-1.5 py-0.5 border text-[0.55rem] tracking-[0.18em] uppercase ${tone}`}>
+                    {needs > 0 ? `${needs} needs review`
+                      : alt > 0 ? `${alt} alt product`
+                      : swap > 0 ? `${swap} alt retailer`
+                      : "All primary"}
+                  </span>
+                  <span className="text-ink/55 font-serif italic">
+                    {ok}/{l.slot_count} primary · {swap} swap · {alt} alt · {needs} review
+                  </span>
+                  <button
+                    onClick={() => refresh.mutate(l.candidate_id)}
+                    disabled={refresh.isPending}
+                    className="ml-auto text-[0.55rem] tracking-[0.22em] uppercase border border-ink/30 px-2 py-1 hover:bg-ink hover:text-ivory disabled:opacity-40"
+                  >
+                    {refresh.isPending ? "…" : "Re-check"}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       )}
 
       {/* Product pool visibility — the Steven Dann buyer's room ledger */}
