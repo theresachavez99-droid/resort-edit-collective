@@ -848,7 +848,7 @@ export const improveLook = createServerFn({ method: "POST" })
 
     await supabaseAdmin
       .from("look_candidates")
-      .update({ status: "pending_review" })
+      .update({ status: "ready_for_review", failure_reason: null })
       .eq("id", cand.id);
 
     return { ok: true as const };
