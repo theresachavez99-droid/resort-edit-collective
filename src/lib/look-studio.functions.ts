@@ -13,6 +13,16 @@ import {
 
 const pw = z.string().min(1).max(200);
 
+/**
+ * Hard quality gate thresholds (0-10 each). A candidate that misses any
+ * of these is held in `failed_gate` and never shown to the reviewer.
+ */
+const GATE_MIN_DESTINATION = 7;
+const GATE_MIN_COHESION = 7;
+const GATE_MIN_ACCESSORY = 7;
+/** Per-DNA sourcing pool floor — below this we surface a warning. */
+export const SOURCING_FLOOR = 150;
+
 type CandidateRow = {
   id: string;
   dna_id: string;
@@ -43,6 +53,23 @@ type SlotRow = {
   position: number;
   notes: string | null;
 };
+
+/**
+ * REQUIRED slots for every Resort Edit look. A candidate that cannot fill
+ * every required slot is regenerated; if it still fails it is marked
+ * `failed_gate`.
+ *
+ * Swimwear is required only on water looks; sunglasses only on daytime.
+ */
+function requiredSlotsFor(dna: LookDNA): LookSlot[] {
+  const isDaytime = !/dinner|night|evening|sunset/i.test(dna.activity);
+  const slots: LookSlot[] = [];
+  if (dna.isWaterLook) slots.push("swimwear");
+  slots.push("dress_or_coverup", "shoes", "bag", "earrings", "necklace", "bracelet", "ring");
+  if (isDaytime) slots.push("sunglasses");
+  slots.push("hair_detail");
+  return slots;
+}
 
 /** DNA queue view: per-DNA candidate counts so the admin sees what needs work. */
 export const listLookDNAQueue = createServerFn({ method: "POST" })
@@ -146,7 +173,11 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
       dna: LOOK_DNA[data.dna_id] ?? null,
       candidates: (candidates ?? []) as unknown as CandidateRow[],
       slots,
-      pool: { sourced: sourcedTotal ?? 0, eligible: eligibleTotal ?? 0 },
+      pool: {
+        sourced: sourcedTotal ?? 0,
+        eligible: eligibleTotal ?? 0,
+        floor: SOURCING_FLOOR,
+      },
     };
   });
 
