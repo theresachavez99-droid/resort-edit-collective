@@ -313,7 +313,7 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     if (!dna) throw new Error(`Unknown DNA: ${data.dna_id}`);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { generateCandidateBriefs, museImagePrompt } = await import("./candidate-brief.server");
-    const { generateAndStoreMuse } = await import("./muse-image.server");
+    const { generateAndStoreMuse, verifyMuseFidelity } = await import("./muse-image.server");
     const { getDestinationMuse, destinationRequiresMuseContinuity } = await import("./destination-muse.server");
 
     // Identity-lock muse for this destination (Lilla → Portofino, etc).
