@@ -179,7 +179,7 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
       const { data: slotRows, error: slotErr } = await supabaseAdmin
         .from("look_candidate_slots")
         .select(
-          "id, candidate_id, slot, sourced_product_id, vault_product_id, position, notes",
+          "id, candidate_id, slot, sourced_product_id, vault_product_id, product_id, position, notes",
         )
         .in("candidate_id", ids);
       if (slotErr) throw new Error(slotErr.message);
@@ -211,10 +211,24 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
       .neq("status", "rejected")
       .not("image_url", "is", null);
 
+    // Split ready-for-review vs discarded so the admin UI never shows
+    // incomplete or muse-less candidates in the review lane.
+    const ready: typeof candidates = [];
+    const discarded: typeof candidates = [];
+    const archived: typeof candidates = [];
+    for (const c of candidates ?? []) {
+      if (c.status === "discarded" || c.status === "failed_gate") discarded.push(c);
+      else if (c.status === "rejected") archived.push(c);
+      else ready.push(c);
+    }
+
     return {
       ok: true as const,
       dna: LOOK_DNA[data.dna_id] ?? null,
       candidates: (candidates ?? []) as unknown as CandidateRow[],
+      ready: ready as unknown as CandidateRow[],
+      discarded: discarded as unknown as CandidateRow[],
+      archived: archived as unknown as CandidateRow[],
       slots,
       pool: {
         sourced: sourcedTotal ?? 0,
@@ -295,6 +309,14 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { generateCandidateBriefs, museImagePrompt } = await import("./candidate-brief.server");
     const { generateAndStoreMuse } = await import("./muse-image.server");
+    const { getDestinationMuse, destinationRequiresMuseContinuity } = await import("./destination-muse.server");
+
+    // Identity-lock muse for this destination (Lilla → Portofino, etc).
+    const destMuse = await getDestinationMuse(dna.destination);
+    const requiresContinuity = destinationRequiresMuseContinuity(dna.destination);
+    if (requiresContinuity && !destMuse) {
+      throw new Error(`Destination "${dna.destination}" requires a configured muse but none is set in destination_muses.`);
+    }
 
     // Pull candidate-eligible products: not rejected; have image + brand + name.
     const { data: pool, error: poolErr } = await supabaseAdmin
@@ -398,12 +420,25 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       await supabaseAdmin.from("look_candidates").update({ status: "pending_muse" }).eq("id", cand.id);
       let museUrl: string | null = null;
       let museError: string | null = null;
-      try {
-        const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief));
-        museUrl = r.url;
-        await supabaseAdmin.from("look_candidates").update({ muse_image_url: museUrl }).eq("id", cand.id);
-      } catch (e) {
-        museError = String((e as Error).message ?? e).slice(0, 240);
+      let identityLocked = false;
+      // One retry on muse failure — never let a museless candidate through.
+      for (let museAttempt = 0; museAttempt < 2 && !museUrl; museAttempt++) {
+        try {
+          const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief), {
+            referenceUrl: destMuse?.reference_url ?? null,
+            museName: destMuse?.muse_name ?? null,
+            faceDescription: destMuse?.face_description ?? null,
+            guardrails: destMuse?.style_guardrails ?? null,
+          });
+          museUrl = r.url;
+          identityLocked = r.identity_locked;
+          await supabaseAdmin
+            .from("look_candidates")
+            .update({ muse_image_url: museUrl })
+            .eq("id", cand.id);
+        } catch (e) {
+          museError = String((e as Error).message ?? e).slice(0, 240);
+        }
       }
 
       // Stage 5: score.
@@ -422,6 +457,9 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       const reasons: string[] = [];
       if (missing.length) reasons.push(`Missing required slots: ${missing.join(", ")}`);
       if (!museUrl) reasons.push(`Muse preview missing${museError ? `: ${museError}` : ""}`);
+      if (requiresContinuity && museUrl && !identityLocked) {
+        reasons.push(`Muse identity not locked to ${destMuse?.muse_name ?? "the destination muse"} — reference image was not applied.`);
+      }
       const ds = typeof scoring.destination_specificity === "number" ? scoring.destination_specificity : 0;
       const sc = typeof scoring.styling_cohesion === "number" ? scoring.styling_cohesion : 0;
       const ae = typeof scoring.accessory_ecosystem === "number" ? scoring.accessory_ecosystem : 0;
@@ -443,6 +481,12 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
         passed,
         reasons,
         diversity_notes: diversityNotes,
+        muse: {
+          present: !!museUrl,
+          identity_locked: identityLocked,
+          muse_name: destMuse?.muse_name ?? null,
+          requires_continuity: requiresContinuity,
+        },
         checks: {
           required_slots_filled: requiredSlots.length - missing.length,
           required_slots_total: requiredSlots.length,
@@ -464,7 +508,8 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       await supabaseAdmin
         .from("look_candidates")
         .update({
-          status: passed ? "pending_review" : "failed_gate",
+          status: passed ? "ready_for_review" : "discarded",
+          failure_reason: passed ? null : reasons.slice(0, 4).join(" · "),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           quality_gate: gate as any,
         })
@@ -803,7 +848,7 @@ export const improveLook = createServerFn({ method: "POST" })
 
     await supabaseAdmin
       .from("look_candidates")
-      .update({ status: "pending_review" })
+      .update({ status: "ready_for_review", failure_reason: null })
       .eq("id", cand.id);
 
     return { ok: true as const };
@@ -816,6 +861,7 @@ export const approveLook = createServerFn({ method: "POST" })
     requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { generateEditorial, pickReplacements, lookSlug } = await import("./look-editorial.server");
+    const { promoteSourcedToProduct } = await import("./product-identity.server");
 
     const { data: cand, error: cErr } = await supabaseAdmin
       .from("look_candidates")
@@ -839,6 +885,47 @@ export const approveLook = createServerFn({ method: "POST" })
         .in("id", sourcedIds);
       for (const sp of prods ?? []) {
         const slot = (slots ?? []).find((s) => s.sourced_product_id === sp.id)?.slot ?? null;
+
+        // PRODUCT IDENTITY: upsert into products + product_sources and write
+        // product_id onto the slot so approved looks point at the identity,
+        // not the retailer URL. Survives future affiliate onboarding.
+        try {
+          const promoted = await promoteSourcedToProduct(
+            {
+              id: sp.id,
+              brand: sp.brand,
+              brand_id: sp.brand_id ?? null,
+              product_name: sp.product_name,
+              retailer_domain: sp.retailer_domain,
+              source_url: sp.source_url,
+              affiliate_url: sp.affiliate_url,
+              image_url: sp.image_url,
+              price: sp.price != null ? Number(sp.price) : null,
+              currency: sp.currency,
+              slot_category: sp.slot_category,
+              category: sp.category ?? null,
+              subcategory: sp.subcategory ?? null,
+              silhouette: sp.silhouette ?? null,
+              fabric: sp.fabric ?? null,
+              texture: sp.texture ?? null,
+              print_family: sp.print_family ?? null,
+              color_family: sp.color_family ?? null,
+              destination_tags: sp.destination_tags ?? [],
+              activity_tags: sp.activity_tags ?? [],
+            },
+            dna ?? null,
+          );
+          if (promoted?.product_id) {
+            await supabaseAdmin
+              .from("look_candidate_slots")
+              .update({ product_id: promoted.product_id })
+              .eq("candidate_id", cand.id)
+              .eq("sourced_product_id", sp.id);
+          }
+        } catch (e) {
+          console.error("product identity promotion failed", e);
+        }
+
         // Skip if already in vault from this candidate.
         const { data: existing } = await supabaseAdmin
           .from("vault_products")
