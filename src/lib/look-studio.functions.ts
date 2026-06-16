@@ -492,16 +492,69 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
  */
 function assembleForBrief(
   slots: LookSlot[],
-  eligible: Array<{ id: string; brand: string | null; product_name: string | null; slot_category: string | null }>,
+  eligible: Array<{
+    id: string;
+    brand: string | null;
+    brand_id?: string | null;
+    product_name: string | null;
+    slot_category: string | null;
+    silhouette?: string | null;
+    fabric?: string | null;
+    texture?: string | null;
+    print_family?: string | null;
+    color_family?: string | null;
+    subcategory?: string | null;
+  }>,
   dna: LookDNA,
   brief: { brand_priorities: string[]; styling_keywords: string[] },
   seed: number,
-): Array<{ slot: LookSlot; sourced_product_id: string | null }> {
+  hero: { heroBrandIds: Set<string>; heroBrandNames: Set<string> },
+): {
+  picks: Array<{ slot: LookSlot; sourced_product_id: string | null }>;
+  notes: string[];
+} {
   const usedIds = new Set<string>();
   const brandPrefs = [...brief.brand_priorities, ...(dna.targetBrands ?? [])].map((b) => b.toLowerCase());
   const keywords = brief.styling_keywords.map((k) => k.toLowerCase());
+  const notes: string[] = [];
 
-  return slots.map((slot) => {
+  // Diversity counters — how many slots already consumed each trait value.
+  const counts: Record<keyof typeof DIVERSITY_CAPS, Map<string, number>> = {
+    brand: new Map(),
+    silhouette: new Map(),
+    fabric: new Map(),
+    texture: new Map(),
+    print_family: new Map(),
+    color_family: new Map(),
+    subcategory: new Map(),
+  };
+
+  const totalSlots = slots.length;
+
+  const traitOf = (
+    p: (typeof eligible)[number],
+    trait: keyof typeof DIVERSITY_CAPS,
+  ): string | null => {
+    if (trait === "brand") return (p.brand ?? "").toLowerCase() || null;
+    return ((p as Record<string, unknown>)[trait] as string | null) ?? null;
+  };
+
+  const violatesCap = (
+    p: (typeof eligible)[number],
+  ): keyof typeof DIVERSITY_CAPS | null => {
+    for (const key of Object.keys(DIVERSITY_CAPS) as Array<keyof typeof DIVERSITY_CAPS>) {
+      const v = traitOf(p, key);
+      if (!v) continue;
+      const cap = DIVERSITY_CAPS[key];
+      const current = counts[key].get(v) ?? 0;
+      // Would assigning this product push us past the cap (rounded down)?
+      const maxAllowed = Math.max(1, Math.floor(cap * totalSlots));
+      if (current + 1 > maxAllowed) return key;
+    }
+    return null;
+  };
+
+  const picks = slots.map((slot) => {
     const matches = eligible.filter((p) => matchesSlot(slot, p) && !usedIds.has(p.id));
     if (!matches.length) return { slot, sourced_product_id: null };
     const scored = matches.map((p) => {
@@ -511,13 +564,47 @@ function assembleForBrief(
       const brandScore = brandPrefs.findIndex((b) => brand.includes(b));
       const brandBoost = brandScore >= 0 ? (brandPrefs.length - brandScore) * 5 : 0;
       const kwBoost = keywords.reduce((acc, k) => acc + (name.includes(k) || cat.includes(k) ? 3 : 0), 0);
-      return { p, score: brandBoost + kwBoost };
+      // Soft hero-brand boost: bumps tie-break ranking, never overrides destination fit.
+      const heroBoost =
+        (p.brand_id && hero.heroBrandIds.has(p.brand_id)) || hero.heroBrandNames.has(brand)
+          ? 4
+          : 0;
+      return { p, score: brandBoost + kwBoost + heroBoost };
     });
     const ranked = shuffle(scored, seed + slot.length).sort((a, b) => b.score - a.score);
-    const pick = ranked[0]?.p ?? null;
-    if (pick) usedIds.add(pick.id);
+    // Walk ranked options; skip any that would violate a diversity cap.
+    let pick: (typeof eligible)[number] | null = null;
+    for (const candidate of ranked) {
+      const violated = violatesCap(candidate.p);
+      if (!violated) {
+        pick = candidate.p;
+        break;
+      }
+      // Otherwise keep looking; record once per dimension we had to skip.
+    }
+    if (!pick && ranked.length) {
+      // Diversity-blocked every option — degrade gracefully to best ranked.
+      pick = ranked[0].p;
+      const violated = violatesCap(pick);
+      if (violated) notes.push(`${slot}: cap on ${violated} relaxed (no alternative for this slot)`);
+    }
+    if (pick) {
+      usedIds.add(pick.id);
+      for (const key of Object.keys(DIVERSITY_CAPS) as Array<keyof typeof DIVERSITY_CAPS>) {
+        const v = traitOf(pick, key);
+        if (v) counts[key].set(v, (counts[key].get(v) ?? 0) + 1);
+      }
+    }
     return { slot, sourced_product_id: pick?.id ?? null };
   });
+
+  // Summarize brand mix for the UI.
+  const brandMix = Array.from(counts.brand.entries())
+    .map(([b, n]) => `${b} ${Math.round((n / totalSlots) * 100)}%`)
+    .join(", ");
+  if (brandMix) notes.unshift(`brand mix: ${brandMix}`);
+
+  return { picks, notes };
 }
 
 async function scoreCandidateInternal(
