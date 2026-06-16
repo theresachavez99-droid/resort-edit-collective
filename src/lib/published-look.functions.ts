@@ -74,11 +74,53 @@ export const getPublishedLook = createServerFn({ method: "GET" })
     const dna = LOOK_DNA[cand.dna_id];
     const { data: slotRows } = await supabaseAdmin
       .from("look_candidate_slots")
-      .select("id, slot, sourced_product_id, position")
+      .select("id, slot, sourced_product_id, product_id, position")
       .eq("candidate_id", cand.id)
       .order("position");
 
-    // Map slot -> vault_product via source_sourced_product_id
+    // PRIMARY READ PATH: slot.product_id -> products + primary product_sources.
+    // FALLBACK: vault_products via source_sourced_product_id (legacy slots).
+    const productIds = (slotRows ?? [])
+      .map((s) => (s as { product_id?: string | null }).product_id)
+      .filter((x): x is string => !!x);
+
+    type ProductRow = {
+      id: string;
+      brand: string;
+      product_name: string;
+      category: string | null;
+      image_url: string | null;
+    };
+    type SourceRow = {
+      product_id: string;
+      retailer: string | null;
+      source_url: string;
+      affiliate_url: string | null;
+      price: number | null;
+      currency: string | null;
+      is_primary: boolean;
+    };
+    let productMap = new Map<string, ProductRow>();
+    let sourceMap = new Map<string, SourceRow>(); // product_id -> primary source
+    if (productIds.length) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sb: any = supabaseAdmin;
+      const { data: prods } = await sb
+        .from("products")
+        .select("id, brand, product_name, category, image_url")
+        .in("id", productIds);
+      productMap = new Map((prods ?? []).map((p: ProductRow) => [p.id, p]));
+      const { data: srcs } = await sb
+        .from("product_sources")
+        .select("product_id, retailer, source_url, affiliate_url, price, currency, is_primary")
+        .in("product_id", productIds)
+        .order("is_primary", { ascending: false });
+      for (const s of (srcs ?? []) as SourceRow[]) {
+        if (!sourceMap.has(s.product_id)) sourceMap.set(s.product_id, s);
+      }
+    }
+
+    // Legacy fallback: vault_products via source_sourced_product_id
     const sourcedIds = (slotRows ?? []).map((s) => s.sourced_product_id).filter((x): x is string => !!x);
     let vaultMap = new Map<string, Record<string, unknown>>();
     if (sourcedIds.length) {
@@ -90,27 +132,57 @@ export const getPublishedLook = createServerFn({ method: "GET" })
     }
 
     const productsRaw: Array<PublishedLookProduct | null> = (slotRows ?? []).map((s) => {
+      const pid = (s as { product_id?: string | null }).product_id ?? null;
+      const product = pid ? productMap.get(pid) ?? null : null;
+      const source = pid ? sourceMap.get(pid) ?? null : null;
+
+      if (product && source) {
+        // Carry across editorial extras (ai_replacements, fallback URLs) from
+        // vault when present — these aren't yet on the Product Identity.
         const v = s.sourced_product_id ? vaultMap.get(s.sourced_product_id) : null;
-        if (!v) return null;
         return {
-          vault_id: v.id as string,
+          vault_id: pid,
           slot: s.slot,
           slot_label: LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot,
-          brand: (v.brand as string) ?? "—",
-          product_name: (v.product_name as string) ?? "—",
-          retailer: (v.retailer as string | null) ?? null,
-          price: v.price != null ? Number(v.price) : null,
-          currency: (v.currency as string | null) ?? "USD",
-          image_url: (v.image_url as string | null) ?? null,
-          primary_url: (v.affiliate_url as string) ?? "#",
-          brand_fallback_url: (v.brand_url as string | null) ?? null,
-          category_fallback_url: (v.category_fallback_url as string | null) ?? null,
-          product_type: (v.product_type as string | null) ?? null,
-          has_backup: !!(v.brand_url || v.category_fallback_url) || (Array.isArray(v.ai_replacements) && (v.ai_replacements as unknown[]).length > 0),
-          ai_replacements: Array.isArray(v.ai_replacements)
+          brand: product.brand,
+          product_name: product.product_name,
+          retailer: source.retailer ?? null,
+          price: source.price != null ? Number(source.price) : null,
+          currency: source.currency ?? "USD",
+          image_url: product.image_url,
+          primary_url: source.affiliate_url ?? source.source_url,
+          brand_fallback_url: v ? ((v.brand_url as string | null) ?? null) : null,
+          category_fallback_url: v ? ((v.category_fallback_url as string | null) ?? null) : null,
+          product_type: product.category,
+          has_backup: !!(v && (v.brand_url || v.category_fallback_url)) || !!(v && Array.isArray(v.ai_replacements) && (v.ai_replacements as unknown[]).length > 0),
+          ai_replacements: v && Array.isArray(v.ai_replacements)
             ? (v.ai_replacements as PublishedLookProduct["ai_replacements"])
             : [],
         };
+      }
+
+      // Legacy fallback (pre-migration slots without product_id)
+      const v = s.sourced_product_id ? vaultMap.get(s.sourced_product_id) : null;
+      if (!v) return null;
+      return {
+        vault_id: v.id as string,
+        slot: s.slot,
+        slot_label: LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot,
+        brand: (v.brand as string) ?? "—",
+        product_name: (v.product_name as string) ?? "—",
+        retailer: (v.retailer as string | null) ?? null,
+        price: v.price != null ? Number(v.price) : null,
+        currency: (v.currency as string | null) ?? "USD",
+        image_url: (v.image_url as string | null) ?? null,
+        primary_url: (v.affiliate_url as string) ?? "#",
+        brand_fallback_url: (v.brand_url as string | null) ?? null,
+        category_fallback_url: (v.category_fallback_url as string | null) ?? null,
+        product_type: (v.product_type as string | null) ?? null,
+        has_backup: !!(v.brand_url || v.category_fallback_url) || (Array.isArray(v.ai_replacements) && (v.ai_replacements as unknown[]).length > 0),
+        ai_replacements: Array.isArray(v.ai_replacements)
+          ? (v.ai_replacements as PublishedLookProduct["ai_replacements"])
+          : [],
+      };
     });
     const products: PublishedLookProduct[] = productsRaw.filter((x): x is PublishedLookProduct => x !== null);
 
