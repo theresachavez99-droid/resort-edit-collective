@@ -329,8 +329,13 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
             <span className="text-[0.6rem] text-ink/45 font-serif italic">Auto-resolves primary → alternate retailer → "If this sells out"</span>
           </div>
           <ul className="space-y-1.5">
-            {health.data.looks.map((l) => {
-              const c = l.status_counts ?? {};
+            {(health.data.looks as Array<{
+              candidate_id: string;
+              variant: string;
+              slot_count: number;
+              status_counts: Record<string, number>;
+            }>).map((l) => {
+              const c: Record<string, number> = l.status_counts ?? {};
               const needs = (c.needs_review ?? 0);
               const alt = (c.using_alternative ?? 0);
               const swap = (c.switched_to_alternate ?? 0);
