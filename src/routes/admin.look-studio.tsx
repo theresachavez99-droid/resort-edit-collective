@@ -365,7 +365,14 @@ function LookCandidateCard({
         ? "bg-red-100 text-red-900 border-red-300"
         : candidate.status === "improving"
           ? "bg-amber-100 text-amber-900 border-amber-300"
-          : "bg-blue-50 text-blue-900 border-blue-300";
+          : candidate.status === "failed_gate"
+            ? "bg-red-50 text-red-900 border-red-400"
+            : candidate.status === "pending_muse" || candidate.status === "pending_score" || candidate.status === "assembling" || candidate.status === "briefing"
+              ? "bg-cream/60 text-ink/70 border-ink/25"
+              : "bg-blue-50 text-blue-900 border-blue-300";
+
+  const brief = (candidate.brief ?? null) as CandidateBriefLike | null;
+  const gate = (candidate.quality_gate ?? null) as QualityGateLike | null;
 
   return (
     <article className="border border-ink/15 bg-ivory">
@@ -373,6 +380,9 @@ function LookCandidateCard({
       <div className="px-4 py-3 border-b border-ink/10 flex items-center justify-between gap-2">
         <div>
           <p className="font-display text-sm tracking-[0.06em]">Variant {candidate.variant}</p>
+          {brief?.title && (
+            <p className="text-[0.7rem] text-ink/65 font-serif italic mt-0.5 line-clamp-1">{brief.title}</p>
+          )}
           <p className="text-[0.7rem] text-ink/55 mt-0.5">
             Composite{" "}
             <span className="font-mono">
@@ -380,10 +390,75 @@ function LookCandidateCard({
             </span>
           </p>
         </div>
-        <span className={`text-[0.6rem] tracking-[0.2em] uppercase border px-2 py-0.5 ${statusColor}`}>
-          {candidate.status.replace(/_/g, " ")}
-        </span>
+        <div className="flex flex-col items-end gap-1">
+          <span className={`text-[0.6rem] tracking-[0.2em] uppercase border px-2 py-0.5 ${statusColor}`}>
+            {candidate.status.replace(/_/g, " ")}
+          </span>
+          {gate && (
+            <span
+              className={`text-[0.55rem] tracking-[0.18em] uppercase border px-1.5 py-0.5 ${gate.passed ? "border-emerald-700 text-emerald-800" : "border-red-700 text-red-800"}`}
+              title={gate.reasons?.join(" · ") || "Quality gate"}
+            >
+              {gate.passed ? "Gate ✓" : "Gate ✗"}
+            </span>
+          )}
+        </div>
       </div>
+
+      {/* Aesthetic brief — the personal-shopper voice */}
+      {brief && (
+        <div className="px-4 py-3 border-b border-ink/10 bg-cream/25 space-y-2">
+          {brief.destination_energy && (
+            <p className="font-serif italic text-[0.78rem] text-ink/80 leading-snug">"{brief.destination_energy}"</p>
+          )}
+          {brief.color_story?.palette && brief.color_story.palette.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              <span className="text-[0.55rem] tracking-[0.22em] uppercase text-ink/55">Palette</span>
+              <div className="flex gap-1">
+                {brief.color_story.palette.slice(0, 5).map((hex, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-block w-4 h-4 rounded-sm border border-ink/15"
+                    style={{ backgroundColor: hex }}
+                    title={hex}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          {brief.luxury_traveler_persona && (
+            <p className="text-[0.68rem] text-ink/65 line-clamp-2">
+              <span className="uppercase tracking-[0.18em] text-[0.55rem] text-ink/45 mr-1">Persona</span>
+              {brief.luxury_traveler_persona}
+            </p>
+          )}
+          {brief.silhouette_strategy && (
+            <p className="text-[0.68rem] text-ink/65 line-clamp-2">
+              <span className="uppercase tracking-[0.18em] text-[0.55rem] text-ink/45 mr-1">Silhouette</span>
+              {brief.silhouette_strategy}
+            </p>
+          )}
+          {brief.accessory_ecosystem && (
+            <p className="text-[0.68rem] text-ink/65 line-clamp-2">
+              <span className="uppercase tracking-[0.18em] text-[0.55rem] text-ink/45 mr-1">Accessories</span>
+              {brief.accessory_ecosystem}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Quality gate failure — surfaced loudly */}
+      {gate && !gate.passed && gate.reasons && gate.reasons.length > 0 && (
+        <div className="px-4 py-2 bg-red-50 border-b border-red-200 text-[0.68rem] text-red-900">
+          <p className="uppercase tracking-[0.2em] text-[0.55rem] text-red-700 mb-1">Quality gate failed</p>
+          <ul className="list-disc list-inside space-y-0.5">
+            {gate.reasons.map((r, i) => (
+              <li key={i}>{r}</li>
+            ))}
+          </ul>
+          <p className="mt-1 italic text-red-700/80">Use Improve or Rescore to regenerate.</p>
+        </div>
+      )}
 
       {/* Editorial muse preview — large, top of card */}
       {candidate.muse_image_url ? (
