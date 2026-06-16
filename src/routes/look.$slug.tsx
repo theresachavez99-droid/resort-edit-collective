@@ -263,7 +263,17 @@ function ProductCard({ product }: { product: PublishedLookProduct }) {
           >
             {product.has_backup ? "Backup ✓" : "No backup"}
           </span>
-          {product.ai_replacements.length > 0 && (
+          {product.resolution_status === "switched_to_alternate" && (
+            <span className="px-1.5 py-0.5 border border-blue-700 text-blue-800">
+              Alt retailer
+            </span>
+          )}
+          {product.resolution_status === "using_alternative" && (
+            <span className="px-1.5 py-0.5 border border-amber-700 text-amber-800">
+              Sold out · alt shown
+            </span>
+          )}
+          {(product.ai_replacements.length > 0 || product.alternatives.length > 0) && (
             <button
               onClick={() => setShowAlts((v) => !v)}
               className="ml-auto text-ink/60 hover:text-ink underline-offset-2 hover:underline tracking-[0.18em]"
@@ -275,6 +285,32 @@ function ProductCard({ product }: { product: PublishedLookProduct }) {
 
         {showAlts && (
           <div className="mt-3 border-t border-ink/10 pt-3 space-y-2">
+            {product.alternatives.map((a, i) => (
+              <a
+                key={`a-${i}`}
+                href={a.url ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex gap-3 items-center text-xs hover:bg-cream/30 -mx-1 px-1 py-1"
+              >
+                {a.image_url ? (
+                  <img src={a.image_url} alt="" className="w-10 h-12 object-cover bg-cream/40" loading="lazy" />
+                ) : (
+                  <div className="w-10 h-12 bg-cream/40" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="font-display tracking-[0.04em] truncate">{a.brand}</p>
+                  <p className="font-serif italic text-ink/60 truncate">{a.product_name}</p>
+                  <p className="text-[0.55rem] tracking-[0.18em] uppercase text-ink/45">
+                    {a.kind === "same_brand" ? "Same brand" : "Same DNA"}
+                    {a.retailer ? ` · ${a.retailer}` : ""}
+                  </p>
+                </div>
+                <p className="font-mono text-ink/70">
+                  {a.price != null ? `$${Math.round(a.price)}` : ""}
+                </p>
+              </a>
+            ))}
             {product.ai_replacements.map((r, i) => (
               <a
                 key={i}
