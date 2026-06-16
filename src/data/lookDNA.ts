@@ -20,6 +20,8 @@ export type LookTier = "luxury" | "mid-luxe" | "riviera-finds";
 export type LookDNA = {
   /** Stable id e.g. "day-2/look-a" — used to join with lookbook + fallbacks. */
   id: string;
+  /** Human-friendly look name (e.g. "Mediterranean Majolica"). */
+  name?: string;
   destination: string;
   activity: string;
   mood: string;
@@ -39,6 +41,16 @@ export type LookDNA = {
   isWaterLook: boolean;
   /** Tier this DNA was authored against. Other tiers re-source from it. */
   tier: LookTier;
+  /**
+   * Phase 2 styling brief fields — drive product sourcing and outfit assembly.
+   * Optional so legacy entries continue to compile.
+   */
+  heroPiece?: string;
+  colorStory?: string[];
+  printStory?: string;
+  accessories?: string[];
+  /** Preferred brands for this DNA. Sourcing prioritizes these, then expands. */
+  targetBrands?: string[];
 };
 
 /**
@@ -66,10 +78,150 @@ export const LOOK_DNA: Record<string, LookDNA> = {
     isWaterLook: true,
     tier: "luxury",
   },
+
+  // ─────────────────────────────────────────────────────────────────
+  // Yacht Day Look DNA registry (Phase 2)
+  // These are STYLING BRIEFS, not products. Sourcing engine consumes
+  // these to find Vault candidates and rank/score against the brief.
+  // ─────────────────────────────────────────────────────────────────
+
+  "yacht-day/mediterranean-majolica": {
+    id: "yacht-day/mediterranean-majolica",
+    name: "Mediterranean Majolica",
+    destination: "Portofino",
+    activity: "Yacht Day",
+    mood: "Mediterranean glamour",
+    palette: ["Capri blue", "ivory", "white", "gold"],
+    silhouette: "Bandeau swimwear with flowing pareo layer",
+    printLanguage: "Majolica tile, hand-painted ceramic, fine blue stripe",
+    resortEnergy: "Old-money coastal — wealthy traveler, relaxed luxury",
+    ageAlignment: "Sophisticated women 32–48",
+    stylingNotes: [
+      "silk scarf in hair",
+      "layered fine gold",
+      "flat woven sandal",
+      "raffia bag",
+    ],
+    isWaterLook: true,
+    tier: "luxury",
+    heroPiece: "Bandeau swimwear",
+    colorStory: ["blue", "white"],
+    printStory: "Majolica-inspired",
+    accessories: ["raffia bag", "gold jewelry", "flat sandals", "silk scarf"],
+    targetBrands: ["Alexandra Miro", "Dolce & Gabbana", "Cala de la Cruz"],
+  },
+
+  "yacht-day/emerald-riviera": {
+    id: "yacht-day/emerald-riviera",
+    name: "Emerald Riviera",
+    destination: "Portofino",
+    activity: "Yacht Day",
+    mood: "Quiet confidence — harbor elegance",
+    palette: ["emerald", "deep green", "gold", "ivory"],
+    silhouette: "Structured one-piece or sculpted bikini, clean lines",
+    printLanguage: "Solid jewel tone; subtle ribbing or matte texture",
+    resortEnergy: "Wealthy traveler — understated, expensive, considered",
+    ageAlignment: "Sophisticated women 35–50",
+    stylingNotes: [
+      "polished gold cuff",
+      "luxury leather or suede sandal",
+      "woven tote",
+      "minimal hair — sleek low pony",
+    ],
+    isWaterLook: true,
+    tier: "luxury",
+    heroPiece: "Structured swimwear",
+    colorStory: ["emerald green"],
+    accessories: ["gold jewelry", "luxury sandals", "woven tote"],
+    targetBrands: ["Eres", "Melissa Odabash", "Johanna Ortiz"],
+  },
+
+  "yacht-day/coral-aperitivo": {
+    id: "yacht-day/coral-aperitivo",
+    name: "Coral Aperitivo",
+    destination: "Portofino",
+    activity: "Yacht Day",
+    mood: "Playful luxury — late-afternoon spritz on deck",
+    palette: ["coral", "terracotta", "warm gold", "sand"],
+    silhouette: "Printed bikini or playful one-piece with ruffle detail",
+    printLanguage: "Latin-American botanical, hand-painted floral, gradient coral",
+    resortEnergy: "Joyful, sun-warmed, confident colour",
+    ageAlignment: "Sophisticated women 28–45",
+    stylingNotes: [
+      "stack of gold bangles",
+      "raffia tote and raffia earrings",
+      "warm-tone lip",
+      "loose tousled hair",
+    ],
+    isWaterLook: true,
+    tier: "luxury",
+    heroPiece: "Printed swimwear",
+    colorStory: ["coral", "terracotta"],
+    accessories: ["gold jewelry", "raffia accessories"],
+    targetBrands: ["Agua by Agua Bendita", "Johanna Ortiz", "Alemais"],
+  },
+
+  "yacht-day/ivory-and-gold": {
+    id: "yacht-day/ivory-and-gold",
+    name: "Ivory & Gold",
+    destination: "Portofino",
+    activity: "Yacht Day",
+    mood: "Sophisticated luxury — quiet expensive",
+    palette: ["ivory", "cream", "sand", "antique gold"],
+    silhouette: "Luxury one-piece, sculpted, often cut-out or draped",
+    printLanguage: "Solid neutrals; matte or subtle metallic finish",
+    resortEnergy: "Editorial old-money — Slim Aarons composure",
+    ageAlignment: "Sophisticated women 35–55",
+    stylingNotes: [
+      "statement gold cuff or chunky chain",
+      "neutral leather sandal",
+      "tortoise oversized sunglasses",
+      "sleek wet-look or low chignon",
+    ],
+    isWaterLook: true,
+    tier: "luxury",
+    heroPiece: "Luxury one-piece",
+    colorStory: ["ivory", "cream", "sand"],
+    accessories: ["statement gold jewelry", "neutral sandals"],
+    targetBrands: ["Eres", "Zimmermann"],
+  },
+
+  "yacht-day/mediterranean-floral": {
+    id: "yacht-day/mediterranean-floral",
+    name: "Mediterranean Floral",
+    destination: "Portofino",
+    activity: "Yacht Day",
+    mood: "Editorial Riviera glamour",
+    palette: ["multi-color floral", "rose", "sky", "leaf green", "gold"],
+    silhouette: "Floral bikini or romantic one-piece with ruffle / tie detail",
+    printLanguage: "Painterly multi-color floral, watercolor bloom, Provençal sprig",
+    resortEnergy: "Riviera magazine cover — joyful, photographed, romantic",
+    ageAlignment: "Sophisticated women 28–48",
+    stylingNotes: [
+      "raffia clutch",
+      "fine gold layering",
+      "natural-finish skin",
+      "loose beach waves",
+    ],
+    isWaterLook: true,
+    tier: "luxury",
+    heroPiece: "Floral swimwear",
+    colorStory: ["multi-color floral"],
+    accessories: ["gold jewelry", "raffia accessories"],
+    targetBrands: ["Agua by Agua Bendita", "Zimmermann", "Faithfull the Brand"],
+  },
 };
 
 export function getLookDNA(id: string): LookDNA | undefined {
   return LOOK_DNA[id];
+}
+
+/**
+ * Convenience: all Yacht Day briefs. Sourcing engine uses this set to drive
+ * the Portofino yacht-day inventory build.
+ */
+export function getYachtDayDNA(): LookDNA[] {
+  return Object.values(LOOK_DNA).filter((d) => d.activity === "Yacht Day");
 }
 
 /**
