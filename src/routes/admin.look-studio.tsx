@@ -524,6 +524,18 @@ function LookCandidateCard({
           Delete
         </button>
       </div>
+      {candidate.status === "approved" && (candidate as { slug?: string | null }).slug && (
+        <div className="px-4 pb-3 -mt-1">
+          <a
+            href={`/look/${(candidate as { slug: string }).slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[0.62rem] tracking-[0.24em] uppercase text-emerald-800 underline"
+          >
+            View published look →
+          </a>
+        </div>
+      )}
 
       {showImprove && (
         <div className="border-t border-ink/10 bg-cream/30 p-4 space-y-3">
