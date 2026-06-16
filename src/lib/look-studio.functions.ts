@@ -309,6 +309,14 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { generateCandidateBriefs, museImagePrompt } = await import("./candidate-brief.server");
     const { generateAndStoreMuse } = await import("./muse-image.server");
+    const { getDestinationMuse, destinationRequiresMuseContinuity } = await import("./destination-muse.server");
+
+    // Identity-lock muse for this destination (Lilla → Portofino, etc).
+    const destMuse = await getDestinationMuse(dna.destination);
+    const requiresContinuity = destinationRequiresMuseContinuity(dna.destination);
+    if (requiresContinuity && !destMuse) {
+      throw new Error(`Destination "${dna.destination}" requires a configured muse but none is set in destination_muses.`);
+    }
 
     // Pull candidate-eligible products: not rejected; have image + brand + name.
     const { data: pool, error: poolErr } = await supabaseAdmin
@@ -412,12 +420,25 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       await supabaseAdmin.from("look_candidates").update({ status: "pending_muse" }).eq("id", cand.id);
       let museUrl: string | null = null;
       let museError: string | null = null;
-      try {
-        const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief));
-        museUrl = r.url;
-        await supabaseAdmin.from("look_candidates").update({ muse_image_url: museUrl }).eq("id", cand.id);
-      } catch (e) {
-        museError = String((e as Error).message ?? e).slice(0, 240);
+      let identityLocked = false;
+      // One retry on muse failure — never let a museless candidate through.
+      for (let museAttempt = 0; museAttempt < 2 && !museUrl; museAttempt++) {
+        try {
+          const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief), {
+            referenceUrl: destMuse?.reference_url ?? null,
+            museName: destMuse?.muse_name ?? null,
+            faceDescription: destMuse?.face_description ?? null,
+            guardrails: destMuse?.style_guardrails ?? null,
+          });
+          museUrl = r.url;
+          identityLocked = r.identity_locked;
+          await supabaseAdmin
+            .from("look_candidates")
+            .update({ muse_image_url: museUrl })
+            .eq("id", cand.id);
+        } catch (e) {
+          museError = String((e as Error).message ?? e).slice(0, 240);
+        }
       }
 
       // Stage 5: score.
@@ -436,6 +457,9 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       const reasons: string[] = [];
       if (missing.length) reasons.push(`Missing required slots: ${missing.join(", ")}`);
       if (!museUrl) reasons.push(`Muse preview missing${museError ? `: ${museError}` : ""}`);
+      if (requiresContinuity && museUrl && !identityLocked) {
+        reasons.push(`Muse identity not locked to ${destMuse?.muse_name ?? "the destination muse"} — reference image was not applied.`);
+      }
       const ds = typeof scoring.destination_specificity === "number" ? scoring.destination_specificity : 0;
       const sc = typeof scoring.styling_cohesion === "number" ? scoring.styling_cohesion : 0;
       const ae = typeof scoring.accessory_ecosystem === "number" ? scoring.accessory_ecosystem : 0;
@@ -457,6 +481,12 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
         passed,
         reasons,
         diversity_notes: diversityNotes,
+        muse: {
+          present: !!museUrl,
+          identity_locked: identityLocked,
+          muse_name: destMuse?.muse_name ?? null,
+          requires_continuity: requiresContinuity,
+        },
         checks: {
           required_slots_filled: requiredSlots.length - missing.length,
           required_slots_total: requiredSlots.length,
@@ -478,7 +508,8 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       await supabaseAdmin
         .from("look_candidates")
         .update({
-          status: passed ? "pending_review" : "failed_gate",
+          status: passed ? "ready_for_review" : "discarded",
+          failure_reason: passed ? null : reasons.slice(0, 4).join(" · "),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           quality_gate: gate as any,
         })
