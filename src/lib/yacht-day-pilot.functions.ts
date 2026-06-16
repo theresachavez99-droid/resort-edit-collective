@@ -31,6 +31,15 @@ const COLLECTION_PATTERNS = [
   /\/new-in\/?/i,
 ];
 
+const DEFAULT_QUERY_TEMPLATES = [
+  "{brand} swimwear",
+  "{brand} bikini",
+  "{brand} swimsuit",
+  "{brand} pareo",
+  "{brand} kaftan",
+  "{brand} coverup",
+];
+
 function looksLikePdp(url: string): boolean {
   try {
     const u = new URL(url);
