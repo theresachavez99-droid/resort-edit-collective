@@ -121,6 +121,7 @@ export type Database = {
         Row: {
           approved_at: string | null
           best_for: string[]
+          brief: Json
           composite_score: number | null
           created_at: string
           day: number | null
@@ -135,8 +136,10 @@ export type Database = {
           notes: string | null
           pack_instead_of: string | null
           published_at: string | null
+          quality_gate: Json
           rejected_at: string | null
           resort_edit_tip: string | null
+          retry_count: number
           scoring: Json
           slug: string | null
           status: string
@@ -148,6 +151,7 @@ export type Database = {
         Insert: {
           approved_at?: string | null
           best_for?: string[]
+          brief?: Json
           composite_score?: number | null
           created_at?: string
           day?: number | null
@@ -162,8 +166,10 @@ export type Database = {
           notes?: string | null
           pack_instead_of?: string | null
           published_at?: string | null
+          quality_gate?: Json
           rejected_at?: string | null
           resort_edit_tip?: string | null
+          retry_count?: number
           scoring?: Json
           slug?: string | null
           status?: string
@@ -175,6 +181,7 @@ export type Database = {
         Update: {
           approved_at?: string | null
           best_for?: string[]
+          brief?: Json
           composite_score?: number | null
           created_at?: string
           day?: number | null
@@ -189,8 +196,10 @@ export type Database = {
           notes?: string | null
           pack_instead_of?: string | null
           published_at?: string | null
+          quality_gate?: Json
           rejected_at?: string | null
           resort_edit_tip?: string | null
+          retry_count?: number
           scoring?: Json
           slug?: string | null
           status?: string
