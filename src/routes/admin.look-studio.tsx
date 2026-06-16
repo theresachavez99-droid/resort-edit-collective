@@ -207,7 +207,10 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   });
 
   const dna = data.data?.dna ?? null;
-  const candidates = (data.data?.candidates ?? []) as LookCandidateRow[];
+  const all = (data.data?.candidates ?? []) as LookCandidateRow[];
+  const ready = ((data.data as { ready?: LookCandidateRow[] } | undefined)?.ready ?? all.filter((c) => c.status !== "discarded" && c.status !== "failed_gate" && c.status !== "rejected")) as LookCandidateRow[];
+  const discarded = ((data.data as { discarded?: LookCandidateRow[] } | undefined)?.discarded ?? all.filter((c) => c.status === "discarded" || c.status === "failed_gate")) as LookCandidateRow[];
+  const candidates = ready;
   const slots = (data.data?.slots ?? []) as LookSlotRow[];
   const pool = (data.data?.pool ?? { sourced: 0, eligible: 0, floor: 150 }) as {
     sourced: number;
@@ -354,6 +357,35 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
           />
         ))}
       </div>
+
+      {discarded.length > 0 && (
+        <details className="mt-10 border border-ink/15 bg-cream/20">
+          <summary className="cursor-pointer px-4 py-3 text-[0.65rem] tracking-[0.28em] uppercase text-ink/65 flex items-center gap-3">
+            <span>Discarded candidates</span>
+            <span className="font-mono text-ink/50">({discarded.length})</span>
+            <span className="font-serif italic text-ink/55 normal-case tracking-normal text-[0.78rem]">
+              Failed quality gate — not surfaced for review. Regenerate to replace.
+            </span>
+          </summary>
+          <ul className="divide-y divide-ink/10 px-4 pb-3">
+            {discarded.map((c) => (
+              <li key={c.id} className="py-3 text-[0.75rem]">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="font-display tracking-[0.06em]">Variant {c.variant}</span>
+                  <span className="text-[0.6rem] uppercase tracking-[0.18em] text-red-700">
+                    {c.status.replace(/_/g, " ")}
+                  </span>
+                </div>
+                <p className="font-serif italic text-ink/65 mt-1">
+                  {(c as unknown as { failure_reason?: string | null }).failure_reason ??
+                    (c.quality_gate?.reasons ?? []).join(" · ") ??
+                    "No reason recorded."}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </div>
   );
 }
