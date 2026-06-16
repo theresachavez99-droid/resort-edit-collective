@@ -42,6 +42,37 @@ type CandidateRow = {
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  brief?: CandidateBriefLike | null;
+  quality_gate?: QualityGateLike | null;
+  retry_count?: number | null;
+  slug?: string | null;
+};
+
+export type CandidateBriefLike = {
+  variant?: string;
+  title?: string;
+  destination_energy?: string;
+  color_story?: { palette?: string[]; narrative?: string };
+  silhouette_strategy?: string;
+  accessory_ecosystem?: string;
+  luxury_traveler_persona?: string;
+  styling_keywords?: string[];
+  brand_priorities?: string[];
+};
+
+export type QualityGateLike = {
+  passed?: boolean;
+  reasons?: string[];
+  checks?: {
+    required_slots_filled?: number;
+    required_slots_total?: number;
+    muse_present?: boolean;
+    destination_specificity?: number;
+    styling_cohesion?: number;
+    accessory_ecosystem?: number;
+  };
+  thresholds?: { destination_specificity?: number; styling_cohesion?: number; accessory_ecosystem?: number };
+  evaluated_at?: string;
 };
 
 type SlotRow = {
