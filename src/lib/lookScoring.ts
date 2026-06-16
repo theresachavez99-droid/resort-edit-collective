@@ -98,14 +98,19 @@ export const LOOK_SLOT_LABELS: Record<LookSlot, string> = {
 /** Preset feedback chips for the Improve Look workflow. */
 export const IMPROVE_FEEDBACK_PRESETS = [
   "More Mediterranean",
-  "More yacht-wife",
   "More Portofino",
   "More colorful",
   "More luxury",
+  "More yacht wife",
   "More editorial",
+  "More destination-specific",
+  "More polished",
+  "More Steven Dann",
   "Less influencer",
   "Less generic",
+  "Less crochet",
   "Less repetitive",
-  "More destination-specific",
   "Better accessories",
+  "Better jewelry",
+  "Better bag",
 ] as const;
