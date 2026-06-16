@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { getPublishedLook, type PublishedLookProduct } from "@/lib/published-look.functions";
+import { getPublishedLook, type PublishedLook, type PublishedLookProduct } from "@/lib/published-look.functions";
 
 export const Route = createFileRoute("/look/$slug")({
   loader: async ({ params }) => {
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/look/$slug")({
 });
 
 function LookPage() {
-  const look = Route.useLoaderData();
+  const look = Route.useLoaderData() as PublishedLook;
   const [showScores, setShowScores] = useState(false);
 
   return (
@@ -83,7 +83,7 @@ function LookPage() {
       <section id="shop" className="px-6 md:px-14 py-16 border-t border-ink/10">
         <SectionHeading kicker="The Outfit" title="Shop the Look" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
-          {look.products.map((p) => (
+          {look.products.map((p: PublishedLookProduct) => (
             <ProductCard key={p.vault_id} product={p} />
           ))}
         </div>
@@ -111,7 +111,7 @@ function LookPage() {
             Not a product dump — the actual contents of a wealthy traveler's tote on a {look.activity.toLowerCase()} in {look.destination}.
           </p>
           <ul className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-5 max-w-5xl">
-            {look.whats_in_her_bag.map((b, i) => (
+            {look.whats_in_her_bag.map((b: { item: string; note: string }, i: number) => (
               <li key={i} className="border-l border-ink/15 pl-4 py-1">
                 <p className="font-display text-sm tracking-[0.06em] uppercase">{b.item}</p>
                 <p className="font-serif italic text-ink/65 text-sm mt-1">{b.note}</p>
@@ -132,7 +132,7 @@ function LookPage() {
         </button>
         {showScores && (
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 max-w-3xl">
-            {look.scoring.map((s) => (
+            {look.scoring.map((s: PublishedLook["scoring"][number]) => (
               <div key={s.key} className="flex items-center gap-3 text-sm">
                 <span className="w-48 text-ink/65">{s.label}</span>
                 <div className="flex-1 h-1 bg-cream/60">
@@ -150,7 +150,7 @@ function LookPage() {
         <section className="px-6 md:px-14 py-16 border-t border-ink/10">
           <SectionHeading kicker="More from this destination" title={`Similar looks in ${look.destination}`} />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-10">
-            {look.similar.map((s) => (
+            {look.similar.map((s: PublishedLook["similar"][number]) => (
               <Link
                 key={s.slug}
                 to="/look/$slug"

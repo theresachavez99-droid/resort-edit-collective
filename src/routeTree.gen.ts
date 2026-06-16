@@ -22,6 +22,7 @@ import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
 import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
 import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
 import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
+import { Route as LookSlugRouteImport } from './routes/look.$slug'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminYachtDayPilotRouteImport } from './routes/admin.yacht-day-pilot'
@@ -99,6 +100,11 @@ const PortofinoDay1Route = PortofinoDay1RouteImport.update({
   path: '/day-1',
   getParentRoute: () => PortofinoRoute,
 } as any)
+const LookSlugRoute = LookSlugRouteImport.update({
+  id: '/look/$slug',
+  path: '/look/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/look/$slug': typeof LookSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
   '/portofino/day-3': typeof PortofinoDay3Route
@@ -200,6 +207,7 @@ export interface FileRoutesByTo {
   '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/look/$slug': typeof LookSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
   '/portofino/day-3': typeof PortofinoDay3Route
@@ -227,6 +235,7 @@ export interface FileRoutesById {
   '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/look/$slug': typeof LookSlugRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
   '/portofino/day-3': typeof PortofinoDay3Route
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/admin/yacht-day-pilot'
     | '/brands/$slug'
     | '/destinations/$slug'
+    | '/look/$slug'
     | '/portofino/day-1'
     | '/portofino/day-2'
     | '/portofino/day-3'
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | '/admin/yacht-day-pilot'
     | '/brands/$slug'
     | '/destinations/$slug'
+    | '/look/$slug'
     | '/portofino/day-1'
     | '/portofino/day-2'
     | '/portofino/day-3'
@@ -307,6 +318,7 @@ export interface FileRouteTypes {
     | '/admin/yacht-day-pilot'
     | '/brands/$slug'
     | '/destinations/$slug'
+    | '/look/$slug'
     | '/portofino/day-1'
     | '/portofino/day-2'
     | '/portofino/day-3'
@@ -332,6 +344,7 @@ export interface RootRouteChildren {
   AdminReviewQueueRoute: typeof AdminReviewQueueRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminYachtDayPilotRoute: typeof AdminYachtDayPilotRoute
+  LookSlugRoute: typeof LookSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -426,6 +439,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/portofino/day-1'
       preLoaderRoute: typeof PortofinoDay1RouteImport
       parentRoute: typeof PortofinoRoute
+    }
+    '/look/$slug': {
+      id: '/look/$slug'
+      path: '/look/$slug'
+      fullPath: '/look/$slug'
+      preLoaderRoute: typeof LookSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/destinations/$slug': {
       id: '/destinations/$slug'
@@ -571,6 +591,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminReviewQueueRoute: AdminReviewQueueRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
   AdminYachtDayPilotRoute: AdminYachtDayPilotRoute,
+  LookSlugRoute: LookSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
