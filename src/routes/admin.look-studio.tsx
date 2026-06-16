@@ -17,6 +17,7 @@ import {
   type CandidateBriefLike,
   type QualityGateLike,
 } from "@/lib/look-studio.functions";
+import { fillPortofinoInventory, bulkSourceBrand } from "@/lib/brand-crawl.functions";
 import {
   IMPROVE_FEEDBACK_PRESETS,
   LOOK_SCORE_CATEGORIES,
@@ -187,6 +188,10 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   const qc = useQueryClient();
   const listFn = useServerFn(listCandidatesForDNA);
   const generateFn = useServerFn(generateLookCandidates);
+  const planFn = useServerFn(fillPortofinoInventory);
+  const sourceFn = useServerFn(bulkSourceBrand);
+  const [sourcingLog, setSourcingLog] = useState<string[]>([]);
+  const [sourcingBusy, setSourcingBusy] = useState(false);
 
   const data = useQuery({
     queryKey: ["look-candidates", dnaId],
@@ -200,6 +205,49 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
       qc.invalidateQueries({ queryKey: ["look-studio-queue"] });
     },
   });
+
+  const isPortofino = (dna?.destination ?? "").toLowerCase().includes("portofino");
+
+  async function runPortofinoSourcing() {
+    setSourcingBusy(true);
+    setSourcingLog(["Planning Portofino inventory…"]);
+    try {
+      const plan = await planFn({ data: { password, target: 15, retailer: "mytheresa.com" } });
+      if (!plan.ok || plan.plan.length === 0) {
+        setSourcingLog((l) => [...l, "Inventory floor already met. Generate candidates now."]);
+        setSourcingBusy(false);
+        return;
+      }
+      setSourcingLog((l) => [...l, `${plan.plan.length} brands below target. Crawling…`]);
+      // Cap to first 6 brands per run so the UI doesn't hang.
+      for (const item of plan.plan.slice(0, 6)) {
+        setSourcingLog((l) => [...l, `→ ${item.brand}: ${item.missing.join(", ")}`]);
+        try {
+          const res = await sourceFn({
+            data: {
+              password,
+              brand_id: item.brand_id,
+              retailer: "mytheresa.com",
+              categories: item.missing as ("swimwear"|"dresses"|"coverups"|"shoes"|"bags"|"jewelry"|"sunglasses"|"hats")[],
+              limit_per_category: 15,
+            },
+          });
+          if (res.ok) {
+            const total = res.results.reduce((a, r) => a + r.scraped, 0);
+            setSourcingLog((l) => [...l, `   ✓ ${item.brand}: ${total} new products`]);
+          } else {
+            setSourcingLog((l) => [...l, `   ✗ ${item.brand}: ${res.error}`]);
+          }
+        } catch (e) {
+          setSourcingLog((l) => [...l, `   ✗ ${item.brand}: ${(e as Error).message}`]);
+        }
+      }
+      setSourcingLog((l) => [...l, "Done. Refresh sourcing depth and try generating again."]);
+      qc.invalidateQueries({ queryKey: ["look-candidates", dnaId] });
+    } finally {
+      setSourcingBusy(false);
+    }
+  }
 
   const dna = data.data?.dna ?? null;
   const candidates = (data.data?.candidates ?? []) as LookCandidateRow[];
@@ -227,6 +275,16 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
           )}
         </div>
         <div className="flex gap-2">
+          {isPortofino && (
+            <button
+              onClick={runPortofinoSourcing}
+              disabled={sourcingBusy}
+              className="border border-ink text-ink px-4 py-2.5 text-[0.7rem] tracking-[0.24em] uppercase disabled:opacity-50"
+              title="Bulk-source approved hero brands tagged with Portofino across missing categories"
+            >
+              {sourcingBusy ? "Sourcing…" : "Source Portofino inventory"}
+            </button>
+          )}
           <button
             onClick={() => generate.mutate()}
             disabled={generate.isPending}
@@ -240,6 +298,12 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
           </button>
         </div>
       </header>
+
+      {sourcingLog.length > 0 && (
+        <pre className="text-[0.65rem] leading-relaxed bg-cream/40 border border-ink/15 p-3 font-mono whitespace-pre-wrap max-h-56 overflow-auto">
+          {sourcingLog.join("\n")}
+        </pre>
+      )}
 
       {/* Product pool visibility — the Steven Dann buyer's room ledger */}
       <div className={`flex items-center gap-3 px-3 py-2 border text-[0.7rem] ${depthShort ? "border-amber-600 bg-amber-50/60" : "border-ink/15 bg-cream/30"}`}>
