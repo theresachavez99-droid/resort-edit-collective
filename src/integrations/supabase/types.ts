@@ -59,9 +59,132 @@ export type Database = {
         }
         Relationships: []
       }
+      look_candidate_slots: {
+        Row: {
+          candidate_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          position: number
+          slot: string
+          sourced_product_id: string | null
+          updated_at: string
+          vault_product_id: string | null
+        }
+        Insert: {
+          candidate_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          position?: number
+          slot: string
+          sourced_product_id?: string | null
+          updated_at?: string
+          vault_product_id?: string | null
+        }
+        Update: {
+          candidate_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          position?: number
+          slot?: string
+          sourced_product_id?: string | null
+          updated_at?: string
+          vault_product_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "look_candidate_slots_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "look_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "look_candidate_slots_sourced_product_id_fkey"
+            columns: ["sourced_product_id"]
+            isOneToOne: false
+            referencedRelation: "sourced_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "look_candidate_slots_vault_product_id_fkey"
+            columns: ["vault_product_id"]
+            isOneToOne: false
+            referencedRelation: "vault_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      look_candidates: {
+        Row: {
+          approved_at: string | null
+          composite_score: number | null
+          created_at: string
+          day: number | null
+          destination: string
+          dna_id: string
+          feedback_history: Json
+          id: string
+          look: number | null
+          lookboard_image_url: string | null
+          muse_image_url: string | null
+          notes: string | null
+          published_at: string | null
+          rejected_at: string | null
+          scoring: Json
+          status: string
+          updated_at: string
+          variant: string
+        }
+        Insert: {
+          approved_at?: string | null
+          composite_score?: number | null
+          created_at?: string
+          day?: number | null
+          destination: string
+          dna_id: string
+          feedback_history?: Json
+          id?: string
+          look?: number | null
+          lookboard_image_url?: string | null
+          muse_image_url?: string | null
+          notes?: string | null
+          published_at?: string | null
+          rejected_at?: string | null
+          scoring?: Json
+          status?: string
+          updated_at?: string
+          variant: string
+        }
+        Update: {
+          approved_at?: string | null
+          composite_score?: number | null
+          created_at?: string
+          day?: number | null
+          destination?: string
+          dna_id?: string
+          feedback_history?: Json
+          id?: string
+          look?: number | null
+          lookboard_image_url?: string | null
+          muse_image_url?: string | null
+          notes?: string | null
+          published_at?: string | null
+          rejected_at?: string | null
+          scoring?: Json
+          status?: string
+          updated_at?: string
+          variant?: string
+        }
+        Relationships: []
+      }
       sourced_products: {
         Row: {
           affiliate_url: string | null
+          auto_approved: boolean
+          auto_score: Json
           brand: string | null
           created_at: string
           currency: string | null
@@ -80,9 +203,12 @@ export type Database = {
           source_url: string
           status: string
           updated_at: string
+          validation_notes: string | null
         }
         Insert: {
           affiliate_url?: string | null
+          auto_approved?: boolean
+          auto_score?: Json
           brand?: string | null
           created_at?: string
           currency?: string | null
@@ -101,9 +227,12 @@ export type Database = {
           source_url: string
           status?: string
           updated_at?: string
+          validation_notes?: string | null
         }
         Update: {
           affiliate_url?: string | null
+          auto_approved?: boolean
+          auto_score?: Json
           brand?: string | null
           created_at?: string
           currency?: string | null
@@ -122,6 +251,7 @@ export type Database = {
           source_url?: string
           status?: string
           updated_at?: string
+          validation_notes?: string | null
         }
         Relationships: []
       }
@@ -196,7 +326,9 @@ export type Database = {
           resort_edit_score: number | null
           retailer: string | null
           silhouette_tags: string[]
+          source_look_candidate_id: string | null
           source_method: string
+          source_slot: string | null
           source_sourced_product_id: string | null
           subcategory: string | null
           thumbnail_url: string | null
@@ -230,7 +362,9 @@ export type Database = {
           resort_edit_score?: number | null
           retailer?: string | null
           silhouette_tags?: string[]
+          source_look_candidate_id?: string | null
           source_method?: string
+          source_slot?: string | null
           source_sourced_product_id?: string | null
           subcategory?: string | null
           thumbnail_url?: string | null
@@ -264,7 +398,9 @@ export type Database = {
           resort_edit_score?: number | null
           retailer?: string | null
           silhouette_tags?: string[]
+          source_look_candidate_id?: string | null
           source_method?: string
+          source_slot?: string | null
           source_sourced_product_id?: string | null
           subcategory?: string | null
           thumbnail_url?: string | null
@@ -276,6 +412,13 @@ export type Database = {
             columns: ["brand_id"]
             isOneToOne: false
             referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vault_products_source_look_candidate_id_fkey"
+            columns: ["source_look_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "look_candidates"
             referencedColumns: ["id"]
           },
           {

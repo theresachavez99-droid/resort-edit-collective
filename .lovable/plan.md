@@ -1,55 +1,81 @@
-# Prompts 46–49 — Phased Plan
+# Resort Edit Look Studio Rebuild
 
-These four prompts touch very different surfaces with very different cost profiles. I want to do them in three phases so each one is verifiable before moving to the next, instead of half-shipping everything in one pass.
+Shift the admin workflow from product-by-product moderation to look-level curation. Products become ingredients; humans only approve complete looks.
 
-## Phase 1 — Structure & copy (Prompts 46 + 47)
+## New workflow
 
-**Day 1 (`src/data/yachtToLunch.ts`)** — currently 10 looks. Reduce to 5 that tell the arc of the day:
+```text
+Look DNA → Source Products → Auto-Validate → Auto-Score
+        → Assemble 3 Outfit Options → Editorial Lookboard
+        → AI Muse Preview → Human Look Review
+        → Approve Look → Publish → Promote products to Vault
+```
 
-1. **Look 1 — Yacht Arrival** (arrival) — keep current Look 1 (D&G Majolica)
-2. **Look 2 — Feminine Yacht Swim** (on-water/swim) — keep current Look 2 (Alexandra Miro cobalt)
-3. **Look 3 — Beach Club Swim** (midday beach club) — promote current Look 4 (Johanna Ortiz emerald + cover-up)
-4. **Look 4 — Sunset Aperitivo** (golden hour) — promote current Look 9
-5. **Look 5 — Harbour Evening** (evening) — promote current Look 10
+## Scope of this build
 
-Renumber `number: 1…5`, update `id`, update LOOK tabs, update intro copy ("ten complete looks" → "five complete looks"), update Day Nav "of 10" → "of 5".
+### 1. Database changes (migration)
+New tables:
+- `look_candidates` — one row per generated outfit option. Fields: look DNA id, destination, day, look, variant (A/B/C), status (`draft` | `pending_review` | `approved` | `rejected` | `improving`), muse_image_url, lookboard_image_url, scoring jsonb, feedback_history jsonb, approved_at, published_at.
+- `look_candidate_slots` — products attached to a candidate. Fields: candidate_id, slot (swimwear, dress, shoes, bag, earrings, necklace, bracelet, ring, sunglasses, hair_detail, optional_layer), sourced_product_id, position.
 
-**Days 2–5 (`src/components/PortofinoDayPage.tsx` + `DAY_META`)** — currently 3 looks each. Extend the template's `[0,1,2].map` to `[0,1,2,3,4].map`, and add 2 more entries to each day's `images`, `lookTitles`, `lookMoods`, and `inspired` arrays. The two new looks per day will reuse existing edit-d{n}-{a|b|c} thumbs cycled (since no new generated images exist yet for slots 4–5) — clearly flagged in code with `TODO: replace with dedicated muse image` comments. Look titles/moods written to fit the day's narrative arc.
+Reuse existing `sourced_products` (auto-validated/scored in background) and `vault_products` (only populated when a parent look is approved).
 
-**Homepage (`src/routes/index.tsx`)**:
-- "Shop 3 Looks" → "Shop 5 Looks" on every day card
-- Hero stats "5 Days · 15 Looks · 6 Experiences" → "5 Days · 25 Looks · 6 Experiences"
-- "Shop 15 Looks — Day by Day" CTA → "Shop 25 Looks — Day by Day"
-- Page title meta "five looks" copy stays consistent
+Add `auto_score` jsonb + `auto_approved` boolean to `sourced_products` so background validation can fast-track items without admin clicks.
 
-## Phase 2 — Muse consistency (Prompt 48)
+### 2. Server functions (`src/lib/look-studio.functions.ts`)
+- `listLookDNAQueue` — DNA entries with candidate counts and status.
+- `generateLookCandidates({ dnaId, count: 3 })` — sources products per slot, scores, persists 3 candidates.
+- `scoreLookCandidate(candidateId)` — runs the 10 scoring categories via Lovable AI, stores jsonb.
+- `generateMusePreview(candidateId)` — AI muse image.
+- `generateLookboard(candidateId)` — editorial composite.
+- `approveLook(candidateId)` — marks approved, promotes its products to `vault_products`.
+- `rejectLook(candidateId, reason)`.
+- `improveLook(candidateId, feedback[])` — regenerates preserving DNA, swaps weakest slots, re-scores.
 
-This requires regenerating up to ~10 Day 1 look images (`src/assets/looks/look-{1..10}-muse.jpg`) plus the new Day 2–5 slots, using `muse-mediterranean.png` as the identity-lock reference per `mem/design/muse-system.md`. Each generation is a separate `edit_image` call with the strict luxury-campaign prompt standard you set in Prompt for Day 5.
+All gated by `requireSupabaseAuth` + admin password check (keep existing `verifyAdmin` flow).
 
-I'd like to do this as a follow-up turn so I can:
-- Confirm with you which 5 Day-1 looks you want kept (vs my picks above)
-- Avoid burning generations on looks we're about to cut
-- Batch the regenerations sensibly (5 Day-1 + 8 new Day 2–5 slots = ~13 images)
+### 3. Auto product pipeline
+Background job (triggered when a candidate is generated): for each sourced product, run `validate → score → auto-approve` using existing `productScoring.ts` + `productValidation.functions.ts`. No human queue.
 
-For Phase 1 I'll leave the existing images in place and add a visible "PLACEHOLDER — pending regeneration" eyebrow tag on any reused thumbnail in Days 2–5 slots 4–5, per your "clearly-marked placeholder" instruction.
+### 4. New admin route: `/admin/look-studio`
+Replaces `/admin/review-queue` as the primary surface. Layout:
+- Left: list of Look DNA entries with status badges (Needs Generation / In Review / Approved).
+- Center: selected DNA shows 3 candidate cards side-by-side. Each card:
+  - Muse preview image
+  - Editorial lookboard
+  - Product grid (11 slots)
+  - Score panel (10 categories + total)
+  - Actions: **Approve Look**, **Reject Look**, **Improve Look**
+- Improve Look opens a panel with the 11 preset feedback chips (More Mediterranean, yacht-wife, Portofino, colorful, luxury, editorial; Less influencer, generic, repetitive; More destination-specific, better accessories) plus free-text.
 
-## Phase 3 — Product link upgrade (Prompt 49)
+### 5. Repurpose existing pages
+- `/admin/review-queue` → redirect to `/admin/look-studio` (keep route file as thin redirect).
+- `/admin/product-vault` → becomes read-only library of products promoted via approved looks. Remove manual approve/reject UI; show parent look provenance.
+- `/admin/product-library` → stays as catalog browser, no workflow actions.
 
-Most current links use `MT()`, `NAP()`, `FF()`, `REV()`, `SAKS()` search-URL helpers in `yachtToLunch.ts` and similar generators in `portofino.ts`. Upgrading every one to a real PDP requires either:
-- Manual research per product (~80 items across Day 1 alone), or
-- Running Firecrawl validation against the brand sites to find live PDPs
+### 6. Scoring rubric (stored in `src/lib/lookScoring.ts`)
+Ten categories, 0–10 each: Destination Specificity, Activity Fidelity, Styling Cohesion, Luxury Traveler Appeal, Editorial Uniqueness, Saveability, Color Story, Print Story, Accessory Ecosystem, Resort Edit Luxury Score. Composite = weighted average (cohesion + destination specificity weighted 1.5×).
 
-The cleaner intermediate step — which I'll do as Phase 3 in this same flow — is to **swap every search-URL helper for the brand's relevant category page**, which is the fallback you explicitly approved ("link to the brand's relevant category page rather than a raw search query"). That removes the "no results" failure mode site-wide in one pass. Verified direct PDPs can then be filled in over time without breaking anything.
+## Out of scope (this turn)
+- Public-facing look pages already exist; this rebuild only changes the admin/curation side.
+- Migrating historical sourced_products data — old rows stay in their current state.
 
-I will **not** attempt to fabricate direct PDP URLs — that would introduce dead links worse than the search pages.
+## Files to create
+- `supabase/migrations/<ts>_look_studio.sql`
+- `src/lib/look-studio.functions.ts`
+- `src/lib/look-studio.server.ts`
+- `src/lib/lookScoring.ts`
+- `src/routes/admin.look-studio.tsx`
+- `src/components/admin/LookCandidateCard.tsx`
+- `src/components/admin/ImproveLookPanel.tsx`
 
-## What I'll do right now if you say "go"
+## Files to modify
+- `src/routes/admin.review-queue.tsx` → redirect to Look Studio
+- `src/routes/admin.product-vault.tsx` → read-only, show look provenance
+- `src/lib/vault.functions.ts` → add `promoteApprovedLookProducts(candidateId)`
+- `.lovable/mem/index.md` + new `mem://features/look-studio.md`
 
-Phase 1 only. That delivers:
-- Day 1 trimmed to 5 looks with the arrival → swim → beach club → aperitivo → evening arc
-- Days 2–5 extended to 5 look modules each (slots 4–5 flagged as placeholders)
-- Homepage copy updated to "5 Looks" / "25 Looks"
-
-Then I'll come back for your confirmation on Phase 2 (image regen list) and Phase 3 (brand-category URL sweep).
-
-Is that sequencing right, or would you rather I just blast all three phases in one go and accept some placeholder/flagged content along the way?
+## Open questions before I build
+1. **AI generation budget.** Generating 3 candidates × muse image + lookboard per DNA is expensive. OK to default to muse preview only (skip composite lookboard until approved), and generate it on demand from a "Generate Preview" button per candidate?
+2. **Product sourcing source.** Should `generateLookCandidates` reuse the existing Firecrawl-based pipeline (`firecrawl.functions.ts`) to find new products, or assemble from already-sourced `sourced_products` rows that match the DNA's brand/category/destination tags?
+3. **Approval cascade.** When a look is approved, should its products auto-promote to vault with `approval_status='approved'`, or land as `pending` in vault for a second pass? (Spec says auto-promote; confirming.)
