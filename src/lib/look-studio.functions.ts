@@ -179,7 +179,7 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
       const { data: slotRows, error: slotErr } = await supabaseAdmin
         .from("look_candidate_slots")
         .select(
-          "id, candidate_id, slot, sourced_product_id, vault_product_id, position, notes",
+          "id, candidate_id, slot, sourced_product_id, vault_product_id, product_id, position, notes",
         )
         .in("candidate_id", ids);
       if (slotErr) throw new Error(slotErr.message);
@@ -211,10 +211,24 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
       .neq("status", "rejected")
       .not("image_url", "is", null);
 
+    // Split ready-for-review vs discarded so the admin UI never shows
+    // incomplete or muse-less candidates in the review lane.
+    const ready: typeof candidates = [];
+    const discarded: typeof candidates = [];
+    const archived: typeof candidates = [];
+    for (const c of candidates ?? []) {
+      if (c.status === "discarded" || c.status === "failed_gate") discarded.push(c);
+      else if (c.status === "rejected") archived.push(c);
+      else ready.push(c);
+    }
+
     return {
       ok: true as const,
       dna: LOOK_DNA[data.dna_id] ?? null,
       candidates: (candidates ?? []) as unknown as CandidateRow[],
+      ready: ready as unknown as CandidateRow[],
+      discarded: discarded as unknown as CandidateRow[],
+      archived: archived as unknown as CandidateRow[],
       slots,
       pool: {
         sourced: sourcedTotal ?? 0,
