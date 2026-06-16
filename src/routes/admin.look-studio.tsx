@@ -14,6 +14,8 @@ import {
   deleteCandidate,
   type LookCandidateRow,
   type LookSlotRow,
+  type CandidateBriefLike,
+  type QualityGateLike,
 } from "@/lib/look-studio.functions";
 import {
   IMPROVE_FEEDBACK_PRESETS,
@@ -202,7 +204,13 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   const dna = data.data?.dna ?? null;
   const candidates = (data.data?.candidates ?? []) as LookCandidateRow[];
   const slots = (data.data?.slots ?? []) as LookSlotRow[];
-  const pool = data.data?.pool ?? { sourced: 0, eligible: 0 };
+  const pool = (data.data?.pool ?? { sourced: 0, eligible: 0, floor: 150 }) as {
+    sourced: number;
+    eligible: number;
+    floor?: number;
+  };
+  const floor = pool.floor ?? 150;
+  const depthShort = pool.eligible < floor;
 
   return (
     <div className="space-y-6">
@@ -234,14 +242,27 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
       </header>
 
       {/* Product pool visibility — the Steven Dann buyer's room ledger */}
-      <div className="text-[0.7rem] tracking-[0.04em] text-ink/65 font-serif italic">
-        Pulled from <span className="font-mono not-italic">{pool.sourced}</span> sourced products ·{" "}
-        <span className="font-mono not-italic">{pool.eligible}</span> eligible after auto-validation ·{" "}
-        candidates assembled from this pool.
+      <div className={`flex items-center gap-3 px-3 py-2 border text-[0.7rem] ${depthShort ? "border-amber-600 bg-amber-50/60" : "border-ink/15 bg-cream/30"}`}>
+        <span className="tracking-[0.18em] uppercase text-[0.6rem] text-ink/65">Sourcing depth</span>
+        <div className="flex-1 h-1.5 bg-cream/60 rounded-sm overflow-hidden max-w-[200px]">
+          <div
+            className={`h-full ${depthShort ? "bg-amber-600" : "bg-emerald-700"}`}
+            style={{ width: `${Math.min(100, (pool.eligible / floor) * 100)}%` }}
+          />
+        </div>
+        <span className="font-mono text-ink/75">{pool.eligible} / {floor}</span>
+        <span className="text-ink/55 font-serif italic ml-2">
+          {depthShort
+            ? "Below Resort Edit floor — looks will repeat. Source more inventory across approved brands."
+            : "Pool meets Resort Edit floor."}
+        </span>
       </div>
 
       {generate.error && (
         <p className="text-sm text-red-700">Failed: {String((generate.error as Error).message)}</p>
+      )}
+      {generate.data?.sourcing_warning && (
+        <p className="text-[0.7rem] text-amber-800 font-serif italic">{generate.data.sourcing_warning}</p>
       )}
 
       {data.isLoading && <p className="text-sm text-ink/55">Loading…</p>}
