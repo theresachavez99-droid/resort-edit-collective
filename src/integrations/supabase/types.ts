@@ -127,6 +127,42 @@ export type Database = {
         }
         Relationships: []
       }
+      destination_muses: {
+        Row: {
+          allowed_variation: string
+          created_at: string
+          destination_slug: string
+          face_description: string
+          id: string
+          muse_name: string
+          reference_url: string
+          style_guardrails: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_variation?: string
+          created_at?: string
+          destination_slug: string
+          face_description: string
+          id?: string
+          muse_name: string
+          reference_url: string
+          style_guardrails?: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_variation?: string
+          created_at?: string
+          destination_slug?: string
+          face_description?: string
+          id?: string
+          muse_name?: string
+          reference_url?: string
+          style_guardrails?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       look_candidate_slots: {
         Row: {
           candidate_id: string
@@ -134,6 +170,7 @@ export type Database = {
           id: string
           notes: string | null
           position: number
+          product_id: string | null
           slot: string
           sourced_product_id: string | null
           updated_at: string
@@ -145,6 +182,7 @@ export type Database = {
           id?: string
           notes?: string | null
           position?: number
+          product_id?: string | null
           slot: string
           sourced_product_id?: string | null
           updated_at?: string
@@ -156,6 +194,7 @@ export type Database = {
           id?: string
           notes?: string | null
           position?: number
+          product_id?: string | null
           slot?: string
           sourced_product_id?: string | null
           updated_at?: string
@@ -167,6 +206,13 @@ export type Database = {
             columns: ["candidate_id"]
             isOneToOne: false
             referencedRelation: "look_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "look_candidate_slots_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
           {
@@ -196,6 +242,7 @@ export type Database = {
           destination: string
           dna_id: string
           editorial_generated_at: string | null
+          failure_reason: string | null
           feedback_history: Json
           id: string
           look: number | null
@@ -226,6 +273,7 @@ export type Database = {
           destination: string
           dna_id: string
           editorial_generated_at?: string | null
+          failure_reason?: string | null
           feedback_history?: Json
           id?: string
           look?: number | null
@@ -256,6 +304,7 @@ export type Database = {
           destination?: string
           dna_id?: string
           editorial_generated_at?: string | null
+          failure_reason?: string | null
           feedback_history?: Json
           id?: string
           look?: number | null
@@ -277,6 +326,145 @@ export type Database = {
           why_it_works?: string | null
         }
         Relationships: []
+      }
+      product_sources: {
+        Row: {
+          affiliate_url: string | null
+          availability: string
+          created_at: string
+          currency: string | null
+          id: string
+          is_primary: boolean
+          last_checked_at: string | null
+          price: number | null
+          product_id: string
+          retailer: string
+          retailer_domain: string | null
+          source_url: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_url?: string | null
+          availability?: string
+          created_at?: string
+          currency?: string | null
+          id?: string
+          is_primary?: boolean
+          last_checked_at?: string | null
+          price?: number | null
+          product_id: string
+          retailer: string
+          retailer_domain?: string | null
+          source_url: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_url?: string | null
+          availability?: string
+          created_at?: string
+          currency?: string | null
+          id?: string
+          is_primary?: boolean
+          last_checked_at?: string | null
+          price?: number | null
+          product_id?: string
+          retailer?: string
+          retailer_domain?: string | null
+          source_url?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_sources_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          activity_tags: string[]
+          approval_status: string
+          brand: string
+          brand_id: string | null
+          category: string | null
+          color: string | null
+          color_family: string | null
+          created_at: string
+          destination_tags: string[]
+          fabric: string | null
+          id: string
+          identity_key: string
+          image_url: string | null
+          luxury_score: number | null
+          notes: string | null
+          print_family: string | null
+          product_name: string
+          resort_edit_score: number | null
+          silhouette: string | null
+          subcategory: string | null
+          texture: string | null
+          updated_at: string
+        }
+        Insert: {
+          activity_tags?: string[]
+          approval_status?: string
+          brand: string
+          brand_id?: string | null
+          category?: string | null
+          color?: string | null
+          color_family?: string | null
+          created_at?: string
+          destination_tags?: string[]
+          fabric?: string | null
+          id?: string
+          identity_key: string
+          image_url?: string | null
+          luxury_score?: number | null
+          notes?: string | null
+          print_family?: string | null
+          product_name: string
+          resort_edit_score?: number | null
+          silhouette?: string | null
+          subcategory?: string | null
+          texture?: string | null
+          updated_at?: string
+        }
+        Update: {
+          activity_tags?: string[]
+          approval_status?: string
+          brand?: string
+          brand_id?: string | null
+          category?: string | null
+          color?: string | null
+          color_family?: string | null
+          created_at?: string
+          destination_tags?: string[]
+          fabric?: string | null
+          id?: string
+          identity_key?: string
+          image_url?: string | null
+          luxury_score?: number | null
+          notes?: string | null
+          print_family?: string | null
+          product_name?: string
+          resort_edit_score?: number | null
+          silhouette?: string | null
+          subcategory?: string | null
+          texture?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sourced_products: {
         Row: {
