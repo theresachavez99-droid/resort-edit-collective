@@ -144,7 +144,7 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
     return {
       ok: true as const,
       dna: LOOK_DNA[data.dna_id] ?? null,
-      candidates: (candidates ?? []) as CandidateRow[],
+      candidates: (candidates ?? []) as unknown as CandidateRow[],
       slots,
       pool: { sourced: sourcedTotal ?? 0, eligible: eligibleTotal ?? 0 },
     };
@@ -530,10 +530,11 @@ export const approveLook = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { generateEditorial, pickReplacements, lookSlug } = await import("./look-editorial.server");
 
     const { data: cand, error: cErr } = await supabaseAdmin
       .from("look_candidates")
-      .select("id, dna_id")
+      .select("id, dna_id, variant, slug")
       .eq("id", data.candidate_id)
       .single();
     if (cErr || !cand) throw new Error("Candidate not found");
@@ -545,6 +546,7 @@ export const approveLook = createServerFn({ method: "POST" })
       .eq("candidate_id", cand.id);
 
     const sourcedIds = (slots ?? []).map((s) => s.sourced_product_id).filter((x): x is string => !!x);
+    const insertedVault: Array<{ id: string; brand: string; product_name: string; slot: string | null; sourcedId: string }> = [];
     if (sourcedIds.length) {
       const { data: prods } = await supabaseAdmin
         .from("sourced_products")
@@ -558,12 +560,26 @@ export const approveLook = createServerFn({ method: "POST" })
           .select("id")
           .eq("source_sourced_product_id", sp.id)
           .maybeSingle();
-        if (existing?.id) continue;
+        if (existing?.id) {
+          insertedVault.push({
+            id: existing.id,
+            brand: sp.brand ?? "Unknown",
+            product_name: sp.product_name ?? "Untitled",
+            slot,
+            sourcedId: sp.id,
+          });
+          continue;
+        }
         const payload = {
           product_name: sp.product_name ?? "Untitled",
           brand: sp.brand ?? "Unknown",
           retailer: sp.retailer_domain ?? null,
           affiliate_url: sp.affiliate_url ?? sp.source_url,
+          brand_url: sp.brand ? `https://www.google.com/search?q=${encodeURIComponent(sp.brand + " " + (sp.product_name ?? ""))}` : null,
+          category_fallback_url: sp.retailer_domain
+            ? `https://www.google.com/search?q=${encodeURIComponent(`${sp.slot_category ?? slot ?? ""} ${dna?.destination ?? ""}`)}`
+            : null,
+          product_type: sp.slot_category ?? slot ?? null,
           image_url: sp.image_url ?? null,
           price: sp.price != null ? Number(sp.price) : null,
           currency: sp.currency ?? "USD",
@@ -580,7 +596,16 @@ export const approveLook = createServerFn({ method: "POST" })
           source_look_candidate_id: cand.id,
           source_slot: slot,
         };
-        await supabaseAdmin.from("vault_products").insert(payload);
+        const { data: ins } = await supabaseAdmin.from("vault_products").insert(payload).select("id").single();
+        if (ins?.id) {
+          insertedVault.push({
+            id: ins.id,
+            brand: sp.brand ?? "Unknown",
+            product_name: sp.product_name ?? "Untitled",
+            slot,
+            sourcedId: sp.id,
+          });
+        }
         await supabaseAdmin
           .from("sourced_products")
           .update({ status: "promoted", promoted_at: new Date().toISOString() })
@@ -588,12 +613,75 @@ export const approveLook = createServerFn({ method: "POST" })
       }
     }
 
+    // Slug + status
+    const slug = cand.slug ?? lookSlug(cand.dna_id, cand.variant);
     await supabaseAdmin
       .from("look_candidates")
-      .update({ status: "approved", approved_at: new Date().toISOString() })
+      .update({
+        status: "approved",
+        approved_at: new Date().toISOString(),
+        published_at: new Date().toISOString(),
+        slug,
+      })
       .eq("id", cand.id);
 
-    return { ok: true as const, promoted: sourcedIds.length };
+    // Best-effort: editorial sections + 3 AI replacements per vault product.
+    if (dna) {
+      try {
+        // Editorial
+        const slotsForCopy = insertedVault.map((v) => ({
+          slot: v.slot ?? "",
+          brand: v.brand,
+          product_name: v.product_name,
+          retailer: null,
+        }));
+        const editorial = await generateEditorial(dna, slotsForCopy);
+        await supabaseAdmin
+          .from("look_candidates")
+          .update({
+            why_it_works: editorial.why_it_works,
+            best_for: editorial.best_for,
+            resort_edit_tip: editorial.resort_edit_tip,
+            pack_instead_of: editorial.pack_instead_of,
+            whats_in_her_bag: editorial.whats_in_her_bag,
+            editorial_generated_at: new Date().toISOString(),
+          })
+          .eq("id", cand.id);
+      } catch (e) {
+        await supabaseAdmin
+          .from("look_candidates")
+          .update({ notes: `Editorial gen failed: ${String((e as Error).message ?? e).slice(0, 200)}` })
+          .eq("id", cand.id);
+      }
+
+      // Replacements per product — pool = same slot_category, not this product.
+      try {
+        const { data: poolAll } = await supabaseAdmin
+          .from("sourced_products")
+          .select("id, brand, product_name, retailer_domain, price, image_url, source_url, affiliate_url, slot_category")
+          .neq("status", "rejected")
+          .not("image_url", "is", null);
+        for (const v of insertedVault) {
+          const pool = (poolAll ?? []).filter(
+            (p) =>
+              p.id !== v.sourcedId &&
+              p.slot_category &&
+              v.slot &&
+              p.slot_category.toLowerCase().includes(v.slot.split("_")[0].toLowerCase()),
+          );
+          const picks = await pickReplacements(dna, { brand: v.brand, product_name: v.product_name, slot: v.slot ?? "item" }, pool);
+          await supabaseAdmin
+            .from("vault_products")
+            .update({ ai_replacements: picks, replacements_generated_at: new Date().toISOString() })
+            .eq("id", v.id);
+        }
+      } catch (e) {
+        // swallow — replacements are nice-to-have
+        console.error("replacement gen failed", e);
+      }
+    }
+
+    return { ok: true as const, promoted: sourcedIds.length, slug };
   });
 
 export const rejectLook = createServerFn({ method: "POST" })

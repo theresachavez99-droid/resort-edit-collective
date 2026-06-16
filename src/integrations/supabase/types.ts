@@ -120,63 +120,84 @@ export type Database = {
       look_candidates: {
         Row: {
           approved_at: string | null
+          best_for: string[]
           composite_score: number | null
           created_at: string
           day: number | null
           destination: string
           dna_id: string
+          editorial_generated_at: string | null
           feedback_history: Json
           id: string
           look: number | null
           lookboard_image_url: string | null
           muse_image_url: string | null
           notes: string | null
+          pack_instead_of: string | null
           published_at: string | null
           rejected_at: string | null
+          resort_edit_tip: string | null
           scoring: Json
+          slug: string | null
           status: string
           updated_at: string
           variant: string
+          whats_in_her_bag: Json
+          why_it_works: string | null
         }
         Insert: {
           approved_at?: string | null
+          best_for?: string[]
           composite_score?: number | null
           created_at?: string
           day?: number | null
           destination: string
           dna_id: string
+          editorial_generated_at?: string | null
           feedback_history?: Json
           id?: string
           look?: number | null
           lookboard_image_url?: string | null
           muse_image_url?: string | null
           notes?: string | null
+          pack_instead_of?: string | null
           published_at?: string | null
           rejected_at?: string | null
+          resort_edit_tip?: string | null
           scoring?: Json
+          slug?: string | null
           status?: string
           updated_at?: string
           variant: string
+          whats_in_her_bag?: Json
+          why_it_works?: string | null
         }
         Update: {
           approved_at?: string | null
+          best_for?: string[]
           composite_score?: number | null
           created_at?: string
           day?: number | null
           destination?: string
           dna_id?: string
+          editorial_generated_at?: string | null
           feedback_history?: Json
           id?: string
           look?: number | null
           lookboard_image_url?: string | null
           muse_image_url?: string | null
           notes?: string | null
+          pack_instead_of?: string | null
           published_at?: string | null
           rejected_at?: string | null
+          resort_edit_tip?: string | null
           scoring?: Json
+          slug?: string | null
           status?: string
           updated_at?: string
           variant?: string
+          whats_in_her_bag?: Json
+          why_it_works?: string | null
         }
         Relationships: []
       }
@@ -301,12 +322,14 @@ export type Database = {
         Row: {
           activity_tags: string[]
           affiliate_url: string
+          ai_replacements: Json
           approval_status: string
           approved_at: string | null
           brand: string
           brand_id: string | null
           brand_url: string | null
           category: string
+          category_fallback_url: string | null
           color_tags: string[]
           created_at: string
           currency: string | null
@@ -323,6 +346,8 @@ export type Database = {
           price: number | null
           print_tags: string[]
           product_name: string
+          product_type: string | null
+          replacements_generated_at: string | null
           resort_edit_score: number | null
           retailer: string | null
           silhouette_tags: string[]
@@ -337,12 +362,14 @@ export type Database = {
         Insert: {
           activity_tags?: string[]
           affiliate_url: string
+          ai_replacements?: Json
           approval_status?: string
           approved_at?: string | null
           brand: string
           brand_id?: string | null
           brand_url?: string | null
           category: string
+          category_fallback_url?: string | null
           color_tags?: string[]
           created_at?: string
           currency?: string | null
@@ -359,6 +386,8 @@ export type Database = {
           price?: number | null
           print_tags?: string[]
           product_name: string
+          product_type?: string | null
+          replacements_generated_at?: string | null
           resort_edit_score?: number | null
           retailer?: string | null
           silhouette_tags?: string[]
@@ -373,12 +402,14 @@ export type Database = {
         Update: {
           activity_tags?: string[]
           affiliate_url?: string
+          ai_replacements?: Json
           approval_status?: string
           approved_at?: string | null
           brand?: string
           brand_id?: string | null
           brand_url?: string | null
           category?: string
+          category_fallback_url?: string | null
           color_tags?: string[]
           created_at?: string
           currency?: string | null
@@ -395,6 +426,8 @@ export type Database = {
           price?: number | null
           print_tags?: string[]
           product_name?: string
+          product_type?: string | null
+          replacements_generated_at?: string | null
           resort_edit_score?: number | null
           retailer?: string | null
           silhouette_tags?: string[]
