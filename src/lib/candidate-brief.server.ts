@@ -58,9 +58,13 @@ Resort energy: ${dna.resortEnergy}
 Styling notes: ${dna.stylingNotes.join("; ")}
 Hero piece: ${dna.heroPiece ?? "n/a"}
 Target brands: ${(dna.targetBrands ?? []).join(", ") || "—"}
+${dna.avoidCues?.length ? `\nANTI-CUES (a brief that drifts toward any of these FAILS): ${dna.avoidCues.join("; ")}` : ""}
+${dna.museEnvironmentCues?.length ? `\nEnvironment cues (must evoke): ${dna.museEnvironmentCues.join("; ")}` : ""}
 
 TASK
-Produce ${variants.length} MEANINGFULLY DIFFERENT luxury interpretations of this DNA. All must remain faithful to the destination + activity, but each must express a distinct luxury point of view — e.g. one Mediterranean maximalist, one polished yacht luxury, one Riviera glamour. Differentiate via color story, silhouette and accessory ecosystem. Do NOT describe products; describe the aesthetic.
+Produce ${variants.length} MEANINGFULLY DIFFERENT luxury interpretations of this DNA. All must remain faithful to the destination + activity, but each must express a distinct luxury point of view rooted in this exact destination — not generic resort wear. Differentiate via color story, silhouette and accessory ecosystem. Do NOT describe products; describe the aesthetic.
+
+EDITORIAL TEST: every brief must pass the question "Would a wealthy woman save this because she wants to dress like this in ${dna.destination}?" If the brief reads like generic luxury resortwear, safe neutrals, influencer aesthetic, or charter-yacht uniform, it FAILS. Bias toward destination specificity, editorial uniqueness, and emotional impact over safety.
 
 Return strict JSON: { "briefs": [ { "title", "destination_energy", "color_story": { "palette": ["#hex", ...], "narrative" }, "silhouette_strategy", "accessory_ecosystem", "luxury_traveler_persona", "styling_keywords": [..], "brand_priorities": [..] }, ... ] } with exactly ${variants.length} briefs in order.`;
 
@@ -139,8 +143,16 @@ function fallbackBrief(dna: LookDNA, variant: string, i: number): CandidateBrief
   };
 }
 
-/** Compose a muse-image prompt from a brief. */
-export function museImagePrompt(dna: LookDNA, brief: CandidateBrief): string {
+/** Compose a muse-image prompt from a brief + the actual assembled product list. */
+export function museImagePrompt(
+  dna: LookDNA,
+  brief: CandidateBrief,
+  products?: Array<{ slot: string; brand: string | null; product_name: string | null }>,
+): string {
+  const wardrobe = (products ?? [])
+    .filter((p) => p.brand && p.product_name)
+    .map((p) => `- ${p.slot}: ${p.brand} — ${p.product_name}`)
+    .join("\n");
   return [
     `Editorial fashion photograph for Resort Edit, a luxury destination styling platform.`,
     `Destination: ${dna.destination}. Activity: ${dna.activity}.`,
@@ -149,6 +161,17 @@ export function museImagePrompt(dna: LookDNA, brief: CandidateBrief): string {
     `Silhouette: ${brief.silhouette_strategy}.`,
     `Accessories: ${brief.accessory_ecosystem}.`,
     `Persona: ${brief.luxury_traveler_persona}`,
-    `Shot like Net-a-Porter / Moda Operandi editorial. Natural light, cinematic, magazine-quality, no text.`,
-  ].join(" ");
+    dna.museEnvironmentCues?.length
+      ? `Environment (must be visible in frame): ${dna.museEnvironmentCues.join("; ")}.`
+      : "",
+    wardrobe
+      ? `WARDROBE FIDELITY — the muse MUST be wearing the following exact products. Reference images are supplied; preserve garment color, silhouette, print, and material faithfully. Do not substitute pieces:\n${wardrobe}`
+      : "",
+    dna.avoidCues?.length
+      ? `Avoid at all costs: ${dna.avoidCues.join("; ")}.`
+      : "",
+    `Shot like Net-a-Porter / Moda Operandi editorial. Natural light, cinematic, magazine-quality, no text, no logos overlaid, no other people.`,
+  ]
+    .filter(Boolean)
+    .join(" ");
 }

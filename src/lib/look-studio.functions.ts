@@ -22,6 +22,11 @@ const GATE_MIN_COHESION = 7;
 const GATE_MIN_ACCESSORY = 7;
 /** Editorial saveability gate: mean of saveability + editorial_uniqueness + luxury_traveler_appeal. */
 const GATE_MIN_SAVEABILITY = 7;
+/** Resort Edit test threshold — would a wealthy woman save this. */
+const GATE_MIN_RESORT_EDIT_TEST = 7;
+/** Muse identity / outfit fidelity gates (0-1). */
+const GATE_MIN_FACE_SIMILARITY = 0.75;
+const GATE_MIN_OUTFIT_FIDELITY = 0.7;
 /** Editorial diversity caps within a single candidate. Max share of slots a single trait may occupy. */
 const DIVERSITY_CAPS = {
   brand: 0.3,
@@ -82,8 +87,31 @@ export type QualityGateLike = {
     destination_specificity?: number;
     styling_cohesion?: number;
     accessory_ecosystem?: number;
+    editorial_saveability_mean?: number;
+    resort_edit_test?: number;
+    face_similarity?: number | null;
+    outfit_fidelity?: number | null;
   };
-  thresholds?: { destination_specificity?: number; styling_cohesion?: number; accessory_ecosystem?: number };
+  thresholds?: {
+    destination_specificity?: number;
+    styling_cohesion?: number;
+    accessory_ecosystem?: number;
+    editorial_saveability?: number;
+    resort_edit_test?: number;
+    face_similarity?: number;
+    outfit_fidelity?: number;
+  };
+  muse?: {
+    present?: boolean;
+    identity_locked?: boolean;
+    muse_name?: string | null;
+    requires_continuity?: boolean;
+    face_similarity?: number | null;
+    outfit_fidelity?: number | null;
+    verification_notes?: string | null;
+    identity_mismatch_reason?: string | null;
+    outfit_mismatch_reason?: string | null;
+  };
   evaluated_at?: string;
 };
 
@@ -308,7 +336,7 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     if (!dna) throw new Error(`Unknown DNA: ${data.dna_id}`);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { generateCandidateBriefs, museImagePrompt } = await import("./candidate-brief.server");
-    const { generateAndStoreMuse } = await import("./muse-image.server");
+    const { generateAndStoreMuse, verifyMuseFidelity } = await import("./muse-image.server");
     const { getDestinationMuse, destinationRequiresMuseContinuity } = await import("./destination-muse.server");
 
     // Identity-lock muse for this destination (Lilla → Portofino, etc).
@@ -421,14 +449,42 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       let museUrl: string | null = null;
       let museError: string | null = null;
       let identityLocked = false;
+      let faceSimilarity: number | null = null;
+      let outfitFidelity: number | null = null;
+      let museVerificationNotes: string | null = null;
+      let identityMismatchReason: string | null = null;
+      let outfitMismatchReason: string | null = null;
+
+      // Resolve product image URLs + summary for muse generation & verification.
+      type SlotProduct = { slot: LookSlot; brand: string | null; product_name: string | null; image_url: string | null };
+      const slotProducts: SlotProduct[] = [];
+      for (const sp of slotPicks) {
+        if (!sp.sourced_product_id) continue;
+        const p = eligible.find((e) => e.id === sp.sourced_product_id);
+        if (!p) continue;
+        slotProducts.push({
+          slot: sp.slot,
+          brand: p.brand ?? null,
+          product_name: p.product_name ?? null,
+          image_url: p.image_url ?? null,
+        });
+      }
+      const productImageUrls = slotProducts
+        .map((p) => p.image_url)
+        .filter((u): u is string => !!u);
+      const productSummaryForMuse = slotProducts
+        .map((p) => `- ${p.slot}: ${p.brand ?? "—"} — ${p.product_name ?? "—"}`)
+        .join("\n");
+
       // One retry on muse failure — never let a museless candidate through.
       for (let museAttempt = 0; museAttempt < 2 && !museUrl; museAttempt++) {
         try {
-          const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief), {
+          const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief, slotProducts), {
             referenceUrl: destMuse?.reference_url ?? null,
             museName: destMuse?.muse_name ?? null,
             faceDescription: destMuse?.face_description ?? null,
             guardrails: destMuse?.style_guardrails ?? null,
+            productImageUrls,
           });
           museUrl = r.url;
           identityLocked = r.identity_locked;
@@ -439,6 +495,22 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
         } catch (e) {
           museError = String((e as Error).message ?? e).slice(0, 240);
         }
+      }
+
+      // Stage 4b: vision verification of muse fidelity (identity + outfit).
+      // Only run when both a generated muse and a reference muse exist.
+      if (museUrl && destMuse?.reference_url) {
+        const verdict = await verifyMuseFidelity(
+          museUrl,
+          destMuse.reference_url,
+          destMuse.muse_name,
+          productSummaryForMuse,
+        );
+        faceSimilarity = verdict.face_similarity;
+        outfitFidelity = verdict.outfit_fidelity;
+        museVerificationNotes = verdict.notes;
+        identityMismatchReason = verdict.identity_mismatch_reason;
+        outfitMismatchReason = verdict.outfit_mismatch_reason;
       }
 
       // Stage 5: score.
@@ -460,12 +532,27 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       if (requiresContinuity && museUrl && !identityLocked) {
         reasons.push(`Muse identity not locked to ${destMuse?.muse_name ?? "the destination muse"} — reference image was not applied.`);
       }
+      if (requiresContinuity && faceSimilarity !== null && faceSimilarity < GATE_MIN_FACE_SIMILARITY) {
+        reasons.push(
+          `Muse identity drift: face similarity ${faceSimilarity.toFixed(2)} < ${GATE_MIN_FACE_SIMILARITY}${
+            identityMismatchReason ? ` — ${identityMismatchReason}` : ""
+          }`,
+        );
+      }
+      if (outfitFidelity !== null && outfitFidelity < GATE_MIN_OUTFIT_FIDELITY) {
+        reasons.push(
+          `Muse outfit does not reflect sourced products: outfit fidelity ${outfitFidelity.toFixed(2)} < ${GATE_MIN_OUTFIT_FIDELITY}${
+            outfitMismatchReason ? ` — ${outfitMismatchReason}` : ""
+          }`,
+        );
+      }
       const ds = typeof scoring.destination_specificity === "number" ? scoring.destination_specificity : 0;
       const sc = typeof scoring.styling_cohesion === "number" ? scoring.styling_cohesion : 0;
       const ae = typeof scoring.accessory_ecosystem === "number" ? scoring.accessory_ecosystem : 0;
       const sv = typeof scoring.saveability === "number" ? scoring.saveability : 0;
       const eu = typeof scoring.editorial_uniqueness === "number" ? scoring.editorial_uniqueness : 0;
       const la = typeof scoring.luxury_traveler_appeal === "number" ? scoring.luxury_traveler_appeal : 0;
+      const rt = typeof scoring.resort_edit_test === "number" ? scoring.resort_edit_test : 0;
       const editorialMean = (sv + eu + la) / 3;
       if (ds < GATE_MIN_DESTINATION) reasons.push(`Destination specificity ${ds.toFixed(1)} < ${GATE_MIN_DESTINATION}`);
       if (sc < GATE_MIN_COHESION) reasons.push(`Styling cohesion ${sc.toFixed(1)} < ${GATE_MIN_COHESION}`);
@@ -473,6 +560,11 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       if (editorialMean < GATE_MIN_SAVEABILITY) {
         reasons.push(
           `Editorial saveability ${editorialMean.toFixed(1)} < ${GATE_MIN_SAVEABILITY} (saveability ${sv}, uniqueness ${eu}, luxury ${la}) — would not feel at home in a Steven Dann carousel`,
+        );
+      }
+      if (rt < GATE_MIN_RESORT_EDIT_TEST) {
+        reasons.push(
+          `Resort Edit test ${rt.toFixed(1)} < ${GATE_MIN_RESORT_EDIT_TEST} — a wealthy woman would not save this to dress like this in ${dna.destination}`,
         );
       }
       const passed = reasons.length === 0;
@@ -486,6 +578,11 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
           identity_locked: identityLocked,
           muse_name: destMuse?.muse_name ?? null,
           requires_continuity: requiresContinuity,
+          face_similarity: faceSimilarity,
+          outfit_fidelity: outfitFidelity,
+          verification_notes: museVerificationNotes,
+          identity_mismatch_reason: identityMismatchReason,
+          outfit_mismatch_reason: outfitMismatchReason,
         },
         checks: {
           required_slots_filled: requiredSlots.length - missing.length,
@@ -495,12 +592,18 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
           styling_cohesion: sc,
           accessory_ecosystem: ae,
           editorial_saveability_mean: editorialMean,
+          resort_edit_test: rt,
+          face_similarity: faceSimilarity,
+          outfit_fidelity: outfitFidelity,
         },
         thresholds: {
           destination_specificity: GATE_MIN_DESTINATION,
           styling_cohesion: GATE_MIN_COHESION,
           accessory_ecosystem: GATE_MIN_ACCESSORY,
           editorial_saveability: GATE_MIN_SAVEABILITY,
+          resort_edit_test: GATE_MIN_RESORT_EDIT_TEST,
+          face_similarity: GATE_MIN_FACE_SIMILARITY,
+          outfit_fidelity: GATE_MIN_OUTFIT_FIDELITY,
         },
         evaluated_at: new Date().toISOString(),
       };
@@ -683,7 +786,7 @@ async function scoreViaAI(dna: LookDNA, productSummary: string): Promise<LookSco
     // Fallback: neutral score so UI still renders.
     return Object.fromEntries(LOOK_SCORE_CATEGORIES.map((c) => [c, 5])) as LookScoring;
   }
-  const system = `You are the head stylist for Resort Edit, a luxury destination styling platform. Score complete looks (not products) on a 0-10 scale for ten categories. Be honest and editorial — a generic influencer outfit must score low.`;
+  const system = `You are the head stylist for Resort Edit, a luxury destination styling platform. Score complete looks (not products) on a 0-10 scale. Be brutally honest and editorial — a generic luxury resortwear outfit must score 4-5 at best. Reward destination specificity, editorial uniqueness, emotional impact, and saveability for a wealthy traveler. Penalize generic luxury signals, safe neutrals, influencer aesthetics, and charter-yacht uniforms.`;
   const user = `LOOK DNA
 Destination: ${dna.destination}
 Activity: ${dna.activity}
@@ -695,11 +798,21 @@ Resort energy: ${dna.resortEnergy}
 Styling notes: ${dna.stylingNotes.join("; ")}
 Hero piece: ${dna.heroPiece ?? "n/a"}
 Target brands: ${(dna.targetBrands ?? []).join(", ") || "n/a"}
+${dna.avoidCues?.length ? `Anti-cues — any of these in the look caps every score at 4: ${dna.avoidCues.join("; ")}` : ""}
 
 ASSEMBLED LOOK
 ${productSummary}
 
-Score each category 0-10 and return strict JSON: { destination_specificity, activity_fidelity, styling_cohesion, luxury_traveler_appeal, editorial_uniqueness, saveability, emotional_impact, color_story, print_story, accessory_ecosystem, discovery_value, resort_edit_luxury_score, rationale }. emotional_impact = does this look make a wealthy traveler save it? discovery_value = does it surface brands/pieces she would not have found herself?`;
+Score each category 0-10 and return strict JSON: { destination_specificity, activity_fidelity, styling_cohesion, luxury_traveler_appeal, editorial_uniqueness, saveability, emotional_impact, color_story, print_story, accessory_ecosystem, discovery_value, resort_edit_luxury_score, resort_edit_test, rationale }.
+
+Definitions:
+- destination_specificity: how unmistakably ${dna.destination} is this — would a stranger know the city from the look alone?
+- editorial_uniqueness: does this look feel different from everything else on Instagram resort-wear feeds?
+- emotional_impact: does this look give a wealthy traveler a feeling — desire, aspiration, fantasy?
+- saveability: would she screenshot and save this to a styling folder?
+- luxury_traveler_appeal: does this read as old-money / well-traveled, not new-money / influencer?
+- discovery_value: does it surface brands/pieces she would not have found herself?
+- resort_edit_test (CRITICAL): on a 0-10 scale, would a wealthy woman save this BECAUSE she wants to dress like this in ${dna.destination}? 0 = no, 10 = absolutely. If the answer is "no" the look has failed; score it ≤ 4.`;
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",

@@ -560,6 +560,34 @@ function LookCandidateCard({
               {gate.passed ? "Gate ✓" : "Gate ✗"}
             </span>
           )}
+          {gate?.muse?.face_similarity != null && (
+            <span
+              className={`text-[0.55rem] tracking-[0.18em] uppercase border px-1.5 py-0.5 ${
+                gate.muse.face_similarity >= 0.85
+                  ? "border-emerald-700 text-emerald-800"
+                  : gate.muse.face_similarity >= 0.75
+                    ? "border-amber-700 text-amber-800"
+                    : "border-red-700 text-red-800"
+              }`}
+              title={gate.muse.identity_mismatch_reason ?? "Face identity match vs reference muse"}
+            >
+              {(gate.muse.muse_name ?? "Muse")} {Math.round((gate.muse.face_similarity ?? 0) * 100)}%
+            </span>
+          )}
+          {gate?.muse?.outfit_fidelity != null && (
+            <span
+              className={`text-[0.55rem] tracking-[0.18em] uppercase border px-1.5 py-0.5 ${
+                gate.muse.outfit_fidelity >= 0.85
+                  ? "border-emerald-700 text-emerald-800"
+                  : gate.muse.outfit_fidelity >= 0.7
+                    ? "border-amber-700 text-amber-800"
+                    : "border-red-700 text-red-800"
+              }`}
+              title={gate.muse.outfit_mismatch_reason ?? "Muse outfit ↔ sourced product fidelity"}
+            >
+              Outfit {Math.round((gate.muse.outfit_fidelity ?? 0) * 100)}%
+            </span>
+          )}
         </div>
       </div>
 
@@ -636,24 +664,18 @@ function LookCandidateCard({
       <div className="p-3 border-b border-ink/10">
         <p className="text-[0.6rem] tracking-[0.24em] uppercase text-ink/55 mb-2">Product lookboard</p>
         <div className="grid grid-cols-4 gap-1.5 bg-cream/30 p-2">
-          {sortedSlots.map((s) => (
+          {sortedSlots.filter((s) => s.product?.image_url).map((s) => (
             <div
               key={s.id}
               className="aspect-square bg-ivory border border-ink/10 overflow-hidden relative"
               title={`${LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}${s.product?.brand ? ` · ${s.product.brand}` : ""}`}
             >
-              {s.product?.image_url ? (
-                <img
-                  src={s.product.image_url}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-[0.55rem] uppercase tracking-[0.16em] text-ink/35 text-center px-1">
-                  {LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}
-                </div>
-              )}
+              <img
+                src={s.product!.image_url!}
+                alt=""
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           ))}
         </div>

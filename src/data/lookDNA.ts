@@ -51,6 +51,10 @@ export type LookDNA = {
   accessories?: string[];
   /** Preferred brands for this DNA. Sourcing prioritizes these, then expands. */
   targetBrands?: string[];
+  /** Editorial signals to avoid — anti-cues that fail the look. */
+  avoidCues?: string[];
+  /** Required environment cues for the muse image (e.g. "polished teak yacht", "Portofino harbor"). */
+  museEnvironmentCues?: string[];
 };
 
 /**
@@ -116,24 +120,49 @@ export const LOOK_DNA: Record<string, LookDNA> = {
     name: "Emerald Riviera",
     destination: "Portofino",
     activity: "Yacht Day",
-    mood: "Quiet confidence — harbor elegance",
-    palette: ["emerald", "deep green", "gold", "ivory"],
-    silhouette: "Structured one-piece or sculpted bikini, clean lines",
-    printLanguage: "Solid jewel tone; subtle ribbing or matte texture",
-    resortEnergy: "Wealthy traveler — understated, expensive, considered",
+    mood: "Italian Riviera glamour — emerald water against polished teak, the harbor in golden hour",
+    palette: ["emerald green", "deep teal", "polished gold", "ivory cream", "warm teak brown"],
+    silhouette: "Elevated structured one-piece OR sculpted high-leg bikini under a sheer silk kaftan or tailored linen shirt; long lean line, never sporty",
+    printLanguage: "Solid emerald jewel tone, fine matte ribbing, or a single hand-painted Mediterranean botanical — never tropical, never logo-ed, never crochet",
+    resortEnergy: "Old-money Riviera — Aman, Splendido, the back deck of a Riva — restrained, expensive, considered, photographed in late-afternoon sun",
     ageAlignment: "Sophisticated women 35–50",
     stylingNotes: [
-      "polished gold cuff",
-      "luxury leather or suede sandal",
-      "woven tote",
-      "minimal hair — sleek low pony",
+      "polished gold cuff and one architectural ring",
+      "fine layered gold chains, not stacked beach jewelry",
+      "luxury suede or python slide / flat — never platform, never plastic",
+      "structured raffia or leather tote with leather handles",
+      "oversized acetate sunglasses in tortoise or honey",
+      "sleek low pony or wet-look bun — never beachy waves",
+      "skin glow, bare warm lip, no contour",
     ],
     isWaterLook: true,
     tier: "luxury",
-    heroPiece: "Structured swimwear",
+    heroPiece: "Sculpted emerald one-piece OR matte ribbed bikini under a silk kaftan",
     colorStory: ["emerald green"],
-    accessories: ["gold jewelry", "luxury sandals", "woven tote"],
-    targetBrands: ["Eres", "Melissa Odabash", "Johanna Ortiz"],
+    accessories: ["fine layered gold", "polished gold cuff", "architectural ring", "suede slide", "structured raffia tote", "oversized tortoise sunglasses"],
+    targetBrands: ["Eres", "Hunza G", "Melissa Odabash", "Johanna Ortiz", "Loro Piana", "The Row", "Khaite", "Cult Gaia"],
+    avoidCues: [
+      "generic resort wear",
+      "influencer travel content",
+      "yacht charter uniform (white polo + navy short)",
+      "basic tank-and-trouser combinations",
+      "crochet anything",
+      "white linen midi dress",
+      "tropical print",
+      "logo prints",
+      "neon",
+      "platform sandals",
+      "fast fashion",
+      "beachy mermaid waves",
+      "Coachella jewelry stacks",
+    ],
+    museEnvironmentCues: [
+      "polished teak deck of a classic Riva or sailing yacht",
+      "emerald-green Mediterranean water",
+      "Portofino harbor with pastel facades softly out of focus",
+      "late-afternoon golden hour, low sun",
+      "no other people in frame",
+    ],
   },
 
   "yacht-day/coral-aperitivo": {
