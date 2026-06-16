@@ -430,6 +430,56 @@ function LookCandidateCard({
         )}
       </div>
 
+      {/* Product list — stylist's ingredient ledger */}
+      <div className="px-4 pb-3 border-t border-ink/10 pt-3">
+        <p className="text-[0.6rem] tracking-[0.24em] uppercase text-ink/55 mb-2">Look ingredients</p>
+        <ul className="divide-y divide-ink/10 text-[0.7rem]">
+          {sortedSlots.map((s) => {
+            const p = s.product;
+            const hasBackup = !!p?.affiliate_url;
+            return (
+              <li key={s.id} className="py-1.5 flex items-center gap-2">
+                <span className="w-20 shrink-0 uppercase tracking-[0.14em] text-ink/55 text-[0.6rem]">
+                  {LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}
+                </span>
+                <div className="flex-1 min-w-0">
+                  {p ? (
+                    <>
+                      <p className="truncate">
+                        <span className="font-display tracking-[0.04em]">{p.brand ?? "—"}</span>
+                        <span className="text-ink/60"> · {p.product_name ?? "—"}</span>
+                      </p>
+                      <p className="truncate text-ink/45 text-[0.65rem]">
+                        {p.retailer_domain ?? "—"}
+                        {p.price != null && (
+                          <>
+                            {" · "}
+                            <span className="font-mono">
+                              {p.currency === "USD" || !p.currency ? "$" : `${p.currency} `}
+                              {Math.round(Number(p.price))}
+                            </span>
+                          </>
+                        )}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-ink/40 italic">Empty slot — no eligible product</p>
+                  )}
+                </div>
+                {p && (
+                  <span
+                    className={`text-[0.55rem] tracking-[0.16em] uppercase px-1.5 py-0.5 border ${hasBackup ? "border-emerald-700 text-emerald-800" : "border-amber-700 text-amber-800"}`}
+                    title={hasBackup ? "Backup affiliate link present" : "No backup link"}
+                  >
+                    {hasBackup ? "Backup ✓" : "No backup"}
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
       {/* Actions */}
       <div className="px-4 py-3 border-t border-ink/10 flex flex-wrap gap-2 text-[0.7rem]">
         <button
