@@ -22,6 +22,11 @@ const GATE_MIN_COHESION = 7;
 const GATE_MIN_ACCESSORY = 7;
 /** Editorial saveability gate: mean of saveability + editorial_uniqueness + luxury_traveler_appeal. */
 const GATE_MIN_SAVEABILITY = 7;
+/** Resort Edit test threshold — would a wealthy woman save this. */
+const GATE_MIN_RESORT_EDIT_TEST = 7;
+/** Muse identity / outfit fidelity gates (0-1). */
+const GATE_MIN_FACE_SIMILARITY = 0.75;
+const GATE_MIN_OUTFIT_FIDELITY = 0.7;
 /** Editorial diversity caps within a single candidate. Max share of slots a single trait may occupy. */
 const DIVERSITY_CAPS = {
   brand: 0.3,
