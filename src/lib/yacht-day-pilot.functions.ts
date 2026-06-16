@@ -31,6 +31,34 @@ const COLLECTION_PATTERNS = [
   /\/new-in\/?/i,
 ];
 
+// Per-retailer URL patterns that strongly indicate a real PDP (product detail page).
+// When a retailer is listed here, we REQUIRE the pattern to match; otherwise we fall
+// back to the looser slug-length heuristic. This eliminates designer index pages
+// (/designer/eres), category landings (/shop/clothing/swimwear-and-beachwear),
+// and editorial articles from the dry-run candidate list.
+const PDP_PATTERNS: Record<string, RegExp> = {
+  "mytheresa.com": /-p\d{6,}/i,
+  "net-a-porter.com": /\/shop\/product\/.+\/\d{6,}$/i,
+  "modaoperandi.com": /\/(?:women|resort)\/.+_cod\d+\.html/i,
+  "saksfifthavenue.com": /\/product\/.+-\d{6,}\.html/i,
+  "neimanmarcus.com": /\/p\/.+-prod\w+/i,
+  "shopbop.com": /\/[\w-]+\/vp\/v=1\/\d+\.htm/i,
+  "luisaviaroma.com": /\/en-[a-z]{2}\/p\/[\w-]+\/[\w-]+\/\d+-[\w]+/i,
+  "everythingbutwater.com": /\/products\/[\w-]+/i,
+};
+
+const EXTRA_BLOCK_PATTERNS = [
+  /\/designer(s)?\//i,
+  /\/brand(s)?\//i,
+  /\/editorial\//i,
+  /\/stories\//i,
+  /\/magazine\//i,
+  /\/blog\//i,
+  /\/journal\//i,
+  /\/gift/i,
+  /\/lookbook/i,
+];
+
 const DEFAULT_QUERY_TEMPLATES = [
   "{brand} swimwear",
   "{brand} bikini",
@@ -40,11 +68,16 @@ const DEFAULT_QUERY_TEMPLATES = [
   "{brand} coverup",
 ];
 
-function looksLikePdp(url: string): boolean {
+function looksLikePdp(url: string, retailer?: string | null): boolean {
   try {
     const u = new URL(url);
     if (COLLECTION_PATTERNS.some((re) => re.test(u.pathname))) return false;
-    // PDPs usually have a slug segment + a numeric or alphanum SKU
+    if (EXTRA_BLOCK_PATTERNS.some((re) => re.test(u.pathname))) return false;
+    if (retailer && PDP_PATTERNS[retailer]) {
+      // Strict: must match the retailer's PDP signature.
+      return PDP_PATTERNS[retailer].test(u.pathname);
+    }
+    // Fallback for retailers without a known PDP signature.
     return u.pathname.split("/").filter(Boolean).length >= 2;
   } catch {
     return false;
@@ -80,6 +113,7 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
         retailersPerBrand: z.number().int().min(1).max(8).default(3),
         resultsPerSearch: z.number().int().min(1).max(10).default(4),
         maxCandidates: z.number().int().min(5).max(60).default(30),
+        maxPerBrand: z.number().int().min(1).max(10).default(3),
         queryTemplates: z.array(z.string().min(3).max(120)).min(1).max(10).optional(),
       })
       .parse(input),
@@ -131,6 +165,7 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
     // 3. For each brand × first N retailers, Firecrawl /search (NO /scrape)
     const candidates: Candidate[] = [];
     const seenUrls = new Set<string>();
+    const perBrandCount: Record<string, number> = {};
     let searchesIssued = 0;
     let searchesFailed = 0;
     let rawResultsSeen = 0;
@@ -176,8 +211,11 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
               if (seenUrls.has(url)) continue;
               const matchedRetailer = retailerOf(url);
               if (!matchedRetailer) continue;
-              if (!looksLikePdp(url)) continue;
+              if (!looksLikePdp(url, matchedRetailer)) continue;
+              // Brand diversity cap: enforce inline, not after collection
+              if ((perBrandCount[brand.name] ?? 0) >= data.maxPerBrand) break;
               seenUrls.add(url);
+              perBrandCount[brand.name] = (perBrandCount[brand.name] ?? 0) + 1;
               candidates.push({
                 url,
                 title: item.title ?? item.metadata?.title ?? null,
