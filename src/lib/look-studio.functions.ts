@@ -433,19 +433,19 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       let outfitMismatchReason: string | null = null;
 
       // Resolve product image URLs + summary for muse generation & verification.
-      const slotProducts = slotPicks
-        .map((sp) => {
-          if (!sp.sourced_product_id) return null;
-          const p = eligible.find((e) => e.id === sp.sourced_product_id);
-          if (!p) return null;
-          return {
-            slot: sp.slot,
-            brand: p.brand ?? null,
-            product_name: p.product_name ?? null,
-            image_url: p.image_url ?? null,
-          };
-        })
-        .filter((x): x is { slot: LookSlot; brand: string | null; product_name: string | null; image_url: string | null } => !!x);
+      type SlotProduct = { slot: LookSlot; brand: string | null; product_name: string | null; image_url: string | null };
+      const slotProducts: SlotProduct[] = [];
+      for (const sp of slotPicks) {
+        if (!sp.sourced_product_id) continue;
+        const p = eligible.find((e) => e.id === sp.sourced_product_id);
+        if (!p) continue;
+        slotProducts.push({
+          slot: sp.slot,
+          brand: p.brand ?? null,
+          product_name: p.product_name ?? null,
+          image_url: p.image_url ?? null,
+        });
+      }
       const productImageUrls = slotProducts
         .map((p) => p.image_url)
         .filter((u): u is string => !!u);
