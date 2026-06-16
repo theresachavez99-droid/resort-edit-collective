@@ -10,7 +10,7 @@ Brand diversity: cap 1–3 appearances per brand per 25-look destination; 30% He
 Workflow hierarchy (never reverse): Destination → Activity → Energy → Look DNA → Complete Outfit → Products → Muse. Products support the look; looks are never built around products.
 Look DNA is mandatory before sourcing. Muse imagery is generated only after products are approved and the outfit is assembled.
 Yacht Day brand universe = swimwear + coverups + resortwear + Mediterranean print + luxury vacation brands tagged Yacht Day — not swimwear-only.
-All sourced products require human approval (status='pending' → review queue). No auto-approval into the Vault, ever.
+Unit of approval is the LOOK, not the product. Sourced products are auto-validated and auto-scored in the background; only products in approved looks enter the Vault. Admin lives in `/admin/look-studio`; `/admin/review-queue` is retired and redirects.
 Dry-run must pass (PDP-only URLs, retailer-specific patterns, ≤3 per brand enforced inline) before any PDP scrape.
 Hero Piece + One Statement rule: every look has exactly one hero; accessories support, never compete. Destination Specificity > generic vacation styling. Activity fidelity heavily influences scoring (Yacht Day ≠ Beach Club ≠ Long Lunch).
 Differentiation Layer (publish gate): every look must pass Transformation, Memory, Screenshot, Daydream, and Movie tests AND embody all six Resort Edit Standard attributes (Luxury, Destination Specificity, Editorial Quality, Saveability, Discovery, Emotional Resonance, Lifestyle Aspiration). Luxury alone is never enough.
@@ -21,3 +21,4 @@ Differentiation Layer (publish gate): every look must pass Transformation, Memor
 - [Personal shopper architecture](mem://features/personal-shopper-architecture) — Phase 2 doctrine: Look DNA, outfit assembly slots, luxury-shopper test, muse-last order
 - [Luxury shopper doctrine](mem://features/luxury-shopper-doctrine) — Full canonical doctrine: success metric, decision hierarchy, editorial identity, hero/one-statement/color/print/texture rules, wealth signals, trip progression, Steven Dann rule
 - [Differentiation layer](mem://features/differentiation-layer) — Five publish-gate tests (Transformation, Memory, Screenshot, Daydream, Movie) + the six-attribute Resort Edit Standard
+- [Look Studio](mem://features/look-studio) — Look-level review workflow, ten-category scoring rubric, Improve Look feedback loop, auto-promote-to-vault on approval
