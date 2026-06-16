@@ -299,7 +299,8 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
           variant,
           status: "assembling",
           scoring: {},
-          brief: brief as unknown as Record<string, unknown>,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          brief: brief as any,
         })
         .select("id")
         .single();
@@ -390,7 +391,8 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
         .from("look_candidates")
         .update({
           status: passed ? "pending_review" : "failed_gate",
-          quality_gate: gate as unknown as Record<string, unknown>,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          quality_gate: gate as any,
         })
         .eq("id", cand.id);
 
