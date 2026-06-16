@@ -524,10 +524,10 @@ function LookCandidateCard({
           Delete
         </button>
       </div>
-      {candidate.status === "approved" && (candidate as { slug?: string | null }).slug && (
+      {candidate.status === "approved" && (candidate as unknown as { slug?: string | null }).slug && (
         <div className="px-4 pb-3 -mt-1">
           <a
-            href={`/look/${(candidate as { slug: string }).slug}`}
+            href={`/look/${(candidate as unknown as { slug: string }).slug}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[0.62rem] tracking-[0.24em] uppercase text-emerald-800 underline"
