@@ -29,6 +29,7 @@ import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers
 import { Route as AdminReviewQueueRouteImport } from './routes/admin.review-queue'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
+import { Route as AdminLookStudioRouteImport } from './routes/admin.look-studio'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } from './routes/destinations.portofino.day-1-yacht-harbour-aperitivo'
@@ -133,6 +134,11 @@ const AdminProductLibraryRoute = AdminProductLibraryRouteImport.update({
   path: '/admin/product-library',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLookStudioRoute = AdminLookStudioRouteImport.update({
+  id: '/admin/look-studio',
+  path: '/admin/look-studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
   id: '/admin/brands',
   path: '/admin/brands',
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
@@ -185,6 +192,7 @@ export interface FileRoutesByTo {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
@@ -211,6 +219,7 @@ export interface FileRoutesById {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/review-queue'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/review-queue'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/review-queue'
@@ -314,6 +326,7 @@ export interface RootRouteChildren {
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminLookStudioRoute: typeof AdminLookStudioRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
   AdminReviewQueueRoute: typeof AdminReviewQueueRoute
@@ -463,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductLibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/look-studio': {
+      id: '/admin/look-studio'
+      path: '/admin/look-studio'
+      fullPath: '/admin/look-studio'
+      preLoaderRoute: typeof AdminLookStudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/brands': {
       id: '/admin/brands'
       path: '/admin/brands'
@@ -545,6 +565,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminBrandsRoute: AdminBrandsRoute,
+  AdminLookStudioRoute: AdminLookStudioRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
   AdminReviewQueueRoute: AdminReviewQueueRoute,
