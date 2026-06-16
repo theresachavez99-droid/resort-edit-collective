@@ -207,9 +207,24 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     if (poolErr) throw new Error(poolErr.message);
 
     const eligible = (pool ?? []).filter((p) => p.image_url && p.brand && p.product_name);
-    const slotsRequired: LookSlot[] = dna.isWaterLook
-      ? ["swimwear", "dress_or_coverup", "shoes", "bag", "earrings", "necklace", "sunglasses", "hair_detail"]
-      : ["dress_or_coverup", "shoes", "bag", "earrings", "necklace", "bracelet", "sunglasses"];
+    // Always assemble a complete Resort Edit look. Swimwear only when the DNA is a water look;
+    // sunglasses only for daytime activities. Every other slot is attempted — missing slots
+    // surface as empty in the UI so the stylist sees gaps explicitly.
+    const isDaytime = !/dinner|night|evening|sunset/i.test(dna.activity);
+    const fullSlots: LookSlot[] = [
+      ...(dna.isWaterLook ? (["swimwear"] as LookSlot[]) : []),
+      "dress_or_coverup",
+      "shoes",
+      "bag",
+      "earrings",
+      "necklace",
+      "bracelet",
+      "ring",
+      ...(isDaytime ? (["sunglasses"] as LookSlot[]) : []),
+      "hair_detail",
+      "optional_layer",
+    ];
+    const slotsRequired: LookSlot[] = fullSlots;
 
     const count = data.count ?? 3;
     const variants = ["A", "B", "C", "D", "E"].slice(0, count);
@@ -278,7 +293,11 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       created.push(cand.id);
     }
 
-    return { ok: true as const, candidate_ids: created };
+    return {
+      ok: true as const,
+      candidate_ids: created,
+      pool: { sourced: (pool ?? []).length, eligible: eligible.length },
+    };
   });
 
 async function scoreCandidateInternal(
