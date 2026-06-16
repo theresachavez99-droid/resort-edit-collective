@@ -18,6 +18,7 @@ import {
   type QualityGateLike,
 } from "@/lib/look-studio.functions";
 import { fillPortofinoInventory, bulkSourceBrand } from "@/lib/brand-crawl.functions";
+import { refreshLookInventory, getDestinationInventoryHealth } from "@/lib/source-availability.functions";
 import {
   IMPROVE_FEEDBACK_PRESETS,
   LOOK_SCORE_CATEGORIES,
