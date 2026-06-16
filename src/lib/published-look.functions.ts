@@ -89,8 +89,7 @@ export const getPublishedLook = createServerFn({ method: "GET" })
       vaultMap = new Map((vps ?? []).map((v) => [v.source_sourced_product_id as string, v as Record<string, unknown>]));
     }
 
-    const products: PublishedLookProduct[] = (slotRows ?? [])
-      .map((s) => {
+    const productsRaw: Array<PublishedLookProduct | null> = (slotRows ?? []).map((s) => {
         const v = s.sourced_product_id ? vaultMap.get(s.sourced_product_id) : null;
         if (!v) return null;
         return {
@@ -112,8 +111,8 @@ export const getPublishedLook = createServerFn({ method: "GET" })
             ? (v.ai_replacements as PublishedLookProduct["ai_replacements"])
             : [],
         };
-      })
-      .filter((x): x is PublishedLookProduct => x !== null);
+    });
+    const products: PublishedLookProduct[] = productsRaw.filter((x): x is PublishedLookProduct => x !== null);
 
     // Similar looks — same destination + activity, approved, different slug.
     const { data: similarRows } = await supabaseAdmin
