@@ -763,7 +763,7 @@ async function scoreViaAI(dna: LookDNA, productSummary: string): Promise<LookSco
     // Fallback: neutral score so UI still renders.
     return Object.fromEntries(LOOK_SCORE_CATEGORIES.map((c) => [c, 5])) as LookScoring;
   }
-  const system = `You are the head stylist for Resort Edit, a luxury destination styling platform. Score complete looks (not products) on a 0-10 scale for ten categories. Be honest and editorial — a generic influencer outfit must score low.`;
+  const system = `You are the head stylist for Resort Edit, a luxury destination styling platform. Score complete looks (not products) on a 0-10 scale. Be brutally honest and editorial — a generic luxury resortwear outfit must score 4-5 at best. Reward destination specificity, editorial uniqueness, emotional impact, and saveability for a wealthy traveler. Penalize generic luxury signals, safe neutrals, influencer aesthetics, and charter-yacht uniforms.`;
   const user = `LOOK DNA
 Destination: ${dna.destination}
 Activity: ${dna.activity}
@@ -775,11 +775,21 @@ Resort energy: ${dna.resortEnergy}
 Styling notes: ${dna.stylingNotes.join("; ")}
 Hero piece: ${dna.heroPiece ?? "n/a"}
 Target brands: ${(dna.targetBrands ?? []).join(", ") || "n/a"}
+${dna.avoidCues?.length ? `Anti-cues — any of these in the look caps every score at 4: ${dna.avoidCues.join("; ")}` : ""}
 
 ASSEMBLED LOOK
 ${productSummary}
 
-Score each category 0-10 and return strict JSON: { destination_specificity, activity_fidelity, styling_cohesion, luxury_traveler_appeal, editorial_uniqueness, saveability, emotional_impact, color_story, print_story, accessory_ecosystem, discovery_value, resort_edit_luxury_score, rationale }. emotional_impact = does this look make a wealthy traveler save it? discovery_value = does it surface brands/pieces she would not have found herself?`;
+Score each category 0-10 and return strict JSON: { destination_specificity, activity_fidelity, styling_cohesion, luxury_traveler_appeal, editorial_uniqueness, saveability, emotional_impact, color_story, print_story, accessory_ecosystem, discovery_value, resort_edit_luxury_score, resort_edit_test, rationale }.
+
+Definitions:
+- destination_specificity: how unmistakably ${dna.destination} is this — would a stranger know the city from the look alone?
+- editorial_uniqueness: does this look feel different from everything else on Instagram resort-wear feeds?
+- emotional_impact: does this look give a wealthy traveler a feeling — desire, aspiration, fantasy?
+- saveability: would she screenshot and save this to a styling folder?
+- luxury_traveler_appeal: does this read as old-money / well-traveled, not new-money / influencer?
+- discovery_value: does it surface brands/pieces she would not have found herself?
+- resort_edit_test (CRITICAL): on a 0-10 scale, would a wealthy woman save this BECAUSE she wants to dress like this in ${dna.destination}? 0 = no, 10 = absolutely. If the answer is "no" the look has failed; score it ≤ 4.`;
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
