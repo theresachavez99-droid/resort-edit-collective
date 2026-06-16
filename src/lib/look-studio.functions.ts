@@ -369,7 +369,7 @@ Target brands: ${(dna.targetBrands ?? []).join(", ") || "n/a"}
 ASSEMBLED LOOK
 ${productSummary}
 
-Score each category 0-10 and return strict JSON: { destination_specificity, activity_fidelity, styling_cohesion, luxury_traveler_appeal, editorial_uniqueness, saveability, color_story, print_story, accessory_ecosystem, resort_edit_luxury_score, rationale }.`;
+Score each category 0-10 and return strict JSON: { destination_specificity, activity_fidelity, styling_cohesion, luxury_traveler_appeal, editorial_uniqueness, saveability, emotional_impact, color_story, print_story, accessory_ecosystem, discovery_value, resort_edit_luxury_score, rationale }. emotional_impact = does this look make a wealthy traveler save it? discovery_value = does it surface brands/pieces she would not have found herself?`;
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
