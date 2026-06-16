@@ -664,24 +664,18 @@ function LookCandidateCard({
       <div className="p-3 border-b border-ink/10">
         <p className="text-[0.6rem] tracking-[0.24em] uppercase text-ink/55 mb-2">Product lookboard</p>
         <div className="grid grid-cols-4 gap-1.5 bg-cream/30 p-2">
-          {sortedSlots.map((s) => (
+          {sortedSlots.filter((s) => s.product?.image_url).map((s) => (
             <div
               key={s.id}
               className="aspect-square bg-ivory border border-ink/10 overflow-hidden relative"
               title={`${LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}${s.product?.brand ? ` · ${s.product.brand}` : ""}`}
             >
-              {s.product?.image_url ? (
-                <img
-                  src={s.product.image_url}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-[0.55rem] uppercase tracking-[0.16em] text-ink/35 text-center px-1">
-                  {LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}
-                </div>
-              )}
+              <img
+                src={s.product!.image_url!}
+                alt=""
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           ))}
         </div>
