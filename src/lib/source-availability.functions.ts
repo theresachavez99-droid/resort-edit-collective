@@ -12,12 +12,12 @@ export const setSourceAvailability = createServerFn({ method: "POST" })
       .object({
         source_id: z.string().uuid(),
         availability: z.enum(["in_stock", "low_stock", "out_of_stock", "unknown"]),
-        token: z.string().min(1),
+        password: z.string().min(1),
       })
       .parse(input),
   )
   .handler(async ({ data }) => {
-    requireAdmin(data.token);
+    requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sb: any = supabaseAdmin;
@@ -35,10 +35,10 @@ export const setSourceAvailability = createServerFn({ method: "POST" })
  */
 export const refreshLookInventory = createServerFn({ method: "POST" })
   .inputValidator((input) =>
-    z.object({ candidate_id: z.string().uuid(), token: z.string().min(1) }).parse(input),
+    z.object({ candidate_id: z.string().uuid(), password: z.string().min(1) }).parse(input),
   )
   .handler(async ({ data }) => {
-    requireAdmin(data.token);
+    requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { resolveSlotSource, persistSlotResolution } = await import("./source-resolver.server");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -72,10 +72,10 @@ export const refreshLookInventory = createServerFn({ method: "POST" })
  */
 export const getDestinationInventoryHealth = createServerFn({ method: "POST" })
   .inputValidator((input) =>
-    z.object({ destination: z.string().min(1).max(64), token: z.string().min(1) }).parse(input),
+    z.object({ destination: z.string().min(1).max(64), password: z.string().min(1) }).parse(input),
   )
   .handler(async ({ data }) => {
-    requireAdmin(data.token);
+    requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sb: any = supabaseAdmin;
