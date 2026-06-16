@@ -67,6 +67,7 @@ type Candidate = {
   brand: string;
   brand_slug: string;
   retailer: string;
+  matchedQuery: string;
   alreadyCached: boolean;
 };
 
@@ -79,6 +80,7 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
         retailersPerBrand: z.number().int().min(1).max(8).default(3),
         resultsPerSearch: z.number().int().min(1).max(10).default(4),
         maxCandidates: z.number().int().min(5).max(60).default(30),
+        queryTemplates: z.array(z.string().min(3).max(120)).min(1).max(10).optional(),
       })
       .parse(input),
   )
@@ -89,13 +91,16 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
       return { ok: false as const, error: "FIRECRAWL_API_KEY missing" };
     }
 
-    // 1. Pull approved swim + yacht-day brands
+    const queryTemplates = data.queryTemplates ?? DEFAULT_QUERY_TEMPLATES;
+
+    // 1. Pull approved brands tagged Yacht Day with at least one resortwear category.
+    //    Yacht Day eligibility = swimwear OR coverups (kaftans, pareos, resort sets live here).
     const { data: brands, error: brandErr } = await supabaseAdmin
       .from("brands")
       .select("id,name,slug,tier,categories,activities")
       .eq("status", "approved")
-      .contains("categories", ["swimwear"])
       .contains("activities", ["Yacht Day"])
+      .overlaps("categories", ["swimwear", "coverups"])
       .order("name", { ascending: true })
       .limit(data.maxBrands);
 
@@ -103,7 +108,8 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
     if (!brands?.length) {
       return {
         ok: false as const,
-        error: "No approved brands tagged Swimwear + Yacht Day. Tag brands first.",
+        error:
+          "No approved brands tagged Yacht Day with swimwear or coverups category. Tag brands first.",
       };
     }
 
@@ -134,57 +140,63 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
 
     outer: for (const brand of brands) {
       for (const retailer of retailers) {
-        if (candidates.length >= data.maxCandidates) break outer;
+        for (const template of queryTemplates) {
+          if (candidates.length >= data.maxCandidates) break outer;
 
-        const query = `${brand.name} swimwear site:${retailer}`;
-        searchesIssued++;
-        try {
-          const res = await fetch(`${FIRECRAWL_BASE}/search`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ query, limit: data.resultsPerSearch }),
-          });
-          if (!res.ok) {
-            searchesFailed++;
-            errors.push(`${brand.name} @ ${retailer}: HTTP ${res.status}`);
-            continue;
-          }
-          const payload = await res.json();
-          // SDK/REST sometimes wrap under .data.web or .web or .data (array)
-          const root = payload?.data ?? payload;
-          const items: any[] =
-            (Array.isArray(root) && root) ||
-            root?.web ||
-            root?.results ||
-            root?.data?.web ||
-            [];
-
-          for (const item of items) {
-            rawResultsSeen++;
-            const url: string | undefined = item.url || item.link;
-            if (!url) continue;
-            if (seenUrls.has(url)) continue;
-            const matchedRetailer = retailerOf(url);
-            if (!matchedRetailer) continue;
-            if (!looksLikePdp(url)) continue;
-            seenUrls.add(url);
-            candidates.push({
-              url,
-              title: item.title ?? item.metadata?.title ?? null,
-              description: item.description ?? item.snippet ?? item.metadata?.description ?? null,
-              brand: brand.name,
-              brand_slug: brand.slug,
-              retailer: matchedRetailer,
-              alreadyCached: cachedSet.has(url),
+          const brandPart = template.replace("{brand}", brand.name);
+          const query = `${brandPart} site:${retailer}`;
+          searchesIssued++;
+          try {
+            const res = await fetch(`${FIRECRAWL_BASE}/search`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${apiKey}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ query, limit: data.resultsPerSearch }),
             });
-            if (candidates.length >= data.maxCandidates) break outer;
+            if (!res.ok) {
+              searchesFailed++;
+              errors.push(`${brand.name} / "${template}" @ ${retailer}: HTTP ${res.status}`);
+              continue;
+            }
+            const payload = await res.json();
+            const root = payload?.data ?? payload;
+            const items: any[] =
+              (Array.isArray(root) && root) ||
+              root?.web ||
+              root?.results ||
+              root?.data?.web ||
+              [];
+
+            for (const item of items) {
+              rawResultsSeen++;
+              const url: string | undefined = item.url || item.link;
+              if (!url) continue;
+              if (seenUrls.has(url)) continue;
+              const matchedRetailer = retailerOf(url);
+              if (!matchedRetailer) continue;
+              if (!looksLikePdp(url)) continue;
+              seenUrls.add(url);
+              candidates.push({
+                url,
+                title: item.title ?? item.metadata?.title ?? null,
+                description:
+                  item.description ?? item.snippet ?? item.metadata?.description ?? null,
+                brand: brand.name,
+                brand_slug: brand.slug,
+                retailer: matchedRetailer,
+                matchedQuery: template,
+                alreadyCached: cachedSet.has(url),
+              });
+              if (candidates.length >= data.maxCandidates) break outer;
+            }
+          } catch (e: any) {
+            searchesFailed++;
+            errors.push(
+              `${brand.name} / "${template}" @ ${retailer}: ${String(e?.message ?? e).slice(0, 120)}`,
+            );
           }
-        } catch (e: any) {
-          searchesFailed++;
-          errors.push(`${brand.name} @ ${retailer}: ${String(e?.message ?? e).slice(0, 120)}`);
         }
       }
     }
@@ -192,10 +204,12 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
     // 4. Build distribution report
     const brandHistogram: Record<string, number> = {};
     const retailerHistogram: Record<string, number> = {};
+    const queryHistogram: Record<string, number> = {};
     let cachedCount = 0;
     for (const c of candidates) {
       brandHistogram[c.brand] = (brandHistogram[c.brand] ?? 0) + 1;
       retailerHistogram[c.retailer] = (retailerHistogram[c.retailer] ?? 0) + 1;
+      queryHistogram[c.matchedQuery] = (queryHistogram[c.matchedQuery] ?? 0) + 1;
       if (c.alreadyCached) cachedCount++;
     }
 
@@ -210,8 +224,9 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
       ok: true as const,
       ranAt: new Date().toISOString(),
       pilot: {
-        category: "swimwear",
+        categories: ["swimwear", "coverups"],
         activity: "Yacht Day",
+        queryTemplates,
       },
       telemetry: {
         searchesIssued,
@@ -226,6 +241,7 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
       brandsConsidered,
       brandHistogram,
       retailerHistogram,
+      queryHistogram,
       candidates,
       errors,
     };
