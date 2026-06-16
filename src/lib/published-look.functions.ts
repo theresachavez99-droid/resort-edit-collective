@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { LOOK_DNA } from "@/data/lookDNA";
 import { LOOK_SLOT_LABELS, LOOK_SCORE_CATEGORIES, LOOK_SCORE_LABELS, composite, type LookScoring, type LookSlot } from "./lookScoring";
+import type { ResolutionStatus, AlternativeProduct } from "./source-resolver.server";
 
 export type PublishedLookProduct = {
   vault_id: string;
@@ -18,6 +19,8 @@ export type PublishedLookProduct = {
   category_fallback_url: string | null;
   product_type: string | null;
   has_backup: boolean;
+  resolution_status: ResolutionStatus | "legacy";
+  alternatives: AlternativeProduct[];
   ai_replacements: Array<{
     brand: string;
     product_name: string;
