@@ -224,6 +224,18 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   const depthShort = pool.eligible < floor;
   const isPortofino = (dna?.destination ?? "").toLowerCase().includes("portofino");
 
+  const destination = dna?.destination ?? "";
+  const health = useQuery({
+    queryKey: ["inv-health", destination],
+    queryFn: () => healthFn({ data: { password, destination } }),
+    enabled: !!destination,
+    refetchOnWindowFocus: false,
+  });
+  const refresh = useMutation({
+    mutationFn: (candidate_id: string) => refreshOneFn({ data: { password, candidate_id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["inv-health", destination] }),
+  });
+
   async function runPortofinoSourcing() {
     setSourcingBusy(true);
     setSourcingLog(["Planning Portofino inventory…"]);
