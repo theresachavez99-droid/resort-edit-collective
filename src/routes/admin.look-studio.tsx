@@ -191,6 +191,8 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   const generateFn = useServerFn(generateLookCandidates);
   const planFn = useServerFn(fillPortofinoInventory);
   const sourceFn = useServerFn(bulkSourceBrand);
+  const healthFn = useServerFn(getDestinationInventoryHealth);
+  const refreshOneFn = useServerFn(refreshLookInventory);
   const [sourcingLog, setSourcingLog] = useState<string[]>([]);
   const [sourcingBusy, setSourcingBusy] = useState(false);
 
