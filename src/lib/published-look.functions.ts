@@ -141,7 +141,7 @@ export const getPublishedLook = createServerFn({ method: "GET" })
         // vault when present — these aren't yet on the Product Identity.
         const v = s.sourced_product_id ? vaultMap.get(s.sourced_product_id) : null;
         return {
-          vault_id: pid,
+          vault_id: pid as string,
           slot: s.slot,
           slot_label: LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot,
           brand: product.brand,
