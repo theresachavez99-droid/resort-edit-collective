@@ -14,9 +14,11 @@ export const LOOK_SCORE_CATEGORIES = [
   "luxury_traveler_appeal",
   "editorial_uniqueness",
   "saveability",
+  "emotional_impact",
   "color_story",
   "print_story",
   "accessory_ecosystem",
+  "discovery_value",
   "resort_edit_luxury_score",
 ] as const;
 
@@ -29,10 +31,12 @@ export const LOOK_SCORE_LABELS: Record<LookScoreCategory, string> = {
   luxury_traveler_appeal: "Luxury Traveler Appeal",
   editorial_uniqueness: "Editorial Uniqueness",
   saveability: "Saveability",
+  emotional_impact: "Emotional Impact",
   color_story: "Color Story",
   print_story: "Print Story",
   accessory_ecosystem: "Accessory Ecosystem",
-  resort_edit_luxury_score: "Resort Edit Luxury Score",
+  discovery_value: "Discovery Value",
+  resort_edit_luxury_score: "Overall Resort Edit Score",
 };
 
 const WEIGHTS: Record<LookScoreCategory, number> = {
@@ -42,9 +46,11 @@ const WEIGHTS: Record<LookScoreCategory, number> = {
   luxury_traveler_appeal: 1,
   editorial_uniqueness: 1,
   saveability: 1,
+  emotional_impact: 1,
   color_story: 1,
   print_story: 1,
   accessory_ecosystem: 1,
+  discovery_value: 1,
   resort_edit_luxury_score: 1,
 };
 
@@ -83,7 +89,7 @@ export type LookSlot = (typeof LOOK_SLOTS)[number];
 
 export const LOOK_SLOT_LABELS: Record<LookSlot, string> = {
   swimwear: "Swimwear",
-  dress_or_coverup: "Dress / Coverup",
+  dress_or_coverup: "Dress / Coverup / Set / Layer",
   shoes: "Shoes",
   bag: "Bag",
   earrings: "Earrings",
@@ -104,6 +110,8 @@ export const IMPROVE_FEEDBACK_PRESETS = [
   "More yacht wife",
   "More editorial",
   "More destination-specific",
+  "More saveable",
+  "More wealthy traveler",
   "More polished",
   "More Steven Dann",
   "Less influencer",
@@ -113,4 +121,7 @@ export const IMPROVE_FEEDBACK_PRESETS = [
   "Better accessories",
   "Better jewelry",
   "Better bag",
+  "Better sunglasses",
+  "Better color story",
+  "Better print story",
 ] as const;
