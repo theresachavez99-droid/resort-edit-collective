@@ -218,13 +218,19 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
             </p>
           )}
         </div>
-        <button
-          onClick={() => generate.mutate()}
-          disabled={generate.isPending}
-          className="bg-ink text-ivory px-5 py-2.5 text-[0.7rem] tracking-[0.24em] uppercase disabled:opacity-50"
-        >
-          {generate.isPending ? "Generating…" : "Generate 3 candidates"}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => generate.mutate()}
+            disabled={generate.isPending}
+            className="bg-ink text-ivory px-5 py-2.5 text-[0.7rem] tracking-[0.24em] uppercase disabled:opacity-50"
+          >
+            {generate.isPending
+              ? "Generating…"
+              : candidates.length === 0
+                ? "Generate 3 candidates"
+                : "Generate 3 more"}
+          </button>
+        </div>
       </header>
 
       {/* Product pool visibility — the Steven Dann buyer's room ledger */}
