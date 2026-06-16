@@ -17,6 +17,8 @@ export type MuseOptions = {
   museName?: string | null;
   faceDescription?: string | null;
   guardrails?: string | null;
+  /** Product reference images — the muse must wear these. First-class for outfit fidelity. */
+  productImageUrls?: string[];
 };
 
 export type MuseResult = {
@@ -36,7 +38,7 @@ export async function generateAndStoreMuse(
 
   const useRef = !!opts.referenceUrl;
   const model = useRef
-    ? "google/gemini-3.1-flash-image-preview"
+    ? "google/gemini-3-pro-image-preview"
     : "openai/gpt-image-2";
 
   // Compose the identity-locked prompt when a reference muse is present.
@@ -45,12 +47,18 @@ export async function generateAndStoreMuse(
         opts.museName ? `Subject: the recurring muse "${opts.museName}".` : "",
         opts.faceDescription ? `Identity lock: ${opts.faceDescription}` : "",
         opts.guardrails ? `Guardrails: ${opts.guardrails}` : "",
-        "Use the supplied reference image strictly for identity (face, skin tone, age range, body proportions, overall appearance). Do NOT change identity. Only outfit, accessories, hairstyle styling, expression, pose, and environment may vary.",
+        "The FIRST supplied image is the identity-lock reference — preserve face, skin tone, hair color, age, and body proportions EXACTLY. Do NOT generate a different woman.",
+        opts.productImageUrls && opts.productImageUrls.length
+          ? `The REMAINING supplied images are the wardrobe — the muse must wear these exact garments and accessories. Match color, silhouette, print, and material faithfully. If the product is a printed trouser, she wears printed trousers; if it is a green one-piece, she wears that exact green one-piece.`
+          : "",
+        "Only outfit styling, hairstyle styling, expression, pose, and environment may vary from the identity reference. NEVER swap identity.",
         prompt,
       ]
         .filter(Boolean)
         .join("\n\n")
     : prompt;
+
+  const productImages = (opts.productImageUrls ?? []).filter(Boolean).slice(0, 8);
 
   const body = useRef
     ? {
@@ -61,6 +69,7 @@ export async function generateAndStoreMuse(
             role: "user",
             content: [
               { type: "image_url", image_url: { url: opts.referenceUrl } },
+              ...productImages.map((u) => ({ type: "image_url", image_url: { url: u } })),
               { type: "text", text: finalPrompt },
             ],
           },
@@ -136,4 +145,100 @@ export async function generateAndStoreMuse(
     identity_locked: useRef,
     reference_used: opts.referenceUrl ?? null,
   };
+}
+
+/**
+ * Vision verification — compare the generated muse against the Lilla reference
+ * (and the assembled product list) and return a strict JSON verdict.
+ *
+ * Returns face_similarity 0-1 and outfit_fidelity 0-1. The gate fails the
+ * candidate when face_similarity < 0.75 or outfit_fidelity < 0.7.
+ */
+export type MuseVerification = {
+  face_similarity: number;
+  outfit_fidelity: number;
+  notes: string;
+  identity_mismatch_reason: string | null;
+  outfit_mismatch_reason: string | null;
+};
+
+export async function verifyMuseFidelity(
+  museUrl: string,
+  referenceUrl: string,
+  museName: string,
+  productSummary: string,
+): Promise<MuseVerification> {
+  const key = process.env.LOVABLE_API_KEY;
+  if (!key) {
+    return {
+      face_similarity: 0,
+      outfit_fidelity: 0,
+      notes: "LOVABLE_API_KEY missing — verification skipped",
+      identity_mismatch_reason: "verification unavailable",
+      outfit_mismatch_reason: "verification unavailable",
+    };
+  }
+
+  const system = `You are a strict editorial verification model for a luxury styling platform. You compare two images: an identity reference and a generated muse. Return ONLY valid JSON.`;
+  const user = `IDENTITY REFERENCE: image 1 is "${museName}", the recurring muse for this destination. Her face, skin tone, hair color, age, and body proportions must be preserved across every generation.
+
+GENERATED MUSE: image 2 is a newly generated editorial image that should depict "${museName}" wearing the products below.
+
+ASSEMBLED PRODUCTS (the muse MUST be wearing these — wardrobe fidelity):
+${productSummary}
+
+TASK
+1. face_similarity: 0.0 to 1.0 — how closely does image 2 depict the SAME woman as image 1? Score 1.0 if it could be the same person; score 0.0 if it is clearly a different woman. Be strict: different face shape, different hair color, different ethnicity, different age range → score below 0.5.
+2. outfit_fidelity: 0.0 to 1.0 — does the outfit on image 2 reflect the assembled products above? Score 1.0 if every major piece (garment, shoes, bag, key jewelry) is recognizably present and correct in color / silhouette / print. Score below 0.6 if any major piece is missing or visibly different.
+3. notes: 1-2 sentence editorial summary.
+4. identity_mismatch_reason: short reason if face_similarity < 0.85, else null.
+5. outfit_mismatch_reason: short reason if outfit_fidelity < 0.85, else null.
+
+Return strict JSON: { "face_similarity": number, "outfit_fidelity": number, "notes": string, "identity_mismatch_reason": string|null, "outfit_mismatch_reason": string|null }`;
+
+  try {
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-pro",
+        messages: [
+          { role: "system", content: system },
+          {
+            role: "user",
+            content: [
+              { type: "image_url", image_url: { url: referenceUrl } },
+              { type: "image_url", image_url: { url: museUrl } },
+              { type: "text", text: user },
+            ],
+          },
+        ],
+        response_format: { type: "json_object" },
+      }),
+    });
+    if (!res.ok) throw new Error(`verify gateway ${res.status}`);
+    const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+    const content = json.choices?.[0]?.message?.content ?? "{}";
+    const parsed = JSON.parse(content) as Partial<MuseVerification>;
+    return {
+      face_similarity: clamp01(Number(parsed.face_similarity ?? 0)),
+      outfit_fidelity: clamp01(Number(parsed.outfit_fidelity ?? 0)),
+      notes: String(parsed.notes ?? ""),
+      identity_mismatch_reason: parsed.identity_mismatch_reason ?? null,
+      outfit_mismatch_reason: parsed.outfit_mismatch_reason ?? null,
+    };
+  } catch (e) {
+    return {
+      face_similarity: 0,
+      outfit_fidelity: 0,
+      notes: `verification failed: ${String((e as Error).message ?? e).slice(0, 160)}`,
+      identity_mismatch_reason: "verification error",
+      outfit_mismatch_reason: "verification error",
+    };
+  }
+}
+
+function clamp01(n: number): number {
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.min(1, n));
 }
