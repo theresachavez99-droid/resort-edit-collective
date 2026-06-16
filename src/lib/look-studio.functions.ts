@@ -238,7 +238,18 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     const slotsRequired: LookSlot[] = fullSlots;
 
     const count = data.count ?? 3;
-    const variants = ["A", "B", "C", "D", "E"].slice(0, count);
+    // Find next variant letter so "Generate 3 more" appends D/E/F… instead of recreating A/B/C.
+    const { data: existingCands } = await supabaseAdmin
+      .from("look_candidates")
+      .select("variant")
+      .eq("dna_id", dna.id);
+    const used = new Set((existingCands ?? []).map((c) => String(c.variant ?? "").toUpperCase()));
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const variants: string[] = [];
+    for (const letter of alphabet) {
+      if (variants.length >= count) break;
+      if (!used.has(letter)) variants.push(letter);
+    }
     const created: string[] = [];
 
     for (let i = 0; i < count; i++) {
@@ -358,7 +369,7 @@ Target brands: ${(dna.targetBrands ?? []).join(", ") || "n/a"}
 ASSEMBLED LOOK
 ${productSummary}
 
-Score each category 0-10 and return strict JSON: { destination_specificity, activity_fidelity, styling_cohesion, luxury_traveler_appeal, editorial_uniqueness, saveability, color_story, print_story, accessory_ecosystem, resort_edit_luxury_score, rationale }.`;
+Score each category 0-10 and return strict JSON: { destination_specificity, activity_fidelity, styling_cohesion, luxury_traveler_appeal, editorial_uniqueness, saveability, emotional_impact, color_story, print_story, accessory_ecosystem, discovery_value, resort_edit_luxury_score, rationale }. emotional_impact = does this look make a wealthy traveler save it? discovery_value = does it surface brands/pieces she would not have found herself?`;
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
