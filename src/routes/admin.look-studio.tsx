@@ -206,6 +206,16 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
     },
   });
 
+  const dna = data.data?.dna ?? null;
+  const candidates = (data.data?.candidates ?? []) as LookCandidateRow[];
+  const slots = (data.data?.slots ?? []) as LookSlotRow[];
+  const pool = (data.data?.pool ?? { sourced: 0, eligible: 0, floor: 150 }) as {
+    sourced: number;
+    eligible: number;
+    floor?: number;
+  };
+  const floor = pool.floor ?? 150;
+  const depthShort = pool.eligible < floor;
   const isPortofino = (dna?.destination ?? "").toLowerCase().includes("portofino");
 
   async function runPortofinoSourcing() {
@@ -248,17 +258,6 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
       setSourcingBusy(false);
     }
   }
-
-  const dna = data.data?.dna ?? null;
-  const candidates = (data.data?.candidates ?? []) as LookCandidateRow[];
-  const slots = (data.data?.slots ?? []) as LookSlotRow[];
-  const pool = (data.data?.pool ?? { sourced: 0, eligible: 0, floor: 150 }) as {
-    sourced: number;
-    eligible: number;
-    floor?: number;
-  };
-  const floor = pool.floor ?? 150;
-  const depthShort = pool.eligible < floor;
 
   return (
     <div className="space-y-6">
