@@ -202,6 +202,7 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   const dna = data.data?.dna ?? null;
   const candidates = (data.data?.candidates ?? []) as LookCandidateRow[];
   const slots = (data.data?.slots ?? []) as LookSlotRow[];
+  const pool = data.data?.pool ?? { sourced: 0, eligible: 0 };
 
   return (
     <div className="space-y-6">
@@ -226,6 +227,13 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
         </button>
       </header>
 
+      {/* Product pool visibility — the Steven Dann buyer's room ledger */}
+      <div className="text-[0.7rem] tracking-[0.04em] text-ink/65 font-serif italic">
+        Pulled from <span className="font-mono not-italic">{pool.sourced}</span> sourced products ·{" "}
+        <span className="font-mono not-italic">{pool.eligible}</span> eligible after auto-validation ·{" "}
+        candidates assembled from this pool.
+      </div>
+
       {generate.error && (
         <p className="text-sm text-red-700">Failed: {String((generate.error as Error).message)}</p>
       )}
@@ -248,6 +256,7 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
             password={password}
             candidate={cand}
             slots={slots.filter((s) => s.candidate_id === cand.id)}
+            poolEligible={pool.eligible}
             onChanged={() => {
               qc.invalidateQueries({ queryKey: ["look-candidates", dnaId] });
               qc.invalidateQueries({ queryKey: ["look-studio-queue"] });
@@ -263,11 +272,13 @@ function LookCandidateCard({
   password,
   candidate,
   slots,
+  poolEligible,
   onChanged,
 }: {
   password: string;
   candidate: LookCandidateRow;
   slots: LookSlotRow[];
+  poolEligible: number;
   onChanged: () => void;
 }) {
   const approveFn = useServerFn(approveLook);
@@ -347,38 +358,50 @@ function LookCandidateCard({
         </span>
       </div>
 
-      {/* Muse preview placeholder */}
+      {/* Editorial muse preview — large, top of card */}
       {candidate.muse_image_url ? (
-        <img src={candidate.muse_image_url} alt="" className="w-full aspect-[3/4] object-cover bg-cream/40" />
+        <img
+          src={candidate.muse_image_url}
+          alt=""
+          className="w-full aspect-[4/5] object-cover bg-cream/40 border-b border-ink/10"
+        />
       ) : (
-        <div className="w-full aspect-[3/4] bg-gradient-to-br from-cream/60 to-ivory border-b border-ink/10 flex items-center justify-center text-[0.65rem] tracking-[0.2em] uppercase text-ink/45">
-          Muse preview not generated
+        <div className="w-full aspect-[4/5] bg-gradient-to-br from-cream/60 to-ivory border-b border-ink/10 flex flex-col items-center justify-center text-ink/45 px-6 text-center gap-2">
+          <p className="text-[0.6rem] tracking-[0.28em] uppercase">Editorial muse preview</p>
+          <p className="font-serif italic text-xs">Awaiting render — approve scoring first</p>
         </div>
       )}
 
-      {/* Slot grid */}
-      <div className="p-3 grid grid-cols-3 gap-2">
-        {sortedSlots.map((s) => (
-          <div key={s.id} className="border border-ink/10 bg-cream/20 p-2 text-[0.65rem]">
-            <p className="uppercase tracking-[0.18em] text-ink/55 truncate">
-              {LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}
-            </p>
-            {s.product?.image_url ? (
-              <img
-                src={s.product.image_url}
-                alt=""
-                className="w-full aspect-square object-cover mt-1 bg-ivory"
-                loading="lazy"
-              />
-            ) : (
-              <div className="w-full aspect-square mt-1 bg-ivory border border-dashed border-ink/15 flex items-center justify-center text-ink/40">
-                empty
-              </div>
-            )}
-            <p className="mt-1 truncate text-ink/70">{s.product?.brand ?? "—"}</p>
-            <p className="truncate text-ink/50">{s.product?.product_name ?? ""}</p>
-          </div>
-        ))}
+      {/* Product lookboard — flat-lay composite of every slot image */}
+      <div className="p-3 border-b border-ink/10">
+        <p className="text-[0.6rem] tracking-[0.24em] uppercase text-ink/55 mb-2">Product lookboard</p>
+        <div className="grid grid-cols-4 gap-1.5 bg-cream/30 p-2">
+          {sortedSlots.map((s) => (
+            <div
+              key={s.id}
+              className="aspect-square bg-ivory border border-ink/10 overflow-hidden relative"
+              title={`${LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}${s.product?.brand ? ` · ${s.product.brand}` : ""}`}
+            >
+              {s.product?.image_url ? (
+                <img
+                  src={s.product.image_url}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[0.55rem] uppercase tracking-[0.16em] text-ink/35 text-center px-1">
+                  {LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="mt-1.5 text-[0.65rem] text-ink/55">
+          <span className="font-mono">{sortedSlots.filter((s) => s.product).length}</span> of{" "}
+          <span className="font-mono">{sortedSlots.length}</span> slots filled · pool{" "}
+          <span className="font-mono">{poolEligible}</span> eligible
+        </p>
       </div>
 
       {/* Scores */}
@@ -405,6 +428,56 @@ function LookCandidateCard({
         {score.rationale && (
           <p className="mt-2 text-[0.7rem] italic text-ink/60 line-clamp-3">{score.rationale}</p>
         )}
+      </div>
+
+      {/* Product list — stylist's ingredient ledger */}
+      <div className="px-4 pb-3 border-t border-ink/10 pt-3">
+        <p className="text-[0.6rem] tracking-[0.24em] uppercase text-ink/55 mb-2">Look ingredients</p>
+        <ul className="divide-y divide-ink/10 text-[0.7rem]">
+          {sortedSlots.map((s) => {
+            const p = s.product;
+            const hasBackup = !!p?.affiliate_url;
+            return (
+              <li key={s.id} className="py-1.5 flex items-center gap-2">
+                <span className="w-20 shrink-0 uppercase tracking-[0.14em] text-ink/55 text-[0.6rem]">
+                  {LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}
+                </span>
+                <div className="flex-1 min-w-0">
+                  {p ? (
+                    <>
+                      <p className="truncate">
+                        <span className="font-display tracking-[0.04em]">{p.brand ?? "—"}</span>
+                        <span className="text-ink/60"> · {p.product_name ?? "—"}</span>
+                      </p>
+                      <p className="truncate text-ink/45 text-[0.65rem]">
+                        {p.retailer_domain ?? "—"}
+                        {p.price != null && (
+                          <>
+                            {" · "}
+                            <span className="font-mono">
+                              {p.currency === "USD" || !p.currency ? "$" : `${p.currency} `}
+                              {Math.round(Number(p.price))}
+                            </span>
+                          </>
+                        )}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-ink/40 italic">Empty slot — no eligible product</p>
+                  )}
+                </div>
+                {p && (
+                  <span
+                    className={`text-[0.55rem] tracking-[0.16em] uppercase px-1.5 py-0.5 border ${hasBackup ? "border-emerald-700 text-emerald-800" : "border-amber-700 text-amber-800"}`}
+                    title={hasBackup ? "Backup affiliate link present" : "No backup link"}
+                  >
+                    {hasBackup ? "Backup ✓" : "No backup"}
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       {/* Actions */}

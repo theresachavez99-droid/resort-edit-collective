@@ -131,11 +131,22 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
       }));
     }
 
+    // Pool stats — how big is the sourced funnel vs how many are eligible to fill slots.
+    const { count: sourcedTotal } = await supabaseAdmin
+      .from("sourced_products")
+      .select("id", { count: "exact", head: true });
+    const { count: eligibleTotal } = await supabaseAdmin
+      .from("sourced_products")
+      .select("id", { count: "exact", head: true })
+      .neq("status", "rejected")
+      .not("image_url", "is", null);
+
     return {
       ok: true as const,
       dna: LOOK_DNA[data.dna_id] ?? null,
       candidates: (candidates ?? []) as CandidateRow[],
       slots,
+      pool: { sourced: sourcedTotal ?? 0, eligible: eligibleTotal ?? 0 },
     };
   });
 
@@ -207,9 +218,24 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     if (poolErr) throw new Error(poolErr.message);
 
     const eligible = (pool ?? []).filter((p) => p.image_url && p.brand && p.product_name);
-    const slotsRequired: LookSlot[] = dna.isWaterLook
-      ? ["swimwear", "dress_or_coverup", "shoes", "bag", "earrings", "necklace", "sunglasses", "hair_detail"]
-      : ["dress_or_coverup", "shoes", "bag", "earrings", "necklace", "bracelet", "sunglasses"];
+    // Always assemble a complete Resort Edit look. Swimwear only when the DNA is a water look;
+    // sunglasses only for daytime activities. Every other slot is attempted — missing slots
+    // surface as empty in the UI so the stylist sees gaps explicitly.
+    const isDaytime = !/dinner|night|evening|sunset/i.test(dna.activity);
+    const fullSlots: LookSlot[] = [
+      ...(dna.isWaterLook ? (["swimwear"] as LookSlot[]) : []),
+      "dress_or_coverup",
+      "shoes",
+      "bag",
+      "earrings",
+      "necklace",
+      "bracelet",
+      "ring",
+      ...(isDaytime ? (["sunglasses"] as LookSlot[]) : []),
+      "hair_detail",
+      "optional_layer",
+    ];
+    const slotsRequired: LookSlot[] = fullSlots;
 
     const count = data.count ?? 3;
     const variants = ["A", "B", "C", "D", "E"].slice(0, count);
@@ -278,7 +304,11 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       created.push(cand.id);
     }
 
-    return { ok: true as const, candidate_ids: created };
+    return {
+      ok: true as const,
+      candidate_ids: created,
+      pool: { sourced: (pool ?? []).length, eligible: eligible.length },
+    };
   });
 
 async function scoreCandidateInternal(
