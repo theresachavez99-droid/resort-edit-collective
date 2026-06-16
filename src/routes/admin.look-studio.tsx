@@ -560,6 +560,34 @@ function LookCandidateCard({
               {gate.passed ? "Gate ✓" : "Gate ✗"}
             </span>
           )}
+          {gate?.muse?.face_similarity != null && (
+            <span
+              className={`text-[0.55rem] tracking-[0.18em] uppercase border px-1.5 py-0.5 ${
+                gate.muse.face_similarity >= 0.85
+                  ? "border-emerald-700 text-emerald-800"
+                  : gate.muse.face_similarity >= 0.75
+                    ? "border-amber-700 text-amber-800"
+                    : "border-red-700 text-red-800"
+              }`}
+              title={gate.muse.identity_mismatch_reason ?? "Face identity match vs reference muse"}
+            >
+              {(gate.muse.muse_name ?? "Muse")} {Math.round((gate.muse.face_similarity ?? 0) * 100)}%
+            </span>
+          )}
+          {gate?.muse?.outfit_fidelity != null && (
+            <span
+              className={`text-[0.55rem] tracking-[0.18em] uppercase border px-1.5 py-0.5 ${
+                gate.muse.outfit_fidelity >= 0.85
+                  ? "border-emerald-700 text-emerald-800"
+                  : gate.muse.outfit_fidelity >= 0.7
+                    ? "border-amber-700 text-amber-800"
+                    : "border-red-700 text-red-800"
+              }`}
+              title={gate.muse.outfit_mismatch_reason ?? "Muse outfit ↔ sourced product fidelity"}
+            >
+              Outfit {Math.round((gate.muse.outfit_fidelity ?? 0) * 100)}%
+            </span>
+          )}
         </div>
       </div>
 
