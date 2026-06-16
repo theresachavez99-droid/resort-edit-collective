@@ -13,6 +13,16 @@ import {
 
 const pw = z.string().min(1).max(200);
 
+/**
+ * Hard quality gate thresholds (0-10 each). A candidate that misses any
+ * of these is held in `failed_gate` and never shown to the reviewer.
+ */
+const GATE_MIN_DESTINATION = 7;
+const GATE_MIN_COHESION = 7;
+const GATE_MIN_ACCESSORY = 7;
+/** Per-DNA sourcing pool floor — below this we surface a warning. */
+export const SOURCING_FLOOR = 150;
+
 type CandidateRow = {
   id: string;
   dna_id: string;
@@ -32,6 +42,37 @@ type CandidateRow = {
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  brief?: CandidateBriefLike | null;
+  quality_gate?: QualityGateLike | null;
+  retry_count?: number | null;
+  slug?: string | null;
+};
+
+export type CandidateBriefLike = {
+  variant?: string;
+  title?: string;
+  destination_energy?: string;
+  color_story?: { palette?: string[]; narrative?: string };
+  silhouette_strategy?: string;
+  accessory_ecosystem?: string;
+  luxury_traveler_persona?: string;
+  styling_keywords?: string[];
+  brand_priorities?: string[];
+};
+
+export type QualityGateLike = {
+  passed?: boolean;
+  reasons?: string[];
+  checks?: {
+    required_slots_filled?: number;
+    required_slots_total?: number;
+    muse_present?: boolean;
+    destination_specificity?: number;
+    styling_cohesion?: number;
+    accessory_ecosystem?: number;
+  };
+  thresholds?: { destination_specificity?: number; styling_cohesion?: number; accessory_ecosystem?: number };
+  evaluated_at?: string;
 };
 
 type SlotRow = {
@@ -43,6 +84,23 @@ type SlotRow = {
   position: number;
   notes: string | null;
 };
+
+/**
+ * REQUIRED slots for every Resort Edit look. A candidate that cannot fill
+ * every required slot is regenerated; if it still fails it is marked
+ * `failed_gate`.
+ *
+ * Swimwear is required only on water looks; sunglasses only on daytime.
+ */
+function requiredSlotsFor(dna: LookDNA): LookSlot[] {
+  const isDaytime = !/dinner|night|evening|sunset/i.test(dna.activity);
+  const slots: LookSlot[] = [];
+  if (dna.isWaterLook) slots.push("swimwear");
+  slots.push("dress_or_coverup", "shoes", "bag", "earrings", "necklace", "bracelet", "ring");
+  if (isDaytime) slots.push("sunglasses");
+  slots.push("hair_detail");
+  return slots;
+}
 
 /** DNA queue view: per-DNA candidate counts so the admin sees what needs work. */
 export const listLookDNAQueue = createServerFn({ method: "POST" })
@@ -146,7 +204,11 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
       dna: LOOK_DNA[data.dna_id] ?? null,
       candidates: (candidates ?? []) as unknown as CandidateRow[],
       slots,
-      pool: { sourced: sourcedTotal ?? 0, eligible: eligibleTotal ?? 0 },
+      pool: {
+        sourced: sourcedTotal ?? 0,
+        eligible: eligibleTotal ?? 0,
+        floor: SOURCING_FLOOR,
+      },
     };
   });
 
@@ -196,8 +258,19 @@ function shuffle<T>(arr: T[], seed: number): T[] {
 
 /**
  * Generate three complete outfit candidates for a given Look DNA.
- * Pulls from already-sourced products (auto-validated in the background),
- * fills each required slot, then scores the composite look via Lovable AI.
+ *
+ * AESTHETIC-FIRST PIPELINE (one call per variant set):
+ *   1. Generate N differentiated briefs (destination energy, color story,
+ *      silhouette strategy, accessory ecosystem, traveler persona) in a
+ *      single AI call so the model deliberately differentiates A/B/C.
+ *   2. For each brief: assemble a complete outfit biased by the brief's
+ *      brand priorities + styling keywords. Up to 2 reshuffles if any
+ *      REQUIRED slot is empty.
+ *   3. Generate a mandatory editorial muse image from the brief.
+ *   4. Score the look. Quality gate: every required slot filled + muse
+ *      present + destination ≥ 7 + cohesion ≥ 7 + accessory ≥ 7.
+ *   5. Pass → status = `pending_review`. Fail → status = `failed_gate`
+ *      (still visible in the list with a regenerate-needed badge).
  */
 export const generateLookCandidates = createServerFn({ method: "POST" })
   .inputValidator((input) =>
@@ -208,6 +281,8 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     const dna = LOOK_DNA[data.dna_id];
     if (!dna) throw new Error(`Unknown DNA: ${data.dna_id}`);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { generateCandidateBriefs, museImagePrompt } = await import("./candidate-brief.server");
+    const { generateAndStoreMuse } = await import("./muse-image.server");
 
     // Pull candidate-eligible products: not rejected; have image + brand + name.
     const { data: pool, error: poolErr } = await supabaseAdmin
@@ -218,24 +293,9 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     if (poolErr) throw new Error(poolErr.message);
 
     const eligible = (pool ?? []).filter((p) => p.image_url && p.brand && p.product_name);
-    // Always assemble a complete Resort Edit look. Swimwear only when the DNA is a water look;
-    // sunglasses only for daytime activities. Every other slot is attempted — missing slots
-    // surface as empty in the UI so the stylist sees gaps explicitly.
-    const isDaytime = !/dinner|night|evening|sunset/i.test(dna.activity);
-    const fullSlots: LookSlot[] = [
-      ...(dna.isWaterLook ? (["swimwear"] as LookSlot[]) : []),
-      "dress_or_coverup",
-      "shoes",
-      "bag",
-      "earrings",
-      "necklace",
-      "bracelet",
-      "ring",
-      ...(isDaytime ? (["sunglasses"] as LookSlot[]) : []),
-      "hair_detail",
-      "optional_layer",
-    ];
-    const slotsRequired: LookSlot[] = fullSlots;
+    const requiredSlots = requiredSlotsFor(dna);
+    // optional_layer is nice-to-have; tried but not gated.
+    const slotsToFill: LookSlot[] = [...requiredSlots, "optional_layer"];
 
     const count = data.count ?? 3;
     // Find next variant letter so "Generate 3 more" appends D/E/F… instead of recreating A/B/C.
@@ -250,37 +310,45 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       if (variants.length >= count) break;
       if (!used.has(letter)) variants.push(letter);
     }
+
+    // Stage 1: generate ALL briefs in one AI call — drives differentiation.
+    const briefs = await generateCandidateBriefs(dna, variants);
+
     const created: string[] = [];
+    const gateResults: Array<{ candidate_id: string; variant: string; passed: boolean; reasons: string[] }> = [];
 
-    for (let i = 0; i < count; i++) {
-      const seed = Date.now() + i * 1000;
-      const usedIds = new Set<string>();
-      const slotPicks: Array<{ slot: LookSlot; sourced_product_id: string | null }> = [];
+    for (let i = 0; i < variants.length; i++) {
+      const brief = briefs[i];
+      const variant = variants[i];
 
-      for (const slot of slotsRequired) {
-        const matches = eligible.filter((p) => matchesSlot(slot, p) && !usedIds.has(p.id));
-        const ranked = shuffle(matches, seed + slot.length);
-        // Prefer products whose brand is in targetBrands
-        const preferred = ranked.find((p) =>
-          (dna.targetBrands ?? []).some((b) => p.brand?.toLowerCase().includes(b.toLowerCase())),
-        );
-        const pick = preferred ?? ranked[0] ?? null;
-        if (pick) usedIds.add(pick.id);
-        slotPicks.push({ slot, sourced_product_id: pick?.id ?? null });
-      }
-
+      // Stage 2: insert candidate shell, store brief.
       const { data: cand, error: candErr } = await supabaseAdmin
         .from("look_candidates")
         .insert({
           dna_id: dna.id,
           destination: dna.destination,
-          variant: variants[i],
-          status: "draft",
+          variant,
+          status: "assembling",
           scoring: {},
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          brief: brief as any,
         })
         .select("id")
         .single();
       if (candErr) throw new Error(candErr.message);
+
+      // Stage 3: assemble with up to 2 reshuffles if required slots are missing.
+      let slotPicks: Array<{ slot: LookSlot; sourced_product_id: string | null }> = [];
+      let missing: LookSlot[] = [];
+      let attempt = 0;
+      for (; attempt < 3; attempt++) {
+        const seed = Date.now() + i * 1000 + attempt * 991;
+        slotPicks = assembleForBrief(slotsToFill, eligible, dna, brief, seed);
+        missing = requiredSlots.filter(
+          (s) => !slotPicks.find((p) => p.slot === s && p.sourced_product_id),
+        );
+        if (missing.length === 0) break;
+      }
 
       const slotInserts = slotPicks.map((sp, idx) => ({
         candidate_id: cand.id,
@@ -295,23 +363,71 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
         if (sErr) throw new Error(sErr.message);
       }
 
-      // Score immediately so the admin sees something useful.
+      // Stage 4: mandatory muse image.
+      await supabaseAdmin.from("look_candidates").update({ status: "pending_muse" }).eq("id", cand.id);
+      let museUrl: string | null = null;
+      let museError: string | null = null;
       try {
-        await scoreCandidateInternal(cand.id, dna, slotPicks, eligible);
+        const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief));
+        museUrl = r.url;
+        await supabaseAdmin.from("look_candidates").update({ muse_image_url: museUrl }).eq("id", cand.id);
       } catch (e) {
-        // Non-fatal: store a placeholder note.
+        museError = String((e as Error).message ?? e).slice(0, 240);
+      }
+
+      // Stage 5: score.
+      await supabaseAdmin.from("look_candidates").update({ status: "pending_score" }).eq("id", cand.id);
+      let scoring: LookScoring = {};
+      try {
+        scoring = await scoreCandidateInternal(cand.id, dna, slotPicks, eligible);
+      } catch (e) {
         await supabaseAdmin
           .from("look_candidates")
           .update({ notes: `Scoring failed: ${String((e as Error).message ?? e).slice(0, 200)}` })
           .eq("id", cand.id);
       }
 
-      // Mark candidate as pending review once assembled.
+      // Stage 6: quality gate.
+      const reasons: string[] = [];
+      if (missing.length) reasons.push(`Missing required slots: ${missing.join(", ")}`);
+      if (!museUrl) reasons.push(`Muse preview missing${museError ? `: ${museError}` : ""}`);
+      const ds = typeof scoring.destination_specificity === "number" ? scoring.destination_specificity : 0;
+      const sc = typeof scoring.styling_cohesion === "number" ? scoring.styling_cohesion : 0;
+      const ae = typeof scoring.accessory_ecosystem === "number" ? scoring.accessory_ecosystem : 0;
+      if (ds < GATE_MIN_DESTINATION) reasons.push(`Destination specificity ${ds.toFixed(1)} < ${GATE_MIN_DESTINATION}`);
+      if (sc < GATE_MIN_COHESION) reasons.push(`Styling cohesion ${sc.toFixed(1)} < ${GATE_MIN_COHESION}`);
+      if (ae < GATE_MIN_ACCESSORY) reasons.push(`Accessory ecosystem ${ae.toFixed(1)} < ${GATE_MIN_ACCESSORY}`);
+      const passed = reasons.length === 0;
+
+      const gate = {
+        passed,
+        reasons,
+        checks: {
+          required_slots_filled: requiredSlots.length - missing.length,
+          required_slots_total: requiredSlots.length,
+          muse_present: !!museUrl,
+          destination_specificity: ds,
+          styling_cohesion: sc,
+          accessory_ecosystem: ae,
+        },
+        thresholds: {
+          destination_specificity: GATE_MIN_DESTINATION,
+          styling_cohesion: GATE_MIN_COHESION,
+          accessory_ecosystem: GATE_MIN_ACCESSORY,
+        },
+        evaluated_at: new Date().toISOString(),
+      };
+
       await supabaseAdmin
         .from("look_candidates")
-        .update({ status: "pending_review" })
+        .update({
+          status: passed ? "pending_review" : "failed_gate",
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          quality_gate: gate as any,
+        })
         .eq("id", cand.id);
 
+      gateResults.push({ candidate_id: cand.id, variant, passed, reasons });
       created.push(cand.id);
     }
 
@@ -319,8 +435,47 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       ok: true as const,
       candidate_ids: created,
       pool: { sourced: (pool ?? []).length, eligible: eligible.length },
+      gates: gateResults,
+      sourcing_warning: eligible.length < SOURCING_FLOOR ? `Only ${eligible.length} eligible products — Resort Edit floor is ${SOURCING_FLOOR}. Source more inventory across approved brands to unlock genuinely differentiated looks.` : null,
     };
   });
+
+/**
+ * Brief-aware product assembly. Ranks eligible products by:
+ *   1. Brand priority (brief.brand_priorities, then DNA.targetBrands)
+ *   2. Keyword overlap with brief.styling_keywords (product_name / slot_category)
+ *   3. Deterministic shuffle (so retries vary picks)
+ * Each product is used at most once per candidate.
+ */
+function assembleForBrief(
+  slots: LookSlot[],
+  eligible: Array<{ id: string; brand: string | null; product_name: string | null; slot_category: string | null }>,
+  dna: LookDNA,
+  brief: { brand_priorities: string[]; styling_keywords: string[] },
+  seed: number,
+): Array<{ slot: LookSlot; sourced_product_id: string | null }> {
+  const usedIds = new Set<string>();
+  const brandPrefs = [...brief.brand_priorities, ...(dna.targetBrands ?? [])].map((b) => b.toLowerCase());
+  const keywords = brief.styling_keywords.map((k) => k.toLowerCase());
+
+  return slots.map((slot) => {
+    const matches = eligible.filter((p) => matchesSlot(slot, p) && !usedIds.has(p.id));
+    if (!matches.length) return { slot, sourced_product_id: null };
+    const scored = matches.map((p) => {
+      const brand = (p.brand ?? "").toLowerCase();
+      const name = (p.product_name ?? "").toLowerCase();
+      const cat = (p.slot_category ?? "").toLowerCase();
+      const brandScore = brandPrefs.findIndex((b) => brand.includes(b));
+      const brandBoost = brandScore >= 0 ? (brandPrefs.length - brandScore) * 5 : 0;
+      const kwBoost = keywords.reduce((acc, k) => acc + (name.includes(k) || cat.includes(k) ? 3 : 0), 0);
+      return { p, score: brandBoost + kwBoost };
+    });
+    const ranked = shuffle(scored, seed + slot.length).sort((a, b) => b.score - a.score);
+    const pick = ranked[0]?.p ?? null;
+    if (pick) usedIds.add(pick.id);
+    return { slot, sourced_product_id: pick?.id ?? null };
+  });
+}
 
 async function scoreCandidateInternal(
   candidateId: string,
