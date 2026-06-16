@@ -5,6 +5,9 @@ import {
   isCollectionOrHomepage,
   isPlaceholderImage,
   type ProductScore,
+  type BrandTier,
+  type BrandStatus,
+  type PenaltyFlag,
 } from "./productScoring";
 import { requireAdmin } from "./admin-auth.server";
 
@@ -29,16 +32,27 @@ export const validateCandidateProduct = createServerFn({ method: "POST" })
       .object({
         password: z.string().min(1).max(200),
         url: z.string().url(),
-        score: z
+        score: z.record(z.string(), z.number().min(1).max(5)).optional(),
+        brand: z
           .object({
-            printMatch: z.number().min(1).max(5),
-            silhouetteMatch: z.number().min(1).max(5),
-            destinationEnergy: z.number().min(1).max(5),
-            luxuryFeel: z.number().min(1).max(5),
-            imageQuality: z.number().min(1).max(5),
-            availability: z.number().min(1).max(5),
-            editorialMatch: z.number().min(1).max(5),
+            brandSlug: z.string().optional(),
+            tier: z.enum(["hero", "discovery"]).optional(),
+            status: z.enum(["approved", "selective", "pending", "rejected"]).optional(),
+            heroShareSoFar: z.number().min(0).max(1).optional(),
           })
+          .optional(),
+        penalties: z
+          .array(
+            z.enum([
+              "genericAnywhere",
+              "influencerAesthetic",
+              "fastFashionEnergy",
+              "trendDriven",
+              "repetitiveSilhouette",
+              "repetitivePrint",
+              "repetitiveColor",
+            ]),
+          )
           .optional(),
       })
       .parse(input),
@@ -95,7 +109,12 @@ export const validateCandidateProduct = createServerFn({ method: "POST" })
     }
 
     if (data.score) {
-      const verdict = evaluateScore(data.score as ProductScore);
+      const verdict = evaluateScore(data.score as ProductScore, {
+        brand: data.brand as
+          | { brandSlug?: string; tier?: BrandTier; status?: BrandStatus; heroShareSoFar?: number }
+          | undefined,
+        penalties: data.penalties as PenaltyFlag[] | undefined,
+      });
       if (!verdict.passes) reasons.push(...verdict.reasons);
     }
 
