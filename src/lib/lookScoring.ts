@@ -20,6 +20,7 @@ export const LOOK_SCORE_CATEGORIES = [
   "accessory_ecosystem",
   "discovery_value",
   "resort_edit_luxury_score",
+  "resort_edit_test",
 ] as const;
 
 export type LookScoreCategory = (typeof LOOK_SCORE_CATEGORIES)[number];
@@ -37,21 +38,26 @@ export const LOOK_SCORE_LABELS: Record<LookScoreCategory, string> = {
   accessory_ecosystem: "Accessory Ecosystem",
   discovery_value: "Discovery Value",
   resort_edit_luxury_score: "Overall Resort Edit Score",
+  resort_edit_test: "Resort Edit Test (would she save it?)",
 };
 
 const WEIGHTS: Record<LookScoreCategory, number> = {
-  destination_specificity: 1.5,
-  styling_cohesion: 1.5,
-  activity_fidelity: 1,
-  luxury_traveler_appeal: 1,
-  editorial_uniqueness: 1,
-  saveability: 1,
-  emotional_impact: 1,
-  color_story: 1,
-  print_story: 1,
-  accessory_ecosystem: 1,
-  discovery_value: 1,
-  resort_edit_luxury_score: 1,
+  // Editorial-fidelity overhaul: reward destination specificity, editorial
+  // uniqueness, emotional impact, saveability, luxury traveler appeal.
+  // Down-weight generic "luxury score" and merely competent cohesion.
+  destination_specificity: 2.0,
+  editorial_uniqueness: 1.75,
+  emotional_impact: 1.5,
+  saveability: 1.5,
+  luxury_traveler_appeal: 1.5,
+  resort_edit_test: 2.0,
+  styling_cohesion: 1.0,
+  activity_fidelity: 1.0,
+  color_story: 1.0,
+  print_story: 1.0,
+  accessory_ecosystem: 1.0,
+  discovery_value: 0.75,
+  resort_edit_luxury_score: 0.5,
 };
 
 export type LookScoring = Partial<Record<LookScoreCategory, number>> & {
