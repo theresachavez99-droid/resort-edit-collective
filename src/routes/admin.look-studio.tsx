@@ -202,6 +202,7 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
   const dna = data.data?.dna ?? null;
   const candidates = (data.data?.candidates ?? []) as LookCandidateRow[];
   const slots = (data.data?.slots ?? []) as LookSlotRow[];
+  const pool = data.data?.pool ?? { sourced: 0, eligible: 0 };
 
   return (
     <div className="space-y-6">
@@ -226,6 +227,13 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
         </button>
       </header>
 
+      {/* Product pool visibility — the Steven Dann buyer's room ledger */}
+      <div className="text-[0.7rem] tracking-[0.04em] text-ink/65 font-serif italic">
+        Pulled from <span className="font-mono not-italic">{pool.sourced}</span> sourced products ·{" "}
+        <span className="font-mono not-italic">{pool.eligible}</span> eligible after auto-validation ·{" "}
+        candidates assembled from this pool.
+      </div>
+
       {generate.error && (
         <p className="text-sm text-red-700">Failed: {String((generate.error as Error).message)}</p>
       )}
@@ -248,6 +256,7 @@ function DNAStudio({ password, dnaId }: { password: string; dnaId: string }) {
             password={password}
             candidate={cand}
             slots={slots.filter((s) => s.candidate_id === cand.id)}
+            poolEligible={pool.eligible}
             onChanged={() => {
               qc.invalidateQueries({ queryKey: ["look-candidates", dnaId] });
               qc.invalidateQueries({ queryKey: ["look-studio-queue"] });
@@ -263,11 +272,13 @@ function LookCandidateCard({
   password,
   candidate,
   slots,
+  poolEligible,
   onChanged,
 }: {
   password: string;
   candidate: LookCandidateRow;
   slots: LookSlotRow[];
+  poolEligible: number;
   onChanged: () => void;
 }) {
   const approveFn = useServerFn(approveLook);
