@@ -14,14 +14,76 @@ export type Database = {
   }
   public: {
     Tables: {
+      brand_crawl_jobs: {
+        Row: {
+          brand_id: string
+          category: string | null
+          created_at: string
+          cursor: string | null
+          error: string | null
+          failed_count: number
+          id: string
+          listing_url: string | null
+          requested_count: number
+          retailer_domain: string
+          scraped_count: number
+          skipped_count: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          brand_id: string
+          category?: string | null
+          created_at?: string
+          cursor?: string | null
+          error?: string | null
+          failed_count?: number
+          id?: string
+          listing_url?: string | null
+          requested_count?: number
+          retailer_domain: string
+          scraped_count?: number
+          skipped_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string
+          category?: string | null
+          created_at?: string
+          cursor?: string | null
+          error?: string | null
+          failed_count?: number
+          id?: string
+          listing_url?: string | null
+          requested_count?: number
+          retailer_domain?: string
+          scraped_count?: number
+          skipped_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_crawl_jobs_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brands: {
         Row: {
           activities: string[]
           categories: string[]
           created_at: string
+          destinations: string[]
           id: string
+          is_hero: boolean
           name: string
           notes: string | null
+          retailer_hints: Json
           slug: string
           status: string
           tier: string
@@ -33,9 +95,12 @@ export type Database = {
           activities?: string[]
           categories?: string[]
           created_at?: string
+          destinations?: string[]
           id?: string
+          is_hero?: boolean
           name: string
           notes?: string | null
+          retailer_hints?: Json
           slug: string
           status?: string
           tier?: string
@@ -47,9 +112,12 @@ export type Database = {
           activities?: string[]
           categories?: string[]
           created_at?: string
+          destinations?: string[]
           id?: string
+          is_hero?: boolean
           name?: string
           notes?: string | null
+          retailer_hints?: Json
           slug?: string
           status?: string
           tier?: string
@@ -212,78 +280,116 @@ export type Database = {
       }
       sourced_products: {
         Row: {
+          activity_tags: string[]
           affiliate_url: string | null
           auto_approved: boolean
           auto_score: Json
           brand: string | null
+          brand_id: string | null
+          category: string | null
+          color_family: string | null
           created_at: string
           currency: string | null
           day: number | null
+          destination_tags: string[]
+          fabric: string | null
           id: string
           image_url: string | null
           look: number | null
           notes: string | null
           price: number | null
+          print_family: string | null
           product_name: string | null
           promoted_at: string | null
           raw_extraction: Json | null
           retailer_domain: string | null
           scraped_at: string | null
+          silhouette: string | null
           slot_category: string | null
           source_url: string
           status: string
+          subcategory: string | null
+          texture: string | null
           updated_at: string
           validation_notes: string | null
         }
         Insert: {
+          activity_tags?: string[]
           affiliate_url?: string | null
           auto_approved?: boolean
           auto_score?: Json
           brand?: string | null
+          brand_id?: string | null
+          category?: string | null
+          color_family?: string | null
           created_at?: string
           currency?: string | null
           day?: number | null
+          destination_tags?: string[]
+          fabric?: string | null
           id?: string
           image_url?: string | null
           look?: number | null
           notes?: string | null
           price?: number | null
+          print_family?: string | null
           product_name?: string | null
           promoted_at?: string | null
           raw_extraction?: Json | null
           retailer_domain?: string | null
           scraped_at?: string | null
+          silhouette?: string | null
           slot_category?: string | null
           source_url: string
           status?: string
+          subcategory?: string | null
+          texture?: string | null
           updated_at?: string
           validation_notes?: string | null
         }
         Update: {
+          activity_tags?: string[]
           affiliate_url?: string | null
           auto_approved?: boolean
           auto_score?: Json
           brand?: string | null
+          brand_id?: string | null
+          category?: string | null
+          color_family?: string | null
           created_at?: string
           currency?: string | null
           day?: number | null
+          destination_tags?: string[]
+          fabric?: string | null
           id?: string
           image_url?: string | null
           look?: number | null
           notes?: string | null
           price?: number | null
+          print_family?: string | null
           product_name?: string | null
           promoted_at?: string | null
           raw_extraction?: Json | null
           retailer_domain?: string | null
           scraped_at?: string | null
+          silhouette?: string | null
           slot_category?: string | null
           source_url?: string
           status?: string
+          subcategory?: string | null
+          texture?: string | null
           updated_at?: string
           validation_notes?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "sourced_products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscribers: {
         Row: {
@@ -339,11 +445,13 @@ export type Database = {
           brand_url: string | null
           category: string
           category_fallback_url: string | null
+          color_family: string | null
           color_tags: string[]
           created_at: string
           currency: string | null
           destination_tags: string[]
           direct_product_url: string | null
+          fabric: string | null
           id: string
           image_status: string
           image_url: string | null
@@ -353,18 +461,21 @@ export type Database = {
           material_tags: string[]
           notes: string | null
           price: number | null
+          print_family: string | null
           print_tags: string[]
           product_name: string
           product_type: string | null
           replacements_generated_at: string | null
           resort_edit_score: number | null
           retailer: string | null
+          silhouette: string | null
           silhouette_tags: string[]
           source_look_candidate_id: string | null
           source_method: string
           source_slot: string | null
           source_sourced_product_id: string | null
           subcategory: string | null
+          texture: string | null
           thumbnail_url: string | null
           updated_at: string
         }
@@ -379,11 +490,13 @@ export type Database = {
           brand_url?: string | null
           category: string
           category_fallback_url?: string | null
+          color_family?: string | null
           color_tags?: string[]
           created_at?: string
           currency?: string | null
           destination_tags?: string[]
           direct_product_url?: string | null
+          fabric?: string | null
           id?: string
           image_status?: string
           image_url?: string | null
@@ -393,18 +506,21 @@ export type Database = {
           material_tags?: string[]
           notes?: string | null
           price?: number | null
+          print_family?: string | null
           print_tags?: string[]
           product_name: string
           product_type?: string | null
           replacements_generated_at?: string | null
           resort_edit_score?: number | null
           retailer?: string | null
+          silhouette?: string | null
           silhouette_tags?: string[]
           source_look_candidate_id?: string | null
           source_method?: string
           source_slot?: string | null
           source_sourced_product_id?: string | null
           subcategory?: string | null
+          texture?: string | null
           thumbnail_url?: string | null
           updated_at?: string
         }
@@ -419,11 +535,13 @@ export type Database = {
           brand_url?: string | null
           category?: string
           category_fallback_url?: string | null
+          color_family?: string | null
           color_tags?: string[]
           created_at?: string
           currency?: string | null
           destination_tags?: string[]
           direct_product_url?: string | null
+          fabric?: string | null
           id?: string
           image_status?: string
           image_url?: string | null
@@ -433,18 +551,21 @@ export type Database = {
           material_tags?: string[]
           notes?: string | null
           price?: number | null
+          print_family?: string | null
           print_tags?: string[]
           product_name?: string
           product_type?: string | null
           replacements_generated_at?: string | null
           resort_edit_score?: number | null
           retailer?: string | null
+          silhouette?: string | null
           silhouette_tags?: string[]
           source_look_candidate_id?: string | null
           source_method?: string
           source_slot?: string | null
           source_sourced_product_id?: string | null
           subcategory?: string | null
+          texture?: string | null
           thumbnail_url?: string | null
           updated_at?: string
         }

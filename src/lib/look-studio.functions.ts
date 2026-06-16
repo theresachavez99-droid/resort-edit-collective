@@ -20,6 +20,18 @@ const pw = z.string().min(1).max(200);
 const GATE_MIN_DESTINATION = 7;
 const GATE_MIN_COHESION = 7;
 const GATE_MIN_ACCESSORY = 7;
+/** Editorial saveability gate: mean of saveability + editorial_uniqueness + luxury_traveler_appeal. */
+const GATE_MIN_SAVEABILITY = 7;
+/** Editorial diversity caps within a single candidate. Max share of slots a single trait may occupy. */
+const DIVERSITY_CAPS = {
+  brand: 0.3,
+  silhouette: 0.4,
+  fabric: 0.4,
+  texture: 0.4,
+  print_family: 0.4,
+  color_family: 0.4,
+  subcategory: 0.3, // "accessory type" — e.g. don't stack 3 raffia bags
+} as const;
 /** Per-DNA sourcing pool floor — below this we surface a warning. */
 export const SOURCING_FLOOR = 150;
 
@@ -287,12 +299,21 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
     // Pull candidate-eligible products: not rejected; have image + brand + name.
     const { data: pool, error: poolErr } = await supabaseAdmin
       .from("sourced_products")
-      .select("id, brand, product_name, price, currency, image_url, source_url, affiliate_url, retailer_domain, slot_category, status, auto_approved")
+      .select("id, brand, brand_id, product_name, price, currency, image_url, source_url, affiliate_url, retailer_domain, slot_category, status, auto_approved, category, subcategory, silhouette, fabric, texture, print_family, color_family, destination_tags, activity_tags")
       .neq("status", "rejected")
       .not("image_url", "is", null);
     if (poolErr) throw new Error(poolErr.message);
 
     const eligible = (pool ?? []).filter((p) => p.image_url && p.brand && p.product_name);
+
+    // Hero brands receive a soft sourcing-priority boost when assembling.
+    const { data: heroBrandRows } = await supabaseAdmin
+      .from("brands")
+      .select("id, name")
+      .eq("is_hero", true);
+    const heroBrandIds = new Set((heroBrandRows ?? []).map((b) => b.id));
+    const heroBrandNames = new Set((heroBrandRows ?? []).map((b) => b.name.toLowerCase()));
+
     const requiredSlots = requiredSlotsFor(dna);
     // optional_layer is nice-to-have; tried but not gated.
     const slotsToFill: LookSlot[] = [...requiredSlots, "optional_layer"];
@@ -341,9 +362,19 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       let slotPicks: Array<{ slot: LookSlot; sourced_product_id: string | null }> = [];
       let missing: LookSlot[] = [];
       let attempt = 0;
+      let diversityNotes: string[] = [];
       for (; attempt < 3; attempt++) {
         const seed = Date.now() + i * 1000 + attempt * 991;
-        slotPicks = assembleForBrief(slotsToFill, eligible, dna, brief, seed);
+        const result = assembleForBrief(
+          slotsToFill,
+          eligible,
+          dna,
+          brief,
+          seed,
+          { heroBrandIds, heroBrandNames },
+        );
+        slotPicks = result.picks;
+        diversityNotes = result.notes;
         missing = requiredSlots.filter(
           (s) => !slotPicks.find((p) => p.slot === s && p.sourced_product_id),
         );
@@ -394,14 +425,24 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       const ds = typeof scoring.destination_specificity === "number" ? scoring.destination_specificity : 0;
       const sc = typeof scoring.styling_cohesion === "number" ? scoring.styling_cohesion : 0;
       const ae = typeof scoring.accessory_ecosystem === "number" ? scoring.accessory_ecosystem : 0;
+      const sv = typeof scoring.saveability === "number" ? scoring.saveability : 0;
+      const eu = typeof scoring.editorial_uniqueness === "number" ? scoring.editorial_uniqueness : 0;
+      const la = typeof scoring.luxury_traveler_appeal === "number" ? scoring.luxury_traveler_appeal : 0;
+      const editorialMean = (sv + eu + la) / 3;
       if (ds < GATE_MIN_DESTINATION) reasons.push(`Destination specificity ${ds.toFixed(1)} < ${GATE_MIN_DESTINATION}`);
       if (sc < GATE_MIN_COHESION) reasons.push(`Styling cohesion ${sc.toFixed(1)} < ${GATE_MIN_COHESION}`);
       if (ae < GATE_MIN_ACCESSORY) reasons.push(`Accessory ecosystem ${ae.toFixed(1)} < ${GATE_MIN_ACCESSORY}`);
+      if (editorialMean < GATE_MIN_SAVEABILITY) {
+        reasons.push(
+          `Editorial saveability ${editorialMean.toFixed(1)} < ${GATE_MIN_SAVEABILITY} (saveability ${sv}, uniqueness ${eu}, luxury ${la}) — would not feel at home in a Steven Dann carousel`,
+        );
+      }
       const passed = reasons.length === 0;
 
       const gate = {
         passed,
         reasons,
+        diversity_notes: diversityNotes,
         checks: {
           required_slots_filled: requiredSlots.length - missing.length,
           required_slots_total: requiredSlots.length,
@@ -409,11 +450,13 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
           destination_specificity: ds,
           styling_cohesion: sc,
           accessory_ecosystem: ae,
+          editorial_saveability_mean: editorialMean,
         },
         thresholds: {
           destination_specificity: GATE_MIN_DESTINATION,
           styling_cohesion: GATE_MIN_COHESION,
           accessory_ecosystem: GATE_MIN_ACCESSORY,
+          editorial_saveability: GATE_MIN_SAVEABILITY,
         },
         evaluated_at: new Date().toISOString(),
       };
@@ -449,16 +492,69 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
  */
 function assembleForBrief(
   slots: LookSlot[],
-  eligible: Array<{ id: string; brand: string | null; product_name: string | null; slot_category: string | null }>,
+  eligible: Array<{
+    id: string;
+    brand: string | null;
+    brand_id?: string | null;
+    product_name: string | null;
+    slot_category: string | null;
+    silhouette?: string | null;
+    fabric?: string | null;
+    texture?: string | null;
+    print_family?: string | null;
+    color_family?: string | null;
+    subcategory?: string | null;
+  }>,
   dna: LookDNA,
   brief: { brand_priorities: string[]; styling_keywords: string[] },
   seed: number,
-): Array<{ slot: LookSlot; sourced_product_id: string | null }> {
+  hero: { heroBrandIds: Set<string>; heroBrandNames: Set<string> },
+): {
+  picks: Array<{ slot: LookSlot; sourced_product_id: string | null }>;
+  notes: string[];
+} {
   const usedIds = new Set<string>();
   const brandPrefs = [...brief.brand_priorities, ...(dna.targetBrands ?? [])].map((b) => b.toLowerCase());
   const keywords = brief.styling_keywords.map((k) => k.toLowerCase());
+  const notes: string[] = [];
 
-  return slots.map((slot) => {
+  // Diversity counters — how many slots already consumed each trait value.
+  const counts: Record<keyof typeof DIVERSITY_CAPS, Map<string, number>> = {
+    brand: new Map(),
+    silhouette: new Map(),
+    fabric: new Map(),
+    texture: new Map(),
+    print_family: new Map(),
+    color_family: new Map(),
+    subcategory: new Map(),
+  };
+
+  const totalSlots = slots.length;
+
+  const traitOf = (
+    p: (typeof eligible)[number],
+    trait: keyof typeof DIVERSITY_CAPS,
+  ): string | null => {
+    if (trait === "brand") return (p.brand ?? "").toLowerCase() || null;
+    return ((p as Record<string, unknown>)[trait] as string | null) ?? null;
+  };
+
+  const violatesCap = (
+    p: (typeof eligible)[number],
+  ): keyof typeof DIVERSITY_CAPS | null => {
+    for (const key of Object.keys(DIVERSITY_CAPS) as Array<keyof typeof DIVERSITY_CAPS>) {
+      const v = traitOf(p, key);
+      if (!v) continue;
+      const cap = DIVERSITY_CAPS[key];
+      const current = counts[key].get(v) ?? 0;
+      // Would assigning this product push us past the cap (rounded down)?
+      const maxAllowed = Math.max(1, Math.floor(cap * totalSlots));
+      if (current + 1 > maxAllowed) return key;
+    }
+    return null;
+  };
+
+  const picks = slots.map((slot) => {
     const matches = eligible.filter((p) => matchesSlot(slot, p) && !usedIds.has(p.id));
     if (!matches.length) return { slot, sourced_product_id: null };
     const scored = matches.map((p) => {
@@ -468,13 +564,47 @@ function assembleForBrief(
       const brandScore = brandPrefs.findIndex((b) => brand.includes(b));
       const brandBoost = brandScore >= 0 ? (brandPrefs.length - brandScore) * 5 : 0;
       const kwBoost = keywords.reduce((acc, k) => acc + (name.includes(k) || cat.includes(k) ? 3 : 0), 0);
-      return { p, score: brandBoost + kwBoost };
+      // Soft hero-brand boost: bumps tie-break ranking, never overrides destination fit.
+      const heroBoost =
+        (p.brand_id && hero.heroBrandIds.has(p.brand_id)) || hero.heroBrandNames.has(brand)
+          ? 4
+          : 0;
+      return { p, score: brandBoost + kwBoost + heroBoost };
     });
     const ranked = shuffle(scored, seed + slot.length).sort((a, b) => b.score - a.score);
-    const pick = ranked[0]?.p ?? null;
-    if (pick) usedIds.add(pick.id);
+    // Walk ranked options; skip any that would violate a diversity cap.
+    let pick: (typeof eligible)[number] | null = null;
+    for (const candidate of ranked) {
+      const violated = violatesCap(candidate.p);
+      if (!violated) {
+        pick = candidate.p;
+        break;
+      }
+      // Otherwise keep looking; record once per dimension we had to skip.
+    }
+    if (!pick && ranked.length) {
+      // Diversity-blocked every option — degrade gracefully to best ranked.
+      pick = ranked[0].p;
+      const violated = violatesCap(pick);
+      if (violated) notes.push(`${slot}: cap on ${violated} relaxed (no alternative for this slot)`);
+    }
+    if (pick) {
+      usedIds.add(pick.id);
+      for (const key of Object.keys(DIVERSITY_CAPS) as Array<keyof typeof DIVERSITY_CAPS>) {
+        const v = traitOf(pick, key);
+        if (v) counts[key].set(v, (counts[key].get(v) ?? 0) + 1);
+      }
+    }
     return { slot, sourced_product_id: pick?.id ?? null };
   });
+
+  // Summarize brand mix for the UI.
+  const brandMix = Array.from(counts.brand.entries())
+    .map(([b, n]) => `${b} ${Math.round((n / totalSlots) * 100)}%`)
+    .join(", ");
+  if (brandMix) notes.unshift(`brand mix: ${brandMix}`);
+
+  return { picks, notes };
 }
 
 async function scoreCandidateInternal(
