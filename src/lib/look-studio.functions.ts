@@ -426,14 +426,42 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       let museUrl: string | null = null;
       let museError: string | null = null;
       let identityLocked = false;
+      let faceSimilarity: number | null = null;
+      let outfitFidelity: number | null = null;
+      let museVerificationNotes: string | null = null;
+      let identityMismatchReason: string | null = null;
+      let outfitMismatchReason: string | null = null;
+
+      // Resolve product image URLs + summary for muse generation & verification.
+      const slotProducts = slotPicks
+        .map((sp) => {
+          if (!sp.sourced_product_id) return null;
+          const p = eligible.find((e) => e.id === sp.sourced_product_id);
+          if (!p) return null;
+          return {
+            slot: sp.slot,
+            brand: p.brand ?? null,
+            product_name: p.product_name ?? null,
+            image_url: p.image_url ?? null,
+          };
+        })
+        .filter((x): x is { slot: LookSlot; brand: string | null; product_name: string | null; image_url: string | null } => !!x);
+      const productImageUrls = slotProducts
+        .map((p) => p.image_url)
+        .filter((u): u is string => !!u);
+      const productSummaryForMuse = slotProducts
+        .map((p) => `- ${p.slot}: ${p.brand ?? "—"} — ${p.product_name ?? "—"}`)
+        .join("\n");
+
       // One retry on muse failure — never let a museless candidate through.
       for (let museAttempt = 0; museAttempt < 2 && !museUrl; museAttempt++) {
         try {
-          const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief), {
+          const r = await generateAndStoreMuse(cand.id, museImagePrompt(dna, brief, slotProducts), {
             referenceUrl: destMuse?.reference_url ?? null,
             museName: destMuse?.muse_name ?? null,
             faceDescription: destMuse?.face_description ?? null,
             guardrails: destMuse?.style_guardrails ?? null,
+            productImageUrls,
           });
           museUrl = r.url;
           identityLocked = r.identity_locked;
@@ -444,6 +472,22 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
         } catch (e) {
           museError = String((e as Error).message ?? e).slice(0, 240);
         }
+      }
+
+      // Stage 4b: vision verification of muse fidelity (identity + outfit).
+      // Only run when both a generated muse and a reference muse exist.
+      if (museUrl && destMuse?.reference_url) {
+        const verdict = await verifyMuseFidelity(
+          museUrl,
+          destMuse.reference_url,
+          destMuse.muse_name,
+          productSummaryForMuse,
+        );
+        faceSimilarity = verdict.face_similarity;
+        outfitFidelity = verdict.outfit_fidelity;
+        museVerificationNotes = verdict.notes;
+        identityMismatchReason = verdict.identity_mismatch_reason;
+        outfitMismatchReason = verdict.outfit_mismatch_reason;
       }
 
       // Stage 5: score.
@@ -465,12 +509,27 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       if (requiresContinuity && museUrl && !identityLocked) {
         reasons.push(`Muse identity not locked to ${destMuse?.muse_name ?? "the destination muse"} — reference image was not applied.`);
       }
+      if (requiresContinuity && faceSimilarity !== null && faceSimilarity < GATE_MIN_FACE_SIMILARITY) {
+        reasons.push(
+          `Muse identity drift: face similarity ${faceSimilarity.toFixed(2)} < ${GATE_MIN_FACE_SIMILARITY}${
+            identityMismatchReason ? ` — ${identityMismatchReason}` : ""
+          }`,
+        );
+      }
+      if (outfitFidelity !== null && outfitFidelity < GATE_MIN_OUTFIT_FIDELITY) {
+        reasons.push(
+          `Muse outfit does not reflect sourced products: outfit fidelity ${outfitFidelity.toFixed(2)} < ${GATE_MIN_OUTFIT_FIDELITY}${
+            outfitMismatchReason ? ` — ${outfitMismatchReason}` : ""
+          }`,
+        );
+      }
       const ds = typeof scoring.destination_specificity === "number" ? scoring.destination_specificity : 0;
       const sc = typeof scoring.styling_cohesion === "number" ? scoring.styling_cohesion : 0;
       const ae = typeof scoring.accessory_ecosystem === "number" ? scoring.accessory_ecosystem : 0;
       const sv = typeof scoring.saveability === "number" ? scoring.saveability : 0;
       const eu = typeof scoring.editorial_uniqueness === "number" ? scoring.editorial_uniqueness : 0;
       const la = typeof scoring.luxury_traveler_appeal === "number" ? scoring.luxury_traveler_appeal : 0;
+      const rt = typeof scoring.resort_edit_test === "number" ? scoring.resort_edit_test : 0;
       const editorialMean = (sv + eu + la) / 3;
       if (ds < GATE_MIN_DESTINATION) reasons.push(`Destination specificity ${ds.toFixed(1)} < ${GATE_MIN_DESTINATION}`);
       if (sc < GATE_MIN_COHESION) reasons.push(`Styling cohesion ${sc.toFixed(1)} < ${GATE_MIN_COHESION}`);
@@ -478,6 +537,11 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
       if (editorialMean < GATE_MIN_SAVEABILITY) {
         reasons.push(
           `Editorial saveability ${editorialMean.toFixed(1)} < ${GATE_MIN_SAVEABILITY} (saveability ${sv}, uniqueness ${eu}, luxury ${la}) — would not feel at home in a Steven Dann carousel`,
+        );
+      }
+      if (rt < GATE_MIN_RESORT_EDIT_TEST) {
+        reasons.push(
+          `Resort Edit test ${rt.toFixed(1)} < ${GATE_MIN_RESORT_EDIT_TEST} — a wealthy woman would not save this to dress like this in ${dna.destination}`,
         );
       }
       const passed = reasons.length === 0;
@@ -491,6 +555,11 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
           identity_locked: identityLocked,
           muse_name: destMuse?.muse_name ?? null,
           requires_continuity: requiresContinuity,
+          face_similarity: faceSimilarity,
+          outfit_fidelity: outfitFidelity,
+          verification_notes: museVerificationNotes,
+          identity_mismatch_reason: identityMismatchReason,
+          outfit_mismatch_reason: outfitMismatchReason,
         },
         checks: {
           required_slots_filled: requiredSlots.length - missing.length,
@@ -500,12 +569,18 @@ export const generateLookCandidates = createServerFn({ method: "POST" })
           styling_cohesion: sc,
           accessory_ecosystem: ae,
           editorial_saveability_mean: editorialMean,
+          resort_edit_test: rt,
+          face_similarity: faceSimilarity,
+          outfit_fidelity: outfitFidelity,
         },
         thresholds: {
           destination_specificity: GATE_MIN_DESTINATION,
           styling_cohesion: GATE_MIN_COHESION,
           accessory_ecosystem: GATE_MIN_ACCESSORY,
           editorial_saveability: GATE_MIN_SAVEABILITY,
+          resort_edit_test: GATE_MIN_RESORT_EDIT_TEST,
+          face_similarity: GATE_MIN_FACE_SIMILARITY,
+          outfit_fidelity: GATE_MIN_OUTFIT_FIDELITY,
         },
         evaluated_at: new Date().toISOString(),
       };
