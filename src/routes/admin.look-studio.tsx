@@ -358,38 +358,50 @@ function LookCandidateCard({
         </span>
       </div>
 
-      {/* Muse preview placeholder */}
+      {/* Editorial muse preview — large, top of card */}
       {candidate.muse_image_url ? (
-        <img src={candidate.muse_image_url} alt="" className="w-full aspect-[3/4] object-cover bg-cream/40" />
+        <img
+          src={candidate.muse_image_url}
+          alt=""
+          className="w-full aspect-[4/5] object-cover bg-cream/40 border-b border-ink/10"
+        />
       ) : (
-        <div className="w-full aspect-[3/4] bg-gradient-to-br from-cream/60 to-ivory border-b border-ink/10 flex items-center justify-center text-[0.65rem] tracking-[0.2em] uppercase text-ink/45">
-          Muse preview not generated
+        <div className="w-full aspect-[4/5] bg-gradient-to-br from-cream/60 to-ivory border-b border-ink/10 flex flex-col items-center justify-center text-ink/45 px-6 text-center gap-2">
+          <p className="text-[0.6rem] tracking-[0.28em] uppercase">Editorial muse preview</p>
+          <p className="font-serif italic text-xs">Awaiting render — approve scoring first</p>
         </div>
       )}
 
-      {/* Slot grid */}
-      <div className="p-3 grid grid-cols-3 gap-2">
-        {sortedSlots.map((s) => (
-          <div key={s.id} className="border border-ink/10 bg-cream/20 p-2 text-[0.65rem]">
-            <p className="uppercase tracking-[0.18em] text-ink/55 truncate">
-              {LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}
-            </p>
-            {s.product?.image_url ? (
-              <img
-                src={s.product.image_url}
-                alt=""
-                className="w-full aspect-square object-cover mt-1 bg-ivory"
-                loading="lazy"
-              />
-            ) : (
-              <div className="w-full aspect-square mt-1 bg-ivory border border-dashed border-ink/15 flex items-center justify-center text-ink/40">
-                empty
-              </div>
-            )}
-            <p className="mt-1 truncate text-ink/70">{s.product?.brand ?? "—"}</p>
-            <p className="truncate text-ink/50">{s.product?.product_name ?? ""}</p>
-          </div>
-        ))}
+      {/* Product lookboard — flat-lay composite of every slot image */}
+      <div className="p-3 border-b border-ink/10">
+        <p className="text-[0.6rem] tracking-[0.24em] uppercase text-ink/55 mb-2">Product lookboard</p>
+        <div className="grid grid-cols-4 gap-1.5 bg-cream/30 p-2">
+          {sortedSlots.map((s) => (
+            <div
+              key={s.id}
+              className="aspect-square bg-ivory border border-ink/10 overflow-hidden relative"
+              title={`${LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}${s.product?.brand ? ` · ${s.product.brand}` : ""}`}
+            >
+              {s.product?.image_url ? (
+                <img
+                  src={s.product.image_url}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[0.55rem] uppercase tracking-[0.16em] text-ink/35 text-center px-1">
+                  {LOOK_SLOT_LABELS[s.slot as LookSlot] ?? s.slot}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="mt-1.5 text-[0.65rem] text-ink/55">
+          <span className="font-mono">{sortedSlots.filter((s) => s.product).length}</span> of{" "}
+          <span className="font-mono">{sortedSlots.length}</span> slots filled · pool{" "}
+          <span className="font-mono">{poolEligible}</span> eligible
+        </p>
       </div>
 
       {/* Scores */}
