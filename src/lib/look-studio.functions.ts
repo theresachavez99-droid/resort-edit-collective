@@ -131,11 +131,22 @@ export const listCandidatesForDNA = createServerFn({ method: "POST" })
       }));
     }
 
+    // Pool stats — how big is the sourced funnel vs how many are eligible to fill slots.
+    const { count: sourcedTotal } = await supabaseAdmin
+      .from("sourced_products")
+      .select("id", { count: "exact", head: true });
+    const { count: eligibleTotal } = await supabaseAdmin
+      .from("sourced_products")
+      .select("id", { count: "exact", head: true })
+      .neq("status", "rejected")
+      .not("image_url", "is", null);
+
     return {
       ok: true as const,
       dna: LOOK_DNA[data.dna_id] ?? null,
       candidates: (candidates ?? []) as CandidateRow[],
       slots,
+      pool: { sourced: sourcedTotal ?? 0, eligible: eligibleTotal ?? 0 },
     };
   });
 
