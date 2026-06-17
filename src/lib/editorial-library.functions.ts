@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireAdmin } from "./admin-auth.server";
+import type { Json } from "@/integrations/supabase/types";
 
 import refMorningPortofino from "@/assets/editorial-refs/ref-morning-in-portofino.jpeg.asset.json";
 import refItalianSummer from "@/assets/editorial-refs/ref-italian-summer-escape.jpeg.asset.json";
@@ -109,19 +110,19 @@ export type EditorialReferenceRow = {
   color_story: string | null;
   hero_piece: string | null;
   hero_piece_category: string | null;
-  supporting_pieces: unknown;
+  supporting_pieces: Json;
   accessory_strategy: string | null;
   silhouette_strategy: string | null;
   texture_strategy: string | null;
-  destination_signals: unknown;
-  luxury_signals: unknown;
-  saveability_drivers: unknown;
+  destination_signals: Json;
+  luxury_signals: Json;
+  saveability_drivers: Json;
   learned_patterns: string | null;
-  editorial_tags: unknown;
-  brands_detected: unknown;
-  price_tier_mix: unknown;
-  category_mix: unknown;
-  raw_extraction: unknown;
+  editorial_tags: Json;
+  brands_detected: Json;
+  price_tier_mix: Json;
+  category_mix: Json;
+  raw_extraction: Json;
   extraction_status: string;
   extraction_error: string | null;
   extracted_at: string | null;
@@ -443,7 +444,7 @@ async function runExtractionForRow(row: {
       .update({
         extraction_status: "failed",
         extraction_error: result.error ?? "unknown extraction error",
-        raw_extraction: (result.raw as Record<string, unknown>) ?? {},
+        raw_extraction: JSON.parse(JSON.stringify(result.raw ?? {})) as Json,
       })
       .eq("id", row.id);
     return { ok: false, error: result.error };
@@ -473,7 +474,7 @@ async function runExtractionForRow(row: {
       brands_detected: p.brands_detected ?? [],
       price_tier_mix: p.price_tier_mix ?? {},
       category_mix: p.category_mix ?? {},
-      raw_extraction: (result.raw as Record<string, unknown>) ?? {},
+      raw_extraction: JSON.parse(JSON.stringify(result.raw ?? {})) as Json,
       extraction_status: "ready",
       extraction_error: null,
       extracted_at: new Date().toISOString(),
