@@ -163,6 +163,108 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_reference_library: {
+        Row: {
+          accessory_strategy: string | null
+          activity: string | null
+          brands_detected: Json
+          category_mix: Json
+          color_story: string | null
+          created_at: string
+          destination: string | null
+          destination_signals: Json
+          editorial_story: string | null
+          editorial_tags: Json
+          extracted_at: string | null
+          extraction_error: string | null
+          extraction_status: string
+          hero_piece: string | null
+          hero_piece_category: string | null
+          id: string
+          learned_patterns: string | null
+          luxury_signals: Json
+          mood: string | null
+          occasion: string | null
+          price_tier_mix: Json
+          raw_extraction: Json
+          reference_image: string | null
+          reference_url: string | null
+          saveability_drivers: Json
+          silhouette_strategy: string | null
+          source_type: string
+          supporting_pieces: Json
+          texture_strategy: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          accessory_strategy?: string | null
+          activity?: string | null
+          brands_detected?: Json
+          category_mix?: Json
+          color_story?: string | null
+          created_at?: string
+          destination?: string | null
+          destination_signals?: Json
+          editorial_story?: string | null
+          editorial_tags?: Json
+          extracted_at?: string | null
+          extraction_error?: string | null
+          extraction_status?: string
+          hero_piece?: string | null
+          hero_piece_category?: string | null
+          id?: string
+          learned_patterns?: string | null
+          luxury_signals?: Json
+          mood?: string | null
+          occasion?: string | null
+          price_tier_mix?: Json
+          raw_extraction?: Json
+          reference_image?: string | null
+          reference_url?: string | null
+          saveability_drivers?: Json
+          silhouette_strategy?: string | null
+          source_type?: string
+          supporting_pieces?: Json
+          texture_strategy?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          accessory_strategy?: string | null
+          activity?: string | null
+          brands_detected?: Json
+          category_mix?: Json
+          color_story?: string | null
+          created_at?: string
+          destination?: string | null
+          destination_signals?: Json
+          editorial_story?: string | null
+          editorial_tags?: Json
+          extracted_at?: string | null
+          extraction_error?: string | null
+          extraction_status?: string
+          hero_piece?: string | null
+          hero_piece_category?: string | null
+          id?: string
+          learned_patterns?: string | null
+          luxury_signals?: Json
+          mood?: string | null
+          occasion?: string | null
+          price_tier_mix?: Json
+          raw_extraction?: Json
+          reference_image?: string | null
+          reference_url?: string | null
+          saveability_drivers?: Json
+          silhouette_strategy?: string | null
+          source_type?: string
+          supporting_pieces?: Json
+          texture_strategy?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       look_candidate_slots: {
         Row: {
           candidate_id: string
