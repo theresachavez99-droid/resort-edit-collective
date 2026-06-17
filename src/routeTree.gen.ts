@@ -31,6 +31,7 @@ import { Route as AdminReviewQueueRouteImport } from './routes/admin.review-queu
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
 import { Route as AdminLookStudioRouteImport } from './routes/admin.look-studio'
+import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editorial-library'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } from './routes/destinations.portofino.day-1-yacht-harbour-aperitivo'
@@ -145,6 +146,11 @@ const AdminLookStudioRoute = AdminLookStudioRouteImport.update({
   path: '/admin/look-studio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminEditorialLibraryRoute = AdminEditorialLibraryRouteImport.update({
+  id: '/admin/editorial-library',
+  path: '/admin/editorial-library',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
   id: '/admin/brands',
   path: '/admin/brands',
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -199,6 +206,7 @@ export interface FileRoutesByTo {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -227,6 +235,7 @@ export interface FileRoutesById {
   '/resort-edits': typeof ResortEditsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -256,6 +265,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/editorial-library'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/editorial-library'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/editorial-library'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -338,6 +350,7 @@ export interface RootRouteChildren {
   ResortEditsRoute: typeof ResortEditsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminEditorialLibraryRoute: typeof AdminEditorialLibraryRoute
   AdminLookStudioRoute: typeof AdminLookStudioRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
@@ -503,6 +516,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLookStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/editorial-library': {
+      id: '/admin/editorial-library'
+      path: '/admin/editorial-library'
+      fullPath: '/admin/editorial-library'
+      preLoaderRoute: typeof AdminEditorialLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/brands': {
       id: '/admin/brands'
       path: '/admin/brands'
@@ -585,6 +605,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResortEditsRoute: ResortEditsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminBrandsRoute: AdminBrandsRoute,
+  AdminEditorialLibraryRoute: AdminEditorialLibraryRoute,
   AdminLookStudioRoute: AdminLookStudioRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
@@ -596,13 +617,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
