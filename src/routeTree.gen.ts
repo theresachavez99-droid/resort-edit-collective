@@ -22,6 +22,7 @@ import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
 import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
 import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
 import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
+import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
 import { Route as LookSlugRouteImport } from './routes/look.$slug'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
@@ -100,6 +101,11 @@ const PortofinoDay2Route = PortofinoDay2RouteImport.update({
 const PortofinoDay1Route = PortofinoDay1RouteImport.update({
   id: '/day-1',
   path: '/day-1',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoMomentRoute = PortofinoMomentRouteImport.update({
+  id: '/$moment',
+  path: '/$moment',
   getParentRoute: () => PortofinoRoute,
 } as any)
 const LookSlugRoute = LookSlugRouteImport.update({
@@ -195,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/look/$slug': typeof LookSlugRoute
+  '/portofino/$moment': typeof PortofinoMomentRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
   '/portofino/day-3': typeof PortofinoDay3Route
@@ -224,6 +231,7 @@ export interface FileRoutesByTo {
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/look/$slug': typeof LookSlugRoute
+  '/portofino/$moment': typeof PortofinoMomentRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
   '/portofino/day-3': typeof PortofinoDay3Route
@@ -254,6 +262,7 @@ export interface FileRoutesById {
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/look/$slug': typeof LookSlugRoute
+  '/portofino/$moment': typeof PortofinoMomentRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
   '/portofino/day-3': typeof PortofinoDay3Route
@@ -285,6 +294,7 @@ export interface FileRouteTypes {
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/look/$slug'
+    | '/portofino/$moment'
     | '/portofino/day-1'
     | '/portofino/day-2'
     | '/portofino/day-3'
@@ -314,6 +324,7 @@ export interface FileRouteTypes {
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/look/$slug'
+    | '/portofino/$moment'
     | '/portofino/day-1'
     | '/portofino/day-2'
     | '/portofino/day-3'
@@ -343,6 +354,7 @@ export interface FileRouteTypes {
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/look/$slug'
+    | '/portofino/$moment'
     | '/portofino/day-1'
     | '/portofino/day-2'
     | '/portofino/day-3'
@@ -464,6 +476,13 @@ declare module '@tanstack/react-router' {
       path: '/day-1'
       fullPath: '/portofino/day-1'
       preLoaderRoute: typeof PortofinoDay1RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/$moment': {
+      id: '/portofino/$moment'
+      path: '/$moment'
+      fullPath: '/portofino/$moment'
+      preLoaderRoute: typeof PortofinoMomentRouteImport
       parentRoute: typeof PortofinoRoute
     }
     '/look/$slug': {
@@ -594,6 +613,7 @@ const DestinationsRouteWithChildren = DestinationsRoute._addFileChildren(
 )
 
 interface PortofinoRouteChildren {
+  PortofinoMomentRoute: typeof PortofinoMomentRoute
   PortofinoDay1Route: typeof PortofinoDay1Route
   PortofinoDay2Route: typeof PortofinoDay2Route
   PortofinoDay3Route: typeof PortofinoDay3Route
@@ -603,6 +623,7 @@ interface PortofinoRouteChildren {
 }
 
 const PortofinoRouteChildren: PortofinoRouteChildren = {
+  PortofinoMomentRoute: PortofinoMomentRoute,
   PortofinoDay1Route: PortofinoDay1Route,
   PortofinoDay2Route: PortofinoDay2Route,
   PortofinoDay3Route: PortofinoDay3Route,

@@ -1,7 +1,9 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { absoluteUrl } from "@/lib/site";
+import { listPortofinoMomentsForLanding, type PortofinoMomentCard } from "@/lib/portofino-moments.functions";
 import cira1Asset from "@/assets/uploads/cira/cira-1.png.asset.json";
 import cira2Asset from "@/assets/uploads/cira/cira-2.png.asset.json";
 import cira3Asset from "@/assets/uploads/cira/cira-3.png.asset.json";
@@ -52,16 +54,33 @@ import { type LookSlug } from "@/lib/portofino-spec";
 export const Route = createFileRoute("/portofino")({
   head: () => ({
     meta: [
-      { title: "5 Days in Portofino — A Style & Itinerary Guide | Resort Edit | Dressed for the destination" },
-      { name: "description", content: "Five complete resort looks and a five-day itinerary for Portofino — yacht days, beach cabanas, sunset dinners and quiet harbor mornings." },
-      { property: "og:title", content: "5 Days in Portofino | Resort Edit | Dressed for the destination" },
-      { property: "og:description", content: "A luxury style and travel guide to the Italian Riviera." },
+      { title: "Portofino — Six Moments | Resort Edit | Dressed for the Destination" },
+      { name: "description", content: "Six destination moments in Portofino — Arrival Day, Market Morning, Yacht Day, Harbor Aperitivo, Sunset Views, Riviera Dinner. A luxury editorial guide to the Italian Riviera." },
+      { property: "og:title", content: "Portofino — Six Moments | Resort Edit" },
+      { property: "og:description", content: "Browse Portofino through six destination moments. Dressed for the Destination." },
       { property: "og:image", content: absoluteUrl(portofinoImg) },
       { property: "og:url", content: absoluteUrl("/portofino") },
       { name: "twitter:image", content: absoluteUrl(portofinoImg) },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/portofino") }],
   }),
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData(
+      queryOptions({
+        queryKey: ["portofino-moments-landing"],
+        queryFn: () => listPortofinoMomentsForLanding(),
+      }),
+    ),
+  errorComponent: () => (
+    <main className="min-h-[60vh] flex items-center justify-center px-6 text-ink">
+      <p className="font-display text-xl">Portofino is taking a moment. Please refresh.</p>
+    </main>
+  ),
+  notFoundComponent: () => (
+    <main className="min-h-[60vh] flex items-center justify-center px-6 text-ink">
+      <p className="font-display text-xl">Not found.</p>
+    </main>
+  ),
   component: PortofinoPage,
 });
 
@@ -145,6 +164,14 @@ function PortofinoPage() {
   const normalized = pathname.replace(/\/+$/, "");
   if (normalized !== "/portofino") return <Outlet />;
 
+  const { data } = useSuspenseQuery(
+    queryOptions({
+      queryKey: ["portofino-moments-landing"],
+      queryFn: () => listPortofinoMomentsForLanding(),
+    }),
+  );
+  const moments: PortofinoMomentCard[] = data.ok ? data.moments : [];
+
   return (
     <div className="pb-16 md:pb-20">
       {/* HERO */}
@@ -156,89 +183,35 @@ function PortofinoPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
         <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
-          <h1 className="font-display text-5xl md:text-[5.5rem] mt-2 tracking-[0.05em] leading-[1]">
-            5 Days in Portofino
+          <span className="eyebrow text-[0.62rem] md:text-[0.7rem] tracking-[0.42em] text-ivory/80">
+            DRESSED FOR THE DESTINATION
+          </span>
+          <h1 className="font-display text-5xl md:text-[6rem] mt-3 tracking-[0.05em] leading-[1]">
+            Portofino
           </h1>
-          <p className="font-serif italic text-base md:text-xl text-ivory/85 mt-2 max-w-2xl leading-relaxed">
-            — Explore each day. Shop three complete looks. —
+          <p className="font-serif italic text-base md:text-xl text-ivory/90 mt-3 max-w-2xl leading-relaxed">
+            A pastel harbor on the Italian Riviera — six destination moments, one editorial language.
           </p>
         </div>
       </section>
 
-      {/* 5 DAY SECTIONS — stacked editorial rows */}
+      {/* SIX DESTINATION MOMENTS — editorial chapter index */}
       <section className="bg-ivory">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-10 md:py-14">
-          <div className="space-y-12 md:space-y-16">
-            {DAYS.map((d) => (
-              <article
-                key={d.slug}
-                id={d.slug}
-                className="grid grid-cols-1 lg:grid-cols-[minmax(220px,1fr)_3fr] gap-6 lg:gap-10 border-b border-border/40 pb-12 md:pb-16 last:border-b-0"
-              >
-                {/* LEFT — Editorial muse + day caption */}
-                <div className="space-y-4">
-                  <div className="relative aspect-[3/4] overflow-hidden bg-cream/40 border border-border/60 flex items-center justify-center">
-                    <img
-                      src={d.image}
-                      alt={`${d.label} — ${d.title}`}
-                      loading="lazy"
-                      decoding="async"
-                      className="absolute inset-0 h-full w-full object-contain"
-                      style={{ imageRendering: "auto" }}
-                    />
-                  </div>
-                  <div>
-                    <h2 className="font-display text-2xl md:text-3xl tracking-[0.05em] text-ink leading-tight">
-                      {d.title}
-                    </h2>
-                    <p className="font-serif italic text-[0.9rem] text-ink/65 mt-2 leading-relaxed">
-                      {d.caption}
-                    </p>
-                    <Link
-                      to={d.href}
-                      className="mt-3 inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink transition-colors border-b border-gold/60 pb-1"
-                    >
-                      View Full Day Edit <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
-                </div>
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-20">
+          <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
+            <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">The Edit</span>
+            <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-3 text-ink">
+              Six Moments in Portofino
+            </h2>
+            <div className="mx-auto my-4 h-px w-12 bg-gold" />
+            <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+              Each moment is its own chapter — a single look, dressed for one place at one hour of the day.
+            </p>
+          </div>
 
-                {/* RIGHT — Three looks */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
-                  {d.looks.map((look) => (
-                    <a
-                      key={look.slug}
-                      href={`/portofino/${d.slug}/${look.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group block bg-ivory border border-border/60 hover:border-gold transition-colors"
-                    >
-                      {/* Reserved header — keeps label off the model */}
-                      <div className="min-h-[48px] px-3 pt-3 pb-2 border-b border-border/40 text-center">
-                        <span className="block eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
-                          {look.label.toUpperCase()}
-                        </span>
-                        <span className="block eyebrow text-[0.6rem] tracking-[0.22em] text-ink mt-1 leading-snug">
-                          {look.title.toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="relative aspect-[3/4] overflow-hidden bg-cream/40 flex items-center justify-center">
-                        <img
-                          src={look.image}
-                          alt={`${d.label} ${look.label} — ${look.title}`}
-                          loading="lazy"
-                          className="absolute inset-0 h-full w-full object-contain transition-transform duration-700 group-hover:scale-[1.04]"
-                        />
-                      </div>
-                      <div className="p-3 md:p-4 text-center">
-                        <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink group-hover:text-gold transition-colors">
-                          View Full Look →
-                        </span>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </article>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {moments.map((m) => (
+              <MomentCard key={m.moment_slug} m={m} />
             ))}
           </div>
         </div>
@@ -433,5 +406,38 @@ function PortofinoPage() {
 
       {/* TIER OPTIONS — bottom of page (spec §8) */}
     </div>
+  );
+}
+
+function MomentCard({ m }: { m: PortofinoMomentCard }) {
+  return (
+    <Link
+      to="/portofino/$moment"
+      params={{ moment: m.moment_slug }}
+      className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors"
+    >
+      <div className="relative aspect-[4/5] overflow-hidden bg-cream/40">
+        <img
+          src={m.hero_image}
+          alt={`${m.moment_name} — Portofino`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+        <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+          {m.archetype_slug.replace(/-/g, " ").toUpperCase()}
+        </span>
+      </div>
+      <div className="p-5 md:p-6 flex flex-col flex-1">
+        <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">
+          {m.moment_name}
+        </h3>
+        <p className="font-serif italic text-ink/70 text-[0.92rem] mt-2.5 leading-relaxed flex-1">
+          {m.narrative}
+        </p>
+        <span className="mt-5 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start">
+          View Moment <ArrowRight className="w-3 h-3" />
+        </span>
+      </div>
+    </Link>
   );
 }

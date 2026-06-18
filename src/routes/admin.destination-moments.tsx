@@ -12,6 +12,7 @@ import {
   type MomentArchetypeRow,
 } from "@/lib/destination-moments.functions";
 import { NamingWarningChip } from "@/components/admin/NamingWarningChip";
+import { getPortofinoMomentVerdicts } from "@/lib/portofino-moments.functions";
 
 export const Route = createFileRoute("/admin/destination-moments")({
   head: () => ({
@@ -85,6 +86,7 @@ function MomentsBoard({ password }: { password: string }) {
   const momFn = useServerFn(listAllDestinationMoments);
   const seedArchFn = useServerFn(seedMomentArchetypes);
   const seedPortFn = useServerFn(seedPortofinoMoments);
+  const verdictsFn = useServerFn(getPortofinoMomentVerdicts);
 
   const archetypes = useQuery({
     queryKey: ["dest-moment-archetypes"],
@@ -93,6 +95,10 @@ function MomentsBoard({ password }: { password: string }) {
   const moments = useQuery({
     queryKey: ["dest-moments-all"],
     queryFn: () => momFn({ data: { password } }),
+  });
+  const verdicts = useQuery({
+    queryKey: ["portofino-moment-verdicts"],
+    queryFn: () => verdictsFn({ data: { password } }),
   });
 
   const seedArch = useMutation({
@@ -106,6 +112,9 @@ function MomentsBoard({ password }: { password: string }) {
 
   const momentRows = moments.data?.ok ? moments.data.moments : [];
   const archRows = archetypes.data?.ok ? archetypes.data.archetypes : [];
+  const verdictMap = new Map(
+    (verdicts.data?.ok ? verdicts.data.verdicts : []).map((v) => [v.moment_slug, v]),
+  );
 
   const byDestination = momentRows.reduce<Record<string, DestinationMomentRow[]>>((acc, m) => {
     (acc[m.destination_slug] ??= []).push(m);
@@ -175,7 +184,13 @@ function MomentsBoard({ password }: { password: string }) {
                   {destSlug.replace(/-/g, " ")}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {list.map((m) => <MomentCard key={m.id} m={m} />)}
+                  {list.map((m) => (
+                    <MomentCard
+                      key={m.id}
+                      m={m}
+                      verdict={m.destination_slug === "portofino" ? verdictMap.get(m.moment_slug) : undefined}
+                    />
+                  ))}
                 </div>
               </div>
             ))}
@@ -224,7 +239,13 @@ function ArchetypeCard({ a }: { a: MomentArchetypeRow }) {
   );
 }
 
-function MomentCard({ m }: { m: DestinationMomentRow }) {
+function MomentCard({
+  m,
+  verdict,
+}: {
+  m: DestinationMomentRow;
+  verdict?: { source: "tagged" | "fallback"; candidate_slug: string | null };
+}) {
   const cues = (m.styling_cues ?? {}) as Record<string, unknown>;
   const palette = Array.isArray(cues.palette) ? (cues.palette as string[]) : [];
   return (
@@ -234,6 +255,23 @@ function MomentCard({ m }: { m: DestinationMomentRow }) {
           <div className="flex items-center gap-2 flex-wrap">
             <h4 className="font-display tracking-[0.14em] uppercase text-base">{m.moment_name}</h4>
             <NamingWarningChip title={`${m.destination_slug} ${m.moment_name}`} size="xs" />
+            {verdict && (
+              <span
+                className={
+                  "text-[0.55rem] tracking-[0.2em] uppercase px-1.5 py-0.5 border " +
+                  (verdict.source === "tagged"
+                    ? "border-emerald-700/60 text-emerald-800 bg-emerald-50"
+                    : "border-amber-700/60 text-amber-800 bg-amber-50")
+                }
+                title={
+                  verdict.source === "tagged"
+                    ? `Tagged: ${verdict.candidate_slug ?? "approved candidate"}`
+                    : "Fallback look — tag approved candidate for this moment."
+                }
+              >
+                {verdict.source === "tagged" ? "Tagged" : "Fallback look"}
+              </span>
+            )}
           </div>
           <p className="text-[0.6rem] tracking-[0.18em] uppercase text-ink/45 mt-1">
             {m.archetype_slug ?? "no archetype"} · {m.time_of_day ?? "—"} · sort {m.sort_order}
