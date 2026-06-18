@@ -273,6 +273,7 @@ function ReferenceCard({
   const brands = asStringArray(r.brands_detected);
   const priceTiers = asEntries(r.price_tier_mix);
   const categoryMix = asEntries(r.category_mix);
+  const isTaxonomy = r.source_type === "framework" || r.source_type === "stylelinks_landing";
 
   return (
     <article className="border border-ink/15 bg-cream/20 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-0 overflow-hidden">
@@ -320,13 +321,15 @@ function ReferenceCard({
             )}
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={onExtract}
-              disabled={isExtracting}
-              className="border border-ink/25 px-3 py-1.5 text-[0.65rem] tracking-[0.2em] uppercase disabled:opacity-50"
-            >
-              {isExtracting ? "Extracting…" : r.extraction_status === "ready" ? "Re-extract" : "Extract"}
-            </button>
+            {!isTaxonomy && (
+              <button
+                onClick={onExtract}
+                disabled={isExtracting}
+                className="border border-ink/25 px-3 py-1.5 text-[0.65rem] tracking-[0.2em] uppercase disabled:opacity-50"
+              >
+                {isExtracting ? "Extracting…" : r.extraction_status === "ready" ? "Re-extract" : "Extract"}
+              </button>
+            )}
             <button onClick={onDelete} className="border border-red-300 text-red-800 px-3 py-1.5 text-[0.65rem] tracking-[0.2em] uppercase">
               Delete
             </button>
