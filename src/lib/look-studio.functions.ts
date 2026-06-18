@@ -63,6 +63,7 @@ type CandidateRow = {
   quality_gate?: QualityGateLike | null;
   retry_count?: number | null;
   slug?: string | null;
+  moment_slug?: string | null;
 };
 
 export type CandidateBriefLike = {
