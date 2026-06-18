@@ -187,11 +187,37 @@ function MomentsBoard({ password }: { password: string }) {
 }
 
 function ArchetypeCard({ a }: { a: MomentArchetypeRow }) {
+  const isCore = a.moment_type === "core";
   return (
     <article className="border border-ink/15 bg-cream/20 p-4">
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-display tracking-[0.12em] uppercase text-sm">{a.archetype_name}</h3>
         <span className="text-[0.55rem] tracking-[0.18em] uppercase text-ink/45">{a.archetype_slug}</span>
+      </div>
+      <div className="flex flex-wrap gap-1.5 mt-2">
+        <span
+          className={
+            "text-[0.55rem] tracking-[0.22em] uppercase px-1.5 py-0.5 border " +
+            (isCore ? "bg-ink text-ivory border-ink" : "bg-ivory text-ink/70 border-ink/30")
+          }
+        >
+          {isCore ? "Core" : "Optional"}
+        </span>
+        <span
+          className={
+            "text-[0.55rem] tracking-[0.22em] uppercase px-1.5 py-0.5 border " +
+            (a.destination_required
+              ? "border-gold/60 text-gold"
+              : "border-ink/20 text-ink/45")
+          }
+          title={
+            a.destination_required
+              ? "Moment names MUST include the destination (e.g. 'Portofino Arrival Day')."
+              : "Moment names may be generic (e.g. 'Villa Dinner')."
+          }
+        >
+          {a.destination_required ? "Destination required" : "Destination optional"}
+        </span>
       </div>
       {a.description && <p className="text-[0.78rem] text-ink/70 mt-2 font-serif italic leading-snug">{a.description}</p>}
     </article>
