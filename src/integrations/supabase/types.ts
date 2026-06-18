@@ -127,6 +127,89 @@ export type Database = {
         }
         Relationships: []
       }
+      destination_moment_archetypes: {
+        Row: {
+          archetype_name: string
+          archetype_slug: string
+          created_at: string
+          description: string | null
+          id: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          archetype_name: string
+          archetype_slug: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          archetype_name?: string
+          archetype_slug?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      destination_moments: {
+        Row: {
+          active: boolean
+          archetype_slug: string | null
+          created_at: string
+          destination_slug: string
+          id: string
+          moment_name: string
+          moment_slug: string
+          narrative: string | null
+          sort_order: number
+          styling_cues: Json
+          time_of_day: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          archetype_slug?: string | null
+          created_at?: string
+          destination_slug: string
+          id?: string
+          moment_name: string
+          moment_slug: string
+          narrative?: string | null
+          sort_order?: number
+          styling_cues?: Json
+          time_of_day?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          archetype_slug?: string | null
+          created_at?: string
+          destination_slug?: string
+          id?: string
+          moment_name?: string
+          moment_slug?: string
+          narrative?: string | null
+          sort_order?: number
+          styling_cues?: Json
+          time_of_day?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "destination_moments_archetype_slug_fkey"
+            columns: ["archetype_slug"]
+            isOneToOne: false
+            referencedRelation: "destination_moment_archetypes"
+            referencedColumns: ["archetype_slug"]
+          },
+        ]
+      }
       destination_muses: {
         Row: {
           allowed_variation: string
@@ -377,6 +460,7 @@ export type Database = {
           id: string
           look: number | null
           lookboard_image_url: string | null
+          moment_slug: string | null
           muse_image_url: string | null
           notes: string | null
           pack_instead_of: string | null
@@ -408,6 +492,7 @@ export type Database = {
           id?: string
           look?: number | null
           lookboard_image_url?: string | null
+          moment_slug?: string | null
           muse_image_url?: string | null
           notes?: string | null
           pack_instead_of?: string | null
@@ -439,6 +524,7 @@ export type Database = {
           id?: string
           look?: number | null
           lookboard_image_url?: string | null
+          moment_slug?: string | null
           muse_image_url?: string | null
           notes?: string | null
           pack_instead_of?: string | null
