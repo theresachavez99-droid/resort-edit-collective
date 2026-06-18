@@ -1,111 +1,101 @@
-## Scope (locked from your answers)
+# Portofino Editorial Rebuild — Six Core Moments
 
-- **Build**: Portofino perfection only. No `/editorial`, `/capsules`, `/essentials` yet.
-- **Naming**: Two-class validator (Destination Moment vs Editorial Commerce). Warn + flag, never block.
-- **Sourcing**: Untouched. No retailer or scoring changes.
+Rebuild `/portofino` around the six canonical moments. Keep the existing `/portofino/day-N` URLs working (no destructive changes), add `/portofino/<moment-slug>` as the canonical per-moment URL, and source looks via a hybrid resolver (tagged Look Studio candidates first, mapped legacy look as fallback).
 
-Everything else from the doctrine (capsule engine, editorial shops, brand diversity scoring, cross-retail enforcement) is documented but deferred to later sprints.
+## What the user will see
 
----
+### 1. New `/portofino` landing — editorial index
 
-## What ships this turn
+Replaces the current Day 1–5 grid. No day numbers, no itinerary language.
 
-### 1. Destination Moments Library (data foundation)
+```
+┌────────────────────────────────────────────────┐
+│  HERO — Portofino harbor                       │
+│  "Dressed for the Destination™"                │
+│  One-paragraph destination introduction        │
+└────────────────────────────────────────────────┘
 
-New table `destination_moments`:
+  Six Moments in Portofino
 
-```text
-id (uuid)
-destination_slug      e.g. "portofino"
-moment_slug           e.g. "harbor-aperitivo"
-moment_name           "Harbor Aperitivo"
-moment_archetype      "aperitivo" | "arrival" | "market" | "yacht" | "sunset" | "dinner" | ...
-time_of_day           "morning" | "midday" | "afternoon" | "evening" | "night"
-narrative             short editorial paragraph
-styling_cues          jsonb (silhouette, palette, materials, accessory strategy)
-sort_order            int
-active                bool
+  ┌──────────┐  ┌──────────┐  ┌──────────┐
+  │ Arrival  │  │ Market   │  │ Yacht    │
+  │ Day      │  │ Morning  │  │ Day      │
+  └──────────┘  └──────────┘  └──────────┘
+  ┌──────────┐  ┌──────────┐  ┌──────────┐
+  │ Harbor   │  │ Sunset   │  │ Riviera  │
+  │ Aperitivo│  │ Views    │  │ Dinner   │
+  └──────────┘  └──────────┘  └──────────┘
 ```
 
-Seed Portofino with the canonical six:
+Each card: moment hero image, moment title, one-sentence narrative (pulled from `destination_moments.narrative`), hero outfit thumbnail, "View Moment" CTA → `/portofino/<moment-slug>`.
 
-1. Arrival Day
-2. Market Morning
-3. Harbor Aperitivo
-4. Yacht Day
-5. Sunset Views
-6. Riviera Dinner
+Card order is the canonical sequence: Arrival → Market → Yacht → Aperitivo → Sunset → Dinner (`sort_order` from `destination_moments`).
 
-Plus the **archetypes table** (`destination_moment_archetypes`) — the reusable library that future destinations (Capri, St. Barths, Palm Beach) will map their local versions onto. Seeded with the 10 archetypes from the doctrine: Arrival, Market Morning, Beach Club Lunch, Yacht Day, Harbor Aperitivo, Sunset Views, Riviera Dinner, Villa Dinner, Shopping Afternoon, Boat Excursion.
+### 2. New per-moment route `/portofino/<moment-slug>`
 
-Both tables: full GRANT block, RLS enabled, `SELECT TO anon` (public read), writes admin-only via service role.
+One route file, dynamic param. For each moment it renders: moment hero, narrative, styling cues (silhouette / palette / hero / accessories / avoid from `styling_cues`), and the resolved look(s) — product cards rendered with the existing `PortofinoDayPage` look component so visual hierarchy and product fit are unchanged.
 
-### 2. Wire moments to existing looks
+### 3. Legacy `/portofino/day-1` … `/portofino/day-5` — preserved as-is
 
-Add `moment_slug` column to `look_candidates` (nullable, FK-soft to `destination_moments.moment_slug`). No migration of existing Day 1–5 data yet — admin will tag manually in Look Studio. Surface a moment picker in the Look Studio candidate card.
+No content changes, no redirects. They keep working. The new landing page does not link to them.
 
-### 3. Naming Doctrine Validator
+## How look sourcing works (hybrid resolver)
 
-New module `src/lib/naming-doctrine.ts` (pure, no deps):
+New server function `resolvePortofinoMomentLook({ moment_slug })`:
 
-- `classifyName(title)` → `{ class: "destination_moment" | "editorial_commerce" | "generic", matches: string[], suggestion?: string }`
-- **Destination Moment** allowlist: built from `destination_moments` rows + archetype names (Harbor Aperitivo, Yacht Day, Market Morning, Riviera Dinner, Blue Grotto Day, Via Camerelle, …).
-- **Editorial Commerce** allowlist: functional category patterns (`Resort Sandals`, `Raffia Bags`, `Vacation Sunglasses`, `Beach Club Dresses`, `Vacation Jewelry`, `Resort Totes`, `Yacht Day Hats`, `Vacation Dresses`, `White Dresses`, etc.).
-- **Generic / discouraged** blocklist with regex: `coastal muse`, `mediterranean escape`, `summer essentials`, `vacation vibes`, `resort chic`, `beach glam`, `european summer`, `vacation style`, `beach chic`, plus a heuristic for influencer-flavored adjective+noun pairs.
+1. Query `look_candidates` where `moment_slug = $1` AND `status = 'approved'`. If any rows: return the highest-scoring one as `{ source: "tagged", look }`.
+2. Otherwise return the mapped legacy look as `{ source: "fallback", look }`.
 
-Output drives a `<NamingWarningChip />` shown in:
+Legacy mapping (locked, one per moment):
 
-- Admin Look Studio candidate card
-- Admin Editorial Library card (already-seeded JHS frameworks will display as `editorial_commerce` ✓ or flag accordingly)
+| Moment            | Legacy fallback                          |
+| ----------------- | ---------------------------------------- |
+| arrival-day       | Day 5 — Market Strolls & Coastal Goodbyes (arrival energy, linen, light) |
+| market-morning    | Day 5 — Market Strolls & Coastal Goodbyes |
+| yacht-day         | Day 1 — Yacht Day & Harbor Aperitivo (yacht half) |
+| harbor-aperitivo  | Day 1 — Yacht Day & Harbor Aperitivo (aperitivo half) |
+| sunset-views      | Day 4 — Sunset Cocktails & Dinner With a View |
+| riviera-dinner    | Day 4 — Sunset Cocktails & Dinner With a View |
 
-No hard block, no auto-rewrite. Warning copy: *"Generic naming detected. Consider a destination moment or functional editorial category."* with the suggestion when one exists.
+Day 2 (Beach Club) and Day 3 (Pool & Shopping) are deliberately NOT mapped — those archetypes are optional and out of scope for the core six.
 
-### 4. Admin surfaces
+## Admin fallback warning
 
-- **`/admin/destination-moments`** — new route. List + reorder Portofino's six moments, edit narrative + styling cues, view archetype mapping. Includes "Seed Portofino moments" and "Seed archetype library" buttons.
-- **Look Studio** — add moment dropdown + naming chip on each candidate card.
-- **Editorial Library** — add naming chip on each card (read-only, advisory).
+`/admin/destination-moments` Portofino section gets a new chip per moment card:
 
-### 5. Public Portofino — no visible changes yet
+- **Approved tagged candidate** — green, "Tagged: <candidate title>"
+- **Fallback look — tag approved candidate for this moment** — amber, when resolver returns `source: "fallback"`
 
-Per "Perfect Portofino" priority, the public `/portofino*` routes stay as-is this turn. The moment data is being built so the next sprint can rewire the public destination page around the six moments without scrambling.
-
----
+Driven by a new server fn `getMomentSourceVerdicts({ password, destination_slug })` that runs the resolver for each moment and returns `{ moment_slug, source, candidate_title? }[]`.
 
 ## Out of scope (explicit)
 
-- `/editorial`, `/capsules`, `/essentials` routes
-- Capsule engine, essentials library
-- Cross-retail sourcing changes, brand-diversity scoring, retailer concentration penalties
-- New destinations (Capri, St. Barths, Palm Beach)
-- Public Portofino page redesign
-- Hard validation / generation blocking on naming
-- Migrating existing Day 1–5 look candidates to new moment_slug values (admin will tag once moments exist)
+- No `/capsules`, `/editorial`, `/essentials`.
+- No sourcing changes (no new retailers, no scoring tweaks, no brand-diversity penalties).
+- No new archetypes, no Beach Club / Villa Dinner / Shopping / Boat Excursion routes.
+- No edits to legacy `/portofino/day-N` pages or to the existing look-detail route.
+- No changes to product cards, ProductCard component, or affiliate logic.
 
----
+## Technical details
 
-## Files
+**New files**
+- `src/routes/portofino.$moment.tsx` — dynamic per-moment route. Param is the moment slug (e.g. `arrival-day`). Uses Route.useParams + a public server-fn loader. Throws `notFound()` for unknown slugs. Reuses `PortofinoDayPage` look renderer for visual parity.
+- `src/lib/portofino-moments.functions.ts` — `listPortofinoMomentsForLanding()` (public) returns `[{ moment, narrative, hero_image, resolved_look_thumb, source }]`; `resolvePortofinoMomentLook({ moment_slug })` (public) returns the look or null; `getMomentSourceVerdicts()` (admin-gated) for the warning chips.
+- `src/lib/portofino-moment-fallbacks.ts` — pure mapping table from `moment_slug` → legacy look-id + thumbnail import. No DB calls.
 
-**New**
-- `supabase/migrations/<ts>_destination_moments.sql`
-- `src/lib/destination-moments.functions.ts` (server fns: list, seed, update)
-- `src/lib/naming-doctrine.ts`
-- `src/components/admin/NamingWarningChip.tsx`
-- `src/routes/admin.destination-moments.tsx`
+**Edited files**
+- `src/routes/portofino.tsx` — replace `PortofinoPage` body with the new editorial-index layout. Keep existing `head()` meta (title still reads "Portofino" — copy unchanged because it's the same destination). Drop the Day 1–5 cards section; keep Hotels and Experiences sections unchanged for now (out of scope to redesign).
+- `src/routes/admin.destination-moments.tsx` — add the source-verdict fetch and render the chip on each Portofino `MomentCard`.
+- `src/routeTree.gen.ts` regenerates automatically.
 
-**Edited**
-- `src/lib/look-studio.functions.ts` — accept `moment_slug` on candidate update
-- `src/routes/admin.look-studio.tsx` — moment picker + naming chip
-- `src/routes/admin.editorial-library.tsx` — naming chip on cards
-- `src/integrations/supabase/types.ts` — regenerated for new tables/columns
+**Routing note**
+- `portofino.$moment.tsx` and `portofino.$day.$look.tsx` coexist fine (different segment counts). `portofino.day-1.tsx` etc. are static segments and take precedence over `$moment`, so legacy URLs keep matching their original files.
 
----
+**No DB migration.** All required tables and the `moment_slug` column on `look_candidates` already exist from the previous phase.
 
 ## Validation
 
-1. Migration runs; `destination_moments` + `destination_moment_archetypes` exist with grants.
-2. `/admin/destination-moments` → seed Portofino → six moments appear.
-3. Naming chip on Editorial Library: existing JHS items like "Coastal Muse", "Mediterranean Escape", "Summer Essentials" show **generic / flag**. "Harbor Aperitivo", "Yacht Day", "Riviera Dinner" show **destination moment ✓**. "Resort Sandals", "Raffia Bags" show **editorial commerce ✓**.
-4. Look Studio candidate card: dropdown lists six Portofino moments; saving persists; chip reflects the title's class.
-
-Approve and I'll build it.
+1. Visit `/portofino` — see hero + six moment cards in canonical order, no day numbers.
+2. Click any moment → `/portofino/<moment-slug>` renders with narrative, styling cues, and a look.
+3. Visit `/portofino/day-1` → still works exactly as before.
+4. Visit `/admin/destination-moments` → all six Portofino moments show the amber "Fallback look" chip (since no candidates are tagged yet). After tagging an approved candidate in Look Studio, refresh and that moment flips to green.
