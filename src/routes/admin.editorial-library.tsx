@@ -315,6 +315,7 @@ function ReferenceCard({
                   Unlock · {r.engagement_unlock_keyword}
                 </span>
               )}
+              <NamingWarningChip title={r.title} size="xs" />
             </div>
             <h2 className="font-display text-xl tracking-[0.06em] uppercase mt-2">{r.title}</h2>
             {r.editorial_story && r.editorial_story !== r.title && (
