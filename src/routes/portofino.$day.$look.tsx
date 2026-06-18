@@ -1,3 +1,5 @@
+      {/* ───────────────────────── MORE LIKE THIS (DNA-matched discovery) ───────────────────────── */}
+      <MoreLikeThis daySlug={day} lookSlug={look} />
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { Check, ChevronLeft, ChevronRight, MapPin, Shirt, ShoppingBag, Sun } from "lucide-react";
 import { useMemo, useState } from "react";
