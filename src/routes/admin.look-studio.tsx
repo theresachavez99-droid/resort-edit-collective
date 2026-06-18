@@ -19,6 +19,8 @@ import {
 } from "@/lib/look-studio.functions";
 import { fillPortofinoInventory, bulkSourceBrand } from "@/lib/brand-crawl.functions";
 import { refreshLookInventory, getDestinationInventoryHealth } from "@/lib/source-availability.functions";
+import { listDestinationMoments, setCandidateMoment } from "@/lib/destination-moments.functions";
+import { NamingWarningChip } from "@/components/admin/NamingWarningChip";
 import {
   IMPROVE_FEEDBACK_PRESETS,
   LOOK_SCORE_CATEGORIES,
@@ -510,6 +512,23 @@ function LookCandidateCard({
     onSuccess: onChanged,
   });
 
+  // Destination Moments — load the list for this candidate's destination so the
+  // editor can tag the candidate. Shared cache key dedupes across cards.
+  const momentsFn = useServerFn(listDestinationMoments);
+  const moments = useQuery({
+    queryKey: ["dest-moments-public", candidate.destination],
+    queryFn: () => momentsFn({ data: { destination_slug: candidate.destination } }),
+    staleTime: 60_000,
+  });
+  const setMomentFn = useServerFn(setCandidateMoment);
+  const setMoment = useMutation({
+    mutationFn: (slug: string | null) =>
+      setMomentFn({ data: { password, candidate_id: candidate.id, moment_slug: slug } }),
+    onSuccess: onChanged,
+  });
+  const momentList = moments.data?.ok ? moments.data.moments : [];
+  const currentMoment = momentList.find((m) => m.moment_slug === candidate.moment_slug);
+
   const sortedSlots = useMemo(
     () => [...slots].sort((a, b) => a.position - b.position),
     [slots],
@@ -539,7 +558,17 @@ function LookCandidateCard({
         <div>
           <p className="font-display text-sm tracking-[0.06em]">Variant {candidate.variant}</p>
           {brief?.title && (
-            <p className="text-[0.7rem] text-ink/65 font-serif italic mt-0.5 line-clamp-1">{brief.title}</p>
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              <p className="text-[0.7rem] text-ink/65 font-serif italic line-clamp-1">{brief.title}</p>
+              <NamingWarningChip
+                title={brief.title}
+                size="xs"
+                context={{
+                  knownMomentNames: momentList.map((m) => m.moment_name),
+                  knownDestinationSlugs: [candidate.destination],
+                }}
+              />
+            </div>
           )}
           <p className="text-[0.7rem] text-ink/55 mt-0.5">
             Composite{" "}
@@ -547,6 +576,29 @@ function LookCandidateCard({
               {candidate.composite_score != null ? candidate.composite_score.toFixed(2) : "—"}
             </span>
           </p>
+          {momentList.length > 0 && (
+            <div className="mt-1.5 flex items-center gap-1.5">
+              <span className="text-[0.55rem] tracking-[0.22em] uppercase text-ink/45">Moment</span>
+              <select
+                value={candidate.moment_slug ?? ""}
+                onChange={(e) => setMoment.mutate(e.target.value || null)}
+                disabled={setMoment.isPending}
+                className="text-[0.7rem] border border-ink/20 bg-ivory px-1.5 py-0.5"
+              >
+                <option value="">— untagged —</option>
+                {momentList.map((m) => (
+                  <option key={m.moment_slug} value={m.moment_slug}>
+                    {m.moment_name}
+                  </option>
+                ))}
+              </select>
+              {currentMoment?.time_of_day && (
+                <span className="text-[0.55rem] tracking-[0.18em] uppercase text-ink/45">
+                  {currentMoment.time_of_day}
+                </span>
+              )}
+            </div>
+          )}
         </div>
         <div className="flex flex-col items-end gap-1">
           <span className={`text-[0.6rem] tracking-[0.2em] uppercase border px-2 py-0.5 ${statusColor}`}>
