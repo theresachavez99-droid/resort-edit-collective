@@ -114,12 +114,17 @@ function LibraryBoard({ password }: { password: string }) {
   });
 
   const references = (refs.data && refs.data.ok ? refs.data.references : []) as EditorialReferenceRow[];
+  const [collectionFilter, setCollectionFilter] = useState<string>("all");
+  const collections = Array.from(new Set(references.map((r) => r.collection ?? "core-stylist-references")));
+  const filtered = collectionFilter === "all"
+    ? references
+    : references.filter((r) => (r.collection ?? "core-stylist-references") === collectionFilter);
   const counts = {
-    total: references.length,
-    ready: references.filter((r) => r.extraction_status === "ready").length,
-    pending: references.filter((r) => r.extraction_status === "pending").length,
-    failed: references.filter((r) => r.extraction_status === "failed").length,
-    extracting: references.filter((r) => r.extraction_status === "extracting").length,
+    total: filtered.length,
+    ready: filtered.filter((r) => r.extraction_status === "ready").length,
+    pending: filtered.filter((r) => r.extraction_status === "pending").length,
+    failed: filtered.filter((r) => r.extraction_status === "failed").length,
+    extracting: filtered.filter((r) => r.extraction_status === "extracting").length,
   };
 
   return (
@@ -137,6 +142,28 @@ function LibraryBoard({ password }: { password: string }) {
             <p className="mt-3 text-[0.7rem] tracking-[0.18em] uppercase text-ink/55">
               {counts.total} references · {counts.ready} ready · {counts.pending} pending · {counts.extracting} extracting · {counts.failed} failed
             </p>
+            {collections.length > 1 && (
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                <button
+                  onClick={() => setCollectionFilter("all")}
+                  className={`border px-2.5 py-1 text-[0.6rem] tracking-[0.22em] uppercase ${collectionFilter === "all" ? "bg-ink text-ivory border-ink" : "border-ink/25 text-ink/70"}`}
+                >
+                  All ({references.length})
+                </button>
+                {collections.map((c) => {
+                  const n = references.filter((r) => (r.collection ?? "core-stylist-references") === c).length;
+                  return (
+                    <button
+                      key={c}
+                      onClick={() => setCollectionFilter(c)}
+                      className={`border px-2.5 py-1 text-[0.6rem] tracking-[0.22em] uppercase ${collectionFilter === c ? "bg-ink text-ivory border-ink" : "border-ink/25 text-ink/70"}`}
+                    >
+                      {c} ({n})
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
           <div className="flex gap-2 flex-wrap">
             <button
@@ -178,13 +205,13 @@ function LibraryBoard({ password }: { password: string }) {
 
       <div className="max-w-[1500px] mx-auto px-6 md:px-10 py-8 space-y-6">
         {refs.isLoading && <p className="text-sm text-ink/55">Loading references…</p>}
-        {!refs.isLoading && references.length === 0 && (
+        {!refs.isLoading && filtered.length === 0 && (
           <div className="border border-ink/20 bg-cream/30 p-8 text-center">
             <p className="font-serif italic text-ink/70">No references yet.</p>
-            <p className="text-sm text-ink/55 mt-2">Click <em>Seed references</em> to insert the 13 starter references.</p>
+            <p className="text-sm text-ink/55 mt-2">Click <em>Seed references</em> to insert the starter references.</p>
           </div>
         )}
-        {references.map((r) => (
+        {filtered.map((r) => (
           <ReferenceCard
             key={r.id}
             r={r}
@@ -271,6 +298,21 @@ function ReferenceCard({
             <div className="flex items-center gap-2 flex-wrap">
               {statusChip(r.extraction_status)}
               <span className="text-[0.6rem] tracking-[0.18em] uppercase text-ink/55">{r.source_type}</span>
+              {r.collection && r.collection !== "core-stylist-references" && (
+                <span className="border border-gold/60 bg-gold/10 text-ink px-2 py-0.5 text-[0.6rem] tracking-[0.18em] uppercase">
+                  {r.reference_type ?? r.collection}
+                </span>
+              )}
+              {r.editorial_priority === "high" && (
+                <span className="border border-ink bg-ink text-ivory px-2 py-0.5 text-[0.6rem] tracking-[0.18em] uppercase">
+                  Priority · High
+                </span>
+              )}
+              {r.engagement_unlock_keyword && (
+                <span className="border border-ink/20 px-2 py-0.5 text-[0.6rem] tracking-[0.18em] uppercase text-ink/70">
+                  Unlock · {r.engagement_unlock_keyword}
+                </span>
+              )}
             </div>
             <h2 className="font-display text-xl tracking-[0.06em] uppercase mt-2">{r.title}</h2>
             {r.editorial_story && r.editorial_story !== r.title && (
