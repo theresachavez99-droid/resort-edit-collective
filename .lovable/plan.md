@@ -1,107 +1,111 @@
-# Look Studio Quality Upgrade Plan
+## Scope (locked from your answers)
 
-Goal: candidates that feel like a luxury personal shopper presentation, not a product grid. No candidate ships unless it passes a hard quality gate.
+- **Build**: Portofino perfection only. No `/editorial`, `/capsules`, `/essentials` yet.
+- **Naming**: Two-class validator (Destination Moment vs Editorial Commerce). Warn + flag, never block.
+- **Sourcing**: Untouched. No retailer or scoring changes.
 
-## 1. Aesthetic-first assembly (workflow reversal)
+Everything else from the doctrine (capsule engine, editorial shops, brand diversity scoring, cross-retail enforcement) is documented but deferred to later sprints.
 
-Replace the current "pick products → score look" flow with a 6-stage pipeline. Each Look DNA + candidate slot (A/B/C) runs through:
+---
 
-```text
-1. Destination Energy Brief   (AI: 1 paragraph mood)
-2. Color Story                (AI: 3-5 hex palette + narrative)
-3. Silhouette Strategy        (AI: proportions, layering, drape)
-4. Accessory Ecosystem        (AI: jewelry stack, bag mood, eyewear era)
-5. Luxury Traveler Persona    (AI: who she is, where she's going, what she'd save)
-6. Product Assembly           (DB: rank sourced_products against the brief)
-```
+## What ships this turn
 
-Stages 1-5 are produced as a single `CandidateBrief` from one Lovable AI call per candidate (Gemini 3 flash). Stage 6 scores every eligible product against the brief (brand fit, color match, silhouette tag, price tier, retailer trust) and picks the best per slot.
+### 1. Destination Moments Library (data foundation)
 
-To guarantee differentiation, A/B/C briefs are generated together in one prompt with an explicit instruction: "Three distinct luxury interpretations of the same DNA — e.g. Mediterranean maximalist / polished yacht luxury / Riviera glamour. Each must use a different color story and accessory ecosystem."
-
-## 2. Mandatory complete slots
-
-Required slot list enforced in code (not just labels):
+New table `destination_moments`:
 
 ```text
-primary_garment, secondary_garment, shoes, bag,
-earrings, necklace, bracelet, ring, sunglasses, hair_detail
+id (uuid)
+destination_slug      e.g. "portofino"
+moment_slug           e.g. "harbor-aperitivo"
+moment_name           "Harbor Aperitivo"
+moment_archetype      "aperitivo" | "arrival" | "market" | "yacht" | "sunset" | "dinner" | ...
+time_of_day           "morning" | "midday" | "afternoon" | "evening" | "night"
+narrative             short editorial paragraph
+styling_cues          jsonb (silhouette, palette, materials, accessory strategy)
+sort_order            int
+active                bool
 ```
 
-`assembleCandidate()` returns `{ status: "incomplete", missingSlots: [...] }` instead of a candidate when any required slot has no product. The orchestrator then:
-1. Calls `sourceForSlots(missingSlots, brief)` — Firecrawl-driven targeted sourcing scoped to the brief's brands and slot types.
-2. Retries assembly once.
-3. If still incomplete, the candidate is **discarded** (not shown). UI surfaces "Candidate failed quality gate — auto-regenerating."
+Seed Portofino with the canonical six:
 
-## 3. Expanded sourcing pool
+1. Arrival Day
+2. Market Morning
+3. Harbor Aperitivo
+4. Yacht Day
+5. Sunset Views
+6. Riviera Dinner
 
-Before any candidate generation runs, ensure pool size ≥ a per-DNA floor:
+Plus the **archetypes table** (`destination_moment_archetypes`) — the reusable library that future destinations (Capri, St. Barths, Palm Beach) will map their local versions onto. Seeded with the 10 archetypes from the doctrine: Arrival, Market Morning, Beach Club Lunch, Yacht Day, Harbor Aperitivo, Sunset Views, Riviera Dinner, Villa Dinner, Shopping Afternoon, Boat Excursion.
 
-- Floor: **300 eligible products per Look DNA** (currently 31 total).
-- Add `ensureSourcingDepth(lookDnaId)` that:
-  - Counts eligible `sourced_products` matching the DNA's brand allowlist + destination + season.
-  - If below floor, kicks off a sourcing batch via Firecrawl across the approved Resort Edit brand list, scoped to the missing slot types and price tiers.
-  - Blocks candidate generation until floor met (with progress UI).
-- Add a "Sourcing Depth" badge to the Look Studio header: `eligible / floor`.
+Both tables: full GRANT block, RLS enabled, `SELECT TO anon` (public read), writes admin-only via service role.
 
-## 4. Mandatory muse preview (hard gate)
+### 2. Wire moments to existing looks
 
-Muse preview generation moves from optional to **required** for candidate completion. A candidate without a rendered muse image is not eligible to display.
+Add `moment_slug` column to `look_candidates` (nullable, FK-soft to `destination_moments.moment_slug`). No migration of existing Day 1–5 data yet — admin will tag manually in Look Studio. Surface a moment picker in the Look Studio candidate card.
 
-- Pipeline: brief → muse prompt (composed from color story + silhouette + persona + destination) → `openai/gpt-image-2` via AI Gateway (streaming, server route `/api/generate-muse`).
-- Stored on `look_candidates.muse_image_url` (already exists). Candidate row stays in `status: 'pending_muse'` until image lands.
-- UI shows a blurred shimmer placeholder while streaming partials arrive, then unblurs on completion.
-- Failure → discard candidate, regenerate.
+### 3. Naming Doctrine Validator
 
-## 5. Quality gate
+New module `src/lib/naming-doctrine.ts` (pure, no deps):
 
-Before a candidate is marked `ready_for_review` and shown in the UI, it must pass ALL of:
+- `classifyName(title)` → `{ class: "destination_moment" | "editorial_commerce" | "generic", matches: string[], suggestion?: string }`
+- **Destination Moment** allowlist: built from `destination_moments` rows + archetype names (Harbor Aperitivo, Yacht Day, Market Morning, Riviera Dinner, Blue Grotto Day, Via Camerelle, …).
+- **Editorial Commerce** allowlist: functional category patterns (`Resort Sandals`, `Raffia Bags`, `Vacation Sunglasses`, `Beach Club Dresses`, `Vacation Jewelry`, `Resort Totes`, `Yacht Day Hats`, `Vacation Dresses`, `White Dresses`, etc.).
+- **Generic / discouraged** blocklist with regex: `coastal muse`, `mediterranean escape`, `summer essentials`, `vacation vibes`, `resort chic`, `beach glam`, `european summer`, `vacation style`, `beach chic`, plus a heuristic for influencer-flavored adjective+noun pairs.
 
-| Check | Threshold |
-|---|---|
-| All 10 required slots filled | 10/10 |
-| Muse image present | non-null URL |
-| Destination specificity score | ≥ 7/10 |
-| Styling cohesion score | ≥ 7/10 |
-| Accessory ecosystem score | ≥ 7/10 |
-| Differentiation vs sibling candidates | cosine distance on color+silhouette+persona embedding ≥ 0.25 |
+Output drives a `<NamingWarningChip />` shown in:
 
-Scoring is done by a second AI pass (`scoreCandidate`) against the assembled outfit + muse image (multimodal). Failures auto-regenerate up to 2 retries per candidate slot; after that, surfaced as "Could not reach Resort Edit quality — adjust DNA or expand brand pool."
+- Admin Look Studio candidate card
+- Admin Editorial Library card (already-seeded JHS frameworks will display as `editorial_commerce` ✓ or flag accordingly)
 
-## 6. UI changes (admin/look-studio)
+No hard block, no auto-rewrite. Warning copy: *"Generic naming detected. Consider a destination moment or functional editorial category."* with the suggestion when one exists.
 
-- "Generate 3 candidates" becomes a multi-stage progress panel:
-  ```text
-  Sourcing depth      ████████░░  248 / 300
-  Briefs (A/B/C)      ████████░░  generating persona…
-  Muse previews       ██░░░░░░░░  A rendering, B queued, C queued
-  Quality gate        —
-  ```
-- Each candidate card shows the brief (Destination Energy, Color Story swatches, Persona) above the muse and lookboard — so the reviewer sees the aesthetic intent, not just the products.
-- Failed candidates appear as a subtle "Regenerating — failed: missing necklace, cohesion 6.2/10" row, then replace themselves on success.
+### 4. Admin surfaces
 
-## Technical details
+- **`/admin/destination-moments`** — new route. List + reorder Portofino's six moments, edit narrative + styling cues, view archetype mapping. Includes "Seed Portofino moments" and "Seed archetype library" buttons.
+- **Look Studio** — add moment dropdown + naming chip on each candidate card.
+- **Editorial Library** — add naming chip on each card (read-only, advisory).
 
-- New file: `src/lib/candidate-brief.server.ts` — `generateCandidateBriefs(dna)` returns `{ A, B, C }` differentiated briefs in one AI call.
-- New file: `src/lib/sourcing-depth.server.ts` — `ensureSourcingDepth`, `sourceForSlots`.
-- New file: `src/routes/api/generate-muse.ts` — streaming muse image route (SSE passthrough per the AI Gateway pattern).
-- Update `src/lib/look-studio.functions.ts`:
-  - `generateLookCandidates` becomes an orchestrator: depth check → briefs → per-candidate (assemble → muse → score → gate → retry/discard).
-  - Add `REQUIRED_SLOTS` constant; `assembleCandidate` enforces it.
-- DB migration: add `look_candidates.brief jsonb`, `status` enum extended with `pending_muse | pending_score | failed_gate`, `gate_failures jsonb` for debugging. `sourced_products` gets `color_tags text[]`, `silhouette_tags text[]` for matching.
-- Differentiation: store a small `aesthetic_vector` (color + silhouette + persona keywords hashed/embedded) on each candidate; compare siblings before approving.
+### 5. Public Portofino — no visible changes yet
 
-## What I am not changing
+Per "Perfect Portofino" priority, the public `/portofino*` routes stay as-is this turn. The moment data is being built so the next sprint can rewire the public destination page around the six moments without scrambling.
 
-- Customer-facing `/look/$slug` editorial page stays as-is — the only thing flowing into it is now higher-quality candidates.
-- Product Vault promotion-on-approve flow unchanged.
-- Review/approve UI semantics unchanged (still look-level).
+---
 
-## Open questions
+## Out of scope (explicit)
 
-1. **Sourcing floor** — 300 eligible per DNA is my proposal. Higher = better differentiation but slower first run (Firecrawl-bound). Confirm or set a different number.
-2. **Brand allowlist** — should `ensureSourcingDepth` source from the existing Resort Edit brand list only, or am I allowed to add brands the AI suggests during brief generation (subject to your later approval)?
-3. **Muse model** — `openai/gpt-image-2` (default, fast, good fashion editorial) vs `google/gemini-3-pro-image-preview` (higher fidelity, slower, costlier). Default to gpt-image-2 unless you want pro.
-4. **Auto-retry budget** — 2 retries per candidate slot before surfacing failure. OK, or higher?
+- `/editorial`, `/capsules`, `/essentials` routes
+- Capsule engine, essentials library
+- Cross-retail sourcing changes, brand-diversity scoring, retailer concentration penalties
+- New destinations (Capri, St. Barths, Palm Beach)
+- Public Portofino page redesign
+- Hard validation / generation blocking on naming
+- Migrating existing Day 1–5 look candidates to new moment_slug values (admin will tag once moments exist)
 
-Approve and I'll implement.
+---
+
+## Files
+
+**New**
+- `supabase/migrations/<ts>_destination_moments.sql`
+- `src/lib/destination-moments.functions.ts` (server fns: list, seed, update)
+- `src/lib/naming-doctrine.ts`
+- `src/components/admin/NamingWarningChip.tsx`
+- `src/routes/admin.destination-moments.tsx`
+
+**Edited**
+- `src/lib/look-studio.functions.ts` — accept `moment_slug` on candidate update
+- `src/routes/admin.look-studio.tsx` — moment picker + naming chip
+- `src/routes/admin.editorial-library.tsx` — naming chip on cards
+- `src/integrations/supabase/types.ts` — regenerated for new tables/columns
+
+---
+
+## Validation
+
+1. Migration runs; `destination_moments` + `destination_moment_archetypes` exist with grants.
+2. `/admin/destination-moments` → seed Portofino → six moments appear.
+3. Naming chip on Editorial Library: existing JHS items like "Coastal Muse", "Mediterranean Escape", "Summer Essentials" show **generic / flag**. "Harbor Aperitivo", "Yacht Day", "Riviera Dinner" show **destination moment ✓**. "Resort Sandals", "Raffia Bags" show **editorial commerce ✓**.
+4. Look Studio candidate card: dropdown lists six Portofino moments; saving persists; chip reflects the title's class.
+
+Approve and I'll build it.
