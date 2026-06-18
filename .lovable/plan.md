@@ -1,101 +1,108 @@
-# Portofino Editorial Rebuild — Six Core Moments
+## More Like This — Editorial Discovery Engine
 
-Rebuild `/portofino` around the six canonical moments. Keep the existing `/portofino/day-N` URLs working (no destructive changes), add `/portofino/<moment-slug>` as the canonical per-moment URL, and source looks via a hybrid resolver (tagged Look Studio candidates first, mapped legacy look as fallback).
+Add a horizontally scrollable "More Like This" carousel to every Portofino look page, surfacing 6–10 destination-aware alternative products selected by editorial DNA (destination + activity + style family) rather than brand. Seed Portofino with a small, curated, editorially-tagged product set including the Milly Lela, Milly Lene, Farm Rio Porcelain Garden, D&G Majolica Shirt Dress, Alice + Olivia Glinda, and Alice + Olivia Miriam from the uploaded references.
 
-## What the user will see
+### Placement on `/portofino/$day/$look`
 
-### 1. New `/portofino` landing — editorial index
+Inserted as a new section, in this order:
 
-Replaces the current Day 1–5 grid. No day numbers, no itinerary language.
-
-```
-┌────────────────────────────────────────────────┐
-│  HERO — Portofino harbor                       │
-│  "Dressed for the Destination™"                │
-│  One-paragraph destination introduction        │
-└────────────────────────────────────────────────┘
-
-  Six Moments in Portofino
-
-  ┌──────────┐  ┌──────────┐  ┌──────────┐
-  │ Arrival  │  │ Market   │  │ Yacht    │
-  │ Day      │  │ Morning  │  │ Day      │
-  └──────────┘  └──────────┘  └──────────┘
-  ┌──────────┐  ┌──────────┐  ┌──────────┐
-  │ Harbor   │  │ Sunset   │  │ Riviera  │
-  │ Aperitivo│  │ Views    │  │ Dinner   │
-  └──────────┘  └──────────┘  └──────────┘
+```text
+Complete the Look (existing)
+… existing sections …
+Editor's Alternatives (existing)
+─ NEW ─  More Like This
+Continue to Day X (Next Look CTA — existing)
 ```
 
-Each card: moment hero image, moment title, one-sentence narrative (pulled from `destination_moments.narrative`), hero outfit thumbnail, "View Moment" CTA → `/portofino/<moment-slug>`.
+Title: **More Like This**  
+Subtitle: *Explore similar pieces with the same destination energy.*
 
-Card order is the canonical sequence: Arrival → Market → Yacht → Aperitivo → Sunset → Dinner (`sort_order` from `destination_moments`).
+The earlier "Editor's Alternatives" section stays as-is (it's per-look manually curated); "More Like This" is the automated DNA-matched discovery layer.
 
-### 2. New per-moment route `/portofino/<moment-slug>`
+### Editorial matching model
 
-One route file, dynamic param. For each moment it renders: moment hero, narrative, styling cues (silhouette / palette / hero / accessories / avoid from `styling_cues`), and the resolved look(s) — product cards rendered with the existing `PortofinoDayPage` look component so visual hierarchy and product fit are unchanged.
+New module `src/data/styleDNA.ts` — pure data, no runtime cost.
 
-### 3. Legacy `/portofino/day-1` … `/portofino/day-5` — preserved as-is
+Each look gets a `LookDNA` record:
+```ts
+{ destination, momentSlug, styleFamilies[], activityTags[], excludeFamilies[] }
+```
 
-No content changes, no redirects. They keep working. The new landing page does not link to them.
+Each product gets a `ProductDNA` record:
+```ts
+{ id, brand, name, price, image, href, retailer,
+  destinations[], styleFamilies[], activityTags[], momentSlugs[],
+  brandTier: 'familiar' | 'discovery',
+  editorialLabel?  // "Mediterranean Embroidery", "Porcelain Prints", etc.
+}
+```
 
-## How look sourcing works (hybrid resolver)
+Style families seeded: `mediterranean_embroidery`, `blue_white_porcelain`, `riviera_floral`, `coastal_knit`, `crochet_resort`, `raffia_luxury`, `yacht_swim`, `harbor_aperitivo`, `sunset_glamour`, `destination_print`.
 
-New server function `resolvePortofinoMomentLook({ moment_slug })`:
+Activity tags seeded: `yacht_day`, `beach_club_lunch`, `harbor_aperitivo`, `market_morning`, `sunset_views`, `riviera_dinner`, `pool_day`, `arrival_day`, `shopping_afternoon`.
 
-1. Query `look_candidates` where `moment_slug = $1` AND `status = 'approved'`. If any rows: return the highest-scoring one as `{ source: "tagged", look }`.
-2. Otherwise return the mapped legacy look as `{ source: "fallback", look }`.
+### Scoring function (`src/lib/moreLikeThis.ts`)
 
-Legacy mapping (locked, one per moment):
+```text
+score =  destinationMatch     × 5.0   // hard prefilter; zero = excluded
+       + styleFamilyOverlap   × 3.0   // count of shared families
+       + activityFidelity     × 4.0   // shared activity, with hard excludes
+       + editorialUniqueness  × 1.0   // boost rarely-shown products
+       + luxuryAppeal         × 0.5   // price/brand-tier signal
+       − sameBrandPenalty     × 2.0   // applied during diversification
+```
 
-| Moment            | Legacy fallback                          |
-| ----------------- | ---------------------------------------- |
-| arrival-day       | Day 5 — Market Strolls & Coastal Goodbyes (arrival energy, linen, light) |
-| market-morning    | Day 5 — Market Strolls & Coastal Goodbyes |
-| yacht-day         | Day 1 — Yacht Day & Harbor Aperitivo (yacht half) |
-| harbor-aperitivo  | Day 1 — Yacht Day & Harbor Aperitivo (aperitivo half) |
-| sunset-views      | Day 4 — Sunset Cocktails & Dinner With a View |
-| riviera-dinner    | Day 4 — Sunset Cocktails & Dinner With a View |
+Hard rules enforced after scoring:
+- Drop any product whose `activityTags` overlap the look's `excludeFamilies` (e.g. yacht coverup under a dinner look).
+- Drop products with no image, no href, or `soldOut: true` (uses existing fallback inventory logic).
+- Diversify: greedy pick top-scored, cap at **2 per brand**, target **6 cards** (8 max).
+- Brand mix target: ~30% familiar / ~70% discovery; if the discovery pool is too small, top up with familiar to hit 6.
 
-Day 2 (Beach Club) and Day 3 (Pool & Shopping) are deliberately NOT mapped — those archetypes are optional and out of scope for the core six.
+### Seed product library
 
-## Admin fallback warning
+Add `src/data/productLibrary.ts` with ~14 seeded items so the carousel renders meaningfully on every Portofino look:
 
-`/admin/destination-moments` Portofino section gets a new chip per moment card:
+| Brand | Product | Families | Activities | Tier |
+|---|---|---|---|---|
+| Milly | Lela Embroidered Midi | mediterranean_embroidery, blue_white_porcelain | market_morning, beach_club_lunch | discovery |
+| Milly | Lene Embroidered Mini | mediterranean_embroidery, blue_white_porcelain | beach_club_lunch, arrival_day | discovery |
+| Farm Rio | Off-White Porcelain Garden Cut-Out Midi | blue_white_porcelain, destination_print | market_morning, sunset_views | discovery |
+| Dolce & Gabbana | Majolica Twill Shirt Dress | blue_white_porcelain, destination_print | riviera_dinner, sunset_views | familiar |
+| Alice + Olivia | Glinda Majolica Tassel Mini | blue_white_porcelain, sunset_glamour | sunset_views, harbor_aperitivo | familiar |
+| Alice + Olivia | Miriam Linen Sweetheart Top | blue_white_porcelain | harbor_aperitivo, beach_club_lunch | familiar |
+| + 8 existing Resort Edit pieces re-tagged from `portofino.ts` (raffia tote, Eres swimsuit, Gianvito sandals, etc.) for yacht/beach/aperitivo coverage |
 
-- **Approved tagged candidate** — green, "Tagged: <candidate title>"
-- **Fallback look — tag approved candidate for this moment** — amber, when resolver returns `source: "fallback"`
+Images for the six uploaded references are added via lovable-assets pointers from `/mnt/user-uploads/` (not copied into the repo). Each product `href` points to its retailer page so existing `trackOutbound` analytics work unchanged.
 
-Driven by a new server fn `getMomentSourceVerdicts({ password, destination_slug })` that runs the resolver for each moment and returns `{ moment_slug, source, candidate_title? }[]`.
+### UI
 
-## Out of scope (explicit)
+New component `src/components/MoreLikeThis.tsx`:
+- Horizontal scroll-snap rail (`overflow-x-auto snap-x snap-mandatory`), no JS carousel dep
+- Card: 240px wide, image (3:4), brand eyebrow, name, price, optional editorial label chip (e.g. "Mediterranean Embroidery"), Save heart (reuses `src/lib/saved.ts`), Shop outbound link
+- Mobile: snap rail; Desktop: same rail with subtle arrow affordance; matches existing ivory/ink/gold tokens
 
-- No `/capsules`, `/editorial`, `/essentials`.
-- No sourcing changes (no new retailers, no scoring tweaks, no brand-diversity penalties).
-- No new archetypes, no Beach Club / Villa Dinner / Shopping / Boat Excursion routes.
-- No edits to legacy `/portofino/day-N` pages or to the existing look-detail route.
-- No changes to product cards, ProductCard component, or affiliate logic.
+### Files
 
-## Technical details
+**New:**
+- `src/data/styleDNA.ts` — LookDNA map for all existing Portofino looks
+- `src/data/productLibrary.ts` — seeded ProductDNA records
+- `src/lib/moreLikeThis.ts` — scorer + diversifier (pure function, fully testable)
+- `src/components/MoreLikeThis.tsx`
+- 6 lovable-assets pointer JSONs under `src/assets/products/` for the uploaded references
 
-**New files**
-- `src/routes/portofino.$moment.tsx` — dynamic per-moment route. Param is the moment slug (e.g. `arrival-day`). Uses Route.useParams + a public server-fn loader. Throws `notFound()` for unknown slugs. Reuses `PortofinoDayPage` look renderer for visual parity.
-- `src/lib/portofino-moments.functions.ts` — `listPortofinoMomentsForLanding()` (public) returns `[{ moment, narrative, hero_image, resolved_look_thumb, source }]`; `resolvePortofinoMomentLook({ moment_slug })` (public) returns the look or null; `getMomentSourceVerdicts()` (admin-gated) for the warning chips.
-- `src/lib/portofino-moment-fallbacks.ts` — pure mapping table from `moment_slug` → legacy look-id + thumbnail import. No DB calls.
+**Edited:**
+- `src/routes/portofino.$day.$look.tsx` — render `<MoreLikeThis lookId={…} />` between Editor's Alternatives and the Continue-to-Day-X CTA
 
-**Edited files**
-- `src/routes/portofino.tsx` — replace `PortofinoPage` body with the new editorial-index layout. Keep existing `head()` meta (title still reads "Portofino" — copy unchanged because it's the same destination). Drop the Day 1–5 cards section; keep Hotels and Experiences sections unchanged for now (out of scope to redesign).
-- `src/routes/admin.destination-moments.tsx` — add the source-verdict fetch and render the chip on each Portofino `MomentCard`.
-- `src/routeTree.gen.ts` regenerates automatically.
+### Out of scope (per prior constraints)
 
-**Routing note**
-- `portofino.$moment.tsx` and `portofino.$day.$look.tsx` coexist fine (different segment counts). `portofino.day-1.tsx` etc. are static segments and take precedence over `$moment`, so legacy URLs keep matching their original files.
+- No new admin UI, no DB migration, no sourcing changes, no new archetypes, no /capsules/editorial/essentials.
+- Quick View modal not built this pass — card opens the retailer in a new tab like existing `ProductCard`.
 
-**No DB migration.** All required tables and the `moment_slug` column on `look_candidates` already exist from the previous phase.
+### Verification
 
-## Validation
-
-1. Visit `/portofino` — see hero + six moment cards in canonical order, no day numbers.
-2. Click any moment → `/portofino/<moment-slug>` renders with narrative, styling cues, and a look.
-3. Visit `/portofino/day-1` → still works exactly as before.
-4. Visit `/admin/destination-moments` → all six Portofino moments show the amber "Fallback look" chip (since no candidates are tagged yet). After tagging an approved candidate in Look Studio, refresh and that moment flips to green.
+- Build clean
+- Visit `/portofino/day-1/look-a` (Yacht): carousel shows yacht/coverup/raffia items, **no** dinner dresses
+- Visit `/portofino/day-4/look-a` (Sunset/Dinner): shows D&G Majolica, A+O Glinda, Farm Rio Porcelain, **no** yacht swim
+- Visit `/portofino/day-2/look-a` (Beach Club): shows Milly Lene, Milly Lela, knit/crochet alts
+- Brand cap verified: never more than 2 Milly tiles in one rail
+- Mobile screenshot at 420px confirms snap scroll + readable copy

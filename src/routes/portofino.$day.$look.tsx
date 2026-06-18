@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { MoreLikeThis } from "@/components/MoreLikeThis";
 import {
   isLookSlug,
   type LookSlug,
@@ -520,6 +521,9 @@ function ViewFullLookPage() {
           </div>
         </section>
       )}
+
+      {/* ───────────────────────── MORE LIKE THIS (DNA-matched discovery) ───────────────────────── */}
+      <MoreLikeThis daySlug={day} lookSlug={look} />
 
       {/* ───────────────────────── BOTTOM · GET THE NEXT EDIT ───────────────────────── */}
       {nextDay && nextDayFirstLook && (
