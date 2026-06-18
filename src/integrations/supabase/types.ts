@@ -133,7 +133,9 @@ export type Database = {
           archetype_slug: string
           created_at: string
           description: string | null
+          destination_required: boolean
           id: string
+          moment_type: string
           sort_order: number
           updated_at: string
         }
@@ -142,7 +144,9 @@ export type Database = {
           archetype_slug: string
           created_at?: string
           description?: string | null
+          destination_required?: boolean
           id?: string
+          moment_type?: string
           sort_order?: number
           updated_at?: string
         }
@@ -151,7 +155,9 @@ export type Database = {
           archetype_slug?: string
           created_at?: string
           description?: string | null
+          destination_required?: boolean
           id?: string
+          moment_type?: string
           sort_order?: number
           updated_at?: string
         }

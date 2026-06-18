@@ -25,6 +25,8 @@ export type MomentArchetypeRow = {
   archetype_name: string;
   description: string | null;
   sort_order: number;
+  moment_type: "core" | "optional";
+  destination_required: boolean;
 };
 
 export type DestinationMomentRow = {
@@ -43,16 +45,18 @@ export type DestinationMomentRow = {
 // ---------- Canonical archetype seeds ----------
 
 const ARCHETYPE_SEEDS: Array<Omit<MomentArchetypeRow, "id">> = [
-  { archetype_slug: "arrival", archetype_name: "Arrival Day", description: "Travel-in look — polished, considered, made to be photographed stepping off a boat or out of a car.", sort_order: 10 },
-  { archetype_slug: "market-morning", archetype_name: "Market Morning", description: "Easy daywear for an early walk through a village or harbor market.", sort_order: 20 },
-  { archetype_slug: "beach-club-lunch", archetype_name: "Beach Club Lunch", description: "Coverup-led look for a long afternoon at a private beach club.", sort_order: 30 },
-  { archetype_slug: "yacht-day", archetype_name: "Yacht Day", description: "On-water styling — sun, salt, breeze. Functional luxury, never costumey.", sort_order: 40 },
-  { archetype_slug: "harbor-aperitivo", archetype_name: "Harbor Aperitivo", description: "Pre-dinner spritz with a view of the boats. Elevated daywear into evening.", sort_order: 50 },
-  { archetype_slug: "sunset-views", archetype_name: "Sunset Views", description: "Golden-hour look from a terrace or cliffside.", sort_order: 60 },
-  { archetype_slug: "riviera-dinner", archetype_name: "Riviera Dinner", description: "Restaurant dressing — refined, romantic, destination-appropriate.", sort_order: 70 },
-  { archetype_slug: "villa-dinner", archetype_name: "Villa Dinner", description: "Private dinner at a rented villa — softer, more relaxed than restaurant dressing.", sort_order: 80 },
-  { archetype_slug: "shopping-afternoon", archetype_name: "Shopping Afternoon", description: "Walking the destination's signature shopping street.", sort_order: 90 },
-  { archetype_slug: "boat-excursion", archetype_name: "Boat Excursion", description: "Half-day boat trip — swimwear plus a thoughtful overlayer.", sort_order: 100 },
+  // Core six — every destination needs these, and the moment name MUST include the destination.
+  { archetype_slug: "arrival", archetype_name: "Arrival Day", description: "Travel-in look — polished, considered, made to be photographed stepping off a boat or out of a car.", sort_order: 10, moment_type: "core", destination_required: true },
+  { archetype_slug: "market-morning", archetype_name: "Market Morning", description: "Easy daywear for an early walk through a village or harbor market.", sort_order: 20, moment_type: "core", destination_required: true },
+  { archetype_slug: "yacht-day", archetype_name: "Yacht Day", description: "On-water styling — sun, salt, breeze. Functional luxury, never costumey.", sort_order: 30, moment_type: "core", destination_required: true },
+  { archetype_slug: "harbor-aperitivo", archetype_name: "Harbor Aperitivo", description: "Pre-dinner spritz with a view of the boats. Elevated daywear into evening.", sort_order: 40, moment_type: "core", destination_required: true },
+  { archetype_slug: "sunset-views", archetype_name: "Sunset Views", description: "Golden-hour look from a terrace or cliffside.", sort_order: 50, moment_type: "core", destination_required: true },
+  { archetype_slug: "riviera-dinner", archetype_name: "Riviera Dinner", description: "Restaurant dressing — refined, romantic, destination-appropriate.", sort_order: 60, moment_type: "core", destination_required: true },
+  // Optional four — used only when a destination genuinely supports the moment. Naming may be generic.
+  { archetype_slug: "beach-club-lunch", archetype_name: "Beach Club Lunch", description: "Coverup-led look for a long afternoon at a private beach club.", sort_order: 70, moment_type: "optional", destination_required: false },
+  { archetype_slug: "villa-dinner", archetype_name: "Villa Dinner", description: "Private dinner at a rented villa — softer, more relaxed than restaurant dressing.", sort_order: 80, moment_type: "optional", destination_required: false },
+  { archetype_slug: "shopping-afternoon", archetype_name: "Shopping Afternoon", description: "Walking the destination's signature shopping street.", sort_order: 90, moment_type: "optional", destination_required: false },
+  { archetype_slug: "boat-excursion", archetype_name: "Boat Excursion", description: "Half-day boat trip — swimwear plus a thoughtful overlayer.", sort_order: 100, moment_type: "optional", destination_required: false },
 ];
 
 // ---------- Portofino moment seeds (the canonical six) ----------
@@ -184,7 +188,7 @@ export const listMomentArchetypes = createServerFn({ method: "POST" })
     requireAdmin(data.password);
     const { data: rows, error } = await supabaseAdmin
       .from("destination_moment_archetypes")
-      .select("id,archetype_slug,archetype_name,description,sort_order")
+      .select("id,archetype_slug,archetype_name,description,sort_order,moment_type,destination_required")
       .order("sort_order", { ascending: true });
     if (error) return { ok: false as const, error: error.message };
     return { ok: true as const, archetypes: (rows ?? []) as MomentArchetypeRow[] };
@@ -211,16 +215,29 @@ export const seedMomentArchetypes = createServerFn({ method: "POST" })
     requireAdmin(data.password);
     const { data: existing, error: selErr } = await supabaseAdmin
       .from("destination_moment_archetypes")
-      .select("archetype_slug");
+      .select("archetype_slug,moment_type,destination_required");
     if (selErr) return { ok: false as const, error: selErr.message };
-    const have = new Set((existing ?? []).map((r) => r.archetype_slug));
-    const toInsert = ARCHETYPE_SEEDS.filter((a) => !have.has(a.archetype_slug));
-    if (!toInsert.length) return { ok: true as const, inserted: 0, total: ARCHETYPE_SEEDS.length };
-    const { error: insErr } = await supabaseAdmin
-      .from("destination_moment_archetypes")
-      .insert(toInsert);
-    if (insErr) return { ok: false as const, error: insErr.message };
-    return { ok: true as const, inserted: toInsert.length, total: ARCHETYPE_SEEDS.length };
+    const haveMap = new Map((existing ?? []).map((r) => [r.archetype_slug, r]));
+    const toInsert = ARCHETYPE_SEEDS.filter((a) => !haveMap.has(a.archetype_slug));
+    // Backfill momentType / destinationRequired on rows that pre-date the new fields.
+    const toUpdate = ARCHETYPE_SEEDS.filter((a) => {
+      const r = haveMap.get(a.archetype_slug) as { moment_type?: string; destination_required?: boolean } | undefined;
+      return r && (r.moment_type !== a.moment_type || r.destination_required !== a.destination_required);
+    });
+    if (toInsert.length) {
+      const { error: insErr } = await supabaseAdmin
+        .from("destination_moment_archetypes")
+        .insert(toInsert);
+      if (insErr) return { ok: false as const, error: insErr.message };
+    }
+    for (const a of toUpdate) {
+      const { error: updErr } = await supabaseAdmin
+        .from("destination_moment_archetypes")
+        .update({ moment_type: a.moment_type, destination_required: a.destination_required } as never)
+        .eq("archetype_slug", a.archetype_slug);
+      if (updErr) return { ok: false as const, error: updErr.message };
+    }
+    return { ok: true as const, inserted: toInsert.length, updated: toUpdate.length, total: ARCHETYPE_SEEDS.length };
   });
 
 /** Admin: idempotent seed of the six Portofino moments. */
