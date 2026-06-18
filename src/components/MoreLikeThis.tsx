@@ -2,7 +2,7 @@ import { Heart } from "lucide-react";
 import { trackOutbound } from "@/lib/utils";
 import { moreLikeThisFor } from "@/lib/moreLikeThis";
 import { savedKey, useSaved } from "@/lib/saved";
-import type { ProductDNA } from "@/data/productLibrary";
+import { resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
 
 /**
  * "More Like This" — destination-DNA discovery carousel.
@@ -48,6 +48,10 @@ function ProductTile({ product }: { product: ProductDNA }) {
   const { has, toggle } = useSaved();
   const id = savedKey(product.brand, product.name);
   const saved = has(id);
+  // Resolve the purchase URL via the inventory-health fallback chain.
+  // The scorer also requires this, so href should always be non-null here.
+  const href = resolvePurchaseUrl(product);
+  if (!href) return null;
 
   return (
     <article className="group flex flex-col bg-ivory border border-ink/10 hover:border-gold/60 transition-colors">
@@ -85,12 +89,15 @@ function ProductTile({ product }: { product: ProductDNA }) {
           {product.name}
         </h3>
         <p className="font-serif text-[0.92rem] text-ink/70 mt-2">{product.price}</p>
+        <p className="eyebrow tracking-[0.22em] text-[0.55rem] text-ink/45 mt-1">
+          {product.channel === "affiliate" ? `AT ${product.retailer.replace(/\.com$/, "").toUpperCase()}` : "DIRECT FROM BRAND"}
+        </p>
         <a
-          href={product.href}
+          href={href}
           target="_blank"
           rel="noreferrer noopener sponsored"
           onClick={() =>
-            trackOutbound({ brand: product.brand, item: product.name, href: product.href })
+            trackOutbound({ brand: product.brand, item: product.name, href })
           }
           className="mt-4 eyebrow tracking-[0.26em] text-[0.6rem] text-ink border-b border-gold pb-0.5 self-start hover:text-gold transition-colors"
         >
