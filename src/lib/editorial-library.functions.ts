@@ -42,7 +42,7 @@ function absoluteAssetUrl(relUrl: string): string {
 
 type SeedRef = {
   title: string;
-  source_type: "instagram" | "nordstrom_curation";
+  source_type: "instagram" | "nordstrom_curation" | "framework" | "stylelinks_landing";
   reference_image: string | null;
   reference_url: string | null;
   destination_hint?: string;
@@ -50,6 +50,12 @@ type SeedRef = {
   reference_type?: string;
   editorial_priority?: "high" | "standard";
   engagement_unlock_keyword?: string | null;
+  /** Optional pre-filled fields for taxonomy / framework records that don't need AI extraction. */
+  prefilled?: {
+    editorial_story?: string;
+    learned_patterns?: string;
+    editorial_tags?: string[];
+  };
 };
 
 /**
@@ -258,6 +264,74 @@ const JHS_V2_SEEDS: SeedRef[] = [
 
 const ALL_SEEDS: SeedRef[] = [...SEEDS, ...JHS_V2_SEEDS];
 
+// -----------------------------------------------------------------------------
+// Julianne Hope StyleLinks — the parent editorial source feed
+// -----------------------------------------------------------------------------
+// The StyleLinks landing page is a *living* editorial reference feed. Unlike a
+// single Nordstrom curation, it reveals the recurring content frameworks,
+// naming conventions, and visual merchandising systems Julianne Hope reuses.
+// We seed the landing source PLUS the 13 recurring content frameworks the
+// user identified, so the story-first pipeline can later reference them as
+// editorial packaging archetypes (saveability / merchandising / capsule logic
+// only — never layouts, wording, branding, typography, or destination concepts).
+// -----------------------------------------------------------------------------
+
+const STYLELINKS_COLLECTION = "julianne-hope-stylelinks";
+const STYLELINKS_REFERENCE_TYPE = "Julianne Hope StyleLinks";
+const STYLELINKS_URL = "https://www.instagram.com/juliannehopestyling/";
+
+const STYLELINKS_FRAMEWORKS: Array<{ name: string; note: string; tags: string[] }> = [
+  { name: "Travel Arrival Look", note: "First-impression airport-to-villa outfit; one statement piece + elevated basics + tonal accessories.", tags: ["arrival", "travel", "capsule"] },
+  { name: "Travel Capsule", note: "Mix-and-match destination wardrobe built around 2-3 hero pieces and shared color story.", tags: ["capsule", "packing", "travel"] },
+  { name: "Mediterranean Escape", note: "Matching-set centric edit anchored in linen, white, raffia, gold; mood over product.", tags: ["mediterranean", "sets", "destination"] },
+  { name: "Sunset in Capri", note: "Swim + cover-up + sandal trio framed as a moment, not a product list.", tags: ["capri", "swim", "moment"] },
+  { name: "Coastal Muse", note: "Top-N edit format (e.g. Top 5 Swimsuits) with one stylist POV per item.", tags: ["coastal", "edit", "topN"] },
+  { name: "Wedding Guest", note: "Occasion edit packaged as a 'what I would wear' rather than category browse.", tags: ["wedding", "occasion", "evening"] },
+  { name: "Garden Ceremony", note: "Soft palette, fluid silhouettes, refined sandals; venue-specific occasion styling.", tags: ["wedding", "garden", "daytime"] },
+  { name: "Everything Raffia", note: "Texture-led merchandising — one material as the narrative spine across categories.", tags: ["raffia", "texture", "merch"] },
+  { name: "Designer Sandals", note: "Single-category authority edit; brands curated as a stylist short-list.", tags: ["sandals", "designer", "category"] },
+  { name: "Vacation Dressing", note: "Pre-trip 'what to pack' framing with destination implied, not stated.", tags: ["vacation", "packing"] },
+  { name: "Matching Sets", note: "Sets as the easy-yes hero; promises a polished look with one decision.", tags: ["sets", "easy", "merch"] },
+  { name: "Summer Essentials", note: "Seasonal capsule positioned as the 5-10 pieces a luxury traveler returns to.", tags: ["summer", "essentials", "capsule"] },
+  { name: "Swimwear Edit", note: "Curated swim shortlist with body-type and destination cues woven in.", tags: ["swim", "edit"] },
+];
+
+const STYLELINKS_SEEDS: SeedRef[] = [
+  {
+    title: "Julianne Hope StyleLinks — Source Feed",
+    source_type: "stylelinks_landing",
+    reference_image: null,
+    reference_url: STYLELINKS_URL,
+    collection: STYLELINKS_COLLECTION,
+    reference_type: STYLELINKS_REFERENCE_TYPE,
+    editorial_priority: "high",
+    engagement_unlock_keyword: null,
+    prefilled: {
+      editorial_story: "Living editorial reference feed — monitor for new content patterns.",
+      learned_patterns:
+        "Packages shopping into highly saveable editorial concepts (e.g. 'Travel Arrival Look', 'Everything Raffia', 'Sunset in Capri', 'Coastal Muse'). Resort Edit borrows the saveable packaging, visual hierarchy, content packaging, and merchandising structure — never layouts, wording, branding, typography, or destination concepts. Influence cap: 40% Julianne Hope packaging / 60% Resort Edit original system.",
+      editorial_tags: ["stylelinks", "living-feed", "editorial-packaging", "saveability", "merchandising"],
+    },
+  },
+  ...STYLELINKS_FRAMEWORKS.map<SeedRef>((f) => ({
+    title: `StyleLinks Framework — ${f.name}`,
+    source_type: "framework",
+    reference_image: null,
+    reference_url: STYLELINKS_URL,
+    collection: STYLELINKS_COLLECTION,
+    reference_type: STYLELINKS_REFERENCE_TYPE,
+    editorial_priority: "high",
+    engagement_unlock_keyword: null,
+    prefilled: {
+      editorial_story: f.name,
+      learned_patterns: f.note,
+      editorial_tags: f.tags,
+    },
+  })),
+];
+
+const ALL_SEEDS_WITH_STYLELINKS: SeedRef[] = [...ALL_SEEDS, ...STYLELINKS_SEEDS];
+
 export type EditorialReferenceRow = {
   id: string;
   title: string;
@@ -323,28 +397,38 @@ export const seedEditorialReferences = createServerFn({ method: "POST" })
       .select("title");
     const existingTitles = new Set((existing ?? []).map((r) => r.title));
 
-    const toInsert = ALL_SEEDS.filter((s) => !existingTitles.has(s.title)).map((s) => ({
-      title: s.title,
-      source_type: s.source_type,
-      reference_image: s.reference_image,
-      reference_url: s.reference_url,
-      destination: s.destination_hint ?? null,
-      collection: s.collection ?? "core-stylist-references",
-      reference_type: s.reference_type ?? null,
-      editorial_priority: s.editorial_priority ?? "standard",
-      engagement_unlock_keyword: s.engagement_unlock_keyword ?? null,
-      extraction_status: "pending",
-    }));
+    const toInsert = ALL_SEEDS_WITH_STYLELINKS
+      .filter((s) => !existingTitles.has(s.title))
+      .map((s) => {
+        // Framework / landing rows are taxonomy — they don't need AI extraction.
+        const isTaxonomy = s.source_type === "framework" || s.source_type === "stylelinks_landing";
+        return {
+          title: s.title,
+          source_type: s.source_type,
+          reference_image: s.reference_image,
+          reference_url: s.reference_url,
+          destination: s.destination_hint ?? null,
+          collection: s.collection ?? "core-stylist-references",
+          reference_type: s.reference_type ?? null,
+          editorial_priority: s.editorial_priority ?? "standard",
+          engagement_unlock_keyword: s.engagement_unlock_keyword ?? null,
+          extraction_status: isTaxonomy ? "ready" : "pending",
+          editorial_story: s.prefilled?.editorial_story ?? null,
+          learned_patterns: s.prefilled?.learned_patterns ?? null,
+          editorial_tags: s.prefilled?.editorial_tags ?? [],
+          extracted_at: isTaxonomy ? new Date().toISOString() : null,
+        };
+      });
 
     if (toInsert.length === 0) {
-      return { ok: true as const, inserted: 0, skipped: ALL_SEEDS.length };
+      return { ok: true as const, inserted: 0, skipped: ALL_SEEDS_WITH_STYLELINKS.length };
     }
 
     const { error } = await supabaseAdmin
       .from("editorial_reference_library")
       .insert(toInsert);
     if (error) return { ok: false as const, error: error.message };
-    return { ok: true as const, inserted: toInsert.length, skipped: ALL_SEEDS.length - toInsert.length };
+    return { ok: true as const, inserted: toInsert.length, skipped: ALL_SEEDS_WITH_STYLELINKS.length - toInsert.length };
   });
 
 // -----------------------------------------------------------------------------
