@@ -551,6 +551,9 @@ function ViewFullLookPage() {
         </section>
       )}
 
+      {/* ───────────────────────── MORE LIKE THIS (DNA-matched discovery) ───────────────────────── */}
+      <MoreLikeThis daySlug={day} lookSlug={look} />
+
       <section className="mx-auto max-w-[1100px] px-4 sm:px-10 mt-28 md:mt-36">
         <div className="border-t border-ink/15 pt-14 grid grid-cols-1 md:grid-cols-[minmax(0,180px)_minmax(0,1fr)] gap-8 md:gap-12 items-center">
           <figure className="w-full aspect-[3/4] md:aspect-[3/4] overflow-hidden bg-cream/35 flex items-center justify-center">
