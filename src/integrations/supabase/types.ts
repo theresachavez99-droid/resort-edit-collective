@@ -169,12 +169,15 @@ export type Database = {
           activity: string | null
           brands_detected: Json
           category_mix: Json
+          collection: string
           color_story: string | null
           created_at: string
           destination: string | null
           destination_signals: Json
+          editorial_priority: string
           editorial_story: string | null
           editorial_tags: Json
+          engagement_unlock_keyword: string | null
           extracted_at: string | null
           extraction_error: string | null
           extraction_status: string
@@ -188,6 +191,7 @@ export type Database = {
           price_tier_mix: Json
           raw_extraction: Json
           reference_image: string | null
+          reference_type: string | null
           reference_url: string | null
           saveability_drivers: Json
           silhouette_strategy: string | null
@@ -202,12 +206,15 @@ export type Database = {
           activity?: string | null
           brands_detected?: Json
           category_mix?: Json
+          collection?: string
           color_story?: string | null
           created_at?: string
           destination?: string | null
           destination_signals?: Json
+          editorial_priority?: string
           editorial_story?: string | null
           editorial_tags?: Json
+          engagement_unlock_keyword?: string | null
           extracted_at?: string | null
           extraction_error?: string | null
           extraction_status?: string
@@ -221,6 +228,7 @@ export type Database = {
           price_tier_mix?: Json
           raw_extraction?: Json
           reference_image?: string | null
+          reference_type?: string | null
           reference_url?: string | null
           saveability_drivers?: Json
           silhouette_strategy?: string | null
@@ -235,12 +243,15 @@ export type Database = {
           activity?: string | null
           brands_detected?: Json
           category_mix?: Json
+          collection?: string
           color_story?: string | null
           created_at?: string
           destination?: string | null
           destination_signals?: Json
+          editorial_priority?: string
           editorial_story?: string | null
           editorial_tags?: Json
+          engagement_unlock_keyword?: string | null
           extracted_at?: string | null
           extraction_error?: string | null
           extraction_status?: string
@@ -254,6 +265,7 @@ export type Database = {
           price_tier_mix?: Json
           raw_extraction?: Json
           reference_image?: string | null
+          reference_type?: string | null
           reference_url?: string | null
           saveability_drivers?: Json
           silhouette_strategy?: string | null
