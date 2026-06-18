@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { NamingWarningChip } from "@/components/admin/NamingWarningChip";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
 import {
   listEditorialReferences,
