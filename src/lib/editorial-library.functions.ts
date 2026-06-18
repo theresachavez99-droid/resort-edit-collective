@@ -11,6 +11,18 @@ import refTuscanyCapsule from "@/assets/editorial-refs/ref-tuscany-capsule.jpeg.
 import refArrivalRosewood from "@/assets/editorial-refs/ref-arrival-at-rosewood.jpeg.asset.json";
 import refCaboState from "@/assets/editorial-refs/ref-cabo-state-of-mind.jpeg.asset.json";
 
+// Julianne Hope Styling v2 — 10 Instagram screenshot references
+import jhsMediterraneanEscape from "@/assets/editorial-refs/jhs-v2/jhs-mediterranean-escape.jpeg.asset.json";
+import jhsBlackRaffiaVacation from "@/assets/editorial-refs/jhs-v2/jhs-black-raffia-vacation.jpeg.asset.json";
+import jhsOutfitInspirationYsl from "@/assets/editorial-refs/jhs-v2/jhs-outfit-inspiration-ysl.jpeg.asset.json";
+import jhsVacationCabo from "@/assets/editorial-refs/jhs-v2/jhs-vacation-cabo.jpeg.asset.json";
+import jhsEverythingRaffia from "@/assets/editorial-refs/jhs-v2/jhs-everything-raffia.jpeg.asset.json";
+import jhsCoastalMuse from "@/assets/editorial-refs/jhs-v2/jhs-coastal-muse.jpeg.asset.json";
+import jhsWeddingGuest from "@/assets/editorial-refs/jhs-v2/jhs-wedding-guest.jpeg.asset.json";
+import jhsSunsetCapri from "@/assets/editorial-refs/jhs-v2/jhs-sunset-in-capri.jpeg.asset.json";
+import jhsTravelArrivalCroatia from "@/assets/editorial-refs/jhs-v2/jhs-travel-arrival-look-croatia.jpeg.asset.json";
+import jhsSomethingBlueGarden from "@/assets/editorial-refs/jhs-v2/jhs-something-blue-garden.jpeg.asset.json";
+
 /**
  * The Resort Edit Editorial Reference Library — training substrate for the
  * future story-first generation pipeline. Stylist references are seeded as
@@ -34,6 +46,10 @@ type SeedRef = {
   reference_image: string | null;
   reference_url: string | null;
   destination_hint?: string;
+  collection?: string;
+  reference_type?: string;
+  editorial_priority?: "high" | "standard";
+  engagement_unlock_keyword?: string | null;
 };
 
 /**
@@ -96,12 +112,162 @@ const SEEDS: SeedRef[] = [
   { title: "Nordstrom Curation 2412585", source_type: "nordstrom_curation", reference_image: null, reference_url: "https://www.nordstrom.com/curation/2412585" },
 ];
 
+/**
+ * Julianne Hope Styling v2 — a second major reference collection.
+ * Stored alongside the core stylist references but tagged so the admin UI
+ * and downstream story-first pipeline can filter, prioritise, and study
+ * these specifically as a stylist case-study. We do NOT copy her layouts —
+ * we codify content architecture, merchandising presentation, capsule
+ * logic, and engagement mechanics.
+ *
+ * Priority `high` is reserved for the six references the user identified
+ * as most aligned with Resort Edit's destination-first philosophy:
+ * Travel Arrival Look, Mediterranean Escape, Sunset in Capri,
+ * Coastal Muse, Everything Raffia, Travel Capsule (Vacation / Cabo).
+ */
+const JHS_V2_COLLECTION = "julianne-hope-styling";
+const JHS_V2_REFERENCE_TYPE = "Julianne Hope Styling";
+
+const JHS_V2_SEEDS: SeedRef[] = [
+  {
+    title: "JHS — Travel / Arrival Look (Croatia)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsTravelArrivalCroatia.url),
+    reference_url: null,
+    destination_hint: "Croatia / European Summer",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "high",
+    engagement_unlock_keyword: "SHOP",
+  },
+  {
+    title: "JHS — Mediterranean Escape (Matching Sets)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsMediterraneanEscape.url),
+    reference_url: null,
+    destination_hint: "Capri / Italian Riviera",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "high",
+    engagement_unlock_keyword: "SETS",
+  },
+  {
+    title: "JHS — Sunset in Capri (Swimwear Edit)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsSunsetCapri.url),
+    reference_url: null,
+    destination_hint: "Capri",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "high",
+    engagement_unlock_keyword: "SWIM",
+  },
+  {
+    title: "JHS — Coastal Muse (Top 5 Swimsuits)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsCoastalMuse.url),
+    reference_url: null,
+    destination_hint: "Coastal / Amalfi",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "high",
+    engagement_unlock_keyword: "SWIM",
+  },
+  {
+    title: "JHS — Everything Raffia (Pt. 2)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsEverythingRaffia.url),
+    reference_url: null,
+    destination_hint: "Vacation / Resort",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "high",
+    engagement_unlock_keyword: "RAFFIA",
+  },
+  {
+    title: "JHS — Travel Capsule (Vacation / Cabo)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsVacationCabo.url),
+    reference_url: null,
+    destination_hint: "Cabo / Vacation",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "high",
+    engagement_unlock_keyword: "VACA",
+  },
+  {
+    title: "JHS — Black Raffia Edit (The Go-Go's Vacation)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsBlackRaffiaVacation.url),
+    reference_url: null,
+    destination_hint: "Vacation / Resort",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "standard",
+    engagement_unlock_keyword: "SHOP",
+  },
+  {
+    title: "JHS — Outfit Inspiration (YSL + Loewe)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsOutfitInspirationYsl.url),
+    reference_url: null,
+    destination_hint: "Spring / Designer Edit",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "standard",
+    engagement_unlock_keyword: "OUTFIT",
+  },
+  {
+    title: "JHS — Wedding Guest (Elevated Black)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsWeddingGuest.url),
+    reference_url: null,
+    destination_hint: "Wedding / Evening",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "standard",
+    engagement_unlock_keyword: "LINKS",
+  },
+  {
+    title: "JHS — Something Blue (Garden Ceremony)",
+    source_type: "instagram",
+    reference_image: absoluteAssetUrl(jhsSomethingBlueGarden.url),
+    reference_url: null,
+    destination_hint: "Wedding / Garden",
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "standard",
+    engagement_unlock_keyword: "WEDDING",
+  },
+  // 13 Nordstrom curation URLs — JHS-curated stylist shops
+  ...[
+    "2508738", "2506568", "2465069", "2420249", "2416259", "2408348",
+    "2409005", "2407003", "2398889", "2397205", "2329068", "2357666",
+    "2366784",
+  ].map<SeedRef>((id) => ({
+    title: `JHS — Nordstrom Curation ${id}`,
+    source_type: "nordstrom_curation",
+    reference_image: null,
+    reference_url: `https://www.nordstrom.com/curation/${id}`,
+    collection: JHS_V2_COLLECTION,
+    reference_type: JHS_V2_REFERENCE_TYPE,
+    editorial_priority: "standard",
+    engagement_unlock_keyword: null,
+  })),
+];
+
+const ALL_SEEDS: SeedRef[] = [...SEEDS, ...JHS_V2_SEEDS];
+
 export type EditorialReferenceRow = {
   id: string;
   title: string;
   source_type: string;
   reference_image: string | null;
   reference_url: string | null;
+  collection: string;
+  reference_type: string | null;
+  editorial_priority: string;
+  engagement_unlock_keyword: string | null;
   destination: string | null;
   activity: string | null;
   mood: string | null;
@@ -157,24 +323,28 @@ export const seedEditorialReferences = createServerFn({ method: "POST" })
       .select("title");
     const existingTitles = new Set((existing ?? []).map((r) => r.title));
 
-    const toInsert = SEEDS.filter((s) => !existingTitles.has(s.title)).map((s) => ({
+    const toInsert = ALL_SEEDS.filter((s) => !existingTitles.has(s.title)).map((s) => ({
       title: s.title,
       source_type: s.source_type,
       reference_image: s.reference_image,
       reference_url: s.reference_url,
       destination: s.destination_hint ?? null,
+      collection: s.collection ?? "core-stylist-references",
+      reference_type: s.reference_type ?? null,
+      editorial_priority: s.editorial_priority ?? "standard",
+      engagement_unlock_keyword: s.engagement_unlock_keyword ?? null,
       extraction_status: "pending",
     }));
 
     if (toInsert.length === 0) {
-      return { ok: true as const, inserted: 0, skipped: SEEDS.length };
+      return { ok: true as const, inserted: 0, skipped: ALL_SEEDS.length };
     }
 
     const { error } = await supabaseAdmin
       .from("editorial_reference_library")
       .insert(toInsert);
     if (error) return { ok: false as const, error: error.message };
-    return { ok: true as const, inserted: toInsert.length, skipped: SEEDS.length - toInsert.length };
+    return { ok: true as const, inserted: toInsert.length, skipped: ALL_SEEDS.length - toInsert.length };
   });
 
 // -----------------------------------------------------------------------------
