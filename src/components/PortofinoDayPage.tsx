@@ -440,6 +440,118 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
   );
 }
 
+function MomentCard({
+  daySlug,
+  lookSlug,
+  image,
+  isPlaceholderImage,
+  title,
+  mood,
+  dayLabel,
+  lookLetter,
+}: {
+  daySlug: DaySlug;
+  lookSlug: "look-a" | "look-b" | "look-c";
+  image: string;
+  isPlaceholderImage?: boolean;
+  title: string;
+  mood: string;
+  dayLabel: string;
+  lookLetter: "A" | "B" | "C";
+}) {
+  return (
+    <Link
+      to="/portofino/$day/$look"
+      params={{ day: daySlug, look: lookSlug }}
+      className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
+    >
+      {/* Image dominates ~75% of card height */}
+      <div className="relative aspect-[3/4] overflow-hidden bg-cream">
+        <img
+          src={image}
+          alt={`${dayLabel} · ${title}`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+        {isPlaceholderImage && (
+          <span className="absolute top-3 left-3 eyebrow text-[0.55rem] tracking-[0.32em] text-ivory bg-ink/75 px-2.5 py-1 border border-gold/40">
+            Placeholder · Image pending
+          </span>
+        )}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent" />
+        <span className="absolute top-3 right-3 eyebrow text-[0.55rem] tracking-[0.34em] text-ivory bg-ink/55 px-2.5 py-1">
+          {dayLabel.toUpperCase()} · LOOK {lookLetter}
+        </span>
+      </div>
+      {/* Editorial caption + single CTA — no product grid here. */}
+      <div className="px-5 py-5 md:px-6 md:py-6">
+        <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink group-hover:text-gold transition-colors">
+          {title}
+        </h3>
+        <p className="font-serif italic text-sm md:text-[0.95rem] text-ink/65 leading-relaxed mt-2 line-clamp-2">
+          {mood}
+        </p>
+        <span className="inline-flex items-center gap-2 mt-4 eyebrow text-[0.6rem] tracking-[0.4em] text-gold">
+          View Moment <span aria-hidden>→</span>
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function StylingPhilosophy({
+  palette,
+  silhouette,
+  textures,
+  mood,
+  tagline,
+}: {
+  palette: string;
+  silhouette: string;
+  textures: string;
+  mood: string;
+  tagline: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const principles: Array<{ label: string; value: string }> = [
+    { label: "Palette", value: palette },
+    { label: "Silhouette", value: silhouette },
+    { label: "Textures", value: textures },
+  ];
+  return (
+    <section className="bg-cream border-y border-border/40 py-12 md:py-16">
+      <div className="mx-auto max-w-5xl px-6 text-center">
+        <span className="eyebrow text-gold tracking-[0.4em] text-[0.62rem]">Our Styling Philosophy</span>
+        <p className="font-serif italic text-base md:text-lg text-ink/75 leading-relaxed mt-4 max-w-2xl mx-auto">
+          {tagline}
+        </p>
+        <div className="mx-auto mt-6 h-px w-12 bg-gold/60" />
+        <dl className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-10 text-left max-w-3xl mx-auto">
+          {principles.map((p) => (
+            <div key={p.label} className="border-t border-border/60 pt-4">
+              <dt className="eyebrow text-gold text-[0.58rem] tracking-[0.35em]">{p.label}</dt>
+              <dd className="font-serif text-ink/80 text-[0.95rem] leading-relaxed mt-2">{p.value}</dd>
+            </div>
+          ))}
+        </dl>
+        {open && (
+          <p className="font-serif italic text-sm md:text-base text-ink/65 leading-relaxed mt-6 max-w-2xl mx-auto">
+            {mood}
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="mt-6 eyebrow text-[0.6rem] tracking-[0.4em] text-ink/55 hover:text-gold transition-colors"
+          aria-expanded={open}
+        >
+          {open ? "Read Less" : "Read More"}
+        </button>
+      </div>
+    </section>
+  );
+}
+
 function LookModule({
   look,
   index,
