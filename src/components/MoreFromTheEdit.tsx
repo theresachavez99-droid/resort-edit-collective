@@ -12,6 +12,7 @@ import {
   type YachtCategory,
 } from "@/lib/portofino-visual-dna";
 import { filterAndDedupImages } from "@/lib/product-image-integrity";
+import { safeHref } from "@/lib/safe-url";
 
 /**
  * "More From The Edit" — dynamic, founder-library-driven discovery rail
@@ -183,7 +184,9 @@ export function MoreFromTheEdit({
 }
 
 function EditTile({ product }: { product: ProductDNA }) {
-  const href = product.href;
+  // Sanitize at render time: drop javascript:/data:/blob:/etc. links so
+  // a malicious product URL can never become a live affiliate href.
+  const href = safeHref(product.href);
   if (!href) return null;
   return (
     <a

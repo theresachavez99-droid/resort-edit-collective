@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { type ShopItem, resolveProductLink } from "@/data/portofino";
 import { trackOutbound } from "@/lib/utils";
+import { safeHref } from "@/lib/safe-url";
 
 type Variant = "compact" | "editorial";
 
@@ -11,7 +12,9 @@ type Variant = "compact" | "editorial";
  * Opens all affiliate links in a new tab.
  */
 export function ProductCard({ item, variant = "compact" }: { item: ShopItem; variant?: Variant }) {
-  const href = resolveProductLink(item);
+  // Sanitize at render time: block javascript:/data:/blob:/etc. even if a
+  // bad URL slipped past the write-time validator.
+  const href = safeHref(resolveProductLink(item));
   if (!href) return null;
   const [imageFailed, setImageFailed] = useState(false);
   const showImage = Boolean(item.image) && !imageFailed;
