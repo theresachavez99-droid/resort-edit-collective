@@ -32,6 +32,7 @@ import { Route as AdminReviewQueueRouteImport } from './routes/admin.review-queu
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
 import { Route as AdminLookStudioRouteImport } from './routes/admin.look-studio'
+import { Route as AdminFounderLearningRouteImport } from './routes/admin.founder-learning'
 import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editorial-library'
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
@@ -153,6 +154,11 @@ const AdminLookStudioRoute = AdminLookStudioRouteImport.update({
   path: '/admin/look-studio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminFounderLearningRoute = AdminFounderLearningRouteImport.update({
+  id: '/admin/founder-learning',
+  path: '/admin/founder-learning',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminEditorialLibraryRoute = AdminEditorialLibraryRouteImport.update({
   id: '/admin/editorial-library',
   path: '/admin/editorial-library',
@@ -192,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -222,6 +229,7 @@ export interface FileRoutesByTo {
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -253,6 +261,7 @@ export interface FileRoutesById {
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -285,6 +294,7 @@ export interface FileRouteTypes {
     | '/admin/brands'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/founder-learning'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -315,6 +325,7 @@ export interface FileRouteTypes {
     | '/admin/brands'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/founder-learning'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -345,6 +356,7 @@ export interface FileRouteTypes {
     | '/admin/brands'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/founder-learning'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -376,6 +388,7 @@ export interface RootRouteChildren {
   AdminBrandsRoute: typeof AdminBrandsRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
   AdminEditorialLibraryRoute: typeof AdminEditorialLibraryRoute
+  AdminFounderLearningRoute: typeof AdminFounderLearningRoute
   AdminLookStudioRoute: typeof AdminLookStudioRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
@@ -548,6 +561,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLookStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/founder-learning': {
+      id: '/admin/founder-learning'
+      path: '/admin/founder-learning'
+      fullPath: '/admin/founder-learning'
+      preLoaderRoute: typeof AdminFounderLearningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/editorial-library': {
       id: '/admin/editorial-library'
       path: '/admin/editorial-library'
@@ -648,6 +668,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBrandsRoute: AdminBrandsRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
   AdminEditorialLibraryRoute: AdminEditorialLibraryRoute,
+  AdminFounderLearningRoute: AdminFounderLearningRoute,
   AdminLookStudioRoute: AdminLookStudioRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,

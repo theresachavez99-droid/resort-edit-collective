@@ -73,6 +73,117 @@ export type Database = {
           },
         ]
       }
+      brand_intelligence: {
+        Row: {
+          associated_destinations: string[]
+          brand: string
+          created_at: string
+          founder_reference_count: number
+          id: string
+          notes: string | null
+          slug: string
+          source: string | null
+          status: string
+          suggested_activities: string[]
+          suggested_destinations: string[]
+          suggested_tier: string | null
+          times_saved_to_library: number
+          times_seen: number
+          times_selected_for_looks: number
+          times_uploaded_by_founder: number
+          updated_at: string
+        }
+        Insert: {
+          associated_destinations?: string[]
+          brand: string
+          created_at?: string
+          founder_reference_count?: number
+          id?: string
+          notes?: string | null
+          slug: string
+          source?: string | null
+          status?: string
+          suggested_activities?: string[]
+          suggested_destinations?: string[]
+          suggested_tier?: string | null
+          times_saved_to_library?: number
+          times_seen?: number
+          times_selected_for_looks?: number
+          times_uploaded_by_founder?: number
+          updated_at?: string
+        }
+        Update: {
+          associated_destinations?: string[]
+          brand?: string
+          created_at?: string
+          founder_reference_count?: number
+          id?: string
+          notes?: string | null
+          slug?: string
+          source?: string | null
+          status?: string
+          suggested_activities?: string[]
+          suggested_destinations?: string[]
+          suggested_tier?: string | null
+          times_saved_to_library?: number
+          times_seen?: number
+          times_selected_for_looks?: number
+          times_uploaded_by_founder?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      brand_review_queue: {
+        Row: {
+          brand: string
+          brand_slug: string
+          created_at: string
+          id: string
+          products_found: Json
+          review_status: string
+          reviewed_at: string | null
+          reviewer_notes: string | null
+          source_urls: string[]
+          suggested_activities: string[]
+          suggested_destinations: string[]
+          suggested_tier: string | null
+          times_seen: number
+          updated_at: string
+        }
+        Insert: {
+          brand: string
+          brand_slug: string
+          created_at?: string
+          id?: string
+          products_found?: Json
+          review_status?: string
+          reviewed_at?: string | null
+          reviewer_notes?: string | null
+          source_urls?: string[]
+          suggested_activities?: string[]
+          suggested_destinations?: string[]
+          suggested_tier?: string | null
+          times_seen?: number
+          updated_at?: string
+        }
+        Update: {
+          brand?: string
+          brand_slug?: string
+          created_at?: string
+          id?: string
+          products_found?: Json
+          review_status?: string
+          reviewed_at?: string | null
+          reviewer_notes?: string | null
+          source_urls?: string[]
+          suggested_activities?: string[]
+          suggested_destinations?: string[]
+          suggested_tier?: string | null
+          times_seen?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       brands: {
         Row: {
           activities: string[]
@@ -363,6 +474,126 @@ export type Database = {
           texture_strategy?: string | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      founder_reference_products: {
+        Row: {
+          activity_tags: string[]
+          approval_date: string
+          brand: string
+          color_story: string[]
+          created_at: string
+          destination_tags: string[]
+          founder_approved: boolean
+          founder_notes: string | null
+          id: string
+          image_url: string | null
+          print_language: string | null
+          product_category: string | null
+          product_name: string | null
+          retailer: string | null
+          silhouette: string | null
+          source_url: string | null
+          style_tags: string[]
+          texture: string | null
+          updated_at: string
+        }
+        Insert: {
+          activity_tags?: string[]
+          approval_date?: string
+          brand: string
+          color_story?: string[]
+          created_at?: string
+          destination_tags?: string[]
+          founder_approved?: boolean
+          founder_notes?: string | null
+          id?: string
+          image_url?: string | null
+          print_language?: string | null
+          product_category?: string | null
+          product_name?: string | null
+          retailer?: string | null
+          silhouette?: string | null
+          source_url?: string | null
+          style_tags?: string[]
+          texture?: string | null
+          updated_at?: string
+        }
+        Update: {
+          activity_tags?: string[]
+          approval_date?: string
+          brand?: string
+          color_story?: string[]
+          created_at?: string
+          destination_tags?: string[]
+          founder_approved?: boolean
+          founder_notes?: string | null
+          id?: string
+          image_url?: string | null
+          print_language?: string | null
+          product_category?: string | null
+          product_name?: string | null
+          retailer?: string | null
+          silhouette?: string | null
+          source_url?: string | null
+          style_tags?: string[]
+          texture?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      founder_uploaded_urls: {
+        Row: {
+          activity_hint: string | null
+          brands_found: number
+          created_at: string
+          destination_hint: string | null
+          harvest_error: string | null
+          harvest_payload: Json | null
+          harvest_status: string
+          harvested_at: string | null
+          id: string
+          new_brands_count: number
+          notes: string | null
+          products_found: number
+          source_type: string | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          activity_hint?: string | null
+          brands_found?: number
+          created_at?: string
+          destination_hint?: string | null
+          harvest_error?: string | null
+          harvest_payload?: Json | null
+          harvest_status?: string
+          harvested_at?: string | null
+          id?: string
+          new_brands_count?: number
+          notes?: string | null
+          products_found?: number
+          source_type?: string | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          activity_hint?: string | null
+          brands_found?: number
+          created_at?: string
+          destination_hint?: string | null
+          harvest_error?: string | null
+          harvest_payload?: Json | null
+          harvest_status?: string
+          harvested_at?: string | null
+          id?: string
+          new_brands_count?: number
+          notes?: string | null
+          products_found?: number
+          source_type?: string | null
+          updated_at?: string
+          url?: string
         }
         Relationships: []
       }
