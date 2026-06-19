@@ -116,13 +116,46 @@ export interface MoreLikeThisResult {
   products: ProductDNA[];
 }
 
-export function moreLikeThisFor(daySlug: string, lookSlug: string): MoreLikeThisResult {
-  const dna = dnaForLook(daySlug, lookSlug);
-  if (!dna) return { dna: null, products: [] };
-
-  const scored: ScoredProduct[] = PRODUCT_LIBRARY
+/**
+ * Pure scoring/diversification pipeline. Takes an explicit product pool so
+ * callers can pass the merged founder-library + static fallback.
+ */
+export function recommendFor(dna: LookDNA, pool: readonly ProductDNA[]): ProductDNA[] {
+  const scored: ScoredProduct[] = pool
     .map((p) => ({ product: p, score: scoreOne(p, dna) }))
     .filter((s) => s.score > 0);
+  return diversify(scored);
+}
 
-  return { dna, products: diversify(scored) };
+/**
+ * Merge the founder reference library (primary source of truth) with the
+ * static `PRODUCT_LIBRARY` (fallback). De-duplicates by brand + name; the
+ * founder DB row always wins when both exist.
+ */
+export function mergeLibraries(
+  founder: readonly ProductDNA[],
+  fallback: readonly ProductDNA[] = PRODUCT_LIBRARY,
+): ProductDNA[] {
+  const key = (p: ProductDNA) => `${p.brand.toLowerCase()}::${p.name.toLowerCase()}`;
+  const seen = new Set(founder.map(key));
+  const out: ProductDNA[] = [...founder];
+  for (const p of fallback) {
+    if (!seen.has(key(p))) out.push(p);
+  }
+  return out;
+}
+
+/**
+ * Slug → DNA → recommendations. `pool` defaults to the static fallback for
+ * backward-compat; pass the merged founder + fallback pool to enable the
+ * full library.
+ */
+export function moreLikeThisFor(
+  daySlug: string,
+  lookSlug: string,
+  pool: readonly ProductDNA[] = PRODUCT_LIBRARY,
+): MoreLikeThisResult {
+  const dna = dnaForLook(daySlug, lookSlug);
+  if (!dna) return { dna: null, products: [] };
+  return { dna, products: recommendFor(dna, pool) };
 }

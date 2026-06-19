@@ -1,8 +1,17 @@
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
 import { trackOutbound } from "@/lib/utils";
-import { moreLikeThisFor } from "@/lib/moreLikeThis";
+import { mergeLibraries, moreLikeThisFor } from "@/lib/moreLikeThis";
 import { savedKey, useSaved } from "@/lib/saved";
-import { resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
+import { PRODUCT_LIBRARY, resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
+import { getFounderProducts } from "@/lib/founder-products.functions";
+
+export const founderProductsQuery = (destination = "portofino") => ({
+  queryKey: ["founder-products", destination] as const,
+  queryFn: () => getFounderProducts({ data: { destination } }),
+  staleTime: 5 * 60_000,
+});
 
 /**
  * "More Like This" — destination-DNA discovery carousel.
@@ -11,7 +20,20 @@ import { resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
  * family signal, with a 2-per-brand cap. See src/lib/moreLikeThis.ts.
  */
 export function MoreLikeThis({ daySlug, lookSlug }: { daySlug: string; lookSlug: string }) {
-  const { dna, products } = moreLikeThisFor(daySlug, lookSlug);
+  // Founder reference library is the primary source of truth. The static
+  // PRODUCT_LIBRARY is fallback only — merged in for any brand+name not
+  // already represented in the founder DB.
+  const { data: founder } = useQuery({
+    ...founderProductsQuery("portofino"),
+    initialData: [] as ProductDNA[],
+    initialDataUpdatedAt: 0,
+    refetchOnMount: "always",
+  });
+  const pool = useMemo(() => mergeLibraries(founder, PRODUCT_LIBRARY), [founder]);
+  const { dna, products } = useMemo(
+    () => moreLikeThisFor(daySlug, lookSlug, pool),
+    [daySlug, lookSlug, pool],
+  );
   if (!dna || products.length === 0) return null;
 
   return (
