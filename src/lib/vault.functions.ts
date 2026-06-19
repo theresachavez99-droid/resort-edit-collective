@@ -1,6 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireAdmin } from "./admin-auth.server";
+import { isHttpUrl } from "./safe-url";
+
+const httpUrlMax = (max: number) =>
+  z.string().url().max(max).refine(isHttpUrl, { message: "URL must use http or https" });
 
 const APPROVAL_STATUSES = ["pending", "approved", "rejected", "archived"] as const;
 const INVENTORY_STATUSES = ["in_stock", "low_stock", "out_of_stock", "unknown"] as const;
@@ -11,10 +15,10 @@ const vaultInput = z.object({
   product_name: z.string().min(1).max(300),
   brand: z.string().min(1).max(120),
   retailer: z.string().max(120).nullable().optional(),
-  affiliate_url: z.string().url().max(2000),
-  brand_url: z.string().url().max(2000).nullable().optional(),
-  image_url: z.string().url().max(2000).nullable().optional(),
-  thumbnail_url: z.string().url().max(2000).nullable().optional(),
+  affiliate_url: httpUrlMax(2000),
+  brand_url: httpUrlMax(2000).nullable().optional(),
+  image_url: httpUrlMax(2000).nullable().optional(),
+  thumbnail_url: httpUrlMax(2000).nullable().optional(),
   price: z.number().nonnegative().nullable().optional(),
   currency: z.string().max(8).nullable().optional(),
   inventory_status: z.enum(INVENTORY_STATUSES).optional(),
