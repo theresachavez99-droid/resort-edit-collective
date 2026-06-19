@@ -139,19 +139,24 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const { data: dayOverrides } = useSuspenseQuery(dayOverridesQueryOptions);
-
   return (
     <QueryClientProvider client={queryClient}>
-      <DayImageOverridesProvider value={dayOverrides ?? {}}>
-        <div className="min-h-screen flex flex-col bg-ivory">
-          <SiteHeader />
-          <main className="flex-1">
-            <Outlet />
-          </main>
-          <SiteFooter />
-        </div>
-      </DayImageOverridesProvider>
+      <RootInner />
     </QueryClientProvider>
+  );
+}
+
+function RootInner() {
+  const { data: dayOverrides } = useSuspenseQuery(dayOverridesQueryOptions);
+  return (
+    <DayImageOverridesProvider value={dayOverrides ?? {}}>
+      <div className="min-h-screen flex flex-col bg-ivory">
+        <SiteHeader />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <SiteFooter />
+      </div>
+    </DayImageOverridesProvider>
   );
 }
