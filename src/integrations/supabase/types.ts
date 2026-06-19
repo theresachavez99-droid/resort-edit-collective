@@ -77,6 +77,7 @@ export type Database = {
         Row: {
           associated_destinations: string[]
           brand: string
+          channel_type: string
           created_at: string
           founder_reference_count: number
           id: string
@@ -96,6 +97,7 @@ export type Database = {
         Insert: {
           associated_destinations?: string[]
           brand: string
+          channel_type?: string
           created_at?: string
           founder_reference_count?: number
           id?: string
@@ -115,6 +117,7 @@ export type Database = {
         Update: {
           associated_destinations?: string[]
           brand?: string
+          channel_type?: string
           created_at?: string
           founder_reference_count?: number
           id?: string
@@ -482,6 +485,7 @@ export type Database = {
           activity_tags: string[]
           approval_date: string
           brand: string
+          channel_type: string
           color_story: string[]
           created_at: string
           destination_tags: string[]
@@ -503,6 +507,7 @@ export type Database = {
           activity_tags?: string[]
           approval_date?: string
           brand: string
+          channel_type?: string
           color_story?: string[]
           created_at?: string
           destination_tags?: string[]
@@ -524,6 +529,7 @@ export type Database = {
           activity_tags?: string[]
           approval_date?: string
           brand?: string
+          channel_type?: string
           color_story?: string[]
           created_at?: string
           destination_tags?: string[]
