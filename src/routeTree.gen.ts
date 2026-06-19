@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ResortEditsRouteImport } from './routes/resort-edits'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PortofinoRouteImport } from './routes/portofino'
@@ -43,6 +44,11 @@ import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } fr
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResortEditsRoute = ResortEditsRouteImport.update({
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/portofino': typeof PortofinoRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/portofino': typeof PortofinoRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
@@ -265,6 +273,7 @@ export interface FileRoutesById {
   '/portofino': typeof PortofinoRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/portofino'
     | '/privacy-policy'
     | '/resort-edits'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/destination-moments'
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/portofino'
     | '/privacy-policy'
     | '/resort-edits'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/destination-moments'
@@ -363,6 +374,7 @@ export interface FileRouteTypes {
     | '/portofino'
     | '/privacy-policy'
     | '/resort-edits'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/destination-moments'
@@ -396,6 +408,7 @@ export interface RootRouteChildren {
   PortofinoRoute: typeof PortofinoRouteWithChildren
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ResortEditsRoute: typeof ResortEditsRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/resort-edits': {
@@ -684,6 +704,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortofinoRoute: PortofinoRouteWithChildren,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   ResortEditsRoute: ResortEditsRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminBrandsRoute: AdminBrandsRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
