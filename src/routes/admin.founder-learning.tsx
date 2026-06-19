@@ -11,6 +11,7 @@ import {
   addFounderReference,
   listFounderReferences,
 } from "@/lib/founder-learning.functions";
+import { runAssetBackfill } from "@/lib/founder-backfill.functions";
 
 export const Route = createFileRoute("/admin/founder-learning")({
   head: () => ({
@@ -23,14 +24,14 @@ export const Route = createFileRoute("/admin/founder-learning")({
 });
 
 const STORAGE_KEY = "admin_founder_pw";
-type Tab = "urls" | "queue" | "references";
+type Tab = "backfill" | "urls" | "queue" | "references";
 
 function FounderLearningPage() {
   const [password, setPassword] = useState<string>(() =>
     typeof window === "undefined" ? "" : window.localStorage.getItem(STORAGE_KEY) ?? "",
   );
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<Tab>("urls");
+  const [tab, setTab] = useState<Tab>("backfill");
   const verify = useServerFn(verifyAdmin);
 
   async function tryAuth(pw: string) {
@@ -90,6 +91,7 @@ function FounderLearningPage() {
       <div className="mb-6 flex gap-2 border-b">
         {(
           [
+            ["backfill", "Asset Backfill"],
             ["urls", "Uploaded URLs"],
             ["queue", "Brand Review Queue"],
             ["references", "Founder References"],
@@ -110,7 +112,173 @@ function FounderLearningPage() {
       {tab === "urls" && <UrlsTab password={password} />}
       {tab === "queue" && <QueueTab password={password} />}
       {tab === "references" && <ReferencesTab password={password} />}
+      {tab === "backfill" && <BackfillTab password={password} />}
     </main>
+  );
+}
+
+/* ───────── Backfill ───────── */
+
+function BackfillTab({ password }: { password: string }) {
+  const qc = useQueryClient();
+  const run = useServerFn(runAssetBackfill);
+  const mut = useMutation({
+    mutationFn: (wipe: boolean) => run({ data: { password, wipe_derived: wipe } }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["brand-review-queue"] });
+      qc.invalidateQueries({ queryKey: ["founder-references"] });
+    },
+  });
+  const report = mut.data?.ok ? mut.data : null;
+
+  return (
+    <div className="space-y-6">
+      <section className="rounded-lg border bg-card p-4">
+        <h2 className="mb-2 font-semibold">Existing Asset Intelligence Backfill</h2>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Reads every existing source (sourced products, brands, look candidates, editorial
+          references, the in-code product library) and rebuilds the founder learning tables. Founder
+          URLs are preserved. Re-runs are safe.
+        </p>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            disabled={mut.isPending}
+            onClick={() => mut.mutate(true)}
+            className="rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
+          >
+            {mut.isPending ? "Running…" : "Run full backfill (wipe + rebuild)"}
+          </button>
+        </div>
+        {mut.data && !mut.data.ok && (
+          <p className="mt-2 text-xs text-red-600">{(mut.data as { error?: string }).error}</p>
+        )}
+      </section>
+
+      {report && (
+        <>
+          <ReportSection title="Phase 1 · Asset Audit">
+            <KVTable obj={report.audit.counts} />
+            <h4 className="mt-3 text-xs font-semibold text-muted-foreground">Brand statuses</h4>
+            <KVTable obj={report.audit.brand_statuses} />
+            <h4 className="mt-3 text-xs font-semibold text-muted-foreground">
+              Sourced-product statuses
+            </h4>
+            <KVTable obj={report.audit.sourced_product_statuses} />
+            <p className="mt-2 text-xs text-muted-foreground">
+              Sourced products with images: {report.audit.sourced_products_with_images}
+            </p>
+          </ReportSection>
+
+          <ReportSection title="Phase 2–4 · Backfill written">
+            <KVTable obj={report.backfill} />
+            <h4 className="mt-3 text-xs font-semibold text-muted-foreground">Brand status mix</h4>
+            <KVTable obj={report.status_breakdown} />
+          </ReportSection>
+
+          <ReportSection title="Phase 5 · Founder Pattern Learning">
+            <h4 className="text-xs font-semibold text-muted-foreground">Top destinations</h4>
+            <TopList items={report.patterns.top_destinations} />
+            <h4 className="mt-2 text-xs font-semibold text-muted-foreground">Top activities</h4>
+            <TopList items={report.patterns.top_activities} />
+            <h4 className="mt-2 text-xs font-semibold text-muted-foreground">Top style families</h4>
+            <TopList items={report.patterns.top_style_families} />
+            <h4 className="mt-2 text-xs font-semibold text-muted-foreground">Top categories</h4>
+            <TopList items={report.patterns.top_categories} />
+            <h4 className="mt-2 text-xs font-semibold text-muted-foreground">
+              Top brands by founder references
+            </h4>
+            <ul className="mt-1 text-xs">
+              {report.patterns.top_brands_by_references.map((b) => (
+                <li key={b.brand} className="flex justify-between">
+                  <span>{b.brand}</span>
+                  <span className="text-muted-foreground">{b.count}</span>
+                </li>
+              ))}
+            </ul>
+            <h4 className="mt-2 text-xs font-semibold text-muted-foreground">
+              Top brands selected for looks
+            </h4>
+            <ul className="mt-1 text-xs">
+              {report.patterns.top_brands_by_selections.length === 0 ? (
+                <li className="text-muted-foreground">— none yet</li>
+              ) : (
+                report.patterns.top_brands_by_selections.map((b) => (
+                  <li key={b.brand} className="flex justify-between">
+                    <span>{b.brand}</span>
+                    <span className="text-muted-foreground">{b.count}</span>
+                  </li>
+                ))
+              )}
+            </ul>
+          </ReportSection>
+
+          <ReportSection title="Phase 6 · Editorial Image Intelligence">
+            <p className="mb-2 text-xs text-muted-foreground">
+              Aggregated from the editorial reference library.
+            </p>
+            {(
+              ["destinations", "activities", "moods", "color_stories", "silhouettes", "textures"] as const
+            ).map((k) => (
+              <div key={k} className="mt-2">
+                <h4 className="text-xs font-semibold text-muted-foreground">{k}</h4>
+                <KVTable obj={report.patterns.editorial_patterns[k] as Record<string, number>} />
+              </div>
+            ))}
+          </ReportSection>
+
+          <ReportSection title="Phase 8 · Gaps requiring founder input">
+            {report.gaps.length === 0 ? (
+              <p className="text-xs text-emerald-700">No critical gaps detected.</p>
+            ) : (
+              <ul className="list-disc pl-4 text-xs">
+                {report.gaps.map((g, i) => (
+                  <li key={i}>{g}</li>
+                ))}
+              </ul>
+            )}
+          </ReportSection>
+        </>
+      )}
+    </div>
+  );
+}
+
+function ReportSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="rounded-lg border bg-card p-4">
+      <h3 className="mb-2 text-sm font-semibold">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+function KVTable({ obj }: { obj: Record<string, number | string> }) {
+  const entries = Object.entries(obj ?? {});
+  if (entries.length === 0) return <p className="text-xs text-muted-foreground">—</p>;
+  return (
+    <ul className="text-xs">
+      {entries.map(([k, v]) => (
+        <li key={k} className="flex justify-between border-b py-1 last:border-0">
+          <span className="text-muted-foreground">{k}</span>
+          <span className="font-medium">{String(v)}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function TopList({ items }: { items: Array<{ key: string; count: number }> }) {
+  if (!items?.length) return <p className="text-xs text-muted-foreground">—</p>;
+  return (
+    <ul className="text-xs">
+      {items.map((i) => (
+        <li key={i.key} className="flex justify-between">
+          <span>{i.key}</span>
+          <span className="text-muted-foreground">{i.count}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
