@@ -438,18 +438,6 @@ export const portofinoLooks: Look[] = [
         lookIndex: 2,
       },
       {
-        brand: "Dolce & Gabbana",
-        item: "Majolica-Print Silk Twill Bandeau Scarf",
-        price: "$245",
-        href: "https://www.dolcegabbana.com/en-us/fashion/women/accessories/scarves-and-silks/majolica-print-silk-twill-bandeau-print-IS174WGDDHBHA3OO.html",
-        image:
-          "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dw3df3d0b8/images/zoom/IS174WGDDHB_HA3OO_0.jpg?sw=740&sh=944",
-        inventory_status: "in_stock",
-        replaced: true,
-        last_verified_date: "2026-06-01",
-        lookIndex: 1,
-      },
-      {
         brand: "Hereu",
         item: "Castell Woven Leather Tote — Tan",
         price: "$695",
@@ -604,16 +592,6 @@ export const portofinoLooks: Look[] = [
       href: "https://www.eighthotels.com/en/eight-hotel-portofino/",
     },
     shop: [
-      {
-        brand: "Zimmermann",
-        item: "Illumination Top — Spring 2025",
-        price: "$525",
-        href: "https://www.net-a-porter.com/en-us/shop/product/zimmermann/clothing/blouses/illumination-cropped-cotton-and-silk-blend-blouse/46376663162848181",
-        image:
-          "https://cdn.modaoperandi.com/assets/images/products/1058425/706197/medium_zimmermann-multi-rebellion-lantern-maxi-skirt.jpg",
-        inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
-      },
       {
         brand: "Zimmermann",
         item: "Illumination Skirt",
