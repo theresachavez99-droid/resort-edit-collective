@@ -413,6 +413,7 @@ function LookModule({
   inspired,
   referenceImage,
   referencePos,
+  stylingNote,
 }: {
   look: Look;
   index: 0 | 1 | 2;
@@ -424,6 +425,7 @@ function LookModule({
   inspired: { palette: string; silhouette: string; textures: string; mood: string };
   referenceImage: string;
   referencePos: string;
+  stylingNote?: StylingNote;
 }) {
   // Live items: real affiliate URLs OR explicit not_available placeholders.
   const liveItems = look.shop.filter(
@@ -448,23 +450,33 @@ function LookModule({
   const items: ShopItem[] = tagged.length ? tagged : (fallback[index] ?? []);
 
   return (
-    <article>
-      <header className="mb-8 md:mb-10">
+    <article className="bg-cream/40 border border-border/25 px-5 py-8 md:px-10 md:py-12 lg:px-14 lg:py-14">
+      <header className="mb-6 md:mb-8 max-w-3xl">
         <span className="eyebrow text-gold tracking-[0.4em] text-[0.65rem]">
           {dayLabel.toUpperCase()} · LOOK {lookLetter}
         </span>
         <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] mt-4">
           {title}
         </h3>
-        <p className="font-serif italic text-base md:text-lg text-ink/65 mt-3 max-w-2xl leading-relaxed">
+        <p className="font-serif italic text-base md:text-lg text-ink/65 mt-3 leading-relaxed">
           {mood}
         </p>
-        <div className="mt-5 h-px w-12 bg-gold" />
+        {stylingNote && (
+          <div className="mt-5 border-l-2 border-gold/50 pl-4 max-w-2xl">
+            <span className="eyebrow text-gold text-[0.58rem] tracking-[0.35em]">
+              {stylingNote.label}
+            </span>
+            <p className="font-serif italic text-[0.95rem] md:text-base text-ink/75 leading-relaxed mt-1.5">
+              {stylingNote.text}
+            </p>
+          </div>
+        )}
+        <div className="mt-5 h-px w-12 bg-gold/70" />
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 lg:gap-12 items-start">
-        {/* LEFT 40% — model image */}
-        <div className="lg:col-span-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* LEFT — model image (5/12) */}
+        <div className="lg:col-span-5">
           <div className="relative overflow-hidden bg-cream aspect-[3/4] lg:sticky lg:top-6">
             <img
               src={image}
@@ -493,20 +505,14 @@ function LookModule({
               </div>
             </div>
           </div>
+          <div className="mt-3 eyebrow text-ink/55 text-[0.58rem] tracking-[0.35em] text-center">
+            The Outfit · {items.length} piece{items.length === 1 ? "" : "s"}
+          </div>
         </div>
 
-        {/* RIGHT 60% — cues + product grid */}
-        <div className="lg:col-span-6">
-          <div className="border border-gold/30 bg-cream/60 p-4 mb-6">
-            <div className="eyebrow text-gold text-[0.55rem] tracking-[0.35em]">Inspired By</div>
-            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 font-serif text-[0.78rem] text-ink/75 leading-snug">
-              <div><span className="text-ink/50">Palette · </span>{inspired.palette}</div>
-              <div><span className="text-ink/50">Silhouette · </span>{inspired.silhouette}</div>
-              <div><span className="text-ink/50">Textures · </span>{inspired.textures}</div>
-              <div><span className="text-ink/50">Mood · </span>{inspired.mood}</div>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+        {/* RIGHT — product grid (7/12) */}
+        <div className="lg:col-span-7">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {items.map((item, k) => (
               <ProductCardCompact key={`${item.brand}-${item.item}-${k}`} item={item} />
             ))}
