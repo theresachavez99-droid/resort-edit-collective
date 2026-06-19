@@ -2,6 +2,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireAdmin } from "./admin-auth.server";
+import { isHttpUrl } from "./safe-url";
+
+const httpUrl = z.string().url().refine(isHttpUrl, { message: "URL must use http or https" });
 
 const FIRECRAWL_BASE = "https://api.firecrawl.dev/v2";
 
@@ -50,11 +53,11 @@ export const scrapeProductUrl = createServerFn({ method: "POST" })
     z
       .object({
         password: z.string().min(1).max(200),
-        url: z.string().url(),
+        url: httpUrl,
         day: z.number().int().min(1).max(7).optional(),
         look: z.number().int().min(1).max(10).optional(),
         slot_category: z.string().min(1).max(64).optional(),
-        affiliate_url: z.string().url().optional(),
+        affiliate_url: httpUrl.optional(),
         notes: z.string().max(500).optional(),
         brand_id: z.string().uuid().optional(),
         force: z.boolean().optional(),
