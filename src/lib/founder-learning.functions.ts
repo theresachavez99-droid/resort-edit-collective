@@ -15,10 +15,20 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireAdmin } from "./admin-auth.server";
+import { isHttpUrl } from "./safe-url";
 
 const pw = z.string().min(1).max(200);
 
 const tagArray = z.array(z.string().min(1).max(80)).max(40).default([]);
+
+/**
+ * Strict http(s) URL — rejects javascript:, data:, blob:, vbscript:, file:
+ * and any other non-http(s) scheme that `z.string().url()` would accept.
+ */
+const httpUrl = z
+  .string()
+  .url()
+  .refine(isHttpUrl, { message: "URL must use http or https" });
 
 /* ─────────────────────────────────────────────────────────────────────── */
 /* 1. Founder Reference Products                                           */
@@ -30,8 +40,8 @@ export const addFounderReference = createServerFn({ method: "POST" })
       .object({
         password: pw,
         brand: z.string().min(1).max(120),
-        image_url: z.string().url().optional(),
-        source_url: z.string().url().optional(),
+        image_url: httpUrl.optional(),
+        source_url: httpUrl.optional(),
         retailer: z.string().max(120).optional(),
         product_name: z.string().max(240).optional(),
         product_category: z.string().max(80).optional(),
@@ -75,7 +85,7 @@ export const listFounderReferences = createServerFn({ method: "POST" })
   .inputValidator((input) =>
     z
       .object({
-        password: pw.optional(),
+        password: pw,
         destination: z.string().max(80).optional(),
         brand: z.string().max(120).optional(),
         limit: z.number().int().min(1).max(500).default(100),
@@ -83,7 +93,9 @@ export const listFounderReferences = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data }) => {
-    // Public read (RLS allows authenticated read; admin-key read here for SSR).
+    // Admin-only: founder library exposes internal notes + sourcing metadata
+    // and runs with service-role credentials, so the caller MUST authenticate.
+    requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     let q = supabaseAdmin
       .from("founder_reference_products")
@@ -107,7 +119,7 @@ export const ingestUploadedUrl = createServerFn({ method: "POST" })
     z
       .object({
         password: pw,
-        url: z.string().url(),
+        url: httpUrl,
         source_type: z.string().max(60).optional(),
         destination_hint: z.string().max(80).optional(),
         activity_hint: z.string().max(80).optional(),
