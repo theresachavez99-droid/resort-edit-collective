@@ -148,7 +148,10 @@ export const portofinoLooks: Look[] = [
     image: yacht,
     itinerary:
       "Cast off from Marina di Portofino around 10. Two long swim stops along the Promontorio, lunch on board, a pause at Paraggi, and a dockside aperitivo at Lo Scoglio before golden hour.",
-    experience: { label: "Charter a Private Yacht", href: "#" },
+    experience: {
+      label: "Charter a Private Yacht",
+      href: "https://www.viator.com/Portofino/d50421",
+    },
     shop: [
       {
         brand: "Dolce & Gabbana",
@@ -335,26 +338,6 @@ export const portofinoLooks: Look[] = [
         last_verified_date: "2026-05-30",
         lookIndex: 2,
       },
-      {
-        brand: "Resort Edit Styling Note",
-        item: "Low relaxed bun with face-framing pieces",
-        price: "Styling",
-        category: "Hair Detail",
-        href: "",
-        not_available: true,
-        last_verified_date: "2026-05-30",
-        lookIndex: 2,
-      },
-      {
-        brand: "Resort Edit Styling Note",
-        item: "Cream oversized linen button-down",
-        price: "Styling",
-        category: "Optional Layer",
-        href: "",
-        not_available: true,
-        last_verified_date: "2026-05-30",
-        lookIndex: 2,
-      },
     ],
     experiences: [
       {
@@ -404,7 +387,10 @@ export const portofinoLooks: Look[] = [
     image: beach,
     itinerary:
       "Cabana at La Fontelina from late morning. Lunch at DaV Mare with the sea below. Afternoon swim, an espresso at the bar, and the slow cliff-path walk back into town.",
-    experience: { label: "Book La Fontelina", href: "#" },
+    experience: {
+      label: "Book La Fontelina",
+      href: "https://www.viator.com/Portofino/d50421/paraggi-beach",
+    },
     shop: [
       {
         brand: "Agua by Agua Bendita",
@@ -611,7 +597,10 @@ export const portofinoLooks: Look[] = [
     image: dayclub,
     itinerary:
       "Morning daybed at Eight Club Portofino. A wander through the ateliers on Via Roma. Aperitivo at Langosteria as the boats come in.",
-    experience: { label: "Reserve a Daybed", href: "#" },
+    experience: {
+      label: "Reserve a Daybed",
+      href: "https://www.eighthotels.com/en/eight-hotel-portofino/",
+    },
     shop: [
       {
         brand: "Zimmermann",
@@ -720,7 +709,10 @@ export const portofinoLooks: Look[] = [
     image: dinner,
     itinerary:
       "Cocktails on the terrace at Belmond Splendido. Dinner at La Terrazza as the lights come up around the bay. A digestivo down in the piazzetta before bed.",
-    experience: { label: "Reserve at Belmond Splendido", href: "#" },
+    experience: {
+      label: "Reserve at Belmond Splendido",
+      href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/dining",
+    },
     shop: [
       {
         brand: "Retrofête",
@@ -818,7 +810,10 @@ export const portofinoLooks: Look[] = [
     image: day5MarketStrollsDetail,
     itinerary:
       "Espresso at Caffè Excelsior. The walk up to Castello Brown for the view that defines Portofino. Gelato at Mario, then a boat over to the abbey at San Fruttuoso before lunch.",
-    experience: { label: "Book the San Fruttuoso Boat", href: "#" },
+    experience: {
+      label: "Book the San Fruttuoso Boat",
+      href: "https://www.viator.com/Portofino/d50421/san-fruttuoso",
+    },
     shop: [
       {
         brand: "Posse",
