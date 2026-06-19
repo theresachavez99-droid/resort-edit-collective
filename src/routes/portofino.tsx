@@ -173,21 +173,8 @@ function PortofinoPage() {
     }),
   );
   const moments: PortofinoMomentCard[] = data.ok ? data.moments : [];
-  // Founder-approved canonical day images override the TS defaults at render.
-  // Only the destination card hero and look-a tile use a canonical image;
-  // look-b / look-c retain their dedicated muse photography.
+  // Founder-approved canonical day images override the TS default at render.
   const dayOverrides = useDayImageOverrides();
-  const overriddenDays = DAYS.map((d) => {
-    const override = dayOverrides[d.slug];
-    if (!override) return d;
-    return {
-      ...d,
-      image: override,
-      looks: d.looks.map((l) =>
-        l.slug === "look-a" ? { ...l, image: override } : l,
-      ),
-    };
-  });
   const lookBeachOverride = dayOverrides["day-2"] ?? lookBeach;
 
   return (
