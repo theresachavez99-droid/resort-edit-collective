@@ -9,6 +9,7 @@
 import type { LookDNA } from "@/data/styleDNA";
 import { dnaForLook } from "@/data/styleDNA";
 import { PRODUCT_LIBRARY, resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
+import { isBrandEligible } from "@/data/brandApprovals";
 
 export interface ScoredProduct {
   product: ProductDNA;
@@ -31,6 +32,15 @@ function scoreOne(p: ProductDNA, dna: LookDNA): number {
   // Primary → Brand → Category fallback chain. No card without a destination.
   if (!p.image) return 0;
   if (!resolvePurchaseUrl(p)) return 0;
+  // Affiliate commerce rule: 100% affiliate inventory required.
+  // Brand-direct listings are never surfaced in More Like This, even if no
+  // affiliate alternative exists — we show fewer cards instead.
+  if (p.channel !== "affiliate") return 0;
+  // Brand Intelligence gate: only approved / approved_selectively brands
+  // may render. Brand approval is independent of retailer (a Milly piece on
+  // Saks is gated by Milly's status, not Saks's). Prevents random affiliate
+  // inventory from creeping into the carousel.
+  if (!isBrandEligible(p.brand)) return 0;
 
   const styleOverlap = overlap(p.styleFamilies, dna.styleFamilies);
   const activityOverlap = overlap(p.activityTags, dna.activityTags);
@@ -39,60 +49,65 @@ function scoreOne(p: ProductDNA, dna: LookDNA): number {
   if (styleOverlap === 0 && activityOverlap === 0) return 0;
 
   const luxury = p.brandTier === "familiar" ? 0.5 : 0.3;
-  // Monetization weight: approved affiliate partners are prioritized over
-  // brand-direct listings, per the affiliate commerce rule. A lower-scoring
-  // affiliate piece can outrank an equally-scored brand-direct piece.
-  const affiliate = p.channel === "affiliate" ? 2.5 : 0;
-  return styleOverlap * 3.0 + activityOverlap * 4.0 + luxury + affiliate;
+  return styleOverlap * 3.0 + activityOverlap * 4.0 + luxury;
 }
 
 /**
  * Greedy diversifier:
  *   - cap 2 products per brand (forces brand discovery)
- *   - target ~6 cards (max 8)
- *   - aim for ~70% discovery / ~30% familiar mix
- *   - aim for ≥80% affiliate-linked cards; fall back to brand-direct only
- *     when no affiliate alternative remains in the candidate pool
+ *   - target ~6 cards (max 8); fewer is fine if the pool is thin
+ *   - aim for ~70/30 discovery/familiar mix as a *target*, never a quota:
+ *     a stronger familiar (e.g. luxury) piece always beats a weaker
+ *     discovery piece. We only skip a familiar pick if there is a
+ *     comparably-scored discovery alternative still available.
  */
 function diversify(scored: ScoredProduct[], max = 8, target = 6): ProductDNA[] {
   const sorted = [...scored].sort((a, b) => b.score - a.score);
   const out: ProductDNA[] = [];
   const brandCount = new Map<string, number>();
   let familiarCount = 0;
-  let brandDirectCount = 0;
-
-  const canTake = (p: ProductDNA, opts: { strict: boolean }) => {
-    if ((brandCount.get(p.brand) ?? 0) >= 2) return false;
-    if (!opts.strict) return true;
-    // Strict pass: enforce ~70/30 discovery split and prefer affiliates.
-    const projected = out.length + 1;
-    const familiarCap = Math.ceil(projected * 0.4); // ~30% + slack
-    if (p.brandTier === "familiar" && familiarCount + 1 > familiarCap) return false;
-    const brandDirectCap = Math.max(1, Math.floor(projected * 0.25));
-    if (p.channel === "brand_direct" && brandDirectCount + 1 > brandDirectCap) return false;
-    return true;
-  };
 
   const push = (p: ProductDNA) => {
     out.push(p);
     brandCount.set(p.brand, (brandCount.get(p.brand) ?? 0) + 1);
     if (p.brandTier === "familiar") familiarCount++;
-    if (p.channel === "brand_direct") brandDirectCount++;
   };
 
-  // Strict pass — honor mix + affiliate preference.
-  for (const { product } of sorted) {
+  // Quality-first pick. The ~70/30 discovery target is honored by softly
+  // skipping a familiar pick *only* when (a) we're already over the
+  // familiar share AND (b) there's a discovery alternative within 15% of
+  // its score. Never trade meaningful quality for the quota.
+  const QUALITY_BAND = 0.15;
+  const taken = new Set<ProductDNA>();
+  for (let i = 0; i < sorted.length; i++) {
     if (out.length >= max) break;
-    if (canTake(product, { strict: true })) push(product);
-  }
-  // Backfill pass — only brand cap remains, ensures we hit target.
-  if (out.length < target) {
-    for (const { product } of sorted) {
-      if (out.length >= max) break;
-      if (out.includes(product)) continue;
-      if (canTake(product, { strict: false })) push(product);
+    const { product, score } = sorted[i];
+    if (taken.has(product)) continue;
+    if ((brandCount.get(product.brand) ?? 0) >= 2) continue;
+
+    if (product.brandTier === "familiar") {
+      const projected = out.length + 1;
+      const familiarShare = (familiarCount + 1) / projected;
+      if (familiarShare > 0.4) {
+        const discoveryAlt = sorted.slice(i + 1).find((s) => {
+          if (taken.has(s.product)) return false;
+          if (s.product.brandTier !== "discovery") return false;
+          if ((brandCount.get(s.product.brand) ?? 0) >= 2) return false;
+          return s.score >= score * (1 - QUALITY_BAND);
+        });
+        if (discoveryAlt) {
+          push(discoveryAlt.product);
+          taken.add(discoveryAlt.product);
+          continue;
+        }
+      }
     }
+    push(product);
+    taken.add(product);
   }
+  // If we're below target, that's intentional: pool was thin. Do not
+  // backfill with brand-direct or unapproved brands to hit a number.
+  void target;
   return out;
 }
 
