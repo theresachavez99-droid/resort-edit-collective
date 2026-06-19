@@ -183,7 +183,10 @@ export function MoreFromTheEdit({
 }
 
 function EditTile({ product }: { product: ProductDNA }) {
-  const href = product.href;
+  // Sanitize at render time: drop javascript:/data:/blob:/etc. links so
+  // a malicious product URL can never become a live affiliate href.
+  const { safeHref } = require("@/lib/safe-url") as typeof import("@/lib/safe-url");
+  const href = safeHref(product.href);
   if (!href) return null;
   return (
     <a
