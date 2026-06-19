@@ -26,6 +26,10 @@ export function MoreLikeThis({ daySlug, lookSlug }: { daySlug: string; lookSlug:
   const { data: founder } = useQuery({
     ...founderProductsQuery("portofino"),
     initialData: [] as ProductDNA[],
+    // Treat the initial empty array as stale so the query fetches the live
+    // founder library on mount (otherwise React Query considers initialData
+    // fresh and never calls the server fn).
+    initialDataUpdatedAt: 0,
   });
   const pool = useMemo(() => mergeLibraries(founder, PRODUCT_LIBRARY), [founder]);
   const { dna, products } = useMemo(
