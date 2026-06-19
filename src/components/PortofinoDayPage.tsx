@@ -4,7 +4,6 @@ import { MoreFromTheEdit } from "@/components/MoreFromTheEdit";
 import type { ActivityTag } from "@/data/styleDNA";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
-import cira1Asset from "@/assets/uploads/cira/cira-1.png.asset.json";
 import cira4Asset from "@/assets/uploads/cira/cira-4.png.asset.json";
 import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
 import cira10Asset from "@/assets/uploads/cira/cira-10.png.asset.json";
