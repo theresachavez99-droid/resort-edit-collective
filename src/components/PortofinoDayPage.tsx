@@ -103,6 +103,11 @@ export const DAY_META: Record<DaySlug, {
       "Golden-hour aperitivo on the piazzetta, drink in hand.",
       "Harbor-side dinner — fluid, polished, never overdressed.",
     ],
+    stylingNotes: [
+      { label: "Why It Works", text: "Crisp navy poplin and raffia ground the white palette, giving the look polish from dock to deck." },
+      { label: "Wear It To", text: "Wear it from a yacht lunch to a harbor table; the silhouette stays easy while the accessories keep it polished." },
+      { label: "Resort Edit Note", text: "The cotton-voile sundress walks the line between swim cover-up and dinner dress — pack it once, wear it three times." },
+    ],
     inspired: [
       { palette: "Navy + ivory", silhouette: "Halter + tailored short", textures: "Poplin, fine knit", mood: "Deck-side polish" },
       { palette: "White on white", silhouette: "Easy midi", textures: "Linen, raffia", mood: "Harbor lunch" },
@@ -133,6 +138,11 @@ export const DAY_META: Record<DaySlug, {
       "Sandy-foot ease for the walk back to the hotel.",
       "Spritz hour by the pool — lemon, ivory and a fresh blowout.",
       "Last light along the harbour, linen catching the breeze.",
+    ],
+    stylingNotes: [
+      { label: "Why It Works", text: "Crochet over a clean ivory base keeps the texture editorial, never tourist; raffia accessories carry the cabana through to coffee." },
+      { label: "Wear It To", text: "Wear it to a beach-club lunch where linen, raffia, and a little jewelry are the whole dress code." },
+      { label: "Resort Edit Note", text: "A slip + leather sandal is the quietest possible exit look — it photographs as ease, not effort." },
     ],
     inspired: [
       { palette: "Ivory + lemon", silhouette: "Crochet set", textures: "Crochet, raffia", mood: "Cabana polish" },
@@ -165,6 +175,11 @@ export const DAY_META: Record<DaySlug, {
       "A long afternoon on a day-club sunbed, blush and gold.",
       "One last loop of the boutiques before sunset reservations.",
     ],
+    stylingNotes: [
+      { label: "Why It Works", text: "Silk over a swim base elevates the day-club uniform; gold hardware is the only accessory the look needs." },
+      { label: "Wear It To", text: "The boutique loop from Dior to Pucci — knit sets photograph beautifully in shop-window light." },
+      { label: "Resort Edit Note", text: "Tailored shorts are the under-packed Riviera piece; they bridge daywear and aperitivo without a full change." },
+    ],
     inspired: [
       { palette: "Blush + gold", silhouette: "Silk slip", textures: "Silk, gold", mood: "Piazzetta polish" },
       { palette: "Sun-bleached neutrals", silhouette: "Knit set", textures: "Fine knit, leather", mood: "Via Roma wander" },
@@ -196,6 +211,11 @@ export const DAY_META: Record<DaySlug, {
       "Pre-dinner spritz on the terrace, sculptural gold catching the light.",
       "A slow walk along the piazzetta after dinner, satin underfoot.",
     ],
+    stylingNotes: [
+      { label: "Why It Works", text: "A fluid sunset-orange gown catches the same light as the harbor at golden hour — the dress becomes the photograph." },
+      { label: "Wear It To", text: "Da i Gemelli on the cliffside, or any candlelit terrace where sculpture beats sparkle." },
+      { label: "Resort Edit Note", text: "A warm-neutral slip in silk is the dress you'll re-wear on every coast — buy once, pack always." },
+    ],
     inspired: [
       { palette: "Sunset orange", silhouette: "Fluid gown", textures: "Satin, silk", mood: "Golden-hour entrance" },
       { palette: "Amber + gold", silhouette: "Sculptural midi", textures: "Silk, metal", mood: "Candlelit cocktail" },
@@ -226,6 +246,11 @@ export const DAY_META: Record<DaySlug, {
       "One last lunch by the water before the boat home.",
       "Hotel terrace espresso, sunhat resting on the chair beside you.",
       "Polished, easy dressing for the boat back to the mainland.",
+    ],
+    stylingNotes: [
+      { label: "Why It Works", text: "A cream tailored set photographs like loungewear and travels like a suit — polished enough for espresso, easy enough for departure." },
+      { label: "Wear It To", text: "Puny in the piazzetta, or any last-day lunch where you want the camera roll to end on espresso and linen." },
+      { label: "Resort Edit Note", text: "An easy sun dress + raffia bag is the Italian goodbye outfit — sentimental without trying." },
     ],
     inspired: [
       { palette: "Cream + gold", silhouette: "Tailored set", textures: "Cotton, silk", mood: "Travel-day polish" },
