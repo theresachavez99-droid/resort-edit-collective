@@ -18,7 +18,7 @@ import { getCanonicalDayImage } from "@/data/dayImageRegistry";
 // Registry so a founder-approved image swap propagates to every Day 1
 // surface in one place. (Previously cira-1, the retired coral image.)
 const heroYacht = getCanonicalDayImage("day-1", "hero");
-const heroBeach = cira4Asset.url;
+const heroBeach = getCanonicalDayImage("day-2", "hero");
 const heroDayclub = cira9Asset.url;
 const heroDinner = cira10Asset.url;
 const heroDay5MarketStrolls = cira13Asset.url;
@@ -42,7 +42,7 @@ import cira8Asset from "@/assets/uploads/cira/cira-8.png.asset.json";
 const d1a = getCanonicalDayImage("day-1", "hero");
 const d1b = cira2Asset.url;
 const d1c = cira3Asset.url;
-const d2a = cira4Asset.url;
+const d2a = getCanonicalDayImage("day-2", "hero");
 const d2b = cira5Asset.url;
 const d2c = cira6Asset.url;
 const d3a = cira7Asset.url;
