@@ -10,6 +10,7 @@ import type { LookDNA } from "@/data/styleDNA";
 import { dnaForLook } from "@/data/styleDNA";
 import { PRODUCT_LIBRARY, resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
 import { isBrandEligible } from "@/data/brandApprovals";
+import { portofinoVisualDnaScore } from "@/lib/portofino-visual-dna";
 
 export interface ScoredProduct {
   product: ProductDNA;
@@ -49,7 +50,18 @@ function scoreOne(p: ProductDNA, dna: LookDNA): number {
   if (styleOverlap === 0 && activityOverlap === 0) return 0;
 
   const luxury = p.brandTier === "familiar" ? 0.5 : 0.3;
-  return styleOverlap * 3.0 + activityOverlap * 4.0 + luxury;
+  const base = styleOverlap * 3.0 + activityOverlap * 4.0 + luxury;
+
+  // Portofino Visual DNA — strong secondary boost, capped so a generic
+  // Portofino-branded item can never outrank a product that is genuinely
+  // closer to the hero look. Boost weight (0.6) and cap (+4) are tuned so
+  // the maximum DNA contribution (~+4) is less than a single extra style
+  // overlap (+3) or activity overlap (+4) on the hero look's signal.
+  if (dna.destination === "portofino") {
+    const dnaBoost = Math.max(-1, Math.min(4, portofinoVisualDnaScore(p) * 0.6));
+    return base + dnaBoost;
+  }
+  return base;
 }
 
 /**
