@@ -13,7 +13,11 @@ import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
 import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
 import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
-const heroYacht = cira1Asset.url;
+import { getCanonicalDayImage } from "@/data/dayImageRegistry";
+// Day 1 hero + editorial reference read from the canonical Day Image
+// Registry so a founder-approved image swap propagates to every Day 1
+// surface in one place. (Previously cira-1, the retired coral image.)
+const heroYacht = getCanonicalDayImage("day-1", "hero");
 const heroBeach = cira4Asset.url;
 const heroDayclub = cira9Asset.url;
 const heroDinner = cira10Asset.url;
@@ -33,7 +37,9 @@ import cira5Asset from "@/assets/uploads/cira/cira-5.png.asset.json";
 import cira6Asset from "@/assets/uploads/cira/cira-6.png.asset.json";
 import cira7Asset from "@/assets/uploads/cira/cira-7.png.asset.json";
 import cira8Asset from "@/assets/uploads/cira/cira-8.png.asset.json";
-const d1a = cira1Asset.url;
+// Day 1 primary look tile also pulls from the canonical registry rather
+// than reusing the retired coral cira-1 asset.
+const d1a = getCanonicalDayImage("day-1", "hero");
 const d1b = cira2Asset.url;
 const d1c = cira3Asset.url;
 const d2a = cira4Asset.url;
