@@ -51,6 +51,9 @@ const d5c = cira15Asset.url;
 
 export type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
 
+export type StylingNoteLabel = "Why It Works" | "Wear It To" | "Resort Edit Note";
+export type StylingNote = { label: StylingNoteLabel; text: string };
+
 export const DAY_META: Record<DaySlug, {
   dayKey: string;
   title: string;
@@ -65,6 +68,10 @@ export const DAY_META: Record<DaySlug, {
   /** Slots 0-2 are dedicated muse images; slots 3-4 currently reuse earlier
    *  thumbnails and are flagged as placeholders pending Phase 2 regeneration. */
   placeholderSlots?: number[];
+  /** One-sentence editorial styling note per look (slots 0-2).
+   *  Intentionally left undefined until founder-approved copy lands;
+   *  the LookModule renders nothing when a slot is absent. NO PLACEHOLDER. */
+  stylingNotes?: [StylingNote?, StylingNote?, StylingNote?];
   inspired: [
     { palette: string; silhouette: string; textures: string; mood: string },
     { palette: string; silhouette: string; textures: string; mood: string },
@@ -302,7 +309,7 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
           style={{ objectPosition: meta.heroPos }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/65" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-5 md:pb-6 text-ivory">
           <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
           <h1 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.04em] leading-[1.05] max-w-4xl">
             {meta.title}
@@ -326,39 +333,41 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
       />
 
       {/* LOOK MODULES */}
-      <section className="bg-ivory pt-16 md:pt-20 pb-24 md:pb-32">
-        <div className="mx-auto max-w-7xl px-6 space-y-32 md:space-y-40">
-          {[0, 1, 2].map((i) => (
-            <LookModule
-              key={i}
-              look={look}
-              index={i as 0 | 1 | 2}
-              image={meta.images[i]}
-              isPlaceholderImage={meta.placeholderSlots?.includes(i) ?? false}
-              title={meta.lookTitles[i]}
-              mood={meta.lookMoods[i]}
-              dayLabel={meta.dayKey}
-              inspired={meta.inspired[i]}
-              referenceImage={meta.hero}
-              referencePos={meta.heroPos}
-            />
+      <section className="bg-ivory pt-10 md:pt-14 pb-14 md:pb-20">
+        <div className="mx-auto max-w-7xl px-6 space-y-16 md:space-y-20">
+          {[0, 1, 2].map((i, idx) => (
+            <div key={i}>
+              <LookModule
+                look={look}
+                index={i as 0 | 1 | 2}
+                image={meta.images[i]}
+                isPlaceholderImage={meta.placeholderSlots?.includes(i) ?? false}
+                title={meta.lookTitles[i]}
+                mood={meta.lookMoods[i]}
+                dayLabel={meta.dayKey}
+                inspired={meta.inspired[i]}
+                referenceImage={meta.hero}
+                referencePos={meta.heroPos}
+                stylingNote={meta.stylingNotes?.[i]}
+              />
+              {idx < 2 && (
+                <div className="mx-auto mt-16 md:mt-20 h-px w-12 bg-gold/30" aria-hidden />
+              )}
+            </div>
           ))}
         </div>
       </section>
 
-      <ExperiencesSection />
-      <HotelsSection />
-
-      {/* DYNAMIC FOUNDER-LIBRARY RAIL — augments, never replaces, the
-          editorial Complete Looks above. Filters the 147-piece founder
-          reference library by destination=portofino + this day's
-          activity tags, applies the affiliate-eligibility + brand-
-          diversity rules, and excludes anything already shown above. */}
+      {/* DYNAMIC FOUNDER-LIBRARY RAIL — sits directly after the three
+          editorial Complete Looks, before Experiences / Where To Stay. */}
       <MoreFromTheEdit
         dayLabel={meta.dayKey}
         moments={DAY_MOMENTS[slug]}
         hiddenItems={look.shop}
       />
+
+      <ExperiencesSection />
+      <HotelsSection />
 
       {/* DAY NAVIGATION */}
       <section className="bg-cream border-y border-border/40 py-16 md:py-20">
@@ -404,6 +413,7 @@ function LookModule({
   inspired,
   referenceImage,
   referencePos,
+  stylingNote,
 }: {
   look: Look;
   index: 0 | 1 | 2;
@@ -415,6 +425,7 @@ function LookModule({
   inspired: { palette: string; silhouette: string; textures: string; mood: string };
   referenceImage: string;
   referencePos: string;
+  stylingNote?: StylingNote;
 }) {
   // Live items: real affiliate URLs OR explicit not_available placeholders.
   const liveItems = look.shop.filter(
@@ -439,23 +450,33 @@ function LookModule({
   const items: ShopItem[] = tagged.length ? tagged : (fallback[index] ?? []);
 
   return (
-    <article>
-      <header className="mb-8 md:mb-10">
+    <article className="bg-cream/40 border border-border/25 px-5 py-8 md:px-10 md:py-12 lg:px-14 lg:py-14">
+      <header className="mb-6 md:mb-8 max-w-3xl">
         <span className="eyebrow text-gold tracking-[0.4em] text-[0.65rem]">
           {dayLabel.toUpperCase()} · LOOK {lookLetter}
         </span>
         <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] mt-4">
           {title}
         </h3>
-        <p className="font-serif italic text-base md:text-lg text-ink/65 mt-3 max-w-2xl leading-relaxed">
+        <p className="font-serif italic text-base md:text-lg text-ink/65 mt-3 leading-relaxed">
           {mood}
         </p>
-        <div className="mt-5 h-px w-12 bg-gold" />
+        {stylingNote && (
+          <div className="mt-5 border-l-2 border-gold/50 pl-4 max-w-2xl">
+            <span className="eyebrow text-gold text-[0.58rem] tracking-[0.35em]">
+              {stylingNote.label}
+            </span>
+            <p className="font-serif italic text-[0.95rem] md:text-base text-ink/75 leading-relaxed mt-1.5">
+              {stylingNote.text}
+            </p>
+          </div>
+        )}
+        <div className="mt-5 h-px w-12 bg-gold/70" />
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 lg:gap-12 items-start">
-        {/* LEFT 40% — model image */}
-        <div className="lg:col-span-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* LEFT — model image (5/12) */}
+        <div className="lg:col-span-5">
           <div className="relative overflow-hidden bg-cream aspect-[3/4] lg:sticky lg:top-6">
             <img
               src={image}
@@ -484,20 +505,14 @@ function LookModule({
               </div>
             </div>
           </div>
+          <div className="mt-3 eyebrow text-ink/55 text-[0.58rem] tracking-[0.35em] text-center">
+            The Outfit · {items.length} piece{items.length === 1 ? "" : "s"}
+          </div>
         </div>
 
-        {/* RIGHT 60% — cues + product grid */}
-        <div className="lg:col-span-6">
-          <div className="border border-gold/30 bg-cream/60 p-4 mb-6">
-            <div className="eyebrow text-gold text-[0.55rem] tracking-[0.35em]">Inspired By</div>
-            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 font-serif text-[0.78rem] text-ink/75 leading-snug">
-              <div><span className="text-ink/50">Palette · </span>{inspired.palette}</div>
-              <div><span className="text-ink/50">Silhouette · </span>{inspired.silhouette}</div>
-              <div><span className="text-ink/50">Textures · </span>{inspired.textures}</div>
-              <div><span className="text-ink/50">Mood · </span>{inspired.mood}</div>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+        {/* RIGHT — product grid (7/12) */}
+        <div className="lg:col-span-7">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {items.map((item, k) => (
               <ProductCardCompact key={`${item.brand}-${item.item}-${k}`} item={item} />
             ))}
@@ -590,10 +605,10 @@ function EditorialReferenceCard({
   textures: string;
 }) {
   return (
-    <section className="bg-cream border-y border-border/40 py-16 md:py-24">
+    <section className="bg-cream border-y border-border/40 py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-10 md:gap-14 items-center">
-          <figure className="relative aspect-[4/5] overflow-hidden bg-cream">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] gap-10 md:gap-16 items-center">
+          <figure className="relative aspect-[3/4] overflow-hidden bg-cream">
             <img
               src={image}
               alt={`${dayKey} editorial reference`}
@@ -604,10 +619,10 @@ function EditorialReferenceCard({
             <span className="eyebrow text-gold tracking-[0.42em] text-[0.7rem]">
               Editorial Reference
             </span>
-            <h2 className="font-display text-3xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
+            <h2 className="font-display text-4xl md:text-6xl mt-5 tracking-[0.04em] leading-[1.02]">
               Three Ways To Wear The Mood
             </h2>
-            <div className="mt-5 h-px w-16 bg-gold" />
+            <div className="mt-6 h-px w-24 bg-gold" />
             <p className="font-serif italic text-xl md:text-2xl text-ink/80 leading-relaxed mt-6 max-w-xl">
               {tagline}
             </p>
@@ -616,6 +631,9 @@ function EditorialReferenceCard({
               <CueRow label="Silhouette" value={silhouette} />
               <CueRow label="Textures" value={textures} />
             </dl>
+            <div className="mt-8 eyebrow text-ink/45 text-[0.6rem] tracking-[0.4em]">
+              Scroll for the three looks ↓
+            </div>
           </div>
         </div>
       </div>
@@ -680,7 +698,7 @@ function ProductCardCompact({ item }: { item: ShopItem }) {
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).style.display = "none";
             }}
-            className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
+            className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="flex flex-col items-center justify-center text-center px-3">
@@ -698,23 +716,23 @@ function ProductCardCompact({ item }: { item: ShopItem }) {
           </span>
         )}
       </div>
-      <div className="flex flex-col flex-1 p-3">
+      <div className="flex flex-col flex-1 p-4">
         {item.category && (
-          <div className="eyebrow text-gold text-[0.5rem] tracking-[0.3em] mb-1">
+          <div className="eyebrow text-gold text-[0.55rem] tracking-[0.32em] mb-1">
             {item.category}
           </div>
         )}
-        <div className="eyebrow text-ink text-[0.5rem] tracking-[0.3em]">
+        <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">
           {item.brand}
         </div>
-        <div className="font-serif italic text-ink/90 text-[0.85rem] leading-snug mt-1">
+        <div className="font-serif italic text-ink/90 text-[0.95rem] leading-snug mt-1.5">
           {item.item}
         </div>
-        <div className="font-serif text-gold text-[0.85rem] mt-1">
+        <div className="font-serif text-gold text-[0.95rem] mt-1.5">
           {item.price}
         </div>
         <div className="mt-auto pt-3">
-          <span className="eyebrow text-[0.55rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
+          <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
             Shop →
           </span>
         </div>
