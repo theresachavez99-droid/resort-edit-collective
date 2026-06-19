@@ -29,10 +29,6 @@ export function MoreLikeThis({ daySlug, lookSlug }: { daySlug: string; lookSlug:
     initialDataUpdatedAt: 0,
     refetchOnMount: "always",
   });
-  if (typeof window !== "undefined") {
-    // eslint-disable-next-line no-console
-    console.log("[MoreLikeThis] founder pool size:", founder.length);
-  }
   const pool = useMemo(() => mergeLibraries(founder, PRODUCT_LIBRARY), [founder]);
   const { dna, products } = useMemo(
     () => moreLikeThisFor(daySlug, lookSlug, pool),
