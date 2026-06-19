@@ -3,6 +3,13 @@ import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { homeDays, type HomeDay, type HomePiece, type HomeBagPiece } from "@/data/homeEdit";
 import { SaveButton } from "@/components/SavedCounter";
 import { savedKey } from "@/lib/saved";
+import { useDayImageOverrides, type DaySlug } from "@/data/dayImageRegistry";
+
+function applyDayOverride(d: HomeDay, overrides: Record<string, string>): HomeDay {
+  const slug = `day-${d.n}` as DaySlug;
+  const override = overrides[slug];
+  return override ? { ...d, image: override } : d;
+}
 
 /**
  * Homepage Portofino Itinerary — five day cards. Tapping a card expands
@@ -10,13 +17,15 @@ import { savedKey } from "@/lib/saved";
  */
 export function HomeItinerary() {
   const [openN, setOpenN] = useState<HomeDay["n"] | null>(null);
-  const idx = openN == null ? -1 : homeDays.findIndex((d) => d.n === openN);
-  const open = idx >= 0 ? homeDays[idx] : null;
+  const dayOverrides = useDayImageOverrides();
+  const days = homeDays.map((d) => applyDayOverride(d, dayOverrides));
+  const idx = openN == null ? -1 : days.findIndex((d) => d.n === openN);
+  const open = idx >= 0 ? days[idx] : null;
 
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
-        {homeDays.map((d) => {
+        {days.map((d) => {
           const isOpen = openN === d.n;
           return (
             <button
@@ -75,18 +84,18 @@ export function HomeItinerary() {
           <div className="flex items-center justify-between px-5 lg:px-8 py-4 border-b border-border/50">
             <button
               type="button"
-              onClick={() => setOpenN(homeDays[(idx - 1 + homeDays.length) % homeDays.length].n)}
+              onClick={() => setOpenN(days[(idx - 1 + days.length) % days.length].n)}
               className="inline-flex items-center gap-1.5 eyebrow text-[0.65rem] tracking-[0.24em] text-ink/70 hover:text-gold transition-colors"
             >
               <ChevronLeft className="w-3.5 h-3.5" strokeWidth={1.5} />
               Prev day
             </button>
             <span className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink/60">
-              · {idx + 1}/{homeDays.length} ·
+              · {idx + 1}/{days.length} ·
             </span>
             <button
               type="button"
-              onClick={() => setOpenN(homeDays[(idx + 1) % homeDays.length].n)}
+              onClick={() => setOpenN(days[(idx + 1) % days.length].n)}
               className="inline-flex items-center gap-1.5 eyebrow text-[0.65rem] tracking-[0.24em] text-ink/70 hover:text-gold transition-colors"
             >
               Next day
