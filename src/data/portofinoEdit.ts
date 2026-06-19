@@ -17,7 +17,7 @@ import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
 const d1a = getCanonicalDayImage("day-1", "hero");
 const d1b = cira2Asset.url;
 const d1c = cira3Asset.url;
-const d2a = cira4Asset.url;
+const d2a = getCanonicalDayImage("day-2", "hero");
 const d2b = cira5Asset.url;
 const d2c = cira6Asset.url;
 const d3a = cira7Asset.url;

@@ -22,14 +22,14 @@ import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
 // Day 1 hero card on /portofino — read from the canonical Day Image
 // Registry so a founder-approved swap propagates here automatically.
 const lookYacht = getCanonicalDayImage("day-1", "destination_card");
-const lookBeach = cira4Asset.url;
+const lookBeach = getCanonicalDayImage("day-2", "destination_card");
 const lookDayclub = cira9Asset.url;
 const lookDinner = cira10Asset.url;
 const day5MarketStrolls = cira13Asset.url;
 const d1a = getCanonicalDayImage("day-1", "hero");
 const d1b = cira2Asset.url;
 const d1c = cira3Asset.url;
-const d2a = cira4Asset.url;
+const d2a = getCanonicalDayImage("day-2", "hero");
 const d2b = cira5Asset.url;
 const d2c = cira6Asset.url;
 const d3a = cira7Asset.url;
