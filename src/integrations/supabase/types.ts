@@ -492,6 +492,8 @@ export type Database = {
           founder_approved: boolean
           founder_notes: string | null
           id: string
+          image_review_status: string | null
+          image_source: string
           image_url: string | null
           print_language: string | null
           product_category: string | null
@@ -514,6 +516,8 @@ export type Database = {
           founder_approved?: boolean
           founder_notes?: string | null
           id?: string
+          image_review_status?: string | null
+          image_source?: string
           image_url?: string | null
           print_language?: string | null
           product_category?: string | null
@@ -536,6 +540,8 @@ export type Database = {
           founder_approved?: boolean
           founder_notes?: string | null
           id?: string
+          image_review_status?: string | null
+          image_source?: string
           image_url?: string | null
           print_language?: string | null
           product_category?: string | null
