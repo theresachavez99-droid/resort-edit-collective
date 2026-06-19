@@ -132,7 +132,7 @@ export const getFounderProducts = createServerFn({ method: "GET" })
     const { data: rows, error } = await supabaseAdmin
       .from("founder_reference_products")
       .select(
-        "id,brand,product_name,product_category,image_url,source_url,retailer,channel_type,destination_tags,activity_tags,style_tags,silhouette,texture,color_story",
+        "id,brand,product_name,product_category,image_url,source_url,retailer,channel_type,destination_tags,activity_tags,style_tags,silhouette,texture,color_story,print_language",
       )
       .contains("destination_tags", [data.destination])
       .eq("founder_approved", true);
@@ -174,6 +174,8 @@ export const getFounderProducts = createServerFn({ method: "GET" })
         activityTags,
         brandTier,
         editorialLabel: editorialLabelFor(styleFamilies[0]),
+        printLanguage: (row as { print_language?: string | null }).print_language ?? undefined,
+        colorStory: (row as { color_story?: string[] | null }).color_story ?? [],
       });
     }
     return products;

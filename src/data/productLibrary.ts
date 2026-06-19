@@ -73,6 +73,9 @@ export interface ProductDNA {
   /** Optional pill rendered on the card, e.g. "Mediterranean Embroidery". */
   editorialLabel?: string;
   soldOut?: boolean;
+  /** Optional founder-DB visual DNA fields used by Portofino weighting. */
+  printLanguage?: string;
+  colorStory?: string[];
 }
 
 const RAW_PRODUCTS: Omit<ProductDNA, "channel">[] = [

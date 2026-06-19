@@ -5,6 +5,7 @@ import { type ProductDNA } from "@/data/productLibrary";
 import { founderProductsQuery } from "@/components/MoreLikeThis";
 import type { ActivityTag } from "@/data/styleDNA";
 import type { ShopItem } from "@/data/portofino";
+import { portofinoVisualDnaScore } from "@/lib/portofino-visual-dna";
 
 /**
  * "More From The Edit" — dynamic, founder-library-driven discovery rail
@@ -60,11 +61,18 @@ export function MoreFromTheEdit({
         return !h || !hiddenHosts.has(h);
       });
 
-    // Stable, day-scoped shuffle so each day surfaces a different cut.
+    // Portofino Visual DNA ranking — heavily rewards Mediterranean embroidery,
+    // blue-and-white porcelain, Riviera florals, Italian harbor cues, and
+    // destination color stories. Generic, technically-correct items sort to
+    // the bottom. Day-scoped seed only breaks ties so each day surfaces a
+    // slightly different cut without overriding the visual signal.
     const seed = hashString(dayLabel);
-    const shuffled = stableShuffle(candidates, seed);
+    const ranked = candidates
+      .map((p, i) => ({ p, s: portofinoVisualDnaScore(p), tie: (seed ^ i) >>> 0 }))
+      .sort((a, b) => (b.s - a.s) || (a.tie - b.tie))
+      .map((x) => x.p);
 
-    for (const p of shuffled) {
+    for (const p of ranked) {
       const brand = p.brand.toLowerCase();
       if (seenBrand.has(brand)) continue;
       seenBrand.add(brand);
@@ -171,15 +179,4 @@ function hashString(s: string): number {
     h = Math.imul(h, 16777619);
   }
   return h >>> 0;
-}
-
-function stableShuffle<T>(arr: readonly T[], seed: number): T[] {
-  const out = arr.slice();
-  let s = seed || 1;
-  for (let i = out.length - 1; i > 0; i--) {
-    s = (s * 1664525 + 1013904223) >>> 0;
-    const j = s % (i + 1);
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
 }
