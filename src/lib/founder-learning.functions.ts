@@ -245,7 +245,9 @@ export const ingestUploadedUrl = createServerFn({ method: "POST" })
         products_found: harvested.products.length,
         brands_found: harvested.brands.length,
         new_brands_count: newBrands,
-        harvest_payload: { retailer: harvested.retailer, products: harvested.products },
+        harvest_payload: JSON.parse(
+          JSON.stringify({ retailer: harvested.retailer, products: harvested.products }),
+        ),
         harvested_at: new Date().toISOString(),
       })
       .eq("id", urlRow.id);
