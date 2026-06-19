@@ -432,18 +432,11 @@ export const similarityForCandidate = createServerFn({ method: "POST" })
 /* helpers                                                                 */
 /* ─────────────────────────────────────────────────────────────────────── */
 
-type SupabaseLike = {
-  from: (table: string) => {
-    select: (cols: string) => {
-      eq: (col: string, val: unknown) => { maybeSingle: () => Promise<{ data: Record<string, unknown> | null }> };
-    };
-    insert: (row: Record<string, unknown>) => Promise<unknown>;
-    update: (row: Record<string, unknown>) => { eq: (col: string, val: unknown) => Promise<unknown> };
-  };
-};
-
+// Helper uses `any` for the supabase client; the inferred Database type
+// graph is too deep here and trips TS2589 when constrained.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function bumpBrandRow(
-  supabase: SupabaseLike,
+  supabase: any,
   brand: string,
   slug: string,
   delta: {
@@ -455,13 +448,13 @@ async function bumpBrandRow(
     associated_destinations?: string[];
   },
 ) {
-  const { data: existing } = await supabase
+  const { data: existing } = await (supabase
     .from("brand_intelligence")
     .select(
       "id, times_seen, times_uploaded_by_founder, times_selected_for_looks, times_saved_to_library, founder_reference_count, associated_destinations",
     )
     .eq("slug", slug)
-    .maybeSingle();
+    .maybeSingle() as Promise<{ data: Record<string, unknown> | null }>);
 
   if (existing) {
     const e = existing as Record<string, unknown>;
