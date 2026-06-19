@@ -1,4 +1,5 @@
 import { Link, notFound } from "@tanstack/react-router";
+import { useState } from "react";
 import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
 import { MoreFromTheEdit } from "@/components/MoreFromTheEdit";
 import type { ActivityTag } from "@/data/styleDNA";
@@ -323,6 +324,8 @@ export function getPortofinoDayHead(slug: DaySlug) {
   };
 }
 
+const LOOK_SLUGS = ["look-a", "look-b", "look-c"] as const;
+
 export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
   const meta = DAY_META[slug];
   const look = portofinoLooks.find((l) => l.day === meta.dayKey);
@@ -330,8 +333,10 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
 
   return (
     <div>
-      {/* HERO */}
-      <section className="relative h-[38vh] md:h-[50vh] min-h-[320px] max-h-[520px] w-full overflow-hidden bg-ink">
+      {/* HERO — compressed: chapters serve as editorial index, not the
+          destination itself. Lower height moves the first moment card
+          above the fold faster. */}
+      <section className="relative h-[28vh] md:h-[36vh] min-h-[240px] max-h-[400px] w-full overflow-hidden bg-ink">
         <img
           src={meta.hero}
           alt={meta.title}
@@ -339,54 +344,57 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
           style={{ objectPosition: meta.heroPos }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/65" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-5 md:pb-6 text-ivory">
-          <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
-          <h1 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.04em] leading-[1.05] max-w-4xl">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-4 md:pb-5 text-ivory">
+          <span className="eyebrow text-ivory/80 tracking-[0.4em] text-[0.62rem]">The Resort Edit · Portofino</span>
+          <h1 className="font-display text-2xl md:text-4xl mt-2 tracking-[0.04em] leading-[1.05] max-w-4xl">
             {meta.title}
           </h1>
-          <div className="mx-auto my-3 h-px w-16 bg-gold/80" />
-          <p className="font-serif italic text-base md:text-lg text-ivory/85 max-w-2xl leading-snug">
+          <div className="mx-auto my-2 h-px w-12 bg-gold/80" />
+          <p className="font-serif italic text-sm md:text-base text-ivory/85 max-w-2xl leading-snug">
             {meta.caption}
           </p>
         </div>
       </section>
 
-      {/* EDITORIAL REFERENCE CARD */}
-      <EditorialReferenceCard
-        image={meta.hero}
-        imagePos={meta.heroPos}
-        dayKey={meta.dayKey}
-        tagline={meta.tagline}
-        palette={meta.editorial.palette}
-        silhouette={meta.editorial.silhouette}
-        textures={meta.editorial.textures}
-      />
-
-      {/* LOOK MODULES */}
-      <section className="bg-ivory pt-10 md:pt-14 pb-14 md:pb-20">
-        <div className="mx-auto max-w-7xl px-6 space-y-16 md:space-y-20">
-          {[0, 1, 2].map((i, idx) => (
-            <div key={i}>
-              <LookModule
-                look={look}
-                index={i as 0 | 1 | 2}
+      {/* MOMENT CARDS — chapter functions as editorial index.
+          Each card is image-led with a single CTA into the moment page,
+          where the full shoppable look lives. */}
+      <section className="bg-ivory pt-8 md:pt-12 pb-12 md:pb-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="text-center mb-8 md:mb-12">
+            <span className="eyebrow text-gold tracking-[0.4em] text-[0.62rem]">The Moments</span>
+            <h2 className="font-display text-2xl md:text-4xl mt-3 tracking-[0.04em]">
+              Three Ways To Wear The Day
+            </h2>
+            <div className="mx-auto mt-4 h-px w-12 bg-gold/70" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {[0, 1, 2].map((i) => (
+              <MomentCard
+                key={i}
+                daySlug={slug}
+                lookSlug={LOOK_SLUGS[i]}
                 image={meta.images[i]}
                 isPlaceholderImage={meta.placeholderSlots?.includes(i) ?? false}
                 title={meta.lookTitles[i]}
                 mood={meta.lookMoods[i]}
                 dayLabel={meta.dayKey}
-                inspired={meta.inspired[i]}
-                referenceImage={meta.hero}
-                referencePos={meta.heroPos}
-                stylingNote={meta.stylingNotes?.[i]}
+                lookLetter={(["A", "B", "C"] as const)[i]}
               />
-              {idx < 2 && (
-                <div className="mx-auto mt-16 md:mt-20 h-px w-12 bg-gold/30" aria-hidden />
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* OUR STYLING PHILOSOPHY — compact replacement for the full-bleed
+          Editorial Reference card. Three principles, expandable. */}
+      <StylingPhilosophy
+        palette={meta.editorial.palette}
+        silhouette={meta.editorial.silhouette}
+        textures={meta.editorial.textures}
+        mood={meta.editorial.mood}
+        tagline={meta.tagline}
+      />
 
       {/* DYNAMIC FOUNDER-LIBRARY RAIL — sits directly after the three
           editorial Complete Looks, before Experiences / Where To Stay. */}
