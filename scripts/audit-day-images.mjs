@@ -13,6 +13,7 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { execSync } from "node:child_process";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const issues = [];
@@ -54,4 +55,31 @@ if (issues.length) {
   for (const i of issues) console.error("  - " + i);
   process.exit(1);
 }
+
+/* ---------- DB override audit (best-effort) ---------- */
+if (process.env.PGHOST) {
+  try {
+    const sql =
+      "SELECT day_slug, length(image_url) AS url_len FROM public.canonical_day_images ORDER BY day_slug;";
+    const out = execSync(`psql -tA -F'|' -c ${JSON.stringify(sql)}`, {
+      stdio: ["ignore", "pipe", "pipe"],
+      encoding: "utf8",
+      timeout: 8000,
+    }).trim();
+    if (out) {
+      console.log("ℹ️  Canonical day image DB overrides:");
+      for (const line of out.split("\n")) {
+        const [slug, len] = line.split("|");
+        console.log(`   - ${slug}: DB override active (${len} chars)`);
+      }
+    } else {
+      console.log("ℹ️  No DB overrides set — TS fallback in dayImageRegistry.ts is live.");
+    }
+  } catch (err) {
+    console.log(`ℹ️  DB override check skipped: ${err.message.split("\n")[0]}`);
+  }
+} else {
+  console.log("ℹ️  PGHOST not set — DB override check skipped (TS fallback in use).");
+}
+
 console.log("✅ Day Image Registry audit clean.");

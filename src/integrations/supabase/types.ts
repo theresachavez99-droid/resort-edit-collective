@@ -241,6 +241,75 @@ export type Database = {
         }
         Relationships: []
       }
+      canonical_day_images: {
+        Row: {
+          approved_at: string
+          created_at: string
+          day_slug: string
+          image_source: string
+          image_url: string
+          notes: string | null
+          original_filename: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string
+          created_at?: string
+          day_slug: string
+          image_source?: string
+          image_url: string
+          notes?: string | null
+          original_filename?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string
+          created_at?: string
+          day_slug?: string
+          image_source?: string
+          image_url?: string
+          notes?: string | null
+          original_filename?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      day_image_uploads: {
+        Row: {
+          created_at: string
+          day_slug: string
+          id: string
+          image_source: string
+          image_url: string
+          notes: string | null
+          original_filename: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          day_slug: string
+          id?: string
+          image_source?: string
+          image_url: string
+          notes?: string | null
+          original_filename?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          day_slug?: string
+          id?: string
+          image_source?: string
+          image_url?: string
+          notes?: string | null
+          original_filename?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       destination_moment_archetypes: {
         Row: {
           archetype_name: string

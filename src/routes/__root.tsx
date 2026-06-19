@@ -7,12 +7,21 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 import appCss from "../styles.css?url";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
 import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
 import { absoluteUrl } from "@/lib/site";
+import { DayImageOverridesProvider } from "@/data/dayImageRegistry";
+import { loadCanonicalDayImageOverrides } from "@/lib/day-images.functions";
+
+const dayOverridesQueryOptions = queryOptions({
+  queryKey: ["canonical-day-image-overrides"],
+  queryFn: () => loadCanonicalDayImageOverrides(),
+  staleTime: 5 * 60_000,
+});
 
 const SHARE_IMAGE = absoluteUrl(heroMuseAsset.url);
 
@@ -74,6 +83,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData(dayOverridesQueryOptions).catch(() => ({})),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -128,16 +139,19 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { data: dayOverrides } = useSuspenseQuery(dayOverridesQueryOptions);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen flex flex-col bg-ivory">
-        <SiteHeader />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <SiteFooter />
-      </div>
+      <DayImageOverridesProvider value={dayOverrides ?? {}}>
+        <div className="min-h-screen flex flex-col bg-ivory">
+          <SiteHeader />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <SiteFooter />
+        </div>
+      </DayImageOverridesProvider>
     </QueryClientProvider>
   );
 }

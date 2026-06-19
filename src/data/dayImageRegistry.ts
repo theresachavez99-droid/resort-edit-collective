@@ -22,6 +22,7 @@ import lillaLemonBeachClub from "@/assets/uploads/lilla/lilla-lemon-beach-club.p
 import cira9 from "@/assets/uploads/cira/cira-9.png.asset.json";
 import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
+import { createContext, createElement, useContext, type ReactNode } from "react";
 
 export type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
 
@@ -88,4 +89,51 @@ export function describeDayImageBindings(daySlug: DaySlug) {
     image: getCanonicalDayImage(daySlug, surface),
     isOverride: Boolean(DAY_IMAGE_OVERRIDES[daySlug]?.[surface]),
   }));
+}
+
+/* ---------------------------------------------------------------------------
+ * Runtime DB override layer
+ * ------------------------------------------------------------------------- */
+
+/**
+ * React context carrying founder-approved DB overrides from
+ * `canonical_day_images`. Populated once at the root by a loader call to
+ * `loadCanonicalDayImageOverrides`. When a surface uses
+ * `useCanonicalDayImage(slug, surface)`, the DB row wins; otherwise the TS
+ * fallback above wins. Pending uploads are NEVER routed through this
+ * context — only approved canonical rows are.
+ */
+const DayImageOverridesContext = createContext<Record<string, string>>({});
+
+export function DayImageOverridesProvider({
+  value,
+  children,
+}: {
+  value: Record<string, string>;
+  children: ReactNode;
+}) {
+  return createElement(
+    DayImageOverridesContext.Provider,
+    { value: value ?? {} },
+    children,
+  );
+}
+
+export function useDayImageOverrides(): Record<string, string> {
+  return useContext(DayImageOverridesContext);
+}
+
+/** Render-time resolver: DB override > explicit fallback > TS canonical. */
+export function useCanonicalDayImage(
+  daySlug: DaySlug,
+  surface: DayImageSurface = "hero",
+  fallback?: string,
+): string {
+  const overrides = useContext(DayImageOverridesContext);
+  return (
+    overrides[daySlug] ??
+    DAY_IMAGE_OVERRIDES[daySlug]?.[surface] ??
+    fallback ??
+    CANONICAL_DAY_IMAGES[daySlug]
+  );
 }

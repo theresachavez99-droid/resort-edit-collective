@@ -37,6 +37,7 @@ import { Route as AdminImageRepairQueueRouteImport } from './routes/admin.image-
 import { Route as AdminFounderLearningRouteImport } from './routes/admin.founder-learning'
 import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editorial-library'
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
+import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } from './routes/destinations.portofino.day-1-yacht-harbour-aperitivo'
@@ -181,6 +182,11 @@ const AdminDestinationMomentsRoute = AdminDestinationMomentsRouteImport.update({
   path: '/admin/destination-moments',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminDayImagesRoute = AdminDayImagesRouteImport.update({
+  id: '/admin/day-images',
+  path: '/admin/day-images',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
   id: '/admin/brands',
   path: '/admin/brands',
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
     | '/admin/founder-learning'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
     | '/admin/founder-learning'
@@ -377,6 +388,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
     | '/admin/founder-learning'
@@ -411,6 +423,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminDayImagesRoute: typeof AdminDayImagesRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
   AdminEditorialLibraryRoute: typeof AdminEditorialLibraryRoute
   AdminFounderLearningRoute: typeof AdminFounderLearningRoute
@@ -622,6 +635,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDestinationMomentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/day-images': {
+      id: '/admin/day-images'
+      path: '/admin/day-images'
+      fullPath: '/admin/day-images'
+      preLoaderRoute: typeof AdminDayImagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/brands': {
       id: '/admin/brands'
       path: '/admin/brands'
@@ -707,6 +727,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminBrandsRoute: AdminBrandsRoute,
+  AdminDayImagesRoute: AdminDayImagesRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
   AdminEditorialLibraryRoute: AdminEditorialLibraryRoute,
   AdminFounderLearningRoute: AdminFounderLearningRoute,

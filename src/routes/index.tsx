@@ -10,7 +10,7 @@ import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { HomeItinerary } from "@/components/HomeItinerary";
-import { getCanonicalDayImage } from "@/data/dayImageRegistry";
+import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
 
 const heroMuse = heroMuseAsset.url;
 const editD2a = getCanonicalDayImage("day-2", "hero");
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const looks: Array<{
+const baseLooks: Array<{
   tag: string;
   title: string;
   image: string;
@@ -81,6 +81,12 @@ const ctas = [
 ];
 
 function Index() {
+  const dayOverrides = useDayImageOverrides();
+  const looks = baseLooks.map((l) =>
+    l.look === "look-a" && dayOverrides[l.day]
+      ? { ...l, image: dayOverrides[l.day] }
+      : l,
+  );
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
   return (
     <div className="bg-ivory w-full">

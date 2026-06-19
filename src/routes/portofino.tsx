@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { absoluteUrl } from "@/lib/site";
 import { listPortofinoMomentsForLanding, type PortofinoMomentCard } from "@/lib/portofino-moments.functions";
-import { getCanonicalDayImage } from "@/data/dayImageRegistry";
+import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
 import cira2Asset from "@/assets/uploads/cira/cira-2.png.asset.json";
 import cira3Asset from "@/assets/uploads/cira/cira-3.png.asset.json";
 import cira4Asset from "@/assets/uploads/cira/cira-4.png.asset.json";
@@ -173,6 +173,9 @@ function PortofinoPage() {
     }),
   );
   const moments: PortofinoMomentCard[] = data.ok ? data.moments : [];
+  // Founder-approved canonical day images override the TS default at render.
+  const dayOverrides = useDayImageOverrides();
+  const lookBeachOverride = dayOverrides["day-2"] ?? lookBeach;
 
   return (
     <div className="pb-16 md:pb-20">
@@ -244,7 +247,7 @@ function PortofinoPage() {
               {/* Dolce & Gabbana Beach Club — hero card */}
               <article className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 bg-ivory border border-border/60">
                 <div className="relative aspect-[4/3] sm:aspect-auto sm:min-h-[320px] overflow-hidden bg-muted">
-                  <img src={lookBeach} alt="Dolce & Gabbana Beach Club, Paraggi" loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center" }} />
+                  <img src={lookBeachOverride} alt="Dolce & Gabbana Beach Club, Paraggi" loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center" }} />
                   <div className="absolute top-3 left-3 bg-gold text-ivory eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">
                     MOST INSTAGRAMMABLE
                   </div>
@@ -300,7 +303,7 @@ function PortofinoPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {[
-                { name: "Dolce & Gabbana Beach Club", image: lookBeach, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", look: DAY_PATHS["day-2"] },
+                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", look: DAY_PATHS["day-2"] },
                 { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", look: DAY_PATHS["day-1"] },
                 { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", look: DAY_PATHS["day-1"] },
                 { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", look: DAY_PATHS["day-4"] },
