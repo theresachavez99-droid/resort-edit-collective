@@ -18,7 +18,7 @@
  * override is explicitly registered here.
  */
 import yachtDay1HeroAsset from "@/assets/generated/resort-edit/look-yacht-day1-hero.png.asset.json";
-import cira4 from "@/assets/uploads/cira/cira-4.png.asset.json";
+import lillaLemonBeachClub from "@/assets/uploads/lilla/lilla-lemon-beach-club.png.asset.json";
 import cira9 from "@/assets/uploads/cira/cira-9.png.asset.json";
 import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
@@ -45,7 +45,7 @@ export type DayImageSurface =
  */
 export const CANONICAL_DAY_IMAGES: Record<DaySlug, string> = {
   "day-1": yachtDay1HeroAsset.url,
-  "day-2": cira4.url,
+  "day-2": lillaLemonBeachClub.url,
   "day-3": cira9.url,
   "day-4": cira10.url,
   "day-5": cira13.url,
