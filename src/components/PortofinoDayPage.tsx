@@ -13,7 +13,7 @@ import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
 import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
 import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
-import { getCanonicalDayImage } from "@/data/dayImageRegistry";
+import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
 // Day 1 hero + editorial reference read from the canonical Day Image
 // Registry so a founder-approved image swap propagates to every Day 1
 // surface in one place. (Previously cira-1, the retired coral image.)
@@ -331,6 +331,10 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
   const look = portofinoLooks.find((l) => l.day === meta.dayKey);
   if (!look) throw notFound();
 
+  // Founder-approved canonical hero overrides the TS default for THIS day.
+  const dayOverrides = useDayImageOverrides();
+  const heroSrc = dayOverrides[slug] ?? meta.hero;
+
   return (
     <div>
       {/* HERO — compressed: chapters serve as editorial index, not the
@@ -338,7 +342,7 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
           above the fold faster. */}
       <section className="relative h-[28vh] md:h-[36vh] min-h-[240px] max-h-[400px] w-full overflow-hidden bg-ink">
         <img
-          src={meta.hero}
+          src={heroSrc}
           alt={meta.title}
           className="absolute inset-0 h-full w-full object-cover"
           style={{ objectPosition: meta.heroPos }}
