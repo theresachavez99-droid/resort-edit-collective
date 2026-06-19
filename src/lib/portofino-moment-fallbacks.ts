@@ -9,8 +9,8 @@
  * and status='approved', it OVERRIDES the fallback — see
  * `src/lib/portofino-moments.functions.ts`.
  */
-import cira1 from "@/assets/uploads/cira/cira-1.png.asset.json";
 import cira3 from "@/assets/uploads/cira/cira-3.png.asset.json";
+import { getCanonicalDayImage } from "@/data/dayImageRegistry";
 import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira11 from "@/assets/uploads/cira/cira-11.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
