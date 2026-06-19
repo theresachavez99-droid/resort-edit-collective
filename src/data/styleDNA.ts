@@ -15,7 +15,13 @@ export type StyleFamily =
   | "yacht_swim"
   | "harbor_aperitivo"
   | "sunset_glamour"
-  | "destination_print";
+  | "destination_print"
+  // ── Extended families introduced by the founder reference library ──
+  | "riviera_glamour"
+  | "coastal_neutral"
+  | "destination_glamour"
+  | "mediterranean_tailoring"
+  | "sequin_glamour";
 
 export type ActivityTag =
   | "yacht_day"
