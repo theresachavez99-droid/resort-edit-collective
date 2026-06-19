@@ -147,6 +147,7 @@ export const portofinoLooks: Look[] = [
     subtitle: "Open water, tan lines & hidden coves.",
     caption:
       "Drift past the lighthouse into glassy green water, then ease back to the marina as the piazzetta fills with candlelight and Negronis.",
+    image: yachtDay1Hero,
     itinerary:
       "Cast off from Marina di Portofino around 10. Two long swim stops along the Promontorio, lunch on board, a pause at Paraggi, and a dockside aperitivo at Lo Scoglio before golden hour.",
     experience: {
@@ -343,7 +344,7 @@ export const portofinoLooks: Look[] = [
     experiences: [
       {
         experience_name: "Private Yacht Charter — Portofino Coast",
-        experience_image: yacht,
+        experience_image: yachtDay1Hero,
         experience_description:
           "Your own boat, your own pace, and hidden swim coves along the promontory.",
         affiliate_link: "https://www.viator.com/Portofino/d50421",
