@@ -675,8 +675,8 @@ function LookModule({
 
 function ExperiencesSection() {
   return (
-    <section className="bg-cream py-18 md:py-24 border-y border-border/40">
-      <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
+    <section className="bg-cream py-14 md:py-18 border-y border-border/40">
+      <div className="mx-auto max-w-3xl px-6 text-center mb-8 md:mb-10">
         <span className="eyebrow text-gold tracking-[0.38em]">Experiences</span>
         <h2 className="font-display text-3xl md:text-5xl mt-4 tracking-[0.04em]">Bookable Moments</h2>
         <div className="mx-auto my-5 h-px w-14 bg-gold" />
@@ -704,8 +704,8 @@ function ExperiencesSection() {
 
 function HotelsSection() {
   return (
-    <section className="bg-ivory py-18 md:py-24">
-      <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
+    <section className="bg-ivory py-14 md:py-18">
+      <div className="mx-auto max-w-3xl px-6 text-center mb-8 md:mb-10">
         <span className="eyebrow text-gold tracking-[0.38em]">Hotels</span>
         <h2 className="font-display text-3xl md:text-5xl mt-4 tracking-[0.04em]">Where To Stay</h2>
         <div className="mx-auto my-5 h-px w-14 bg-gold" />
