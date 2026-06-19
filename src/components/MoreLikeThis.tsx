@@ -6,6 +6,7 @@ import { mergeLibraries, moreLikeThisFor } from "@/lib/moreLikeThis";
 import { savedKey, useSaved } from "@/lib/saved";
 import { PRODUCT_LIBRARY, resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
 import { getFounderProducts } from "@/lib/founder-products.functions";
+import { safeHref } from "@/lib/safe-url";
 
 export const founderProductsQuery = (destination = "portofino") => ({
   queryKey: ["founder-products", destination] as const,
@@ -72,7 +73,9 @@ function ProductTile({ product }: { product: ProductDNA }) {
   const saved = has(id);
   // Resolve the purchase URL via the inventory-health fallback chain.
   // The scorer also requires this, so href should always be non-null here.
-  const href = resolvePurchaseUrl(product);
+  // Sanitize at render time: javascript:/data:/blob: links can never
+  // become a live affiliate href.
+  const href = safeHref(resolvePurchaseUrl(product));
   if (!href) return null;
 
   return (
