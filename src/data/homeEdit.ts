@@ -1,10 +1,11 @@
 import yacht from "@/assets/generated/resort-edit/look-yacht-detail-thumb.jpg";
 import yachtDay1HeroAsset from "@/assets/generated/resort-edit/look-yacht-day1-hero.png.asset.json";
 const yachtDay1Hero = yachtDay1HeroAsset.url;
-import beach from "@/assets/generated/resort-edit/look-beach-detail-thumb.jpg";
 import dayclub from "@/assets/generated/resort-edit/look-dayclub-detail-thumb.jpg";
 import cira10Asset from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
+import { getCanonicalDayImage } from "@/data/dayImageRegistry";
+const beach = getCanonicalDayImage("day-2", "hero");
 
 /**
  * Homepage itinerary data: 5 days, one complete look per day, broken into

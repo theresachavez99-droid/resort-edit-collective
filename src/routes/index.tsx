@@ -3,7 +3,6 @@ import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import heroMuseAsset from "@/assets/hero-lilla-portofino-harbor.png.asset.json";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import editD2a from "@/assets/generated/resort-edit/edit-d2-a-card-thumb.jpg";
 import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
@@ -11,8 +10,10 @@ import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { HomeItinerary } from "@/components/HomeItinerary";
+import { getCanonicalDayImage } from "@/data/dayImageRegistry";
 
 const heroMuse = heroMuseAsset.url;
+const editD2a = getCanonicalDayImage("day-2", "hero");
 
 export const Route = createFileRoute("/")({
   head: () => ({
