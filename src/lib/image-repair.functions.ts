@@ -153,7 +153,7 @@ export const approveImage = createServerFn({ method: "POST" })
   });
 
 const ReplaceInput = Action.extend({
-  image_url: httpUrl.and(z.string().max(2000)),
+  image_url: z.string().url().max(2000).refine(isHttpUrl, { message: "URL must use http or https" }),
   image_source: z
     .enum(["retailer_cdn", "brand_cdn", "cleaned_thumbnail"])
     .default("cleaned_thumbnail"),
