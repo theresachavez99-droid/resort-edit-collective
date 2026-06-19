@@ -1,4 +1,5 @@
 import { Link, notFound } from "@tanstack/react-router";
+import { useState } from "react";
 import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
 import { MoreFromTheEdit } from "@/components/MoreFromTheEdit";
 import type { ActivityTag } from "@/data/styleDNA";
@@ -323,6 +324,8 @@ export function getPortofinoDayHead(slug: DaySlug) {
   };
 }
 
+const LOOK_SLUGS = ["look-a", "look-b", "look-c"] as const;
+
 export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
   const meta = DAY_META[slug];
   const look = portofinoLooks.find((l) => l.day === meta.dayKey);
@@ -330,8 +333,10 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
 
   return (
     <div>
-      {/* HERO */}
-      <section className="relative h-[38vh] md:h-[50vh] min-h-[320px] max-h-[520px] w-full overflow-hidden bg-ink">
+      {/* HERO — compressed: chapters serve as editorial index, not the
+          destination itself. Lower height moves the first moment card
+          above the fold faster. */}
+      <section className="relative h-[28vh] md:h-[36vh] min-h-[240px] max-h-[400px] w-full overflow-hidden bg-ink">
         <img
           src={meta.hero}
           alt={meta.title}
@@ -339,54 +344,57 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
           style={{ objectPosition: meta.heroPos }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/65" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-5 md:pb-6 text-ivory">
-          <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
-          <h1 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.04em] leading-[1.05] max-w-4xl">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-4 md:pb-5 text-ivory">
+          <span className="eyebrow text-ivory/80 tracking-[0.4em] text-[0.62rem]">The Resort Edit · Portofino</span>
+          <h1 className="font-display text-2xl md:text-4xl mt-2 tracking-[0.04em] leading-[1.05] max-w-4xl">
             {meta.title}
           </h1>
-          <div className="mx-auto my-3 h-px w-16 bg-gold/80" />
-          <p className="font-serif italic text-base md:text-lg text-ivory/85 max-w-2xl leading-snug">
+          <div className="mx-auto my-2 h-px w-12 bg-gold/80" />
+          <p className="font-serif italic text-sm md:text-base text-ivory/85 max-w-2xl leading-snug">
             {meta.caption}
           </p>
         </div>
       </section>
 
-      {/* EDITORIAL REFERENCE CARD */}
-      <EditorialReferenceCard
-        image={meta.hero}
-        imagePos={meta.heroPos}
-        dayKey={meta.dayKey}
-        tagline={meta.tagline}
-        palette={meta.editorial.palette}
-        silhouette={meta.editorial.silhouette}
-        textures={meta.editorial.textures}
-      />
-
-      {/* LOOK MODULES */}
-      <section className="bg-ivory pt-10 md:pt-14 pb-14 md:pb-20">
-        <div className="mx-auto max-w-7xl px-6 space-y-16 md:space-y-20">
-          {[0, 1, 2].map((i, idx) => (
-            <div key={i}>
-              <LookModule
-                look={look}
-                index={i as 0 | 1 | 2}
+      {/* MOMENT CARDS — chapter functions as editorial index.
+          Each card is image-led with a single CTA into the moment page,
+          where the full shoppable look lives. */}
+      <section className="bg-ivory pt-8 md:pt-12 pb-12 md:pb-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="text-center mb-8 md:mb-12">
+            <span className="eyebrow text-gold tracking-[0.4em] text-[0.62rem]">The Moments</span>
+            <h2 className="font-display text-2xl md:text-4xl mt-3 tracking-[0.04em]">
+              Three Ways To Wear The Day
+            </h2>
+            <div className="mx-auto mt-4 h-px w-12 bg-gold/70" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {[0, 1, 2].map((i) => (
+              <MomentCard
+                key={i}
+                daySlug={slug}
+                lookSlug={LOOK_SLUGS[i]}
                 image={meta.images[i]}
                 isPlaceholderImage={meta.placeholderSlots?.includes(i) ?? false}
                 title={meta.lookTitles[i]}
                 mood={meta.lookMoods[i]}
                 dayLabel={meta.dayKey}
-                inspired={meta.inspired[i]}
-                referenceImage={meta.hero}
-                referencePos={meta.heroPos}
-                stylingNote={meta.stylingNotes?.[i]}
+                lookLetter={(["A", "B", "C"] as const)[i]}
               />
-              {idx < 2 && (
-                <div className="mx-auto mt-16 md:mt-20 h-px w-12 bg-gold/30" aria-hidden />
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* OUR STYLING PHILOSOPHY — compact replacement for the full-bleed
+          Editorial Reference card. Three principles, expandable. */}
+      <StylingPhilosophy
+        palette={meta.editorial.palette}
+        silhouette={meta.editorial.silhouette}
+        textures={meta.editorial.textures}
+        mood={meta.editorial.mood}
+        tagline={meta.tagline}
+      />
 
       {/* DYNAMIC FOUNDER-LIBRARY RAIL — sits directly after the three
           editorial Complete Looks, before Experiences / Where To Stay. */}
@@ -429,6 +437,118 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
         </div>
       </section>
     </div>
+  );
+}
+
+function MomentCard({
+  daySlug,
+  lookSlug,
+  image,
+  isPlaceholderImage,
+  title,
+  mood,
+  dayLabel,
+  lookLetter,
+}: {
+  daySlug: DaySlug;
+  lookSlug: "look-a" | "look-b" | "look-c";
+  image: string;
+  isPlaceholderImage?: boolean;
+  title: string;
+  mood: string;
+  dayLabel: string;
+  lookLetter: "A" | "B" | "C";
+}) {
+  return (
+    <Link
+      to="/portofino/$day/$look"
+      params={{ day: daySlug, look: lookSlug }}
+      className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
+    >
+      {/* Image dominates ~75% of card height */}
+      <div className="relative aspect-[3/4] overflow-hidden bg-cream">
+        <img
+          src={image}
+          alt={`${dayLabel} · ${title}`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+        {isPlaceholderImage && (
+          <span className="absolute top-3 left-3 eyebrow text-[0.55rem] tracking-[0.32em] text-ivory bg-ink/75 px-2.5 py-1 border border-gold/40">
+            Placeholder · Image pending
+          </span>
+        )}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent" />
+        <span className="absolute top-3 right-3 eyebrow text-[0.55rem] tracking-[0.34em] text-ivory bg-ink/55 px-2.5 py-1">
+          {dayLabel.toUpperCase()} · LOOK {lookLetter}
+        </span>
+      </div>
+      {/* Editorial caption + single CTA — no product grid here. */}
+      <div className="px-5 py-5 md:px-6 md:py-6">
+        <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink group-hover:text-gold transition-colors">
+          {title}
+        </h3>
+        <p className="font-serif italic text-sm md:text-[0.95rem] text-ink/65 leading-relaxed mt-2 line-clamp-2">
+          {mood}
+        </p>
+        <span className="inline-flex items-center gap-2 mt-4 eyebrow text-[0.6rem] tracking-[0.4em] text-gold">
+          View Moment <span aria-hidden>→</span>
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function StylingPhilosophy({
+  palette,
+  silhouette,
+  textures,
+  mood,
+  tagline,
+}: {
+  palette: string;
+  silhouette: string;
+  textures: string;
+  mood: string;
+  tagline: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const principles: Array<{ label: string; value: string }> = [
+    { label: "Palette", value: palette },
+    { label: "Silhouette", value: silhouette },
+    { label: "Textures", value: textures },
+  ];
+  return (
+    <section className="bg-cream border-y border-border/40 py-12 md:py-16">
+      <div className="mx-auto max-w-5xl px-6 text-center">
+        <span className="eyebrow text-gold tracking-[0.4em] text-[0.62rem]">Our Styling Philosophy</span>
+        <p className="font-serif italic text-base md:text-lg text-ink/75 leading-relaxed mt-4 max-w-2xl mx-auto">
+          {tagline}
+        </p>
+        <div className="mx-auto mt-6 h-px w-12 bg-gold/60" />
+        <dl className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-10 text-left max-w-3xl mx-auto">
+          {principles.map((p) => (
+            <div key={p.label} className="border-t border-border/60 pt-4">
+              <dt className="eyebrow text-gold text-[0.58rem] tracking-[0.35em]">{p.label}</dt>
+              <dd className="font-serif text-ink/80 text-[0.95rem] leading-relaxed mt-2">{p.value}</dd>
+            </div>
+          ))}
+        </dl>
+        {open && (
+          <p className="font-serif italic text-sm md:text-base text-ink/65 leading-relaxed mt-6 max-w-2xl mx-auto">
+            {mood}
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="mt-6 eyebrow text-[0.6rem] tracking-[0.4em] text-ink/55 hover:text-gold transition-colors"
+          aria-expanded={open}
+        >
+          {open ? "Read Less" : "Read More"}
+        </button>
+      </div>
+    </section>
   );
 }
 
@@ -555,8 +675,8 @@ function LookModule({
 
 function ExperiencesSection() {
   return (
-    <section className="bg-cream py-18 md:py-24 border-y border-border/40">
-      <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
+    <section className="bg-cream py-14 md:py-18 border-y border-border/40">
+      <div className="mx-auto max-w-3xl px-6 text-center mb-8 md:mb-10">
         <span className="eyebrow text-gold tracking-[0.38em]">Experiences</span>
         <h2 className="font-display text-3xl md:text-5xl mt-4 tracking-[0.04em]">Bookable Moments</h2>
         <div className="mx-auto my-5 h-px w-14 bg-gold" />
@@ -584,8 +704,8 @@ function ExperiencesSection() {
 
 function HotelsSection() {
   return (
-    <section className="bg-ivory py-18 md:py-24">
-      <div className="mx-auto max-w-3xl px-6 text-center mb-10 md:mb-12">
+    <section className="bg-ivory py-14 md:py-18">
+      <div className="mx-auto max-w-3xl px-6 text-center mb-8 md:mb-10">
         <span className="eyebrow text-gold tracking-[0.38em]">Hotels</span>
         <h2 className="font-display text-3xl md:text-5xl mt-4 tracking-[0.04em]">Where To Stay</h2>
         <div className="mx-auto my-5 h-px w-14 bg-gold" />
