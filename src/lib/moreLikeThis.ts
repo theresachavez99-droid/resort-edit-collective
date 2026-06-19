@@ -11,6 +11,7 @@ import { dnaForLook } from "@/data/styleDNA";
 import { PRODUCT_LIBRARY, resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
 import { isBrandEligible } from "@/data/brandApprovals";
 import { portofinoVisualDnaScore } from "@/lib/portofino-visual-dna";
+import { filterAndDedupImages } from "@/lib/product-image-integrity";
 
 export interface ScoredProduct {
   product: ProductDNA;
@@ -133,7 +134,11 @@ export interface MoreLikeThisResult {
  * callers can pass the merged founder-library + static fallback.
  */
 export function recommendFor(dna: LookDNA, pool: readonly ProductDNA[]): ProductDNA[] {
-  const scored: ScoredProduct[] = pool
+  // Image integrity gate — placeholders, SVG sketches, cross-brand image
+  // collisions, and duplicate URLs are removed before scoring so the
+  // recommender never surfaces a card that would fail the visual bar.
+  const { kept } = filterAndDedupImages(pool);
+  const scored: ScoredProduct[] = kept
     .map((p) => ({ product: p, score: scoreOne(p, dna) }))
     .filter((s) => s.score > 0);
   return diversify(scored);

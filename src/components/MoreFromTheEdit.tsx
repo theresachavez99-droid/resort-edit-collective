@@ -6,6 +6,7 @@ import { founderProductsQuery } from "@/components/MoreLikeThis";
 import type { ActivityTag } from "@/data/styleDNA";
 import type { ShopItem } from "@/data/portofino";
 import { portofinoVisualDnaScore } from "@/lib/portofino-visual-dna";
+import { filterAndDedupImages } from "@/lib/product-image-integrity";
 
 /**
  * "More From The Edit" — dynamic, founder-library-driven discovery rail
@@ -72,7 +73,12 @@ export function MoreFromTheEdit({
       .sort((a, b) => (b.s - a.s) || (a.tie - b.tie))
       .map((x) => x.p);
 
-    for (const p of ranked) {
+    // Image integrity gate — drop placeholders, sketches, cross-brand image
+    // collisions, and same-URL duplicates BEFORE the brand-cap loop, so a
+    // quarantined card is replaced by the next eligible product.
+    const { kept } = filterAndDedupImages(ranked);
+
+    for (const p of kept) {
       const brand = p.brand.toLowerCase();
       if (seenBrand.has(brand)) continue;
       seenBrand.add(brand);
