@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { absoluteUrl } from "@/lib/site";
 import { listPortofinoMomentsForLanding, type PortofinoMomentCard } from "@/lib/portofino-moments.functions";
-import cira1Asset from "@/assets/uploads/cira/cira-1.png.asset.json";
+import { getCanonicalDayImage } from "@/data/dayImageRegistry";
 import cira2Asset from "@/assets/uploads/cira/cira-2.png.asset.json";
 import cira3Asset from "@/assets/uploads/cira/cira-3.png.asset.json";
 import cira4Asset from "@/assets/uploads/cira/cira-4.png.asset.json";
@@ -19,12 +19,14 @@ import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
 import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
 import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
-const lookYacht = cira1Asset.url;
+// Day 1 hero card on /portofino — read from the canonical Day Image
+// Registry so a founder-approved swap propagates here automatically.
+const lookYacht = getCanonicalDayImage("day-1", "destination_card");
 const lookBeach = cira4Asset.url;
 const lookDayclub = cira9Asset.url;
 const lookDinner = cira10Asset.url;
 const day5MarketStrolls = cira13Asset.url;
-const d1a = cira1Asset.url;
+const d1a = getCanonicalDayImage("day-1", "hero");
 const d1b = cira2Asset.url;
 const d1c = cira3Asset.url;
 const d2a = cira4Asset.url;
