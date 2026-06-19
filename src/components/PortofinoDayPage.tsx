@@ -605,10 +605,10 @@ function EditorialReferenceCard({
   textures: string;
 }) {
   return (
-    <section className="bg-cream border-y border-border/40 py-16 md:py-24">
+    <section className="bg-cream border-y border-border/40 py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-10 md:gap-14 items-center">
-          <figure className="relative aspect-[4/5] overflow-hidden bg-cream">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] gap-10 md:gap-16 items-center">
+          <figure className="relative aspect-[3/4] overflow-hidden bg-cream">
             <img
               src={image}
               alt={`${dayKey} editorial reference`}
@@ -619,10 +619,10 @@ function EditorialReferenceCard({
             <span className="eyebrow text-gold tracking-[0.42em] text-[0.7rem]">
               Editorial Reference
             </span>
-            <h2 className="font-display text-3xl md:text-5xl mt-5 tracking-[0.04em] leading-[1.05]">
+            <h2 className="font-display text-4xl md:text-6xl mt-5 tracking-[0.04em] leading-[1.02]">
               Three Ways To Wear The Mood
             </h2>
-            <div className="mt-5 h-px w-16 bg-gold" />
+            <div className="mt-6 h-px w-24 bg-gold" />
             <p className="font-serif italic text-xl md:text-2xl text-ink/80 leading-relaxed mt-6 max-w-xl">
               {tagline}
             </p>
@@ -631,6 +631,9 @@ function EditorialReferenceCard({
               <CueRow label="Silhouette" value={silhouette} />
               <CueRow label="Textures" value={textures} />
             </dl>
+            <div className="mt-8 eyebrow text-ink/45 text-[0.6rem] tracking-[0.4em]">
+              Scroll for the three looks ↓
+            </div>
           </div>
         </div>
       </div>
@@ -695,7 +698,7 @@ function ProductCardCompact({ item }: { item: ShopItem }) {
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).style.display = "none";
             }}
-            className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
+            className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="flex flex-col items-center justify-center text-center px-3">
@@ -713,23 +716,23 @@ function ProductCardCompact({ item }: { item: ShopItem }) {
           </span>
         )}
       </div>
-      <div className="flex flex-col flex-1 p-3">
+      <div className="flex flex-col flex-1 p-4">
         {item.category && (
-          <div className="eyebrow text-gold text-[0.5rem] tracking-[0.3em] mb-1">
+          <div className="eyebrow text-gold text-[0.55rem] tracking-[0.32em] mb-1">
             {item.category}
           </div>
         )}
-        <div className="eyebrow text-ink text-[0.5rem] tracking-[0.3em]">
+        <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">
           {item.brand}
         </div>
-        <div className="font-serif italic text-ink/90 text-[0.85rem] leading-snug mt-1">
+        <div className="font-serif italic text-ink/90 text-[0.95rem] leading-snug mt-1.5">
           {item.item}
         </div>
-        <div className="font-serif text-gold text-[0.85rem] mt-1">
+        <div className="font-serif text-gold text-[0.95rem] mt-1.5">
           {item.price}
         </div>
         <div className="mt-auto pt-3">
-          <span className="eyebrow text-[0.55rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
+          <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
             Shop →
           </span>
         </div>
