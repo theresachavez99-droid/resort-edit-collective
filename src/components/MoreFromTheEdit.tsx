@@ -5,7 +5,12 @@ import { type ProductDNA } from "@/data/productLibrary";
 import { founderProductsQuery } from "@/components/MoreLikeThis";
 import type { ActivityTag } from "@/data/styleDNA";
 import type { ShopItem } from "@/data/portofino";
-import { portofinoVisualDnaScore } from "@/lib/portofino-visual-dna";
+import {
+  portofinoVisualDnaScore,
+  classifyYachtCategory,
+  YACHT_DAY_QUOTAS,
+  type YachtCategory,
+} from "@/lib/portofino-visual-dna";
 import { filterAndDedupImages } from "@/lib/product-image-integrity";
 
 /**
@@ -77,6 +82,61 @@ export function MoreFromTheEdit({
     // collisions, and same-URL duplicates BEFORE the brand-cap loop, so a
     // quarantined card is replaced by the next eligible product.
     const { kept } = filterAndDedupImages(ranked);
+
+    // Yacht Day composes the rail as a wardrobe (swim + coverups + linen
+    // + raffia + shoes + accessories), not a top-N dress assortment.
+    // Other days keep the simple top-N + brand-cap loop.
+    const isYachtDay = momentSet.has("yacht_day" as ActivityTag);
+
+    if (isYachtDay) {
+      const remaining: Record<YachtCategory, number> = {
+        swim: YACHT_DAY_QUOTAS.swim,
+        coverup: YACHT_DAY_QUOTAS.coverup,
+        linen_layer: YACHT_DAY_QUOTAS.linen_layer,
+        bag: YACHT_DAY_QUOTAS.bag,
+        shoe: YACHT_DAY_QUOTAS.shoe,
+        accessory: YACHT_DAY_QUOTAS.accessory,
+        dress: 0,
+        other: 0,
+      };
+      const leftovers: ProductDNA[] = [];
+      // Pass 1 — fill quota buckets, respecting one-per-brand.
+      for (const p of kept) {
+        const brand = p.brand.toLowerCase();
+        if (seenBrand.has(brand)) continue;
+        const cat = classifyYachtCategory(p);
+        if (remaining[cat] > 0) {
+          remaining[cat] -= 1;
+          seenBrand.add(brand);
+          out.push(p);
+          if (out.length >= max) break;
+        } else {
+          leftovers.push(p);
+        }
+      }
+      // Pass 2 — backfill any unmet slots from leftovers (still skipping
+      // dresses unless absolutely nothing else is left).
+      if (out.length < max) {
+        for (const p of leftovers) {
+          const brand = p.brand.toLowerCase();
+          if (seenBrand.has(brand)) continue;
+          if (classifyYachtCategory(p) === "dress") continue;
+          seenBrand.add(brand);
+          out.push(p);
+          if (out.length >= max) break;
+        }
+      }
+      if (out.length < max) {
+        for (const p of leftovers) {
+          const brand = p.brand.toLowerCase();
+          if (seenBrand.has(brand)) continue;
+          seenBrand.add(brand);
+          out.push(p);
+          if (out.length >= max) break;
+        }
+      }
+      return out;
+    }
 
     for (const p of kept) {
       const brand = p.brand.toLowerCase();
