@@ -11,6 +11,11 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "audit:links": "node scripts/audit-links.mjs",
+    "audit:security": "node scripts/audit-security-static.mjs",
+    "audit:urls": "node scripts/audit-url-safety.mjs",
+    "audit:images": "node scripts/audit-image-integrity.mjs",
+    "audit:day-images": "node scripts/audit-day-images.mjs",
+    "audit:launch": "node scripts/launch-readiness-audit.mjs",
     "test:day1-route": "node scripts/test-day1-route.mjs"
   },
   "dependencies": {
