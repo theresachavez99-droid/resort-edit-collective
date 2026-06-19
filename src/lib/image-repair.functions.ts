@@ -53,7 +53,7 @@ export const listImageRepairQueue = createServerFn({ method: "POST" })
         "id,brand,product_name,product_category,image_url,source_url,image_source,image_review_status,founder_approved",
       )
       .eq("founder_approved", true)
-      .or("image_review_status.is.null,image_review_status.eq.")
+      .is("image_review_status", null)
       .order("brand");
 
     if (error) throw new Error(error.message);
