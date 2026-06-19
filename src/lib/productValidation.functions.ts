@@ -10,6 +10,7 @@ import {
   type PenaltyFlag,
 } from "./productScoring";
 import { requireAdmin } from "./admin-auth.server";
+import { isHttpUrl } from "./safe-url";
 
 const FIRECRAWL_BASE = "https://api.firecrawl.dev/v2";
 
@@ -31,7 +32,7 @@ export const validateCandidateProduct = createServerFn({ method: "POST" })
     z
       .object({
         password: z.string().min(1).max(200),
-        url: z.string().url(),
+        url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }),
         score: z.record(z.string(), z.number().min(1).max(5)).optional(),
         brand: z
           .object({
