@@ -76,6 +76,15 @@ export interface ProductDNA {
   /** Optional founder-DB visual DNA fields used by Portofino weighting. */
   printLanguage?: string;
   colorStory?: string[];
+  /** Classification of the image source. Only retailer_cdn / brand_cdn /
+   *  cleaned_thumbnail are allowed to render on live rails. */
+  imageSource?:
+    | "retailer_cdn"
+    | "brand_cdn"
+    | "cleaned_thumbnail"
+    | "founder_screenshot"
+    | "placeholder"
+    | "unknown";
 }
 
 const RAW_PRODUCTS: Omit<ProductDNA, "channel">[] = [

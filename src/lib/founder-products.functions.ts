@@ -132,10 +132,15 @@ export const getFounderProducts = createServerFn({ method: "GET" })
     const { data: rows, error } = await supabaseAdmin
       .from("founder_reference_products")
       .select(
-        "id,brand,product_name,product_category,image_url,source_url,retailer,channel_type,destination_tags,activity_tags,style_tags,silhouette,texture,color_story,print_language",
+        "id,brand,product_name,product_category,image_url,source_url,retailer,channel_type,destination_tags,activity_tags,style_tags,silhouette,texture,color_story,print_language,image_source",
       )
       .contains("destination_tags", [data.destination])
-      .eq("founder_approved", true);
+      .eq("founder_approved", true)
+      // Hard whitelist: only images we have positively classified as real
+      // product photography are eligible for live rails. Placeholders,
+      // sketches, founder screenshots, and unknown-source images are
+      // surfaced ONLY in the admin Image Repair Queue, never here.
+      .in("image_source", ["retailer_cdn", "brand_cdn", "cleaned_thumbnail"]);
 
     if (error) {
       console.error("[founder-products] query failed", error.message);
@@ -176,6 +181,7 @@ export const getFounderProducts = createServerFn({ method: "GET" })
         editorialLabel: editorialLabelFor(styleFamilies[0]),
         printLanguage: (row as { print_language?: string | null }).print_language ?? undefined,
         colorStory: (row as { color_story?: string[] | null }).color_story ?? [],
+        imageSource: (row as { image_source?: ProductDNA["imageSource"] }).image_source,
       });
     }
     return products;

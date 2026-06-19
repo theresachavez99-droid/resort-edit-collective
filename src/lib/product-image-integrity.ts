@@ -43,6 +43,22 @@ export function isValidProductImage(url: string | undefined | null): boolean {
 }
 
 /**
+ * Source-level allowlist. The Data API already filters to allowed sources,
+ * but the static PRODUCT_LIBRARY fallback has no image_source — undefined
+ * is treated as ALLOWED for backward compat. Founder DB rows always carry
+ * a classification, so quarantined sources are blocked deterministically.
+ */
+const ALLOWED_SOURCES = new Set([
+  "retailer_cdn",
+  "brand_cdn",
+  "cleaned_thumbnail",
+]);
+export function isAllowedImageSource(p: ProductDNA): boolean {
+  if (!p.imageSource) return true; // static fallback rows
+  return ALLOWED_SOURCES.has(p.imageSource);
+}
+
+/**
  * Apply integrity rules to a candidate pool. Order is preserved so the
  * caller's ranking (DNA score, activity score, etc.) decides which product
  * survives a collision — the first occurrence wins, the rest are dropped.
@@ -61,6 +77,7 @@ export function filterAndDedupImages(
   const urlBrands = new Map<string, Set<string>>();
   for (const p of products) {
     if (!isValidProductImage(p.image)) continue;
+    if (!isAllowedImageSource(p)) continue;
     const set = urlBrands.get(p.image) ?? new Set<string>();
     set.add(p.brand.toLowerCase());
     urlBrands.set(p.image, set);
@@ -81,12 +98,18 @@ export function filterAndDedupImages(
       audit.invalidUrl.push(p);
       continue;
     }
+    if (!isAllowedImageSource(p)) {
+      audit.invalidUrl.push(p);
+      continue;
+    }
     if (blacklisted.has(p.image)) {
       // Already logged in crossBrandCollision; suppress all renders.
       continue;
     }
     const firstBrand = seenUrl.get(p.image);
     if (firstBrand) {
+      // Duplicate URL — allowed only if it is the exact same product
+      // (same brand AND same name). Otherwise quarantined.
       audit.duplicateUrl.push({ url: p.image, brands: [firstBrand, p.brand.toLowerCase()] });
       continue;
     }
