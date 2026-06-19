@@ -74,7 +74,8 @@ export default {
       if (redirect) return redirect;
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+      return applyNonProdNoIndex(request, normalized);
     } catch (error) {
       console.error(error);
       return brandedErrorResponse();
@@ -84,6 +85,24 @@ export default {
 
 // Internal preview/published hosts we should NOT redirect away from.
 const PASSTHROUGH_HOST_SUFFIXES = [".lovable.app", ".lovable.dev", ".lovableproject.com", "localhost"];
+
+function isNonProdHost(host: string): boolean {
+  return host !== SITE_HOST && host !== `www.${SITE_HOST}`;
+}
+
+// On preview/staging/dev hosts (anything that isn't the canonical prod domain),
+// stamp X-Robots-Tag so crawlers don't index preview/published-preview surfaces.
+function applyNonProdNoIndex(request: Request, response: Response): Response {
+  const host = (request.headers.get("host") ?? "").toLowerCase();
+  if (!host || !isNonProdHost(host)) return response;
+  const headers = new Headers(response.headers);
+  headers.set("x-robots-tag", "noindex, nofollow, noarchive");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
 
 function buildCanonicalRedirect(request: Request): Response | null {
   let url: URL;
