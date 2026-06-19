@@ -61,7 +61,8 @@ const fnFiles = files.filter((f) => f.endsWith(".functions.ts"));
 
 /* 1. listFounderReferences must call requireAdmin */
 const fl = readFileSync(join(SRC, "lib/founder-learning.functions.ts"), "utf8");
-const listBlock = fl.match(/export const listFounderReferences[\s\S]*?\n\}\);/);
+/* Match from the export keyword to the closing of the createServerFn chain. */
+const listBlock = fl.match(/export const listFounderReferences[\s\S]*?\}\s*\)\s*;/);
 if (!listBlock) fail("listFounderReferences export not found");
 else {
   if (!/password:\s*pw\b/.test(listBlock[0]))
