@@ -1,5 +1,7 @@
 import { Link, notFound } from "@tanstack/react-router";
 import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
+import { MoreFromTheEdit } from "@/components/MoreFromTheEdit";
+import type { ActivityTag } from "@/data/styleDNA";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
 import cira1Asset from "@/assets/uploads/cira/cira-1.png.asset.json";
@@ -237,6 +239,19 @@ export const DAY_PATHS: Record<DaySlug, "/portofino/day-1" | "/portofino/day-2" 
   "day-5": "/portofino/day-5",
 };
 
+/**
+ * Activity-tag map per day. Drives the "More From The Edit" rail —
+ * picks founder references whose activity_tags intersect this list.
+ * Mirrors how each day was editorially conceived in portofino.ts.
+ */
+export const DAY_MOMENTS: Record<DaySlug, readonly ActivityTag[]> = {
+  "day-1": ["yacht_day", "harbor_aperitivo", "arrival_day"],
+  "day-2": ["beach_club_lunch", "pool_day"],
+  "day-3": ["pool_day", "shopping_afternoon", "harbor_aperitivo"],
+  "day-4": ["sunset_views", "riviera_dinner"],
+  "day-5": ["market_morning", "shopping_afternoon"],
+};
+
 const experiences = [
   { name: "Private Yacht Charter", tier: "Signature Experience", description: "Hidden coves, chilled wine, and the Portofino coast from the water.", image: expYacht, href: "https://www.viator.com/Portofino/d50421" },
   { name: "Harbor Golden Hour", tier: "Signature Experience", description: "Aperitivo in the piazzetta as the pastel facades catch the last light.", image: expHarbor, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/" },
@@ -333,6 +348,17 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
 
       <ExperiencesSection />
       <HotelsSection />
+
+      {/* DYNAMIC FOUNDER-LIBRARY RAIL — augments, never replaces, the
+          editorial Complete Looks above. Filters the 147-piece founder
+          reference library by destination=portofino + this day's
+          activity tags, applies the affiliate-eligibility + brand-
+          diversity rules, and excludes anything already shown above. */}
+      <MoreFromTheEdit
+        dayLabel={meta.dayKey}
+        moments={DAY_MOMENTS[slug]}
+        hiddenItems={look.shop}
+      />
 
       {/* DAY NAVIGATION */}
       <section className="bg-cream border-y border-border/40 py-16 md:py-20">
