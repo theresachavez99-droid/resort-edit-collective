@@ -1,4 +1,6 @@
 import yacht from "@/assets/generated/resort-edit/look-yacht-detail-thumb.jpg";
+import yachtDay1HeroAsset from "@/assets/generated/resort-edit/look-yacht-day1-hero.png.asset.json";
+const yachtDay1Hero = yachtDay1HeroAsset.url;
 import beach from "@/assets/generated/resort-edit/look-beach-detail-thumb.jpg";
 import dayclub from "@/assets/generated/resort-edit/look-dayclub-detail-thumb.jpg";
 import cira10Asset from "@/assets/uploads/cira/cira-10.png.asset.json";
@@ -130,7 +132,7 @@ export const homeDays: HomeDay[] = [
     subtitle: "Open water, tan lines & hidden coves.",
     caption:
       "Drift past the lighthouse into glassy green water, then ease back to the marina as the piazzetta fills with candlelight and Negronis.",
-    image: yacht,
+    image: yachtDay1Hero,
     isWaterDay: true,
     outfit: [
       {
