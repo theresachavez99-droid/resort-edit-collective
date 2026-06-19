@@ -71,8 +71,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Yacht Day",
     narrative:
       "A long day on the water — Paraggi, Camogli, lunch on board. Swim under, throw-on over, considered finish.",
-    hero_image: cira1.url,
-    outfit_image: cira1.url,
+    hero_image: getCanonicalDayImage("day-1", "hero"),
+    outfit_image: getCanonicalDayImage("day-1", "hero"),
     legacy_day: "/portofino/day-1",
     legacy_look_title: "Boarding the Boat",
   },
