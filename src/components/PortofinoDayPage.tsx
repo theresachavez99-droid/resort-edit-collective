@@ -51,6 +51,9 @@ const d5c = cira15Asset.url;
 
 export type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
 
+export type StylingNoteLabel = "Why It Works" | "Wear It To" | "Resort Edit Note";
+export type StylingNote = { label: StylingNoteLabel; text: string };
+
 export const DAY_META: Record<DaySlug, {
   dayKey: string;
   title: string;
@@ -65,6 +68,10 @@ export const DAY_META: Record<DaySlug, {
   /** Slots 0-2 are dedicated muse images; slots 3-4 currently reuse earlier
    *  thumbnails and are flagged as placeholders pending Phase 2 regeneration. */
   placeholderSlots?: number[];
+  /** One-sentence editorial styling note per look (slots 0-2).
+   *  Intentionally left undefined until founder-approved copy lands;
+   *  the LookModule renders nothing when a slot is absent. NO PLACEHOLDER. */
+  stylingNotes?: [StylingNote?, StylingNote?, StylingNote?];
   inspired: [
     { palette: string; silhouette: string; textures: string; mood: string },
     { palette: string; silhouette: string; textures: string; mood: string },
@@ -302,7 +309,7 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
           style={{ objectPosition: meta.heroPos }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/65" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-5 md:pb-6 text-ivory">
           <span className="eyebrow text-ivory/80 tracking-[0.4em]">The Resort Edit · Portofino</span>
           <h1 className="font-display text-3xl md:text-5xl mt-3 tracking-[0.04em] leading-[1.05] max-w-4xl">
             {meta.title}
@@ -326,39 +333,41 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
       />
 
       {/* LOOK MODULES */}
-      <section className="bg-ivory pt-16 md:pt-20 pb-24 md:pb-32">
-        <div className="mx-auto max-w-7xl px-6 space-y-32 md:space-y-40">
-          {[0, 1, 2].map((i) => (
-            <LookModule
-              key={i}
-              look={look}
-              index={i as 0 | 1 | 2}
-              image={meta.images[i]}
-              isPlaceholderImage={meta.placeholderSlots?.includes(i) ?? false}
-              title={meta.lookTitles[i]}
-              mood={meta.lookMoods[i]}
-              dayLabel={meta.dayKey}
-              inspired={meta.inspired[i]}
-              referenceImage={meta.hero}
-              referencePos={meta.heroPos}
-            />
+      <section className="bg-ivory pt-10 md:pt-14 pb-14 md:pb-20">
+        <div className="mx-auto max-w-7xl px-6 space-y-16 md:space-y-20">
+          {[0, 1, 2].map((i, idx) => (
+            <div key={i}>
+              <LookModule
+                look={look}
+                index={i as 0 | 1 | 2}
+                image={meta.images[i]}
+                isPlaceholderImage={meta.placeholderSlots?.includes(i) ?? false}
+                title={meta.lookTitles[i]}
+                mood={meta.lookMoods[i]}
+                dayLabel={meta.dayKey}
+                inspired={meta.inspired[i]}
+                referenceImage={meta.hero}
+                referencePos={meta.heroPos}
+                stylingNote={meta.stylingNotes?.[i]}
+              />
+              {idx < 2 && (
+                <div className="mx-auto mt-16 md:mt-20 h-px w-12 bg-gold/30" aria-hidden />
+              )}
+            </div>
           ))}
         </div>
       </section>
 
-      <ExperiencesSection />
-      <HotelsSection />
-
-      {/* DYNAMIC FOUNDER-LIBRARY RAIL — augments, never replaces, the
-          editorial Complete Looks above. Filters the 147-piece founder
-          reference library by destination=portofino + this day's
-          activity tags, applies the affiliate-eligibility + brand-
-          diversity rules, and excludes anything already shown above. */}
+      {/* DYNAMIC FOUNDER-LIBRARY RAIL — sits directly after the three
+          editorial Complete Looks, before Experiences / Where To Stay. */}
       <MoreFromTheEdit
         dayLabel={meta.dayKey}
         moments={DAY_MOMENTS[slug]}
         hiddenItems={look.shop}
       />
+
+      <ExperiencesSection />
+      <HotelsSection />
 
       {/* DAY NAVIGATION */}
       <section className="bg-cream border-y border-border/40 py-16 md:py-20">
