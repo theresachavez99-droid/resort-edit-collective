@@ -5,6 +5,7 @@ import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { MoreLikeThis } from "@/components/MoreLikeThis";
+import { founderProductsQuery } from "@/components/MoreLikeThis";
 import {
   isLookSlug,
   type LookSlug,
