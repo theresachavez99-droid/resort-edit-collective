@@ -176,7 +176,7 @@ export const runAssetBackfill = createServerFn({ method: "POST" })
       for (const a of p.activityTags) agg.activities.add(a);
       for (const s of p.styleFamilies) agg.styles.add(s);
       agg.founder_reference_count += 1;
-      if (p.brandTier === "hero" || p.brandTier === "discovery") agg.tier = p.brandTier as never;
+      if (p.brandTier === "discovery") agg.tier = "discovery";
       refRows.push({
         brand: p.brand,
         retailer: p.retailer,
