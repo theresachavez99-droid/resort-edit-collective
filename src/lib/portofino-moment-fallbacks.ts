@@ -16,6 +16,7 @@ import cira11 from "@/assets/uploads/cira/cira-11.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
 import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrace.png.asset.json";
+import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
@@ -72,7 +73,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Yacht Day",
     narrative:
       "A long day on the water — Paraggi, Camogli, lunch on board. Swim under, throw-on over, considered finish.",
-    hero_image: getCanonicalDayImage("day-1", "hero"),
+    hero_image: yachtDayHero.url,
     outfit_image: getCanonicalDayImage("day-1", "hero"),
     legacy_day: "/portofino/day-1",
     legacy_look_title: "Boarding the Boat",
