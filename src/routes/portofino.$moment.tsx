@@ -4,13 +4,6 @@ import { ArrowRight } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import { getPortofinoMomentDef, PORTOFINO_MOMENT_DEFS } from "@/lib/portofino-moment-fallbacks";
 import { absoluteUrl } from "@/lib/site";
-import yachtDayHeroAsset from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
-
-// Page-specific hero overrides — used ONLY on /portofino/$moment hero banner.
-// Does NOT affect moment cards on /portofino, homepage, or any other surface.
-const PAGE_HERO_OVERRIDES: Record<string, string> = {
-  "yacht-day": yachtDayHeroAsset.url,
-};
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -37,9 +30,9 @@ export const Route = createFileRoute("/portofino/$moment")({
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
-        { property: "og:image", content: absoluteUrl(def.hero_image) },
+        { property: "og:image", content: absoluteUrl(def.hero_banner_image) },
         { property: "og:url", content: absoluteUrl(path) },
-        { name: "twitter:image", content: absoluteUrl(def.hero_image) },
+        { name: "twitter:image", content: absoluteUrl(def.hero_banner_image) },
       ],
       links: [{ rel: "canonical", href: absoluteUrl(path) }],
     };
@@ -76,7 +69,7 @@ function MomentPage() {
   if (!card) throw notFound();
 
   const { resolved } = card;
-  const heroImage = PAGE_HERO_OVERRIDES[slug] ?? card.hero_image;
+  const heroImage = card.hero_banner_image;
   const currentIdx = PORTOFINO_MOMENT_DEFS.findIndex((m) => m.moment_slug === slug);
   const nextMoment =
     currentIdx >= 0
