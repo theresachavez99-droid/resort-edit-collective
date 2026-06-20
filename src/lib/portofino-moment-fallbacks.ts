@@ -15,6 +15,7 @@ import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira11 from "@/assets/uploads/cira/cira-11.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
+import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrace.jpeg.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
@@ -48,8 +49,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "arrival",
     moment_name: "Arrival Day",
     narrative:
-      "Stepping off the boat at the Piazzetta with a small case and sunglasses on — the first impression of the trip, quietly considered.",
-    hero_image: cira14.url,
+      "The first afternoon in Portofino—sun on the harbor, luggage unpacked, and nowhere to be but here.",
+    hero_image: arrivalDayHero.url,
     outfit_image: cira14.url,
     legacy_day: "/portofino/day-5",
     legacy_look_title: "The Slow Departure",
