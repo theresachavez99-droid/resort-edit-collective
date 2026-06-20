@@ -178,23 +178,23 @@ function PortofinoPage() {
   const lookBeachOverride = dayOverrides["day-2"] ?? lookBeach;
 
   return (
-    <div className="pb-16 md:pb-20">
+    <div className="pb-10 md:pb-12">
       {/* HERO */}
-      <section className="relative h-[42vh] md:h-[56vh] min-h-[300px] md:min-h-[380px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[34vh] md:h-[46vh] min-h-[260px] md:min-h-[320px] w-full overflow-hidden bg-ink">
         <img
           src={portofinoImg}
           alt="Portofino harbor — editorial hero"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-4 md:pb-6 text-ivory">
           <span className="eyebrow text-[0.62rem] md:text-[0.7rem] tracking-[0.42em] text-ivory/80">
             DRESSED FOR THE DESTINATION
           </span>
-          <h1 className="font-display text-5xl md:text-[6rem] mt-3 tracking-[0.05em] leading-[1]">
+          <h1 className="font-display text-5xl md:text-[6rem] mt-2 tracking-[0.05em] leading-[1]">
             Portofino
           </h1>
-          <p className="font-serif italic text-base md:text-xl text-ivory/90 mt-3 max-w-2xl leading-relaxed">
+          <p className="font-serif italic text-base md:text-xl text-ivory/90 mt-2 max-w-2xl leading-relaxed">
             A pastel harbor on the Italian Riviera — six destination moments, one editorial language.
           </p>
         </div>
@@ -202,19 +202,19 @@ function PortofinoPage() {
 
       {/* SIX DESTINATION MOMENTS — editorial chapter index */}
       <section className="bg-ivory">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-20">
-          <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-8 md:pt-12 pb-10 md:pb-14">
+          <div className="max-w-3xl mx-auto text-center mb-6 md:mb-8">
             <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">The Edit</span>
-            <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-3 text-ink">
+            <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-2 text-ink">
               Six Moments in Portofino
             </h2>
-            <div className="mx-auto my-4 h-px w-12 bg-gold" />
+            <div className="mx-auto my-3 h-px w-12 bg-gold" />
             <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
               Each moment is its own chapter — a single look, dressed for one place at one hour of the day.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {moments.map((m) => (
               <MomentCard key={m.moment_slug} m={m} />
             ))}
@@ -224,26 +224,26 @@ function PortofinoPage() {
 
       {/* PLAN YOUR PORTOFINO STAY — concierge layer */}
       <section className="bg-cream border-y border-border/40">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-10 md:py-14">
           {/* Section header */}
-          <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+          <div className="max-w-3xl mx-auto text-center mb-8 md:mb-10">
             <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">The Concierge</span>
-            <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-3 text-ink">
+            <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-2 text-ink">
               Plan Your Portofino Stay
             </h2>
-            <div className="mx-auto my-4 h-px w-12 bg-gold" />
+            <div className="mx-auto my-3 h-px w-12 bg-gold" />
             <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
               The tables, beach clubs, boats, and reservations worth planning ahead.
             </p>
           </div>
 
           {/* 1. RESORT EDIT FAVORITES */}
-          <div className="mb-16 md:mb-20">
-            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+          <div className="mb-10 md:mb-12">
+            <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
               <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">RESORT EDIT FAVORITES</h3>
               <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Editor&rsquo;s shortlist</span>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
               {/* Dolce & Gabbana Beach Club — hero card */}
               <article className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 bg-ivory border border-border/60">
                 <div className="relative aspect-[4/3] sm:aspect-auto sm:min-h-[320px] overflow-hidden bg-muted">
@@ -252,13 +252,13 @@ function PortofinoPage() {
                     MOST INSTAGRAMMABLE
                   </div>
                 </div>
-                <div className="p-6 md:p-7 flex flex-col">
+                <div className="p-5 md:p-6 flex flex-col">
                   <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold">Le Carillon · Paraggi Bay</span>
-                  <h4 className="font-display text-2xl md:text-[1.7rem] tracking-wide mt-2 leading-tight">Dolce &amp; Gabbana Beach Club</h4>
-                  <p className="font-serif italic text-ink/70 text-[0.95rem] mt-3 leading-relaxed flex-1">
+                  <h4 className="font-display text-2xl md:text-[1.7rem] tracking-wide mt-1.5 leading-tight">Dolce &amp; Gabbana Beach Club</h4>
+                  <p className="font-serif italic text-ink/70 text-[0.95rem] mt-2 leading-relaxed flex-1">
                     Majolica umbrellas, Riviera water, seaside lunches, and the most photographed beach setup in Portofino.
                   </p>
-                  <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
                     <a href="https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/" target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-[0.62rem] tracking-[0.3em] text-ink hover:text-gold border-b border-ink/40 hover:border-gold pb-1">
                       Reserve →
                     </a>
@@ -270,24 +270,24 @@ function PortofinoPage() {
               </article>
 
               {/* Two side favorites */}
-              <div className="grid grid-rows-2 gap-5 md:gap-6">
-                <article className="bg-ivory border border-border/60 p-5 flex flex-col">
+              <div className="grid grid-rows-2 gap-4 md:gap-5">
+                <article className="bg-ivory border border-border/60 p-4 flex flex-col">
                   <span className="self-start bg-ink text-ivory eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">BOOK FIRST</span>
-                  <h4 className="font-display text-lg tracking-wide mt-3 leading-tight">Private Boat to San Fruttuoso</h4>
-                  <p className="font-serif italic text-ink/65 text-[0.88rem] mt-2 leading-relaxed flex-1">
+                  <h4 className="font-display text-lg tracking-wide mt-2.5 leading-tight">Private Boat to San Fruttuoso</h4>
+                  <p className="font-serif italic text-ink/65 text-[0.88rem] mt-1.5 leading-relaxed flex-1">
                     The abbey, swim stops, and quiet coves most day trippers miss.
                   </p>
-                  <a href="https://www.viator.com/Portofino/d50421/san-fruttuoso" target="_blank" rel="noopener noreferrer sponsored" className="mt-3 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 pb-1">
+                  <a href="https://www.viator.com/Portofino/d50421/san-fruttuoso" target="_blank" rel="noopener noreferrer sponsored" className="mt-2.5 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 pb-1">
                     Book →
                   </a>
                 </article>
-                <article className="bg-ivory border border-border/60 p-5 flex flex-col">
+                <article className="bg-ivory border border-border/60 p-4 flex flex-col">
                   <span className="self-start bg-ivory text-ink border border-ink eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">INSIDER FAVORITE</span>
-                  <h4 className="font-display text-lg tracking-wide mt-3 leading-tight">Sunset Aperitivo Reservation</h4>
-                  <p className="font-serif italic text-ink/65 text-[0.88rem] mt-2 leading-relaxed flex-1">
+                  <h4 className="font-display text-lg tracking-wide mt-2.5 leading-tight">Sunset Aperitivo Reservation</h4>
+                  <p className="font-serif italic text-ink/65 text-[0.88rem] mt-1.5 leading-relaxed flex-1">
                     Harbor cocktails before dinner — reserve early.
                   </p>
-                  <Link to={DAY_PATHS["day-4"]} className="mt-3 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 pb-1">
+                  <Link to={DAY_PATHS["day-4"]} className="mt-2.5 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 pb-1">
                     Plan The Evening →
                   </Link>
                 </article>
@@ -296,12 +296,12 @@ function PortofinoPage() {
           </div>
 
           {/* 2. BOOKABLE MOMENTS */}
-          <div className="mb-16 md:mb-20">
-            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+          <div className="mb-10 md:mb-12">
+            <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
               <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">BOOKABLE MOMENTS</h3>
               <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Reserve before you go</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
               {[
                 { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", look: DAY_PATHS["day-2"] },
                 { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", look: DAY_PATHS["day-1"] },
@@ -314,10 +314,10 @@ function PortofinoPage() {
                   <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                     <img src={exp.image} alt={exp.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                   </div>
-                  <div className="p-4 md:p-5 flex flex-col flex-1">
+                  <div className="p-3.5 md:p-4 flex flex-col flex-1">
                     <h4 className="font-display text-[1.05rem] tracking-wide leading-snug">{exp.name}</h4>
-                    <p className="font-serif italic text-ink/65 text-[0.86rem] mt-2 leading-relaxed flex-1">{exp.desc}</p>
-                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 border-t border-border/50">
+                    <p className="font-serif italic text-ink/65 text-[0.86rem] mt-1.5 leading-relaxed flex-1">{exp.desc}</p>
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 pt-2.5 border-t border-border/50">
                       <a href={exp.href} target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink hover:text-gold">
                         BOOK →
                       </a>
@@ -332,12 +332,12 @@ function PortofinoPage() {
           </div>
 
           {/* 3. WHERE TO STAY */}
-          <div className="mb-16 md:mb-20">
-            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+          <div className="mb-10 md:mb-12">
+            <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
               <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">WHERE TO STAY</h3>
               <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Four addresses on the promontory</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
               {[
                 { name: "Splendido, A Belmond Hotel", category: "ULTRA LUXURY", note: "A cliffside grande dame above the harbor — bougainvillea terraces, pastel-pink facade, and the most storied view on the Riviera.", image: hotelSplendido, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/" },
                 { name: "Splendido Mare", category: "HARBORFRONT", note: "On the piazzetta itself. Wake to the boats, dine on the waterfront, walk everywhere that matters.", image: hotelSplendidoMare, href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-splendido-mare/" },
@@ -348,11 +348,11 @@ function PortofinoPage() {
                   <div className="relative overflow-hidden bg-muted">
                     <img src={h.image} alt={h.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
-                  <div className="p-5 flex flex-col">
+                  <div className="p-4 flex flex-col">
                     <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-gold">{h.category}</span>
                     <h4 className="font-display text-lg md:text-xl tracking-wide mt-1.5 leading-snug">{h.name}</h4>
-                    <p className="font-serif italic text-ink/65 text-[0.86rem] mt-2.5 leading-relaxed flex-1">{h.note}</p>
-                    <span className="mt-4 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-ink group-hover:text-gold transition-colors border-b border-ink/30 group-hover:border-gold pb-1">
+                    <p className="font-serif italic text-ink/65 text-[0.86rem] mt-2 leading-relaxed flex-1">{h.note}</p>
+                    <span className="mt-3 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-ink group-hover:text-gold transition-colors border-b border-ink/30 group-hover:border-gold pb-1">
                       Book This Stay →
                     </span>
                   </div>
@@ -362,12 +362,12 @@ function PortofinoPage() {
           </div>
 
           {/* 4. INSIDER NOTES */}
-          <div className="mb-16 md:mb-20">
-            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+          <div className="mb-10 md:mb-12">
+            <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
               <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">INSIDER NOTES</h3>
               <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">From the concierge desk</span>
             </div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3">
               {[
                 "Reserve beach clubs weeks ahead — Paraggi sells out by May.",
                 "Paraggi for beach time. Portofino for dinner.",
@@ -388,20 +388,20 @@ function PortofinoPage() {
 
           {/* 5. GETTING THERE */}
           <div>
-            <div className="flex items-baseline justify-between mb-6 border-b border-ink/15 pb-3">
+            <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
               <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">GETTING THERE</h3>
               <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Arrival, the easy way</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
               {[
                 { label: "Private Driver", note: "Black-car transfer from Genoa (45 min), Milan (2.5 hr), or Nice (3 hr). The most direct arrival." },
                 { label: "By Boat", note: "Water taxi from Santa Margherita or Rapallo — the entrance the village was designed for." },
                 { label: "Santa Margherita Base", note: "Stay ten minutes away for easier logistics, then come into Portofino for lunch and dinner." },
                 { label: "Train + Transfer", note: "High-speed rail to Santa Margherita Ligure, then taxi or boat into the village." },
               ].map((g) => (
-                <article key={g.label} className="bg-ivory border border-border/60 p-5">
+                <article key={g.label} className="bg-ivory border border-border/60 p-4">
                   <span className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">{g.label.toUpperCase()}</span>
-                  <p className="font-serif italic text-ink/70 text-[0.92rem] mt-3 leading-relaxed">{g.note}</p>
+                  <p className="font-serif italic text-ink/70 text-[0.92rem] mt-2 leading-relaxed">{g.note}</p>
                 </article>
               ))}
             </div>
@@ -436,10 +436,10 @@ function MomentCard({ m }: { m: PortofinoMomentCard }) {
         <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">
           {m.moment_name}
         </h3>
-        <p className="font-serif italic text-ink/70 text-[0.92rem] mt-2.5 leading-relaxed flex-1">
+        <p className="font-serif italic text-ink/70 text-[0.92rem] mt-2 leading-relaxed flex-1">
           {m.narrative}
         </p>
-        <span className="mt-5 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start">
+        <span className="mt-4 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start">
           View Moment <ArrowRight className="w-3 h-3" />
         </span>
       </div>
