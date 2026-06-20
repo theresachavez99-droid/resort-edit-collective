@@ -102,7 +102,7 @@ function MomentPage() {
           alt={`${card.moment_name} — Portofino`}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/25 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/10 to-black/45" />
         <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-8 md:pb-10 text-ivory">
           <Link
             to="/portofino"
