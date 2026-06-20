@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "asset_id": "9c773159-6ea7-4499-9319-6abccd1ef290",
+  "asset_id": "def861d1-a650-4a8a-a18f-44642d7c4136",
   "project_id": "2676ecab-fdce-44d9-937f-acaa3df99903",
-  "url": "/__l5e/assets-v1/9c773159-6ea7-4499-9319-6abccd1ef290/lilla-portofino-hero.jpg",
-  "r2_key": "a/v1/2676ecab-fdce-44d9-937f-acaa3df99903/9c773159-6ea7-4499-9319-6abccd1ef290/lilla-portofino-hero.jpg",
-  "original_filename": "lilla-portofino-hero.jpg",
-  "size": 167133,
-  "content_type": "image/jpeg",
-  "created_at": "2026-06-20T23:27:34Z"
+  "url": "/__l5e/assets-v1/def861d1-a650-4a8a-a18f-44642d7c4136/lilla-portofino-hero-full.png",
+  "r2_key": "a/v1/2676ecab-fdce-44d9-937f-acaa3df99903/def861d1-a650-4a8a-a18f-44642d7c4136/lilla-portofino-hero-full.png",
+  "original_filename": "lilla-portofino-hero-full.png",
+  "size": 2988745,
+  "content_type": "image/png",
+  "created_at": "2026-06-20T23:29:57Z"
 }
