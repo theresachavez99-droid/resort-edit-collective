@@ -1,6 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { Ship, Umbrella, Camera, Compass } from "lucide-react";
-import heroMuseAsset from "@/assets/hero-lilla-portofino-harbor.png.asset.json";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
 import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
@@ -11,8 +10,10 @@ import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { HomeItinerary } from "@/components/HomeItinerary";
 import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
+import { getFeaturedDestination } from "@/data/featuredDestination";
 
-const heroMuse = heroMuseAsset.url;
+const featured = getFeaturedDestination();
+const heroMuse = featured.heroImage;
 const editD2a = getCanonicalDayImage("day-2", "hero");
 
 export const Route = createFileRoute("/")({
@@ -90,43 +91,86 @@ function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
   return (
     <div className="bg-ivory w-full">
-      {/* HERO — balanced 50/50 split */}
-      <section className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center`}>
-          <div className="relative aspect-[3/4] lg:aspect-[7/10] overflow-hidden bg-muted">
-            <img
-              src={heroMuse}
-              alt="Lilla in a Mediterranean print designer dress overlooking Portofino harbor, Italy."
-              fetchPriority="high"
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: "center center" }}
-            />
-          </div>
-          <div className="lg:pl-2 max-w-[750px]">
-            <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">RESORT EDIT™</p>
-            <h1 className="font-display mt-3 text-[3.4rem] sm:text-[4.2rem] lg:text-[6.2rem] xl:text-[7.4rem] leading-[0.9] tracking-[0.01em] text-ink">
-              DRESSED FOR THE
-              <br />
-              DESTINATION™
-            </h1>
-            <p
-              className="font-serif italic text-[2rem] sm:text-[2.4rem] lg:text-[2.9rem] xl:text-[3.2rem] leading-[1.05] tracking-[-0.01em] mt-3 -ml-0.5 max-w-[95%]"
-              style={{ color: "oklch(0.62 0.12 66)" }}
+      {/* HERO — editorial cover: photography-led, destination-first hierarchy */}
+      <section
+        className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
+      >
+        {/* Photography occupies more visual weight (7/12) and runs slightly taller */}
+        <div className="relative aspect-[3/4] lg:aspect-[5/7] overflow-hidden bg-muted lg:col-span-7">
+          <img
+            src={featured.heroImage}
+            alt={featured.heroImageAlt}
+            fetchPriority="high"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: "center center" }}
+          />
+        </div>
+        <div className="lg:pl-2 max-w-[680px] lg:col-span-5">
+          <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">
+            RESORT EDIT™
+          </p>
+          <h1 className="font-display mt-2 text-[4.2rem] sm:text-[5.6rem] lg:text-[7.4rem] xl:text-[8.6rem] leading-[0.88] tracking-[0.005em] text-ink uppercase">
+            {featured.name}
+          </h1>
+          <p
+            className="font-serif italic text-[1.5rem] sm:text-[1.75rem] lg:text-[2rem] leading-[1.1] tracking-[-0.01em] mt-2"
+            style={{ color: "oklch(0.62 0.12 66)" }}
+          >
+            Dressed for the Destination™
+          </p>
+          <p className="eyebrow text-ink/65 text-[0.7rem] sm:text-[0.74rem] tracking-[0.24em] mt-3">
+            {featured.country} <span className="text-gold/70">•</span>{" "}
+            {featured.totalLooks} Looks{" "}
+            <span className="text-gold/70">•</span>{" "}
+            {featured.totalMoments} Moments
+          </p>
+          <p
+            className="font-serif italic text-[1.25rem] sm:text-[1.4rem] lg:text-[1.55rem] leading-[1.2] mt-3 text-ink"
+          >
+            {featured.tagline}
+          </p>
+          <div className="mt-4 mb-3 h-px w-24 bg-gold/80" />
+          <p className="font-serif text-[1.02rem] lg:text-[1.08rem] text-ink/75 leading-[1.55] max-w-xl">
+            Curated outfits, hotels, experiences, and insider recommendations designed around how women actually travel.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link
+              to={featured.primaryCtaHref as "/"}
+              className="bg-gold text-ivory eyebrow text-[0.78rem] tracking-[0.28em] px-10 py-[18px] hover:bg-ink transition-colors"
             >
-              Five Days. Five Looks. One Perfect Destination.
-            </p>
-            <div className="mt-5 mb-4 h-px w-32 bg-gold/80" />
-            <p className="font-serif text-lg lg:text-[1.2rem] text-ink/80 leading-[1.7] max-w-2xl">
-              Curated outfits, hotels, experiences, and insider recommendations designed around how women actually travel.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-4">
-              <Link to="/portofino" className="bg-gold text-ivory eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-ink transition-colors">
-                Explore Portofino
-              </Link>
-              <Link to="/destinations" className="border border-ink text-ink eyebrow text-[0.82rem] tracking-[0.28em] px-12 py-[22px] hover:bg-ink hover:text-ivory transition-colors">
-                View All Destinations
-              </Link>
-            </div>
+              Explore {featured.name}
+            </Link>
+            <Link
+              to="/destinations"
+              className="border border-ink text-ink eyebrow text-[0.78rem] tracking-[0.28em] px-10 py-[18px] hover:bg-ink hover:text-ivory transition-colors"
+            >
+              View All Destinations
+            </Link>
           </div>
+
+          {/* Chapter navigation — communicates depth above the fold */}
+          <nav
+            aria-label={`${featured.name} chapters`}
+            className="mt-6 -mx-4 sm:mx-0 overflow-x-auto lg:overflow-visible"
+          >
+            <ul className="flex lg:flex-wrap items-center gap-x-5 gap-y-2 px-4 sm:px-0 whitespace-nowrap lg:whitespace-normal">
+              {featured.momentLabels.map((m, i) => (
+                <li key={m.slug} className="flex items-center gap-x-5">
+                  <Link
+                    to="/portofino/$moment"
+                    params={{ moment: m.slug }}
+                    className="eyebrow text-[0.68rem] tracking-[0.22em] text-ink/70 hover:text-gold transition-colors"
+                  >
+                    {m.label}
+                  </Link>
+                  {i < featured.momentLabels.length - 1 && (
+                    <span aria-hidden className="text-gold/50">·</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </section>
 
       {/* PORTOFINO ITINERARY */}
