@@ -4,6 +4,13 @@ import { ArrowRight } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import { getPortofinoMomentDef, PORTOFINO_MOMENT_DEFS } from "@/lib/portofino-moment-fallbacks";
 import { absoluteUrl } from "@/lib/site";
+import yachtDayHeroAsset from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
+
+// Page-specific hero overrides — used ONLY on /portofino/$moment hero banner.
+// Does NOT affect moment cards on /portofino, homepage, or any other surface.
+const PAGE_HERO_OVERRIDES: Record<string, string> = {
+  "yacht-day": yachtDayHeroAsset.url,
+};
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -69,6 +76,7 @@ function MomentPage() {
   if (!card) throw notFound();
 
   const { resolved } = card;
+  const heroImage = PAGE_HERO_OVERRIDES[slug] ?? card.hero_image;
   const currentIdx = PORTOFINO_MOMENT_DEFS.findIndex((m) => m.moment_slug === slug);
   const nextMoment =
     currentIdx >= 0
@@ -98,7 +106,7 @@ function MomentPage() {
       {/* HERO */}
       <section className="relative h-[44vh] md:h-[58vh] min-h-[320px] w-full overflow-hidden bg-ink">
         <img
-          src={card.hero_image}
+          src={heroImage}
           alt={`${card.moment_name} — Portofino`}
           className="absolute inset-0 h-full w-full object-cover"
         />
