@@ -17,6 +17,7 @@ import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
 import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrace.png.asset.json";
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
+import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
@@ -65,7 +66,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Market Morning",
     narrative:
       "Walking up for peaches and flowers before the heat lands — cotton, raffia, espresso in hand.",
-    moment_card_image: cira13.url,
+    moment_card_image: marketMorningCard.url,
     hero_banner_image: cira13.url,
     outfit_image: cira13.url,
     legacy_day: "/portofino/day-5",
