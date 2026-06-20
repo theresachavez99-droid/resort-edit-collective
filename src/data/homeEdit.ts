@@ -62,6 +62,9 @@ export type HomeDay = {
   imageRetina?: string;
   isEvening?: boolean;
   isWaterDay?: boolean;
+  /** Moment slug + display label for the "Explore Moment" CTA. */
+  momentSlug: string;
+  momentLabel: string;
   outfit: HomePiece[];
   bag: HomeBagPiece[];
 };
@@ -135,6 +138,8 @@ export const homeDays: HomeDay[] = [
       "Drift past the lighthouse into glassy green water, then ease back to the marina as the piazzetta fills with candlelight and Negronis.",
     image: yachtDay1Hero,
     isWaterDay: true,
+    momentSlug: "yacht-day",
+    momentLabel: "Yacht Day",
     outfit: [
       {
         category: "Outfit",
@@ -204,6 +209,8 @@ export const homeDays: HomeDay[] = [
       "Trade the morning for a cliffside cabana above Paraggi, then linger over a long lunch beneath the pines until the coastal path back into town turns gold.",
     image: beach,
     isWaterDay: true,
+    momentSlug: "harbor-aperitivo",
+    momentLabel: "Harbor Aperitivo",
     outfit: [
       {
         category: "Outfit",
@@ -273,6 +280,8 @@ export const homeDays: HomeDay[] = [
       "Drift from a sun-warmed daybed into the cool of the ateliers along Via Roma, landing in the piazzetta just as the yachts come in and the Prosecco starts to pour.",
     image: dayclub,
     isWaterDay: true,
+    momentSlug: "sunset-views",
+    momentLabel: "Sunset Views",
     outfit: [
       {
         category: "Outfit",
@@ -342,6 +351,8 @@ export const homeDays: HomeDay[] = [
       "A silk dress, a rooftop cocktail high above the cliffs, and a long Italian dinner unfolding as the lights of the harbor blink on one by one.",
     image: dinner,
     isEvening: true,
+    momentSlug: "riviera-dinner",
+    momentLabel: "Riviera Dinner",
     outfit: [
       {
         category: "Outfit",
@@ -396,6 +407,8 @@ export const homeDays: HomeDay[] = [
     caption:
       "Climb the path to Castello Brown for one last look over the harbor, then drift down to a waterside table where lunch turns into the kind of farewell that already feels like a return.",
     image: market,
+    momentSlug: "market-morning",
+    momentLabel: "Market Morning",
     outfit: [
       {
         category: "Outfit",

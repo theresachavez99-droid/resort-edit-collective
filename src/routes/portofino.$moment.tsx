@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
-import { getPortofinoMomentDef } from "@/lib/portofino-moment-fallbacks";
+import { getPortofinoMomentDef, PORTOFINO_MOMENT_DEFS } from "@/lib/portofino-moment-fallbacks";
 import { absoluteUrl } from "@/lib/site";
 
 const momentQuery = (slug: string) =>
@@ -69,9 +69,32 @@ function MomentPage() {
   if (!card) throw notFound();
 
   const { resolved } = card;
+  const currentIdx = PORTOFINO_MOMENT_DEFS.findIndex((m) => m.moment_slug === slug);
+  const nextMoment =
+    currentIdx >= 0
+      ? PORTOFINO_MOMENT_DEFS[(currentIdx + 1) % PORTOFINO_MOMENT_DEFS.length]
+      : null;
 
   return (
     <div className="pb-16 md:pb-20">
+      {/* BREADCRUMB */}
+      <nav
+        aria-label="Breadcrumb"
+        className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-5 pb-2"
+      >
+        <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 eyebrow text-[0.6rem] tracking-[0.26em] text-ink/55">
+          <li>
+            <Link to="/" className="hover:text-gold transition-colors">Home</Link>
+          </li>
+          <li aria-hidden className="text-gold/50">/</li>
+          <li>
+            <Link to="/portofino" className="hover:text-gold transition-colors">Portofino</Link>
+          </li>
+          <li aria-hidden className="text-gold/50">/</li>
+          <li aria-current="page" className="text-ink">{card.moment_name}</li>
+        </ol>
+      </nav>
+
       {/* HERO */}
       <section className="relative h-[44vh] md:h-[58vh] min-h-[320px] w-full overflow-hidden bg-ink">
         <img
@@ -152,6 +175,30 @@ function MomentPage() {
           </div>
         </div>
       </section>
+
+      {/* CONTINUE THE JOURNEY */}
+      {nextMoment && (
+        <section className="bg-cream border-t border-border/40">
+          <div className="mx-auto max-w-[1180px] px-4 sm:px-6 py-14 md:py-20 text-center">
+            <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
+              Continue the Journey
+            </span>
+            <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3">
+              {nextMoment.moment_name}
+            </h3>
+            <p className="font-serif italic text-[1rem] md:text-[1.1rem] text-ink/70 mt-3 max-w-xl mx-auto leading-relaxed">
+              {nextMoment.narrative}
+            </p>
+            <Link
+              to="/portofino/$moment"
+              params={{ moment: nextMoment.moment_slug }}
+              className="mt-6 inline-flex items-center gap-2 eyebrow text-[0.7rem] tracking-[0.3em] bg-gold text-ivory px-8 py-4 hover:bg-ink transition-colors"
+            >
+              Continue to {nextMoment.moment_name} <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
