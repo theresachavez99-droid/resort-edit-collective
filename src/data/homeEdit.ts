@@ -62,6 +62,9 @@ export type HomeDay = {
   imageRetina?: string;
   isEvening?: boolean;
   isWaterDay?: boolean;
+  /** Moment slug + display label for the "Explore Moment" CTA. */
+  momentSlug: string;
+  momentLabel: string;
   outfit: HomePiece[];
   bag: HomeBagPiece[];
 };
