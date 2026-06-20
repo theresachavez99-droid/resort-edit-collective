@@ -98,14 +98,13 @@ function Index() {
       <section
         className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
       >
-        {/* Photography runs wider & shorter — destination-led editorial cover */}
-        <div className="relative aspect-[4/5] lg:aspect-[4/3] overflow-hidden bg-muted lg:col-span-7">
+        {/* Photography — full-body editorial portrait, never cropped at head or hem */}
+        <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-cream/40 lg:col-span-7">
           <img
             src={featured.heroImage}
             alt={featured.heroImageAlt}
             fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-cover"
-            style={{ objectPosition: "center center" }}
+            className="absolute inset-0 h-full w-full object-contain object-center"
           />
         </div>
         <div className="lg:pl-2 max-w-[680px] lg:col-span-5">
