@@ -49,6 +49,7 @@ const hotels = [
     name: "Splendido, A Belmond Hotel",
     image: hotelSplendido,
     vibe: "ICONIC · CLIFFTOP VIEWS",
+    pick: "Resort Edit Favorite",
     desc: "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied view on the Riviera.",
     signals: ["The Resort Edit top pick", "Harbour-facing rooms only", "Private pool terrace & cabanas"],
     note: "Where to stay if this trip is the trip.",
@@ -58,6 +59,7 @@ const hotels = [
     name: "Eight Hotel Portofino",
     image: hotelEight,
     vibe: "PIAZZETTA · LOCAL ENERGY",
+    pick: "Best for First-Time Visitors",
     desc: "Quietly chic and steps from the piazzetta. A modern Italian retreat for travelers who want to live like a local in the heart of town.",
     signals: ["Steps from the piazzetta", "Boutique, under 20 rooms", "Concierge who books the impossible"],
     note: "For the trip you'll want to repeat next summer.",
@@ -67,6 +69,7 @@ const hotels = [
     name: "Hotel Piccolo Portofino",
     image: hotelPiccolo,
     vibe: "HIDDEN · PRIVATE COVE",
+    pick: "Best for Privacy",
     desc: "An intimate seaside hideaway tucked into a private cove. Sun-bleached terraces, turquoise water, and the kind of service that anticipates everything.",
     signals: ["Private sea-access terrace", "Quiet side of the harbor", "Sea-view suites only"],
     note: "For the traveler who wants the harbor without the crowd.",
@@ -173,15 +176,25 @@ function Index() {
         </div>
       </section>
 
+      {/* DESTINATION INTRO — editorial context, intentionally understated */}
+      <section className={`${wrap} mt-14 lg:mt-20`}>
+        <p className="mx-auto max-w-2xl text-center font-serif italic text-[1.05rem] sm:text-[1.15rem] lg:text-[1.22rem] leading-[1.55] text-ink/75">
+          Portofino is a harbor town on the Italian Riviera known for pastel waterfront buildings, yacht culture, beach clubs, long lunches, and sunset aperitivos.
+        </p>
+      </section>
+
       {/* PORTOFINO ITINERARY */}
-      <section className={`${wrap} mt-20 lg:mt-28`}>
+      <section className={`${wrap} mt-16 lg:mt-24`}>
         <div className="flex items-center gap-4 justify-center mb-4">
           <div className="h-px w-16 bg-gold/50" />
           <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">PORTOFINO ITINERARY</h2>
           <div className="h-px w-16 bg-gold/50" />
         </div>
-        <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-          Five days in Portofino — from yacht mornings and beach club lunches to market strolls and sunset dinners.
+        <p className="mt-1 text-center font-serif italic text-[1rem] sm:text-[1.08rem] text-ink/80 max-w-2xl mx-auto leading-snug">
+          Six destination moments. One editorial wardrobe.
+        </p>
+        <p className="mb-10 mt-2 text-center font-serif italic text-[0.92rem] sm:text-[0.98rem] text-ink/60 max-w-2xl mx-auto leading-relaxed">
+          From market mornings and yacht afternoons to sunset cocktails and Riviera dinners.
         </p>
         <HomeItinerary />
       </section>
@@ -253,7 +266,7 @@ function Index() {
                   </span>
                 </div>
                 <div className="p-6 flex flex-col flex-1">
-                  <div className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">PORTOFINO, ITALY</div>
+                  <div className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">{h.pick}</div>
                   <h3 className="mt-2 font-display text-2xl tracking-wide text-ink">{h.name}</h3>
                   <p className="mt-3 font-serif text-[0.95rem] text-ink/75 leading-relaxed">{h.desc}</p>
                   <ul className="mt-5 space-y-1.5">
@@ -312,6 +325,50 @@ function Index() {
       </section>
 
       {/* DISCLOSURE — visually secondary, well below CTAs */}
+      {/* BRANDS WE LOVE — minimalist trust signal, no logos/carousels */}
+      <section className={`${wrap} mt-24 lg:mt-32`}>
+        <div className="flex items-center gap-4 justify-center mb-4">
+          <div className="h-px w-16 bg-gold/50" />
+          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BRANDS WE LOVE</h2>
+          <div className="h-px w-16 bg-gold/50" />
+        </div>
+        <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+          A short list of the ateliers and houses we keep returning to across destinations.
+        </p>
+        <ul className="mx-auto max-w-4xl flex flex-wrap items-center justify-center gap-x-7 gap-y-3 lg:gap-x-10">
+          {[
+            "Zimmermann",
+            "Johanna Ortiz",
+            "Alexandra Miro",
+            "Agua by Agua Bendita",
+            "Alemais",
+            "Posse",
+            "SIR.",
+            "Faithfull the Brand",
+          ].map((name, i, arr) => (
+            <li key={name} className="flex items-center gap-x-7 lg:gap-x-10">
+              <Link
+                to="/brands"
+                className="font-display text-[1rem] sm:text-[1.1rem] tracking-[0.22em] uppercase text-ink/75 hover:text-gold transition-colors"
+              >
+                {name}
+              </Link>
+              {i < arr.length - 1 && (
+                <span aria-hidden className="text-gold/50">·</span>
+              )}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-8 text-center">
+          <Link
+            to="/brands"
+            className="eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 hover:text-ink hover:border-ink transition-colors"
+          >
+            See All Brands We Love →
+          </Link>
+        </div>
+      </section>
+
       <div className={`${wrap} mt-24 lg:mt-32 pb-16`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
         <p className="mt-8 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
