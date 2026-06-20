@@ -325,6 +325,50 @@ function Index() {
       </section>
 
       {/* DISCLOSURE — visually secondary, well below CTAs */}
+      {/* BRANDS WE LOVE — minimalist trust signal, no logos/carousels */}
+      <section className={`${wrap} mt-24 lg:mt-32`}>
+        <div className="flex items-center gap-4 justify-center mb-4">
+          <div className="h-px w-16 bg-gold/50" />
+          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BRANDS WE LOVE</h2>
+          <div className="h-px w-16 bg-gold/50" />
+        </div>
+        <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+          A short list of the ateliers and houses we keep returning to across destinations.
+        </p>
+        <ul className="mx-auto max-w-4xl flex flex-wrap items-center justify-center gap-x-7 gap-y-3 lg:gap-x-10">
+          {[
+            "Zimmermann",
+            "Johanna Ortiz",
+            "Alexandra Miro",
+            "Agua by Agua Bendita",
+            "Alemais",
+            "Posse",
+            "SIR.",
+            "Faithfull the Brand",
+          ].map((name, i, arr) => (
+            <li key={name} className="flex items-center gap-x-7 lg:gap-x-10">
+              <Link
+                to="/brands"
+                className="font-display text-[1rem] sm:text-[1.1rem] tracking-[0.22em] uppercase text-ink/75 hover:text-gold transition-colors"
+              >
+                {name}
+              </Link>
+              {i < arr.length - 1 && (
+                <span aria-hidden className="text-gold/50">·</span>
+              )}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-8 text-center">
+          <Link
+            to="/brands"
+            className="eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 hover:text-ink hover:border-ink transition-colors"
+          >
+            See All Brands We Love →
+          </Link>
+        </div>
+      </section>
+
       <div className={`${wrap} mt-24 lg:mt-32 pb-16`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
         <p className="mt-8 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
