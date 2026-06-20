@@ -2,7 +2,7 @@
  * Portofino canonical moment definitions + legacy-look fallbacks.
  *
  * Used by the public `/portofino` rebuild. Every moment ALWAYS resolves
- * to a hero image + legacy day page so no moment ever appears empty,
+ * to separate card + hero banner images and a legacy day page so no moment ever appears empty,
  * even before any Look Studio candidate has been tagged with the moment.
  *
  * When a `look_candidates` row is tagged with the matching moment_slug
@@ -43,8 +43,8 @@ export type PortofinoMomentDef = {
 };
 
 /**
- * Canonical six moments, in canonical order. Edit copy here only — the
- * landing page and per-moment route both read from this list.
+ * Canonical six moments, in canonical order. Card images sell the wardrobe;
+ * hero banner images sell the destination experience. Keep those sources separate.
  */
 export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
   {
