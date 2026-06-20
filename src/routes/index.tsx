@@ -95,8 +95,8 @@ function Index() {
       <section
         className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
       >
-        {/* Photography occupies more visual weight (7/12) and runs slightly taller */}
-        <div className="relative aspect-[3/4] lg:aspect-[5/7] overflow-hidden bg-muted lg:col-span-7">
+        {/* Photography runs wider & shorter — destination-led editorial cover */}
+        <div className="relative aspect-[4/5] lg:aspect-[4/3] overflow-hidden bg-muted lg:col-span-7">
           <img
             src={featured.heroImage}
             alt={featured.heroImageAlt}
@@ -109,31 +109,31 @@ function Index() {
           <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">
             RESORT EDIT™
           </p>
-          <h1 className="font-display mt-2 text-[4.2rem] sm:text-[5.6rem] lg:text-[7.4rem] xl:text-[8.6rem] leading-[0.88] tracking-[0.005em] text-ink uppercase">
+          <h1 className="font-display mt-1.5 text-[4.2rem] sm:text-[5.6rem] lg:text-[7.4rem] xl:text-[8.6rem] leading-[0.86] tracking-[0.005em] text-ink uppercase">
             {featured.name}
           </h1>
           <p
-            className="font-serif italic text-[1.5rem] sm:text-[1.75rem] lg:text-[2rem] leading-[1.1] tracking-[-0.01em] mt-2"
+            className="font-serif italic text-[1.4rem] sm:text-[1.6rem] lg:text-[1.85rem] leading-[1.05] tracking-[-0.01em] mt-1.5"
             style={{ color: "oklch(0.62 0.12 66)" }}
           >
             Dressed for the Destination™
           </p>
-          <p className="eyebrow text-ink/65 text-[0.7rem] sm:text-[0.74rem] tracking-[0.24em] mt-3">
+          <p className="eyebrow text-ink/65 text-[0.7rem] sm:text-[0.74rem] tracking-[0.24em] mt-2.5">
             {featured.country} <span className="text-gold/70">•</span>{" "}
             {featured.totalLooks} Looks{" "}
             <span className="text-gold/70">•</span>{" "}
             {featured.totalMoments} Moments
           </p>
           <p
-            className="font-serif italic text-[1.25rem] sm:text-[1.4rem] lg:text-[1.55rem] leading-[1.2] mt-3 text-ink"
+            className="font-serif italic text-[1.2rem] sm:text-[1.32rem] lg:text-[1.45rem] leading-[1.15] mt-2.5 text-ink"
           >
             {featured.tagline}
           </p>
-          <div className="mt-4 mb-3 h-px w-24 bg-gold/80" />
-          <p className="font-serif text-[1.02rem] lg:text-[1.08rem] text-ink/75 leading-[1.55] max-w-xl">
+          <div className="mt-3 mb-2.5 h-px w-24 bg-gold/80" />
+          <p className="font-serif text-[1rem] lg:text-[1.05rem] text-ink/75 leading-[1.5] max-w-xl">
             Curated outfits, hotels, experiences, and insider recommendations designed around how women actually travel.
           </p>
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-4 flex flex-wrap gap-3">
             <Link
               to={featured.primaryCtaHref as "/"}
               className="bg-gold text-ivory eyebrow text-[0.78rem] tracking-[0.28em] px-10 py-[18px] hover:bg-ink transition-colors"
@@ -151,7 +151,7 @@ function Index() {
           {/* Chapter navigation — communicates depth above the fold */}
           <nav
             aria-label={`${featured.name} chapters`}
-            className="mt-6 -mx-4 sm:mx-0 overflow-x-auto lg:overflow-visible"
+            className="mt-5 -mx-4 sm:mx-0 overflow-x-auto lg:overflow-visible"
           >
             <ul className="flex lg:flex-wrap items-center gap-x-5 gap-y-2 px-4 sm:px-0 whitespace-nowrap lg:whitespace-normal">
               {featured.momentLabels.map((m, i) => (
