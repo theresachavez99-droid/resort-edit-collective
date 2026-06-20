@@ -423,7 +423,7 @@ function MomentCard({ m }: { m: PortofinoMomentCard }) {
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-cream/40">
         <img
-          src={m.hero_image}
+          src={m.moment_card_image}
           alt={`${m.moment_name} — Portofino`}
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
