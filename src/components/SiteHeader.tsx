@@ -53,7 +53,7 @@ export function SiteHeader() {
           <img
             src={palmMark}
             alt="Resort Edit"
-            className="h-8 md:h-10 lg:h-11 w-auto select-none"
+            className="h-11 md:h-[3.4rem] lg:h-[3.75rem] w-auto select-none"
             draggable={false}
           />
         </Link>
