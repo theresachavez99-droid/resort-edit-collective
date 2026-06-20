@@ -16,6 +16,7 @@ import cira11 from "@/assets/uploads/cira/cira-11.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
 import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrace.png.asset.json";
+import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
@@ -30,8 +31,10 @@ export type PortofinoMomentDef = {
   moment_name: string;
   /** Short one-sentence narrative shown on the landing card. */
   narrative: string;
-  /** Hero image used on landing card AND inside the moment page. */
-  hero_image: string;
+  /** Wardrobe-focused thumbnail used only on the `/portofino` Six Moments grid. */
+  moment_card_image: string;
+  /** Destination-focused banner used only on `/portofino/$moment` detail pages. */
+  hero_banner_image: string;
   /** Tighter portrait of the legacy hero outfit. */
   outfit_image: string;
   /** Legacy day page the fallback look originally lived on. */
@@ -50,7 +53,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Arrival Day",
     narrative:
       "The first afternoon in Portofino—sun on the harbor, luggage unpacked, and nowhere to be but here.",
-    hero_image: arrivalDayHero.url,
+    moment_card_image: cira14.url,
+    hero_banner_image: arrivalDayHero.url,
     outfit_image: cira14.url,
     legacy_day: "/portofino/day-5",
     legacy_look_title: "The Slow Departure",
@@ -61,7 +65,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Market Morning",
     narrative:
       "Walking up for peaches and flowers before the heat lands — cotton, raffia, espresso in hand.",
-    hero_image: cira13.url,
+    moment_card_image: cira13.url,
+    hero_banner_image: cira13.url,
     outfit_image: cira13.url,
     legacy_day: "/portofino/day-5",
     legacy_look_title: "Morning Espresso & Market",
@@ -72,7 +77,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Yacht Day",
     narrative:
       "A long day on the water — Paraggi, Camogli, lunch on board. Swim under, throw-on over, considered finish.",
-    hero_image: getCanonicalDayImage("day-1", "hero"),
+    moment_card_image: getCanonicalDayImage("day-1", "hero"),
+    hero_banner_image: yachtDayHero.url,
     outfit_image: getCanonicalDayImage("day-1", "hero"),
     legacy_day: "/portofino/day-1",
     legacy_look_title: "Boarding the Boat",
@@ -83,7 +89,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Harbor Aperitivo",
     narrative:
       "A spritz at sunset overlooking the harbor — yachts lit, hills pink. The hinge moment between day and dinner.",
-    hero_image: cira3.url,
+    moment_card_image: cira3.url,
+    hero_banner_image: cira3.url,
     outfit_image: cira3.url,
     legacy_day: "/portofino/day-1",
     legacy_look_title: "Harbour Aperitivo",
@@ -94,7 +101,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Sunset Views",
     narrative:
       "The long golden hour from a terrace above the harbor — light layers, the right earring, a slow walk.",
-    hero_image: cira11.url,
+    moment_card_image: cira11.url,
+    hero_banner_image: cira11.url,
     outfit_image: cira11.url,
     legacy_day: "/portofino/day-4",
     legacy_look_title: "Sunset Cocktails",
@@ -105,7 +113,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Riviera Dinner",
     narrative:
       "Dinner at Puny or DaU Mari — polished, romantic, distinctly Riviera. Never city-cocktail.",
-    hero_image: cira10.url,
+    moment_card_image: cira10.url,
+    hero_banner_image: cira10.url,
     outfit_image: cira10.url,
     legacy_day: "/portofino/day-4",
     legacy_look_title: "Dinner with a View",
