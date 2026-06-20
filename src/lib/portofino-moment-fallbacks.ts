@@ -15,7 +15,7 @@ import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira11 from "@/assets/uploads/cira/cira-11.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
-import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrace.jpeg.asset.json";
+import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrace.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
