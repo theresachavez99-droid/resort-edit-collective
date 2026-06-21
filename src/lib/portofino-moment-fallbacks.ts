@@ -18,7 +18,7 @@ import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
 import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrace.png.asset.json";
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
-import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-terrace.png.asset.json";
+import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
