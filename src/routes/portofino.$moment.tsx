@@ -371,10 +371,10 @@ function ShopCard({
   const o = product as OverrideItem;
   return (
     <a
-      href={o.href}
+      href={o.url}
       target="_blank"
       rel="noopener noreferrer sponsored"
-      onClick={() => trackOutbound({ brand: o.brand, item: o.title, href: o.href })}
+      onClick={() => trackOutbound({ brand: o.brand, item: o.title, href: o.url })}
       className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors h-full"
     >
       <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
@@ -386,13 +386,17 @@ function ShopCard({
             className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
           />
         )}
+        {o.slotLabel && (
+          <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold bg-ivory/85 px-1.5 py-0.5">
+            {o.slotLabel}
+          </span>
+        )}
       </div>
       <div className="flex flex-col flex-1 p-4">
         <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">{o.brand}</div>
         <div className="font-serif italic text-ink/90 text-[0.92rem] leading-snug mt-1.5 line-clamp-2">
           {o.title}
         </div>
-        {o.price && <div className="font-serif text-gold text-[0.9rem] mt-1.5">{o.price}</div>}
         <div className="mt-auto pt-3">
           <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
             SHOP →
