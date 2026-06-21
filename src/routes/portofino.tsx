@@ -428,7 +428,7 @@ function MomentCard({ m }: { m: PortofinoMomentCard }) {
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
           style={
-            m.moment_slug === "sunset-views" || m.moment_slug === "harbor-aperitivo" || m.moment_slug === "arrival-day"
+            m.moment_slug === "sunset-views" || m.moment_slug === "harbor-aperitivo" || m.moment_slug === "arrival-day" || m.moment_slug === "riviera-dinner"
               ? { objectPosition: "center top" }
               : undefined
           }
