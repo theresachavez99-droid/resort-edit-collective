@@ -1,11 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { homeDays, type HomeDay } from "@/data/homeEdit";
 import { useDayImageOverrides, type DaySlug } from "@/data/dayImageRegistry";
+import { getPortofinoMomentDef } from "@/lib/portofino-moment-fallbacks";
 
 function applyDayOverride(d: HomeDay, overrides: Record<string, string>): HomeDay {
   const slug = `day-${d.n}` as DaySlug;
   const override = overrides[slug];
-  return override ? { ...d, image: override } : d;
+  const momentDef = getPortofinoMomentDef(d.momentSlug);
+  // Single source of truth: the canonical Portofino moment card image.
+  // DB-backed day-image overrides still win when present.
+  const image = override ?? momentDef?.moment_card_image ?? d.image;
+  return { ...d, image };
 }
 
 /**
