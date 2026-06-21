@@ -75,10 +75,38 @@ function MomentPage() {
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
   const currentIdx = PORTOFINO_MOMENT_DEFS.findIndex((m) => m.moment_slug === slug);
-  const nextMoment =
-    currentIdx >= 0
-      ? PORTOFINO_MOMENT_DEFS[(currentIdx + 1) % PORTOFINO_MOMENT_DEFS.length]
-      : null;
+  const relatedMoments = PORTOFINO_MOMENT_DEFS.filter(
+    (m) => m.moment_slug !== slug,
+  ).slice(0, 3);
+
+  // Resolve the canonical shoppable Look from the lookbook.
+  const look = findLook(card.legacy_day_slug, card.look_slug);
+  const override = look ? lookOverrideFor(card.legacy_day_slug, card.look_slug) : null;
+
+  // Prefer the override product set if defined; otherwise pick the first
+  // tier that actually has sourced products. The look_slug guarantees a
+  // dedicated product set per moment.
+  let shopProducts: Array<{ category?: string; product: LookProduct | OverrideItem; kind: "category" | "override" }> = [];
+  if (override) {
+    shopProducts = override.main.map((p) => ({ product: p, kind: "override" as const }));
+  } else if (look) {
+    const firstTierSlug =
+      TIER_SLUGS.find((t) =>
+        LOOK_CATEGORY_ORDER.some((c) => !look.tiers[t].products[c].isPlaceholder),
+      ) ?? TIER_SLUGS[0];
+    const products = look.tiers[firstTierSlug].products;
+    shopProducts = LOOK_CATEGORY_ORDER.map((c) => ({
+      category: LOOK_CATEGORY_LABEL[c],
+      product: products[c],
+      kind: "category" as const,
+    }));
+  }
+
+  // "More <moment> Looks" — other curated looks from the same destination
+  // that the user can shop directly without leaving the moment context.
+  const moreLooks = lookbook
+    .filter((l) => !(l.daySlug === card.legacy_day_slug && l.lookSlug === card.look_slug))
+    .slice(0, 4);
 
   return (
     <div className="pb-16 md:pb-20">
@@ -124,31 +152,29 @@ function MomentPage() {
         </div>
       </section>
 
-      {/* THE LOOK */}
+      {/* SHOP THIS LOOK — inline product grid; no off-page handoff */}
       <section className="bg-ivory">
-        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 py-12 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,1fr)_1.4fr] gap-8 md:gap-12 items-start">
-            <div className="relative aspect-[3/4] overflow-hidden bg-cream/40 border border-border/60 flex items-center justify-center">
-              <img
-                src={resolved.image}
-                alt={resolved.title}
-                className="absolute inset-0 h-full w-full object-contain"
-              />
-            </div>
-            <div className="space-y-5">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,0.85fr)_1.4fr] gap-8 md:gap-12 items-start">
+            <div className="lg:sticky lg:top-6 space-y-5">
+              <div className="relative aspect-[3/4] overflow-hidden bg-cream/40 border border-border/60 flex items-center justify-center">
+                <img
+                  src={resolved.image}
+                  alt={resolved.title}
+                  className="absolute inset-0 h-full w-full object-contain"
+                />
+              </div>
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
                 {resolved.source === "tagged" ? "Resort Edit Look" : "Editor's Pick"}
               </span>
-              <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-tight">
+              <h2 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink leading-tight">
                 {resolved.title}
               </h2>
-
               {resolved.why_it_works && (
-                <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed">
+                <p className="font-serif italic text-[0.95rem] text-ink/80 leading-relaxed">
                   "{resolved.why_it_works}"
                 </p>
               )}
-
               {resolved.best_for && resolved.best_for.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
                   {resolved.best_for.map((b) => (
@@ -161,49 +187,218 @@ function MomentPage() {
                   ))}
                 </div>
               )}
+            </div>
 
-              <div className="pt-3 border-t border-border/50 flex flex-wrap items-center gap-x-6 gap-y-3">
-                <Link
-                  to={resolved.legacy_day_path ?? card.legacy_day}
-                  className="inline-flex items-center gap-2 eyebrow text-[0.65rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 hover:border-ink pb-1"
-                >
-                  Shop the Full Look <ArrowRight className="w-3 h-3" />
-                </Link>
-                <Link
-                  to="/portofino"
-                  className="eyebrow text-[0.62rem] tracking-[0.3em] text-ink/60 hover:text-gold"
-                >
-                  ← All six moments
-                </Link>
+            <div>
+              <div className="flex items-end justify-between border-b border-ink/15 pb-5">
+                <div>
+                  <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">Shop This Look</span>
+                  <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
+                    The Full Outfit
+                  </h3>
+                </div>
+                <span className="font-serif text-[0.85rem] text-ink/55 hidden md:inline">
+                  {shopProducts.filter((p) => (p.kind === "override" ? true : !(p.product as LookProduct).isPlaceholder)).length} pieces
+                </span>
+              </div>
+
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+                {shopProducts.map((entry, i) => (
+                  <ShopCard key={i} entry={entry} />
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CONTINUE THE JOURNEY */}
-      {nextMoment && (
-        <section className="bg-cream border-t border-border/40">
-          <div className="mx-auto max-w-[1180px] px-4 sm:px-6 py-14 md:py-20 text-center">
+      {/* MORE {MOMENT} LOOKS — directly shoppable, no extra navigation */}
+      {moreLooks.length > 0 && (
+        <section className="bg-cream border-y border-border/40">
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-16">
+            <div className="flex items-end justify-between mb-8">
+              <div>
+                <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
+                  More {card.moment_name} Looks
+                </span>
+                <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
+                  Other Ways To Wear The Riviera
+                </h3>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              {moreLooks.map((l) => (
+                <Link
+                  key={l.id}
+                  to="/portofino/$day/$look"
+                  params={{ day: l.daySlug, look: l.lookSlug }}
+                  className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden bg-cream">
+                    <img
+                      src={l.heroImage}
+                      alt={l.title}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">{l.day}</span>
+                    <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
+                      {l.title}
+                    </h4>
+                    <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
+                      Shop This Look <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CONTINUE EXPLORING PORTOFINO — sibling moment cards */}
+      {relatedMoments.length > 0 && (
+        <section className="bg-ivory">
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-20 text-center">
             <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-              Continue the Journey
+              Continue Exploring Portofino
             </span>
-            <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3">
-              {nextMoment.moment_name}
-            </h3>
-            <p className="font-serif italic text-[1rem] md:text-[1.1rem] text-ink/70 mt-3 max-w-xl mx-auto leading-relaxed">
-              {nextMoment.narrative}
-            </p>
-            <Link
-              to="/portofino/$moment"
-              params={{ moment: nextMoment.moment_slug }}
-              className="mt-6 inline-flex items-center gap-2 eyebrow text-[0.7rem] tracking-[0.3em] bg-gold text-ivory px-8 py-4 hover:bg-ink transition-colors"
-            >
-              Continue to {nextMoment.moment_name} <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            <div className="mx-auto mt-3 h-px w-12 bg-gold/70" />
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedMoments.map((m) => (
+                <Link
+                  key={m.moment_slug}
+                  to="/portofino/$moment"
+                  params={{ moment: m.moment_slug }}
+                  className="group flex flex-col bg-cream/40 border border-border/40 hover:border-gold transition-colors text-left"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden bg-cream">
+                    <img
+                      src={m.moment_card_image}
+                      alt={m.moment_name}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <h4 className="font-display text-lg md:text-xl tracking-[0.03em] text-ink group-hover:text-gold transition-colors">
+                      {m.moment_name}
+                    </h4>
+                    <p className="font-serif italic text-[0.9rem] text-ink/65 leading-relaxed mt-2 line-clamp-2">
+                      {m.narrative}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
     </div>
+  );
+}
+
+function ShopCard({
+  entry,
+}: {
+  entry: { category?: string; product: LookProduct | OverrideItem; kind: "category" | "override" };
+}) {
+  const { product, kind, category } = entry;
+
+  if (kind === "category") {
+    const p = product as LookProduct;
+    if (p.isPlaceholder || !p.url || !p.image) {
+      return (
+        <div className="flex flex-col bg-ivory border border-border/60 h-full" aria-disabled="true">
+          <div className="relative aspect-square bg-cream flex items-center justify-center px-3 text-center">
+            {category && (
+              <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold/80">
+                {category}
+              </span>
+            )}
+            <span className="font-serif italic text-ink/60 text-[0.72rem] leading-snug">
+              {p.brand} — {p.title}
+            </span>
+          </div>
+          <div className="p-3">
+            <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55">
+              Not available through approved affiliate partners
+            </span>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <a
+        href={p.url}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        onClick={() => trackOutbound({ brand: p.brand, item: p.title, href: p.url! })}
+        className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors h-full"
+      >
+        <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
+          <img
+            src={p.image}
+            alt={`${p.brand} ${p.title}`}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+          {category && (
+            <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold bg-ivory/85 px-1.5 py-0.5">
+              {category}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col flex-1 p-4">
+          <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">{p.brand}</div>
+          <div className="font-serif italic text-ink/90 text-[0.92rem] leading-snug mt-1.5 line-clamp-2">
+            {p.title}
+          </div>
+          <div className="font-serif text-gold text-[0.9rem] mt-1.5">{p.price}</div>
+          <div className="mt-auto pt-3">
+            <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
+              SHOP →
+            </span>
+          </div>
+        </div>
+      </a>
+    );
+  }
+
+  // Override item (free-form curated grid)
+  const o = product as OverrideItem;
+  return (
+    <a
+      href={o.href}
+      target="_blank"
+      rel="noopener noreferrer sponsored"
+      onClick={() => trackOutbound({ brand: o.brand, item: o.title, href: o.href })}
+      className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors h-full"
+    >
+      <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
+        {o.image && (
+          <img
+            src={o.image}
+            alt={`${o.brand} ${o.title}`}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        )}
+      </div>
+      <div className="flex flex-col flex-1 p-4">
+        <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">{o.brand}</div>
+        <div className="font-serif italic text-ink/90 text-[0.92rem] leading-snug mt-1.5 line-clamp-2">
+          {o.title}
+        </div>
+        {o.price && <div className="font-serif text-gold text-[0.9rem] mt-1.5">{o.price}</div>}
+        <div className="mt-auto pt-3">
+          <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
+            SHOP →
+          </span>
+        </div>
+      </div>
+    </a>
   );
 }
