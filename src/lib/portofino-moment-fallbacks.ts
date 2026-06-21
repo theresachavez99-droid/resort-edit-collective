@@ -21,6 +21,7 @@ import marketMorningCard from "@/assets/uploads/portofino/market-morning-espress
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
+import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
@@ -28,6 +29,8 @@ export type LegacyDayPath =
   | "/portofino/day-3"
   | "/portofino/day-4"
   | "/portofino/day-5";
+
+export type LegacyDaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
 
 export type PortofinoMomentDef = {
   moment_slug: string;
@@ -44,6 +47,10 @@ export type PortofinoMomentDef = {
   /** Legacy day page the fallback look originally lived on. */
   legacy_day: LegacyDayPath;
   legacy_look_title: string;
+  /** Day slug used to resolve the canonical shoppable Look from `lookbook`. */
+  legacy_day_slug: LegacyDaySlug;
+  /** Look slug within the day that powers the inline Shop This Look grid. */
+  look_slug: LookSlug;
 };
 
 /**
@@ -62,6 +69,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     outfit_image: cira14.url,
     legacy_day: "/portofino/day-5",
     legacy_look_title: "The Slow Departure",
+    legacy_day_slug: "day-5",
+    look_slug: "look-c",
   },
   {
     moment_slug: "market-morning",
@@ -74,6 +83,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     outfit_image: cira13.url,
     legacy_day: "/portofino/day-5",
     legacy_look_title: "Morning Espresso & Market",
+    legacy_day_slug: "day-5",
+    look_slug: "look-a",
   },
   {
     moment_slug: "yacht-day",
@@ -86,6 +97,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     outfit_image: getCanonicalDayImage("day-1", "hero"),
     legacy_day: "/portofino/day-1",
     legacy_look_title: "Boarding the Boat",
+    legacy_day_slug: "day-1",
+    look_slug: "look-a",
   },
   {
     moment_slug: "harbor-aperitivo",
@@ -98,6 +111,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     outfit_image: cira3.url,
     legacy_day: "/portofino/day-1",
     legacy_look_title: "Harbour Aperitivo",
+    legacy_day_slug: "day-1",
+    look_slug: "look-c",
   },
   {
     moment_slug: "sunset-views",
@@ -110,6 +125,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     outfit_image: cira11.url,
     legacy_day: "/portofino/day-4",
     legacy_look_title: "Sunset Cocktails",
+    legacy_day_slug: "day-4",
+    look_slug: "look-a",
   },
   {
     moment_slug: "riviera-dinner",
@@ -122,6 +139,8 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     outfit_image: cira10.url,
     legacy_day: "/portofino/day-4",
     legacy_look_title: "Dinner with a View",
+    legacy_day_slug: "day-4",
+    look_slug: "look-b",
   },
 ];
 
