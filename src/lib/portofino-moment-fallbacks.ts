@@ -18,6 +18,7 @@ import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
 import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrace.png.asset.json";
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
+import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-terrace.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
@@ -102,7 +103,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Sunset Views",
     narrative:
       "The long golden hour from a terrace above the harbor — light layers, the right earring, a slow walk.",
-    moment_card_image: cira11.url,
+    moment_card_image: sunsetViewsCard.url,
     hero_banner_image: cira11.url,
     outfit_image: cira11.url,
     legacy_day: "/portofino/day-4",

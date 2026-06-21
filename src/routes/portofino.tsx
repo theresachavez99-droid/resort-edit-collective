@@ -427,6 +427,7 @@ function MomentCard({ m }: { m: PortofinoMomentCard }) {
           alt={`${m.moment_name} — Portofino`}
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          style={m.moment_slug === "sunset-views" ? { objectPosition: "center top" } : undefined}
         />
         <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
           {m.archetype_slug.replace(/-/g, " ").toUpperCase()}
