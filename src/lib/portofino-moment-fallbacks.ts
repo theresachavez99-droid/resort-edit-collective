@@ -20,6 +20,7 @@ import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.
 import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
+import arrivalDayCard from "@/assets/uploads/portofino/arrival-day-lilla-splendido.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
@@ -56,7 +57,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Arrival Day",
     narrative:
       "The first afternoon in Portofino—sun on the harbor, luggage unpacked, and nowhere to be but here.",
-    moment_card_image: cira14.url,
+    moment_card_image: arrivalDayCard.url,
     hero_banner_image: arrivalDayHero.url,
     outfit_image: cira14.url,
     legacy_day: "/portofino/day-5",
