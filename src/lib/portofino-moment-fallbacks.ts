@@ -19,6 +19,7 @@ import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrac
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
+import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-spritz.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
@@ -91,7 +92,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Harbor Aperitivo",
     narrative:
       "A spritz at sunset overlooking the harbor — yachts lit, hills pink. The hinge moment between day and dinner.",
-    moment_card_image: cira3.url,
+    moment_card_image: harborAperitivoCard.url,
     hero_banner_image: cira3.url,
     outfit_image: cira3.url,
     legacy_day: "/portofino/day-1",
