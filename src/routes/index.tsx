@@ -8,7 +8,7 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
-import { HomeItinerary } from "@/components/HomeItinerary";
+import { HomeItinerary, portofinoMomentsQuery } from "@/components/HomeItinerary";
 import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
 import { getFeaturedDestination } from "@/data/featuredDestination";
 
@@ -29,6 +29,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(portofinoMomentsQuery),
   component: Index,
 });
 
