@@ -19,7 +19,7 @@ import arrivalDayHero from "@/assets/uploads/portofino/arrival-day-harbor-terrac
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
-import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-spritz.png.asset.json";
+import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
 
 export type LegacyDayPath =
   | "/portofino/day-1"
