@@ -149,3 +149,40 @@ export function getPortofinoMomentDef(slug: string): PortofinoMomentDef | undefi
 }
 
 export const PORTOFINO_MOMENT_SLUGS = PORTOFINO_MOMENT_DEFS.map((m) => m.moment_slug);
+
+/**
+ * Three "Additional Looks" — secondary canonical Portofino outfits that
+ * sit alongside the Six Moments. Same naming everywhere on the site.
+ */
+export type PortofinoAdditionalLook = {
+  canonical_name: string;
+  legacy_day_slug: LegacyDaySlug;
+  look_slug: LookSlug;
+};
+
+export const PORTOFINO_ADDITIONAL_LOOKS: PortofinoAdditionalLook[] = [
+  { canonical_name: "Beach Club + Long Lunch", legacy_day_slug: "day-2", look_slug: "look-a" },
+  { canonical_name: "Pool Lounging + Shopping", legacy_day_slug: "day-3", look_slug: "look-a" },
+  { canonical_name: "Exploring the Harbor", legacy_day_slug: "day-3", look_slug: "look-b" },
+];
+
+/**
+ * Single source of truth for what each (daySlug, lookSlug) look is called
+ * to users — Six Moments + Three Additional Looks. Falls back to undefined
+ * for looks that aren't part of the canonical public taxonomy (those
+ * should not be surfaced on user-facing rails).
+ */
+export function getCanonicalPortofinoLookName(
+  daySlug: LegacyDaySlug,
+  lookSlug: LookSlug,
+): { name: string; category: "moment" | "additional" } | undefined {
+  const moment = PORTOFINO_MOMENT_DEFS.find(
+    (m) => m.legacy_day_slug === daySlug && m.look_slug === lookSlug,
+  );
+  if (moment) return { name: moment.moment_name, category: "moment" };
+  const add = PORTOFINO_ADDITIONAL_LOOKS.find(
+    (a) => a.legacy_day_slug === daySlug && a.look_slug === lookSlug,
+  );
+  if (add) return { name: add.canonical_name, category: "additional" };
+  return undefined;
+}
