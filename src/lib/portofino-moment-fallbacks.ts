@@ -121,7 +121,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "sunset-views",
     moment_name: "Sunset Views",
     narrative:
-      "The golden hour above Portofino — terrace views, warm light, a slow stroll, and the harbor turning gold.",
+      "The harbor at golden hour — terrace views, warm light, and the slow transition into evening.",
     moment_card_image: sunsetViewsCard.url,
     hero_banner_image: sunsetViewsHero.url,
     outfit_image: sunsetViewsCard.url,
