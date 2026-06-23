@@ -199,13 +199,11 @@ function MomentPage() {
                 {resolved.source === "tagged" ? "Resort Edit Look" : "Editor's Pick"}
               </span>
               <h2 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink leading-tight">
-                {resolved.title}
+                {card.moment_name}
               </h2>
-              {resolved.why_it_works && (
-                <p className="font-serif italic text-[0.95rem] text-ink/80 leading-relaxed">
-                  "{resolved.why_it_works}"
-                </p>
-              )}
+              <p className="font-serif italic text-[0.95rem] text-ink/80 leading-relaxed">
+                {card.narrative}
+              </p>
               {resolved.best_for && resolved.best_for.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
                   {resolved.best_for.map((b) => (
@@ -225,7 +223,7 @@ function MomentPage() {
                 <div>
                   <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">Shop This Look</span>
                   <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                    The Full Outfit
+                    Shop {card.moment_name} →
                   </h3>
                 </div>
                 <span className="font-serif text-[0.85rem] text-ink/55 hidden md:inline">
