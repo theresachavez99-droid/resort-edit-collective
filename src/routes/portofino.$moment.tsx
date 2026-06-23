@@ -185,7 +185,7 @@ function MomentPage() {
 
       {/* SHOP THIS LOOK — inline product grid; no off-page handoff */}
       <section className="bg-ivory">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,0.85fr)_1.4fr] gap-8 md:gap-12 items-start">
             <div className="lg:sticky lg:top-6 space-y-5">
               <div className="relative aspect-[3/4] overflow-hidden bg-cream/40 border border-border/60 flex items-center justify-center">
