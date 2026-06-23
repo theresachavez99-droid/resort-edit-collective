@@ -434,3 +434,37 @@ function ShopCard({
     </a>
   );
 }
+
+function LookCardBody({
+  name,
+  category,
+  image,
+}: {
+  name: string;
+  category: "moment" | "additional";
+  image: string;
+}) {
+  return (
+    <>
+      <div className="relative aspect-[3/4] overflow-hidden bg-cream">
+        <img
+          src={image}
+          alt={name}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+      </div>
+      <div className="p-4">
+        <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
+          {category === "moment" ? "Portofino Moment" : "Additional Look"}
+        </span>
+        <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
+          {name}
+        </h4>
+        <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
+          Shop This Look <ArrowRight className="w-3 h-3" />
+        </span>
+      </div>
+    </>
+  );
+}
