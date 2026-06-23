@@ -1,4 +1,4 @@
-import heroMuseAsset from "@/assets/hero-lilla-portofino-harbor.png.asset.json";
+import heroMuseAsset from "@/assets/hero-lilla-portofino-harbor-walk.png.asset.json";
 
 /**
  * Featured Destination — single source of truth for the homepage editorial cover.
