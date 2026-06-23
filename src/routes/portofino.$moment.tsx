@@ -2,7 +2,11 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
-import { getPortofinoMomentDef, PORTOFINO_MOMENT_DEFS } from "@/lib/portofino-moment-fallbacks";
+import {
+  getPortofinoMomentDef,
+  PORTOFINO_MOMENT_DEFS,
+  PORTOFINO_ADDITIONAL_LOOKS,
+} from "@/lib/portofino-moment-fallbacks";
 import { absoluteUrl } from "@/lib/site";
 import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, lookbook, type LookProduct } from "@/data/lookbook";
 import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
@@ -102,10 +106,37 @@ function MomentPage() {
     }));
   }
 
-  // "More <moment> Looks" — other curated looks from the same destination
-  // that the user can shop directly without leaving the moment context.
-  const moreLooks = lookbook
-    .filter((l) => !(l.daySlug === card.legacy_day_slug && l.lookSlug === card.look_slug))
+  // "More Portofino Looks" — only the canonical taxonomy (Six Moments +
+  // Three Additional Looks). Editorial day-page names like "Boarding the
+  // Boat" never reach the user-facing rail.
+  const canonicalEntries: Array<{
+    daySlug: typeof card.legacy_day_slug;
+    lookSlug: typeof card.look_slug;
+    name: string;
+    category: "moment" | "additional";
+    momentSlug?: string;
+  }> = [
+    ...PORTOFINO_MOMENT_DEFS.map((m) => ({
+      daySlug: m.legacy_day_slug,
+      lookSlug: m.look_slug,
+      name: m.moment_name,
+      category: "moment" as const,
+      momentSlug: m.moment_slug,
+    })),
+    ...PORTOFINO_ADDITIONAL_LOOKS.map((a) => ({
+      daySlug: a.legacy_day_slug,
+      lookSlug: a.look_slug,
+      name: a.canonical_name,
+      category: "additional" as const,
+    })),
+  ];
+  const moreLooks = canonicalEntries
+    .filter((e) => !(e.daySlug === card.legacy_day_slug && e.lookSlug === card.look_slug))
+    .map((e) => {
+      const l = lookbook.find((lb) => lb.daySlug === e.daySlug && lb.lookSlug === e.lookSlug);
+      return l ? { ...e, heroImage: l.heroImage } : null;
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null)
     .slice(0, 4);
 
   return (
@@ -219,39 +250,34 @@ function MomentPage() {
             <div className="flex items-end justify-between mb-8">
               <div>
                 <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                  More {card.moment_name} Looks
+                  More Portofino Looks
                 </span>
                 <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                  Other Ways To Wear The Riviera
+                  Other Canonical Looks
                 </h3>
               </div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {moreLooks.map((l) => (
-                <Link
-                  key={l.id}
-                  to="/portofino/$day/$look"
-                  params={{ day: l.daySlug, look: l.lookSlug }}
-                  className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden bg-cream">
-                    <img
-                      src={l.heroImage}
-                      alt={l.title}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">{l.day}</span>
-                    <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
-                      {l.title}
-                    </h4>
-                    <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
-                      Shop This Look <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </Link>
+                l.category === "moment" && l.momentSlug ? (
+                  <Link
+                    key={`${l.daySlug}-${l.lookSlug}`}
+                    to="/portofino/$moment"
+                    params={{ moment: l.momentSlug }}
+                    className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
+                  >
+                    <LookCardBody name={l.name} category={l.category} image={l.heroImage} />
+                  </Link>
+                ) : (
+                  <Link
+                    key={`${l.daySlug}-${l.lookSlug}`}
+                    to="/portofino/$day/$look"
+                    params={{ day: l.daySlug, look: l.lookSlug }}
+                    className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
+                  >
+                    <LookCardBody name={l.name} category={l.category} image={l.heroImage} />
+                  </Link>
+                )
               ))}
             </div>
           </div>
@@ -404,5 +430,39 @@ function ShopCard({
         </div>
       </div>
     </a>
+  );
+}
+
+function LookCardBody({
+  name,
+  category,
+  image,
+}: {
+  name: string;
+  category: "moment" | "additional";
+  image: string;
+}) {
+  return (
+    <>
+      <div className="relative aspect-[3/4] overflow-hidden bg-cream">
+        <img
+          src={image}
+          alt={name}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+      </div>
+      <div className="p-4">
+        <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
+          {category === "moment" ? "Portofino Moment" : "Additional Look"}
+        </span>
+        <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
+          {name}
+        </h4>
+        <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
+          Shop This Look <ArrowRight className="w-3 h-3" />
+        </span>
+      </div>
+    </>
   );
 }

@@ -40,9 +40,9 @@ const baseLooks: Array<{
   day: "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
   look: "look-a" | "look-b" | "look-c";
 }> = [
-  { tag: "The Beach Club Edit", title: "Beach Club Afternoon & Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
-  { tag: "The Poolside Edit", title: "Pool Lounging & Shopping", image: editD2b, day: "day-2", look: "look-b" },
-  { tag: "The Harbor Stroll Edit", title: "Exploring the Harbor", image: editD1a, day: "day-1", look: "look-a" },
+  { tag: "Additional Look", title: "Beach Club + Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
+  { tag: "Additional Look", title: "Pool Lounging + Shopping", image: editD2b, day: "day-3", look: "look-a" },
+  { tag: "Additional Look", title: "Exploring the Harbor", image: editD1a, day: "day-3", look: "look-b" },
 ];
 
 const hotels = [
