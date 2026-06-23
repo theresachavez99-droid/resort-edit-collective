@@ -223,7 +223,7 @@ function MomentPage() {
                 <div>
                   <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">Shop This Look</span>
                   <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                    Shop {card.moment_name} →
+                    This Full Outfit →
                   </h3>
                 </div>
                 <span className="font-serif text-[0.85rem] text-ink/55 hidden md:inline">
