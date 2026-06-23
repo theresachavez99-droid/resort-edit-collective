@@ -19,6 +19,7 @@ import arrivalDayImage from "@/assets/uploads/portofino/arrival-day-lilla-splend
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
+import sunsetViewsHero from "@/assets/uploads/portofino/sunset-views-harbor-golden-hour.png.asset.json";
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
 import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
@@ -120,9 +121,9 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "sunset-views",
     moment_name: "Sunset Views",
     narrative:
-      "The long golden hour from a terrace above the harbor — light layers, the right earring, a slow walk.",
+      "The golden hour above Portofino — terrace views, warm light, a slow stroll, and the harbor turning gold.",
     moment_card_image: sunsetViewsCard.url,
-    hero_banner_image: sunsetViewsCard.url,
+    hero_banner_image: sunsetViewsHero.url,
     outfit_image: sunsetViewsCard.url,
     legacy_day: "/portofino/day-4",
     legacy_look_title: "Sunset Cocktails",
