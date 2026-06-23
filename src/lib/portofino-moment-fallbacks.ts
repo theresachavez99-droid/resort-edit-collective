@@ -21,6 +21,7 @@ import marketMorningCard from "@/assets/uploads/portofino/market-morning-espress
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
+import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
@@ -135,7 +136,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     narrative:
       "Candlelit terraces, harbor lights, and the best reservation of the trip.",
     moment_card_image: rivieraDinnerCard.url,
-    hero_banner_image: cira10.url,
+    hero_banner_image: rivieraDinnerHero.url,
     outfit_image: cira10.url,
     legacy_day: "/portofino/day-4",
     legacy_look_title: "Dinner with a View",
