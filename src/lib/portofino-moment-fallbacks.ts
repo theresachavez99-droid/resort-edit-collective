@@ -137,7 +137,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
       "Candlelit terraces, harbor lights, and the best reservation of the trip.",
     moment_card_image: rivieraDinnerCard.url,
     hero_banner_image: rivieraDinnerHero.url,
-    outfit_image: cira10.url,
+    outfit_image: rivieraDinnerCard.url,
     legacy_day: "/portofino/day-4",
     legacy_look_title: "Dinner with a View",
     legacy_day_slug: "day-4",
