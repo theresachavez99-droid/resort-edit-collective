@@ -133,7 +133,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "riviera-dinner",
     moment_name: "Riviera Dinner",
     narrative:
-      "Dinner at Puny or DaU Mari — polished, romantic, distinctly Riviera. Never city-cocktail.",
+      "Candlelit terraces, harbor lights, and the best reservation of the trip.",
     moment_card_image: rivieraDinnerCard.url,
     hero_banner_image: cira10.url,
     outfit_image: cira10.url,
