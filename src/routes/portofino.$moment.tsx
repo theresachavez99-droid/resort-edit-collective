@@ -6,7 +6,6 @@ import {
   getPortofinoMomentDef,
   PORTOFINO_MOMENT_DEFS,
   PORTOFINO_ADDITIONAL_LOOKS,
-  getCanonicalPortofinoLookName,
 } from "@/lib/portofino-moment-fallbacks";
 import { absoluteUrl } from "@/lib/site";
 import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, lookbook, type LookProduct } from "@/data/lookbook";
@@ -139,7 +138,6 @@ function MomentPage() {
     })
     .filter((x): x is NonNullable<typeof x> => x !== null)
     .slice(0, 4);
-  void getCanonicalPortofinoLookName;
 
   return (
     <div className="pb-16 md:pb-20">
