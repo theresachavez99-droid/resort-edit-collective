@@ -20,7 +20,8 @@ import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
 import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
 import poolLoungingShoppingAsset from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
-import editD1aAdditional from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
+import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
+const editD1aAdditional = exploringHarborAsset.url;
 // Day 1 hero card on /portofino — read from the canonical Day Image
 // Registry so a founder-approved swap propagates here automatically.
 const lookYacht = getCanonicalDayImage("day-1", "destination_card");

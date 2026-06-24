@@ -24,7 +24,8 @@ import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lil
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
 import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
 import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
-import exploringHarborImage from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
+import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
+const exploringHarborImage = exploringHarborAsset.url;
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
