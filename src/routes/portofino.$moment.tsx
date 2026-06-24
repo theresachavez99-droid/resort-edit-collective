@@ -246,7 +246,6 @@ function MomentPage() {
               {siblingLooks.map((l) => (
                 <Link
                   key={l.title}
-                  // @ts-expect-error — union of typed routes
                   to={l.to}
                   params={l.params as never}
                   className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
