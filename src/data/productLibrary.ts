@@ -76,6 +76,10 @@ export interface ProductDNA {
   /** Optional founder-DB visual DNA fields used by Portofino weighting. */
   printLanguage?: string;
   colorStory?: string[];
+  /** Product category (Dress, Shoes, Bag, Earrings, Necklace, Bracelet, Ring). */
+  category?: "Dress" | "Shoes" | "Bag" | "Earrings" | "Necklace" | "Bracelet" | "Ring";
+  /** Optional 0–100 editorial priority from the founder reference library. */
+  priorityScore?: number;
   /** Classification of the image source. Only retailer_cdn / brand_cdn /
    *  cleaned_thumbnail are allowed to render on live rails. */
   imageSource?:
@@ -257,6 +261,7 @@ const RAW_PRODUCTS: Omit<ProductDNA, "channel">[] = [
 ];
 
 import { RIVIERA_DINNER_LIBRARY } from "@/data/rivieraDinnerLibrary";
+import { RIVIERA_ACCESSORY_LIBRARY } from "@/data/rivieraAccessoryLibrary";
 
 const SEEDED_PRODUCTS: ProductDNA[] = RAW_PRODUCTS.map((p) => ({
   ...p,
@@ -269,6 +274,7 @@ const SEEDED_PRODUCTS: ProductDNA[] = RAW_PRODUCTS.map((p) => ({
 export const PRODUCT_LIBRARY: ProductDNA[] = [
   ...SEEDED_PRODUCTS,
   ...RIVIERA_DINNER_LIBRARY,
+  ...RIVIERA_ACCESSORY_LIBRARY,
 ];
 
 /**
