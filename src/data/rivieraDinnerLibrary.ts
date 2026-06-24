@@ -5,7 +5,7 @@
 // The audit pipeline (scripts/audit-riviera-dinner.mjs) scores them.
 import type { ProductDNA } from "@/data/productLibrary";
 
-export const RIVIERA_DINNER_LIBRARY: ProductDNA[] = [
+const RAW_RIVIERA_DINNER: unknown[] = [
   {
     id: "rd-01-zimmermann-roselight-picnic-linen-midi-sundress",
     brand: "Zimmermann",
@@ -857,3 +857,4 @@ export const RIVIERA_DINNER_LIBRARY: ProductDNA[] = [
     imageSource: "unknown",
   },
 ];
+export const RIVIERA_DINNER_LIBRARY = RAW_RIVIERA_DINNER as ProductDNA[];
