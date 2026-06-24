@@ -133,7 +133,7 @@ const DAYS: DayRow[] = [
     imagePos: "50% 16%",
     looks: [
       { slug: "look-a", label: "Look A", title: "Poolside", image: d3a },
-      { slug: "look-b", label: "Look B", title: "Via Roma Boutiques", image: d3b },
+      { slug: "look-b", label: "Look B", title: "Exploring the Harbor", image: d3b },
       { slug: "look-c", label: "Look C", title: "Capri Aperitivo", image: d3c },
     ],
   },
