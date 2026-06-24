@@ -11,6 +11,11 @@ import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type LookProduct } 
 import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS } from "@/lib/portofino-spec";
+import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
+import { DAY_PATHS } from "@/components/PortofinoDayPage";
+import editD1aAdditional from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
+
+const beachLongLunchDefault = getCanonicalDayImage("day-2", "destination_card");
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -79,6 +84,23 @@ function MomentPage() {
   const heroImage = card.hero_banner_image;
   // "Other Moments in Portofino" — the six canonical moments minus this page.
   const otherMoments = PORTOFINO_MOMENT_DEFS.filter((m) => m.moment_slug !== slug);
+  const dayOverrides = useDayImageOverrides();
+  const beachLongLunchImage = dayOverrides["day-2"] ?? beachLongLunchDefault;
+  const siblingLooks =
+    slug === "pool-lounging-shopping"
+      ? [
+          {
+            title: "Beach Club + Long Lunch",
+            image: beachLongLunchImage,
+            to: DAY_PATHS["day-2"],
+          },
+          {
+            title: "Exploring the Harbor",
+            image: editD1aAdditional,
+            to: DAY_PATHS["day-3"],
+          },
+        ]
+      : [];
 
   // Resolve the canonical shoppable Look from the lookbook.
   const look = findLook(card.legacy_day_slug, card.look_slug);
