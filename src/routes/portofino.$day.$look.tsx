@@ -5,6 +5,8 @@ import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { MoreLikeThis } from "@/components/MoreLikeThis";
+import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
+import { PORTOFINO_MOMENT_DEFS } from "@/lib/portofino-moment-fallbacks";
 import {
   isLookSlug,
   type LookSlug,
@@ -548,6 +550,13 @@ function ViewFullLookPage() {
 
       {/* ───────────────────────── MORE LIKE THIS (DNA-matched discovery) ───────────────────────── */}
       <MoreLikeThis daySlug={day} lookSlug={look} />
+
+      {/* ───────────────────────── OTHER MOMENTS IN PORTOFINO (canonical cross-sell) ───────────────────────── */}
+      <OtherPortofinoMoments
+        excludeSlugs={PORTOFINO_MOMENT_DEFS.filter(
+          (m) => m.legacy_day_slug === day && m.look_slug === look,
+        ).map((m) => m.moment_slug)}
+      />
 
       {/* ───────────────────────── BOTTOM · GET THE NEXT EDIT ───────────────────────── */}
       {nextDay && nextDayFirstLook && (
