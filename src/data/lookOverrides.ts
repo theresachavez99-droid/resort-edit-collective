@@ -33,6 +33,13 @@ import imgPalomaBoater from "@/assets/products/lack-of-color-paloma-sun-boater.s
 import imgForgetMeKnot from "@/assets/products/oradina-forget-me-knot-studs.svg";
 import imgRemiBangle from "@/assets/products/jenny-bird-remi-hinge-bangle.svg";
 
+import imgPoolZella from "@/assets/products/alexandra-miro-zella-red-capri.svg";
+import imgPoolJaimee from "@/assets/products/alexandra-miro-jaimee-skirt-red-capri.svg";
+import imgPoolDaphnae from "@/assets/products/ancient-greek-daphnae-sandal.svg";
+import imgPoolAsa from "@/assets/products/cult-gaia-asa-xl-tote-natural.svg";
+import imgPoolLeSpecs from "@/assets/products/le-specs-tortoise-sunglasses.svg";
+import imgPoolHoops from "@/assets/products/gold-hoops-revolve.svg";
+
 export type OverrideItem = {
   slotLabel: string;
   brand: string;
