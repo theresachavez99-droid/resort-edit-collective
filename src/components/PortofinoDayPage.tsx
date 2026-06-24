@@ -1,7 +1,8 @@
 import { Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { portofinoLooks, resolveProductLink, type ShopItem, type Look } from "@/data/portofino";
-import { MoreFromTheEdit } from "@/components/MoreFromTheEdit";
+import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
+import { PORTOFINO_MOMENT_DEFS } from "@/lib/portofino-moment-fallbacks";
 import type { ActivityTag } from "@/data/styleDNA";
 import { trackOutbound } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site";
@@ -400,12 +401,13 @@ export function PortofinoDayTemplate({ slug }: { slug: DaySlug }) {
         tagline={meta.tagline}
       />
 
-      {/* DYNAMIC FOUNDER-LIBRARY RAIL — sits directly after the three
-          editorial Complete Looks, before Experiences / Where To Stay. */}
-      <MoreFromTheEdit
-        dayLabel={meta.dayKey}
-        moments={DAY_MOMENTS[slug]}
-        hiddenItems={look.shop}
+      {/* Canonical cross-sell — every Portofino surface ends with the same
+          "Other Moments in Portofino" strip, excluding any moment that
+          lives on this day. */}
+      <OtherPortofinoMoments
+        excludeSlugs={PORTOFINO_MOMENT_DEFS.filter((m) => m.legacy_day_slug === slug).map(
+          (m) => m.moment_slug,
+        )}
       />
 
       <ExperiencesSection />
