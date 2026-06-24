@@ -44,7 +44,7 @@ const baseLooks: Array<{
 }> = [
   { tag: "Additional Look", title: "Beach Club + Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
   { tag: "Additional Look", title: "Pool Lounging + Shopping", image: poolLoungingShoppingAsset.url, day: "day-3", look: "look-a", momentSlug: "pool-lounging-shopping" },
-  { tag: "Additional Look", title: "Exploring the Harbor", image: editD1a, day: "day-3", look: "look-b", momentSlug: "exploring-the-harbor" },
+  { tag: "Additional Look", title: "Exploring the Harbor", image: exploringHarborAsset.url, day: "day-3", look: "look-b", momentSlug: "exploring-the-harbor" },
 ];
 
 const hotels = [
