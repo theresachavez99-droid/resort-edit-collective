@@ -101,6 +101,9 @@ function ViewFullLookPage() {
   const lookData = findLook(day, look as LookSlug);
   if (!lookData) throw notFound();
 
+  const isBeachClub = day === "day-2" && look === "look-a";
+  const displayTitle = isBeachClub ? "Beach Club + Long Lunch" : lookData.title;
+
   const editorial = lookEditorialFor(day, look);
   const alternatives = alternativesFor(day, look);
   const override = lookOverrideFor(day, look as LookSlug);
@@ -160,9 +163,15 @@ function ViewFullLookPage() {
               5 Days in Portofino
             </Link>
             <ChevronRight className="w-3 h-3 text-ink/30" />
-            <span className="text-ink/65">{lookData.day}</span>
-            <ChevronRight className="w-3 h-3 text-ink/30" />
-            <span className="text-gold">View Full Look</span>
+            {isBeachClub ? (
+              <span className="text-gold uppercase tracking-[0.18em]">Beach Club + Long Lunch</span>
+            ) : (
+              <>
+                <span className="text-ink/65">{lookData.day}</span>
+                <ChevronRight className="w-3 h-3 text-ink/30" />
+                <span className="text-gold">View Full Look</span>
+              </>
+            )}
           </nav>
           <div className="flex items-center gap-4 text-[0.85rem]">
             {prevLook ? (
@@ -213,7 +222,7 @@ function ViewFullLookPage() {
               {lookData.day.toUpperCase()}
             </p>
             <h1 className="font-display text-[2.1rem] md:text-[3rem] xl:text-[3.4rem] leading-[1.02] tracking-[0.03em] text-ink mt-5 uppercase">
-              {lookData.title}
+              {displayTitle}
             </h1>
 
             {editorial?.mood && (
