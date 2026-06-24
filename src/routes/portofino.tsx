@@ -316,65 +316,7 @@ function PortofinoPage() {
             </p>
           </div>
 
-          {/* 1. RESORT EDIT FAVORITES */}
-          <div className="mb-10 md:mb-12">
-            <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
-              <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">RESORT EDIT FAVORITES</h3>
-              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Editor&rsquo;s shortlist</span>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
-              {/* Dolce & Gabbana Beach Club — hero card */}
-              <article className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 bg-ivory border border-border/60">
-                <div className="relative aspect-[4/3] sm:aspect-auto sm:min-h-[320px] overflow-hidden bg-muted">
-                  <img src={lookBeachOverride} alt="Dolce & Gabbana Beach Club, Paraggi" loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center" }} />
-                  <div className="absolute top-3 left-3 bg-gold text-ivory eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">
-                    MOST INSTAGRAMMABLE
-                  </div>
-                </div>
-                <div className="p-5 md:p-6 flex flex-col">
-                  <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold">Le Carillon · Paraggi Bay</span>
-                  <h4 className="font-display text-2xl md:text-[1.7rem] tracking-wide mt-1.5 leading-tight">Dolce &amp; Gabbana Beach Club</h4>
-                  <p className="font-serif italic text-ink/70 text-[0.95rem] mt-2 leading-relaxed flex-1">
-                    Majolica umbrellas, Riviera water, seaside lunches, and the most photographed beach setup in Portofino.
-                  </p>
-                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
-                    <a href="https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/" target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-[0.62rem] tracking-[0.3em] text-ink hover:text-gold border-b border-ink/40 hover:border-gold pb-1">
-                      Reserve →
-                    </a>
-                    <Link to={DAY_PATHS["day-2"]} className="eyebrow text-[0.62rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 hover:border-ink pb-1">
-                      What To Wear Here →
-                    </Link>
-                  </div>
-                </div>
-              </article>
-
-              {/* Two side favorites */}
-              <div className="grid grid-rows-2 gap-4 md:gap-5">
-                <article className="bg-ivory border border-border/60 p-4 flex flex-col">
-                  <span className="self-start bg-ink text-ivory eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">BOOK FIRST</span>
-                  <h4 className="font-display text-lg tracking-wide mt-2.5 leading-tight">Private Boat to San Fruttuoso</h4>
-                  <p className="font-serif italic text-ink/65 text-[0.88rem] mt-1.5 leading-relaxed flex-1">
-                    The abbey, swim stops, and quiet coves most day trippers miss.
-                  </p>
-                  <a href="https://www.viator.com/Portofino/d50421/san-fruttuoso" target="_blank" rel="noopener noreferrer sponsored" className="mt-2.5 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 pb-1">
-                    Book →
-                  </a>
-                </article>
-                <article className="bg-ivory border border-border/60 p-4 flex flex-col">
-                  <span className="self-start bg-ivory text-ink border border-ink eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem]">INSIDER FAVORITE</span>
-                  <h4 className="font-display text-lg tracking-wide mt-2.5 leading-tight">Sunset Aperitivo Reservation</h4>
-                  <p className="font-serif italic text-ink/65 text-[0.88rem] mt-1.5 leading-relaxed flex-1">
-                    Harbor cocktails before dinner — reserve early.
-                  </p>
-                  <Link to={DAY_PATHS["day-4"]} className="mt-2.5 self-start eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink border-b border-gold/60 pb-1">
-                    Plan The Evening →
-                  </Link>
-                </article>
-              </div>
-            </div>
-          </div>
-
-          {/* 2. BOOKABLE MOMENTS */}
+          {/* BOOKABLE MOMENTS */}
           <div className="mb-10 md:mb-12">
             <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
               <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">BOOKABLE MOMENTS</h3>
@@ -382,16 +324,30 @@ function PortofinoPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
               {[
-                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", look: DAY_PATHS["day-2"] },
-                { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", look: DAY_PATHS["day-1"] },
-                { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", look: DAY_PATHS["day-1"] },
-                { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", look: DAY_PATHS["day-4"] },
-                { name: "Private Driver Transfer", image: expHarbor, desc: "Black-car arrival from Genoa, Milan, or Nice — no parking, no stress.", href: "https://www.getyourguide.com/portofino-l1093/transfers", look: DAY_PATHS["day-5"] },
-                { name: "Reserve Harbor Dinner", image: expCooking, desc: "A candlelit table on the piazzetta — book weeks ahead.", href: "https://www.opentable.com/landmark/restaurants-near-portofino", look: DAY_PATHS["day-4"] },
+                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", look: DAY_PATHS["day-2"], badge: "MOST INSTAGRAMMABLE", badgeStyle: "gold" as const },
+                { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", look: DAY_PATHS["day-1"], badge: null, badgeStyle: null },
+                { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", look: DAY_PATHS["day-1"], badge: "BOOK FIRST", badgeStyle: "ink" as const },
+                { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", look: DAY_PATHS["day-4"], badge: "INSIDER FAVORITE", badgeStyle: "outline" as const },
+                { name: "Private Driver Transfer", image: expHarbor, desc: "Black-car arrival from Genoa, Milan, or Nice — no parking, no stress.", href: "https://www.getyourguide.com/portofino-l1093/transfers", look: DAY_PATHS["day-5"], badge: null, badgeStyle: null },
+                { name: "Reserve Harbor Dinner", image: expCooking, desc: "A candlelit table on the piazzetta — book weeks ahead.", href: "https://www.opentable.com/landmark/restaurants-near-portofino", look: DAY_PATHS["day-4"], badge: null, badgeStyle: null },
               ].map((exp) => (
                 <article key={exp.name} className="bg-ivory border border-border/60 flex flex-col">
                   <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                     <img src={exp.image} alt={exp.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                    {exp.badge && (
+                      <span
+                        className={
+                          "absolute top-3 left-3 eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem] " +
+                          (exp.badgeStyle === "gold"
+                            ? "bg-gold text-ivory"
+                            : exp.badgeStyle === "ink"
+                              ? "bg-ink text-ivory"
+                              : "bg-ivory text-ink border border-ink")
+                        }
+                      >
+                        {exp.badge}
+                      </span>
+                    )}
                   </div>
                   <div className="p-3.5 md:p-4 flex flex-col flex-1">
                     <h4 className="font-display text-[1.05rem] tracking-wide leading-snug">{exp.name}</h4>
