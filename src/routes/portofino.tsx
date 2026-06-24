@@ -255,8 +255,8 @@ function PortofinoPage() {
               {
                 title: "Exploring the Harbor",
                 image: editD1aAdditional,
-                to: DAY_PATHS["day-3"],
-                moment: undefined as string | undefined,
+                to: undefined,
+                moment: "exploring-the-harbor",
               },
             ].map((l) => (
               <article
