@@ -24,6 +24,7 @@ import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lil
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
 import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
 import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
+import exploringHarborImage from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
@@ -174,6 +175,20 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     legacy_look_title: "Poolside",
     legacy_day_slug: "day-3",
     look_slug: "look-a",
+  },
+  {
+    moment_slug: "exploring-the-harbor",
+    archetype_slug: "exploring-the-harbor",
+    moment_name: "Exploring the Harbor",
+    narrative:
+      "A slow afternoon along the quay — boutique windows, espresso stops, and the harbor catching the light.",
+    moment_card_image: exploringHarborImage,
+    hero_banner_image: exploringHarborImage,
+    outfit_image: exploringHarborImage,
+    legacy_day: "/portofino/day-3",
+    legacy_look_title: "Exploring the Harbor",
+    legacy_day_slug: "day-3",
+    look_slug: "look-b",
   },
 ];
 
