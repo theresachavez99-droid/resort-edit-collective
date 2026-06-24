@@ -222,13 +222,23 @@ function Index() {
                 <div className="relative aspect-[5/6] mt-4 overflow-hidden bg-muted">
                   <img src={l.image} alt={l.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                 </div>
-                <Link
-                  to="/portofino/$day/$look"
-                  params={{ day: l.day, look: l.look }}
-                  className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
-                >
-                  Get the Look →
-                </Link>
+                {l.momentSlug ? (
+                  <Link
+                    to="/portofino/$moment"
+                    params={{ moment: l.momentSlug }}
+                    className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
+                  >
+                    Get the Look →
+                  </Link>
+                ) : (
+                  <Link
+                    to="/portofino/$day/$look"
+                    params={{ day: l.day, look: l.look }}
+                    className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
+                  >
+                    Get the Look →
+                  </Link>
+                )}
               </article>
             ))}
 
