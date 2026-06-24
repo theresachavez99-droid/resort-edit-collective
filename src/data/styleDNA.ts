@@ -21,7 +21,8 @@ export type StyleFamily =
   | "coastal_neutral"
   | "destination_glamour"
   | "mediterranean_tailoring"
-  | "sequin_glamour";
+  | "sequin_glamour"
+  | "romantic_evening";
 
 export type ActivityTag =
   | "yacht_day"
@@ -137,7 +138,7 @@ export const LOOK_DNA: Record<string, LookDNA> = {
   "day-4/look-b": {
     destination: "portofino",
     momentSlug: "riviera-dinner",
-    styleFamilies: ["sunset_glamour", "destination_print"],
+    styleFamilies: ["sunset_glamour", "riviera_floral", "romantic_evening", "destination_glamour"],
     activityTags: ["riviera_dinner", "sunset_views"],
     excludeActivities: ["yacht_day", "pool_day", "beach_club_lunch"],
     editorialLabel: "Riviera Dinner",
@@ -145,7 +146,7 @@ export const LOOK_DNA: Record<string, LookDNA> = {
   "day-4/look-c": {
     destination: "portofino",
     momentSlug: "riviera-dinner",
-    styleFamilies: ["sunset_glamour", "blue_white_porcelain"],
+    styleFamilies: ["sunset_glamour", "riviera_floral", "romantic_evening"],
     activityTags: ["riviera_dinner"],
     excludeActivities: ["yacht_day", "pool_day"],
     editorialLabel: "Porcelain Prints",
