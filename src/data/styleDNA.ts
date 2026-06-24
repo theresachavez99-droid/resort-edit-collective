@@ -104,11 +104,27 @@ export const LOOK_DNA: Record<string, LookDNA> = {
   // ── Day 3 · Pool + Shopping ────────────────────────────────────────
   "day-3/look-a": {
     destination: "portofino",
-    momentSlug: "shopping-afternoon",
-    styleFamilies: ["riviera_floral", "destination_print"],
-    activityTags: ["shopping_afternoon", "harbor_aperitivo"],
-    excludeActivities: ["yacht_day"],
-    editorialLabel: "Riviera Florals",
+    momentSlug: "pool-lounging-shopping",
+    styleFamilies: [
+      "destination_glamour",
+      "resort_relaxation",
+      "poolside_luxury",
+      "mediterranean_resort",
+      "riviera_floral",
+    ],
+    activityTags: [
+      "pool_lounging",
+      "shopping",
+      "hotel_pool",
+      "afternoon_relaxation",
+    ],
+    excludeActivities: [
+      "yacht_day",
+      "beach_club_lunch",
+      "harbor_aperitivo",
+      "riviera_dinner",
+    ],
+    editorialLabel: "Pool Lounging + Shopping",
   },
   "day-3/look-b": {
     destination: "portofino",
