@@ -70,17 +70,24 @@ export const Route = createFileRoute("/portofino/$day/$look")({
       });
     }
   },
-  head: () => ({
-    meta: [
-      { title: "Shop the Full Look — Portofino | Resort Edit | Dressed for the destination" },
-      {
-        name: "description",
-        content:
-          "A complete editorial look — outfit, shoes, bag, jewelry, sunglasses, hair and layer — each piece linked to its exact affiliate product.",
-      },
-      { property: "og:url", content: absoluteUrl("/portofino") },
-    ],
-  }),
+  head: ({ params }) => {
+    const isBeachClub = params.day === "day-2" && params.look === "look-a";
+    const title = isBeachClub
+      ? "Beach Club + Long Lunch in Portofino — Resort Edit"
+      : "Shop the Full Look — Portofino | Resort Edit | Dressed for the destination";
+    return {
+      meta: [
+        { title },
+        {
+          name: "description",
+          content:
+            "A complete editorial look — outfit, shoes, bag, jewelry, sunglasses, hair and layer — each piece linked to its exact affiliate product.",
+        },
+        { property: "og:title", content: title },
+        { property: "og:url", content: absoluteUrl("/portofino") },
+      ],
+    };
+  },
   component: ViewFullLookPage,
 });
 
