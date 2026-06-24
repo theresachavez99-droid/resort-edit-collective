@@ -87,7 +87,7 @@ function MomentPage() {
   const beachLongLunchImage = dayOverrides["day-2"] ?? beachLongLunchDefault;
   type SiblingLook =
     | { title: string; image: string; to: "/portofino/$day/$look"; params: { day: string; look: string } }
-    | { title: string; image: string; to: "/portofino/day-3"; params?: undefined };
+    | { title: string; image: string; to: "/portofino/$moment"; params: { moment: string } };
   const siblingLooks: SiblingLook[] =
     slug === "pool-lounging-shopping"
       ? [
@@ -100,7 +100,8 @@ function MomentPage() {
           {
             title: "Exploring the Harbor",
             image: editD1aAdditional,
-            to: "/portofino/day-3",
+            to: "/portofino/$moment",
+            params: { moment: "exploring-the-harbor" },
           },
         ]
       : [];

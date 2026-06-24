@@ -173,7 +173,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Piazzetta polish in soft neutrals and gold light.",
     images: [d3a, d3b, d3c, d3a, d3b],
     placeholderSlots: [3, 4],
-    lookTitles: ["Poolside", "Via Roma Boutiques", "Capri Aperitivo", "Day Club Lounging", "Boutique-Hour Glam"],
+    lookTitles: ["Poolside", "Exploring the Harbor", "Capri Aperitivo", "Day Club Lounging", "Boutique-Hour Glam"],
     lookMoods: [
       "Poolside-to-piazzetta polish with editorial restraint.",
       "Window-shopping the boutiques in soft, sun-bleached neutrals.",
@@ -463,10 +463,19 @@ function MomentCard({
   dayLabel: string;
   lookLetter: "A" | "B" | "C";
 }) {
+  // Looks migrated to named-slug moment pages.
+  const momentOverride =
+    daySlug === "day-3" && lookSlug === "look-a"
+      ? "pool-lounging-shopping"
+      : daySlug === "day-3" && lookSlug === "look-b"
+        ? "exploring-the-harbor"
+        : null;
+  const linkProps = momentOverride
+    ? ({ to: "/portofino/$moment", params: { moment: momentOverride } } as const)
+    : ({ to: "/portofino/$day/$look", params: { day: daySlug, look: lookSlug } } as const);
   return (
     <Link
-      to="/portofino/$day/$look"
-      params={{ day: daySlug, look: lookSlug }}
+      {...linkProps}
       className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
     >
       {/* Image dominates ~75% of card height */}
