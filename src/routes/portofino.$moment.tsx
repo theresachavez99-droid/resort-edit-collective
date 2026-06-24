@@ -2,10 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
-import {
-  getPortofinoMomentDef,
-  PORTOFINO_MOMENT_DEFS,
-} from "@/lib/portofino-moment-fallbacks";
+import { getPortofinoMomentDef } from "@/lib/portofino-moment-fallbacks";
+import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
 import { absoluteUrl } from "@/lib/site";
 import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type LookProduct } from "@/data/lookbook";
 import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
@@ -81,8 +79,6 @@ function MomentPage() {
 
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
-  // "Other Moments in Portofino" — the six canonical moments minus this page.
-  const otherMoments = PORTOFINO_MOMENT_DEFS.filter((m) => m.moment_slug !== slug);
   const dayOverrides = useDayImageOverrides();
   const beachLongLunchImage = dayOverrides["day-2"] ?? beachLongLunchDefault;
   type SiblingLook =
@@ -277,50 +273,7 @@ function MomentPage() {
         </section>
       )}
 
-      {otherMoments.length > 0 && (
-        <section className="bg-cream border-y border-border/40">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-16">
-            <div className="mb-8">
-              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                MORE PORTOFINO LOOKS
-              </span>
-              <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                Other Moments in Portofino
-              </h3>
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
-              {otherMoments.map((m) => (
-                <Link
-                  key={m.moment_slug}
-                  to="/portofino/$moment"
-                  params={{ moment: m.moment_slug }}
-                  className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden bg-cream">
-                    <img
-                      src={m.moment_card_image}
-                      alt={m.moment_name}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
-                      Portofino Moment
-                    </span>
-                    <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
-                      {m.moment_name}
-                    </h4>
-                    <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
-                      VIEW MOMENT <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      <OtherPortofinoMoments excludeSlugs={[slug]} />
     </div>
   );
 }
