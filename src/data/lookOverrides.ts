@@ -200,6 +200,52 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
       },
     ],
   },
+  "day-3/look-a": {
+    main: [
+      {
+        slotLabel: "SWIMSUIT",
+        brand: "Alexandra Miro",
+        title: "Zella Swimsuit — Red Capri",
+        url: "AFF-POOL-SWIMSUIT",
+        image: imgPoolZella,
+      },
+      {
+        slotLabel: "SKIRT",
+        brand: "Alexandra Miro",
+        title: "Jaimee Skirt — Red Capri",
+        url: "AFF-POOL-SKIRT",
+        image: imgPoolJaimee,
+      },
+      {
+        slotLabel: "SHOES",
+        brand: "Ancient Greek Sandals",
+        title: "Daphnae Sandal",
+        url: "AFF-POOL-SHOES",
+        image: imgPoolDaphnae,
+      },
+      {
+        slotLabel: "BAG",
+        brand: "Cult Gaia",
+        title: "Asa XL Tote — Natural",
+        url: "AFF-POOL-BAG",
+        image: imgPoolAsa,
+      },
+      {
+        slotLabel: "SUNGLASSES",
+        brand: "Le Specs",
+        title: "Tortoise Sunglasses",
+        url: "AFF-POOL-SUNGLASSES",
+        image: imgPoolLeSpecs,
+      },
+      {
+        slotLabel: "JEWELRY",
+        brand: "Revolve",
+        title: "Gold Hoop Earrings",
+        url: "AFF-POOL-JEWELRY",
+        image: imgPoolHoops,
+      },
+    ],
+  },
 };
 
 export function lookOverrideFor(daySlug: Look["daySlug"], lookSlug: LookSlug): LookOverride | undefined {
