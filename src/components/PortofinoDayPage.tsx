@@ -173,7 +173,7 @@ export const DAY_META: Record<DaySlug, {
     tagline: "Piazzetta polish in soft neutrals and gold light.",
     images: [d3a, d3b, d3c, d3a, d3b],
     placeholderSlots: [3, 4],
-    lookTitles: ["Poolside", "Via Roma Boutiques", "Capri Aperitivo", "Day Club Lounging", "Boutique-Hour Glam"],
+    lookTitles: ["Poolside", "Exploring the Harbor", "Capri Aperitivo", "Day Club Lounging", "Boutique-Hour Glam"],
     lookMoods: [
       "Poolside-to-piazzetta polish with editorial restraint.",
       "Window-shopping the boutiques in soft, sun-bleached neutrals.",
