@@ -206,78 +206,44 @@ function MomentPage() {
         </div>
       </section>
 
-      {/* MORE {MOMENT} LOOKS — directly shoppable, no extra navigation */}
-      {moreLooks.length > 0 && (
+      {/* OTHER MOMENTS IN PORTOFINO — unified canonical strip */}
+      {otherMoments.length > 0 && (
         <section className="bg-cream border-y border-border/40">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-16">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                  More Portofino Looks
-                </span>
-                <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                  Other Canonical Looks
-                </h3>
-              </div>
+            <div className="mb-8">
+              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
+                MORE PORTOFINO LOOKS
+              </span>
+              <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
+                Other Moments in Portofino
+              </h3>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {moreLooks.map((l) => (
-                l.category === "moment" && l.momentSlug ? (
-                  <Link
-                    key={`${l.daySlug}-${l.lookSlug}`}
-                    to="/portofino/$moment"
-                    params={{ moment: l.momentSlug }}
-                    className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
-                  >
-                    <LookCardBody name={l.name} category={l.category} image={l.heroImage} />
-                  </Link>
-                ) : (
-                  <Link
-                    key={`${l.daySlug}-${l.lookSlug}`}
-                    to="/portofino/$day/$look"
-                    params={{ day: l.daySlug, look: l.lookSlug }}
-                    className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
-                  >
-                    <LookCardBody name={l.name} category={l.category} image={l.heroImage} />
-                  </Link>
-                )
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* CONTINUE EXPLORING PORTOFINO — sibling moment cards */}
-      {relatedMoments.length > 0 && (
-        <section className="bg-ivory">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-20 text-center">
-            <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-              Continue Exploring Portofino
-            </span>
-            <div className="mx-auto mt-3 h-px w-12 bg-gold/70" />
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedMoments.map((m) => (
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+              {otherMoments.map((m) => (
                 <Link
                   key={m.moment_slug}
                   to="/portofino/$moment"
                   params={{ moment: m.moment_slug }}
-                  className="group flex flex-col bg-cream/40 border border-border/40 hover:border-gold transition-colors text-left"
+                  className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-cream">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-cream">
                     <img
                       src={m.moment_card_image}
                       alt={m.moment_name}
                       loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                     />
                   </div>
-                  <div className="p-5">
-                    <h4 className="font-display text-lg md:text-xl tracking-[0.03em] text-ink group-hover:text-gold transition-colors">
+                  <div className="p-4">
+                    <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
+                      Portofino Moment
+                    </span>
+                    <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
                       {m.moment_name}
                     </h4>
-                    <p className="font-serif italic text-[0.9rem] text-ink/65 leading-relaxed mt-2 line-clamp-2">
-                      {m.narrative}
-                    </p>
+                    <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
+                      VIEW MOMENT <ArrowRight className="w-3 h-3" />
+                    </span>
                   </div>
                 </Link>
               ))}
