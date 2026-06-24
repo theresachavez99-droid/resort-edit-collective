@@ -107,16 +107,13 @@ export const LOOK_DNA: Record<string, LookDNA> = {
     momentSlug: "pool-lounging-shopping",
     styleFamilies: [
       "destination_glamour",
-      "resort_relaxation",
-      "poolside_luxury",
-      "mediterranean_resort",
+      "riviera_glamour",
       "riviera_floral",
+      "destination_print",
     ],
     activityTags: [
-      "pool_lounging",
-      "shopping",
-      "hotel_pool",
-      "afternoon_relaxation",
+      "pool_day",
+      "shopping_afternoon",
     ],
     excludeActivities: [
       "yacht_day",
