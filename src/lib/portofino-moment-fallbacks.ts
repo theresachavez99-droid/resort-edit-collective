@@ -23,7 +23,7 @@ import sunsetViewsHero from "@/assets/uploads/portofino/sunset-views-harbor-gold
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
 import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
-import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-capri.jpg.asset.json";
+import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
