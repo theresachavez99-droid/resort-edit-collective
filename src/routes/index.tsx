@@ -2,8 +2,8 @@ import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
+import poolLoungingShoppingAsset from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-capri.jpg.asset.json";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
@@ -39,9 +39,10 @@ const baseLooks: Array<{
   image: string;
   day: "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
   look: "look-a" | "look-b" | "look-c";
+  momentSlug?: string;
 }> = [
   { tag: "Additional Look", title: "Beach Club + Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
-  { tag: "Additional Look", title: "Pool Lounging + Shopping", image: editD2b, day: "day-3", look: "look-a" },
+  { tag: "Additional Look", title: "Pool Lounging + Shopping", image: poolLoungingShoppingAsset.url, day: "day-3", look: "look-a", momentSlug: "pool-lounging-shopping" },
   { tag: "Additional Look", title: "Exploring the Harbor", image: editD1a, day: "day-3", look: "look-b" },
 ];
 
@@ -88,7 +89,7 @@ const ctas = [
 function Index() {
   const dayOverrides = useDayImageOverrides();
   const looks = baseLooks.map((l) =>
-    l.look === "look-a" && dayOverrides[l.day]
+    l.look === "look-a" && dayOverrides[l.day] && !l.momentSlug
       ? { ...l, image: dayOverrides[l.day] }
       : l,
   );
@@ -220,13 +221,23 @@ function Index() {
                 <div className="relative aspect-[5/6] mt-4 overflow-hidden bg-muted">
                   <img src={l.image} alt={l.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                 </div>
-                <Link
-                  to="/portofino/$day/$look"
-                  params={{ day: l.day, look: l.look }}
-                  className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
-                >
-                  Get the Look →
-                </Link>
+                {l.momentSlug ? (
+                  <Link
+                    to="/portofino/$moment"
+                    params={{ moment: l.momentSlug }}
+                    className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
+                  >
+                    Get the Look →
+                  </Link>
+                ) : (
+                  <Link
+                    to="/portofino/$day/$look"
+                    params={{ day: l.day, look: l.look }}
+                    className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
+                  >
+                    Get the Look →
+                  </Link>
+                )}
               </article>
             ))}
 

@@ -22,7 +22,10 @@ export type StyleFamily =
   | "destination_glamour"
   | "mediterranean_tailoring"
   | "sequin_glamour"
-  | "romantic_evening";
+  | "romantic_evening"
+  | "poolside_luxury"
+  | "mediterranean_resort"
+  | "shopping_after_pool";
 
 export type ActivityTag =
   | "yacht_day"
@@ -33,7 +36,11 @@ export type ActivityTag =
   | "riviera_dinner"
   | "pool_day"
   | "arrival_day"
-  | "shopping_afternoon";
+  | "shopping_afternoon"
+  | "pool_lounging"
+  | "hotel_pool"
+  | "shopping"
+  | "afternoon_relaxation";
 
 export interface LookDNA {
   destination: string;
@@ -107,13 +114,17 @@ export const LOOK_DNA: Record<string, LookDNA> = {
     momentSlug: "pool-lounging-shopping",
     styleFamilies: [
       "destination_glamour",
-      "riviera_glamour",
-      "riviera_floral",
-      "destination_print",
+      "poolside_luxury",
+      "mediterranean_resort",
+      "shopping_after_pool",
     ],
     activityTags: [
       "pool_day",
       "shopping_afternoon",
+      "pool_lounging",
+      "hotel_pool",
+      "shopping",
+      "afternoon_relaxation",
     ],
     excludeActivities: [
       "yacht_day",
