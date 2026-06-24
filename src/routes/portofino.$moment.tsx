@@ -5,10 +5,9 @@ import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import {
   getPortofinoMomentDef,
   PORTOFINO_MOMENT_DEFS,
-  PORTOFINO_ADDITIONAL_LOOKS,
 } from "@/lib/portofino-moment-fallbacks";
 import { absoluteUrl } from "@/lib/site";
-import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, lookbook, type LookProduct } from "@/data/lookbook";
+import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type LookProduct } from "@/data/lookbook";
 import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS } from "@/lib/portofino-spec";
@@ -79,9 +78,8 @@ function MomentPage() {
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
   const currentIdx = PORTOFINO_MOMENT_DEFS.findIndex((m) => m.moment_slug === slug);
-  const relatedMoments = PORTOFINO_MOMENT_DEFS.filter(
-    (m) => m.moment_slug !== slug,
-  ).slice(0, 3);
+  // "Other Moments in Portofino" — the six canonical moments minus this page.
+  const otherMoments = PORTOFINO_MOMENT_DEFS.filter((m) => m.moment_slug !== slug);
 
   // Resolve the canonical shoppable Look from the lookbook.
   const look = findLook(card.legacy_day_slug, card.look_slug);
@@ -105,39 +103,6 @@ function MomentPage() {
       kind: "category" as const,
     }));
   }
-
-  // "More Portofino Looks" — only the canonical taxonomy (Six Moments +
-  // Three Additional Looks). Editorial day-page names like "Boarding the
-  // Boat" never reach the user-facing rail.
-  const canonicalEntries: Array<{
-    daySlug: typeof card.legacy_day_slug;
-    lookSlug: typeof card.look_slug;
-    name: string;
-    category: "moment" | "additional";
-    momentSlug?: string;
-  }> = [
-    ...PORTOFINO_MOMENT_DEFS.map((m) => ({
-      daySlug: m.legacy_day_slug,
-      lookSlug: m.look_slug,
-      name: m.moment_name,
-      category: "moment" as const,
-      momentSlug: m.moment_slug,
-    })),
-    ...PORTOFINO_ADDITIONAL_LOOKS.map((a) => ({
-      daySlug: a.legacy_day_slug,
-      lookSlug: a.look_slug,
-      name: a.canonical_name,
-      category: "additional" as const,
-    })),
-  ];
-  const moreLooks = canonicalEntries
-    .filter((e) => !(e.daySlug === card.legacy_day_slug && e.lookSlug === card.look_slug))
-    .map((e) => {
-      const l = lookbook.find((lb) => lb.daySlug === e.daySlug && lb.lookSlug === e.lookSlug);
-      return l ? { ...e, heroImage: l.heroImage } : null;
-    })
-    .filter((x): x is NonNullable<typeof x> => x !== null)
-    .slice(0, 4);
 
   return (
     <div className="pb-16 md:pb-20">
