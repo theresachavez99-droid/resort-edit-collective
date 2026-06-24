@@ -2,7 +2,7 @@ import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
+import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
 import poolLoungingShoppingAsset from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
@@ -43,7 +43,7 @@ const baseLooks: Array<{
 }> = [
   { tag: "Additional Look", title: "Beach Club + Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
   { tag: "Additional Look", title: "Pool Lounging + Shopping", image: poolLoungingShoppingAsset.url, day: "day-3", look: "look-a", momentSlug: "pool-lounging-shopping" },
-  { tag: "Additional Look", title: "Exploring the Harbor", image: editD1a, day: "day-3", look: "look-b", momentSlug: "exploring-the-harbor" },
+  { tag: "Additional Look", title: "Exploring the Harbor", image: exploringHarborAsset.url, day: "day-3", look: "look-b", momentSlug: "exploring-the-harbor" },
 ];
 
 const hotels = [

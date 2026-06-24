@@ -10,7 +10,8 @@ import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS } from "@/lib/portofino-spec";
 import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
-import editD1aAdditional from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
+import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
+const editD1aAdditional = exploringHarborAsset.url;
 
 const beachLongLunchDefault = getCanonicalDayImage("day-2", "destination_card");
 
