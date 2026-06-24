@@ -11,6 +11,11 @@ import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type LookProduct } 
 import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS } from "@/lib/portofino-spec";
+import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
+import { DAY_PATHS } from "@/components/PortofinoDayPage";
+import editD1aAdditional from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
+
+const beachLongLunchDefault = getCanonicalDayImage("day-2", "destination_card");
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -79,6 +84,23 @@ function MomentPage() {
   const heroImage = card.hero_banner_image;
   // "Other Moments in Portofino" — the six canonical moments minus this page.
   const otherMoments = PORTOFINO_MOMENT_DEFS.filter((m) => m.moment_slug !== slug);
+  const dayOverrides = useDayImageOverrides();
+  const beachLongLunchImage = dayOverrides["day-2"] ?? beachLongLunchDefault;
+  const siblingLooks =
+    slug === "pool-lounging-shopping"
+      ? [
+          {
+            title: "Beach Club + Long Lunch",
+            image: beachLongLunchImage,
+            to: DAY_PATHS["day-2"],
+          },
+          {
+            title: "Exploring the Harbor",
+            image: editD1aAdditional,
+            to: DAY_PATHS["day-3"],
+          },
+        ]
+      : [];
 
   // Resolve the canonical shoppable Look from the lookbook.
   const look = findLook(card.legacy_day_slug, card.look_slug);
@@ -206,6 +228,50 @@ function MomentPage() {
       </section>
 
       {/* OTHER MOMENTS IN PORTOFINO — unified canonical strip */}
+      {siblingLooks.length > 0 && (
+        <section className="bg-ivory border-t border-border/40">
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-16">
+            <div className="mb-8">
+              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
+                MORE WAYS TO DRESS FOR PORTOFINO
+              </span>
+              <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
+                Other Looks for the Day
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+              {siblingLooks.map((l) => (
+                <Link
+                  key={l.title}
+                  to={l.to}
+                  className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden bg-cream">
+                    <img
+                      src={l.image}
+                      alt={`${l.title} — Portofino additional look`}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                    <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+                      ADDITIONAL LOOK
+                    </span>
+                  </div>
+                  <div className="p-5 md:p-6 flex flex-col flex-1">
+                    <h4 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">
+                      {l.title}
+                    </h4>
+                    <span className="mt-4 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start">
+                      Get The Look <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {otherMoments.length > 0 && (
         <section className="bg-cream border-y border-border/40">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-16">
