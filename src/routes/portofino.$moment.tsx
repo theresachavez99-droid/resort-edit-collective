@@ -12,7 +12,6 @@ import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS } from "@/lib/portofino-spec";
 import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
-import { DAY_PATHS } from "@/components/PortofinoDayPage";
 import editD1aAdditional from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
 
 const beachLongLunchDefault = getCanonicalDayImage("day-2", "destination_card");
@@ -86,18 +85,22 @@ function MomentPage() {
   const otherMoments = PORTOFINO_MOMENT_DEFS.filter((m) => m.moment_slug !== slug);
   const dayOverrides = useDayImageOverrides();
   const beachLongLunchImage = dayOverrides["day-2"] ?? beachLongLunchDefault;
-  const siblingLooks =
+  type SiblingLook =
+    | { title: string; image: string; to: "/portofino/$day/$look"; params: { day: string; look: string } }
+    | { title: string; image: string; to: "/portofino/day-3"; params?: undefined };
+  const siblingLooks: SiblingLook[] =
     slug === "pool-lounging-shopping"
       ? [
           {
             title: "Beach Club + Long Lunch",
             image: beachLongLunchImage,
-            to: DAY_PATHS["day-2"],
+            to: "/portofino/$day/$look",
+            params: { day: "day-2", look: "look-a" },
           },
           {
             title: "Exploring the Harbor",
             image: editD1aAdditional,
-            to: DAY_PATHS["day-3"],
+            to: "/portofino/day-3",
           },
         ]
       : [];
@@ -243,7 +246,9 @@ function MomentPage() {
               {siblingLooks.map((l) => (
                 <Link
                   key={l.title}
+                  // @ts-expect-error — union of typed routes
                   to={l.to}
+                  params={l.params as never}
                   className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-cream">
