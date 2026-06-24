@@ -224,6 +224,83 @@ function PortofinoPage() {
         </div>
       </section>
 
+      {/* MORE WAYS TO DRESS FOR PORTOFINO — additional looks */}
+      <section className="bg-ivory border-t border-border/40">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-8 md:pt-12 pb-10 md:pb-14">
+          <div className="max-w-3xl mx-auto text-center mb-6 md:mb-8">
+            <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">More Ways To Dress For Portofino</span>
+            <h2 className="font-display text-2xl md:text-4xl tracking-[0.04em] mt-2 text-ink">
+              Additional outfit ideas
+            </h2>
+            <div className="mx-auto my-3 h-px w-12 bg-gold" />
+            <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
+              For beach clubs, harbor lunches, shopping afternoons, and sunset reservations.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+            {[
+              {
+                title: "Beach Club + Long Lunch",
+                image: lookBeachOverride,
+                to: DAY_PATHS["day-2"],
+                moment: undefined as string | undefined,
+              },
+              {
+                title: "Pool Lounging + Shopping",
+                image: poolLoungingShoppingAsset.url,
+                to: undefined,
+                moment: "pool-lounging-shopping",
+              },
+              {
+                title: "Exploring the Harbor",
+                image: editD1aAdditional,
+                to: DAY_PATHS["day-3"],
+                moment: undefined as string | undefined,
+              },
+            ].map((l) => (
+              <article
+                key={l.title}
+                className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden bg-cream/40">
+                  <img
+                    src={l.image}
+                    alt={`${l.title} — Portofino additional look`}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
+                  <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+                    ADDITIONAL LOOK
+                  </span>
+                </div>
+                <div className="p-5 md:p-6 flex flex-col flex-1">
+                  <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">
+                    {l.title}
+                  </h3>
+                  {l.moment ? (
+                    <Link
+                      to="/portofino/$moment"
+                      params={{ moment: l.moment }}
+                      className="mt-4 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start"
+                    >
+                      Get The Look →
+                    </Link>
+                  ) : (
+                    <Link
+                      to={l.to!}
+                      className="mt-4 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start"
+                    >
+                      Get The Look →
+                    </Link>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* PLAN YOUR PORTOFINO STAY — concierge layer */}
       <section className="bg-cream border-y border-border/40">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-10 md:py-14">
