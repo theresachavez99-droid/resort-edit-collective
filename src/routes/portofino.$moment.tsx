@@ -77,7 +77,6 @@ function MomentPage() {
 
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
-  const currentIdx = PORTOFINO_MOMENT_DEFS.findIndex((m) => m.moment_slug === slug);
   // "Other Moments in Portofino" — the six canonical moments minus this page.
   const otherMoments = PORTOFINO_MOMENT_DEFS.filter((m) => m.moment_slug !== slug);
 
@@ -324,6 +323,42 @@ function ShopCard({
 
   // Override item (free-form curated grid)
   const o = product as OverrideItem;
+  const isPlaceholderUrl = !o.url || o.url.startsWith("AFF-");
+  if (isPlaceholderUrl) {
+    return (
+      <div
+        className="flex flex-col bg-ivory border border-border/60 h-full"
+        aria-disabled="true"
+      >
+        <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
+          {o.image && (
+            <img
+              src={o.image}
+              alt={`${o.brand} ${o.title}`}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-contain p-4"
+            />
+          )}
+          {o.slotLabel && (
+            <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold bg-ivory/85 px-1.5 py-0.5">
+              {o.slotLabel}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col flex-1 p-4">
+          <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">{o.brand}</div>
+          <div className="font-serif italic text-ink/90 text-[0.92rem] leading-snug mt-1.5 line-clamp-2">
+            {o.title}
+          </div>
+          <div className="mt-auto pt-3">
+            <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink/55">
+              COMING SOON
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <a
       href={o.url}
@@ -359,39 +394,5 @@ function ShopCard({
         </div>
       </div>
     </a>
-  );
-}
-
-function LookCardBody({
-  name,
-  category,
-  image,
-}: {
-  name: string;
-  category: "moment" | "additional";
-  image: string;
-}) {
-  return (
-    <>
-      <div className="relative aspect-[3/4] overflow-hidden bg-cream">
-        <img
-          src={image}
-          alt={name}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-        />
-      </div>
-      <div className="p-4">
-        <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
-          {category === "moment" ? "Portofino Moment" : "Additional Look"}
-        </span>
-        <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
-          {name}
-        </h4>
-        <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
-          Shop This Look <ArrowRight className="w-3 h-3" />
-        </span>
-      </div>
-    </>
   );
 }
