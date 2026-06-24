@@ -23,6 +23,7 @@ import sunsetViewsHero from "@/assets/uploads/portofino/sunset-views-harbor-gold
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
 import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
+import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-capri.jpg.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
@@ -147,10 +148,34 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
 ];
 
 export function getPortofinoMomentDef(slug: string): PortofinoMomentDef | undefined {
-  return PORTOFINO_MOMENT_DEFS.find((m) => m.moment_slug === slug);
+  return (
+    PORTOFINO_MOMENT_DEFS.find((m) => m.moment_slug === slug) ??
+    PORTOFINO_ADDITIONAL_MOMENT_DEFS.find((m) => m.moment_slug === slug)
+  );
 }
 
 export const PORTOFINO_MOMENT_SLUGS = PORTOFINO_MOMENT_DEFS.map((m) => m.moment_slug);
+
+/**
+ * Additional moment defs — surfaced via `/portofino/$moment` but not part of
+ * the canonical Six Moments grid. Currently: Pool Lounging + Shopping.
+ */
+export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
+  {
+    moment_slug: "pool-lounging-shopping",
+    archetype_slug: "pool-lounging-shopping",
+    moment_name: "Pool Lounging + Shopping",
+    narrative:
+      "Relaxed poolside hours, boutique discoveries, and an afternoon that drifts effortlessly into town.",
+    moment_card_image: poolLoungingShoppingImage.url,
+    hero_banner_image: poolLoungingShoppingImage.url,
+    outfit_image: poolLoungingShoppingImage.url,
+    legacy_day: "/portofino/day-3",
+    legacy_look_title: "Poolside",
+    legacy_day_slug: "day-3",
+    look_slug: "look-a",
+  },
+];
 
 /**
  * Three "Additional Looks" — secondary canonical Portofino outfits that
