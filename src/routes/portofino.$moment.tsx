@@ -5,10 +5,9 @@ import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import {
   getPortofinoMomentDef,
   PORTOFINO_MOMENT_DEFS,
-  PORTOFINO_ADDITIONAL_LOOKS,
 } from "@/lib/portofino-moment-fallbacks";
 import { absoluteUrl } from "@/lib/site";
-import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, lookbook, type LookProduct } from "@/data/lookbook";
+import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type LookProduct } from "@/data/lookbook";
 import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS } from "@/lib/portofino-spec";
@@ -78,10 +77,8 @@ function MomentPage() {
 
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
-  const currentIdx = PORTOFINO_MOMENT_DEFS.findIndex((m) => m.moment_slug === slug);
-  const relatedMoments = PORTOFINO_MOMENT_DEFS.filter(
-    (m) => m.moment_slug !== slug,
-  ).slice(0, 3);
+  // "Other Moments in Portofino" — the six canonical moments minus this page.
+  const otherMoments = PORTOFINO_MOMENT_DEFS.filter((m) => m.moment_slug !== slug);
 
   // Resolve the canonical shoppable Look from the lookbook.
   const look = findLook(card.legacy_day_slug, card.look_slug);
@@ -105,39 +102,6 @@ function MomentPage() {
       kind: "category" as const,
     }));
   }
-
-  // "More Portofino Looks" — only the canonical taxonomy (Six Moments +
-  // Three Additional Looks). Editorial day-page names like "Boarding the
-  // Boat" never reach the user-facing rail.
-  const canonicalEntries: Array<{
-    daySlug: typeof card.legacy_day_slug;
-    lookSlug: typeof card.look_slug;
-    name: string;
-    category: "moment" | "additional";
-    momentSlug?: string;
-  }> = [
-    ...PORTOFINO_MOMENT_DEFS.map((m) => ({
-      daySlug: m.legacy_day_slug,
-      lookSlug: m.look_slug,
-      name: m.moment_name,
-      category: "moment" as const,
-      momentSlug: m.moment_slug,
-    })),
-    ...PORTOFINO_ADDITIONAL_LOOKS.map((a) => ({
-      daySlug: a.legacy_day_slug,
-      lookSlug: a.look_slug,
-      name: a.canonical_name,
-      category: "additional" as const,
-    })),
-  ];
-  const moreLooks = canonicalEntries
-    .filter((e) => !(e.daySlug === card.legacy_day_slug && e.lookSlug === card.look_slug))
-    .map((e) => {
-      const l = lookbook.find((lb) => lb.daySlug === e.daySlug && lb.lookSlug === e.lookSlug);
-      return l ? { ...e, heroImage: l.heroImage } : null;
-    })
-    .filter((x): x is NonNullable<typeof x> => x !== null)
-    .slice(0, 4);
 
   return (
     <div className="pb-16 md:pb-20">
@@ -241,78 +205,44 @@ function MomentPage() {
         </div>
       </section>
 
-      {/* MORE {MOMENT} LOOKS — directly shoppable, no extra navigation */}
-      {moreLooks.length > 0 && (
+      {/* OTHER MOMENTS IN PORTOFINO — unified canonical strip */}
+      {otherMoments.length > 0 && (
         <section className="bg-cream border-y border-border/40">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-16">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                  More Portofino Looks
-                </span>
-                <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                  Other Canonical Looks
-                </h3>
-              </div>
+            <div className="mb-8">
+              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
+                MORE PORTOFINO LOOKS
+              </span>
+              <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
+                Other Moments in Portofino
+              </h3>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {moreLooks.map((l) => (
-                l.category === "moment" && l.momentSlug ? (
-                  <Link
-                    key={`${l.daySlug}-${l.lookSlug}`}
-                    to="/portofino/$moment"
-                    params={{ moment: l.momentSlug }}
-                    className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
-                  >
-                    <LookCardBody name={l.name} category={l.category} image={l.heroImage} />
-                  </Link>
-                ) : (
-                  <Link
-                    key={`${l.daySlug}-${l.lookSlug}`}
-                    to="/portofino/$day/$look"
-                    params={{ day: l.daySlug, look: l.lookSlug }}
-                    className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
-                  >
-                    <LookCardBody name={l.name} category={l.category} image={l.heroImage} />
-                  </Link>
-                )
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* CONTINUE EXPLORING PORTOFINO — sibling moment cards */}
-      {relatedMoments.length > 0 && (
-        <section className="bg-ivory">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-20 text-center">
-            <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-              Continue Exploring Portofino
-            </span>
-            <div className="mx-auto mt-3 h-px w-12 bg-gold/70" />
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedMoments.map((m) => (
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+              {otherMoments.map((m) => (
                 <Link
                   key={m.moment_slug}
                   to="/portofino/$moment"
                   params={{ moment: m.moment_slug }}
-                  className="group flex flex-col bg-cream/40 border border-border/40 hover:border-gold transition-colors text-left"
+                  className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-cream">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-cream">
                     <img
                       src={m.moment_card_image}
                       alt={m.moment_name}
                       loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                     />
                   </div>
-                  <div className="p-5">
-                    <h4 className="font-display text-lg md:text-xl tracking-[0.03em] text-ink group-hover:text-gold transition-colors">
+                  <div className="p-4">
+                    <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
+                      Portofino Moment
+                    </span>
+                    <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
                       {m.moment_name}
                     </h4>
-                    <p className="font-serif italic text-[0.9rem] text-ink/65 leading-relaxed mt-2 line-clamp-2">
-                      {m.narrative}
-                    </p>
+                    <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
+                      VIEW MOMENT <ArrowRight className="w-3 h-3" />
+                    </span>
                   </div>
                 </Link>
               ))}
@@ -393,6 +323,42 @@ function ShopCard({
 
   // Override item (free-form curated grid)
   const o = product as OverrideItem;
+  const isPlaceholderUrl = !o.url || o.url.startsWith("AFF-");
+  if (isPlaceholderUrl) {
+    return (
+      <div
+        className="flex flex-col bg-ivory border border-border/60 h-full"
+        aria-disabled="true"
+      >
+        <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
+          {o.image && (
+            <img
+              src={o.image}
+              alt={`${o.brand} ${o.title}`}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-contain p-4"
+            />
+          )}
+          {o.slotLabel && (
+            <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold bg-ivory/85 px-1.5 py-0.5">
+              {o.slotLabel}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col flex-1 p-4">
+          <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">{o.brand}</div>
+          <div className="font-serif italic text-ink/90 text-[0.92rem] leading-snug mt-1.5 line-clamp-2">
+            {o.title}
+          </div>
+          <div className="mt-auto pt-3">
+            <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink/55">
+              COMING SOON
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <a
       href={o.url}
@@ -428,39 +394,5 @@ function ShopCard({
         </div>
       </div>
     </a>
-  );
-}
-
-function LookCardBody({
-  name,
-  category,
-  image,
-}: {
-  name: string;
-  category: "moment" | "additional";
-  image: string;
-}) {
-  return (
-    <>
-      <div className="relative aspect-[3/4] overflow-hidden bg-cream">
-        <img
-          src={image}
-          alt={name}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-        />
-      </div>
-      <div className="p-4">
-        <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
-          {category === "moment" ? "Portofino Moment" : "Additional Look"}
-        </span>
-        <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
-          {name}
-        </h4>
-        <span className="mt-2 inline-flex items-center gap-1.5 eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60 group-hover:text-gold">
-          Shop This Look <ArrowRight className="w-3 h-3" />
-        </span>
-      </div>
-    </>
   );
 }

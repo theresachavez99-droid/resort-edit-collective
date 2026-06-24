@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-label="Gold Hoop Earrings">
+<rect width="420" height="520" fill="#fbf8ef"/>
+<rect x="24" y="24" width="372" height="472" fill="#fffdf7" stroke="#d6c49a" stroke-width="2"/>
+<g transform="translate(0 10)"><circle cx="160" cy="260" r="58" fill="none" stroke="#c89b3a" stroke-width="12"/><circle cx="260" cy="260" r="58" fill="none" stroke="#c89b3a" stroke-width="12"/><circle cx="160" cy="202" r="4" fill="#9a751f"/><circle cx="260" cy="202" r="4" fill="#9a751f"/></g>
+<text x="210" y="426" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#2b241c">Gold Hoop Earrings</text>
+<text x="210" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" letter-spacing="3" fill="#b9995a">REVOLVE</text>
+</svg>

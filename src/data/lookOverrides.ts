@@ -33,6 +33,13 @@ import imgPalomaBoater from "@/assets/products/lack-of-color-paloma-sun-boater.s
 import imgForgetMeKnot from "@/assets/products/oradina-forget-me-knot-studs.svg";
 import imgRemiBangle from "@/assets/products/jenny-bird-remi-hinge-bangle.svg";
 
+import imgPoolZella from "@/assets/products/alexandra-miro-zella-red-capri.svg";
+import imgPoolJaimee from "@/assets/products/alexandra-miro-jaimee-skirt-red-capri.svg";
+import imgPoolDaphnae from "@/assets/products/ancient-greek-daphnae-sandal.svg";
+import imgPoolAsa from "@/assets/products/cult-gaia-asa-xl-tote-natural.svg";
+import imgPoolLeSpecs from "@/assets/products/le-specs-tortoise-sunglasses.svg";
+import imgPoolHoops from "@/assets/products/gold-hoops-revolve.svg";
+
 export type OverrideItem = {
   slotLabel: string;
   brand: string;
@@ -190,6 +197,52 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
         title: "Paloma Sun Straw Boater Hat",
         url: "https://lackofcolor.com/products/paloma-sun-hat",
         image: imgPalomaBoater,
+      },
+    ],
+  },
+  "day-3/look-a": {
+    main: [
+      {
+        slotLabel: "SWIMSUIT",
+        brand: "Alexandra Miro",
+        title: "Zella Swimsuit — Red Capri",
+        url: "AFF-POOL-SWIMSUIT",
+        image: imgPoolZella,
+      },
+      {
+        slotLabel: "SKIRT",
+        brand: "Alexandra Miro",
+        title: "Jaimee Skirt — Red Capri",
+        url: "AFF-POOL-SKIRT",
+        image: imgPoolJaimee,
+      },
+      {
+        slotLabel: "SHOES",
+        brand: "Ancient Greek Sandals",
+        title: "Daphnae Sandal",
+        url: "AFF-POOL-SHOES",
+        image: imgPoolDaphnae,
+      },
+      {
+        slotLabel: "BAG",
+        brand: "Cult Gaia",
+        title: "Asa XL Tote — Natural",
+        url: "AFF-POOL-BAG",
+        image: imgPoolAsa,
+      },
+      {
+        slotLabel: "SUNGLASSES",
+        brand: "Le Specs",
+        title: "Tortoise Sunglasses",
+        url: "AFF-POOL-SUNGLASSES",
+        image: imgPoolLeSpecs,
+      },
+      {
+        slotLabel: "JEWELRY",
+        brand: "Revolve",
+        title: "Gold Hoop Earrings",
+        url: "AFF-POOL-JEWELRY",
+        image: imgPoolHoops,
       },
     ],
   },
