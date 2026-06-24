@@ -22,6 +22,7 @@ import lillaLemonBeachClub from "@/assets/uploads/lilla/lilla-lemon-beach-club.p
 import cira9 from "@/assets/uploads/cira/cira-9.png.asset.json";
 import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
+import poolLoungingShopping from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-splendido.jpg.asset.json";
 import { createContext, createElement, useContext, type ReactNode } from "react";
 
 export type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
@@ -47,7 +48,7 @@ export type DayImageSurface =
 export const CANONICAL_DAY_IMAGES: Record<DaySlug, string> = {
   "day-1": yachtDay1HeroAsset.url,
   "day-2": lillaLemonBeachClub.url,
-  "day-3": cira9.url,
+  "day-3": poolLoungingShopping.url,
   "day-4": cira10.url,
   "day-5": cira13.url,
 };
