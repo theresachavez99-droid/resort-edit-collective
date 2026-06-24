@@ -11,10 +11,6 @@
  * Bypasses the image-integrity gate so newly-imported products (no photos
  * yet) participate in the audit. Does NOT write or publish.
  */
-import { register } from "node:module";
-import { pathToFileURL } from "node:url";
-register("ts-node/esm", pathToFileURL("./"));
-
 const { PRODUCT_LIBRARY } = await import("../src/data/productLibrary.ts");
 const { LOOK_DNA } = await import("../src/data/styleDNA.ts");
 const { RIVIERA_DINNER_LIBRARY } = await import("../src/data/rivieraDinnerLibrary.ts");
