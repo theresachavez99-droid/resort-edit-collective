@@ -72,9 +72,12 @@ export const Route = createFileRoute("/portofino/$day/$look")({
   },
   head: ({ params }) => {
     const isBeachClub = params.day === "day-2" && params.look === "look-a";
+    const isHarbor = params.day === "day-3" && params.look === "look-b";
     const title = isBeachClub
       ? "Beach Club + Long Lunch in Portofino — Resort Edit"
-      : "Shop the Full Look — Portofino | Resort Edit | Dressed for the destination";
+      : isHarbor
+        ? "Exploring the Harbor in Portofino — Resort Edit"
+        : "Shop the Full Look — Portofino | Resort Edit | Dressed for the destination";
     return {
       meta: [
         { title },
@@ -102,7 +105,12 @@ function ViewFullLookPage() {
   if (!lookData) throw notFound();
 
   const isBeachClub = day === "day-2" && look === "look-a";
-  const displayTitle = isBeachClub ? "Beach Club + Long Lunch" : lookData.title;
+  const isHarbor = day === "day-3" && look === "look-b";
+  const displayTitle = isBeachClub
+    ? "Beach Club + Long Lunch"
+    : isHarbor
+      ? "Exploring the Harbor"
+      : lookData.title;
 
   const editorial = lookEditorialFor(day, look);
   const alternatives = alternativesFor(day, look);
@@ -163,8 +171,8 @@ function ViewFullLookPage() {
               5 Days in Portofino
             </Link>
             <ChevronRight className="w-3 h-3 text-ink/30" />
-            {isBeachClub ? (
-              <span className="text-gold uppercase tracking-[0.18em]">Beach Club + Long Lunch</span>
+            {isBeachClub || isHarbor ? (
+              <span className="text-gold uppercase tracking-[0.18em]">{displayTitle}</span>
             ) : (
               <>
                 <span className="text-ink/65">{lookData.day}</span>
