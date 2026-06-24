@@ -2,7 +2,6 @@ import { Ship, Umbrella, Camera, Compass } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import editD2b from "@/assets/generated/resort-edit/edit-d2-b-card-thumb.jpg";
 import editD1a from "@/assets/generated/resort-edit/edit-d1-a-card-thumb.jpg";
 import poolLoungingShoppingAsset from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-capri.jpg.asset.json";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
