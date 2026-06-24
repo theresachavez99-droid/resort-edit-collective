@@ -256,10 +256,20 @@ const RAW_PRODUCTS: Omit<ProductDNA, "channel">[] = [
   },
 ];
 
-export const PRODUCT_LIBRARY: ProductDNA[] = RAW_PRODUCTS.map((p) => ({
+import { RIVIERA_DINNER_LIBRARY } from "@/data/rivieraDinnerLibrary";
+
+const SEEDED_PRODUCTS: ProductDNA[] = RAW_PRODUCTS.map((p) => ({
   ...p,
   channel: channelFor(p.retailer),
 }));
+
+// Riviera Dinner inventory expansion (50 products from founder library).
+// Items without product imagery are gated out of live rails by the
+// image-integrity filter; they remain visible to the audit pipeline.
+export const PRODUCT_LIBRARY: ProductDNA[] = [
+  ...SEEDED_PRODUCTS,
+  ...RIVIERA_DINNER_LIBRARY,
+];
 
 /**
  * Resolve the best purchase URL using the inventory health fallback chain:
