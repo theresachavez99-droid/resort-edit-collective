@@ -463,10 +463,19 @@ function MomentCard({
   dayLabel: string;
   lookLetter: "A" | "B" | "C";
 }) {
+  // Looks migrated to named-slug moment pages.
+  const momentOverride =
+    daySlug === "day-3" && lookSlug === "look-a"
+      ? "pool-lounging-shopping"
+      : daySlug === "day-3" && lookSlug === "look-b"
+        ? "exploring-the-harbor"
+        : null;
+  const linkProps = momentOverride
+    ? ({ to: "/portofino/$moment", params: { moment: momentOverride } } as const)
+    : ({ to: "/portofino/$day/$look", params: { day: daySlug, look: lookSlug } } as const);
   return (
     <Link
-      to="/portofino/$day/$look"
-      params={{ day: daySlug, look: lookSlug }}
+      {...linkProps}
       className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
     >
       {/* Image dominates ~75% of card height */}
