@@ -1121,12 +1121,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
     // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
     if (missingRequiredSlots.length > 0) {
+      const slotEffectivenessGated = buildSlotEffectiveness(slotResults, [], candidatesById);
       return {
         ok: true as const,
         ranAt: new Date().toISOString(),
         brief,
         slotCoverage,
         registryCoverage,
+        slotEffectiveness: slotEffectivenessGated,
         candidates: [...candidatesById.values()],
         looks: [],
         assemblyError: `Insufficient candidates for complete look generation. Required slots with zero candidates: ${missingRequiredSlots.join(", ")}.`,
@@ -1246,4 +1248,107 @@ function aggregateTelemetry(results: SlotDiscoveryResult[], totalCandidates: num
       candidatesAccepted: expansionAccepted,
     },
   };
+}
+
+// ──────────────────────────────────────────────────────────────
+// Slot Effectiveness Report
+//
+// Per-slot read of HOW WELL discovery served assembly:
+//   - core brands searched / expansion activated
+//   - retailers searched / represented
+//   - candidates found / accepted / rejected
+//   - final products used (count of slot fills in complete looks)
+//   - brand & retailer diversity
+//   - strong / adequate / weak rating
+// ──────────────────────────────────────────────────────────────
+
+type Effectiveness = "strong" | "adequate" | "weak";
+
+function rateEffectiveness(args: {
+  required: boolean;
+  finalUsed: number;
+  uniqueBrands: number;
+  uniqueRetailers: number;
+  shortfall: number;
+}): Effectiveness {
+  const { required, finalUsed, uniqueBrands, uniqueRetailers, shortfall } = args;
+  // A slot is "weak" if discovery fell short OR final looks lean on a
+  // single brand / single retailer (no real choice for the stylist).
+  if (shortfall > 0) return "weak";
+  if (uniqueBrands < 2) return "weak";
+  if (required && finalUsed === 0) return "weak";
+  if (uniqueBrands >= 4 && uniqueRetailers >= 3) return "strong";
+  return "adequate";
+}
+
+function buildSlotEffectiveness(
+  results: SlotDiscoveryResult[],
+  looks: AssembledLook[],
+  candidatesById: Map<string, SlotCandidate>,
+) {
+  // Count how many candidates per slot ended up in a COMPLETE look.
+  const finalUsedBySlot = new Map<string, number>();
+  const finalBrandsBySlot = new Map<string, Set<string>>();
+  const finalRetailersBySlot = new Map<string, Set<string>>();
+  for (const look of looks) {
+    if (!look.complete) continue;
+    for (const s of look.slots) {
+      const c = candidatesById.get(s.candidateId);
+      if (!c) continue;
+      finalUsedBySlot.set(s.slot, (finalUsedBySlot.get(s.slot) ?? 0) + 1);
+      if (!finalBrandsBySlot.has(s.slot)) finalBrandsBySlot.set(s.slot, new Set());
+      if (!finalRetailersBySlot.has(s.slot)) finalRetailersBySlot.set(s.slot, new Set());
+      finalBrandsBySlot.get(s.slot)!.add(c.brand);
+      finalRetailersBySlot.get(s.slot)!.add(c.retailer);
+    }
+  }
+
+  return results.map((r) => {
+    const accepted = r.candidates.length;
+    const rejected = Object.values(r.rejections).reduce((a, b) => a + b, 0);
+    const candidateBrands = new Set(r.candidates.map((c) => c.brand));
+    const candidateRetailers = new Set(r.candidates.map((c) => c.retailer));
+    const finalUsed = finalUsedBySlot.get(r.slot) ?? 0;
+    const finalBrands = finalBrandsBySlot.get(r.slot)?.size ?? 0;
+    const finalRetailers = finalRetailersBySlot.get(r.slot)?.size ?? 0;
+    const rating = rateEffectiveness({
+      required: r.required,
+      finalUsed,
+      uniqueBrands: candidateBrands.size,
+      uniqueRetailers: candidateRetailers.size,
+      shortfall: r.shortfall,
+    });
+    const expansionTriggered = r.expansion?.triggered ?? false;
+    const expansionEligible = EXPANDABLE_SLOTS.has(r.slot);
+    return {
+      slot: r.slot,
+      label: r.label,
+      required: r.required,
+      // Brand pools.
+      coreBrandsSearched: r.brandsConsidered.length,
+      coreBrands: r.brandsConsidered,
+      expansionEligible,
+      expansionActivated: expansionTriggered,
+      expansionBrandsSearched: r.expansion?.brandsConsidered.length ?? 0,
+      // Retailer pools.
+      retailersPerBrand: r.retailersPerBrand,
+      retailersSearched: r.retailersQueried.length,
+      retailersSearchedList: r.retailersQueried,
+      retailersRepresentedCount: r.retailersRepresented.length,
+      retailersRepresented: r.retailersRepresented,
+      // Candidate flow.
+      candidatesFound: r.rawResults,
+      candidatesAccepted: accepted,
+      candidatesRejected: rejected,
+      acceptanceRate:
+        r.rawResults > 0 ? Math.round((accepted / r.rawResults) * 1000) / 1000 : 0,
+      // Final outcome.
+      finalProductsUsed: finalUsed,
+      brandDiversity: candidateBrands.size,
+      retailerDiversity: candidateRetailers.size,
+      finalBrandDiversity: finalBrands,
+      finalRetailerDiversity: finalRetailers,
+      coverage: rating,
+    };
+  });
 }
