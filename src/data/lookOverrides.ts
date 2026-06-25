@@ -56,20 +56,6 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
   "day-1/look-c": {
     main: [
       {
-        slotLabel: "DRESS",
-        brand: "Resort Edit",
-        title: "Ivory Crochet Knit Midi Dress",
-        url: "AFF-HARBORAPERITIVO-DRESS",
-        image: "",
-      },
-      {
-        slotLabel: "SHOES",
-        brand: "Resort Edit",
-        title: "Tan Leather Flat Sandals",
-        url: "AFF-HARBORAPERITIVO-SHOES",
-        image: "",
-      },
-      {
         slotLabel: "EARRINGS",
         brand: "Revolve",
         title: "Gold Hoop Earrings",
