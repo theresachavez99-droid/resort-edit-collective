@@ -28,6 +28,167 @@ export const Route = createFileRoute("/admin/collections/$id")({
 
 const STORAGE_KEY = "admin_yacht_pilot_pw";
 const COLLECTION_STATUSES = ["draft", "in_review", "approved", "rejected"] as const;
+const EDITORIAL_QUESTIONS = [
+  { id: "authentic", label: "Authentic to the destination?" },
+  { id: "activity", label: "Matches the activity?" },
+  { id: "publish", label: "Would I publish this?" },
+  { id: "distinct", label: "Visually distinct from other looks?" },
+  { id: "strengthens", label: "Strengthens the overall collection?" },
+] as const;
+type EditorialAnswer = "yes" | "no" | null;
+type LookAnswers = Record<string, EditorialAnswer>;
+const answersStorageKey = (collectionId: string) =>
+  `admin_editorial_answers:${collectionId}`;
+
+function loadAnswers(collectionId: string): Record<string, LookAnswers> {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(answersStorageKey(collectionId)) ?? "{}");
+  } catch {
+    return {};
+  }
+}
+function saveAnswers(collectionId: string, all: Record<string, LookAnswers>) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(answersStorageKey(collectionId), JSON.stringify(all));
+}
+
+type Slot = SlotData & {
+  metadata?: Record<string, unknown> | null;
+  reasoning?: string | null;
+};
+type Look = {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  status: string;
+  pinned: boolean;
+  reasoning?: Record<string, unknown> | null;
+  scoring?: Record<string, unknown> | null;
+  metadata?: Record<string, unknown> | null;
+  slots: Slot[];
+};
+
+function pickString(obj: unknown, key: string): string | null {
+  if (!obj || typeof obj !== "object") return null;
+  const v = (obj as Record<string, unknown>)[key];
+  return typeof v === "string" && v ? v : null;
+}
+function pickNumber(obj: unknown, key: string): number | null {
+  if (!obj || typeof obj !== "object") return null;
+  const v = (obj as Record<string, unknown>)[key];
+  return typeof v === "number" ? v : null;
+}
+function pickStringArray(obj: unknown, key: string): string[] {
+  if (!obj || typeof obj !== "object") return [];
+  const v = (obj as Record<string, unknown>)[key];
+  return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+}
+
+function lookEditorialScore(look: Look): number | null {
+  const explicit =
+    pickNumber(look.scoring, "editorial") ??
+    pickNumber(look.metadata, "editorialScore");
+  if (explicit != null) return explicit;
+  const slotScores = look.slots
+    .map((s) => pickNumber(s.metadata, "editorialScore"))
+    .filter((n): n is number => n != null);
+  if (!slotScores.length) return null;
+  return slotScores.reduce((a, b) => a + b, 0) / slotScores.length;
+}
+function lookCompleteness(look: Look): { filled: number; total: number } {
+  const total = look.slots.length;
+  const filled = look.slots.filter((s) => s.brand && s.product_name).length;
+  return { filled, total };
+}
+function lookBrandDiversity(look: Look): number {
+  const filled = look.slots.filter((s) => s.brand);
+  if (!filled.length) return 0;
+  const unique = new Set(filled.map((s) => (s.brand ?? "").toLowerCase())).size;
+  return unique / filled.length;
+}
+function lookStyleDNA(look: Look): string[] {
+  const fromMeta = pickStringArray(look.metadata, "styleDNA");
+  if (fromMeta.length) return fromMeta;
+  const themes = pickStringArray(look.metadata, "themes");
+  if (themes.length) return themes;
+  const palettes = look.slots
+    .map((s) => pickString(s.metadata, "palette"))
+    .filter((x): x is string => !!x);
+  const silhouettes = look.slots
+    .map((s) => pickString(s.metadata, "silhouette"))
+    .filter((x): x is string => !!x);
+  return Array.from(new Set([...palettes, ...silhouettes])).slice(0, 6);
+}
+
+function collectionInsights(looks: Look[]) {
+  const allSlots = looks.flatMap((l) => l.slots);
+  const filled = allSlots.filter((s) => s.brand && s.product_name);
+  const brands = new Set(filled.map((s) => (s.brand ?? "").toLowerCase()));
+  const retailers = new Set(filled.map((s) => (s.retailer ?? "").toLowerCase()).filter(Boolean));
+  const palettes = filled
+    .map((s) => pickString(s.metadata, "palette"))
+    .filter((x): x is string => !!x);
+  const silhouettes = filled
+    .map((s) => pickString(s.metadata, "silhouette"))
+    .filter((x): x is string => !!x);
+  const paletteSet = new Set(palettes.map((p) => p.toLowerCase()));
+  const silhouetteSet = new Set(silhouettes.map((s) => s.toLowerCase()));
+
+  const editorialScores = looks
+    .map(lookEditorialScore)
+    .filter((n): n is number => n != null);
+  const avgEditorial = editorialScores.length
+    ? editorialScores.reduce((a, b) => a + b, 0) / editorialScores.length
+    : null;
+  const spread = editorialScores.length
+    ? Math.max(...editorialScores) - Math.min(...editorialScores)
+    : 0;
+
+  const totalSlots = allSlots.length;
+  const completeness = totalSlots ? filled.length / totalSlots : 0;
+
+  // Activity authenticity: share of slots whose brand metadata included activity tag.
+  // Proxy: filled-slot ratio combined with brand diversity.
+  const brandDiv = filled.length ? brands.size / filled.length : 0;
+  const retailerDiv = filled.length ? retailers.size / filled.length : 0;
+  // Cohesion: high when palettes/silhouettes overlap across looks but not collapsed to 1.
+  const cohesion = filled.length
+    ? 1 -
+      Math.abs(
+        (paletteSet.size + silhouetteSet.size) / (palettes.length + silhouettes.length || 1) -
+          0.5,
+      ) * 2
+    : 0;
+
+  return {
+    looks: looks.length,
+    filled: filled.length,
+    totalSlots,
+    completeness,
+    brands: brands.size,
+    retailers: retailers.size,
+    brandDiversity: brandDiv,
+    retailerDiversity: retailerDiv,
+    palettes: paletteSet.size,
+    silhouettes: silhouetteSet.size,
+    avgEditorial,
+    editorialSpread: spread,
+    cohesion: Math.max(0, Math.min(1, cohesion)),
+  };
+}
+
+function pct(n: number): string {
+  return `${Math.round(n * 100)}%`;
+}
+function scoreFmt(n: number | null): string {
+  return n == null ? "—" : n.toFixed(2);
+}
+function ratingFromPct(n: number): { label: string; cls: string } {
+  if (n >= 0.75) return { label: "Strong", cls: "bg-green-100 text-green-800" };
+  if (n >= 0.45) return { label: "Adequate", cls: "bg-amber-100 text-amber-900" };
+  return { label: "Weak", cls: "bg-red-100 text-red-800" };
+}
 
 function CollectionDetail() {
   const { id } = Route.useParams();
