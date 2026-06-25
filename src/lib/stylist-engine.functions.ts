@@ -1343,6 +1343,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             silhouette: c?.silhouette ?? null,
             palette: c?.palette ?? null,
             editorialScore: c?.editorialScore ?? null,
+            commerceSource: c?.commerceSource ?? null,
           };
         }),
       })),
