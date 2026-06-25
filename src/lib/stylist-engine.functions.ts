@@ -620,6 +620,12 @@ async function discoverForSlot(args: {
             silhouette,
             brandTier: brand.tier,
           });
+          // v4 — gate on approved commerce source before accepting.
+          const cs = resolveCommerceSource(brand, matchedRetailer);
+          if (!cs.approved) {
+            bump("no_approved_commerce_source");
+            continue;
+          }
           candidates.push({
             id: `c${(idCounter.n++).toString().padStart(4, "0")}`,
             slot: spec.slot,
@@ -635,6 +641,7 @@ async function discoverForSlot(args: {
             editorialScore: score,
             matchedQuery: tpl,
             source,
+            commerceSource: cs.kind,
           });
         }
       }
