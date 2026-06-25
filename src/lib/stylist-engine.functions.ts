@@ -346,6 +346,12 @@ type SlotDiscoveryResult = {
   rawResults: number;
   rejections: Record<string, number>;
   shortfall: number; // how many below targetMin (0 if covered)
+  /** Effective retailers/brand setting used (slot-specific override). */
+  retailersPerBrand: number;
+  /** Distinct retailers actually queried across all brands in this slot. */
+  retailersQueried: string[];
+  /** Distinct retailers present in accepted candidates. */
+  retailersRepresented: string[];
   /** Tier-2 controlled accessory expansion telemetry (null when not eligible / not triggered). */
   expansion?: {
     triggered: boolean;
@@ -355,6 +361,8 @@ type SlotDiscoveryResult = {
     rawResults: number;
     accepted: number;
     rejections: Record<string, number>;
+    retailersQueried: string[];
+    retailersRepresented: string[];
   } | null;
 };
 
