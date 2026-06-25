@@ -222,6 +222,11 @@ export type EngineBrand = {
   categories: string[];
   commerceSources: CommerceSourceEntry[];
   preferredCommerceSource: CommerceSourceKind;
+  /**
+   * v5 — context-aware affinity map keyed by "<destination>:<activity>".
+   * Replaces static tier as the primary ranking signal.
+   */
+  editorialAffinity: Record<string, number>;
 };
 
 function resolveCommerceSource(
@@ -252,18 +257,57 @@ function resolveCommerceSource(
   return { kind: "affiliate_retailer", approved: false };
 }
 
-export async function loadEngineBrands(activity: string): Promise<EngineBrand[]> {
+/**
+ * v5 — resolve the Editorial Affinity score for a brand in a specific
+ * destination + activity context. Falls back to:
+ *   1. exact "<destination>:<activity>" key
+ *   2. activity-only average across the brand's recorded contexts
+ *   3. legacy-tier inferred baseline (luxury=70, mid-luxe=55)
+ *   4. 50 (neutral)
+ */
+export function affinityFor(
+  brand: Pick<EngineBrand, "editorialAffinity" | "tier">,
+  destination: string,
+  activity: string,
+): number {
+  const map = brand.editorialAffinity ?? {};
+  const dKey = destination.trim().toLowerCase().replace(/\s+/g, "-");
+  const aKey = activity.trim().toLowerCase().replace(/\s+/g, "-");
+  const exact = map[`${dKey}:${aKey}`];
+  if (typeof exact === "number") return exact;
+  // Activity match across any destination.
+  const activityMatches = Object.entries(map)
+    .filter(([k]) => k.endsWith(`:${aKey}`))
+    .map(([, v]) => v);
+  if (activityMatches.length)
+    return Math.round(activityMatches.reduce((a, b) => a + b, 0) / activityMatches.length);
+  // Destination match across any activity (weaker signal).
+  const destMatches = Object.entries(map)
+    .filter(([k]) => k.startsWith(`${dKey}:`))
+    .map(([, v]) => v);
+  if (destMatches.length)
+    return Math.round((destMatches.reduce((a, b) => a + b, 0) / destMatches.length) * 0.85);
+  // Legacy fallback while affinity data is being seeded.
+  if (brand.tier === "luxury") return 70;
+  if (brand.tier === "mid-luxe") return 55;
+  return 50;
+}
+
+export async function loadEngineBrands(
+  activity: string,
+  destination = "Portofino",
+): Promise<EngineBrand[]> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("brands")
     .select(
-      "id,name,slug,tier,categories,activities,commerce_sources,preferred_commerce_source,destination_strength",
+      "id,name,slug,tier,categories,activities,commerce_sources,preferred_commerce_source,destination_strength,editorial_affinity",
     )
     .eq("status", "approved")
     .contains("activities", [activity])
     .order("name", { ascending: true });
   if (error) throw new Error(error.message);
-  return (data ?? []).map((b) => ({
+  const mapped: EngineBrand[] = (data ?? []).map((b) => ({
     name: b.name as string,
     slug: b.slug as string,
     tier: (b.tier as string | null) ?? null,
@@ -274,7 +318,13 @@ export async function loadEngineBrands(activity: string): Promise<EngineBrand[]>
     preferredCommerceSource:
       (((b as { preferred_commerce_source?: string }).preferred_commerce_source as CommerceSourceKind) ??
         "affiliate_retailer"),
+    editorialAffinity: ((b as { editorial_affinity?: Record<string, number> | null })
+      .editorial_affinity ?? {}) as Record<string, number>,
   }));
+  // v5 — sort by editorial affinity for this destination + activity so
+  // discovery batches lead with the most context-aligned brands.
+  mapped.sort((a, b) => affinityFor(b, destination, activity) - affinityFor(a, destination, activity));
+  return mapped;
 }
 
 // ──────────────────────────────────────────────────────────────
