@@ -1,19 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import { getPortofinoMomentDef } from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
 import { absoluteUrl } from "@/lib/site";
-import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type LookProduct } from "@/data/lookbook";
+import { findLook, lookbook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type Look, type LookProduct } from "@/data/lookbook";
 import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
-import { TIER_SLUGS } from "@/lib/portofino-spec";
-import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
-import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
-const editD1aAdditional = exploringHarborAsset.url;
-
-const beachLongLunchDefault = getCanonicalDayImage("day-2", "destination_card");
+import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
+import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -80,51 +77,20 @@ function MomentPage() {
 
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
-  const dayOverrides = useDayImageOverrides();
-  const beachLongLunchImage = dayOverrides["day-2"] ?? beachLongLunchDefault;
-  type SiblingLook =
-    | { title: string; image: string; to: "/portofino/$day/$look"; params: { day: string; look: string } }
-    | { title: string; image: string; to: "/portofino/$moment"; params: { moment: string } };
-  const siblingLooks: SiblingLook[] =
-    slug === "pool-lounging-shopping"
-      ? [
-          {
-            title: "Beach Club + Long Lunch",
-            image: beachLongLunchImage,
-            to: "/portofino/$day/$look",
-            params: { day: "day-2", look: "look-a" },
-          },
-          {
-            title: "Exploring the Harbor",
-            image: editD1aAdditional,
-            to: "/portofino/$moment",
-            params: { moment: "exploring-the-harbor" },
-          },
-        ]
-      : [];
 
-  // Resolve the canonical shoppable Look from the lookbook.
-  const look = findLook(card.legacy_day_slug, card.look_slug);
-  const override = look ? lookOverrideForPublic(card.legacy_day_slug, card.look_slug) : null;
+  // Featured (canonical) look for this moment.
+  const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
+  const featuredShop = resolveShopProducts(card.legacy_day_slug, card.look_slug);
+  const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
 
-  // Prefer the override product set if defined; otherwise pick the first
-  // tier that actually has sourced products. The look_slug guarantees a
-  // dedicated product set per moment.
-  let shopProducts: Array<{ category?: string; product: LookProduct | OverrideItem; kind: "category" | "override" }> = [];
-  if (override) {
-    shopProducts = override.main.map((p) => ({ product: p, kind: "override" as const }));
-  } else if (look) {
-    const firstTierSlug =
-      TIER_SLUGS.find((t) =>
-        LOOK_CATEGORY_ORDER.some((c) => !look.tiers[t].products[c].isPlaceholder),
-      ) ?? TIER_SLUGS[0];
-    const products = look.tiers[firstTierSlug].products;
-    shopProducts = LOOK_CATEGORY_ORDER.map((c) => ({
-      category: LOOK_CATEGORY_LABEL[c],
-      product: products[c],
-      kind: "category" as const,
-    }));
-  }
+  // Sibling looks within the same day — "More Ways to Dress for {moment}".
+  const siblings: Look[] = lookbook.filter(
+    (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
+  );
+
+  // Inline expansion state: which look's shop grid is currently open.
+  // `featured` opens the featured look; `look-a|b|c` opens that sibling.
+  const [openShop, setOpenShop] = useState<string | null>(null);
 
   return (
     <div className="pb-16 md:pb-20">
@@ -170,26 +136,26 @@ function MomentPage() {
         </div>
       </section>
 
-      {/* SHOP THIS LOOK — inline product grid; no off-page handoff */}
+      {/* FEATURED LOOK — editorial hero styling recommendation */}
       <section className="bg-ivory">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,0.85fr)_1.4fr] gap-8 md:gap-12 items-start">
-            <div className="lg:sticky lg:top-6 space-y-5">
-              <div className="relative aspect-[3/4] overflow-hidden bg-cream/40 border border-border/60 flex items-center justify-center">
-                <img
-                  src={resolved.image}
-                  alt={resolved.title}
-                  className="absolute inset-0 h-full w-full object-contain"
-                />
-              </div>
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-16 md:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_minmax(280px,0.9fr)] gap-10 md:gap-16 items-center">
+            <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
+              <img
+                src={resolved.image}
+                alt={`${resolved.title} — Portofino featured look`}
+                className="absolute inset-0 h-full w-full object-cover object-center"
+              />
+            </div>
+            <div className="space-y-5 lg:pl-4">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                {resolved.source === "tagged" ? "Resort Edit Look" : "Editor's Pick"}
+                Editor's Pick
               </span>
-              <h2 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink leading-tight">
-                {card.moment_name}
+              <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
+                {featuredLook?.title ?? resolved.title}
               </h2>
-              <p className="font-serif italic text-[0.95rem] text-ink/80 leading-relaxed">
-                {card.narrative}
+              <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
+                {featuredLook?.caption ?? card.narrative}
               </p>
               {resolved.best_for && resolved.best_for.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
@@ -203,71 +169,68 @@ function MomentPage() {
                   ))}
                 </div>
               )}
-            </div>
-
-            <div>
-              <div className="flex items-end justify-between border-b border-ink/15 pb-5">
-                <div>
-                  <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">Shop This Look</span>
-                  <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                    This Full Outfit →
-                  </h3>
+              {featuredShop.length > 0 && (
+                <div className="pt-3">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOpenShop((cur) => (cur === "featured" ? null : "featured"))
+                    }
+                    aria-expanded={openShop === "featured"}
+                    aria-controls="shop-featured"
+                    className="inline-flex items-center gap-3 eyebrow text-[0.68rem] tracking-[0.32em] text-ink border-b border-gold pb-1 hover:text-gold transition-colors"
+                  >
+                    {openShop === "featured" ? "Hide The Look" : "Shop This Look"}
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform ${openShop === "featured" ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {featuredPieceCount > 0 && (
+                    <p className="font-serif italic text-[0.85rem] text-ink/55 mt-2">
+                      {featuredPieceCount} pieces curated by Resort Edit
+                    </p>
+                  )}
                 </div>
-                <span className="font-serif text-[0.85rem] text-ink/55 hidden md:inline">
-                  {shopProducts.filter((p) => (p.kind === "override" ? true : !(p.product as LookProduct).isPlaceholder)).length} pieces
-                </span>
-              </div>
-
-              <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-                {shopProducts.map((entry, i) => (
-                  <ShopCard key={i} entry={entry} />
-                ))}
-              </div>
+              )}
             </div>
           </div>
+
+          {openShop === "featured" && featuredShop.length > 0 && (
+            <InlineShop
+              id="shop-featured"
+              heading={`Shop ${featuredLook?.title ?? card.moment_name}`}
+              entries={featuredShop}
+            />
+          )}
         </div>
       </section>
 
-      {/* OTHER MOMENTS IN PORTOFINO — unified canonical strip */}
-      {siblingLooks.length > 0 && (
-        <section className="bg-ivory border-t border-border/40">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 md:py-16">
-            <div className="mb-8">
+      {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid */}
+      {siblings.length > 0 && (
+        <section className="bg-cream/40 border-t border-border/40">
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-16 md:py-20">
+            <div className="mb-10 md:mb-12 max-w-2xl">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                MORE WAYS TO DRESS FOR PORTOFINO
+                THE EDIT
               </span>
-              <h3 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink mt-2">
-                Other Looks for the Day
+              <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
+                More Ways to Dress for {card.moment_name}
               </h3>
+              <p className="font-serif italic text-[0.95rem] text-ink/70 mt-3 leading-relaxed">
+                Additional looks styled for this moment — each one a complete outfit, ready when you are.
+              </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-              {siblingLooks.map((l) => (
-                <Link
-                  key={l.title}
-                  to={l.to}
-                  params={l.params as never}
-                  className="group flex flex-col bg-ivory border border-border/40 hover:border-gold transition-colors"
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden bg-cream">
-                    <img
-                      src={l.image}
-                      alt={`${l.title} — Portofino additional look`}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                    />
-                    <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-                      ADDITIONAL LOOK
-                    </span>
-                  </div>
-                  <div className="p-5 md:p-6 flex flex-col flex-1">
-                    <h4 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">
-                      {l.title}
-                    </h4>
-                    <span className="mt-4 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start">
-                      Get The Look <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </Link>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
+              {siblings.map((sib) => (
+                <EditorialLookCard
+                  key={sib.id}
+                  look={sib}
+                  isOpen={openShop === sib.lookSlug}
+                  onToggle={() =>
+                    setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
+                  }
+                />
               ))}
             </div>
           </div>
@@ -275,6 +238,144 @@ function MomentPage() {
       )}
 
       <OtherPortofinoMoments excludeSlugs={[slug]} />
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// Helpers — shop product resolution + inline editorial cards
+// ──────────────────────────────────────────────────────────────
+type ShopEntry = {
+  category?: string;
+  product: LookProduct | OverrideItem;
+  kind: "category" | "override";
+};
+
+function resolveShopProducts(daySlug: LegacyDaySlug, lookSlug: LookSlug): ShopEntry[] {
+  const look = findLook(daySlug, lookSlug);
+  const override = look ? lookOverrideForPublic(daySlug, lookSlug) : null;
+  if (override) {
+    return override.main.map((p) => ({ product: p, kind: "override" as const }));
+  }
+  if (!look) return [];
+  const firstTierSlug =
+    TIER_SLUGS.find((t) =>
+      LOOK_CATEGORY_ORDER.some((c) => !look.tiers[t].products[c].isPlaceholder),
+    ) ?? TIER_SLUGS[0];
+  const products = look.tiers[firstTierSlug].products;
+  return LOOK_CATEGORY_ORDER.map((c) => ({
+    category: LOOK_CATEGORY_LABEL[c],
+    product: products[c],
+    kind: "category" as const,
+  }));
+}
+
+function shopEntryIsLive(entry: ShopEntry): boolean {
+  if (entry.kind === "override") {
+    const o = entry.product as OverrideItem;
+    return !!o.url && !o.url.startsWith("AFF-");
+  }
+  const p = entry.product as LookProduct;
+  return !p.isPlaceholder;
+}
+
+function EditorialLookCard({
+  look,
+  isOpen,
+  onToggle,
+}: {
+  look: Look;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  const entries = resolveShopProducts(look.daySlug, look.lookSlug);
+  const liveCount = entries.filter(shopEntryIsLive).length;
+  return (
+    <article className="flex flex-col bg-ivory border border-border/40">
+      <div className="relative aspect-[4/5] overflow-hidden bg-cream">
+        <img
+          src={look.heroImage}
+          alt={`${look.title} — additional Portofino look`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+          ADDITIONAL LOOK
+        </span>
+      </div>
+      <div className="p-6 md:p-8 flex flex-col gap-4">
+        <h4 className="font-display text-2xl md:text-[1.75rem] tracking-[0.04em] text-ink leading-[1.15]">
+          {look.title}
+        </h4>
+        <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed line-clamp-3">
+          {look.caption}
+        </p>
+        <div className="flex items-center justify-between pt-1">
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={isOpen}
+            aria-controls={`shop-${look.daySlug}-${look.lookSlug}`}
+            className="inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.32em] text-ink border-b border-gold pb-1 hover:text-gold transition-colors self-start"
+          >
+            {isOpen ? "Hide The Look" : "Shop This Look"}
+            <ChevronDown
+              className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+          {liveCount > 0 && (
+            <span className="font-serif italic text-[0.78rem] text-ink/50">
+              {liveCount} pieces
+            </span>
+          )}
+        </div>
+      </div>
+      {isOpen && entries.length > 0 && (
+        <div className="border-t border-border/40 px-5 md:px-7 py-7">
+          <InlineShop
+            id={`shop-${look.daySlug}-${look.lookSlug}`}
+            heading={`Shop ${look.title}`}
+            entries={entries}
+            compact
+          />
+        </div>
+      )}
+    </article>
+  );
+}
+
+function InlineShop({
+  id,
+  heading,
+  entries,
+  compact = false,
+}: {
+  id: string;
+  heading: string;
+  entries: ShopEntry[];
+  compact?: boolean;
+}) {
+  return (
+    <div id={id} className={compact ? "" : "mt-14 md:mt-16 border-t border-border/40 pt-10"}>
+      <div className="flex items-end justify-between mb-6">
+        <div>
+          <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
+            Shop The Look
+          </span>
+          <h4 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink mt-2">
+            {heading}
+          </h4>
+        </div>
+      </div>
+      <div
+        className={`grid gap-4 md:gap-5 ${
+          compact ? "grid-cols-2 md:grid-cols-3" : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+        }`}
+      >
+        {entries.map((entry, i) => (
+          <ShopCard key={i} entry={entry} />
+        ))}
+      </div>
     </div>
   );
 }
