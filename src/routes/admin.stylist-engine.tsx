@@ -467,7 +467,18 @@ function LooksGrid({ result }: { result: Extract<RunResult, { ok: true; gated: f
                       <p className="text-xs uppercase tracking-widest text-stone-500">
                         {s.slot}
                       </p>
-                      <p className="font-medium truncate">{s.brand}</p>
+                      <p className="font-medium truncate">
+                        {s.brand}
+                        {s.source === "expansion" ? (
+                          <span className="ml-2 text-[9px] uppercase tracking-widest bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded align-middle">
+                            Accessory Discovery
+                          </span>
+                        ) : (
+                          <span className="ml-2 text-[9px] uppercase tracking-widest bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded align-middle">
+                            Core Brand
+                          </span>
+                        )}
+                      </p>
                       <p className="text-stone-600 truncate">{s.title}</p>
                       {s.reasoning && (
                         <p className="text-xs text-stone-500 italic">{s.reasoning}</p>
