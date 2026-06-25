@@ -232,6 +232,10 @@ function SlotCoverage({ result }: { result: Extract<RunResult, { ok: true }> }) 
                   >
                     {s.found}
                   </span>
+                  <span className="text-[10px] text-stone-500 ml-1">
+                    ({s.coreFound} core
+                    {s.expansionFound > 0 ? ` · ${s.expansionFound} exp` : ""})
+                  </span>
                 </td>
                 <td className="px-3 py-2">{s.brandsSearched}</td>
                 <td className="px-3 py-2">{s.searchesIssued}</td>
@@ -242,6 +246,11 @@ function SlotCoverage({ result }: { result: Extract<RunResult, { ok: true }> }) 
                     <span className="text-red-700">empty</span>
                   ) : (
                     <span className="text-amber-700">short by {s.shortfall}</span>
+                  )}
+                  {s.expansion?.triggered && (
+                    <span className="ml-2 text-[10px] uppercase tracking-widest bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded">
+                      expansion
+                    </span>
                   )}
                 </td>
               </tr>
@@ -254,6 +263,12 @@ function SlotCoverage({ result }: { result: Extract<RunResult, { ok: true }> }) 
         <Stat label="Raw results" value={tel.rawResults} />
         <Stat label="Total candidates" value={tel.totalCandidates} />
         <Stat label="~Firecrawl credits" value={tel.approxFirecrawlCredits} />
+        <Stat label="Expansion searches" value={tel.expansion?.searchesIssued ?? 0} />
+        <Stat label="Expansion accepted" value={tel.expansion?.candidatesAccepted ?? 0} />
+        <Stat
+          label="Slots expanded"
+          value={tel.expansion?.slotsExpanded?.join(", ") || "none"}
+        />
       </div>
       {Object.keys(tel.rejectionsByReason).length > 0 && (
         <details className="text-xs text-stone-600">
