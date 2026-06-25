@@ -368,7 +368,7 @@ async function regenerateSingleSlot(args: {
   const spec = specs.find((s) => s.slot === slot.slot) as SlotSpec | undefined;
   if (!spec) return { ok: false as const, reason: "no_spec_for_slot" };
 
-  const brands = await loadEngineBrands(col.activity);
+  const brands = await loadEngineBrands(col.activity, col.destination);
   if (!brands.length) return { ok: false as const, reason: "no_brands" };
 
   // Exclude URLs already used in this look to avoid duplicates.
@@ -391,6 +391,8 @@ async function regenerateSingleSlot(args: {
     canonicalSeen: new Map(),
     seenUrls,
     source: "core",
+    destination: col.destination,
+    activity: col.activity,
   });
   const candidate = result.candidates.sort((a, b) => b.editorialScore - a.editorialScore)[0];
   if (!candidate) return { ok: false as const, reason: "no_candidates" };
@@ -408,6 +410,7 @@ async function regenerateSingleSlot(args: {
       silhouette: candidate.silhouette,
       palette: candidate.palette,
       editorialScore: candidate.editorialScore,
+      brandAffinity: candidate.brandAffinity,
       source: candidate.source,
       brandTier: candidate.brandTier,
       commerceSource: candidate.commerceSource,

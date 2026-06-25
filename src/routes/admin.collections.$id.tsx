@@ -479,6 +479,7 @@ type SlotData = {
   price: number | null;
   currency: string | null;
   locked: boolean;
+  metadata?: Record<string, unknown> | null;
 };
 
 function SlotRow({
@@ -522,6 +523,24 @@ function SlotRow({
             {slot.locked && (
               <span className="text-xs bg-stone-200 px-2 py-0.5 rounded">Locked</span>
             )}
+            {(() => {
+              const aff = pickNumber(slot.metadata, "brandAffinity");
+              if (aff === null) return null;
+              const tone =
+                aff >= 90
+                  ? "bg-emerald-100 text-emerald-800"
+                  : aff >= 75
+                    ? "bg-amber-100 text-amber-800"
+                    : "bg-stone-100 text-stone-700";
+              return (
+                <span
+                  className={`text-[11px] px-2 py-0.5 rounded ${tone}`}
+                  title="Editorial Affinity for this destination + activity"
+                >
+                  Affinity {Math.round(aff)}
+                </span>
+              );
+            })()}
           </div>
           <div className="mt-1">
             <span className="font-medium">{slot.brand ?? "—"}</span> ·{" "}

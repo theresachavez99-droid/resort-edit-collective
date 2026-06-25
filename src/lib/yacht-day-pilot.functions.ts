@@ -370,17 +370,27 @@ export function editorialScore(input: {
   title: string | null;
   description: string | null;
   silhouette: string;
-  brandTier: string | null;
+  /** Legacy fallback signal (deprecated). */
+  brandTier?: string | null;
+  /** v5 — primary brand-context signal, 0–100. */
+  affinity?: number | null;
 }): number {
   const hay = `${input.title ?? ""} ${input.description ?? ""}`;
   let s = 0;
-  if (input.brandTier === "luxury") s += 2;
-  else if (input.brandTier === "mid-luxe") s += 1;
+  // v5: Editorial Affinity is the primary brand signal. Maps 0–100 onto
+  // a 0–3 contribution so an 85+ brand outweighs a luxury-tier fallback.
+  if (typeof input.affinity === "number" && input.affinity > 0) {
+    s += Math.min(3, (input.affinity / 100) * 3);
+  } else if (input.brandTier === "luxury") {
+    s += 1; // legacy fallback when no affinity recorded yet
+  } else if (input.brandTier === "mid-luxe") {
+    s += 0.5;
+  }
   if (LUXURY_FABRIC_TOKENS.test(hay)) s += 2;
   if (YACHT_FIT_TOKENS.test(hay)) s += 1;
   if (STATEMENT_TOKENS.test(hay)) s += 1;
   if (input.silhouette !== "other") s += 1;
-  return s;
+  return Math.round(s * 100) / 100;
 }
 
 export function looksLikePdp(url: string, retailer?: string | null): boolean {

@@ -190,11 +190,13 @@ export type Database = {
       brands: {
         Row: {
           activities: string[]
+          affinity_signals: Json
           categories: string[]
           commerce_sources: Json
           created_at: string
           destination_strength: string[]
           destinations: string[]
+          editorial_affinity: Json
           id: string
           is_hero: boolean
           materials: string[]
@@ -212,11 +214,13 @@ export type Database = {
         }
         Insert: {
           activities?: string[]
+          affinity_signals?: Json
           categories?: string[]
           commerce_sources?: Json
           created_at?: string
           destination_strength?: string[]
           destinations?: string[]
+          editorial_affinity?: Json
           id?: string
           is_hero?: boolean
           materials?: string[]
@@ -234,11 +238,13 @@ export type Database = {
         }
         Update: {
           activities?: string[]
+          affinity_signals?: Json
           categories?: string[]
           commerce_sources?: Json
           created_at?: string
           destination_strength?: string[]
           destinations?: string[]
+          editorial_affinity?: Json
           id?: string
           is_hero?: boolean
           materials?: string[]
@@ -1516,7 +1522,20 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      brand_founder_signal_view: {
+        Row: {
+          activity: string | null
+          approvals: number | null
+          avg_editorial_score: number | null
+          brand_name: string | null
+          collection_approvals: number | null
+          destination: string | null
+          last_seen_at: string | null
+          rejections: number | null
+          total_appearances: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
