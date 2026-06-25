@@ -550,6 +550,9 @@ export async function discoverForSlot(args: {
   seenUrls: Set<string>;
   source?: "core" | "expansion";
   startingCount?: number;
+  /** v5 — context for affinity-based ranking. */
+  destination?: string;
+  activity?: string;
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
