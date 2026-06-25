@@ -913,7 +913,13 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         password: z.string().min(1).max(200),
         targetLooks: z.number().int().min(3).max(12).default(6),
         maxBrandsPerSlot: z.number().int().min(2).max(20).default(8),
-        retailersPerBrand: z.number().int().min(1).max(8).default(3),
+        /**
+         * Floor for retailers/brand across all slots. Slot-specific
+         * overrides in YACHT_DAY_SLOT_SPECS take precedence when higher.
+         * Default raised from 3 → 6 because accessory inventory is
+         * fragmented across many retailers.
+         */
+        retailersPerBrand: z.number().int().min(1).max(12).default(6),
         resultsPerSearch: z.number().int().min(1).max(10).default(4),
         persist: z.boolean().default(true),
         includeOptional: z.boolean().default(true),
