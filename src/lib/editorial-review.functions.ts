@@ -135,7 +135,7 @@ export const updateCollectionStatus = createServerFn({ method: "POST" })
     if (data.notes !== undefined) patch.notes = data.notes;
     const { error } = await supabaseAdmin
       .from("editorial_collections")
-      .update(patch)
+      .update(patch as never)
       .eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true as const };
@@ -195,7 +195,7 @@ export const updateLookStatus = createServerFn({ method: "POST" })
     }
     const { error } = await supabaseAdmin
       .from("editorial_collection_looks")
-      .update(patch)
+      .update(patch as never)
       .eq("id", data.lookId);
     if (error) throw new Error(error.message);
     return { ok: true as const };
@@ -213,13 +213,13 @@ export const setFeaturedLook = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error: clearErr } = await supabaseAdmin
       .from("editorial_collection_looks")
-      .update({ pinned: false })
+      .update({ pinned: false } as never)
       .eq("collection_id", data.collectionId);
     if (clearErr) throw new Error(clearErr.message);
     if (data.lookId) {
       const { error } = await supabaseAdmin
         .from("editorial_collection_looks")
-        .update({ pinned: true })
+        .update({ pinned: true } as never)
         .eq("id", data.lookId)
         .eq("collection_id", data.collectionId);
       if (error) throw new Error(error.message);
@@ -242,7 +242,7 @@ export const reorderLooks = createServerFn({ method: "POST" })
     for (let i = 0; i < data.orderedLookIds.length; i++) {
       const { error } = await supabaseAdmin
         .from("editorial_collection_looks")
-        .update({ position: i, updated_at: new Date().toISOString() })
+        .update({ position: i, updated_at: new Date().toISOString() } as never)
         .eq("id", data.orderedLookIds[i])
         .eq("collection_id", data.collectionId);
       if (error) throw new Error(error.message);
@@ -263,7 +263,7 @@ export const setSlotLocked = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
       .from("editorial_collection_look_slots")
-      .update({ locked: data.locked, updated_at: new Date().toISOString() })
+      .update({ locked: data.locked, updated_at: new Date().toISOString() } as never)
       .eq("id", data.slotId);
     if (error) throw new Error(error.message);
     return { ok: true as const };
@@ -303,7 +303,7 @@ export const replaceSlotProduct = createServerFn({ method: "POST" })
     };
     const { error } = await supabaseAdmin
       .from("editorial_collection_look_slots")
-      .update(patch)
+      .update(patch as never)
       .eq("id", data.slotId);
     if (error) throw new Error(error.message);
     return { ok: true as const };
@@ -394,7 +394,7 @@ async function regenerateSingleSlot(args: {
   };
   const { error: upErr } = await supabaseAdmin
     .from("editorial_collection_look_slots")
-    .update(patch)
+    .update(patch as never)
     .eq("id", slot.id);
   if (upErr) throw new Error(upErr.message);
   return {
