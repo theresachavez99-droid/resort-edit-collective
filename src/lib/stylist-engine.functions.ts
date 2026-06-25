@@ -39,7 +39,7 @@ import {
 // templates, target candidate count, and silhouette fillers.
 // ──────────────────────────────────────────────────────────────
 
-type SlotSpec = {
+export type SlotSpec = {
   slot: string;
   label: string;
   required: boolean;
@@ -215,7 +215,7 @@ type CommerceSourceEntry = {
   status?: "active" | "planned" | "paused";
 };
 
-type EngineBrand = {
+export type EngineBrand = {
   name: string;
   slug: string;
   tier: string | null;
@@ -252,7 +252,7 @@ function resolveCommerceSource(
   return { kind: "affiliate_retailer", approved: false };
 }
 
-async function loadEngineBrands(activity: string): Promise<EngineBrand[]> {
+export async function loadEngineBrands(activity: string): Promise<EngineBrand[]> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("brands")
@@ -421,7 +421,7 @@ function briefFor(destination: string, activity: string): EditorialBrief {
 // Per-slot discovery
 // ──────────────────────────────────────────────────────────────
 
-type SlotCandidate = {
+export type SlotCandidate = {
   id: string;
   slot: string;
   brand: string;
@@ -440,7 +440,7 @@ type SlotCandidate = {
   commerceSource: CommerceSourceKind;
 };
 
-type SlotDiscoveryResult = {
+export type SlotDiscoveryResult = {
   slot: string;
   label: string;
   required: boolean;
@@ -486,7 +486,7 @@ async function firecrawlSearch(apiKey: string, query: string, limit: number) {
   return items;
 }
 
-async function discoverForSlot(args: {
+export async function discoverForSlot(args: {
   apiKey: string;
   spec: SlotSpec;
   brands: EngineBrand[];

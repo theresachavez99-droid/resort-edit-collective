@@ -39,9 +39,11 @@ import { Route as AdminFounderLearningRouteImport } from './routes/admin.founder
 import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editorial-library'
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
 import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
+import { Route as AdminCollectionsRouteImport } from './routes/admin.collections'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } from './routes/destinations.portofino.day-1-yacht-harbour-aperitivo'
+import { Route as AdminCollectionsIdRouteImport } from './routes/admin.collections.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -193,6 +195,11 @@ const AdminDayImagesRoute = AdminDayImagesRouteImport.update({
   path: '/admin/day-images',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminCollectionsRoute = AdminCollectionsRouteImport.update({
+  id: '/admin/collections',
+  path: '/admin/collections',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
   id: '/admin/brands',
   path: '/admin/brands',
@@ -209,6 +216,11 @@ const DestinationsPortofinoDay1YachtHarbourAperitivoRoute =
     path: '/portofino/day-1-yacht-harbour-aperitivo',
     getParentRoute: () => DestinationsRoute,
   } as any)
+const AdminCollectionsIdRoute = AdminCollectionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminCollectionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -221,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
@@ -242,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
+  '/admin/collections/$id': typeof AdminCollectionsIdRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
@@ -256,6 +270,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
@@ -277,6 +292,7 @@ export interface FileRoutesByTo {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
+  '/admin/collections/$id': typeof AdminCollectionsIdRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
@@ -292,6 +308,7 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
@@ -313,6 +330,7 @@ export interface FileRoutesById {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
+  '/admin/collections/$id': typeof AdminCollectionsIdRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
@@ -329,6 +347,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
@@ -350,6 +369,7 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
+    | '/admin/collections/$id'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   fileRoutesByTo: FileRoutesByTo
@@ -364,6 +384,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
@@ -385,6 +406,7 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
+    | '/admin/collections/$id'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   id:
@@ -399,6 +421,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
@@ -420,6 +443,7 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
+    | '/admin/collections/$id'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   fileRoutesById: FileRoutesById
@@ -435,6 +459,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminCollectionsRoute: typeof AdminCollectionsRouteWithChildren
   AdminDayImagesRoute: typeof AdminDayImagesRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
   AdminEditorialLibraryRoute: typeof AdminEditorialLibraryRoute
@@ -662,6 +687,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDayImagesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/collections': {
+      id: '/admin/collections'
+      path: '/admin/collections'
+      fullPath: '/admin/collections'
+      preLoaderRoute: typeof AdminCollectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/brands': {
       id: '/admin/brands'
       path: '/admin/brands'
@@ -682,6 +714,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/destinations/portofino/day-1-yacht-harbour-aperitivo'
       preLoaderRoute: typeof DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport
       parentRoute: typeof DestinationsRoute
+    }
+    '/admin/collections/$id': {
+      id: '/admin/collections/$id'
+      path: '/$id'
+      fullPath: '/admin/collections/$id'
+      preLoaderRoute: typeof AdminCollectionsIdRouteImport
+      parentRoute: typeof AdminCollectionsRoute
     }
   }
 }
@@ -736,6 +775,17 @@ const PortofinoRouteWithChildren = PortofinoRoute._addFileChildren(
   PortofinoRouteChildren,
 )
 
+interface AdminCollectionsRouteChildren {
+  AdminCollectionsIdRoute: typeof AdminCollectionsIdRoute
+}
+
+const AdminCollectionsRouteChildren: AdminCollectionsRouteChildren = {
+  AdminCollectionsIdRoute: AdminCollectionsIdRoute,
+}
+
+const AdminCollectionsRouteWithChildren =
+  AdminCollectionsRoute._addFileChildren(AdminCollectionsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -747,6 +797,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminBrandsRoute: AdminBrandsRoute,
+  AdminCollectionsRoute: AdminCollectionsRouteWithChildren,
   AdminDayImagesRoute: AdminDayImagesRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
   AdminEditorialLibraryRoute: AdminEditorialLibraryRoute,
