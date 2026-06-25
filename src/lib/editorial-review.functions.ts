@@ -10,6 +10,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireAdmin } from "./admin-auth.server";
+import type { Json } from "@/integrations/supabase/types";
 import {
   discoverForSlot,
   getSlotSpecs,
@@ -113,7 +114,7 @@ export const getEditorialCollection = createServerFn({ method: "POST" })
       locked: boolean;
       reasoning: string | null;
       rejected_reason: string | null;
-      metadata: Record<string, unknown> | null;
+      metadata: Json;
       created_at: string;
       updated_at: string;
     };
