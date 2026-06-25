@@ -56,20 +56,6 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
   "day-1/look-c": {
     main: [
       {
-        slotLabel: "DRESS",
-        brand: "Resort Edit",
-        title: "Ivory Crochet Knit Midi Dress",
-        url: "AFF-HARBORAPERITIVO-DRESS",
-        image: "",
-      },
-      {
-        slotLabel: "SHOES",
-        brand: "Resort Edit",
-        title: "Tan Leather Flat Sandals",
-        url: "AFF-HARBORAPERITIVO-SHOES",
-        image: "",
-      },
-      {
         slotLabel: "EARRINGS",
         brand: "Revolve",
         title: "Gold Hoop Earrings",
@@ -229,4 +215,43 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
 
 export function lookOverrideFor(daySlug: Look["daySlug"], lookSlug: LookSlug): LookOverride | undefined {
   return OVERRIDES[`${daySlug}/${lookSlug}`];
+}
+
+/**
+ * Guardrail: a curated override item is safe to render on a public
+ * shopping rail only when it carries real customer-facing attribution —
+ * real brand (never the internal "Resort Edit" placeholder), real image,
+ * and a real outbound affiliate URL (never an internal "AFF-..." token).
+ *
+ * Items that fail this check are sourcing placeholders and must be hidden
+ * from public render. Use `lookOverrideForPublic()` to get a sanitised
+ * override; call `lookOverrideFor()` directly only for admin/debug views.
+ */
+export function isPublicOverrideItem(item: OverrideItem): boolean {
+  const brand = item.brand?.trim().toLowerCase() ?? "";
+  if (!brand || brand === "resort edit" || brand === "founder upload") return false;
+  const url = item.url?.trim() ?? "";
+  if (!url) return false;
+  if (url.startsWith("AFF-")) return false;
+  if (!/^https?:\/\//i.test(url)) return false;
+  if (!item.image) return false;
+  if (!item.title?.trim()) return false;
+  return true;
+}
+
+export function lookOverrideForPublic(
+  daySlug: Look["daySlug"],
+  lookSlug: LookSlug,
+): LookOverride | undefined {
+  const raw = OVERRIDES[`${daySlug}/${lookSlug}`];
+  if (!raw) return undefined;
+  const main = raw.main.filter(isPublicOverrideItem);
+  if (main.length === 0) return undefined;
+  const details = raw.details
+    ? (() => {
+        const items = raw.details!.items.filter(isPublicOverrideItem);
+        return items.length > 0 ? { ...raw.details!, items } : undefined;
+      })()
+    : undefined;
+  return { main, details };
 }

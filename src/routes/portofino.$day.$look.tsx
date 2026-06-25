@@ -25,7 +25,7 @@ import {
   alternativesFor,
   type AlternativeProduct,
 } from "@/data/lookAlternatives";
-import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
+import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
 import {
   CUSTOMIZE_OPTIONS,
   enrichmentFor,
@@ -116,7 +116,7 @@ function ViewFullLookPage() {
 
   const editorial = lookEditorialFor(day, look);
   const alternatives = alternativesFor(day, look);
-  const override = lookOverrideFor(day, look as LookSlug);
+  const override = lookOverrideForPublic(day, look as LookSlug);
 
   // Source of truth for the product grid:
   //   1. A per-look override (custom slot grid, e.g. Day 1 Look C)
