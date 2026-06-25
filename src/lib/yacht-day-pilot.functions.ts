@@ -551,7 +551,7 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
           if (brandRaw >= data.maxPerBrand * 3) break;
 
           const brandPart = template.replace("{brand}", brand.name);
-          const query = `${brandPart} site:${retailer}`;
+          const query = `${brandPart} site:${retailer}${QUERY_EXCLUSIONS}`;
           searchesIssued++;
           try {
             const res = await fetch(`${FIRECRAWL_BASE}/search`, {
@@ -607,6 +607,15 @@ export const runYachtDayDryRun = createServerFn({ method: "POST" })
                   url,
                   requestedBrand: brand.name,
                   retailer: null,
+                });
+                continue;
+              }
+              if (isObviousNonPdp(url)) {
+                rejections.push({
+                  reason: "non_pdp_prefiltered",
+                  url,
+                  requestedBrand: brand.name,
+                  retailer: matchedRetailer,
                 });
                 continue;
               }
