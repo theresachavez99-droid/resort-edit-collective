@@ -11,15 +11,8 @@
 import type { LookSlug } from "@/lib/portofino-spec";
 import type { Look } from "./lookbook";
 
-import imgShaniGeneva from "@/assets/products/shani-shemer-geneva-espresso.svg";
-import imgMc2Amalia from "@/assets/products/mc2-amalia-degrade-trousers.svg";
-import imgEleftheria from "@/assets/products/ancient-greek-eleftheria-sandal.svg";
-import imgLeanna from "@/assets/products/jennifer-behr-leanna-earrings.svg";
-import imgNatashaCuff from "@/assets/products/jennifer-fisher-natasha-cuff.svg";
 import imgTriompheCateye from "@/assets/products/celine-triomphe-cateye.svg";
 import imgRaffiaTote from "@/assets/products/large-woven-raffia-tote-chestnut.svg";
-import imgCollette from "@/assets/products/collette-straw-sun-hat.svg";
-import imgMadisonRing from "@/assets/products/madison-avenue-ring.svg";
 import imgGlowDrops from "@/assets/products/st-tropez-tonic-glow-drops.svg";
 
 import imgMichaFloral from "@/assets/products/melissa-odabash-micha-floral.svg";
