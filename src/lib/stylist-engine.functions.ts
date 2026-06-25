@@ -160,6 +160,96 @@ const ACTIVITY_SLOTS: Record<string, SlotSpec[]> = {
 };
 
 // ──────────────────────────────────────────────────────────────
+// Tier-2 controlled accessory expansion.
+//
+// Curated luxury accessory brands carried by APPROVED_RETAILERS that are
+// editorially appropriate for Resort Edit but NOT (yet) in the Brands I
+// Love registry. Used ONLY when a Tier-1 accessory slot falls below its
+// minimum candidate threshold. Candidates from this pool are marked
+// `source: "expansion"` and are NEVER automatically promoted to the
+// registry — Founder approval is required.
+//
+// Strict rules:
+// - Only the slots listed in EXPANDABLE_SLOTS may expand.
+// - Swimwear, dresses, linen, separates, and cover-ups are NEVER expanded.
+// - All other filters (approved retailer, brand match, silhouette,
+//   editorial scoring) still apply.
+// ──────────────────────────────────────────────────────────────
+
+const EXPANDABLE_SLOTS = new Set(["shoes", "bag", "sunglasses", "jewelry", "hat"]);
+
+const ACCESSORY_EXPANSION_BRANDS: Record<string, string[]> = {
+  sunglasses: [
+    "Celine",
+    "Saint Laurent",
+    "Bottega Veneta",
+    "Loewe",
+    "Prada",
+    "Miu Miu",
+    "Chloé",
+    "Linda Farrow",
+    "Jacques Marie Mage",
+    "Oliver Peoples",
+    "Persol",
+    "Tom Ford",
+    "Dior",
+    "Gucci",
+    "Khaite",
+  ],
+  shoes: [
+    "Manolo Blahnik",
+    "Aquazzura",
+    "Jimmy Choo",
+    "Gianvito Rossi",
+    "Stuart Weitzman",
+    "Khaite",
+    "The Row",
+    "Hermès",
+    "Carrie Forbes",
+    "Alohas",
+    "Le Monde Béryl",
+    "Emme Parsons",
+  ],
+  bag: [
+    "Loewe",
+    "Bottega Veneta",
+    "Saint Laurent",
+    "Jacquemus",
+    "Khaite",
+    "The Row",
+    "Polène",
+    "DeMellier",
+    "Strathberry",
+    "Cult Gaia",
+    "Hereu",
+    "Mansur Gavriel",
+  ],
+  jewelry: [
+    "Sophie Buhai",
+    "Jennifer Fisher",
+    "Missoma",
+    "Anni Lu",
+    "Pamela Card",
+    "Foundrae",
+    "Spinelli Kilcollin",
+    "Brinker & Eliza",
+    "Roxanne Assoulin",
+    "Laura Lombardi",
+    "Éliou",
+    "Mejuri",
+  ],
+  hat: [
+    "Janessa Leone",
+    "Lack of Color",
+    "Maison Michel",
+    "Sensi Studio",
+    "Eric Javits",
+    "Helen Kaminski",
+    "Borsalino",
+  ],
+};
+
+// ──────────────────────────────────────────────────────────────
 // Editorial brief — per destination+activity.
 // ──────────────────────────────────────────────────────────────
 
@@ -227,6 +317,7 @@ type SlotCandidate = {
   palette: string;
   editorialScore: number;
   matchedQuery: string;
+  source: "core" | "expansion";
 };
 
 type SlotDiscoveryResult = {
@@ -241,6 +332,16 @@ type SlotDiscoveryResult = {
   rawResults: number;
   rejections: Record<string, number>;
   shortfall: number; // how many below targetMin (0 if covered)
+  /** Tier-2 controlled accessory expansion telemetry (null when not eligible / not triggered). */
+  expansion?: {
+    triggered: boolean;
+    reason: string;
+    brandsConsidered: string[];
+    searchesIssued: number;
+    rawResults: number;
+    accepted: number;
+    rejections: Record<string, number>;
+  } | null;
 };
 
 async function firecrawlSearch(apiKey: string, query: string, limit: number) {
@@ -267,6 +368,8 @@ async function discoverForSlot(args: {
   idCounter: { n: number };
   canonicalSeen: Map<string, string>;
   seenUrls: Set<string>;
+  source?: "core" | "expansion";
+  startingCount?: number;
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
@@ -279,6 +382,8 @@ async function discoverForSlot(args: {
     canonicalSeen,
     seenUrls,
   } = args;
+  const source: "core" | "expansion" = args.source ?? "core";
+  const startingCount = args.startingCount ?? 0;
 
   const candidates: SlotCandidate[] = [];
   const rejections: Record<string, number> = {};
@@ -399,6 +504,7 @@ async function discoverForSlot(args: {
             palette,
             editorialScore: score,
             matchedQuery: tpl,
+            source,
           });
         }
       }
@@ -407,7 +513,8 @@ async function discoverForSlot(args: {
 
   // Sort by editorial score, retain up to targetMax.
   candidates.sort((a, b) => b.editorialScore - a.editorialScore);
-  const kept = candidates.slice(0, spec.targetMax);
+  const remaining = Math.max(0, spec.targetMax - startingCount);
+  const kept = candidates.slice(0, remaining);
 
   return {
     slot: spec.slot,
@@ -420,7 +527,7 @@ async function discoverForSlot(args: {
     searchesIssued,
     rawResults,
     rejections,
-    shortfall: Math.max(0, spec.targetMin - kept.length),
+    shortfall: Math.max(0, spec.targetMin - (kept.length + startingCount)),
   };
 }
 
@@ -747,7 +854,13 @@ async function persistCollection(args: {
           image_url: null,
           price: null,
           reasoning: s.reasoning ?? null,
-          metadata: { silhouette: c.silhouette, palette: c.palette, editorialScore: c.editorialScore },
+          metadata: {
+            silhouette: c.silhouette,
+            palette: c.palette,
+            editorialScore: c.editorialScore,
+            source: c.source,
+            brandTier: c.brandTier,
+          },
         };
       })
       .filter((x): x is NonNullable<typeof x> => x !== null);
@@ -810,6 +923,32 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       categories: (b.categories ?? []) as string[],
     }));
 
+    // ── Registry analytics: count Yacht Day brands per category and flag
+    // underrepresented accessory categories before discovery runs.
+    const registryByCategory: Record<string, number> = {};
+    for (const b of brands) {
+      for (const c of b.categories) {
+        registryByCategory[c] = (registryByCategory[c] ?? 0) + 1;
+      }
+    }
+    const weakCategoryThreshold = 5;
+    const accessoryCategoryAliases: Record<string, string[]> = {
+      sunglasses: ["sunglasses", "eyewear"],
+      shoes: ["shoes", "sandals", "footwear"],
+      bag: ["bags", "bag"],
+      jewelry: ["jewelry", "jewellery"],
+      hat: ["hats", "hat", "millinery"],
+    };
+    const registryCoverage = Object.entries(accessoryCategoryAliases).map(([slot, aliases]) => {
+      const count = aliases.reduce((sum, a) => sum + (registryByCategory[a] ?? 0), 0);
+      return {
+        slot,
+        brandCount: count,
+        weak: count < weakCategoryThreshold,
+        expansionPoolSize: ACCESSORY_EXPANSION_BRANDS[slot]?.length ?? 0,
+      };
+    });
+
     // Per-slot discovery — shared dedup so the same URL doesn't show
     // in two slots.
     const canonicalSeen = new Map<string, string>();
@@ -832,7 +971,62 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         idCounter,
         canonicalSeen,
         seenUrls,
+        source: "core",
       });
+
+      // Tier-2 controlled accessory expansion.
+      if (
+        EXPANDABLE_SLOTS.has(spec.slot) &&
+        r.shortfall > 0 &&
+        (ACCESSORY_EXPANSION_BRANDS[spec.slot]?.length ?? 0) > 0
+      ) {
+        const coreBrandNames = new Set(slotBrands.map((b) => b.name.toLowerCase()));
+        const expansionBrandNames = (ACCESSORY_EXPANSION_BRANDS[spec.slot] ?? [])
+          .filter((n) => !coreBrandNames.has(n.toLowerCase()))
+          .slice(0, data.maxBrandsPerSlot);
+        const expansionBrands = expansionBrandNames.map((name) => ({
+          name,
+          slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          tier: "expansion",
+          categories: spec.brandCategories,
+        }));
+        const exp = await discoverForSlot({
+          apiKey,
+          spec,
+          brands: expansionBrands,
+          resultsPerSearch: data.resultsPerSearch,
+          retailersPerBrand: data.retailersPerBrand,
+          brandOffset: brandOffset + slotBrands.length,
+          idCounter,
+          canonicalSeen,
+          seenUrls,
+          source: "expansion",
+          startingCount: r.candidates.length,
+        });
+        const acceptedExpansion = exp.candidates.length;
+        // Merge expansion candidates into the slot.
+        r.candidates = [...r.candidates, ...exp.candidates];
+        r.searchesIssued += exp.searchesIssued;
+        r.rawResults += exp.rawResults;
+        for (const [k, v] of Object.entries(exp.rejections)) {
+          r.rejections[k] = (r.rejections[k] ?? 0) + v;
+        }
+        r.shortfall = Math.max(0, spec.targetMin - r.candidates.length);
+        r.expansion = {
+          triggered: true,
+          reason: `Tier-1 returned ${r.candidates.length - acceptedExpansion} of ${spec.targetMin} required`,
+          brandsConsidered: expansionBrandNames,
+          searchesIssued: exp.searchesIssued,
+          rawResults: exp.rawResults,
+          accepted: acceptedExpansion,
+          rejections: exp.rejections,
+        };
+      } else {
+        r.expansion = EXPANDABLE_SLOTS.has(spec.slot)
+          ? { triggered: false, reason: "tier-1 met target", brandsConsidered: [], searchesIssued: 0, rawResults: 0, accepted: 0, rejections: {} }
+          : null;
+      }
+
       slotResults.push(r);
       brandOffset += slotBrands.length;
     }
@@ -844,11 +1038,15 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       required: r.required,
       target: `${r.targetMin}-${r.targetMax}`,
       found: r.candidates.length,
+      coreFound: r.candidates.filter((c) => c.source === "core").length,
+      expansionFound: r.candidates.filter((c) => c.source === "expansion").length,
       shortfall: r.shortfall,
       covered: r.candidates.length >= r.targetMin,
       brandsSearched: r.brandsConsidered.length,
       searchesIssued: r.searchesIssued,
       rejections: r.rejections,
+      expansion: r.expansion,
+      expandable: EXPANDABLE_SLOTS.has(r.slot),
     }));
 
     const missingRequiredSlots = slotResults
@@ -865,6 +1063,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         ranAt: new Date().toISOString(),
         brief,
         slotCoverage,
+        registryCoverage,
         candidates: [...candidatesById.values()],
         looks: [],
         assemblyError: `Insufficient candidates for complete look generation. Required slots with zero candidates: ${missingRequiredSlots.join(", ")}.`,
@@ -913,6 +1112,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       ranAt: new Date().toISOString(),
       brief,
       slotCoverage,
+      registryCoverage,
       gated: false as const,
       candidates: [...candidatesById.values()],
       discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
@@ -930,6 +1130,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             candidateId: s.candidateId,
             reasoning: s.reasoning ?? null,
             brand: c?.brand ?? null,
+            brandTier: c?.brandTier ?? null,
+            source: c?.source ?? null,
             retailer: c?.retailer ?? null,
             title: c?.title ?? null,
             url: c?.url ?? null,
@@ -946,11 +1148,19 @@ function aggregateTelemetry(results: SlotDiscoveryResult[], totalCandidates: num
   let searches = 0;
   let raw = 0;
   const allRej: Record<string, number> = {};
+  let expansionSearches = 0;
+  let expansionAccepted = 0;
+  const expansionSlots: string[] = [];
   for (const r of results) {
     searches += r.searchesIssued;
     raw += r.rawResults;
     for (const [k, v] of Object.entries(r.rejections)) {
       allRej[k] = (allRej[k] ?? 0) + v;
+    }
+    if (r.expansion?.triggered) {
+      expansionSearches += r.expansion.searchesIssued;
+      expansionAccepted += r.expansion.accepted;
+      expansionSlots.push(r.slot);
     }
   }
   return {
@@ -961,5 +1171,10 @@ function aggregateTelemetry(results: SlotDiscoveryResult[], totalCandidates: num
     approxFirecrawlCredits: searches,
     scrapesPerformed: 0,
     dbWrites: 0,
+    expansion: {
+      slotsExpanded: expansionSlots,
+      searchesIssued: expansionSearches,
+      candidatesAccepted: expansionAccepted,
+    },
   };
 }
