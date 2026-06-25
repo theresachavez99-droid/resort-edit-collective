@@ -227,6 +227,7 @@ type SlotCandidate = {
   palette: string;
   editorialScore: number;
   matchedQuery: string;
+  source: "core" | "expansion";
 };
 
 type SlotDiscoveryResult = {
@@ -241,6 +242,16 @@ type SlotDiscoveryResult = {
   rawResults: number;
   rejections: Record<string, number>;
   shortfall: number; // how many below targetMin (0 if covered)
+  /** Tier-2 controlled accessory expansion telemetry (null when not eligible / not triggered). */
+  expansion?: {
+    triggered: boolean;
+    reason: string;
+    brandsConsidered: string[];
+    searchesIssued: number;
+    rawResults: number;
+    accepted: number;
+    rejections: Record<string, number>;
+  } | null;
 };
 
 async function firecrawlSearch(apiKey: string, query: string, limit: number) {
