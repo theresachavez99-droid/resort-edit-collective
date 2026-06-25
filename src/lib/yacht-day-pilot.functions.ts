@@ -239,7 +239,7 @@ function detectBrandSignals(
   title: string | null,
   description: string | null,
 ): BrandSignals {
-  const needle = brandTokens(brand);
+  const needles = aliasesFor(brand).map(brandTokens).filter((n) => n.length > 0);
   let pathTokens: string[] = [];
   try {
     pathTokens = tokenize(new URL(url).pathname);
@@ -248,10 +248,12 @@ function detectBrandSignals(
   }
   const titleTokens = tokenize(title ?? "");
   const descTokens = tokenize(description ?? "");
+  const anyContains = (tokens: string[]) =>
+    needles.some((n) => containsTokenSequence(tokens, n));
   const matchedSources: string[] = [];
-  if (containsTokenSequence(pathTokens, needle)) matchedSources.push("url");
-  if (containsTokenSequence(titleTokens, needle)) matchedSources.push("title");
-  if (containsTokenSequence(descTokens, needle)) matchedSources.push("description");
+  if (anyContains(pathTokens)) matchedSources.push("url");
+  if (anyContains(titleTokens)) matchedSources.push("title");
+  if (anyContains(descTokens)) matchedSources.push("description");
   return {
     url: matchedSources.includes("url"),
     title: matchedSources.includes("title"),
