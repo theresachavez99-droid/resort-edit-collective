@@ -28,6 +28,167 @@ export const Route = createFileRoute("/admin/collections/$id")({
 
 const STORAGE_KEY = "admin_yacht_pilot_pw";
 const COLLECTION_STATUSES = ["draft", "in_review", "approved", "rejected"] as const;
+const EDITORIAL_QUESTIONS = [
+  { id: "authentic", label: "Authentic to the destination?" },
+  { id: "activity", label: "Matches the activity?" },
+  { id: "publish", label: "Would I publish this?" },
+  { id: "distinct", label: "Visually distinct from other looks?" },
+  { id: "strengthens", label: "Strengthens the overall collection?" },
+] as const;
+type EditorialAnswer = "yes" | "no" | null;
+type LookAnswers = Record<string, EditorialAnswer>;
+const answersStorageKey = (collectionId: string) =>
+  `admin_editorial_answers:${collectionId}`;
+
+function loadAnswers(collectionId: string): Record<string, LookAnswers> {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(answersStorageKey(collectionId)) ?? "{}");
+  } catch {
+    return {};
+  }
+}
+function saveAnswers(collectionId: string, all: Record<string, LookAnswers>) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(answersStorageKey(collectionId), JSON.stringify(all));
+}
+
+type Slot = SlotData & {
+  metadata?: Record<string, unknown> | null;
+  reasoning?: string | null;
+};
+type Look = {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  status: string;
+  pinned: boolean;
+  reasoning?: Record<string, unknown> | null;
+  scoring?: Record<string, unknown> | null;
+  metadata?: Record<string, unknown> | null;
+  slots: Slot[];
+};
+
+function pickString(obj: unknown, key: string): string | null {
+  if (!obj || typeof obj !== "object") return null;
+  const v = (obj as Record<string, unknown>)[key];
+  return typeof v === "string" && v ? v : null;
+}
+function pickNumber(obj: unknown, key: string): number | null {
+  if (!obj || typeof obj !== "object") return null;
+  const v = (obj as Record<string, unknown>)[key];
+  return typeof v === "number" ? v : null;
+}
+function pickStringArray(obj: unknown, key: string): string[] {
+  if (!obj || typeof obj !== "object") return [];
+  const v = (obj as Record<string, unknown>)[key];
+  return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+}
+
+function lookEditorialScore(look: Look): number | null {
+  const explicit =
+    pickNumber(look.scoring, "editorial") ??
+    pickNumber(look.metadata, "editorialScore");
+  if (explicit != null) return explicit;
+  const slotScores = look.slots
+    .map((s) => pickNumber(s.metadata, "editorialScore"))
+    .filter((n): n is number => n != null);
+  if (!slotScores.length) return null;
+  return slotScores.reduce((a, b) => a + b, 0) / slotScores.length;
+}
+function lookCompleteness(look: Look): { filled: number; total: number } {
+  const total = look.slots.length;
+  const filled = look.slots.filter((s) => s.brand && s.product_name).length;
+  return { filled, total };
+}
+function lookBrandDiversity(look: Look): number {
+  const filled = look.slots.filter((s) => s.brand);
+  if (!filled.length) return 0;
+  const unique = new Set(filled.map((s) => (s.brand ?? "").toLowerCase())).size;
+  return unique / filled.length;
+}
+function lookStyleDNA(look: Look): string[] {
+  const fromMeta = pickStringArray(look.metadata, "styleDNA");
+  if (fromMeta.length) return fromMeta;
+  const themes = pickStringArray(look.metadata, "themes");
+  if (themes.length) return themes;
+  const palettes = look.slots
+    .map((s) => pickString(s.metadata, "palette"))
+    .filter((x): x is string => !!x);
+  const silhouettes = look.slots
+    .map((s) => pickString(s.metadata, "silhouette"))
+    .filter((x): x is string => !!x);
+  return Array.from(new Set([...palettes, ...silhouettes])).slice(0, 6);
+}
+
+function collectionInsights(looks: Look[]) {
+  const allSlots = looks.flatMap((l) => l.slots);
+  const filled = allSlots.filter((s) => s.brand && s.product_name);
+  const brands = new Set(filled.map((s) => (s.brand ?? "").toLowerCase()));
+  const retailers = new Set(filled.map((s) => (s.retailer ?? "").toLowerCase()).filter(Boolean));
+  const palettes = filled
+    .map((s) => pickString(s.metadata, "palette"))
+    .filter((x): x is string => !!x);
+  const silhouettes = filled
+    .map((s) => pickString(s.metadata, "silhouette"))
+    .filter((x): x is string => !!x);
+  const paletteSet = new Set(palettes.map((p) => p.toLowerCase()));
+  const silhouetteSet = new Set(silhouettes.map((s) => s.toLowerCase()));
+
+  const editorialScores = looks
+    .map(lookEditorialScore)
+    .filter((n): n is number => n != null);
+  const avgEditorial = editorialScores.length
+    ? editorialScores.reduce((a, b) => a + b, 0) / editorialScores.length
+    : null;
+  const spread = editorialScores.length
+    ? Math.max(...editorialScores) - Math.min(...editorialScores)
+    : 0;
+
+  const totalSlots = allSlots.length;
+  const completeness = totalSlots ? filled.length / totalSlots : 0;
+
+  // Activity authenticity: share of slots whose brand metadata included activity tag.
+  // Proxy: filled-slot ratio combined with brand diversity.
+  const brandDiv = filled.length ? brands.size / filled.length : 0;
+  const retailerDiv = filled.length ? retailers.size / filled.length : 0;
+  // Cohesion: high when palettes/silhouettes overlap across looks but not collapsed to 1.
+  const cohesion = filled.length
+    ? 1 -
+      Math.abs(
+        (paletteSet.size + silhouetteSet.size) / (palettes.length + silhouettes.length || 1) -
+          0.5,
+      ) * 2
+    : 0;
+
+  return {
+    looks: looks.length,
+    filled: filled.length,
+    totalSlots,
+    completeness,
+    brands: brands.size,
+    retailers: retailers.size,
+    brandDiversity: brandDiv,
+    retailerDiversity: retailerDiv,
+    palettes: paletteSet.size,
+    silhouettes: silhouetteSet.size,
+    avgEditorial,
+    editorialSpread: spread,
+    cohesion: Math.max(0, Math.min(1, cohesion)),
+  };
+}
+
+function pct(n: number): string {
+  return `${Math.round(n * 100)}%`;
+}
+function scoreFmt(n: number | null): string {
+  return n == null ? "—" : n.toFixed(2);
+}
+function ratingFromPct(n: number): { label: string; cls: string } {
+  if (n >= 0.75) return { label: "Strong", cls: "bg-green-100 text-green-800" };
+  if (n >= 0.45) return { label: "Adequate", cls: "bg-amber-100 text-amber-900" };
+  return { label: "Weak", cls: "bg-red-100 text-red-800" };
+}
 
 function CollectionDetail() {
   const { id } = Route.useParams();
@@ -122,6 +283,21 @@ function CollectionDetail() {
   if (!query.data?.ok) return <main className="p-8">No data</main>;
 
   const { collection, looks } = query.data;
+  const typedLooks = looks as unknown as Look[];
+  const insights = collectionInsights(typedLooks);
+  const [answers, setAnswersState] = useState<Record<string, LookAnswers>>(() =>
+    loadAnswers(collection.id),
+  );
+  const updateAnswer = (lookId: string, qid: string, value: EditorialAnswer) => {
+    setAnswersState((prev) => {
+      const next = {
+        ...prev,
+        [lookId]: { ...(prev[lookId] ?? {}), [qid]: value },
+      };
+      saveAnswers(collection.id, next);
+      return next;
+    });
+  };
 
   return (
     <main className="mx-auto max-w-6xl p-8 space-y-8">
@@ -131,7 +307,7 @@ function CollectionDetail() {
 
       <header className="space-y-2">
         <p className="uppercase tracking-widest text-xs text-stone-500">
-          Founder Review · Internal Only — approving does NOT publish
+          Editorial Review · Internal Only — approving does NOT publish
         </p>
         <h1 className="text-3xl font-serif">
           {collection.destination} · {collection.activity}
@@ -140,6 +316,8 @@ function CollectionDetail() {
           ID {collection.id} · created {new Date(collection.created_at).toLocaleString()}
         </p>
       </header>
+
+      <CollectionInsightsPanel insights={insights} />
 
       <section className="border rounded p-4 space-y-3">
         <h2 className="font-semibold">Collection status</h2>
@@ -174,149 +352,84 @@ function CollectionDetail() {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold">Looks ({looks.length})</h2>
+          <h2 className="font-semibold font-serif text-xl">The Collection · {looks.length} looks</h2>
           <p className="text-xs text-stone-500">
-            Use ↑/↓ to reorder. Pin one look as featured. Lock products to protect them from
-            regeneration.
+            Review like a magazine. Products are refinement tools beneath each look.
           </p>
         </div>
-        {looks.map((look, idx) => (
-          <article key={look.id} className="border rounded p-4 space-y-3">
-            <header className="flex items-start justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-stone-500">#{idx + 1}</span>
-                  <h3 className="text-lg font-serif">{look.title}</h3>
-                  {look.pinned && (
-                    <span className="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded">
-                      Featured
-                    </span>
-                  )}
-                  <StatusBadge status={look.status} />
-                </div>
-                {look.subtitle && (
-                  <p className="text-sm text-stone-600">{look.subtitle}</p>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-1 justify-end">
-                <button
-                  disabled={!!busy || idx === 0}
-                  onClick={() => {
-                    const ids = looks.map((l) => l.id);
-                    [ids[idx - 1], ids[idx]] = [ids[idx], ids[idx - 1]];
-                    run("reorder", () =>
-                      reorder({
-                        data: { password: pw, collectionId: collection.id, orderedLookIds: ids },
-                      }),
-                    );
-                  }}
-                  className="text-xs border px-2 py-1 rounded"
-                >
-                  ↑
-                </button>
-                <button
-                  disabled={!!busy || idx === looks.length - 1}
-                  onClick={() => {
-                    const ids = looks.map((l) => l.id);
-                    [ids[idx + 1], ids[idx]] = [ids[idx], ids[idx + 1]];
-                    run("reorder", () =>
-                      reorder({
-                        data: { password: pw, collectionId: collection.id, orderedLookIds: ids },
-                      }),
-                    );
-                  }}
-                  className="text-xs border px-2 py-1 rounded"
-                >
-                  ↓
-                </button>
-                <button
-                  disabled={!!busy}
-                  onClick={() =>
-                    run("feature", () =>
-                      feature({
-                        data: {
-                          password: pw,
-                          collectionId: collection.id,
-                          lookId: look.pinned ? null : look.id,
-                        },
-                      }),
-                    )
-                  }
-                  className="text-xs border px-2 py-1 rounded"
-                >
-                  {look.pinned ? "Unfeature" : "Feature"}
-                </button>
-                <button
-                  disabled={!!busy}
-                  onClick={() =>
-                    run("approve-look", () =>
-                      setLookStatus({
-                        data: { password: pw, lookId: look.id, status: "approved" },
-                      }),
-                    )
-                  }
-                  className="text-xs border px-2 py-1 rounded bg-green-50"
-                >
-                  Approve
-                </button>
-                <button
-                  disabled={!!busy}
-                  onClick={() => {
-                    const reason = prompt("Rejection reason (optional)") ?? undefined;
-                    run("reject-look", () =>
-                      setLookStatus({
-                        data: {
-                          password: pw,
-                          lookId: look.id,
-                          status: "rejected",
-                          rejectedReason: reason,
-                        },
-                      }),
-                    );
-                  }}
-                  className="text-xs border px-2 py-1 rounded bg-red-50"
-                >
-                  Reject
-                </button>
-                <button
-                  disabled={!!busy}
-                  onClick={() =>
-                    confirm("Regenerate every unlocked slot in this look?") &&
-                    run("regen-look", () =>
-                      regenLook({ data: { password: pw, lookId: look.id } }),
-                    )
-                  }
-                  className="text-xs border px-2 py-1 rounded"
-                >
-                  Regenerate Look
-                </button>
-              </div>
-            </header>
-            <div className="grid gap-2">
-              {look.slots.map((s) => (
-                <SlotRow
-                  key={s.id}
-                  slot={s}
-                  busy={busy}
-                  onLock={(locked) =>
-                    run("lock-slot", () =>
-                      lockSlot({ data: { password: pw, slotId: s.id, locked } }),
-                    )
-                  }
-                  onReplace={(patch) =>
-                    run("replace-slot", () =>
-                      replaceSlot({ data: { password: pw, slotId: s.id, ...patch } }),
-                    )
-                  }
-                  onRegen={() =>
-                    run("regen-slot", () =>
-                      regenSlot({ data: { password: pw, slotId: s.id } }),
-                    )
-                  }
-                />
-              ))}
-            </div>
-          </article>
+        {typedLooks.map((look, idx) => (
+          <EditorialLookCard
+            key={look.id}
+            look={look}
+            idx={idx}
+            total={typedLooks.length}
+            avgEditorial={insights.avgEditorial}
+            collectionBrandTotal={insights.brands || 1}
+            busy={busy}
+            answers={answers[look.id] ?? {}}
+            onAnswer={(qid, v) => updateAnswer(look.id, qid, v)}
+            onMove={(dir) => {
+              const ids = typedLooks.map((l) => l.id);
+              const j = idx + dir;
+              if (j < 0 || j >= ids.length) return;
+              [ids[j], ids[idx]] = [ids[idx], ids[j]];
+              run("reorder", () =>
+                reorder({
+                  data: { password: pw, collectionId: collection.id, orderedLookIds: ids },
+                }),
+              );
+            }}
+            onFeature={() =>
+              run("feature", () =>
+                feature({
+                  data: {
+                    password: pw,
+                    collectionId: collection.id,
+                    lookId: look.pinned ? null : look.id,
+                  },
+                }),
+              )
+            }
+            onApprove={() =>
+              run("approve-look", () =>
+                setLookStatus({
+                  data: { password: pw, lookId: look.id, status: "approved" },
+                }),
+              )
+            }
+            onReject={() => {
+              const reason = prompt("Rejection reason (optional)") ?? undefined;
+              run("reject-look", () =>
+                setLookStatus({
+                  data: {
+                    password: pw,
+                    lookId: look.id,
+                    status: "rejected",
+                    rejectedReason: reason,
+                  },
+                }),
+              );
+            }}
+            onRegenLook={() =>
+              confirm("Regenerate every unlocked slot in this look?") &&
+              run("regen-look", () =>
+                regenLook({ data: { password: pw, lookId: look.id } }),
+              )
+            }
+            onLockSlot={(slotId, locked) =>
+              run("lock-slot", () =>
+                lockSlot({ data: { password: pw, slotId, locked } }),
+              )
+            }
+            onReplaceSlot={(slotId, patch) =>
+              run("replace-slot", () =>
+                replaceSlot({ data: { password: pw, slotId, ...patch } }),
+              )
+            }
+            onRegenSlot={(slotId) =>
+              run("regen-slot", () => regenSlot({ data: { password: pw, slotId } }))
+            }
+          />
         ))}
       </section>
     </main>
@@ -519,4 +632,341 @@ function StatusBadge({ status }: { status: string }) {
           ? "bg-amber-100 text-amber-900"
           : "bg-stone-100 text-stone-700";
   return <span className={`inline-block rounded px-2 py-0.5 text-xs ${cls}`}>{status}</span>;
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Collection-level insights (editorial first)
+// ──────────────────────────────────────────────────────────────────
+
+function CollectionInsightsPanel({
+  insights,
+}: {
+  insights: ReturnType<typeof collectionInsights>;
+}) {
+  const cards: Array<{ label: string; value: string; sub?: string; rating?: number }> = [
+    {
+      label: "Editorial diversity",
+      value: insights.avgEditorial == null ? "—" : insights.avgEditorial.toFixed(2),
+      sub: `spread ${insights.editorialSpread.toFixed(2)}`,
+    },
+    {
+      label: "Brand diversity",
+      value: `${insights.brands} brands`,
+      sub: pct(insights.brandDiversity),
+      rating: insights.brandDiversity,
+    },
+    {
+      label: "Retailer diversity",
+      value: `${insights.retailers} retailers`,
+      sub: pct(insights.retailerDiversity),
+      rating: insights.retailerDiversity,
+    },
+    {
+      label: "Color balance",
+      value: `${insights.palettes} palettes`,
+      sub: "across looks",
+    },
+    {
+      label: "Silhouette balance",
+      value: `${insights.silhouettes} shapes`,
+      sub: "across looks",
+    },
+    {
+      label: "Activity authenticity",
+      value: pct(insights.completeness),
+      sub: `${insights.filled}/${insights.totalSlots} slots`,
+      rating: insights.completeness,
+    },
+    {
+      label: "Collection cohesion",
+      value: pct(insights.cohesion),
+      sub: "palette + silhouette",
+      rating: insights.cohesion,
+    },
+  ];
+  return (
+    <section className="border rounded p-4 space-y-3 bg-stone-50/40">
+      <div className="flex items-baseline justify-between">
+        <h2 className="font-serif text-xl">Collection Insights</h2>
+        <p className="text-xs text-stone-500">Read the magazine before the catalog.</p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {cards.map((c) => {
+          const rating = c.rating != null ? ratingFromPct(c.rating) : null;
+          return (
+            <div key={c.label} className="border rounded bg-white p-3">
+              <p className="text-[11px] uppercase tracking-wider text-stone-500">{c.label}</p>
+              <p className="text-lg font-serif mt-1">{c.value}</p>
+              <div className="flex items-center justify-between mt-1">
+                {c.sub && <span className="text-xs text-stone-500">{c.sub}</span>}
+                {rating && (
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded ${rating.cls}`}>
+                    {rating.label}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Editorial Look Card — primary unit of review
+// ──────────────────────────────────────────────────────────────────
+
+type ReplacePatch = {
+  brand: string;
+  productName: string;
+  retailer: string;
+  sourceUrl: string;
+  imageUrl?: string | null;
+  price?: number | null;
+  currency?: string;
+};
+
+function EditorialLookCard({
+  look,
+  idx,
+  total,
+  avgEditorial,
+  collectionBrandTotal,
+  busy,
+  answers,
+  onAnswer,
+  onMove,
+  onFeature,
+  onApprove,
+  onReject,
+  onRegenLook,
+  onLockSlot,
+  onReplaceSlot,
+  onRegenSlot,
+}: {
+  look: Look;
+  idx: number;
+  total: number;
+  avgEditorial: number | null;
+  collectionBrandTotal: number;
+  busy: string | null;
+  answers: LookAnswers;
+  onAnswer: (qid: string, v: EditorialAnswer) => void;
+  onMove: (dir: -1 | 1) => void;
+  onFeature: () => void;
+  onApprove: () => void;
+  onReject: () => void;
+  onRegenLook: () => void;
+  onLockSlot: (slotId: string, locked: boolean) => void;
+  onReplaceSlot: (slotId: string, patch: ReplacePatch) => void;
+  onRegenSlot: (slotId: string) => void;
+}) {
+  const [showProducts, setShowProducts] = useState(false);
+  const score = lookEditorialScore(look);
+  const completeness = lookCompleteness(look);
+  const brandDiv = lookBrandDiversity(look);
+  const dna = lookStyleDNA(look);
+  const uniqueBrands = new Set(
+    look.slots.map((s) => (s.brand ?? "").toLowerCase()).filter(Boolean),
+  ).size;
+  const description =
+    look.subtitle ||
+    pickString(look.metadata, "description") ||
+    pickString(look.reasoning, "summary") ||
+    "";
+  const scoreDelta =
+    score != null && avgEditorial != null ? score - avgEditorial : null;
+
+  return (
+    <article className="border rounded bg-white">
+      {/* Editorial summary */}
+      <div className="p-5 space-y-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs text-stone-500">
+              <span>Look {idx + 1} of {total}</span>
+              {look.pinned && (
+                <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded">Featured</span>
+              )}
+              <StatusBadge status={look.status} />
+            </div>
+            <h3 className="text-2xl font-serif">{look.title}</h3>
+            {description && <p className="text-sm text-stone-700 max-w-2xl">{description}</p>}
+            {dna.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {dna.map((d) => (
+                  <span
+                    key={d}
+                    className="text-[11px] border border-stone-300 px-2 py-0.5 rounded-full text-stone-600"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex gap-1">
+              <button
+                disabled={!!busy || idx === 0}
+                onClick={() => onMove(-1)}
+                className="text-xs border px-2 py-1 rounded"
+                title="Move up"
+              >
+                ↑
+              </button>
+              <button
+                disabled={!!busy || idx === total - 1}
+                onClick={() => onMove(1)}
+                className="text-xs border px-2 py-1 rounded"
+                title="Move down"
+              >
+                ↓
+              </button>
+              <button
+                disabled={!!busy}
+                onClick={onFeature}
+                className="text-xs border px-2 py-1 rounded"
+              >
+                {look.pinned ? "Unfeature" : "Feature"}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Editorial scorecard */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <Metric
+            label="Editorial score"
+            value={scoreFmt(score)}
+            sub={
+              scoreDelta == null
+                ? undefined
+                : `${scoreDelta >= 0 ? "+" : ""}${scoreDelta.toFixed(2)} vs avg`
+            }
+          />
+          <Metric
+            label="Completeness"
+            value={`${completeness.filled}/${completeness.total}`}
+            sub={completeness.total ? pct(completeness.filled / completeness.total) : "—"}
+          />
+          <Metric
+            label="Brand diversity"
+            value={pct(brandDiv)}
+            sub={`${uniqueBrands} unique`}
+          />
+          <Metric
+            label="Collection contribution"
+            value={`${uniqueBrands}/${collectionBrandTotal}`}
+            sub="brands shared"
+          />
+        </div>
+
+        {/* Editorial review questions */}
+        <div className="border rounded p-3 bg-stone-50/60 space-y-2">
+          <p className="text-[11px] uppercase tracking-wider text-stone-500">
+            Editorial review
+          </p>
+          <ul className="space-y-1.5">
+            {EDITORIAL_QUESTIONS.map((q) => {
+              const cur = answers[q.id] ?? null;
+              return (
+                <li key={q.id} className="flex items-center justify-between gap-3 text-sm">
+                  <span className="text-stone-700">{q.label}</span>
+                  <div className="flex gap-1">
+                    {(["yes", "no"] as const).map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => onAnswer(q.id, cur === v ? null : v)}
+                        className={`text-xs px-2 py-0.5 rounded border ${
+                          cur === v
+                            ? v === "yes"
+                              ? "bg-green-600 text-white border-green-600"
+                              : "bg-red-600 text-white border-red-600"
+                            : "bg-white text-stone-600"
+                        }`}
+                      >
+                        {v === "yes" ? "Yes" : "No"}
+                      </button>
+                    ))}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* Primary editorial actions */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            disabled={!!busy}
+            onClick={onApprove}
+            className="text-sm px-4 py-1.5 rounded bg-green-600 text-white"
+          >
+            Approve look
+          </button>
+          <button
+            disabled={!!busy}
+            onClick={onReject}
+            className="text-sm px-4 py-1.5 rounded border border-red-300 text-red-700"
+          >
+            Reject
+          </button>
+          <button
+            disabled={!!busy}
+            onClick={onRegenLook}
+            className="text-sm px-3 py-1.5 rounded border text-stone-700"
+          >
+            Regenerate look
+          </button>
+        </div>
+      </div>
+
+      {/* Collapsed product slots */}
+      <div className="border-t">
+        <button
+          onClick={() => setShowProducts((v) => !v)}
+          className="w-full text-left px-5 py-2.5 text-xs uppercase tracking-wider text-stone-500 hover:bg-stone-50 flex items-center justify-between"
+        >
+          <span>
+            Refine products · {completeness.filled}/{completeness.total} slots filled
+          </span>
+          <span>{showProducts ? "Hide ▲" : "Show ▼"}</span>
+        </button>
+        {showProducts && (
+          <div className="p-4 pt-0 grid gap-2">
+            {look.slots.map((s) => (
+              <SlotRow
+                key={s.id}
+                slot={s}
+                busy={busy}
+                onLock={(locked) => onLockSlot(s.id, locked)}
+                onReplace={(patch) => onReplaceSlot(s.id, patch)}
+                onRegen={() => onRegenSlot(s.id)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function Metric({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+}) {
+  return (
+    <div className="border rounded p-2.5 bg-white">
+      <p className="text-[10px] uppercase tracking-wider text-stone-500">{label}</p>
+      <p className="text-base font-serif mt-0.5">{value}</p>
+      {sub && <p className="text-[11px] text-stone-500">{sub}</p>}
+    </div>
+  );
 }
