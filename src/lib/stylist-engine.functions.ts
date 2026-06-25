@@ -1236,6 +1236,21 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const candidatesById = new Map<string, SlotCandidate>();
     for (const r of slotResults) r.candidates.forEach((c) => candidatesById.set(c.id, c));
 
+    // v4 — commerce source mix across the candidate pool.
+    const commerceSourceMix = (() => {
+      const counts: Record<string, number> = {};
+      for (const c of candidatesById.values()) {
+        counts[c.commerceSource] = (counts[c.commerceSource] ?? 0) + 1;
+      }
+      const total = candidatesById.size || 1;
+      return {
+        counts,
+        shares: Object.fromEntries(
+          Object.entries(counts).map(([k, v]) => [k, Math.round((v / total) * 1000) / 1000]),
+        ),
+      };
+    })();
+
     // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
     if (missingRequiredSlots.length > 0) {
       const slotEffectivenessGated = buildSlotEffectiveness(slotResults, [], candidatesById);
@@ -1246,6 +1261,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         slotCoverage,
         registryCoverage,
         slotEffectiveness: slotEffectivenessGated,
+        commerceSourceMix,
         candidates: [...candidatesById.values()],
         looks: [],
         assemblyError: `Insufficient candidates for complete look generation. Required slots with zero candidates: ${missingRequiredSlots.join(", ")}.`,
@@ -1301,6 +1317,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       slotCoverage,
       registryCoverage,
       slotEffectiveness,
+      commerceSourceMix,
       gated: false as const,
       candidates: [...candidatesById.values()],
       discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
