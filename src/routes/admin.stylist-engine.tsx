@@ -265,6 +265,10 @@ function SlotCoverage({ result }: { result: Extract<RunResult, { ok: true }> }) 
                       expansion
                     </span>
                   )}
+                  <div className="text-[10px] text-stone-500 mt-0.5">
+                    {s.retailersPerBrand}/brand · {s.retailersSearched ?? s.retailersQueried?.length ?? 0} retailers searched ·{" "}
+                    {s.retailersRepresented?.length ?? 0} represented
+                  </div>
                 </td>
               </tr>
             ))}
