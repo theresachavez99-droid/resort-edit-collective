@@ -536,3 +536,111 @@ function LooksGrid({ result }: { result: Extract<RunResult, { ok: true; gated: f
     </section>
   );
 }
+
+function SlotEffectivenessReport({
+  result,
+}: {
+  result: Extract<RunResult, { ok: true }>;
+}) {
+  const rows = result.slotEffectiveness ?? [];
+  if (!rows.length) return null;
+  const tone = (c: string) =>
+    c === "strong"
+      ? "bg-emerald-100 text-emerald-800"
+      : c === "adequate"
+        ? "bg-amber-100 text-amber-900"
+        : "bg-red-100 text-red-800";
+  return (
+    <section className="space-y-3">
+      <h2 className="text-xl font-serif">Slot effectiveness</h2>
+      <p className="text-sm text-stone-600 max-w-2xl">
+        Per-slot read of how well discovery served assembly. A slot is{" "}
+        <strong>weak</strong> if it fell short of its target, or if accepted
+        candidates cluster on a single brand/retailer (no real choice for the
+        stylist).
+      </p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs border">
+          <thead className="bg-stone-100 text-left">
+            <tr>
+              <th className="px-2 py-2">Slot</th>
+              <th className="px-2 py-2">Core brands</th>
+              <th className="px-2 py-2">Expansion</th>
+              <th className="px-2 py-2">Retailers searched</th>
+              <th className="px-2 py-2">Found / Accepted / Rejected</th>
+              <th className="px-2 py-2">Final used</th>
+              <th className="px-2 py-2">Brand div.</th>
+              <th className="px-2 py-2">Retailer div.</th>
+              <th className="px-2 py-2">Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.slot} className="border-t align-top">
+                <td className="px-2 py-2 font-medium">
+                  {r.label}
+                  {!r.required && (
+                    <span className="ml-1 text-[10px] text-stone-500">(opt)</span>
+                  )}
+                </td>
+                <td className="px-2 py-2">{r.coreBrandsSearched}</td>
+                <td className="px-2 py-2">
+                  {r.expansionActivated ? (
+                    <span className="text-indigo-800">
+                      yes ({r.expansionBrandsSearched})
+                    </span>
+                  ) : r.expansionEligible ? (
+                    <span className="text-stone-500">no</span>
+                  ) : (
+                    <span className="text-stone-400">n/a</span>
+                  )}
+                </td>
+                <td className="px-2 py-2">
+                  {r.retailersSearched}
+                  <span className="text-stone-500">
+                    {" "}
+                    · {r.retailersRepresentedCount} repr.
+                  </span>
+                  <div className="text-[10px] text-stone-500">
+                    {r.retailersPerBrand}/brand cap
+                  </div>
+                </td>
+                <td className="px-2 py-2">
+                  {r.candidatesFound} / {r.candidatesAccepted} / {r.candidatesRejected}
+                  <div className="text-[10px] text-stone-500">
+                    accept rate {Math.round(r.acceptanceRate * 100)}%
+                  </div>
+                </td>
+                <td className="px-2 py-2">{r.finalProductsUsed}</td>
+                <td className="px-2 py-2">
+                  {r.brandDiversity}
+                  <span className="text-stone-500"> / {r.finalBrandDiversity} final</span>
+                </td>
+                <td className="px-2 py-2">
+                  {r.retailerDiversity}
+                  <span className="text-stone-500">
+                    {" "}
+                    / {r.finalRetailerDiversity} final
+                  </span>
+                </td>
+                <td className="px-2 py-2">
+                  <span
+                    className={`text-[10px] uppercase tracking-widest px-1.5 py-0.5 rounded ${tone(r.coverage)}`}
+                  >
+                    {r.coverage}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-xs text-stone-500 italic">
+        Strong = required slot covered with ≥4 brands and ≥3 retailers. Adequate
+        = covered but thin diversity. Weak = shortfall, single-brand, or no
+        slot fills in complete looks — re-run with broader retailer depth or
+        promote expansion brands.
+      </p>
+    </section>
+  );
+}
