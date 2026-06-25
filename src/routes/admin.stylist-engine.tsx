@@ -29,7 +29,7 @@ function StylistEnginePage() {
   const [result, setResult] = useState<RunResult | null>(null);
   const [targetLooks, setTargetLooks] = useState(6);
   const [maxBrandsPerSlot, setMaxBrandsPerSlot] = useState(8);
-  const [retailersPerBrand, setRetailersPerBrand] = useState(3);
+  const [retailersPerBrand, setRetailersPerBrand] = useState(6);
   const [resultsPerSearch, setResultsPerSearch] = useState(4);
   const [persist, setPersist] = useState(true);
 
@@ -117,7 +117,13 @@ function StylistEnginePage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
           <Field label="Target looks" value={targetLooks} set={setTargetLooks} min={3} max={12} />
           <Field label="Brands per slot" value={maxBrandsPerSlot} set={setMaxBrandsPerSlot} min={2} max={20} />
-          <Field label="Retailers / brand" value={retailersPerBrand} set={setRetailersPerBrand} min={1} max={8} />
+          <Field
+            label="Retailers / brand (floor)"
+            value={retailersPerBrand}
+            set={setRetailersPerBrand}
+            min={1}
+            max={12}
+          />
           <Field label="Results / search" value={resultsPerSearch} set={setResultsPerSearch} min={1} max={10} />
           <label className="flex flex-col">
             <span className="text-stone-500 text-xs mb-1">Persist as draft</span>
