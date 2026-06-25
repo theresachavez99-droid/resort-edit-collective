@@ -283,6 +283,21 @@ function CollectionDetail() {
   if (!query.data?.ok) return <main className="p-8">No data</main>;
 
   const { collection, looks } = query.data;
+  const typedLooks = looks as unknown as Look[];
+  const insights = collectionInsights(typedLooks);
+  const [answers, setAnswersState] = useState<Record<string, LookAnswers>>(() =>
+    loadAnswers(collection.id),
+  );
+  const updateAnswer = (lookId: string, qid: string, value: EditorialAnswer) => {
+    setAnswersState((prev) => {
+      const next = {
+        ...prev,
+        [lookId]: { ...(prev[lookId] ?? {}), [qid]: value },
+      };
+      saveAnswers(collection.id, next);
+      return next;
+    });
+  };
 
   return (
     <main className="mx-auto max-w-6xl p-8 space-y-8">
@@ -292,7 +307,7 @@ function CollectionDetail() {
 
       <header className="space-y-2">
         <p className="uppercase tracking-widest text-xs text-stone-500">
-          Founder Review · Internal Only — approving does NOT publish
+          Editorial Review · Internal Only — approving does NOT publish
         </p>
         <h1 className="text-3xl font-serif">
           {collection.destination} · {collection.activity}
@@ -301,6 +316,8 @@ function CollectionDetail() {
           ID {collection.id} · created {new Date(collection.created_at).toLocaleString()}
         </p>
       </header>
+
+      <CollectionInsightsPanel insights={insights} />
 
       <section className="border rounded p-4 space-y-3">
         <h2 className="font-semibold">Collection status</h2>
@@ -335,149 +352,84 @@ function CollectionDetail() {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold">Looks ({looks.length})</h2>
+          <h2 className="font-semibold font-serif text-xl">The Collection · {looks.length} looks</h2>
           <p className="text-xs text-stone-500">
-            Use ↑/↓ to reorder. Pin one look as featured. Lock products to protect them from
-            regeneration.
+            Review like a magazine. Products are refinement tools beneath each look.
           </p>
         </div>
-        {looks.map((look, idx) => (
-          <article key={look.id} className="border rounded p-4 space-y-3">
-            <header className="flex items-start justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-stone-500">#{idx + 1}</span>
-                  <h3 className="text-lg font-serif">{look.title}</h3>
-                  {look.pinned && (
-                    <span className="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded">
-                      Featured
-                    </span>
-                  )}
-                  <StatusBadge status={look.status} />
-                </div>
-                {look.subtitle && (
-                  <p className="text-sm text-stone-600">{look.subtitle}</p>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-1 justify-end">
-                <button
-                  disabled={!!busy || idx === 0}
-                  onClick={() => {
-                    const ids = looks.map((l) => l.id);
-                    [ids[idx - 1], ids[idx]] = [ids[idx], ids[idx - 1]];
-                    run("reorder", () =>
-                      reorder({
-                        data: { password: pw, collectionId: collection.id, orderedLookIds: ids },
-                      }),
-                    );
-                  }}
-                  className="text-xs border px-2 py-1 rounded"
-                >
-                  ↑
-                </button>
-                <button
-                  disabled={!!busy || idx === looks.length - 1}
-                  onClick={() => {
-                    const ids = looks.map((l) => l.id);
-                    [ids[idx + 1], ids[idx]] = [ids[idx], ids[idx + 1]];
-                    run("reorder", () =>
-                      reorder({
-                        data: { password: pw, collectionId: collection.id, orderedLookIds: ids },
-                      }),
-                    );
-                  }}
-                  className="text-xs border px-2 py-1 rounded"
-                >
-                  ↓
-                </button>
-                <button
-                  disabled={!!busy}
-                  onClick={() =>
-                    run("feature", () =>
-                      feature({
-                        data: {
-                          password: pw,
-                          collectionId: collection.id,
-                          lookId: look.pinned ? null : look.id,
-                        },
-                      }),
-                    )
-                  }
-                  className="text-xs border px-2 py-1 rounded"
-                >
-                  {look.pinned ? "Unfeature" : "Feature"}
-                </button>
-                <button
-                  disabled={!!busy}
-                  onClick={() =>
-                    run("approve-look", () =>
-                      setLookStatus({
-                        data: { password: pw, lookId: look.id, status: "approved" },
-                      }),
-                    )
-                  }
-                  className="text-xs border px-2 py-1 rounded bg-green-50"
-                >
-                  Approve
-                </button>
-                <button
-                  disabled={!!busy}
-                  onClick={() => {
-                    const reason = prompt("Rejection reason (optional)") ?? undefined;
-                    run("reject-look", () =>
-                      setLookStatus({
-                        data: {
-                          password: pw,
-                          lookId: look.id,
-                          status: "rejected",
-                          rejectedReason: reason,
-                        },
-                      }),
-                    );
-                  }}
-                  className="text-xs border px-2 py-1 rounded bg-red-50"
-                >
-                  Reject
-                </button>
-                <button
-                  disabled={!!busy}
-                  onClick={() =>
-                    confirm("Regenerate every unlocked slot in this look?") &&
-                    run("regen-look", () =>
-                      regenLook({ data: { password: pw, lookId: look.id } }),
-                    )
-                  }
-                  className="text-xs border px-2 py-1 rounded"
-                >
-                  Regenerate Look
-                </button>
-              </div>
-            </header>
-            <div className="grid gap-2">
-              {look.slots.map((s) => (
-                <SlotRow
-                  key={s.id}
-                  slot={s}
-                  busy={busy}
-                  onLock={(locked) =>
-                    run("lock-slot", () =>
-                      lockSlot({ data: { password: pw, slotId: s.id, locked } }),
-                    )
-                  }
-                  onReplace={(patch) =>
-                    run("replace-slot", () =>
-                      replaceSlot({ data: { password: pw, slotId: s.id, ...patch } }),
-                    )
-                  }
-                  onRegen={() =>
-                    run("regen-slot", () =>
-                      regenSlot({ data: { password: pw, slotId: s.id } }),
-                    )
-                  }
-                />
-              ))}
-            </div>
-          </article>
+        {typedLooks.map((look, idx) => (
+          <EditorialLookCard
+            key={look.id}
+            look={look}
+            idx={idx}
+            total={typedLooks.length}
+            avgEditorial={insights.avgEditorial}
+            collectionBrandTotal={insights.brands || 1}
+            busy={busy}
+            answers={answers[look.id] ?? {}}
+            onAnswer={(qid, v) => updateAnswer(look.id, qid, v)}
+            onMove={(dir) => {
+              const ids = typedLooks.map((l) => l.id);
+              const j = idx + dir;
+              if (j < 0 || j >= ids.length) return;
+              [ids[j], ids[idx]] = [ids[idx], ids[j]];
+              run("reorder", () =>
+                reorder({
+                  data: { password: pw, collectionId: collection.id, orderedLookIds: ids },
+                }),
+              );
+            }}
+            onFeature={() =>
+              run("feature", () =>
+                feature({
+                  data: {
+                    password: pw,
+                    collectionId: collection.id,
+                    lookId: look.pinned ? null : look.id,
+                  },
+                }),
+              )
+            }
+            onApprove={() =>
+              run("approve-look", () =>
+                setLookStatus({
+                  data: { password: pw, lookId: look.id, status: "approved" },
+                }),
+              )
+            }
+            onReject={() => {
+              const reason = prompt("Rejection reason (optional)") ?? undefined;
+              run("reject-look", () =>
+                setLookStatus({
+                  data: {
+                    password: pw,
+                    lookId: look.id,
+                    status: "rejected",
+                    rejectedReason: reason,
+                  },
+                }),
+              );
+            }}
+            onRegenLook={() =>
+              confirm("Regenerate every unlocked slot in this look?") &&
+              run("regen-look", () =>
+                regenLook({ data: { password: pw, lookId: look.id } }),
+              )
+            }
+            onLockSlot={(slotId, locked) =>
+              run("lock-slot", () =>
+                lockSlot({ data: { password: pw, slotId, locked } }),
+              )
+            }
+            onReplaceSlot={(slotId, patch) =>
+              run("replace-slot", () =>
+                replaceSlot({ data: { password: pw, slotId, ...patch } }),
+              )
+            }
+            onRegenSlot={(slotId) =>
+              run("regen-slot", () => regenSlot({ data: { password: pw, slotId } }))
+            }
+          />
         ))}
       </section>
     </main>
