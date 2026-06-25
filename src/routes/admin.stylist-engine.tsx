@@ -332,6 +332,84 @@ function Stat({ label, value }: { label: string; value: number | string }) {
   );
 }
 
+function RegistryCoverage({ result }: { result: Extract<RunResult, { ok: true }> }) {
+  const rc = result.registryCoverage ?? [];
+  if (!rc.length) return null;
+  return (
+    <section className="space-y-3">
+      <h2 className="text-xl font-serif">Brands I Love · accessory coverage</h2>
+      <p className="text-sm text-stone-600 max-w-2xl">
+        Tier-1 registry depth per accessory slot (Yacht Day–tagged brands).
+        Slots flagged below have a thin core pool — Tier-2 controlled accessory
+        expansion will activate automatically if discovery falls short.
+      </p>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
+        {rc.map((c) => (
+          <div
+            key={c.slot}
+            className={`border rounded p-3 ${c.weak ? "bg-amber-50 border-amber-300" : "bg-white"}`}
+          >
+            <p className="text-xs uppercase tracking-widest text-stone-500">{c.slot}</p>
+            <p className="text-2xl font-medium">
+              {c.brandCount}
+              {c.weak && <span className="text-amber-700 text-xs ml-1">⚠ weak</span>}
+            </p>
+            <p className="text-[11px] text-stone-500">
+              Expansion pool: {c.expansionPoolSize} luxury brands
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ExpansionReport({ result }: { result: Extract<RunResult, { ok: true }> }) {
+  const expanded = result.slotCoverage.filter((s) => s.expansion?.triggered);
+  if (expanded.length === 0) return null;
+  return (
+    <section className="space-y-3">
+      <h2 className="text-xl font-serif">Tier-2 Accessory Expansion · activated</h2>
+      <p className="text-sm text-stone-600 max-w-2xl">
+        Core Brands I Love returned fewer candidates than required for these
+        slots. Discovery temporarily expanded into a curated luxury pool on
+        approved retailers. Candidates are <strong>not</strong> auto-promoted —
+        Founder approval is required.
+      </p>
+      <div className="space-y-3">
+        {expanded.map((s) => (
+          <div key={s.slot} className="border rounded p-4 bg-indigo-50/40 border-indigo-200">
+            <div className="flex justify-between items-baseline">
+              <p className="font-medium">
+                {s.label}
+                <span className="text-xs text-stone-600 ml-2">
+                  ({s.coreFound} core + {s.expansionFound} expansion ·
+                  target {s.target})
+                </span>
+              </p>
+              <span className="text-[10px] uppercase tracking-widest text-indigo-800">
+                {s.expansion?.reason}
+              </span>
+            </div>
+            <p className="text-xs text-stone-600 mt-1">
+              Expansion brands searched: {s.expansion?.brandsConsidered.join(", ") || "—"}
+            </p>
+            <p className="text-xs text-stone-500 mt-0.5">
+              Searches issued: {s.expansion?.searchesIssued ?? 0} · accepted:{" "}
+              {s.expansion?.accepted ?? 0}
+            </p>
+          </div>
+        ))}
+        <p className="text-xs text-stone-500 italic">
+          When the Founder repeatedly approves a brand surfaced here, the engine
+          will recommend promoting it to Brands I Love. Promotion is never
+          automatic.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function LooksGrid({ result }: { result: Extract<RunResult, { ok: true; gated: false }> }) {
   if (result.looks.length === 0) {
     return (
