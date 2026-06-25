@@ -410,6 +410,7 @@ async function discoverForSlot(args: {
   const candidates: SlotCandidate[] = [];
   const rejections: Record<string, number> = {};
   const bump = (k: string) => (rejections[k] = (rejections[k] ?? 0) + 1);
+  const retailersQueried = new Set<string>();
 
   // Brands relevant to this slot.
   const slotBrands = brands.filter((b) =>
@@ -428,6 +429,7 @@ async function discoverForSlot(args: {
       retailers.push(APPROVED_RETAILERS[(brandOffset + bi + k) % APPROVED_RETAILERS.length]);
     }
     for (const retailer of retailers) {
+      retailersQueried.add(retailer);
       for (const tpl of spec.templates) {
         if (candidates.length >= spec.targetMax) break outer;
         const query = `${tpl.replace("{brand}", brand.name)} site:${retailer}${QUERY_EXCLUSIONS}`;
@@ -537,6 +539,7 @@ async function discoverForSlot(args: {
   candidates.sort((a, b) => b.editorialScore - a.editorialScore);
   const remaining = Math.max(0, spec.targetMax - startingCount);
   const kept = candidates.slice(0, remaining);
+  const retailersRepresented = Array.from(new Set(kept.map((c) => c.retailer)));
 
   return {
     slot: spec.slot,
@@ -550,6 +553,9 @@ async function discoverForSlot(args: {
     rawResults,
     rejections,
     shortfall: Math.max(0, spec.targetMin - (kept.length + startingCount)),
+    retailersPerBrand,
+    retailersQueried: Array.from(retailersQueried),
+    retailersRepresented,
   };
 }
 
