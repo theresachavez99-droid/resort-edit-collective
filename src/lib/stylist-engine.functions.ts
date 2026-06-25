@@ -268,11 +268,12 @@ async function loadEngineBrands(activity: string): Promise<EngineBrand[]> {
     slug: b.slug as string,
     tier: (b.tier as string | null) ?? null,
     categories: ((b as { categories?: string[] }).categories ?? []) as string[],
-    commerceSources:
-      ((b as { commerce_sources?: CommerceSourceEntry[] }).commerce_sources ?? []) as CommerceSourceEntry[],
+    commerceSources: (Array.isArray((b as { commerce_sources?: unknown }).commerce_sources)
+      ? ((b as { commerce_sources: unknown[] }).commerce_sources as CommerceSourceEntry[])
+      : []),
     preferredCommerceSource:
-      ((b as { preferred_commerce_source?: CommerceSourceKind }).preferred_commerce_source ??
-        "affiliate_retailer") as CommerceSourceKind,
+      (((b as { preferred_commerce_source?: string }).preferred_commerce_source as CommerceSourceKind) ??
+        "affiliate_retailer"),
   }));
 }
 
