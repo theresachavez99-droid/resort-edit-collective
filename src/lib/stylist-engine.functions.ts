@@ -278,6 +278,8 @@ async function discoverForSlot(args: {
   idCounter: { n: number };
   canonicalSeen: Map<string, string>;
   seenUrls: Set<string>;
+  source?: "core" | "expansion";
+  startingCount?: number;
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
@@ -290,6 +292,8 @@ async function discoverForSlot(args: {
     canonicalSeen,
     seenUrls,
   } = args;
+  const source: "core" | "expansion" = args.source ?? "core";
+  const startingCount = args.startingCount ?? 0;
 
   const candidates: SlotCandidate[] = [];
   const rejections: Record<string, number> = {};
@@ -410,6 +414,7 @@ async function discoverForSlot(args: {
             palette,
             editorialScore: score,
             matchedQuery: tpl,
+            source,
           });
         }
       }
@@ -418,7 +423,8 @@ async function discoverForSlot(args: {
 
   // Sort by editorial score, retain up to targetMax.
   candidates.sort((a, b) => b.editorialScore - a.editorialScore);
-  const kept = candidates.slice(0, spec.targetMax);
+  const remaining = Math.max(0, spec.targetMax - startingCount);
+  const kept = candidates.slice(0, remaining);
 
   return {
     slot: spec.slot,
@@ -431,7 +437,7 @@ async function discoverForSlot(args: {
     searchesIssued,
     rawResults,
     rejections,
-    shortfall: Math.max(0, spec.targetMin - kept.length),
+    shortfall: Math.max(0, spec.targetMin - (kept.length + startingCount)),
   };
 }
 
