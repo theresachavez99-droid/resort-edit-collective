@@ -1198,6 +1198,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           categories: spec.brandCategories,
           commerceSources: [],
           preferredCommerceSource: "affiliate_retailer" as const,
+          editorialAffinity: {},
         }));
         const exp = await discoverForSlot({
           apiKey,
