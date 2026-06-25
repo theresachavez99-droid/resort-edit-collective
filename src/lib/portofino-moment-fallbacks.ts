@@ -21,6 +21,7 @@ import marketMorningCard from "@/assets/uploads/portofino/market-morning-espress
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
 import sunsetViewsHero from "@/assets/uploads/portofino/sunset-views-harbor-golden-hour.png.asset.json";
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
+import harborAperitivoBanner from "@/assets/uploads/portofino/harbor-aperitivo-banner-golden-hour.png.asset.json";
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
 import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
 import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
@@ -112,7 +113,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     narrative:
       "A spritz at sunset overlooking the harbor — yachts lit, hills pink. The hinge moment between day and dinner.",
     moment_card_image: harborAperitivoCard.url,
-    hero_banner_image: harborAperitivoCard.url,
+    hero_banner_image: harborAperitivoBanner.url,
     outfit_image: harborAperitivoCard.url,
     legacy_day: "/portofino/day-1",
     legacy_look_title: "Harbour Aperitivo",
