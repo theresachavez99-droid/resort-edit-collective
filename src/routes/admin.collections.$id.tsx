@@ -479,6 +479,7 @@ type SlotData = {
   price: number | null;
   currency: string | null;
   locked: boolean;
+  metadata?: Record<string, unknown> | null;
 };
 
 function SlotRow({
