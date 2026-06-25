@@ -145,7 +145,9 @@ function StylistEnginePage() {
 
       {result && result.ok && (
         <>
+          <RegistryCoverage result={result} />
           <SlotCoverage result={result} />
+          <ExpansionReport result={result} />
           {result.gated ? (
             <section className="border border-red-300 bg-red-50 rounded p-5 text-red-900 space-y-1">
               <p className="font-medium">Insufficient candidates for complete look generation.</p>
