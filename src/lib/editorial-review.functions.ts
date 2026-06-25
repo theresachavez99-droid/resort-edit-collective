@@ -97,7 +97,27 @@ export const getEditorialCollection = createServerFn({ method: "POST" })
       .order("position", { ascending: true });
     if (lkErr) throw new Error(lkErr.message);
     const lookIds = (looks ?? []).map((l) => l.id);
-    let slots: Array<Record<string, unknown> & { id: string; look_id: string }> = [];
+    type SlotRow = {
+      id: string;
+      look_id: string;
+      slot: string;
+      position: number;
+      brand: string | null;
+      product_name: string | null;
+      retailer: string | null;
+      source_url: string | null;
+      affiliate_url: string | null;
+      image_url: string | null;
+      price: number | null;
+      currency: string | null;
+      locked: boolean;
+      reasoning: string | null;
+      rejected_reason: string | null;
+      metadata: unknown;
+      created_at: string;
+      updated_at: string;
+    };
+    let slots: SlotRow[] = [];
     if (lookIds.length) {
       const { data: slotRows, error: slErr } = await supabaseAdmin
         .from("editorial_collection_look_slots")
@@ -105,9 +125,9 @@ export const getEditorialCollection = createServerFn({ method: "POST" })
         .in("look_id", lookIds)
         .order("position", { ascending: true });
       if (slErr) throw new Error(slErr.message);
-      slots = (slotRows ?? []) as typeof slots;
+      slots = ((slotRows ?? []) as unknown) as SlotRow[];
     }
-    const slotsByLook: Record<string, typeof slots> = {};
+    const slotsByLook: Record<string, SlotRow[]> = {};
     for (const s of slots) (slotsByLook[s.look_id] ??= []).push(s);
     return {
       ok: true as const,
