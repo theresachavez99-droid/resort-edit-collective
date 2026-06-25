@@ -1059,6 +1059,7 @@ async function persistCollection(args: {
             silhouette: c.silhouette,
             palette: c.palette,
             editorialScore: c.editorialScore,
+            brandAffinity: c.brandAffinity,
             source: c.source,
             brandTier: c.brandTier,
             commerceSource: c.commerceSource,
