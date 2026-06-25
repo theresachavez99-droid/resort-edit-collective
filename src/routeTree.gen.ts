@@ -29,6 +29,7 @@ import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slu
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminYachtDayPilotRouteImport } from './routes/admin.yacht-day-pilot'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
+import { Route as AdminStylistEngineRouteImport } from './routes/admin.stylist-engine'
 import { Route as AdminReviewQueueRouteImport } from './routes/admin.review-queue'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
@@ -142,6 +143,11 @@ const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
   path: '/admin/subscribers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminStylistEngineRoute = AdminStylistEngineRouteImport.update({
+  id: '/admin/stylist-engine',
+  path: '/admin/stylist-engine',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminReviewQueueRoute = AdminReviewQueueRouteImport.update({
   id: '/admin/review-queue',
   path: '/admin/review-queue',
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
+  '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
+  '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -293,6 +301,7 @@ export interface FileRoutesById {
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
+  '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/yacht-day-pilot': typeof AdminYachtDayPilotRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -329,6 +338,7 @@ export interface FileRouteTypes {
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/review-queue'
+    | '/admin/stylist-engine'
     | '/admin/subscribers'
     | '/admin/yacht-day-pilot'
     | '/brands/$slug'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/review-queue'
+    | '/admin/stylist-engine'
     | '/admin/subscribers'
     | '/admin/yacht-day-pilot'
     | '/brands/$slug'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/admin/product-library'
     | '/admin/product-vault'
     | '/admin/review-queue'
+    | '/admin/stylist-engine'
     | '/admin/subscribers'
     | '/admin/yacht-day-pilot'
     | '/brands/$slug'
@@ -432,6 +444,7 @@ export interface RootRouteChildren {
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
   AdminReviewQueueRoute: typeof AdminReviewQueueRoute
+  AdminStylistEngineRoute: typeof AdminStylistEngineRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminYachtDayPilotRoute: typeof AdminYachtDayPilotRoute
   LookSlugRoute: typeof LookSlugRoute
@@ -577,6 +590,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/subscribers'
       fullPath: '/admin/subscribers'
       preLoaderRoute: typeof AdminSubscribersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/stylist-engine': {
+      id: '/admin/stylist-engine'
+      path: '/admin/stylist-engine'
+      fullPath: '/admin/stylist-engine'
+      preLoaderRoute: typeof AdminStylistEngineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/review-queue': {
@@ -736,6 +756,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
   AdminReviewQueueRoute: AdminReviewQueueRoute,
+  AdminStylistEngineRoute: AdminStylistEngineRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
   AdminYachtDayPilotRoute: AdminYachtDayPilotRoute,
   LookSlugRoute: LookSlugRoute,
