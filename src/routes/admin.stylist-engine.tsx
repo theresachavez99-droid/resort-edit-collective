@@ -28,8 +28,9 @@ function StylistEnginePage() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [result, setResult] = useState<RunResult | null>(null);
   const [targetLooks, setTargetLooks] = useState(6);
-  const [maxBrands, setMaxBrands] = useState(14);
-  const [maxCandidates, setMaxCandidates] = useState(40);
+  const [maxBrandsPerSlot, setMaxBrandsPerSlot] = useState(8);
+  const [retailersPerBrand, setRetailersPerBrand] = useState(3);
+  const [resultsPerSearch, setResultsPerSearch] = useState(4);
   const [persist, setPersist] = useState(true);
 
   useEffect(() => {
@@ -62,7 +63,14 @@ function StylistEnginePage() {
   const mutation = useMutation({
     mutationFn: () =>
       runEngine({
-        data: { password: pw, targetLooks, maxBrands, maxCandidates, persist },
+        data: {
+          password: pw,
+          targetLooks,
+          maxBrandsPerSlot,
+          retailersPerBrand,
+          resultsPerSearch,
+          persist,
+        },
       }),
     onSuccess: (r) => setResult(r),
   });
@@ -95,21 +103,22 @@ function StylistEnginePage() {
     <main className="mx-auto max-w-6xl p-8 space-y-8">
       <header className="space-y-2">
         <p className="uppercase tracking-widest text-xs text-stone-500">
-          v3 Luxury Stylist Engine · Dry Run
+          v3 Luxury Stylist Engine · Slot-aware Dry Run
         </p>
         <h1 className="text-3xl font-serif">Portofino · Yacht Day</h1>
         <p className="text-stone-600 max-w-2xl">
-          Single engine, collection-first. Generates 5–10 complete editorial looks across the
-          Yacht Day outfit ecosystem. No publishing, no live-site writes. Persists as a draft
-          collection for Founder Review.
+          Sources by outfit slot — swim, coverup, shoes, bag, sunglasses, jewelry, hat — each
+          with its own brand subset, query templates, and candidate quota. Refuses to call
+          Gemini if any required slot has zero candidates. Persists complete looks only.
         </p>
       </header>
 
       <section className="border rounded-lg p-5 bg-stone-50 space-y-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
           <Field label="Target looks" value={targetLooks} set={setTargetLooks} min={3} max={12} />
-          <Field label="Max brands" value={maxBrands} set={setMaxBrands} min={3} max={30} />
-          <Field label="Max candidates" value={maxCandidates} set={setMaxCandidates} min={10} max={80} />
+          <Field label="Brands per slot" value={maxBrandsPerSlot} set={setMaxBrandsPerSlot} min={2} max={20} />
+          <Field label="Retailers / brand" value={retailersPerBrand} set={setRetailersPerBrand} min={1} max={8} />
+          <Field label="Results / search" value={resultsPerSearch} set={setResultsPerSearch} min={1} max={10} />
           <label className="flex flex-col">
             <span className="text-stone-500 text-xs mb-1">Persist as draft</span>
             <input
@@ -136,8 +145,21 @@ function StylistEnginePage() {
 
       {result && result.ok && (
         <>
-          <CollectionReport result={result} />
-          <LooksGrid result={result} />
+          <SlotCoverage result={result} />
+          {result.gated ? (
+            <section className="border border-red-300 bg-red-50 rounded p-5 text-red-900 space-y-1">
+              <p className="font-medium">Insufficient candidates for complete look generation.</p>
+              <p className="text-sm">{result.assemblyError}</p>
+              <p className="text-xs text-red-700">
+                Gemini was not called. Fix the registry tags (or the slot's query templates) and re-run.
+              </p>
+            </section>
+          ) : (
+            <>
+              <CollectionReport result={result} />
+              <LooksGrid result={result} />
+            </>
+          )}
         </>
       )}
       {result && !result.ok && (
@@ -172,27 +194,102 @@ function Field(props: {
   );
 }
 
-function CollectionReport({ result }: { result: Extract<RunResult, { ok: true }> }) {
+function SlotCoverage({ result }: { result: Extract<RunResult, { ok: true }> }) {
+  const tel = result.discoveryTelemetry;
+  return (
+    <section className="space-y-3">
+      <h2 className="text-xl font-serif">Slot coverage (before assembly)</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border">
+          <thead className="bg-stone-100 text-left">
+            <tr>
+              <th className="px-3 py-2">Slot</th>
+              <th className="px-3 py-2">Required</th>
+              <th className="px-3 py-2">Target</th>
+              <th className="px-3 py-2">Found</th>
+              <th className="px-3 py-2">Brands</th>
+              <th className="px-3 py-2">Searches</th>
+              <th className="px-3 py-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {result.slotCoverage.map((s) => (
+              <tr key={s.slot} className="border-t">
+                <td className="px-3 py-2 font-medium">{s.label}</td>
+                <td className="px-3 py-2">{s.required ? "yes" : "optional"}</td>
+                <td className="px-3 py-2">{s.target}</td>
+                <td className="px-3 py-2">
+                  <span
+                    className={
+                      s.found === 0 && s.required
+                        ? "text-red-700 font-medium"
+                        : s.found < (s.shortfall + s.found)
+                        ? "text-amber-700"
+                        : "text-emerald-700"
+                    }
+                  >
+                    {s.found}
+                  </span>
+                </td>
+                <td className="px-3 py-2">{s.brandsSearched}</td>
+                <td className="px-3 py-2">{s.searchesIssued}</td>
+                <td className="px-3 py-2">
+                  {s.covered ? (
+                    <span className="text-emerald-700">covered</span>
+                  ) : s.found === 0 ? (
+                    <span className="text-red-700">empty</span>
+                  ) : (
+                    <span className="text-amber-700">short by {s.shortfall}</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+        <Stat label="Total searches" value={tel.searchesIssued} />
+        <Stat label="Raw results" value={tel.rawResults} />
+        <Stat label="Total candidates" value={tel.totalCandidates} />
+        <Stat label="~Firecrawl credits" value={tel.approxFirecrawlCredits} />
+      </div>
+      {Object.keys(tel.rejectionsByReason).length > 0 && (
+        <details className="text-xs text-stone-600">
+          <summary className="cursor-pointer">Rejections by reason</summary>
+          <ul className="mt-1">
+            {Object.entries(tel.rejectionsByReason)
+              .sort((a, b) => b[1] - a[1])
+              .map(([k, v]) => (
+                <li key={k}>
+                  {k}: {v}
+                </li>
+              ))}
+          </ul>
+        </details>
+      )}
+    </section>
+  );
+}
+
+function CollectionReport({
+  result,
+}: {
+  result: Extract<RunResult, { ok: true; gated: false }>;
+}) {
   const cs = result.collectionScore;
-  const tel = result.discovery.telemetry;
+  if (!cs) return null;
   return (
     <section className="space-y-4">
       <h2 className="text-xl font-serif">Collection report</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-        <Stat label="Looks generated" value={cs.looksCount} />
+        <Stat label="Looks total" value={cs.looksTotal} />
+        <Stat label="Complete looks" value={cs.looksComplete} />
+        <Stat label="Incomplete (discarded)" value={cs.looksIncomplete} />
         <Stat label="Filled slots" value={cs.slotCount} />
         <Stat label="Brand diversity" value={cs.brandDiversity} />
         <Stat label="Retailer diversity" value={cs.retailerDiversity} />
         <Stat label="Silhouette diversity" value={cs.silhouetteDiversity} />
         <Stat label="Palette diversity" value={cs.paletteDiversity} />
-        <Stat label="Max brand share" value={cs.maxBrandShare} />
-        <Stat label="Max retailer share" value={cs.maxRetailerShare} />
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-        <Stat label="Discovery searches" value={tel.searchesIssued} />
-        <Stat label="Discovery candidates" value={tel.candidatesAfterFilters} />
-        <Stat label="Brand match rate" value={tel.brandMatchRate} />
-        <Stat label="Avg editorial score" value={tel.avgEditorialScore} />
       </div>
       {result.collectionId && (
         <p className="text-xs text-stone-500">
@@ -205,32 +302,6 @@ function CollectionReport({ result }: { result: Extract<RunResult, { ok: true }>
       {result.persistError && (
         <p className="text-sm text-red-700">Persist error: {result.persistError}</p>
       )}
-      <div className="grid md:grid-cols-2 gap-4 text-xs">
-        <div className="border rounded p-3">
-          <p className="font-medium mb-1">Brand distribution</p>
-          <ul>
-            {Object.entries(cs.brandDistribution)
-              .sort((a, b) => b[1] - a[1])
-              .map(([b, n]) => (
-                <li key={b}>
-                  {b}: {n}
-                </li>
-              ))}
-          </ul>
-        </div>
-        <div className="border rounded p-3">
-          <p className="font-medium mb-1">Retailer distribution</p>
-          <ul>
-            {Object.entries(cs.retailerDistribution)
-              .sort((a, b) => b[1] - a[1])
-              .map(([r, n]) => (
-                <li key={r}>
-                  {r}: {n}
-                </li>
-              ))}
-          </ul>
-        </div>
-      </div>
     </section>
   );
 }
@@ -244,11 +315,11 @@ function Stat({ label, value }: { label: string; value: number | string }) {
   );
 }
 
-function LooksGrid({ result }: { result: Extract<RunResult, { ok: true }> }) {
+function LooksGrid({ result }: { result: Extract<RunResult, { ok: true; gated: false }> }) {
   if (result.looks.length === 0) {
     return (
       <section className="border rounded p-6 text-stone-600">
-        Engine returned 0 complete looks. The candidate pool may be too thin or missing required slots.
+        Engine returned 0 looks. Check the assembly warning above.
       </section>
     );
   }
@@ -259,14 +330,26 @@ function LooksGrid({ result }: { result: Extract<RunResult, { ok: true }> }) {
         {result.looks.map((look, i) => {
           const score = result.lookScores[i];
           return (
-            <article key={i} className="border rounded-lg p-5 bg-white space-y-3">
-              <header>
-                <p className="uppercase tracking-widest text-xs text-stone-500">
-                  Look {i + 1}
-                </p>
-                <h3 className="text-xl font-serif">{look.title}</h3>
-                {look.subtitle && (
-                  <p className="text-sm italic text-stone-600">{look.subtitle}</p>
+            <article
+              key={i}
+              className={`border rounded-lg p-5 space-y-3 ${
+                look.complete ? "bg-white" : "bg-amber-50 border-amber-300"
+              }`}
+            >
+              <header className="flex justify-between items-start">
+                <div>
+                  <p className="uppercase tracking-widest text-xs text-stone-500">
+                    Look {i + 1}
+                  </p>
+                  <h3 className="text-xl font-serif">{look.title}</h3>
+                  {look.subtitle && (
+                    <p className="text-sm italic text-stone-600">{look.subtitle}</p>
+                  )}
+                </div>
+                {!look.complete && (
+                  <span className="text-[10px] uppercase tracking-widest bg-amber-200 text-amber-900 px-2 py-1 rounded">
+                    Incomplete · not persisted
+                  </span>
                 )}
               </header>
               <p className="text-sm text-stone-700">{look.description}</p>
@@ -277,7 +360,7 @@ function LooksGrid({ result }: { result: Extract<RunResult, { ok: true }> }) {
                   </span>
                 ))}
                 {look.palette.map((p) => (
-                  <span key={p} className="bg-amber-50 px-1.5 py-0.5 rounded">
+                  <span key={p} className="bg-amber-100 px-1.5 py-0.5 rounded">
                     {p}
                   </span>
                 ))}
