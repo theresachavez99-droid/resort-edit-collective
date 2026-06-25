@@ -111,6 +111,12 @@ function StylistEnginePage() {
           with its own brand subset, query templates, and candidate quota. Refuses to call
           Gemini if any required slot has zero candidates. Persists complete looks only.
         </p>
+        <p className="text-xs text-stone-500 max-w-2xl">
+          Retailers / brand is a <strong>floor</strong>. Each slot has an
+          intrinsic override (swim 4 · coverup 5 · shoes 7 · bag 7 · sunglasses 9 ·
+          jewelry 9 · hat 7) — accessory slots search broader because their
+          inventory is fragmented across more retailers.
+        </p>
       </header>
 
       <section className="border rounded-lg p-5 bg-stone-50 space-y-4">
