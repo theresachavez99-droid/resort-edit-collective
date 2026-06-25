@@ -923,6 +923,32 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       categories: (b.categories ?? []) as string[],
     }));
 
+    // ── Registry analytics: count Yacht Day brands per category and flag
+    // underrepresented accessory categories before discovery runs.
+    const registryByCategory: Record<string, number> = {};
+    for (const b of brands) {
+      for (const c of b.categories) {
+        registryByCategory[c] = (registryByCategory[c] ?? 0) + 1;
+      }
+    }
+    const weakCategoryThreshold = 5;
+    const accessoryCategoryAliases: Record<string, string[]> = {
+      sunglasses: ["sunglasses", "eyewear"],
+      shoes: ["shoes", "sandals", "footwear"],
+      bag: ["bags", "bag"],
+      jewelry: ["jewelry", "jewellery"],
+      hat: ["hats", "hat", "millinery"],
+    };
+    const registryCoverage = Object.entries(accessoryCategoryAliases).map(([slot, aliases]) => {
+      const count = aliases.reduce((sum, a) => sum + (registryByCategory[a] ?? 0), 0);
+      return {
+        slot,
+        brandCount: count,
+        weak: count < weakCategoryThreshold,
+        expansionPoolSize: ACCESSORY_EXPANSION_BRANDS[slot]?.length ?? 0,
+      };
+    });
+
     // Per-slot discovery — shared dedup so the same URL doesn't show
     // in two slots.
     const canonicalSeen = new Map<string, string>();
@@ -1085,6 +1111,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       ranAt: new Date().toISOString(),
       brief,
       slotCoverage,
+      registryCoverage,
       gated: false as const,
       candidates: [...candidatesById.values()],
       discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
@@ -1102,6 +1129,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             candidateId: s.candidateId,
             reasoning: s.reasoning ?? null,
             brand: c?.brand ?? null,
+            brandTier: c?.brandTier ?? null,
+            source: c?.source ?? null,
             retailer: c?.retailer ?? null,
             title: c?.title ?? null,
             url: c?.url ?? null,
