@@ -484,6 +484,8 @@ export type SlotCandidate = {
   silhouette: string;
   palette: string;
   editorialScore: number;
+  /** v5 — Editorial Affinity used at scoring time (0–100). */
+  brandAffinity: number;
   matchedQuery: string;
   source: "core" | "expansion";
   /** v4 — resolved commerce channel for this candidate. */
