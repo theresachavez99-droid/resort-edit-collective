@@ -160,6 +160,96 @@ const ACTIVITY_SLOTS: Record<string, SlotSpec[]> = {
 };
 
 // ──────────────────────────────────────────────────────────────
+// Tier-2 controlled accessory expansion.
+//
+// Curated luxury accessory brands carried by APPROVED_RETAILERS that are
+// editorially appropriate for Resort Edit but NOT (yet) in the Brands I
+// Love registry. Used ONLY when a Tier-1 accessory slot falls below its
+// minimum candidate threshold. Candidates from this pool are marked
+// `source: "expansion"` and are NEVER automatically promoted to the
+// registry — Founder approval is required.
+//
+// Strict rules:
+// - Only the slots listed in EXPANDABLE_SLOTS may expand.
+// - Swimwear, dresses, linen, separates, and cover-ups are NEVER expanded.
+// - All other filters (approved retailer, brand match, silhouette,
+//   editorial scoring) still apply.
+// ──────────────────────────────────────────────────────────────
+
+const EXPANDABLE_SLOTS = new Set(["shoes", "bag", "sunglasses", "jewelry", "hat"]);
+
+const ACCESSORY_EXPANSION_BRANDS: Record<string, string[]> = {
+  sunglasses: [
+    "Celine",
+    "Saint Laurent",
+    "Bottega Veneta",
+    "Loewe",
+    "Prada",
+    "Miu Miu",
+    "Chloé",
+    "Linda Farrow",
+    "Jacques Marie Mage",
+    "Oliver Peoples",
+    "Persol",
+    "Tom Ford",
+    "Dior",
+    "Gucci",
+    "Khaite",
+  ],
+  shoes: [
+    "Manolo Blahnik",
+    "Aquazzura",
+    "Jimmy Choo",
+    "Gianvito Rossi",
+    "Stuart Weitzman",
+    "Khaite",
+    "The Row",
+    "Hermès",
+    "Carrie Forbes",
+    "Alohas",
+    "Le Monde Béryl",
+    "Emme Parsons",
+  ],
+  bag: [
+    "Loewe",
+    "Bottega Veneta",
+    "Saint Laurent",
+    "Jacquemus",
+    "Khaite",
+    "The Row",
+    "Polène",
+    "DeMellier",
+    "Strathberry",
+    "Cult Gaia",
+    "Hereu",
+    "Mansur Gavriel",
+  ],
+  jewelry: [
+    "Sophie Buhai",
+    "Jennifer Fisher",
+    "Missoma",
+    "Anni Lu",
+    "Pamela Card",
+    "Foundrae",
+    "Spinelli Kilcollin",
+    "Brinker & Eliza",
+    "Roxanne Assoulin",
+    "Laura Lombardi",
+    "Éliou",
+    "Mejuri",
+  ],
+  hat: [
+    "Janessa Leone",
+    "Lack of Color",
+    "Maison Michel",
+    "Sensi Studio",
+    "Eric Javits",
+    "Helen Kaminski",
+    "Borsalino",
+  ],
+};
+
+// ──────────────────────────────────────────────────────────────
 // Editorial brief — per destination+activity.
 // ──────────────────────────────────────────────────────────────
 
