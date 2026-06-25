@@ -385,10 +385,10 @@ async function persistCollection(args: {
       destination: brief.destination,
       activity: brief.activity,
       title: `${brief.destination} — ${brief.activity}`,
-      brief: brief as unknown as Record<string, unknown>,
+      brief: brief as unknown as never,
       status: "draft",
-      scoring: collectionScore as unknown as Record<string, unknown>,
-      diagnostics,
+      scoring: collectionScore as unknown as never,
+      diagnostics: diagnostics as unknown as never,
       notes: args.notes ?? null,
     })
     .select("id")
