@@ -671,11 +671,13 @@ export async function discoverForSlot(args: {
             continue;
           }
           const palette = inferPalette(title);
+          const brandAffinity = affinityFor(brand, destination, activity);
           const score = scoreEditorial({
             title,
             description,
             silhouette,
             brandTier: brand.tier,
+            affinity: brandAffinity,
           });
           // v4 — gate on approved commerce source before accepting.
           const cs = resolveCommerceSource(brand, matchedRetailer);
@@ -696,6 +698,7 @@ export async function discoverForSlot(args: {
             silhouette,
             palette,
             editorialScore: score,
+            brandAffinity,
             matchedQuery: tpl,
             source,
             commerceSource: cs.kind,
