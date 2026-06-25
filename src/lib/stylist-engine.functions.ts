@@ -1044,31 +1044,32 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const apiKey = process.env.FIRECRAWL_API_KEY;
     if (!apiKey) return { ok: false as const, stage: "config" as const, error: "FIRECRAWL_API_KEY missing" };
 
-    const brief = briefFor("Portofino", "Yacht Day");
-    const specs = ACTIVITY_SLOTS["Yacht Day"]!.filter((s) => s.required || data.includeOptional);
+    const destination = "Portofino";
+    const activity = "Yacht Day";
+    const brief = briefFor(destination, activity);
+    const specs = getSlotSpecs(destination, activity).filter(
+      (s) => s.required || data.includeOptional,
+    );
 
-    // Load all Yacht Day brands once.
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: allBrands, error: brandErr } = await supabaseAdmin
-      .from("brands")
-      .select("id,name,slug,tier,categories,activities")
-      .eq("status", "approved")
-      .contains("activities", ["Yacht Day"])
-      .order("name", { ascending: true });
-    if (brandErr) return { ok: false as const, stage: "discovery" as const, error: brandErr.message };
-    if (!allBrands?.length) {
+    // v4 — load brands via destination-agnostic helper. Pulls commerce
+    // metadata so the engine can stamp + gate by commerce source.
+    let brands: EngineBrand[];
+    try {
+      brands = await loadEngineBrands(activity);
+    } catch (e) {
       return {
         ok: false as const,
         stage: "discovery" as const,
-        error: "No approved brands tagged Yacht Day in the registry.",
+        error: String((e as Error)?.message ?? e),
       };
     }
-    const brands = allBrands.map((b) => ({
-      name: b.name as string,
-      slug: b.slug as string,
-      tier: (b.tier as string | null) ?? null,
-      categories: (b.categories ?? []) as string[],
-    }));
+    if (!brands.length) {
+      return {
+        ok: false as const,
+        stage: "discovery" as const,
+        error: `No approved brands tagged ${activity} in the registry.`,
+      };
+    }
 
     // ── Registry analytics: count Yacht Day brands per category and flag
     // underrepresented accessory categories before discovery runs.
@@ -1139,11 +1140,13 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         const expansionBrandNames = (ACCESSORY_EXPANSION_BRANDS[spec.slot] ?? [])
           .filter((n) => !coreBrandNames.has(n.toLowerCase()))
           .slice(0, data.maxBrandsPerSlot);
-        const expansionBrands = expansionBrandNames.map((name) => ({
+        const expansionBrands: EngineBrand[] = expansionBrandNames.map((name) => ({
           name,
           slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
           tier: "expansion",
           categories: spec.brandCategories,
+          commerceSources: [],
+          preferredCommerceSource: "affiliate_retailer" as const,
         }));
         const exp = await discoverForSlot({
           apiKey,
