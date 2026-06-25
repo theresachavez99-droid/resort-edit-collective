@@ -995,12 +995,20 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       const slotBrands = brands
         .filter((b) => b.categories.some((c) => spec.brandCategories.includes(c)))
         .slice(0, data.maxBrandsPerSlot);
+      // Effective retailers/brand for THIS slot. The slot's intrinsic
+      // accessory-aware override floors the global setting — accessory
+      // slots will not run with thin retailer coverage even if the user
+      // sets the global knob low.
+      const effectiveRetailersPerBrand = Math.max(
+        data.retailersPerBrand,
+        spec.retailersPerBrand,
+      );
       const r = await discoverForSlot({
         apiKey,
         spec,
         brands: slotBrands,
         resultsPerSearch: data.resultsPerSearch,
-        retailersPerBrand: data.retailersPerBrand,
+        retailersPerBrand: effectiveRetailersPerBrand,
         brandOffset,
         idCounter,
         canonicalSeen,
@@ -1029,7 +1037,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           spec,
           brands: expansionBrands,
           resultsPerSearch: data.resultsPerSearch,
-          retailersPerBrand: data.retailersPerBrand,
+          retailersPerBrand: effectiveRetailersPerBrand,
           brandOffset: brandOffset + slotBrands.length,
           idCounter,
           canonicalSeen,
@@ -1045,6 +1053,12 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         for (const [k, v] of Object.entries(exp.rejections)) {
           r.rejections[k] = (r.rejections[k] ?? 0) + v;
         }
+        for (const rt of exp.retailersQueried) {
+          if (!r.retailersQueried.includes(rt)) r.retailersQueried.push(rt);
+        }
+        const reprSet = new Set(r.retailersRepresented);
+        for (const rt of exp.retailersRepresented) reprSet.add(rt);
+        r.retailersRepresented = Array.from(reprSet);
         r.shortfall = Math.max(0, spec.targetMin - r.candidates.length);
         r.expansion = {
           triggered: true,
@@ -1054,10 +1068,22 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           rawResults: exp.rawResults,
           accepted: acceptedExpansion,
           rejections: exp.rejections,
+          retailersQueried: exp.retailersQueried,
+          retailersRepresented: exp.retailersRepresented,
         };
       } else {
         r.expansion = EXPANDABLE_SLOTS.has(spec.slot)
-          ? { triggered: false, reason: "tier-1 met target", brandsConsidered: [], searchesIssued: 0, rawResults: 0, accepted: 0, rejections: {} }
+          ? {
+              triggered: false,
+              reason: "tier-1 met target",
+              brandsConsidered: [],
+              searchesIssued: 0,
+              rawResults: 0,
+              accepted: 0,
+              rejections: {},
+              retailersQueried: [],
+              retailersRepresented: [],
+            }
           : null;
       }
 
@@ -1078,6 +1104,9 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       covered: r.candidates.length >= r.targetMin,
       brandsSearched: r.brandsConsidered.length,
       searchesIssued: r.searchesIssued,
+      retailersPerBrand: r.retailersPerBrand,
+      retailersQueried: r.retailersQueried,
+      retailersRepresented: r.retailersRepresented,
       rejections: r.rejections,
       expansion: r.expansion,
       expandable: EXPANDABLE_SLOTS.has(r.slot),
