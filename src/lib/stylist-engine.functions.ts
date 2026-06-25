@@ -1150,6 +1150,11 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const lookScores = looks.map((l) => ({ title: l.title, ...scoreLook(l, candidatesById) }));
     const collectionScore = scoreCollection(looks, candidatesById);
 
+    // ── Slot Effectiveness Report — computed AFTER assembly so it can
+    // count how many candidates each slot actually contributed to the
+    // final looks (not just discovery yield).
+    const slotEffectiveness = buildSlotEffectiveness(slotResults, looks, candidatesById);
+
     // Persistence (complete looks only).
     let collectionId: string | null = null;
     let persistError: string | null = null;
@@ -1176,6 +1181,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       brief,
       slotCoverage,
       registryCoverage,
+      slotEffectiveness,
       gated: false as const,
       candidates: [...candidatesById.values()],
       discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
