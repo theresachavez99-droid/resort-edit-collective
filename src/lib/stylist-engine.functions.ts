@@ -854,7 +854,13 @@ async function persistCollection(args: {
           image_url: null,
           price: null,
           reasoning: s.reasoning ?? null,
-          metadata: { silhouette: c.silhouette, palette: c.palette, editorialScore: c.editorialScore },
+          metadata: {
+            silhouette: c.silhouette,
+            palette: c.palette,
+            editorialScore: c.editorialScore,
+            source: c.source,
+            brandTier: c.brandTier,
+          },
         };
       })
       .filter((x): x is NonNullable<typeof x> => x !== null);
