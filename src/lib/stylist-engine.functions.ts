@@ -939,7 +939,62 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         idCounter,
         canonicalSeen,
         seenUrls,
+        source: "core",
       });
+
+      // Tier-2 controlled accessory expansion.
+      if (
+        EXPANDABLE_SLOTS.has(spec.slot) &&
+        r.shortfall > 0 &&
+        (ACCESSORY_EXPANSION_BRANDS[spec.slot]?.length ?? 0) > 0
+      ) {
+        const coreBrandNames = new Set(slotBrands.map((b) => b.name.toLowerCase()));
+        const expansionBrandNames = (ACCESSORY_EXPANSION_BRANDS[spec.slot] ?? [])
+          .filter((n) => !coreBrandNames.has(n.toLowerCase()))
+          .slice(0, data.maxBrandsPerSlot);
+        const expansionBrands = expansionBrandNames.map((name) => ({
+          name,
+          slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          tier: "expansion",
+          categories: spec.brandCategories,
+        }));
+        const exp = await discoverForSlot({
+          apiKey,
+          spec,
+          brands: expansionBrands,
+          resultsPerSearch: data.resultsPerSearch,
+          retailersPerBrand: data.retailersPerBrand,
+          brandOffset: brandOffset + slotBrands.length,
+          idCounter,
+          canonicalSeen,
+          seenUrls,
+          source: "expansion",
+          startingCount: r.candidates.length,
+        });
+        const acceptedExpansion = exp.candidates.length;
+        // Merge expansion candidates into the slot.
+        r.candidates = [...r.candidates, ...exp.candidates];
+        r.searchesIssued += exp.searchesIssued;
+        r.rawResults += exp.rawResults;
+        for (const [k, v] of Object.entries(exp.rejections)) {
+          r.rejections[k] = (r.rejections[k] ?? 0) + v;
+        }
+        r.shortfall = Math.max(0, spec.targetMin - r.candidates.length);
+        r.expansion = {
+          triggered: true,
+          reason: `Tier-1 returned ${r.candidates.length - acceptedExpansion} of ${spec.targetMin} required`,
+          brandsConsidered: expansionBrandNames,
+          searchesIssued: exp.searchesIssued,
+          rawResults: exp.rawResults,
+          accepted: acceptedExpansion,
+          rejections: exp.rejections,
+        };
+      } else {
+        r.expansion = EXPANDABLE_SLOTS.has(spec.slot)
+          ? { triggered: false, reason: "tier-1 met target", brandsConsidered: [], searchesIssued: 0, rawResults: 0, accepted: 0, rejections: {} }
+          : null;
+      }
+
       slotResults.push(r);
       brandOffset += slotBrands.length;
     }
@@ -951,11 +1006,15 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       required: r.required,
       target: `${r.targetMin}-${r.targetMax}`,
       found: r.candidates.length,
+      coreFound: r.candidates.filter((c) => c.source === "core").length,
+      expansionFound: r.candidates.filter((c) => c.source === "expansion").length,
       shortfall: r.shortfall,
       covered: r.candidates.length >= r.targetMin,
       brandsSearched: r.brandsConsidered.length,
       searchesIssued: r.searchesIssued,
       rejections: r.rejections,
+      expansion: r.expansion,
+      expandable: EXPANDABLE_SLOTS.has(r.slot),
     }));
 
     const missingRequiredSlots = slotResults
