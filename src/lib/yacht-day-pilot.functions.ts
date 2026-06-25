@@ -3,14 +3,14 @@ import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireAdmin } from "./admin-auth.server";
 
-const FIRECRAWL_BASE = "https://api.firecrawl.dev/v2";
+export const FIRECRAWL_BASE = "https://api.firecrawl.dev/v2";
 
 /**
  * Approved retailer allowlist for Yacht Day pilot — full Resort Edit
  * affiliate ecosystem. Order is the rotation order used to diversify
  * search coverage so we don't sit on Mytheresa for every brand.
  */
-const APPROVED_RETAILERS = [
+export const APPROVED_RETAILERS = [
   "net-a-porter.com",
   "mytheresa.com",
   "saksfifthavenue.com",
@@ -102,7 +102,7 @@ const PREFILTER_NON_PDP_PATTERNS: RegExp[] = [
   /\/new-in(\/|$)/i,
 ];
 
-function isObviousNonPdp(url: string): boolean {
+export function isObviousNonPdp(url: string): boolean {
   try {
     const u = new URL(url);
     return PREFILTER_NON_PDP_PATTERNS.some((re) => re.test(u.pathname));
@@ -116,7 +116,7 @@ function isObviousNonPdp(url: string): boolean {
  * Drops most designer-index, collection, and editorial articles before they
  * burn raw-result budget.
  */
-const QUERY_EXCLUSIONS =
+export const QUERY_EXCLUSIONS =
   " -inurl:designer -inurl:designers -inurl:collection -inurl:collections" +
   " -inurl:category -inurl:editorial -inurl:stories -inurl:magazine" +
   " -inurl:journal -inurl:blog -inurl:lookbook -inurl:porter";
@@ -233,7 +233,7 @@ type BrandSignals = {
  * ordered token sequence in at least one signal; matching only in the
  * description is treated as low confidence and rejected.
  */
-function detectBrandSignals(
+export function detectBrandSignals(
   brand: string,
   url: string,
   title: string | null,
@@ -274,7 +274,7 @@ const REGION_PREFIX_RE = /^\/((?:en|fr|it|de|es|jp|kr)[-_][a-z]{2}|[a-z]{2}|intl
  * Reduce a URL to a retailer-stable canonical key. Same product surfaced
  * across regional domains/paths collapses to one key.
  */
-function canonicalProductKey(url: string, retailer: string): string {
+export function canonicalProductKey(url: string, retailer: string): string {
   let parsed: URL;
   try {
     parsed = new URL(url);
@@ -331,7 +331,7 @@ const SILHOUETTE_TOKENS: Record<string, RegExp> = {
   sunglasses: /\b(sunglass|shades|cat\s?eye|aviator)\b/i,
 };
 
-function inferSilhouette(title: string | null, url: string): string {
+export function inferSilhouette(title: string | null, url: string): string {
   const hay = `${title ?? ""} ${url}`;
   for (const [name, re] of Object.entries(SILHOUETTE_TOKENS)) {
     if (re.test(hay)) return name;
@@ -350,7 +350,7 @@ const PALETTE_TOKENS: Record<string, RegExp> = {
   gold: /\b(gold|brass)\b/i,
 };
 
-function inferPalette(title: string | null): string {
+export function inferPalette(title: string | null): string {
   const hay = title ?? "";
   for (const [name, re] of Object.entries(PALETTE_TOKENS)) {
     if (re.test(hay)) return name;
@@ -366,7 +366,7 @@ const YACHT_FIT_TOKENS = /\b(yacht|resort|riviera|capri|portofino|cruise|sail|su
 const LUXURY_FABRIC_TOKENS = /\b(silk|linen|raffia|crochet|cashmere|cotton|leather)\b/i;
 const STATEMENT_TOKENS = /\b(embellish|sequin|tassel|fringe|broderie|lace)\b/i;
 
-function editorialScore(input: {
+export function editorialScore(input: {
   title: string | null;
   description: string | null;
   silhouette: string;
@@ -383,7 +383,7 @@ function editorialScore(input: {
   return s;
 }
 
-function looksLikePdp(url: string, retailer?: string | null): boolean {
+export function looksLikePdp(url: string, retailer?: string | null): boolean {
   try {
     const u = new URL(url);
     if (COLLECTION_PATTERNS.some((re) => re.test(u.pathname))) return false;
@@ -399,7 +399,7 @@ function looksLikePdp(url: string, retailer?: string | null): boolean {
   }
 }
 
-function retailerOf(url: string): string | null {
+export function retailerOf(url: string): string | null {
   try {
     const host = new URL(url).hostname.replace(/^www\./, "");
     return APPROVED_RETAILERS.find((d) => host === d || host.endsWith(`.${d}`)) ?? null;
