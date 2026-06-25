@@ -11,15 +11,8 @@
 import type { LookSlug } from "@/lib/portofino-spec";
 import type { Look } from "./lookbook";
 
-import imgShaniGeneva from "@/assets/products/shani-shemer-geneva-espresso.svg";
-import imgMc2Amalia from "@/assets/products/mc2-amalia-degrade-trousers.svg";
-import imgEleftheria from "@/assets/products/ancient-greek-eleftheria-sandal.svg";
-import imgLeanna from "@/assets/products/jennifer-behr-leanna-earrings.svg";
-import imgNatashaCuff from "@/assets/products/jennifer-fisher-natasha-cuff.svg";
 import imgTriompheCateye from "@/assets/products/celine-triomphe-cateye.svg";
 import imgRaffiaTote from "@/assets/products/large-woven-raffia-tote-chestnut.svg";
-import imgCollette from "@/assets/products/collette-straw-sun-hat.svg";
-import imgMadisonRing from "@/assets/products/madison-avenue-ring.svg";
 import imgGlowDrops from "@/assets/products/st-tropez-tonic-glow-drops.svg";
 
 import imgMichaFloral from "@/assets/products/melissa-odabash-micha-floral.svg";
@@ -63,39 +56,39 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
   "day-1/look-c": {
     main: [
       {
-        slotLabel: "OUTFIT · SWIM",
-        brand: "Shani Shemer",
-        title: "Geneva One-Piece Swimsuit in Espresso",
-        url: "https://www.fwrd.com/product-shani-shemer-geneva-one-piece-swimsuit-in-espresso/SMEF-WX124/",
-        image: imgShaniGeneva,
-      },
-      {
-        slotLabel: "TROUSERS · LAYER",
-        brand: "MC2 Saint Barth",
-        title: "Brown Amalia Degradé Raschel Long Trousers",
-        url: "https://us.mc2saintbarth.com/products/brown-amalia-degrade-raschel-long-trousers",
-        image: imgMc2Amalia,
+        slotLabel: "DRESS",
+        brand: "Resort Edit",
+        title: "Ivory Crochet Knit Midi Dress",
+        url: "AFF-HARBORAPERITIVO-DRESS",
+        image: "",
       },
       {
         slotLabel: "SHOES",
-        brand: "Ancient Greek Sandals",
-        title: "Eleftheria Sandals",
-        url: "https://www.shopbop.com/eleftheria-sandal-ancient-greek-sandals/vp/v=1/1535976709.htm",
-        image: imgEleftheria,
+        brand: "Resort Edit",
+        title: "Tan Leather Flat Sandals",
+        url: "AFF-HARBORAPERITIVO-SHOES",
+        image: "",
       },
       {
         slotLabel: "EARRINGS",
-        brand: "Jennifer Behr",
-        title: "Leanna Crystal Earrings",
-        url: "https://www.neimanmarcus.com/p/jennifer-behr-leanna-crystal-earrings-prod284790262",
-        image: imgLeanna,
+        brand: "Revolve",
+        title: "Gold Hoop Earrings",
+        url: "AFF-HARBORAPERITIVO-EARRINGS",
+        image: imgPoolHoops,
+      },
+      {
+        slotLabel: "NECKLACE",
+        brand: "Missoma x Lucy Williams",
+        title: "18ct Gold-Plated Roman Arc Coin Pendant Necklace",
+        url: "https://www.libertylondon.com/us/x-lucy-williams-18ct-gold-plated-engravable-roman-arc-coin-pendant-necklace-R498618006.html",
+        image: imgRomanArcNecklace,
       },
       {
         slotLabel: "BRACELET",
-        brand: "Jennifer Fisher",
-        title: "Natasha Cuff",
-        url: "https://www.shopbop.com/natasha-cuff-jennifer-fisher/vp/v=1/1542946262.htm",
-        image: imgNatashaCuff,
+        brand: "Jenny Bird",
+        title: "Remi Hinge Bangle Bracelet",
+        url: "https://www.nordstrom.com/s/jenny-bird-remi-hinge-bangle-bracelet/6839686",
+        image: imgRemiBangle,
       },
       {
         slotLabel: "SUNGLASSES",
@@ -110,20 +103,6 @@ const OVERRIDES: Partial<Record<Key, LookOverride>> = {
         title: "Large Woven Raffia Tote (Chestnut Brown)",
         url: "https://www.nordstrom.com/s/large-woven-raffia-tote/8842846",
         image: imgRaffiaTote,
-      },
-      {
-        slotLabel: "HAT",
-        brand: "Nordstrom",
-        title: "Collette Straw Sun Hat",
-        url: "https://www.nordstrom.com/s/collette-straw-sun-hat/8048666",
-        image: imgCollette,
-      },
-      {
-        slotLabel: "RING",
-        brand: "Nordstrom",
-        title: "Madison Avenue Ring",
-        url: "https://www.nordstrom.com/s/madison-avenue-ring/8506686",
-        image: imgMadisonRing,
       },
     ],
     details: {
