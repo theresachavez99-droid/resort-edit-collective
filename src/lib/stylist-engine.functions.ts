@@ -436,6 +436,8 @@ type SlotCandidate = {
   editorialScore: number;
   matchedQuery: string;
   source: "core" | "expansion";
+  /** v4 — resolved commerce channel for this candidate. */
+  commerceSource: CommerceSourceKind;
 };
 
 type SlotDiscoveryResult = {
