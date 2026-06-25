@@ -567,6 +567,8 @@ export async function discoverForSlot(args: {
   } = args;
   const source: "core" | "expansion" = args.source ?? "core";
   const startingCount = args.startingCount ?? 0;
+  const destination = args.destination ?? "Portofino";
+  const activity = args.activity ?? spec.slot;
 
   const candidates: SlotCandidate[] = [];
   const rejections: Record<string, number> = {};
