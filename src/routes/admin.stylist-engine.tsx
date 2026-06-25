@@ -171,6 +171,7 @@ function StylistEnginePage() {
           ) : (
             <>
               <CollectionReport result={result} />
+              <SlotEffectivenessReport result={result} />
               <LooksGrid result={result} />
             </>
           )}
