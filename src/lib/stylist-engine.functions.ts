@@ -53,6 +53,13 @@ type SlotSpec = {
   targetMin: number;
   /** Maximum to collect before stopping that slot's search. */
   targetMax: number;
+  /**
+   * Retailer depth override for this slot — how many approved retailers
+   * to query per brand. Accessory slots need broader coverage because
+   * inventory is fragmented across many retailers; swimwear and coverups
+   * concentrate inside fewer specialty/department stores.
+   */
+  retailersPerBrand: number;
 };
 
 const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
@@ -65,6 +72,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     templates: ["{brand} one piece swimsuit", "{brand} bikini", "{brand} maillot"],
     targetMin: 8,
     targetMax: 12,
+    retailersPerBrand: 4,
   },
   {
     slot: "coverup",
@@ -81,6 +89,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 8,
     targetMax: 12,
+    retailersPerBrand: 5,
   },
   {
     slot: "shoes",
@@ -96,6 +105,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 8,
     targetMax: 12,
+    retailersPerBrand: 7,
   },
   {
     slot: "bag",
@@ -111,6 +121,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 8,
     targetMax: 12,
+    retailersPerBrand: 7,
   },
   {
     slot: "sunglasses",
@@ -126,6 +137,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 6,
     targetMax: 10,
+    retailersPerBrand: 9,
   },
   {
     slot: "jewelry",
@@ -142,6 +154,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 12,
     targetMax: 20,
+    retailersPerBrand: 9,
   },
   {
     slot: "hat",
@@ -152,6 +165,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     templates: ["{brand} straw hat", "{brand} panama hat", "{brand} sun hat"],
     targetMin: 4,
     targetMax: 8,
+    retailersPerBrand: 7,
   },
 ];
 
@@ -332,6 +346,12 @@ type SlotDiscoveryResult = {
   rawResults: number;
   rejections: Record<string, number>;
   shortfall: number; // how many below targetMin (0 if covered)
+  /** Effective retailers/brand setting used (slot-specific override). */
+  retailersPerBrand: number;
+  /** Distinct retailers actually queried across all brands in this slot. */
+  retailersQueried: string[];
+  /** Distinct retailers present in accepted candidates. */
+  retailersRepresented: string[];
   /** Tier-2 controlled accessory expansion telemetry (null when not eligible / not triggered). */
   expansion?: {
     triggered: boolean;
@@ -341,6 +361,8 @@ type SlotDiscoveryResult = {
     rawResults: number;
     accepted: number;
     rejections: Record<string, number>;
+    retailersQueried: string[];
+    retailersRepresented: string[];
   } | null;
 };
 
@@ -388,6 +410,7 @@ async function discoverForSlot(args: {
   const candidates: SlotCandidate[] = [];
   const rejections: Record<string, number> = {};
   const bump = (k: string) => (rejections[k] = (rejections[k] ?? 0) + 1);
+  const retailersQueried = new Set<string>();
 
   // Brands relevant to this slot.
   const slotBrands = brands.filter((b) =>
@@ -406,6 +429,7 @@ async function discoverForSlot(args: {
       retailers.push(APPROVED_RETAILERS[(brandOffset + bi + k) % APPROVED_RETAILERS.length]);
     }
     for (const retailer of retailers) {
+      retailersQueried.add(retailer);
       for (const tpl of spec.templates) {
         if (candidates.length >= spec.targetMax) break outer;
         const query = `${tpl.replace("{brand}", brand.name)} site:${retailer}${QUERY_EXCLUSIONS}`;
@@ -515,6 +539,7 @@ async function discoverForSlot(args: {
   candidates.sort((a, b) => b.editorialScore - a.editorialScore);
   const remaining = Math.max(0, spec.targetMax - startingCount);
   const kept = candidates.slice(0, remaining);
+  const retailersRepresented = Array.from(new Set(kept.map((c) => c.retailer)));
 
   return {
     slot: spec.slot,
@@ -528,6 +553,9 @@ async function discoverForSlot(args: {
     rawResults,
     rejections,
     shortfall: Math.max(0, spec.targetMin - (kept.length + startingCount)),
+    retailersPerBrand,
+    retailersQueried: Array.from(retailersQueried),
+    retailersRepresented,
   };
 }
 
@@ -885,7 +913,13 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         password: z.string().min(1).max(200),
         targetLooks: z.number().int().min(3).max(12).default(6),
         maxBrandsPerSlot: z.number().int().min(2).max(20).default(8),
-        retailersPerBrand: z.number().int().min(1).max(8).default(3),
+        /**
+         * Floor for retailers/brand across all slots. Slot-specific
+         * overrides in YACHT_DAY_SLOT_SPECS take precedence when higher.
+         * Default raised from 3 → 6 because accessory inventory is
+         * fragmented across many retailers.
+         */
+        retailersPerBrand: z.number().int().min(1).max(12).default(6),
         resultsPerSearch: z.number().int().min(1).max(10).default(4),
         persist: z.boolean().default(true),
         includeOptional: z.boolean().default(true),
@@ -961,12 +995,20 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       const slotBrands = brands
         .filter((b) => b.categories.some((c) => spec.brandCategories.includes(c)))
         .slice(0, data.maxBrandsPerSlot);
+      // Effective retailers/brand for THIS slot. The slot's intrinsic
+      // accessory-aware override floors the global setting — accessory
+      // slots will not run with thin retailer coverage even if the user
+      // sets the global knob low.
+      const effectiveRetailersPerBrand = Math.max(
+        data.retailersPerBrand,
+        spec.retailersPerBrand,
+      );
       const r = await discoverForSlot({
         apiKey,
         spec,
         brands: slotBrands,
         resultsPerSearch: data.resultsPerSearch,
-        retailersPerBrand: data.retailersPerBrand,
+        retailersPerBrand: effectiveRetailersPerBrand,
         brandOffset,
         idCounter,
         canonicalSeen,
@@ -995,7 +1037,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           spec,
           brands: expansionBrands,
           resultsPerSearch: data.resultsPerSearch,
-          retailersPerBrand: data.retailersPerBrand,
+          retailersPerBrand: effectiveRetailersPerBrand,
           brandOffset: brandOffset + slotBrands.length,
           idCounter,
           canonicalSeen,
@@ -1011,6 +1053,12 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         for (const [k, v] of Object.entries(exp.rejections)) {
           r.rejections[k] = (r.rejections[k] ?? 0) + v;
         }
+        for (const rt of exp.retailersQueried) {
+          if (!r.retailersQueried.includes(rt)) r.retailersQueried.push(rt);
+        }
+        const reprSet = new Set(r.retailersRepresented);
+        for (const rt of exp.retailersRepresented) reprSet.add(rt);
+        r.retailersRepresented = Array.from(reprSet);
         r.shortfall = Math.max(0, spec.targetMin - r.candidates.length);
         r.expansion = {
           triggered: true,
@@ -1020,10 +1068,22 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           rawResults: exp.rawResults,
           accepted: acceptedExpansion,
           rejections: exp.rejections,
+          retailersQueried: exp.retailersQueried,
+          retailersRepresented: exp.retailersRepresented,
         };
       } else {
         r.expansion = EXPANDABLE_SLOTS.has(spec.slot)
-          ? { triggered: false, reason: "tier-1 met target", brandsConsidered: [], searchesIssued: 0, rawResults: 0, accepted: 0, rejections: {} }
+          ? {
+              triggered: false,
+              reason: "tier-1 met target",
+              brandsConsidered: [],
+              searchesIssued: 0,
+              rawResults: 0,
+              accepted: 0,
+              rejections: {},
+              retailersQueried: [],
+              retailersRepresented: [],
+            }
           : null;
       }
 
@@ -1044,6 +1104,9 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       covered: r.candidates.length >= r.targetMin,
       brandsSearched: r.brandsConsidered.length,
       searchesIssued: r.searchesIssued,
+      retailersPerBrand: r.retailersPerBrand,
+      retailersQueried: r.retailersQueried,
+      retailersRepresented: r.retailersRepresented,
       rejections: r.rejections,
       expansion: r.expansion,
       expandable: EXPANDABLE_SLOTS.has(r.slot),
@@ -1058,12 +1121,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
     // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
     if (missingRequiredSlots.length > 0) {
+      const slotEffectivenessGated = buildSlotEffectiveness(slotResults, [], candidatesById);
       return {
         ok: true as const,
         ranAt: new Date().toISOString(),
         brief,
         slotCoverage,
         registryCoverage,
+        slotEffectiveness: slotEffectivenessGated,
         candidates: [...candidatesById.values()],
         looks: [],
         assemblyError: `Insufficient candidates for complete look generation. Required slots with zero candidates: ${missingRequiredSlots.join(", ")}.`,
@@ -1086,6 +1151,11 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
     const lookScores = looks.map((l) => ({ title: l.title, ...scoreLook(l, candidatesById) }));
     const collectionScore = scoreCollection(looks, candidatesById);
+
+    // ── Slot Effectiveness Report — computed AFTER assembly so it can
+    // count how many candidates each slot actually contributed to the
+    // final looks (not just discovery yield).
+    const slotEffectiveness = buildSlotEffectiveness(slotResults, looks, candidatesById);
 
     // Persistence (complete looks only).
     let collectionId: string | null = null;
@@ -1113,6 +1183,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       brief,
       slotCoverage,
       registryCoverage,
+      slotEffectiveness,
       gated: false as const,
       candidates: [...candidatesById.values()],
       discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
@@ -1177,4 +1248,107 @@ function aggregateTelemetry(results: SlotDiscoveryResult[], totalCandidates: num
       candidatesAccepted: expansionAccepted,
     },
   };
+}
+
+// ──────────────────────────────────────────────────────────────
+// Slot Effectiveness Report
+//
+// Per-slot read of HOW WELL discovery served assembly:
+//   - core brands searched / expansion activated
+//   - retailers searched / represented
+//   - candidates found / accepted / rejected
+//   - final products used (count of slot fills in complete looks)
+//   - brand & retailer diversity
+//   - strong / adequate / weak rating
+// ──────────────────────────────────────────────────────────────
+
+type Effectiveness = "strong" | "adequate" | "weak";
+
+function rateEffectiveness(args: {
+  required: boolean;
+  finalUsed: number;
+  uniqueBrands: number;
+  uniqueRetailers: number;
+  shortfall: number;
+}): Effectiveness {
+  const { required, finalUsed, uniqueBrands, uniqueRetailers, shortfall } = args;
+  // A slot is "weak" if discovery fell short OR final looks lean on a
+  // single brand / single retailer (no real choice for the stylist).
+  if (shortfall > 0) return "weak";
+  if (uniqueBrands < 2) return "weak";
+  if (required && finalUsed === 0) return "weak";
+  if (uniqueBrands >= 4 && uniqueRetailers >= 3) return "strong";
+  return "adequate";
+}
+
+function buildSlotEffectiveness(
+  results: SlotDiscoveryResult[],
+  looks: AssembledLook[],
+  candidatesById: Map<string, SlotCandidate>,
+) {
+  // Count how many candidates per slot ended up in a COMPLETE look.
+  const finalUsedBySlot = new Map<string, number>();
+  const finalBrandsBySlot = new Map<string, Set<string>>();
+  const finalRetailersBySlot = new Map<string, Set<string>>();
+  for (const look of looks) {
+    if (!look.complete) continue;
+    for (const s of look.slots) {
+      const c = candidatesById.get(s.candidateId);
+      if (!c) continue;
+      finalUsedBySlot.set(s.slot, (finalUsedBySlot.get(s.slot) ?? 0) + 1);
+      if (!finalBrandsBySlot.has(s.slot)) finalBrandsBySlot.set(s.slot, new Set());
+      if (!finalRetailersBySlot.has(s.slot)) finalRetailersBySlot.set(s.slot, new Set());
+      finalBrandsBySlot.get(s.slot)!.add(c.brand);
+      finalRetailersBySlot.get(s.slot)!.add(c.retailer);
+    }
+  }
+
+  return results.map((r) => {
+    const accepted = r.candidates.length;
+    const rejected = Object.values(r.rejections).reduce((a, b) => a + b, 0);
+    const candidateBrands = new Set(r.candidates.map((c) => c.brand));
+    const candidateRetailers = new Set(r.candidates.map((c) => c.retailer));
+    const finalUsed = finalUsedBySlot.get(r.slot) ?? 0;
+    const finalBrands = finalBrandsBySlot.get(r.slot)?.size ?? 0;
+    const finalRetailers = finalRetailersBySlot.get(r.slot)?.size ?? 0;
+    const rating = rateEffectiveness({
+      required: r.required,
+      finalUsed,
+      uniqueBrands: candidateBrands.size,
+      uniqueRetailers: candidateRetailers.size,
+      shortfall: r.shortfall,
+    });
+    const expansionTriggered = r.expansion?.triggered ?? false;
+    const expansionEligible = EXPANDABLE_SLOTS.has(r.slot);
+    return {
+      slot: r.slot,
+      label: r.label,
+      required: r.required,
+      // Brand pools.
+      coreBrandsSearched: r.brandsConsidered.length,
+      coreBrands: r.brandsConsidered,
+      expansionEligible,
+      expansionActivated: expansionTriggered,
+      expansionBrandsSearched: r.expansion?.brandsConsidered.length ?? 0,
+      // Retailer pools.
+      retailersPerBrand: r.retailersPerBrand,
+      retailersSearched: r.retailersQueried.length,
+      retailersSearchedList: r.retailersQueried,
+      retailersRepresentedCount: r.retailersRepresented.length,
+      retailersRepresented: r.retailersRepresented,
+      // Candidate flow.
+      candidatesFound: r.rawResults,
+      candidatesAccepted: accepted,
+      candidatesRejected: rejected,
+      acceptanceRate:
+        r.rawResults > 0 ? Math.round((accepted / r.rawResults) * 1000) / 1000 : 0,
+      // Final outcome.
+      finalProductsUsed: finalUsed,
+      brandDiversity: candidateBrands.size,
+      retailerDiversity: candidateRetailers.size,
+      finalBrandDiversity: finalBrands,
+      finalRetailerDiversity: finalRetailers,
+      coverage: rating,
+    };
+  });
 }
