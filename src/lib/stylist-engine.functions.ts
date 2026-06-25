@@ -1117,7 +1117,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     // metadata so the engine can stamp + gate by commerce source.
     let brands: EngineBrand[];
     try {
-      brands = await loadEngineBrands(activity);
+      brands = await loadEngineBrands(activity, destination);
     } catch (e) {
       return {
         ok: false as const,
