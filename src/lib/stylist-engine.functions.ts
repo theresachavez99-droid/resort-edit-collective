@@ -489,7 +489,7 @@ async function firecrawlSearch(apiKey: string, query: string, limit: number) {
 async function discoverForSlot(args: {
   apiKey: string;
   spec: SlotSpec;
-  brands: Array<{ name: string; slug: string; tier: string | null; categories: string[] }>;
+  brands: EngineBrand[];
   resultsPerSearch: number;
   retailersPerBrand: number;
   brandOffset: number;
