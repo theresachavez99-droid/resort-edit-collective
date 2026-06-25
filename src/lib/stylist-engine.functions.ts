@@ -1001,6 +1001,7 @@ async function persistCollection(args: {
             editorialScore: c.editorialScore,
             source: c.source,
             brandTier: c.brandTier,
+            commerceSource: c.commerceSource,
           },
         };
       })
