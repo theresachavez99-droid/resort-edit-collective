@@ -41,6 +41,7 @@ import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.dest
 import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
 import { Route as AdminCollectionsRouteImport } from './routes/admin.collections'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
+import { Route as AdminBrandPerformanceRouteImport } from './routes/admin.brand-performance'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } from './routes/destinations.portofino.day-1-yacht-harbour-aperitivo'
 import { Route as AdminCollectionsIdRouteImport } from './routes/admin.collections.$id'
@@ -205,6 +206,11 @@ const AdminBrandsRoute = AdminBrandsRouteImport.update({
   path: '/admin/brands',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBrandPerformanceRoute = AdminBrandPerformanceRouteImport.update({
+  id: '/admin/brand-performance',
+  path: '/admin/brand-performance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
   id: '/$day/$look',
   path: '/$day/$look',
@@ -232,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/resort-edits': typeof ResortEditsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/resort-edits': typeof ResortEditsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
@@ -307,6 +315,7 @@ export interface FileRoutesById {
   '/resort-edits': typeof ResortEditsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
@@ -346,6 +355,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/admin/brand-performance'
     | '/admin/brands'
     | '/admin/collections'
     | '/admin/day-images'
@@ -383,6 +393,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/admin/brand-performance'
     | '/admin/brands'
     | '/admin/collections'
     | '/admin/day-images'
@@ -420,6 +431,7 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/admin/brand-performance'
     | '/admin/brands'
     | '/admin/collections'
     | '/admin/day-images'
@@ -458,6 +470,7 @@ export interface RootRouteChildren {
   ResortEditsRoute: typeof ResortEditsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminBrandPerformanceRoute: typeof AdminBrandPerformanceRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
   AdminCollectionsRoute: typeof AdminCollectionsRouteWithChildren
   AdminDayImagesRoute: typeof AdminDayImagesRoute
@@ -701,6 +714,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBrandsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/brand-performance': {
+      id: '/admin/brand-performance'
+      path: '/admin/brand-performance'
+      fullPath: '/admin/brand-performance'
+      preLoaderRoute: typeof AdminBrandPerformanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portofino/$day/$look': {
       id: '/portofino/$day/$look'
       path: '/$day/$look'
@@ -796,6 +816,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResortEditsRoute: ResortEditsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminBrandPerformanceRoute: AdminBrandPerformanceRoute,
   AdminBrandsRoute: AdminBrandsRoute,
   AdminCollectionsRoute: AdminCollectionsRouteWithChildren,
   AdminDayImagesRoute: AdminDayImagesRoute,
