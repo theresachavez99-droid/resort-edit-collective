@@ -6,7 +6,7 @@ import { getPortofinoMomentDef } from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
 import { absoluteUrl } from "@/lib/site";
 import { findLook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type LookProduct } from "@/data/lookbook";
-import { lookOverrideFor, type OverrideItem } from "@/data/lookOverrides";
+import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS } from "@/lib/portofino-spec";
 import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
@@ -105,7 +105,7 @@ function MomentPage() {
 
   // Resolve the canonical shoppable Look from the lookbook.
   const look = findLook(card.legacy_day_slug, card.look_slug);
-  const override = look ? lookOverrideFor(card.legacy_day_slug, card.look_slug) : null;
+  const override = look ? lookOverrideForPublic(card.legacy_day_slug, card.look_slug) : null;
 
   // Prefer the override product set if defined; otherwise pick the first
   // tier that actually has sourced products. The look_slug guarantees a
