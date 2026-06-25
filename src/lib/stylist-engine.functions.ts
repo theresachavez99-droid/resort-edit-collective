@@ -174,6 +174,110 @@ const ACTIVITY_SLOTS: Record<string, SlotSpec[]> = {
 };
 
 // ──────────────────────────────────────────────────────────────
+// v4 — Destination-agnostic slot resolver.
+//
+// The engine no longer hard-binds to a single activity. Slot specs are
+// keyed by `${destination}|${activity}` first, then by activity alone,
+// then fall back to a sensible default. Add new (destination, activity)
+// entries here without touching the engine core.
+// ──────────────────────────────────────────────────────────────
+
+const SLOT_SPECS_BY_KEY: Record<string, SlotSpec[]> = {
+  "Portofino|Yacht Day": YACHT_DAY_SLOT_SPECS,
+};
+
+export function getSlotSpecs(destination: string, activity: string): SlotSpec[] {
+  const key = `${destination}|${activity}`;
+  return (
+    SLOT_SPECS_BY_KEY[key] ??
+    ACTIVITY_SLOTS[activity] ??
+    YACHT_DAY_SLOT_SPECS
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// v4 — Commerce sources.
+//
+// Every accepted candidate is stamped with the commerce channel it
+// belongs to. Today every approved brand seeds an `affiliate_retailer`
+// entry, so resolution is retailer-based. When Brand Direct partnerships
+// activate, brands declare `brand_direct` in `commerce_sources` and the
+// resolver will prefer it based on `preferred_commerce_source`.
+// ──────────────────────────────────────────────────────────────
+
+type CommerceSourceKind = "affiliate_retailer" | "brand_direct" | "hybrid";
+
+type CommerceSourceEntry = {
+  kind: CommerceSourceKind;
+  retailers?: string[];
+  program?: string;
+  endpoint?: string | null;
+  status?: "active" | "planned" | "paused";
+};
+
+type EngineBrand = {
+  name: string;
+  slug: string;
+  tier: string | null;
+  categories: string[];
+  commerceSources: CommerceSourceEntry[];
+  preferredCommerceSource: CommerceSourceKind;
+};
+
+function resolveCommerceSource(
+  brand: Pick<EngineBrand, "commerceSources" | "preferredCommerceSource">,
+  retailerHost: string,
+): { kind: CommerceSourceKind; approved: boolean } {
+  const sources = brand.commerceSources ?? [];
+  // No structured sources yet → assume affiliate retailer (v3 behavior).
+  if (sources.length === 0) {
+    return { kind: "affiliate_retailer", approved: true };
+  }
+  const active = sources.filter((s) => (s.status ?? "active") === "active");
+  if (active.length === 0) return { kind: "affiliate_retailer", approved: false };
+
+  const preferred = brand.preferredCommerceSource ?? "affiliate_retailer";
+  // Affiliate retailer match: either the brand's retailer list is empty
+  // (any APPROVED_RETAILER counts) or the host is in the brand's list.
+  const affiliate = active.find((s) => s.kind === "affiliate_retailer" || s.kind === "hybrid");
+  if (affiliate) {
+    const retailers = (affiliate.retailers ?? []).map((r) => r.toLowerCase());
+    if (retailers.length === 0 || retailers.includes(retailerHost.toLowerCase())) {
+      return { kind: preferred === "brand_direct" ? "hybrid" : "affiliate_retailer", approved: true };
+    }
+  }
+  // Brand-direct fallback (architectural placeholder — no integrations yet).
+  const direct = active.find((s) => s.kind === "brand_direct");
+  if (direct) return { kind: "brand_direct", approved: true };
+  return { kind: "affiliate_retailer", approved: false };
+}
+
+async function loadEngineBrands(activity: string): Promise<EngineBrand[]> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("brands")
+    .select(
+      "id,name,slug,tier,categories,activities,commerce_sources,preferred_commerce_source,destination_strength",
+    )
+    .eq("status", "approved")
+    .contains("activities", [activity])
+    .order("name", { ascending: true });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((b) => ({
+    name: b.name as string,
+    slug: b.slug as string,
+    tier: (b.tier as string | null) ?? null,
+    categories: ((b as { categories?: string[] }).categories ?? []) as string[],
+    commerceSources: (Array.isArray((b as { commerce_sources?: unknown }).commerce_sources)
+      ? ((b as { commerce_sources: unknown[] }).commerce_sources as CommerceSourceEntry[])
+      : []),
+    preferredCommerceSource:
+      (((b as { preferred_commerce_source?: string }).preferred_commerce_source as CommerceSourceKind) ??
+        "affiliate_retailer"),
+  }));
+}
+
+// ──────────────────────────────────────────────────────────────
 // Tier-2 controlled accessory expansion.
 //
 // Curated luxury accessory brands carried by APPROVED_RETAILERS that are
@@ -332,6 +436,8 @@ type SlotCandidate = {
   editorialScore: number;
   matchedQuery: string;
   source: "core" | "expansion";
+  /** v4 — resolved commerce channel for this candidate. */
+  commerceSource: CommerceSourceKind;
 };
 
 type SlotDiscoveryResult = {
@@ -383,7 +489,7 @@ async function firecrawlSearch(apiKey: string, query: string, limit: number) {
 async function discoverForSlot(args: {
   apiKey: string;
   spec: SlotSpec;
-  brands: Array<{ name: string; slug: string; tier: string | null; categories: string[] }>;
+  brands: EngineBrand[];
   resultsPerSearch: number;
   retailersPerBrand: number;
   brandOffset: number;
@@ -514,6 +620,12 @@ async function discoverForSlot(args: {
             silhouette,
             brandTier: brand.tier,
           });
+          // v4 — gate on approved commerce source before accepting.
+          const cs = resolveCommerceSource(brand, matchedRetailer);
+          if (!cs.approved) {
+            bump("no_approved_commerce_source");
+            continue;
+          }
           candidates.push({
             id: `c${(idCounter.n++).toString().padStart(4, "0")}`,
             slot: spec.slot,
@@ -529,6 +641,7 @@ async function discoverForSlot(args: {
             editorialScore: score,
             matchedQuery: tpl,
             source,
+            commerceSource: cs.kind,
           });
         }
       }
@@ -888,6 +1001,7 @@ async function persistCollection(args: {
             editorialScore: c.editorialScore,
             source: c.source,
             brandTier: c.brandTier,
+            commerceSource: c.commerceSource,
           },
         };
       })
@@ -931,31 +1045,32 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const apiKey = process.env.FIRECRAWL_API_KEY;
     if (!apiKey) return { ok: false as const, stage: "config" as const, error: "FIRECRAWL_API_KEY missing" };
 
-    const brief = briefFor("Portofino", "Yacht Day");
-    const specs = ACTIVITY_SLOTS["Yacht Day"]!.filter((s) => s.required || data.includeOptional);
+    const destination = "Portofino";
+    const activity = "Yacht Day";
+    const brief = briefFor(destination, activity);
+    const specs = getSlotSpecs(destination, activity).filter(
+      (s) => s.required || data.includeOptional,
+    );
 
-    // Load all Yacht Day brands once.
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: allBrands, error: brandErr } = await supabaseAdmin
-      .from("brands")
-      .select("id,name,slug,tier,categories,activities")
-      .eq("status", "approved")
-      .contains("activities", ["Yacht Day"])
-      .order("name", { ascending: true });
-    if (brandErr) return { ok: false as const, stage: "discovery" as const, error: brandErr.message };
-    if (!allBrands?.length) {
+    // v4 — load brands via destination-agnostic helper. Pulls commerce
+    // metadata so the engine can stamp + gate by commerce source.
+    let brands: EngineBrand[];
+    try {
+      brands = await loadEngineBrands(activity);
+    } catch (e) {
       return {
         ok: false as const,
         stage: "discovery" as const,
-        error: "No approved brands tagged Yacht Day in the registry.",
+        error: String((e as Error)?.message ?? e),
       };
     }
-    const brands = allBrands.map((b) => ({
-      name: b.name as string,
-      slug: b.slug as string,
-      tier: (b.tier as string | null) ?? null,
-      categories: (b.categories ?? []) as string[],
-    }));
+    if (!brands.length) {
+      return {
+        ok: false as const,
+        stage: "discovery" as const,
+        error: `No approved brands tagged ${activity} in the registry.`,
+      };
+    }
 
     // ── Registry analytics: count Yacht Day brands per category and flag
     // underrepresented accessory categories before discovery runs.
@@ -1026,11 +1141,13 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         const expansionBrandNames = (ACCESSORY_EXPANSION_BRANDS[spec.slot] ?? [])
           .filter((n) => !coreBrandNames.has(n.toLowerCase()))
           .slice(0, data.maxBrandsPerSlot);
-        const expansionBrands = expansionBrandNames.map((name) => ({
+        const expansionBrands: EngineBrand[] = expansionBrandNames.map((name) => ({
           name,
           slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
           tier: "expansion",
           categories: spec.brandCategories,
+          commerceSources: [],
+          preferredCommerceSource: "affiliate_retailer" as const,
         }));
         const exp = await discoverForSlot({
           apiKey,
@@ -1119,6 +1236,21 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const candidatesById = new Map<string, SlotCandidate>();
     for (const r of slotResults) r.candidates.forEach((c) => candidatesById.set(c.id, c));
 
+    // v4 — commerce source mix across the candidate pool.
+    const commerceSourceMix = (() => {
+      const counts: Record<string, number> = {};
+      for (const c of candidatesById.values()) {
+        counts[c.commerceSource] = (counts[c.commerceSource] ?? 0) + 1;
+      }
+      const total = candidatesById.size || 1;
+      return {
+        counts,
+        shares: Object.fromEntries(
+          Object.entries(counts).map(([k, v]) => [k, Math.round((v / total) * 1000) / 1000]),
+        ),
+      };
+    })();
+
     // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
     if (missingRequiredSlots.length > 0) {
       const slotEffectivenessGated = buildSlotEffectiveness(slotResults, [], candidatesById);
@@ -1129,6 +1261,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         slotCoverage,
         registryCoverage,
         slotEffectiveness: slotEffectivenessGated,
+        commerceSourceMix,
         candidates: [...candidatesById.values()],
         looks: [],
         assemblyError: `Insufficient candidates for complete look generation. Required slots with zero candidates: ${missingRequiredSlots.join(", ")}.`,
@@ -1184,6 +1317,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       slotCoverage,
       registryCoverage,
       slotEffectiveness,
+      commerceSourceMix,
       gated: false as const,
       candidates: [...candidatesById.values()],
       discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
@@ -1209,6 +1343,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             silhouette: c?.silhouette ?? null,
             palette: c?.palette ?? null,
             editorialScore: c?.editorialScore ?? null,
+            commerceSource: c?.commerceSource ?? null,
           };
         }),
       })),

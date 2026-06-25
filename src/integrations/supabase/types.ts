@@ -191,13 +191,16 @@ export type Database = {
         Row: {
           activities: string[]
           categories: string[]
+          commerce_sources: Json
           created_at: string
+          destination_strength: string[]
           destinations: string[]
           id: string
           is_hero: boolean
           materials: string[]
           name: string
           notes: string | null
+          preferred_commerce_source: string
           retailer_hints: Json
           slug: string
           status: string
@@ -210,13 +213,16 @@ export type Database = {
         Insert: {
           activities?: string[]
           categories?: string[]
+          commerce_sources?: Json
           created_at?: string
+          destination_strength?: string[]
           destinations?: string[]
           id?: string
           is_hero?: boolean
           materials?: string[]
           name: string
           notes?: string | null
+          preferred_commerce_source?: string
           retailer_hints?: Json
           slug: string
           status?: string
@@ -229,13 +235,16 @@ export type Database = {
         Update: {
           activities?: string[]
           categories?: string[]
+          commerce_sources?: Json
           created_at?: string
+          destination_strength?: string[]
           destinations?: string[]
           id?: string
           is_hero?: boolean
           materials?: string[]
           name?: string
           notes?: string | null
+          preferred_commerce_source?: string
           retailer_hints?: Json
           slug?: string
           status?: string

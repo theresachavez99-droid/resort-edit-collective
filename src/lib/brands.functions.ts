@@ -25,6 +25,21 @@ export const ACTIVITY_STRENGTHS = [
   "statement-dinner",
 ] as const;
 
+/**
+ * Stylist Engine v4 — commerce source kinds and preference order.
+ * Affiliate retailers are the default; brand-direct partnerships will
+ * activate per-brand without engine changes when populated.
+ */
+export const COMMERCE_SOURCE_KINDS = ["affiliate_retailer", "brand_direct", "hybrid"] as const;
+
+const commerceSourceEntry = z.object({
+  kind: z.enum(COMMERCE_SOURCE_KINDS),
+  retailers: z.array(z.string().min(1).max(120)).max(40).optional(),
+  program: z.string().max(120).optional(),
+  endpoint: z.string().max(500).nullable().optional(),
+  status: z.enum(["active", "planned", "paused"]).default("active"),
+});
+
 const brandInput = z.object({
   name: z.string().min(1).max(160),
   website: z.string().url().max(2000).nullable().optional(),
@@ -34,6 +49,12 @@ const brandInput = z.object({
   activities: z.array(z.enum(ACTIVITY_STRENGTHS)).max(ACTIVITY_STRENGTHS.length).default([]),
   notes: z.string().max(2000).nullable().optional(),
   why_we_love: z.string().max(2000).nullable().optional(),
+  /** v4 — editorial destination strength (Mediterranean, Tropical, etc.). */
+  destination_strength: z.array(z.string().min(1).max(80)).max(20).optional(),
+  /** v4 — approved commerce channels for this brand. */
+  commerce_sources: z.array(commerceSourceEntry).max(10).optional(),
+  /** v4 — preferred channel when multiple are active. */
+  preferred_commerce_source: z.enum(COMMERCE_SOURCE_KINDS).optional(),
 });
 
 export type BrandInput = z.infer<typeof brandInput>;
