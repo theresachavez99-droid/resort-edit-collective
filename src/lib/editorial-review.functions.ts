@@ -113,7 +113,7 @@ export const getEditorialCollection = createServerFn({ method: "POST" })
       locked: boolean;
       reasoning: string | null;
       rejected_reason: string | null;
-      metadata: unknown;
+      metadata: Record<string, unknown> | null;
       created_at: string;
       updated_at: string;
     };
