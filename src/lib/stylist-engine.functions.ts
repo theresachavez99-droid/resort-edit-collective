@@ -25,7 +25,6 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireAdmin } from "./admin-auth.server";
 import { runYachtDayDryRun } from "./yacht-day-pilot.functions";
 
@@ -378,6 +377,8 @@ async function persistCollection(args: {
   notes?: string;
 }) {
   const { brief, looks, candidatesById, slots, diagnostics, collectionScore } = args;
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
   const { data: col, error: colErr } = await supabaseAdmin
     .from("editorial_collections")
