@@ -78,6 +78,68 @@ const EXTRA_BLOCK_PATTERNS = [
 ];
 
 /**
+ * URL-shape prefilter — fired BEFORE any brand/title/silhouette work to bucket
+ * obvious non-PDPs (designer / collection / category / editorial landing pages)
+ * separately from "URL didn't match the retailer's PDP signature". Keeps the
+ * `not_pdp` ledger reflecting genuine PDP-shape failures only.
+ */
+const PREFILTER_NON_PDP_PATTERNS: RegExp[] = [
+  /\/designer(s)?(\/|$)/i,
+  /\/shop\/designer(s)?(\/|$)/i,
+  /\/brand(s)?(\/|$)/i,
+  /\/collection(s)?(\/|$)/i,
+  /\/category(\/|$)/i,
+  /\/editorial(\/|$)/i,
+  /\/stories(\/|$)/i,
+  /\/magazine(\/|$)/i,
+  /\/journal(\/|$)/i,
+  /\/blog(\/|$)/i,
+  /\/lookbook(\/|$)/i,
+  /\/(porter|the-edit|the-edit-magazine)(\/|$)/i,
+  /\/shop\/?$/i,
+  /\/women\/?$/i,
+  /\/sale(\/|$)/i,
+  /\/new-in(\/|$)/i,
+];
+
+function isObviousNonPdp(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return PREFILTER_NON_PDP_PATTERNS.some((re) => re.test(u.pathname));
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Google-style negative operators appended to every Firecrawl /search query.
+ * Drops most designer-index, collection, and editorial articles before they
+ * burn raw-result budget.
+ */
+const QUERY_EXCLUSIONS =
+  " -inurl:designer -inurl:designers -inurl:collection -inurl:collections" +
+  " -inurl:category -inurl:editorial -inurl:stories -inurl:magazine" +
+  " -inurl:journal -inurl:blog -inurl:lookbook -inurl:porter";
+
+/**
+ * Conservative per-brand alias map. ONLY add aliases when the alias tokens
+ * still match the brand exactly — never partial. "Calla" is deliberately
+ * NOT a Callas Milano alias because it would collide with Suzie Kondi's
+ * "Calla" product line.
+ */
+const BRAND_ALIASES: Record<string, string[]> = {
+  Eres: ["Eres", "ERES"],
+  Etro: ["Etro", "ETRO"],
+  "Callas Milano": ["Callas Milano", "CALLAS MILANO", "callas-milano", "Callas"],
+};
+
+function aliasesFor(brand: string): string[] {
+  const list = BRAND_ALIASES[brand];
+  if (list && list.length) return list;
+  return [brand];
+}
+
+/**
  * Per-category query templates. A brand only gets searches for categories
  * it's actually tagged in — we don't run "bikini" against a sandal brand.
  * Yacht Day must surface editorial variety: swim + coverups + resort
@@ -369,6 +431,7 @@ type RejectionReason =
   | "duplicate_url"
   | "retailer_not_approved"
   | "not_pdp"
+  | "non_pdp_prefiltered"
   | "brand_mismatch"
   | "weak_brand_signal"
   | "duplicate_silhouette"
