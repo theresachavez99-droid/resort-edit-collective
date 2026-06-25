@@ -1063,6 +1063,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         ranAt: new Date().toISOString(),
         brief,
         slotCoverage,
+        registryCoverage,
         candidates: [...candidatesById.values()],
         looks: [],
         assemblyError: `Insufficient candidates for complete look generation. Required slots with zero candidates: ${missingRequiredSlots.join(", ")}.`,
