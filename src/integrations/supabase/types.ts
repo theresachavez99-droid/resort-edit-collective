@@ -195,11 +195,13 @@ export type Database = {
           destinations: string[]
           id: string
           is_hero: boolean
+          materials: string[]
           name: string
           notes: string | null
           retailer_hints: Json
           slug: string
           status: string
+          style_dna: string[]
           tier: string
           updated_at: string
           website: string | null
@@ -212,11 +214,13 @@ export type Database = {
           destinations?: string[]
           id?: string
           is_hero?: boolean
+          materials?: string[]
           name: string
           notes?: string | null
           retailer_hints?: Json
           slug: string
           status?: string
+          style_dna?: string[]
           tier?: string
           updated_at?: string
           website?: string | null
@@ -229,11 +233,13 @@ export type Database = {
           destinations?: string[]
           id?: string
           is_hero?: boolean
+          materials?: string[]
           name?: string
           notes?: string | null
           retailer_hints?: Json
           slug?: string
           status?: string
+          style_dna?: string[]
           tier?: string
           updated_at?: string
           website?: string | null
@@ -431,6 +437,190 @@ export type Database = {
           muse_name?: string
           reference_url?: string
           style_guardrails?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      editorial_collection_look_slots: {
+        Row: {
+          affiliate_url: string | null
+          brand: string | null
+          created_at: string
+          currency: string | null
+          id: string
+          image_url: string | null
+          locked: boolean
+          look_id: string
+          metadata: Json
+          position: number
+          price: number | null
+          product_name: string | null
+          reasoning: string | null
+          rejected_reason: string | null
+          retailer: string | null
+          slot: string
+          source_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          affiliate_url?: string | null
+          brand?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          image_url?: string | null
+          locked?: boolean
+          look_id: string
+          metadata?: Json
+          position?: number
+          price?: number | null
+          product_name?: string | null
+          reasoning?: string | null
+          rejected_reason?: string | null
+          retailer?: string | null
+          slot: string
+          source_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          affiliate_url?: string | null
+          brand?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          image_url?: string | null
+          locked?: boolean
+          look_id?: string
+          metadata?: Json
+          position?: number
+          price?: number | null
+          product_name?: string | null
+          reasoning?: string | null
+          rejected_reason?: string | null
+          retailer?: string | null
+          slot?: string
+          source_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editorial_collection_look_slots_look_id_fkey"
+            columns: ["look_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_collection_looks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      editorial_collection_looks: {
+        Row: {
+          approved_at: string | null
+          collection_id: string
+          completeness_score: number
+          created_at: string
+          description: string | null
+          editorial_score: number
+          id: string
+          missing_slots: string[]
+          palette: string[]
+          pinned: boolean
+          position: number
+          reasoning: Json
+          rejected_at: string | null
+          status: string
+          style_dna: string[]
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          collection_id: string
+          completeness_score?: number
+          created_at?: string
+          description?: string | null
+          editorial_score?: number
+          id?: string
+          missing_slots?: string[]
+          palette?: string[]
+          pinned?: boolean
+          position?: number
+          reasoning?: Json
+          rejected_at?: string | null
+          status?: string
+          style_dna?: string[]
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          collection_id?: string
+          completeness_score?: number
+          created_at?: string
+          description?: string | null
+          editorial_score?: number
+          id?: string
+          missing_slots?: string[]
+          palette?: string[]
+          pinned?: boolean
+          position?: number
+          reasoning?: Json
+          rejected_at?: string | null
+          status?: string
+          style_dna?: string[]
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editorial_collection_looks_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      editorial_collections: {
+        Row: {
+          activity: string
+          brief: Json
+          created_at: string
+          destination: string
+          diagnostics: Json
+          id: string
+          notes: string | null
+          scoring: Json
+          status: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          activity: string
+          brief?: Json
+          created_at?: string
+          destination: string
+          diagnostics?: Json
+          id?: string
+          notes?: string | null
+          scoring?: Json
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          activity?: string
+          brief?: Json
+          created_at?: string
+          destination?: string
+          diagnostics?: Json
+          id?: string
+          notes?: string | null
+          scoring?: Json
+          status?: string
+          title?: string | null
           updated_at?: string
         }
         Relationships: []
