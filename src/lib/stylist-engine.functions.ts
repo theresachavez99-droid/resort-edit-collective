@@ -174,6 +174,109 @@ const ACTIVITY_SLOTS: Record<string, SlotSpec[]> = {
 };
 
 // ──────────────────────────────────────────────────────────────
+// v4 — Destination-agnostic slot resolver.
+//
+// The engine no longer hard-binds to a single activity. Slot specs are
+// keyed by `${destination}|${activity}` first, then by activity alone,
+// then fall back to a sensible default. Add new (destination, activity)
+// entries here without touching the engine core.
+// ──────────────────────────────────────────────────────────────
+
+const SLOT_SPECS_BY_KEY: Record<string, SlotSpec[]> = {
+  "Portofino|Yacht Day": YACHT_DAY_SLOT_SPECS,
+};
+
+export function getSlotSpecs(destination: string, activity: string): SlotSpec[] {
+  const key = `${destination}|${activity}`;
+  return (
+    SLOT_SPECS_BY_KEY[key] ??
+    ACTIVITY_SLOTS[activity] ??
+    YACHT_DAY_SLOT_SPECS
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// v4 — Commerce sources.
+//
+// Every accepted candidate is stamped with the commerce channel it
+// belongs to. Today every approved brand seeds an `affiliate_retailer`
+// entry, so resolution is retailer-based. When Brand Direct partnerships
+// activate, brands declare `brand_direct` in `commerce_sources` and the
+// resolver will prefer it based on `preferred_commerce_source`.
+// ──────────────────────────────────────────────────────────────
+
+type CommerceSourceKind = "affiliate_retailer" | "brand_direct" | "hybrid";
+
+type CommerceSourceEntry = {
+  kind: CommerceSourceKind;
+  retailers?: string[];
+  program?: string;
+  endpoint?: string | null;
+  status?: "active" | "planned" | "paused";
+};
+
+type EngineBrand = {
+  name: string;
+  slug: string;
+  tier: string | null;
+  categories: string[];
+  commerceSources: CommerceSourceEntry[];
+  preferredCommerceSource: CommerceSourceKind;
+};
+
+function resolveCommerceSource(
+  brand: Pick<EngineBrand, "commerceSources" | "preferredCommerceSource">,
+  retailerHost: string,
+): { kind: CommerceSourceKind; approved: boolean } {
+  const sources = brand.commerceSources ?? [];
+  // No structured sources yet → assume affiliate retailer (v3 behavior).
+  if (sources.length === 0) {
+    return { kind: "affiliate_retailer", approved: true };
+  }
+  const active = sources.filter((s) => (s.status ?? "active") === "active");
+  if (active.length === 0) return { kind: "affiliate_retailer", approved: false };
+
+  const preferred = brand.preferredCommerceSource ?? "affiliate_retailer";
+  // Affiliate retailer match: either the brand's retailer list is empty
+  // (any APPROVED_RETAILER counts) or the host is in the brand's list.
+  const affiliate = active.find((s) => s.kind === "affiliate_retailer" || s.kind === "hybrid");
+  if (affiliate) {
+    const retailers = (affiliate.retailers ?? []).map((r) => r.toLowerCase());
+    if (retailers.length === 0 || retailers.includes(retailerHost.toLowerCase())) {
+      return { kind: preferred === "brand_direct" ? "hybrid" : "affiliate_retailer", approved: true };
+    }
+  }
+  // Brand-direct fallback (architectural placeholder — no integrations yet).
+  const direct = active.find((s) => s.kind === "brand_direct");
+  if (direct) return { kind: "brand_direct", approved: true };
+  return { kind: "affiliate_retailer", approved: false };
+}
+
+async function loadEngineBrands(activity: string): Promise<EngineBrand[]> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("brands")
+    .select(
+      "id,name,slug,tier,categories,activities,commerce_sources,preferred_commerce_source,destination_strength",
+    )
+    .eq("status", "approved")
+    .contains("activities", [activity])
+    .order("name", { ascending: true });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((b) => ({
+    name: b.name as string,
+    slug: b.slug as string,
+    tier: (b.tier as string | null) ?? null,
+    categories: ((b as { categories?: string[] }).categories ?? []) as string[],
+    commerceSources:
+      ((b as { commerce_sources?: CommerceSourceEntry[] }).commerce_sources ?? []) as CommerceSourceEntry[],
+    preferredCommerceSource:
+      ((b as { preferred_commerce_source?: CommerceSourceKind }).preferred_commerce_source ??
+        "affiliate_retailer") as CommerceSourceKind,
+  }));
+}
+
+// ──────────────────────────────────────────────────────────────
 // Tier-2 controlled accessory expansion.
 //
 // Curated luxury accessory brands carried by APPROVED_RETAILERS that are
