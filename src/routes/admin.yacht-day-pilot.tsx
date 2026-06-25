@@ -186,39 +186,76 @@ function DryRunReport({ result }: { result: Extract<DryRunResult, { ok: true }> 
         <Stat label="Searches issued" value={t.searchesIssued} />
         <Stat label="Searches failed" value={t.searchesFailed} />
         <Stat label="Raw results" value={t.rawResultsSeen} />
-        <Stat label="Candidates (PDP, approved retailer)" value={t.candidatesAfterFilters} />
+        <Stat label="Finalists" value={t.candidatesAfterFilters} highlight />
+        <Stat label="Pre-finalist accepted" value={t.rawAcceptedBeforeFinalists} />
+        <Stat label="Rejected total" value={t.rejected} />
+        <Stat label="Brand mismatches" value={t.brandMismatches} />
+        <Stat label="Brand-match rate" value={`${Math.round(t.brandMatchRate * 100)}%`} />
+        <Stat label="Duplicates removed" value={t.duplicatesRemoved} />
+        <Stat label="Regional duplicates removed" value={t.regionalDuplicatesRemoved} />
+        <Stat label="Editorial diversity" value={t.editorialDiversityScore.toFixed(2)} />
+        <Stat label="Avg editorial score" value={t.avgEditorialScore.toFixed(2)} />
         <Stat label="Already cached" value={t.cachedCandidates} />
-        <Stat label="PDP scrapes performed" value={t.scrapesPerformed} highlight />
-        <Stat label="DB writes" value={t.dbWrites} highlight />
+        <Stat label="PDP scrapes performed" value={t.scrapesPerformed} />
+        <Stat label="DB writes" value={t.dbWrites} />
         <Stat label="≈ Firecrawl credits used" value={t.approxFirecrawlCreditsUsed} />
       </section>
 
-      <section>
-        <h2 className="font-serif text-xl mb-2">Brand distribution</h2>
-        <Histogram data={result.brandHistogram} max={Math.max(1, ...Object.values(result.brandHistogram))} />
-        {Object.keys(result.brandHistogram).length === 0 && (
-          <p className="text-sm text-muted-foreground">No candidates discovered yet.</p>
-        )}
+      <section className="grid md:grid-cols-2 gap-6">
+        <div>
+          <h2 className="font-serif text-xl mb-2">Brand distribution (finalists)</h2>
+          <Histogram data={result.brandHistogram} max={Math.max(1, ...Object.values(result.brandHistogram))} />
+          {Object.keys(result.brandHistogram).length === 0 && (
+            <p className="text-sm text-muted-foreground">No candidates discovered yet.</p>
+          )}
+        </div>
+        <div>
+          <h2 className="font-serif text-xl mb-2">Retailer distribution</h2>
+          <Histogram
+            data={result.retailerHistogram}
+            max={Math.max(1, ...Object.values(result.retailerHistogram))}
+          />
+          <p className="text-xs text-muted-foreground mt-2">
+            Soft cap ≈ 40% per retailer enforced during finalist selection.
+          </p>
+        </div>
+        <div>
+          <h2 className="font-serif text-xl mb-2">Category distribution</h2>
+          <Histogram data={result.categoryHistogram} max={Math.max(1, ...Object.values(result.categoryHistogram))} />
+        </div>
+        <div>
+          <h2 className="font-serif text-xl mb-2">Silhouette distribution</h2>
+          <Histogram data={result.silhouetteHistogram} max={Math.max(1, ...Object.values(result.silhouetteHistogram))} />
+        </div>
+        <div>
+          <h2 className="font-serif text-xl mb-2">Palette distribution</h2>
+          <Histogram data={result.paletteHistogram} max={Math.max(1, ...Object.values(result.paletteHistogram))} />
+        </div>
+        <div>
+          <h2 className="font-serif text-xl mb-2">Rejections by reason</h2>
+          <Histogram
+            data={result.rejectionsByReason}
+            max={Math.max(1, ...Object.values(result.rejectionsByReason))}
+          />
+        </div>
       </section>
 
-      <section>
-        <h2 className="font-serif text-xl mb-2">Retailer distribution</h2>
-        <Histogram
-          data={result.retailerHistogram}
-          max={Math.max(1, ...Object.values(result.retailerHistogram))}
-        />
+      <section className="grid md:grid-cols-3 gap-4">
+        <BrandList title={`Requested brands (${result.requestedBrands.length})`} brands={result.requestedBrands} />
+        <BrandList title={`Accepted brands (${result.acceptedBrands.length})`} brands={result.acceptedBrands} tone="ok" />
+        <BrandList title={`Rejected brands (${result.rejectedBrands.length})`} brands={result.rejectedBrands} tone="bad" />
       </section>
 
       <section>
         <h2 className="font-serif text-xl mb-2">Brands considered ({result.brandsConsidered.length})</h2>
         <div className="text-xs text-muted-foreground mb-2">
-          Resort Edit scoring not run — no PDPs were scraped in this dry-run. Scores will populate when the live
-          sourcing run hits each candidate's PDP.
+          Editorial scoring is computed pre-finalist from search-result signals (title, URL slug, brand tier).
+          PDP scrapes still gated until the brand-validation chain passes on the live run.
         </div>
         <ul className="text-sm grid grid-cols-2 md:grid-cols-3 gap-1">
           {result.brandsConsidered.map((b) => (
             <li key={b.slug} className="flex justify-between border-b py-1">
-              <span>
+              <span className={b.accepted ? "" : "text-muted-foreground"}>
                 {b.name} <span className="text-xs text-muted-foreground">({b.tier})</span>
               </span>
               <span className="tabular-nums">{b.foundCount}</span>
@@ -228,14 +265,23 @@ function DryRunReport({ result }: { result: Extract<DryRunResult, { ok: true }> 
       </section>
 
       <section>
-        <h2 className="font-serif text-xl mb-2">Top candidates ({result.candidates.length})</h2>
+        <h2 className="font-serif text-xl mb-2">
+          Top {result.candidates.length} validated finalists (ready for PDP scraping)
+        </h2>
         <ol className="space-y-2">
           {result.candidates.map((c, i) => (
             <li key={c.url} className="border rounded p-3 text-sm">
-              <div className="flex items-baseline gap-2">
+              <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-xs text-muted-foreground tabular-nums">#{i + 1}</span>
                 <span className="font-medium">{c.brand}</span>
                 <span className="text-xs text-muted-foreground">· {c.retailer}</span>
+                <span className="text-xs bg-slate-100 px-1 rounded">{c.category}</span>
+                <span className="text-xs bg-slate-100 px-1 rounded">{c.silhouette}</span>
+                <span className="text-xs bg-slate-100 px-1 rounded">{c.palette}</span>
+                <span className="text-xs bg-emerald-100 px-1 rounded">ed {c.editorialScore}</span>
+                <span className="text-xs text-muted-foreground">
+                  brand@{c.brandMatchSources.join("+")}
+                </span>
                 {c.alreadyCached && (
                   <span className="text-xs bg-yellow-100 px-1 rounded">already cached</span>
                 )}
@@ -257,6 +303,25 @@ function DryRunReport({ result }: { result: Extract<DryRunResult, { ok: true }> 
         </ol>
       </section>
 
+      {result.rejections.length > 0 && (
+        <section>
+          <h2 className="font-serif text-xl mb-2">
+            Rejection sample ({result.rejections.length} of {result.telemetry.rejected})
+          </h2>
+          <ul className="text-xs space-y-1 max-h-96 overflow-auto border rounded p-2">
+            {result.rejections.map((r, i) => (
+              <li key={i} className="flex gap-2 border-b py-1">
+                <span className="font-mono bg-rose-100 px-1 rounded shrink-0">{r.reason}</span>
+                <span className="text-muted-foreground shrink-0">{r.requestedBrand}</span>
+                {r.retailer && <span className="text-muted-foreground shrink-0">· {r.retailer}</span>}
+                <span className="truncate flex-1">{r.url}</span>
+                {r.detail && <span className="text-muted-foreground shrink-0">— {r.detail}</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {result.errors.length > 0 && (
         <section>
           <h2 className="font-serif text-xl mb-2">Errors ({result.errors.length})</h2>
@@ -271,11 +336,46 @@ function DryRunReport({ result }: { result: Extract<DryRunResult, { ok: true }> 
   );
 }
 
-function Stat({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
+function Stat({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value: number | string;
+  highlight?: boolean;
+}) {
   return (
-    <div className={`border rounded p-3 ${highlight ? "bg-green-50" : ""}`}>
+    <div className={`border rounded p-3 ${highlight ? "bg-emerald-50" : ""}`}>
       <div className="text-xs text-muted-foreground">{label}</div>
       <div className="text-2xl tabular-nums">{value}</div>
+    </div>
+  );
+}
+
+function BrandList({
+  title,
+  brands,
+  tone,
+}: {
+  title: string;
+  brands: string[];
+  tone?: "ok" | "bad";
+}) {
+  const colour =
+    tone === "ok" ? "border-emerald-300" : tone === "bad" ? "border-rose-300" : "border-border";
+  return (
+    <div className={`border ${colour} rounded p-3`}>
+      <h3 className="font-serif text-sm mb-2">{title}</h3>
+      {brands.length === 0 ? (
+        <p className="text-xs text-muted-foreground">None.</p>
+      ) : (
+        <ul className="text-xs space-y-0.5">
+          {brands.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
