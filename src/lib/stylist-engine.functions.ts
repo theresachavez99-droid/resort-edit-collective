@@ -53,6 +53,13 @@ type SlotSpec = {
   targetMin: number;
   /** Maximum to collect before stopping that slot's search. */
   targetMax: number;
+  /**
+   * Retailer depth override for this slot — how many approved retailers
+   * to query per brand. Accessory slots need broader coverage because
+   * inventory is fragmented across many retailers; swimwear and coverups
+   * concentrate inside fewer specialty/department stores.
+   */
+  retailersPerBrand: number;
 };
 
 const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
@@ -65,6 +72,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     templates: ["{brand} one piece swimsuit", "{brand} bikini", "{brand} maillot"],
     targetMin: 8,
     targetMax: 12,
+    retailersPerBrand: 4,
   },
   {
     slot: "coverup",
@@ -81,6 +89,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 8,
     targetMax: 12,
+    retailersPerBrand: 5,
   },
   {
     slot: "shoes",
@@ -96,6 +105,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 8,
     targetMax: 12,
+    retailersPerBrand: 7,
   },
   {
     slot: "bag",
@@ -111,6 +121,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 8,
     targetMax: 12,
+    retailersPerBrand: 7,
   },
   {
     slot: "sunglasses",
@@ -126,6 +137,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 6,
     targetMax: 10,
+    retailersPerBrand: 9,
   },
   {
     slot: "jewelry",
@@ -142,6 +154,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     ],
     targetMin: 12,
     targetMax: 20,
+    retailersPerBrand: 9,
   },
   {
     slot: "hat",
@@ -152,6 +165,7 @@ const YACHT_DAY_SLOT_SPECS: SlotSpec[] = [
     templates: ["{brand} straw hat", "{brand} panama hat", "{brand} sun hat"],
     targetMin: 4,
     targetMax: 8,
+    retailersPerBrand: 7,
   },
 ];
 
