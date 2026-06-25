@@ -1148,11 +1148,19 @@ function aggregateTelemetry(results: SlotDiscoveryResult[], totalCandidates: num
   let searches = 0;
   let raw = 0;
   const allRej: Record<string, number> = {};
+  let expansionSearches = 0;
+  let expansionAccepted = 0;
+  const expansionSlots: string[] = [];
   for (const r of results) {
     searches += r.searchesIssued;
     raw += r.rawResults;
     for (const [k, v] of Object.entries(r.rejections)) {
       allRej[k] = (allRej[k] ?? 0) + v;
+    }
+    if (r.expansion?.triggered) {
+      expansionSearches += r.expansion.searchesIssued;
+      expansionAccepted += r.expansion.accepted;
+      expansionSlots.push(r.slot);
     }
   }
   return {
@@ -1163,5 +1171,10 @@ function aggregateTelemetry(results: SlotDiscoveryResult[], totalCandidates: num
     approxFirecrawlCredits: searches,
     scrapesPerformed: 0,
     dbWrites: 0,
+    expansion: {
+      slotsExpanded: expansionSlots,
+      searchesIssued: expansionSearches,
+      candidatesAccepted: expansionAccepted,
+    },
   };
 }
