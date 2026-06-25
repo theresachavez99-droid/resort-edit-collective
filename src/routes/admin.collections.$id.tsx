@@ -633,3 +633,340 @@ function StatusBadge({ status }: { status: string }) {
           : "bg-stone-100 text-stone-700";
   return <span className={`inline-block rounded px-2 py-0.5 text-xs ${cls}`}>{status}</span>;
 }
+
+// ──────────────────────────────────────────────────────────────────
+// Collection-level insights (editorial first)
+// ──────────────────────────────────────────────────────────────────
+
+function CollectionInsightsPanel({
+  insights,
+}: {
+  insights: ReturnType<typeof collectionInsights>;
+}) {
+  const cards: Array<{ label: string; value: string; sub?: string; rating?: number }> = [
+    {
+      label: "Editorial diversity",
+      value: insights.avgEditorial == null ? "—" : insights.avgEditorial.toFixed(2),
+      sub: `spread ${insights.editorialSpread.toFixed(2)}`,
+    },
+    {
+      label: "Brand diversity",
+      value: `${insights.brands} brands`,
+      sub: pct(insights.brandDiversity),
+      rating: insights.brandDiversity,
+    },
+    {
+      label: "Retailer diversity",
+      value: `${insights.retailers} retailers`,
+      sub: pct(insights.retailerDiversity),
+      rating: insights.retailerDiversity,
+    },
+    {
+      label: "Color balance",
+      value: `${insights.palettes} palettes`,
+      sub: "across looks",
+    },
+    {
+      label: "Silhouette balance",
+      value: `${insights.silhouettes} shapes`,
+      sub: "across looks",
+    },
+    {
+      label: "Activity authenticity",
+      value: pct(insights.completeness),
+      sub: `${insights.filled}/${insights.totalSlots} slots`,
+      rating: insights.completeness,
+    },
+    {
+      label: "Collection cohesion",
+      value: pct(insights.cohesion),
+      sub: "palette + silhouette",
+      rating: insights.cohesion,
+    },
+  ];
+  return (
+    <section className="border rounded p-4 space-y-3 bg-stone-50/40">
+      <div className="flex items-baseline justify-between">
+        <h2 className="font-serif text-xl">Collection Insights</h2>
+        <p className="text-xs text-stone-500">Read the magazine before the catalog.</p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {cards.map((c) => {
+          const rating = c.rating != null ? ratingFromPct(c.rating) : null;
+          return (
+            <div key={c.label} className="border rounded bg-white p-3">
+              <p className="text-[11px] uppercase tracking-wider text-stone-500">{c.label}</p>
+              <p className="text-lg font-serif mt-1">{c.value}</p>
+              <div className="flex items-center justify-between mt-1">
+                {c.sub && <span className="text-xs text-stone-500">{c.sub}</span>}
+                {rating && (
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded ${rating.cls}`}>
+                    {rating.label}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Editorial Look Card — primary unit of review
+// ──────────────────────────────────────────────────────────────────
+
+type ReplacePatch = {
+  brand: string;
+  productName: string;
+  retailer: string;
+  sourceUrl: string;
+  imageUrl?: string | null;
+  price?: number | null;
+  currency?: string;
+};
+
+function EditorialLookCard({
+  look,
+  idx,
+  total,
+  avgEditorial,
+  collectionBrandTotal,
+  busy,
+  answers,
+  onAnswer,
+  onMove,
+  onFeature,
+  onApprove,
+  onReject,
+  onRegenLook,
+  onLockSlot,
+  onReplaceSlot,
+  onRegenSlot,
+}: {
+  look: Look;
+  idx: number;
+  total: number;
+  avgEditorial: number | null;
+  collectionBrandTotal: number;
+  busy: string | null;
+  answers: LookAnswers;
+  onAnswer: (qid: string, v: EditorialAnswer) => void;
+  onMove: (dir: -1 | 1) => void;
+  onFeature: () => void;
+  onApprove: () => void;
+  onReject: () => void;
+  onRegenLook: () => void;
+  onLockSlot: (slotId: string, locked: boolean) => void;
+  onReplaceSlot: (slotId: string, patch: ReplacePatch) => void;
+  onRegenSlot: (slotId: string) => void;
+}) {
+  const [showProducts, setShowProducts] = useState(false);
+  const score = lookEditorialScore(look);
+  const completeness = lookCompleteness(look);
+  const brandDiv = lookBrandDiversity(look);
+  const dna = lookStyleDNA(look);
+  const uniqueBrands = new Set(
+    look.slots.map((s) => (s.brand ?? "").toLowerCase()).filter(Boolean),
+  ).size;
+  const description =
+    look.subtitle ||
+    pickString(look.metadata, "description") ||
+    pickString(look.reasoning, "summary") ||
+    "";
+  const scoreDelta =
+    score != null && avgEditorial != null ? score - avgEditorial : null;
+
+  return (
+    <article className="border rounded bg-white">
+      {/* Editorial summary */}
+      <div className="p-5 space-y-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs text-stone-500">
+              <span>Look {idx + 1} of {total}</span>
+              {look.pinned && (
+                <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded">Featured</span>
+              )}
+              <StatusBadge status={look.status} />
+            </div>
+            <h3 className="text-2xl font-serif">{look.title}</h3>
+            {description && <p className="text-sm text-stone-700 max-w-2xl">{description}</p>}
+            {dna.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {dna.map((d) => (
+                  <span
+                    key={d}
+                    className="text-[11px] border border-stone-300 px-2 py-0.5 rounded-full text-stone-600"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex gap-1">
+              <button
+                disabled={!!busy || idx === 0}
+                onClick={() => onMove(-1)}
+                className="text-xs border px-2 py-1 rounded"
+                title="Move up"
+              >
+                ↑
+              </button>
+              <button
+                disabled={!!busy || idx === total - 1}
+                onClick={() => onMove(1)}
+                className="text-xs border px-2 py-1 rounded"
+                title="Move down"
+              >
+                ↓
+              </button>
+              <button
+                disabled={!!busy}
+                onClick={onFeature}
+                className="text-xs border px-2 py-1 rounded"
+              >
+                {look.pinned ? "Unfeature" : "Feature"}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Editorial scorecard */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <Metric
+            label="Editorial score"
+            value={scoreFmt(score)}
+            sub={
+              scoreDelta == null
+                ? undefined
+                : `${scoreDelta >= 0 ? "+" : ""}${scoreDelta.toFixed(2)} vs avg`
+            }
+          />
+          <Metric
+            label="Completeness"
+            value={`${completeness.filled}/${completeness.total}`}
+            sub={completeness.total ? pct(completeness.filled / completeness.total) : "—"}
+          />
+          <Metric
+            label="Brand diversity"
+            value={pct(brandDiv)}
+            sub={`${uniqueBrands} unique`}
+          />
+          <Metric
+            label="Collection contribution"
+            value={`${uniqueBrands}/${collectionBrandTotal}`}
+            sub="brands shared"
+          />
+        </div>
+
+        {/* Editorial review questions */}
+        <div className="border rounded p-3 bg-stone-50/60 space-y-2">
+          <p className="text-[11px] uppercase tracking-wider text-stone-500">
+            Editorial review
+          </p>
+          <ul className="space-y-1.5">
+            {EDITORIAL_QUESTIONS.map((q) => {
+              const cur = answers[q.id] ?? null;
+              return (
+                <li key={q.id} className="flex items-center justify-between gap-3 text-sm">
+                  <span className="text-stone-700">{q.label}</span>
+                  <div className="flex gap-1">
+                    {(["yes", "no"] as const).map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => onAnswer(q.id, cur === v ? null : v)}
+                        className={`text-xs px-2 py-0.5 rounded border ${
+                          cur === v
+                            ? v === "yes"
+                              ? "bg-green-600 text-white border-green-600"
+                              : "bg-red-600 text-white border-red-600"
+                            : "bg-white text-stone-600"
+                        }`}
+                      >
+                        {v === "yes" ? "Yes" : "No"}
+                      </button>
+                    ))}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* Primary editorial actions */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            disabled={!!busy}
+            onClick={onApprove}
+            className="text-sm px-4 py-1.5 rounded bg-green-600 text-white"
+          >
+            Approve look
+          </button>
+          <button
+            disabled={!!busy}
+            onClick={onReject}
+            className="text-sm px-4 py-1.5 rounded border border-red-300 text-red-700"
+          >
+            Reject
+          </button>
+          <button
+            disabled={!!busy}
+            onClick={onRegenLook}
+            className="text-sm px-3 py-1.5 rounded border text-stone-700"
+          >
+            Regenerate look
+          </button>
+        </div>
+      </div>
+
+      {/* Collapsed product slots */}
+      <div className="border-t">
+        <button
+          onClick={() => setShowProducts((v) => !v)}
+          className="w-full text-left px-5 py-2.5 text-xs uppercase tracking-wider text-stone-500 hover:bg-stone-50 flex items-center justify-between"
+        >
+          <span>
+            Refine products · {completeness.filled}/{completeness.total} slots filled
+          </span>
+          <span>{showProducts ? "Hide ▲" : "Show ▼"}</span>
+        </button>
+        {showProducts && (
+          <div className="p-4 pt-0 grid gap-2">
+            {look.slots.map((s) => (
+              <SlotRow
+                key={s.id}
+                slot={s}
+                busy={busy}
+                onLock={(locked) => onLockSlot(s.id, locked)}
+                onReplace={(patch) => onReplaceSlot(s.id, patch)}
+                onRegen={() => onRegenSlot(s.id)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function Metric({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+}) {
+  return (
+    <div className="border rounded p-2.5 bg-white">
+      <p className="text-[10px] uppercase tracking-wider text-stone-500">{label}</p>
+      <p className="text-base font-serif mt-0.5">{value}</p>
+      {sub && <p className="text-[11px] text-stone-500">{sub}</p>}
+    </div>
+  );
+}
