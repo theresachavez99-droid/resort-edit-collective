@@ -694,13 +694,20 @@ export async function discoverForSlot(args: {
           }
           const palette = inferPalette(title);
           const brandAffinity = affinityFor(brand, destination, activity);
-          const score = scoreEditorial({
+          // v4.4 — product family curation gate.
+          const verdict = evaluateProductFamily({ brand: brand.name, title, description });
+          if (!verdict.approved) {
+            bump(`curation:${verdict.reason.slice(0, 60)}`);
+            continue;
+          }
+          const baseScore = scoreEditorial({
             title,
             description,
             silhouette,
             brandTier: brand.tier,
             affinity: brandAffinity,
           });
+          const score = Math.round((baseScore + verdict.constructionScore) * 1000) / 1000;
           // v4 — gate on approved commerce source before accepting.
           const cs = resolveCommerceSource(brand, matchedRetailer);
           if (!cs.approved) {
@@ -724,6 +731,10 @@ export async function discoverForSlot(args: {
             matchedQuery: tpl,
             source,
             commerceSource: cs.kind,
+            approvalLevel: verdict.level,
+            familyMatched: verdict.familyMatched,
+            constructionScore: verdict.constructionScore,
+            curationReason: verdict.reason,
           });
         }
       }
