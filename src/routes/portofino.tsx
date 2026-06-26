@@ -50,8 +50,6 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
-import { DAY_PATHS, type DaySlug } from "@/components/PortofinoDayPage";
-import { type LookSlug } from "@/lib/portofino-spec";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
@@ -86,80 +84,6 @@ export const Route = createFileRoute("/portofino")({
   component: PortofinoPage,
 });
 
-type LookCard = { slug: LookSlug; label: string; title: string; image: string };
-type DayRow = {
-  slug: DaySlug;
-  href: (typeof DAY_PATHS)[DaySlug];
-  label: string;
-  title: string;
-  caption: string;
-  image: string;
-  imagePos: string;
-  looks: LookCard[];
-};
-
-const DAYS: DayRow[] = [
-  {
-    slug: "day-1", href: DAY_PATHS["day-1"], label: "Day 1",
-    title: "Yacht Day & Harbour Aperitivo",
-    caption: "Open water, tan lines & hidden coves.",
-    image: lookYacht,
-    imagePos: "50% 20%",
-    looks: [
-      { slug: "look-a", label: "Look A", title: "Boarding the Boat", image: d1a },
-      { slug: "look-b", label: "Look B", title: "Midday on Deck", image: d1b },
-      { slug: "look-c", label: "Look C", title: "Harbour Aperitivo", image: d1c },
-    ],
-  },
-  {
-    slug: "day-2", href: DAY_PATHS["day-2"], label: "Day 2",
-    title: "Beach Club & Long Lunches",
-    caption: "Slow mornings, long lunches, seaside glamour.",
-    image: lookBeach,
-    imagePos: "50% 18%",
-    looks: [
-      { slug: "look-a", label: "Look A", title: "Beach Club Morning", image: d2a },
-      { slug: "look-b", label: "Look B", title: "The Long Lunch", image: d2b },
-      { slug: "look-c", label: "Look C", title: "Seaside Glamour", image: d2c },
-    ],
-  },
-  {
-    slug: "day-3", href: DAY_PATHS["day-3"], label: "Day 3",
-    title: "Pool Lounging & Shopping",
-    caption: "Poolside ease, via Roma, Capri luxe.",
-    image: lookDayclub,
-    imagePos: "50% 16%",
-    looks: [
-      { slug: "look-a", label: "Look A", title: "Poolside", image: d3a },
-      { slug: "look-b", label: "Look B", title: "Exploring the Harbor", image: d3b },
-      { slug: "look-c", label: "Look C", title: "Capri Aperitivo", image: d3c },
-    ],
-  },
-  {
-    slug: "day-4", href: DAY_PATHS["day-4"], label: "Day 4",
-    title: "Sunset Cocktails & Dinner With A View",
-    caption: "Golden hour, candlelight, harbor glow.",
-    image: lookDinner,
-    imagePos: "50% 22%",
-    looks: [
-      { slug: "look-a", label: "Look A", title: "Sunset Cocktails", image: d4a },
-      { slug: "look-b", label: "Look B", title: "Dinner with a View", image: d4b },
-      { slug: "look-c", label: "Look C", title: "After-Dinner Drinks", image: d4c },
-    ],
-  },
-  {
-    slug: "day-5", href: DAY_PATHS["day-5"], label: "Day 5",
-    title: "Market Strolls & Coastal Goodbyes",
-    caption: "Espresso, linen, and one long last lunch.",
-    image: day5MarketStrolls,
-    imagePos: "50% 18%",
-    looks: [
-      { slug: "look-a", label: "Look A", title: "Morning Espresso & Market", image: d5a },
-      { slug: "look-b", label: "Look B", title: "One Long Last Lunch", image: d5b },
-      { slug: "look-c", label: "Look C", title: "The Slow Departure", image: d5c },
-    ],
-  },
-];
 
 function PortofinoPage() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -245,12 +169,12 @@ function PortofinoPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
               {[
-                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", look: DAY_PATHS["day-2"], badge: "MOST INSTAGRAMMABLE", badgeStyle: "gold" as const },
-                { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", look: DAY_PATHS["day-1"], badge: null, badgeStyle: null },
-                { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", look: DAY_PATHS["day-1"], badge: "BOOK FIRST", badgeStyle: "ink" as const },
-                { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", look: DAY_PATHS["day-4"], badge: "INSIDER FAVORITE", badgeStyle: "outline" as const },
-                { name: "Private Driver Transfer", image: expHarbor, desc: "Black-car arrival from Genoa, Milan, or Nice — no parking, no stress.", href: "https://www.getyourguide.com/portofino-l1093/transfers", look: DAY_PATHS["day-5"], badge: null, badgeStyle: null },
-                { name: "Reserve Harbor Dinner", image: expCooking, desc: "A candlelit table on the piazzetta — book weeks ahead.", href: "https://www.opentable.com/landmark/restaurants-near-portofino", look: DAY_PATHS["day-4"], badge: null, badgeStyle: null },
+                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", moment: "beach-club-long-lunch", badge: "MOST INSTAGRAMMABLE", badgeStyle: "gold" as const },
+                { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", moment: "yacht-day", badge: null, badgeStyle: null },
+                { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", moment: "yacht-day", badge: "BOOK FIRST", badgeStyle: "ink" as const },
+                { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", moment: "sunset-views", badge: "INSIDER FAVORITE", badgeStyle: "outline" as const },
+                { name: "Private Driver Transfer", image: expHarbor, desc: "Black-car arrival from Genoa, Milan, or Nice — no parking, no stress.", href: "https://www.getyourguide.com/portofino-l1093/transfers", moment: "arrival", badge: null, badgeStyle: null },
+                { name: "Reserve Harbor Dinner", image: expCooking, desc: "A candlelit table on the piazzetta — book weeks ahead.", href: "https://www.opentable.com/landmark/restaurants-near-portofino", moment: "riviera-dinner", badge: null, badgeStyle: null },
               ].map((exp) => (
                 <article key={exp.name} className="bg-ivory border border-border/60 flex flex-col">
                   <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -277,7 +201,7 @@ function PortofinoPage() {
                       <a href={exp.href} target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink hover:text-gold">
                         BOOK →
                       </a>
-                      <Link to={exp.look} className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink">
+                      <Link to="/portofino/$moment" params={{ moment: exp.moment }} className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink">
                         WHAT TO WEAR HERE →
                       </Link>
                     </div>

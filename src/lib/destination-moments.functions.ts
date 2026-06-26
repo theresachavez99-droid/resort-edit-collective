@@ -64,7 +64,7 @@ const ARCHETYPE_SEEDS: Array<Omit<MomentArchetypeRow, "id">> = [
 const PORTOFINO_MOMENT_SEEDS: Array<Omit<DestinationMomentRow, "id">> = [
   {
     destination_slug: "portofino",
-    moment_slug: "arrival-day",
+    moment_slug: "arrival",
     moment_name: "Arrival Day",
     archetype_slug: "arrival",
     time_of_day: "afternoon",

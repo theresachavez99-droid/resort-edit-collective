@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, useMatch } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { destinations, destinationHref } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
@@ -60,10 +60,6 @@ const filterTagsBySlug: Record<string, FilterKey[]> = {
 };
 
 function DestinationsPage() {
-  const dayEditMatch = useMatch({
-    from: "/destinations/portofino/day-1-yacht-harbour-aperitivo",
-    shouldThrow: false,
-  });
   const featured = useMemo(
     () =>
       FEATURED_SLUGS.map((slug) => destinations.find((d) => d.slug === slug)!).filter(Boolean),
@@ -78,8 +74,6 @@ function DestinationsPage() {
     [featured, filter],
   );
   const heroImage = heroCannes;
-
-  if (dayEditMatch) return <Outlet />;
 
   return (
     <div className="bg-ivory">

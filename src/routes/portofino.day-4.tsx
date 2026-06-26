@@ -1,7 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { getPortofinoDayHead, PortofinoDayTemplate } from "@/components/PortofinoDayPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { momentSlugForLookKey } from "@/lib/portofino-moment-fallbacks";
 
+// Legacy day route — permanently redirected to the canonical moment route.
 export const Route = createFileRoute("/portofino/day-4")({
-  head: () => getPortofinoDayHead("day-4"),
-  component: () => <PortofinoDayTemplate slug="day-4" />,
+  beforeLoad: () => {
+    throw redirect({
+      to: "/portofino/$moment",
+      params: { moment: momentSlugForLookKey("day-4") },
+      replace: true,
+    });
+  },
+  component: () => null,
 });

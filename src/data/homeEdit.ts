@@ -281,7 +281,7 @@ export const homeDays: HomeDay[] = [
       "Relaxed poolside hours, boutique discoveries, and an afternoon that drifts effortlessly into town.",
     image: poolLoungingShopping,
     isWaterDay: true,
-    momentSlug: "pool-lounging-shopping",
+    momentSlug: "pool-lounging",
     momentLabel: "Pool Lounging + Shopping",
     outfit: [
       {
