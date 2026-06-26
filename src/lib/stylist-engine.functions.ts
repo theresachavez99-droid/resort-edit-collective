@@ -49,6 +49,25 @@ import {
   evaluateProductFamily,
   type ApprovalLevel,
 } from "./product-family-curation";
+import {
+  planEditorialCollection,
+  rotationPenalty,
+  ROTATION_TIE_THRESHOLD,
+  RHYTHM_LABELS,
+  type LookPlan,
+  type RhythmRole,
+} from "./collection-director";
+import {
+  computeAccessoryRotationScore,
+  computeBrandDominanceScore,
+  computeEditorialRhythmScore,
+  computeHeroStrength,
+  computeLuxuryPerceptionScore,
+  computeMemorabilityScore,
+  computeVisualRepetitionScore,
+  fingerprintLook,
+} from "./visual-fingerprint";
+import { containsBannedPhrase, rewriteCollectionCopy } from "./editorial-copy";
 
 // ──────────────────────────────────────────────────────────────
 // Slot specs — every required slot has its own brand categories,
