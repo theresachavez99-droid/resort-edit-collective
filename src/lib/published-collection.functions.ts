@@ -210,7 +210,7 @@ async function resolvePublishedCollection(
       activity: collection.activity,
       collection_name: collection.title,
       season: collection.season ?? null,
-      version: `${collection.id}:${new Date(collection.updated_at).getTime()}`,
+      version: `${collection.id}:${collection.updated_at ? new Date(collection.updated_at).getTime() : 0}`,
       published_at: collection.published_at ?? null,
       collection_health: fallbackCount > 0 ? "degraded" : "healthy",
       featured_look: featured,
