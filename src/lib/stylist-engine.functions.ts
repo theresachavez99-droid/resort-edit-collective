@@ -68,6 +68,24 @@ import {
   fingerprintLook,
 } from "./visual-fingerprint";
 import { containsBannedPhrase, rewriteCollectionCopy } from "./editorial-copy";
+import {
+  BudgetMeter,
+  CACHE_MIN_EDITORIAL_SCORE,
+  DISCOVERY_MODE_LABEL,
+  SLOT_FIRECRAWL_BUDGET_DEFAULTS,
+  buildSiteScopedQuery,
+  coverageStatusFor,
+  isApprovedRetailerHost,
+  retailersForSlot,
+  type CoverageStatus,
+  type DiscoveryMode,
+} from "./discovery-pipeline";
+import type { CachedCandidate } from "./product-cache.server";
+
+/** Lazy loader for the server-only product-cache module. */
+async function cacheModule() {
+  return await import("./product-cache.server");
+}
 
 // ──────────────────────────────────────────────────────────────
 // Slot specs — every required slot has its own brand categories,
@@ -391,13 +409,13 @@ const ACCESSORY_EXPANSION_BRANDS: Record<string, string[]> = {
     "Miu Miu",
     "Chloé",
     "Linda Farrow",
-    "Jacques Marie Mage",
     "Oliver Peoples",
     "Persol",
     "Tom Ford",
     "Dior",
     "Gucci",
-    "Khaite",
+    // Holds (Founder, v4.7 launch): Jacques Marie Mage, DITA, Khaite — re-evaluate
+    // after cache warm-up; specialist registry covers core sunglass needs.
   ],
   shoes: [
     "Manolo Blahnik",
@@ -595,6 +613,12 @@ export async function discoverForSlot(args: {
   /** v5 — context for affinity-based ranking. */
   destination?: string;
   activity?: string;
+  /** v4.7 — pre-fill from product cache. Counted toward early-stop. */
+  seedCandidates?: SlotCandidate[];
+  /** v4.7 — per-slot Firecrawl budget meter. */
+  budget?: BudgetMeter;
+  /** v4.7 — slot-specific retailer priority order (overrides APPROVED_RETAILERS rotation). */
+  retailerPriority?: string[];
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
@@ -612,10 +636,15 @@ export async function discoverForSlot(args: {
   const destination = args.destination ?? "Portofino";
   const activity = args.activity ?? spec.slot;
 
+  const seeds = args.seedCandidates ?? [];
   const candidates: SlotCandidate[] = [];
   const rejections: Record<string, number> = {};
   const bump = (k: string) => (rejections[k] = (rejections[k] ?? 0) + 1);
   const retailersQueried = new Set<string>();
+  const budget = args.budget;
+  // Effective starting count includes seeds; the inner loop terminates
+  // when candidates.length + seeds.length + startingCount >= targetMax.
+  const seedAndStart = startingCount + seeds.length;
 
   // Brands relevant to this slot.
   const slotBrands = brands.filter((b) =>
@@ -624,20 +653,32 @@ export async function discoverForSlot(args: {
 
   let searchesIssued = 0;
   let rawResults = 0;
+  let budgetExhausted = false;
 
   outer: for (let bi = 0; bi < slotBrands.length; bi++) {
     const brand = slotBrands[bi];
-    // Rotate retailers per brand to diversify.
-    const retailers: string[] = [];
-    const rc = Math.min(retailersPerBrand, APPROVED_RETAILERS.length);
-    for (let k = 0; k < rc; k++) {
-      retailers.push(APPROVED_RETAILERS[(brandOffset + bi + k) % APPROVED_RETAILERS.length]);
-    }
+    // v4.7 — prefer slot-specific retailer priority list when provided.
+    const retailers: string[] = args.retailerPriority
+      ? retailersForSlot(spec.slot, args.retailerPriority, retailersPerBrand)
+      : (() => {
+          const rc = Math.min(retailersPerBrand, APPROVED_RETAILERS.length);
+          const out: string[] = [];
+          for (let k = 0; k < rc; k++) {
+            out.push(APPROVED_RETAILERS[(brandOffset + bi + k) % APPROVED_RETAILERS.length]);
+          }
+          return out;
+        })();
     for (const retailer of retailers) {
       retailersQueried.add(retailer);
       for (const tpl of spec.templates) {
-        if (candidates.length >= spec.targetMax) break outer;
-        const query = `${tpl.replace("{brand}", brand.name)} site:${retailer}${QUERY_EXCLUSIONS}`;
+        // v4.7 — early-stop when (seeds + accepted) hits the slot's max.
+        if (candidates.length + seedAndStart >= spec.targetMax) break outer;
+        // v4.7 — budget gate. Stop the slot entirely once exhausted.
+        if (budget && !budget.take(spec.slot)) {
+          budgetExhausted = true;
+          break outer;
+        }
+        const query = buildSiteScopedQuery(tpl, brand.name, retailer, QUERY_EXCLUSIONS);
         searchesIssued++;
         let items: any[] = [];
         try {
@@ -771,9 +812,14 @@ export async function discoverForSlot(args: {
 
   // Sort by editorial score, retain up to targetMax.
   candidates.sort((a, b) => b.editorialScore - a.editorialScore);
-  const remaining = Math.max(0, spec.targetMax - startingCount);
+  const remaining = Math.max(0, spec.targetMax - seedAndStart);
   const kept = candidates.slice(0, remaining);
-  const retailersRepresented = Array.from(new Set(kept.map((c) => c.retailer)));
+  // v4.7 — seeds are always included; they're cache hits we want to keep.
+  const finalKept = [...seeds, ...kept];
+  const retailersRepresented = Array.from(new Set(finalKept.map((c) => c.retailer)));
+  if (budgetExhausted) {
+    rejections["budget_exhausted"] = (rejections["budget_exhausted"] ?? 0) + 1;
+  }
 
   return {
     slot: spec.slot,
@@ -782,11 +828,11 @@ export async function discoverForSlot(args: {
     targetMin: spec.targetMin,
     targetMax: spec.targetMax,
     brandsConsidered: slotBrands.map((b) => b.name),
-    candidates: kept,
+    candidates: finalKept,
     searchesIssued,
     rawResults,
     rejections,
-    shortfall: Math.max(0, spec.targetMin - (kept.length + startingCount)),
+    shortfall: Math.max(0, spec.targetMin - (finalKept.length + startingCount)),
     retailersPerBrand,
     retailersQueried: Array.from(retailersQueried),
     retailersRepresented,
@@ -1196,10 +1242,19 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
          * Default raised from 3 → 6 because accessory inventory is
          * fragmented across many retailers.
          */
-        retailersPerBrand: z.number().int().min(1).max(12).default(6),
-        resultsPerSearch: z.number().int().min(1).max(10).default(4),
+        retailersPerBrand: z.number().int().min(1).max(12).default(3),
+        resultsPerSearch: z.number().int().min(1).max(10).default(3),
         persist: z.boolean().default(true),
         includeOptional: z.boolean().default(true),
+        /**
+         * v4.7 — Discovery Strategy. Fast Review is the long-term default
+         * once the cache is populated. Balanced is the recommended mode
+         * during early warm-up. Deep Discovery is opt-in and consumes
+         * the most credits.
+         */
+        discoveryMode: z.enum(["fast", "balanced", "deep"]).default("fast"),
+        /** v4.7 — disable to debug a cold-start run. */
+        enableCache: z.boolean().default(true),
       })
       .parse(input),
   )
@@ -1268,6 +1323,18 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const idCounter = { n: 0 };
     const slotResults: SlotDiscoveryResult[] = [];
     let brandOffset = 0;
+
+    // ── v4.7 — Discovery Strategy: Fast Review (default), Balanced, Deep.
+    // Budget meter governs per-slot Firecrawl /search expenditure.
+    const budget = new BudgetMeter(data.discoveryMode as DiscoveryMode);
+    const cacheStatsPerSlot: Record<
+      string,
+      { hits: number; written: number; rejected: number; rejectionReasons: Record<string, number> }
+    > = {};
+    const cacheHitUrls: string[] = []; // URLs to bumpUsage on after persist
+    // Dynamic cache module (server-only). Skipped entirely when disabled.
+    const cache = data.enableCache ? await cacheModule() : null;
+
     for (const spec of specs) {
       // Cap brands per slot for budget.
       const slotBrands = brands
@@ -1281,6 +1348,61 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         data.retailersPerBrand,
         spec.retailersPerBrand,
       );
+
+      // ── v4.7 — Stage 1: consult the product cache BEFORE Firecrawl.
+      // Each hit becomes a seed candidate that counts toward the slot's
+      // target maximum, reducing or eliminating the need for external
+      // search calls.
+      const seedCandidates: SlotCandidate[] = [];
+      const slotCacheStats = { hits: 0, written: 0, rejected: 0, rejectionReasons: {} as Record<string, number> };
+      if (cache) {
+        try {
+          const cached = await cache.lookupCache({
+            slot: spec.slot,
+            destination,
+            activity,
+            brands: slotBrands.map((b) => b.name),
+            limit: spec.targetMax * 2,
+          });
+          for (const row of cached) {
+            if (seedCandidates.length >= spec.targetMax) break;
+            const canonical = row.canonical_url;
+            if (canonicalSeen.has(canonical) || seenUrls.has(canonical)) continue;
+            canonicalSeen.set(canonical, canonical);
+            seenUrls.add(canonical);
+            idCounter.n += 1;
+            const id = `cache-${spec.slot}-${idCounter.n}`;
+            seedCandidates.push({
+              id,
+              slot: spec.slot,
+              brand: row.brand,
+              brandTier: null,
+              retailer: row.retailer ?? "",
+              title: row.product_name,
+              description: null,
+              url: row.canonical_url,
+              canonicalKey: canonical,
+              silhouette: "cached",
+              palette: "cached",
+              editorialScore: row.editorial_score,
+              brandAffinity: affinityFor(
+                slotBrands.find((b) => b.name === row.brand) ?? { tier: null, editorialAffinity: {} },
+                destination,
+                activity,
+              ),
+              matchedQuery: "[cache hit]",
+              source: "core",
+              commerceSource: "affiliate_retailer",
+              image: row.image_url ?? null,
+            });
+            cacheHitUrls.push(canonical);
+          }
+          slotCacheStats.hits = seedCandidates.length;
+        } catch (e) {
+          console.warn(`[cache] lookup failed for slot ${spec.slot}:`, (e as Error).message);
+        }
+      }
+
       const r = await discoverForSlot({
         apiKey,
         spec,
@@ -1294,6 +1416,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         source: "core",
         destination,
         activity,
+        seedCandidates,
+        budget,
       });
 
       // Tier-2 controlled accessory expansion.
@@ -1374,6 +1498,56 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
       slotResults.push(r);
       brandOffset += slotBrands.length;
+
+      // ── v4.7 — Stage 3: write newly discovered (non-seed) candidates
+      // to the cache, subject to quality + approved-retailer gates.
+      if (cache) {
+        const seedIds = new Set(seedCandidates.map((c) => c.id));
+        const fresh = r.candidates.filter((c) => !seedIds.has(c.id));
+        if (fresh.length) {
+          try {
+            const writeResult = await cache.upsertCache(
+              fresh.map((c) => ({
+                canonical_url: c.canonicalKey || c.url,
+                retailer: c.retailer,
+                brand: c.brand,
+                brand_id: null,
+                slot_category: spec.slot,
+                product_name: c.title,
+                image_url: c.image ?? null,
+                price: null,
+                currency: null,
+                destination_tags: [destination],
+                activity_tags: [activity],
+                editorial_score: c.editorialScore,
+                quality_source: "discovered" as const,
+              })),
+            );
+            slotCacheStats.written = writeResult.written;
+            slotCacheStats.rejected = writeResult.rejected;
+            slotCacheStats.rejectionReasons = writeResult.rejectedReasons;
+          } catch (e) {
+            console.warn(`[cache] upsert failed for slot ${spec.slot}:`, (e as Error).message);
+          }
+        }
+      }
+      cacheStatsPerSlot[spec.slot] = slotCacheStats;
+    }
+
+    // ── v4.7 — Coverage status (4-tier) per slot, surfaced to the admin UI.
+    const slotCoverageStatus: Record<string, CoverageStatus> = {};
+    for (const r of slotResults) {
+      const core = r.candidates.filter((c) => c.source === "core").length;
+      const expansion = r.candidates.filter((c) => c.source === "expansion").length;
+      const uniqueBrands = new Set(r.candidates.map((c) => c.brand)).size;
+      slotCoverageStatus[r.slot] = coverageStatusFor({
+        required: r.required,
+        shortfall: r.shortfall,
+        coreFinal: core,
+        expansionFinal: expansion,
+        cacheCandidates: cacheStatsPerSlot[r.slot]?.hits ?? 0,
+        uniqueBrandsInPool: uniqueBrands,
+      });
     }
 
     // Slot coverage report.
@@ -1492,6 +1666,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
     if (missingRequiredSlots.length > 0) {
       const slotEffectivenessGated = buildSlotEffectiveness(slotResults, [], candidatesById);
+      const gatedBudget = budget.report();
+      const gatedHits = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.hits, 0);
       return {
         ok: true as const,
         ranAt: new Date().toISOString(),
@@ -1508,6 +1684,22 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         collectionScore: null,
         lookScores: [],
         discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
+        slotCoverageStatus,
+        costReport: {
+          discoveryMode: data.discoveryMode,
+          discoveryModeLabel: DISCOVERY_MODE_LABEL[data.discoveryMode as DiscoveryMode],
+          cacheEnabled: !!cache,
+          firecrawlRequests: gatedBudget.totalSpent,
+          estimatedCreditsUsed: gatedBudget.totalSpent,
+          estimatedCreditsSaved: gatedHits,
+          cacheHits: gatedHits,
+          cacheHitRate: 0,
+          productsReused: gatedHits,
+          productsNewlyDiscovered: candidatesById.size - gatedHits,
+          productsNewlyCached: 0,
+          productsRejectedFromCache: 0,
+          perSlot: {},
+        },
       };
     }
 
@@ -1965,6 +2157,56 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       }
     }
 
+    // ── v4.7 — Bump usage stats for cache rows actually used in this run.
+    if (cache && cacheHitUrls.length) {
+      try {
+        await cache.bumpUsage(cacheHitUrls);
+      } catch (e) {
+        console.warn("[cache] bumpUsage failed:", (e as Error).message);
+      }
+    }
+
+    // ── v4.7 — Cost report. Estimated credits assume 1 Firecrawl /search
+    // call ≈ 1 credit (the most common pricing tier). Cache hits would
+    // otherwise have required ≥1 search each, so each hit ≈ 1 saved credit.
+    const budgetReport = budget.report();
+    const cacheHitsTotal = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.hits, 0);
+    const newlyCachedTotal = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.written, 0);
+    const cacheRejectedTotal = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.rejected, 0);
+    const totalAttempted = cacheHitsTotal + budgetReport.totalSpent;
+    const cacheHitRate = totalAttempted > 0
+      ? Math.round((cacheHitsTotal / totalAttempted) * 1000) / 1000
+      : 0;
+    const costReport = {
+      discoveryMode: data.discoveryMode,
+      discoveryModeLabel: DISCOVERY_MODE_LABEL[data.discoveryMode as DiscoveryMode],
+      cacheEnabled: !!cache,
+      firecrawlRequests: budgetReport.totalSpent,
+      estimatedCreditsUsed: budgetReport.totalSpent,
+      estimatedCreditsSaved: cacheHitsTotal,
+      cacheHits: cacheHitsTotal,
+      cacheHitRate,
+      productsReused: cacheHitsTotal,
+      productsNewlyDiscovered: candidatesById.size - cacheHitsTotal,
+      productsNewlyCached: newlyCachedTotal,
+      productsRejectedFromCache: cacheRejectedTotal,
+      perSlot: Object.fromEntries(
+        slotResults.map((r) => [
+          r.slot,
+          {
+            cacheHits: cacheStatsPerSlot[r.slot]?.hits ?? 0,
+            firecrawlRequests: budgetReport.spent[r.slot] ?? 0,
+            budgetRemaining: budgetReport.remaining[r.slot] ?? 0,
+            exhausted: budgetReport.exhausted.includes(r.slot),
+            written: cacheStatsPerSlot[r.slot]?.written ?? 0,
+            rejected: cacheStatsPerSlot[r.slot]?.rejected ?? 0,
+            rejectionReasons: cacheStatsPerSlot[r.slot]?.rejectionReasons ?? {},
+            coverageStatus: slotCoverageStatus[r.slot],
+          },
+        ]),
+      ),
+    };
+
     return {
       ok: true as const,
       ranAt: new Date().toISOString(),
@@ -1985,6 +2227,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       decisionDeviations,
       editorialDiagnostics,
       editorialDecisions,
+      costReport,
+      slotCoverageStatus,
       looks: looks.map((l) => ({
         ...l,
         slots: l.slots.map((s) => {

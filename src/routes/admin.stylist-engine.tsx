@@ -33,9 +33,13 @@ function StylistEnginePage() {
   const [result, setResult] = useState<RunResult | null>(null);
   const [targetLooks, setTargetLooks] = useState(6);
   const [maxBrandsPerSlot, setMaxBrandsPerSlot] = useState(8);
-  const [retailersPerBrand, setRetailersPerBrand] = useState(6);
-  const [resultsPerSearch, setResultsPerSearch] = useState(4);
+  const [retailersPerBrand, setRetailersPerBrand] = useState(3);
+  const [resultsPerSearch, setResultsPerSearch] = useState(3);
   const [persist, setPersist] = useState(true);
+  // v4.7 — Discovery Strategy. Fast Review is the long-term default; the
+  // engine reads cache first and trims Firecrawl spend hard.
+  const [discoveryMode, setDiscoveryMode] = useState<"fast" | "balanced" | "deep">("fast");
+  const [enableCache, setEnableCache] = useState(true);
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
@@ -74,6 +78,8 @@ function StylistEnginePage() {
           retailersPerBrand,
           resultsPerSearch,
           persist,
+          discoveryMode,
+          enableCache,
         },
       }),
     onSuccess: (r) => setResult(r),
@@ -124,6 +130,31 @@ function StylistEnginePage() {
       </header>
 
       <section className="border rounded-lg p-5 bg-stone-50 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label className="flex flex-col text-sm">
+            <span className="text-stone-500 text-xs mb-1 uppercase tracking-wide">
+              Discovery Strategy
+            </span>
+            <select
+              value={discoveryMode}
+              onChange={(e) => setDiscoveryMode(e.target.value as typeof discoveryMode)}
+              className="border px-3 py-2 rounded bg-white"
+            >
+              <option value="fast">Fast Review — cache-first, minimal Firecrawl (default)</option>
+              <option value="balanced">Balanced — cache + limited Firecrawl</option>
+              <option value="deep">Deep Discovery — broad search, more credits</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-2 text-sm mt-6">
+            <input
+              type="checkbox"
+              checked={enableCache}
+              onChange={(e) => setEnableCache(e.target.checked)}
+              className="h-5 w-5"
+            />
+            <span>Use product cache (recommended)</span>
+          </label>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
           <Field label="Target looks" value={targetLooks} set={setTargetLooks} min={3} max={12} />
           <Field label="Brands per slot" value={maxBrandsPerSlot} set={setMaxBrandsPerSlot} min={2} max={20} />
@@ -161,6 +192,7 @@ function StylistEnginePage() {
 
       {result && result.ok && (
         <>
+          <CostReport result={result} />
           <RegistryCoverage result={result} />
           <SlotCoverage result={result} />
           <ExpansionReport result={result} />
@@ -307,6 +339,131 @@ function SlotCoverage({ result }: { result: Extract<RunResult, { ok: true }> }) 
         </details>
       )}
     </section>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// v4.7 — Cost Report. Surfaces cache hit rate, Firecrawl spend, and
+// estimated credits saved at the top of every run so the Founder can
+// confirm cache effectiveness at a glance.
+// ──────────────────────────────────────────────────────────────
+function CostReport({ result }: { result: Extract<RunResult, { ok: true }> }) {
+  const cr = (result as unknown as { costReport?: CostReportShape }).costReport;
+  if (!cr) return null;
+  const stats: Array<[string, string]> = [
+    ["Discovery mode", cr.discoveryModeLabel ?? cr.discoveryMode],
+    ["Cache hit rate", `${Math.round(cr.cacheHitRate * 100)}%`],
+    ["Firecrawl requests", String(cr.firecrawlRequests)],
+    ["Credits used (est.)", String(cr.estimatedCreditsUsed)],
+    ["Credits saved (est.)", String(cr.estimatedCreditsSaved)],
+    ["Products reused", String(cr.productsReused)],
+    ["Newly discovered", String(cr.productsNewlyDiscovered)],
+    ["Newly cached", String(cr.productsNewlyCached)],
+  ];
+  return (
+    <section className="border rounded-lg p-5 bg-emerald-50 border-emerald-200 space-y-3">
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-xl font-serif">Cost report</h2>
+        <span className="text-xs uppercase tracking-widest text-emerald-700">
+          v4.7 · Product Cache
+        </span>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {stats.map(([label, value]) => (
+          <div key={label} className="bg-white border border-emerald-100 rounded p-3">
+            <p className="text-[10px] uppercase tracking-widest text-stone-500">{label}</p>
+            <p className="text-lg font-medium text-stone-900 mt-0.5">{value}</p>
+          </div>
+        ))}
+      </div>
+      {Object.keys(cr.perSlot ?? {}).length > 0 && (
+        <details className="text-xs">
+          <summary className="cursor-pointer text-stone-600 hover:text-stone-900">
+            Per-slot detail
+          </summary>
+          <div className="overflow-x-auto mt-2">
+            <table className="w-full text-xs border bg-white">
+              <thead className="bg-stone-100 text-left">
+                <tr>
+                  <th className="px-2 py-1">Slot</th>
+                  <th className="px-2 py-1">Coverage</th>
+                  <th className="px-2 py-1">Cache hits</th>
+                  <th className="px-2 py-1">Firecrawl</th>
+                  <th className="px-2 py-1">Budget left</th>
+                  <th className="px-2 py-1">Newly cached</th>
+                  <th className="px-2 py-1">Rejected</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(cr.perSlot).map(([slot, s]) => (
+                  <tr key={slot} className="border-t">
+                    <td className="px-2 py-1 font-medium">{slot}</td>
+                    <td className="px-2 py-1">
+                      <CoverageBadge status={s.coverageStatus} />
+                    </td>
+                    <td className="px-2 py-1">{s.cacheHits}</td>
+                    <td className="px-2 py-1">
+                      {s.firecrawlRequests}
+                      {s.exhausted ? <span className="text-amber-700 ml-1">⚠ exhausted</span> : null}
+                    </td>
+                    <td className="px-2 py-1">{s.budgetRemaining}</td>
+                    <td className="px-2 py-1">{s.written}</td>
+                    <td className="px-2 py-1 text-stone-500">{s.rejected}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
+    </section>
+  );
+}
+
+type CostReportShape = {
+  discoveryMode: string;
+  discoveryModeLabel?: string;
+  cacheEnabled: boolean;
+  firecrawlRequests: number;
+  estimatedCreditsUsed: number;
+  estimatedCreditsSaved: number;
+  cacheHits: number;
+  cacheHitRate: number;
+  productsReused: number;
+  productsNewlyDiscovered: number;
+  productsNewlyCached: number;
+  productsRejectedFromCache: number;
+  perSlot: Record<
+    string,
+    {
+      cacheHits: number;
+      firecrawlRequests: number;
+      budgetRemaining: number;
+      exhausted: boolean;
+      written: number;
+      rejected: number;
+      rejectionReasons: Record<string, number>;
+      coverageStatus?: "strong" | "adequate" | "expansion_supported" | "weak";
+    }
+  >;
+};
+
+function CoverageBadge({
+  status,
+}: {
+  status?: "strong" | "adequate" | "expansion_supported" | "weak";
+}) {
+  if (!status) return <span className="text-stone-400">—</span>;
+  const styles: Record<string, string> = {
+    strong: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    adequate: "bg-sky-100 text-sky-800 border-sky-200",
+    expansion_supported: "bg-amber-100 text-amber-800 border-amber-200",
+    weak: "bg-rose-100 text-rose-800 border-rose-200",
+  };
+  return (
+    <span className={`inline-block text-[10px] px-1.5 py-0.5 rounded border ${styles[status]}`}>
+      {status.replace("_", " ")}
+    </span>
   );
 }
 
