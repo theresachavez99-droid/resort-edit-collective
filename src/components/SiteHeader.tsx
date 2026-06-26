@@ -9,6 +9,7 @@ const nav = [
   { to: "/resort-edits", label: "Resort Edits" },
   { to: "/brands", label: "Brands We Love" },
   { to: "/about", label: "About" },
+  { to: "/my-edit", label: "My Edit" },
 ] as const;
 
 const mobileExtras = [] as const;

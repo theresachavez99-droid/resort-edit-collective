@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { getPublishedLook, type PublishedLook, type PublishedLookProduct } from "@/lib/published-look.functions";
+import { SaveLookButton } from "@/components/SaveLookButton";
 
 export const Route = createFileRoute("/look/$slug")({
   loader: async ({ params }) => {
@@ -70,12 +71,26 @@ function LookPage() {
               Palette · {look.palette.join(" · ")}
             </p>
           )}
-          <a
-            href="#shop"
-            className="mt-10 inline-block bg-ink text-ivory px-7 py-3.5 text-[0.7rem] tracking-[0.28em] uppercase w-fit"
-          >
-            Shop the Look
-          </a>
+          <div className="mt-10 flex items-center gap-6">
+            <a
+              href="#shop"
+              className="inline-block bg-ink text-ivory px-7 py-3.5 text-[0.7rem] tracking-[0.28em] uppercase w-fit"
+            >
+              Shop the Look
+            </a>
+            <SaveLookButton
+              source="look_detail"
+              look={{
+                id: `look/${look.slug}`,
+                destination: look.destination,
+                activity: look.activity,
+                title: look.dna_name,
+                description: look.why_it_works ?? look.mood ?? undefined,
+                image: look.muse_image_url ?? undefined,
+                url: `/look/${look.slug}`,
+              }}
+            />
+          </div>
         </div>
       </section>
 

@@ -11,6 +11,7 @@ import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
+import { SaveLookButton } from "@/components/SaveLookButton";
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -133,6 +134,21 @@ function MomentPage() {
           <p className="font-serif italic text-base md:text-xl text-ivory/90 mt-3 max-w-2xl leading-relaxed">
             {card.narrative}
           </p>
+          <div className="mt-5">
+            <SaveLookButton
+              tone="light"
+              source="portofino_moment_hero"
+              look={{
+                id: `portofino/${slug}`,
+                destination: "Portofino",
+                activity: card.moment_name,
+                title: card.moment_name,
+                description: card.narrative,
+                image: card.hero_banner_image ?? heroImage,
+                url: `/portofino/${slug}`,
+              }}
+            />
+          </div>
         </div>
       </section>
 

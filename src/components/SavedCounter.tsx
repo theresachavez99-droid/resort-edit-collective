@@ -1,24 +1,29 @@
-import { Heart } from "lucide-react";
+import { Bookmark, Heart } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { useMyEdit } from "@/lib/myEdit";
 import { useSaved } from "@/lib/saved";
 
 /**
  * Header "Saved" counter. No login — counts items stored in localStorage.
  */
 export function SavedCounter() {
-  const { count } = useSaved();
+  const { count } = useMyEdit();
   return (
-    <span
-      aria-label={`Saved items (${count})`}
+    <Link
+      to="/my-edit"
+      aria-label={`My Edit (${count} saved)`}
       className="inline-flex items-center gap-1.5 text-ink/80 hover:text-gold transition-colors"
       style={{ fontSize: "16px", fontWeight: 500, letterSpacing: "0.12em", lineHeight: 1 }}
     >
-      <Heart
+      <Bookmark
         className="w-[18px] h-[18px]"
         strokeWidth={1.5}
         fill={count > 0 ? "currentColor" : "none"}
       />
-      <span className="eyebrow text-[0.7rem] tracking-[0.22em]">Saved {count}</span>
-    </span>
+      <span className="eyebrow text-[0.7rem] tracking-[0.22em]">
+        My Edit{count > 0 ? ` ${count}` : ""}
+      </span>
+    </Link>
   );
 }
 
