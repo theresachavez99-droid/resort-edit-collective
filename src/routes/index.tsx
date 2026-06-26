@@ -1,20 +1,15 @@
 import { Ship, Umbrella, Sailboat, UtensilsCrossed } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-still-life.jpg";
-import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
-import poolLoungingShoppingAsset from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { HomeItinerary, portofinoMomentsQuery } from "@/components/HomeItinerary";
-import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
 import { getFeaturedDestination } from "@/data/featuredDestination";
 
 const featured = getFeaturedDestination();
 const heroMuse = featured.heroImage;
-const editD2a = getCanonicalDayImage("day-2", "hero");
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,19 +30,6 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(portofinoMomentsQuery),
   component: Index,
 });
-
-const baseLooks: Array<{
-  tag: string;
-  title: string;
-  image: string;
-  day: "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
-  look: "look-a" | "look-b" | "look-c";
-  momentSlug?: string;
-}> = [
-  { tag: "Additional Look", title: "Beach Club & Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
-  { tag: "Additional Look", title: "Pool Lounging & Shopping", image: poolLoungingShoppingAsset.url, day: "day-3", look: "look-a", momentSlug: "pool-lounging-shopping" },
-  { tag: "Additional Look", title: "Exploring the Harbor", image: exploringHarborAsset.url, day: "day-3", look: "look-b", momentSlug: "exploring-the-harbor" },
-];
 
 const hotels = [
   {
@@ -90,12 +72,6 @@ const ctas = [
 ];
 
 function Index() {
-  const dayOverrides = useDayImageOverrides();
-  const looks = baseLooks.map((l) =>
-    l.look === "look-a" && dayOverrides[l.day] && !l.momentSlug
-      ? { ...l, image: dayOverrides[l.day] }
-      : l,
-  );
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
   return (
     <div className="bg-ivory w-full">
