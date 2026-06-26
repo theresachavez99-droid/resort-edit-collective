@@ -26,6 +26,7 @@ import {
   type AlternativeProduct,
 } from "@/data/lookAlternatives";
 import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
+import { SaveLookButton } from "@/components/SaveLookButton";
 import {
   CUSTOMIZE_OPTIONS,
   enrichmentFor,
@@ -234,6 +235,22 @@ function ViewFullLookPage() {
             <h1 className="font-display text-[2.1rem] md:text-[3rem] xl:text-[3.4rem] leading-[1.02] tracking-[0.03em] text-ink mt-5 uppercase">
               {displayTitle}
             </h1>
+
+            <div className="mt-5">
+              <SaveLookButton
+                source="portofino_day_look"
+                look={{
+                  id: `portofino/${day}/${look}`,
+                  destination: lookData.destination,
+                  activity: lookData.subtitle ?? lookData.lookLabel,
+                  collection: lookData.day,
+                  title: displayTitle,
+                  description: editorial?.mood ?? undefined,
+                  image: lookData.heroImage,
+                  url: `/portofino/${day}/${look}`,
+                }}
+              />
+            </div>
 
             {editorial?.mood && (
               <p className="font-serif italic text-[1.15rem] md:text-[1.2rem] text-ink/75 leading-[1.55] mt-6 max-w-[36rem]">
