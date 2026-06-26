@@ -793,6 +793,7 @@ async function assembleLooks(
   slotResults: SlotDiscoveryResult[],
   specs: SlotSpec[],
   targetLookCount: number,
+  archetypeAssignments: SwimArchetypeId[] = [],
 ): Promise<AssembledLook[]> {
   const slotLines = specs
     .map(
@@ -820,8 +821,29 @@ async function assembleLooks(
 
   const requiredSlotNames = specs.filter((s) => s.required).map((s) => s.slot);
 
+  // v4.2 — per-look archetype briefs steer Gemini to compose each look
+  // around a distinct swim story and apply the cohesion recipe to the
+  // other slots.
+  const archetypeBriefs = archetypeAssignments
+    .map((id, i) => {
+      const a = getArchetype(id);
+      return `  Look ${i + 1} — Swim Archetype: "${a.label}"
+    Story: ${a.description}
+    Preferred swim brands: ${a.preferredBrands.join(", ")}
+    Cohesion recipe (style the other slots around the swim piece):
+      coverup → ${a.cohesion.coverup.join(", ")}
+      bag → ${a.cohesion.bag.join(", ")}
+      jewelry → ${a.cohesion.jewelry.join(", ")}
+      shoes → ${a.cohesion.shoes.join(", ")}
+      sunglasses → ${a.cohesion.sunglasses.join(", ")}
+      palette → ${a.cohesion.palette.join(", ")}`;
+    })
+    .join("\n\n");
+
   const system = `You are the fashion director at Resort Edit, a luxury destination styling platform.
 You compose COMPLETE editorial looks from a slot-indexed candidate pool.
+Swim is the editorial anchor of every Yacht Day look. PICK THE SWIM PIECE FIRST,
+then style the rest of the outfit around it using the per-look cohesion recipe.
 Return strict JSON only. Never invent products or ids not in the pool.`;
 
   const user = `EDITORIAL BRIEF
@@ -833,6 +855,13 @@ Style DNA: ${brief.styleDna.join(", ")}
 Notes: ${brief.notes}
 ${themes}
 
+SWIM ARCHETYPE PLAN (one distinct archetype per look — do not duplicate)
+${archetypeBriefs}
+
+COLLECTION-WIDE SWIM CAPS
+- Missoni swim: maximum 1 look per collection.
+- Treat reference brands (e.g. "St. Barths") as supporting only — never as the hero look.
+
 OUTFIT SLOTS
 ${slotLines}
 
@@ -843,6 +872,12 @@ ${candidateBlocks.join("\n\n")}
 
 TASK
 Assemble ${targetLookCount} COMPLETE editorial looks. A complete look MUST fill EVERY required slot above by picking one candidateId from that slot's pool. Optional slots may be filled or omitted.
+
+SWIM-FIRST ASSEMBLY
+- For each look, choose the swim candidate that best expresses its assigned archetype FIRST.
+- Then pick coverup / bag / jewelry / shoes / sunglasses whose titles, palettes, or
+  brands match that archetype's cohesion recipe.
+- The collection MUST present six distinct swim archetypes — never duplicate.
 
 Optimize for:
 - Editorial excellence — each look reads as if PORTER, Moda Operandi, or a private stylist curated it.
@@ -860,6 +895,7 @@ Return strict JSON:
       "description": "2–3 sentences, editorial voice.",
       "styleDna": ["1–3 values from the brief"],
       "palette": ["1–4 color/print descriptors"],
+      "swimArchetype": "<one of the assigned archetype ids for this look index>",
       "slots": [
         { "slot": "swim", "candidateId": "<id>", "reasoning": "<one line>" },
         { "slot": "coverup", "candidateId": "<id>", "reasoning": "<one line>" },
