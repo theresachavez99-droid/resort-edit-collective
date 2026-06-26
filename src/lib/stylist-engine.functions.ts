@@ -409,13 +409,13 @@ const ACCESSORY_EXPANSION_BRANDS: Record<string, string[]> = {
     "Miu Miu",
     "Chloé",
     "Linda Farrow",
-    "Jacques Marie Mage",
     "Oliver Peoples",
     "Persol",
     "Tom Ford",
     "Dior",
     "Gucci",
-    "Khaite",
+    // Holds (Founder, v4.7 launch): Jacques Marie Mage, DITA, Khaite — re-evaluate
+    // after cache warm-up; specialist registry covers core sunglass needs.
   ],
   shoes: [
     "Manolo Blahnik",
