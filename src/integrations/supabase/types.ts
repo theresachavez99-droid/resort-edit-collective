@@ -136,6 +136,50 @@ export type Database = {
         }
         Relationships: []
       }
+      brand_promotion_signals: {
+        Row: {
+          activity: string | null
+          brand: string
+          brand_id: string | null
+          collection_id: string | null
+          created_at: string
+          destination: string | null
+          id: string
+          signal_type: string
+          slot_category: string
+        }
+        Insert: {
+          activity?: string | null
+          brand: string
+          brand_id?: string | null
+          collection_id?: string | null
+          created_at?: string
+          destination?: string | null
+          id?: string
+          signal_type?: string
+          slot_category: string
+        }
+        Update: {
+          activity?: string | null
+          brand?: string
+          brand_id?: string | null
+          collection_id?: string | null
+          created_at?: string
+          destination?: string | null
+          id?: string
+          signal_type?: string
+          slot_category?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_promotion_signals_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brand_review_queue: {
         Row: {
           brand: string
@@ -189,9 +233,11 @@ export type Database = {
       }
       brands: {
         Row: {
+          accessory_specialist: boolean
           activities: string[]
           affinity_signals: Json
           approval_level: string
+          approved_accessory_slots: string[]
           approved_product_families: string[]
           categories: string[]
           commerce_sources: Json
@@ -220,9 +266,11 @@ export type Database = {
           why_we_love: string | null
         }
         Insert: {
+          accessory_specialist?: boolean
           activities?: string[]
           affinity_signals?: Json
           approval_level?: string
+          approved_accessory_slots?: string[]
           approved_product_families?: string[]
           categories?: string[]
           commerce_sources?: Json
@@ -251,9 +299,11 @@ export type Database = {
           why_we_love?: string | null
         }
         Update: {
+          accessory_specialist?: boolean
           activities?: string[]
           affinity_signals?: Json
           approval_level?: string
+          approved_accessory_slots?: string[]
           approved_product_families?: string[]
           categories?: string[]
           commerce_sources?: Json
@@ -1238,6 +1288,86 @@ export type Database = {
           why_it_works?: string | null
         }
         Relationships: []
+      }
+      product_cache: {
+        Row: {
+          activity_tags: string[]
+          brand: string
+          brand_id: string | null
+          canonical_url: string
+          created_at: string
+          currency: string | null
+          destination_tags: string[]
+          discovered_at: string
+          editorial_score: number
+          id: string
+          image_url: string | null
+          inventory_health: string
+          last_used_at: string | null
+          last_verified_at: string
+          price: number | null
+          product_name: string | null
+          quality_source: string
+          retailer: string | null
+          slot_category: string
+          times_used: number
+          updated_at: string
+        }
+        Insert: {
+          activity_tags?: string[]
+          brand: string
+          brand_id?: string | null
+          canonical_url: string
+          created_at?: string
+          currency?: string | null
+          destination_tags?: string[]
+          discovered_at?: string
+          editorial_score?: number
+          id?: string
+          image_url?: string | null
+          inventory_health?: string
+          last_used_at?: string | null
+          last_verified_at?: string
+          price?: number | null
+          product_name?: string | null
+          quality_source?: string
+          retailer?: string | null
+          slot_category: string
+          times_used?: number
+          updated_at?: string
+        }
+        Update: {
+          activity_tags?: string[]
+          brand?: string
+          brand_id?: string | null
+          canonical_url?: string
+          created_at?: string
+          currency?: string | null
+          destination_tags?: string[]
+          discovered_at?: string
+          editorial_score?: number
+          id?: string
+          image_url?: string | null
+          inventory_health?: string
+          last_used_at?: string | null
+          last_verified_at?: string
+          price?: number | null
+          product_name?: string | null
+          quality_source?: string
+          retailer?: string | null
+          slot_category?: string
+          times_used?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_cache_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_sources: {
         Row: {
