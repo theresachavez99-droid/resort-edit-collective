@@ -1323,6 +1323,18 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const idCounter = { n: 0 };
     const slotResults: SlotDiscoveryResult[] = [];
     let brandOffset = 0;
+
+    // ── v4.7 — Discovery Strategy: Fast Review (default), Balanced, Deep.
+    // Budget meter governs per-slot Firecrawl /search expenditure.
+    const budget = new BudgetMeter(data.discoveryMode as DiscoveryMode);
+    const cacheStatsPerSlot: Record<
+      string,
+      { hits: number; written: number; rejected: number; rejectionReasons: Record<string, number> }
+    > = {};
+    const cacheHitUrls: string[] = []; // URLs to bumpUsage on after persist
+    // Dynamic cache module (server-only). Skipped entirely when disabled.
+    const cache = data.enableCache ? await cacheModule() : null;
+
     for (const spec of specs) {
       // Cap brands per slot for budget.
       const slotBrands = brands
@@ -1336,6 +1348,69 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         data.retailersPerBrand,
         spec.retailersPerBrand,
       );
+
+      // ── v4.7 — Stage 1: consult the product cache BEFORE Firecrawl.
+      // Each hit becomes a seed candidate that counts toward the slot's
+      // target maximum, reducing or eliminating the need for external
+      // search calls.
+      const seedCandidates: SlotCandidate[] = [];
+      const slotCacheStats = { hits: 0, written: 0, rejected: 0, rejectionReasons: {} as Record<string, number> };
+      if (cache) {
+        try {
+          const cached = await cache.lookupCache({
+            slot: spec.slot,
+            destination,
+            activity,
+            brands: slotBrands.map((b) => b.name),
+            limit: spec.targetMax * 2,
+          });
+          for (const row of cached) {
+            if (seedCandidates.length >= spec.targetMax) break;
+            const canonical = row.canonical_url;
+            if (canonicalSeen.has(canonical) || seenUrls.has(canonical)) continue;
+            canonicalSeen.set(canonical, canonical);
+            seenUrls.add(canonical);
+            idCounter.n += 1;
+            const id = `cache-${spec.slot}-${idCounter.n}`;
+            seedCandidates.push({
+              id,
+              slot: spec.slot,
+              brand: row.brand,
+              brandTier: null,
+              retailer: row.retailer ?? "",
+              title: row.product_name,
+              description: null,
+              url: row.canonical_url,
+              canonicalKey: canonical,
+              silhouette: "cached",
+              palette: "cached",
+              editorialScore: row.editorial_score,
+              brandAffinity: affinityFor(
+                slotBrands.find((b) => b.name === row.brand) ?? {
+                  name: row.brand,
+                  slug: "",
+                  tier: null,
+                  categories: [],
+                  commerceSources: [],
+                  preferredCommerceSource: "affiliate_retailer",
+                  editorialAffinity: {},
+                },
+                destination,
+                activity,
+              ),
+              matchedQuery: "[cache hit]",
+              source: "core",
+              commerceSource: "affiliate_retailer",
+              image: row.image_url ?? null,
+            });
+            cacheHitUrls.push(canonical);
+          }
+          slotCacheStats.hits = seedCandidates.length;
+        } catch (e) {
+          console.warn(`[cache] lookup failed for slot ${spec.slot}:`, (e as Error).message);
+        }
+      }
+
       const r = await discoverForSlot({
         apiKey,
         spec,
@@ -1349,6 +1424,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         source: "core",
         destination,
         activity,
+        seedCandidates,
+        budget,
       });
 
       // Tier-2 controlled accessory expansion.
@@ -1429,6 +1506,56 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
       slotResults.push(r);
       brandOffset += slotBrands.length;
+
+      // ── v4.7 — Stage 3: write newly discovered (non-seed) candidates
+      // to the cache, subject to quality + approved-retailer gates.
+      if (cache) {
+        const seedIds = new Set(seedCandidates.map((c) => c.id));
+        const fresh = r.candidates.filter((c) => !seedIds.has(c.id));
+        if (fresh.length) {
+          try {
+            const writeResult = await cache.upsertCache(
+              fresh.map((c) => ({
+                canonical_url: c.canonicalKey || c.url,
+                retailer: c.retailer,
+                brand: c.brand,
+                brand_id: null,
+                slot_category: spec.slot,
+                product_name: c.title,
+                image_url: c.image ?? null,
+                price: null,
+                currency: null,
+                destination_tags: [destination],
+                activity_tags: [activity],
+                editorial_score: c.editorialScore,
+                quality_source: "discovered" as const,
+              })),
+            );
+            slotCacheStats.written = writeResult.written;
+            slotCacheStats.rejected = writeResult.rejected;
+            slotCacheStats.rejectionReasons = writeResult.rejectedReasons;
+          } catch (e) {
+            console.warn(`[cache] upsert failed for slot ${spec.slot}:`, (e as Error).message);
+          }
+        }
+      }
+      cacheStatsPerSlot[spec.slot] = slotCacheStats;
+    }
+
+    // ── v4.7 — Coverage status (4-tier) per slot, surfaced to the admin UI.
+    const slotCoverageStatus: Record<string, CoverageStatus> = {};
+    for (const r of slotResults) {
+      const core = r.candidates.filter((c) => c.source === "core").length;
+      const expansion = r.candidates.filter((c) => c.source === "expansion").length;
+      const uniqueBrands = new Set(r.candidates.map((c) => c.brand)).size;
+      slotCoverageStatus[r.slot] = coverageStatusFor({
+        required: r.required,
+        shortfall: r.shortfall,
+        coreFinal: core,
+        expansionFinal: expansion,
+        cacheCandidates: cacheStatsPerSlot[r.slot]?.hits ?? 0,
+        uniqueBrandsInPool: uniqueBrands,
+      });
     }
 
     // Slot coverage report.
