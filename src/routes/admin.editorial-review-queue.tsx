@@ -37,7 +37,10 @@ function ReviewQueuePage() {
   }, []);
 
   const auth = useMutation({
-    mutationFn: () => verify({ data: { password: pw } }),
+    mutationFn: () => {
+      if (!pw) throw new Error("Password required");
+      return verify({ data: { password: pw } });
+    },
     onSuccess: () => {
       sessionStorage.setItem(STORAGE_KEY, pw);
       setAuthed(true);
@@ -73,6 +76,7 @@ function ReviewQueuePage() {
         />
         <button
           onClick={() => auth.mutate()}
+          disabled={!pw}
           className="bg-black text-white px-4 py-2 text-sm tracking-widest uppercase"
         >
           Enter
