@@ -27,7 +27,10 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: SITE_URL },
       { name: "twitter:image", content: absoluteUrl(heroMuse) },
     ],
-    links: [{ rel: "canonical", href: SITE_URL }],
+    links: [
+      { rel: "canonical", href: SITE_URL },
+      { rel: "preload", as: "image", href: heroMuse, fetchpriority: "high" },
+    ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(portofinoMomentsQuery),
   component: Index,

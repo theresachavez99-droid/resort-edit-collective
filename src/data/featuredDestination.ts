@@ -1,4 +1,4 @@
-import heroMuseAsset from "@/assets/hero-lilla-portofino-harbor-walk.png.asset.json";
+import heroMuseAsset from "@/assets/hero-lilla-portofino-waterfront-floral.png.asset.json";
 
 /**
  * Featured Destination — single source of truth for the homepage editorial cover.
@@ -41,7 +41,7 @@ const FEATURED_DESTINATIONS: Record<string, FeaturedDestination> = {
     country: "Italy",
     heroImage: heroMuseAsset.url,
     heroImageAlt:
-      "Lilla in a Mediterranean print designer dress overlooking Portofino harbor, Italy.",
+      "Lilla walking along the Portofino waterfront in an elegant floral resort dress overlooking the Italian Riviera.",
     tagline: "Five Days. Five Looks. One Perfect Destination.",
     totalLooks: 25,
     totalMoments: 6,
