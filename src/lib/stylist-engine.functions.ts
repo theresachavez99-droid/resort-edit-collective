@@ -1154,7 +1154,7 @@ async function persistCollection(args: {
           retailer: c.retailer,
           source_url: c.url,
           affiliate_url: c.url,
-          image_url: null,
+          image_url: c.image ?? null,
           price: null,
           reasoning: s.reasoning ?? null,
           metadata: {
