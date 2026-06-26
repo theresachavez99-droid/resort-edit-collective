@@ -2139,6 +2139,56 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       }
     }
 
+    // ── v4.7 — Bump usage stats for cache rows actually used in this run.
+    if (cache && cacheHitUrls.length) {
+      try {
+        await cache.bumpUsage(cacheHitUrls);
+      } catch (e) {
+        console.warn("[cache] bumpUsage failed:", (e as Error).message);
+      }
+    }
+
+    // ── v4.7 — Cost report. Estimated credits assume 1 Firecrawl /search
+    // call ≈ 1 credit (the most common pricing tier). Cache hits would
+    // otherwise have required ≥1 search each, so each hit ≈ 1 saved credit.
+    const budgetReport = budget.report();
+    const cacheHitsTotal = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.hits, 0);
+    const newlyCachedTotal = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.written, 0);
+    const cacheRejectedTotal = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.rejected, 0);
+    const totalAttempted = cacheHitsTotal + budgetReport.totalSpent;
+    const cacheHitRate = totalAttempted > 0
+      ? Math.round((cacheHitsTotal / totalAttempted) * 1000) / 1000
+      : 0;
+    const costReport = {
+      discoveryMode: data.discoveryMode,
+      discoveryModeLabel: DISCOVERY_MODE_LABEL[data.discoveryMode as DiscoveryMode],
+      cacheEnabled: !!cache,
+      firecrawlRequests: budgetReport.totalSpent,
+      estimatedCreditsUsed: budgetReport.totalSpent,
+      estimatedCreditsSaved: cacheHitsTotal,
+      cacheHits: cacheHitsTotal,
+      cacheHitRate,
+      productsReused: cacheHitsTotal,
+      productsNewlyDiscovered: candidatesById.size - cacheHitsTotal,
+      productsNewlyCached: newlyCachedTotal,
+      productsRejectedFromCache: cacheRejectedTotal,
+      perSlot: Object.fromEntries(
+        slotResults.map((r) => [
+          r.slot,
+          {
+            cacheHits: cacheStatsPerSlot[r.slot]?.hits ?? 0,
+            firecrawlRequests: budgetReport.spent[r.slot] ?? 0,
+            budgetRemaining: budgetReport.remaining[r.slot] ?? 0,
+            exhausted: budgetReport.exhausted.includes(r.slot),
+            written: cacheStatsPerSlot[r.slot]?.written ?? 0,
+            rejected: cacheStatsPerSlot[r.slot]?.rejected ?? 0,
+            rejectionReasons: cacheStatsPerSlot[r.slot]?.rejectionReasons ?? {},
+            coverageStatus: slotCoverageStatus[r.slot],
+          },
+        ]),
+      ),
+    };
+
     return {
       ok: true as const,
       ranAt: new Date().toISOString(),
@@ -2159,6 +2209,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       decisionDeviations,
       editorialDiagnostics,
       editorialDecisions,
+      costReport,
+      slotCoverageStatus,
       looks: looks.map((l) => ({
         ...l,
         slots: l.slots.map((s) => {
