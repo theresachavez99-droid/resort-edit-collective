@@ -1,20 +1,15 @@
 import { Ship, Umbrella, Sailboat, UtensilsCrossed } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-still-life.jpg";
-import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
-import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
-import poolLoungingShoppingAsset from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { HomeItinerary, portofinoMomentsQuery } from "@/components/HomeItinerary";
-import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
 import { getFeaturedDestination } from "@/data/featuredDestination";
 
 const featured = getFeaturedDestination();
 const heroMuse = featured.heroImage;
-const editD2a = getCanonicalDayImage("day-2", "hero");
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,19 +30,6 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(portofinoMomentsQuery),
   component: Index,
 });
-
-const baseLooks: Array<{
-  tag: string;
-  title: string;
-  image: string;
-  day: "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
-  look: "look-a" | "look-b" | "look-c";
-  momentSlug?: string;
-}> = [
-  { tag: "Additional Look", title: "Beach Club & Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
-  { tag: "Additional Look", title: "Pool Lounging & Shopping", image: poolLoungingShoppingAsset.url, day: "day-3", look: "look-a", momentSlug: "pool-lounging-shopping" },
-  { tag: "Additional Look", title: "Exploring the Harbor", image: exploringHarborAsset.url, day: "day-3", look: "look-b", momentSlug: "exploring-the-harbor" },
-];
 
 const hotels = [
   {
@@ -90,12 +72,6 @@ const ctas = [
 ];
 
 function Index() {
-  const dayOverrides = useDayImageOverrides();
-  const looks = baseLooks.map((l) =>
-    l.look === "look-a" && dayOverrides[l.day] && !l.momentSlug
-      ? { ...l, image: dayOverrides[l.day] }
-      : l,
-  );
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
   return (
     <div className="bg-ivory w-full">
@@ -155,6 +131,9 @@ function Index() {
             aria-label={`${featured.name} chapters`}
             className="mt-5"
           >
+            <p className="eyebrow text-gold text-[0.62rem] tracking-[0.34em] mb-2">
+              Editorial Itinerary
+            </p>
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-3">
               {featured.momentLabels.map((m, i) => (
                 <li key={m.slug} className="flex items-center gap-x-5">
@@ -199,59 +178,19 @@ function Index() {
       </section>
 
       {/* SHOP THE LOOKS + TIP */}
+      {/* RESORT EDIT TIP — quiet editorial pause between itinerary and hotels */}
       <section className={`${wrap} rhythm-major`}>
-          <div className="flex items-center gap-4 justify-center mb-4">
-            <div className="h-px w-16 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE WAYS TO DRESS FOR PORTOFINO</h2>
-            <div className="h-px w-16 bg-gold/50" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6 max-w-4xl mx-auto">
+          <div className="bg-gold/15 border border-gold/30 p-6 lg:col-span-2 flex flex-col justify-center">
+            <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">✦ Resort Edit Tip</div>
+            <p className="mt-5 font-serif italic text-lg text-ink/85 leading-relaxed">
+              Book a cabana. Sip limoncello. Stay until sunset.
+            </p>
           </div>
-          <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-            Additional outfit ideas for beach clubs, harbor lunches, shopping afternoons, and sunset reservations.
-          </p>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 lg:gap-6">
-            {looks.map((l) => (
-              <article key={l.title} className="bg-card border border-border/50 flex flex-col">
-                <div className="text-center pt-5 px-3">
-                  <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">{l.tag}</div>
-                  <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] text-ink">{l.title}</h3>
-                </div>
-                <div className="relative aspect-[5/6] mt-4 overflow-hidden bg-muted">
-                  <img src={l.image} alt={l.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                </div>
-                {l.momentSlug ? (
-                  <Link
-                    to="/portofino/$moment"
-                    params={{ moment: l.momentSlug }}
-                    className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
-                  >
-                    Get the Look →
-                  </Link>
-                ) : (
-                  <Link
-                    to="/portofino/$day/$look"
-                    params={{ day: l.day, look: l.look }}
-                    className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
-                  >
-                    Get the Look →
-                  </Link>
-                )}
-              </article>
-            ))}
-
-            {/* Resort Edit Tip */}
-            <aside className="flex flex-col gap-5">
-              <div className="bg-gold/15 border border-gold/30 p-6 flex-1 flex flex-col">
-                <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">✦ Resort Edit Tip</div>
-                <p className="mt-5 font-serif italic text-lg text-ink/85 leading-relaxed">
-                  Book a cabana.<br />Sip limoncello.<br />Stay until sunset.
-                </p>
-              </div>
-              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-              </div>
-            </aside>
+          <div className="relative aspect-[4/3] lg:aspect-auto overflow-hidden bg-muted">
+            <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
           </div>
+        </div>
       </section>
 
       {/* WHERE TO STAY */}

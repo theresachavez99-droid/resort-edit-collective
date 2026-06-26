@@ -1,8 +1,5 @@
 import heroMuseAsset from "@/assets/hero-lilla-portofino-waterfront-floral.png.asset.json";
-import {
-  PORTOFINO_MOMENT_DEFS,
-  PORTOFINO_ADDITIONAL_MOMENT_DEFS,
-} from "@/lib/portofino-moment-fallbacks";
+import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
 
 /**
  * Featured Destination — single source of truth for the homepage editorial cover.
@@ -43,10 +40,10 @@ export const featuredDestinationSlug = "portofino";
  * moment registries so the homepage hero nav always reflects every
  * published moment without manual updates.
  */
-const portofinoMomentLabels: FeaturedMoment[] = [
-  ...PORTOFINO_MOMENT_DEFS,
-  ...PORTOFINO_ADDITIONAL_MOMENT_DEFS,
-].map((m) => ({ label: m.moment_name, slug: m.moment_slug }));
+const portofinoMomentLabels: FeaturedMoment[] = PORTOFINO_JOURNEY.map((m) => ({
+  label: m.moment_name,
+  slug: m.moment_slug,
+}));
 
 const FEATURED_DESTINATIONS: Record<string, FeaturedDestination> = {
   portofino: {

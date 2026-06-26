@@ -44,6 +44,12 @@ export type PortofinoMomentDef = {
   moment_name: string;
   /** Short one-sentence narrative shown on the landing card. */
   narrative: string;
+  /**
+   * Editorial sequence position within the destination journey.
+   * Single source of truth for hero nav, homepage grid, /portofino grid,
+   * Other Moments strip, and Prev/Next navigation. Lower = earlier in the day.
+   */
+  editorial_order: number;
   /** Wardrobe-focused thumbnail used only on the `/portofino` Six Moments grid. */
   moment_card_image: string;
   /** Destination-focused banner used only on `/portofino/$moment` detail pages. */
@@ -70,6 +76,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Arrival Day",
     narrative:
       "The first afternoon in Portofino—sun on the harbor, luggage unpacked, and nowhere to be but here.",
+    editorial_order: 1,
     moment_card_image: arrivalDayImage.url,
     hero_banner_image: arrivalDayImage.url,
     outfit_image: arrivalDayImage.url,
@@ -84,6 +91,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Market Morning",
     narrative:
       "Walking up for peaches and flowers before the heat lands — cotton, raffia, espresso in hand.",
+    editorial_order: 2,
     moment_card_image: marketMorningCard.url,
     hero_banner_image: marketMorningCard.url,
     outfit_image: marketMorningCard.url,
@@ -98,6 +106,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Yacht Day",
     narrative:
       "A long day on the water — Paraggi, Camogli, lunch on board. Swim under, throw-on over, considered finish.",
+    editorial_order: 4,
     moment_card_image: getCanonicalDayImage("day-1", "hero"),
     hero_banner_image: yachtDayHero.url,
     outfit_image: getCanonicalDayImage("day-1", "hero"),
@@ -112,6 +121,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Harbor Aperitivo",
     narrative:
       "A spritz at sunset overlooking the harbor — yachts lit, hills pink. The hinge moment between day and dinner.",
+    editorial_order: 7,
     moment_card_image: harborAperitivoCard.url,
     hero_banner_image: harborAperitivoBanner.url,
     outfit_image: harborAperitivoCard.url,
@@ -126,6 +136,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Sunset Views",
     narrative:
       "The harbor at golden hour — terrace views, warm light, and the slow transition into evening.",
+    editorial_order: 8,
     moment_card_image: sunsetViewsCard.url,
     hero_banner_image: sunsetViewsHero.url,
     outfit_image: sunsetViewsCard.url,
@@ -140,6 +151,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Riviera Dinner",
     narrative:
       "Candlelit terraces, harbor lights, and the best reservation of the trip.",
+    editorial_order: 9,
     moment_card_image: rivieraDinnerCard.url,
     hero_banner_image: rivieraDinnerHero.url,
     outfit_image: rivieraDinnerCard.url,
@@ -165,25 +177,12 @@ export const PORTOFINO_MOMENT_SLUGS = PORTOFINO_MOMENT_DEFS.map((m) => m.moment_
  */
 export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
   {
-    moment_slug: "pool-lounging-shopping",
-    archetype_slug: "pool-lounging-shopping",
-    moment_name: "Pool Lounging & Shopping",
-    narrative:
-      "Relaxed poolside hours, boutique discoveries, and an afternoon that drifts effortlessly into town.",
-    moment_card_image: poolLoungingShoppingImage.url,
-    hero_banner_image: poolLoungingShoppingImage.url,
-    outfit_image: poolLoungingShoppingImage.url,
-    legacy_day: "/portofino/day-3",
-    legacy_look_title: "Poolside",
-    legacy_day_slug: "day-3",
-    look_slug: "look-a",
-  },
-  {
     moment_slug: "exploring-the-harbor",
     archetype_slug: "exploring-the-harbor",
     moment_name: "Exploring the Harbor",
     narrative:
       "A slow afternoon along the quay — boutique windows, espresso stops, and the harbor catching the light.",
+    editorial_order: 3,
     moment_card_image: exploringHarborImage,
     hero_banner_image: exploringHarborImage,
     outfit_image: exploringHarborImage,
@@ -192,7 +191,61 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     legacy_day_slug: "day-3",
     look_slug: "look-b",
   },
+  {
+    moment_slug: "beach-club-long-lunch",
+    archetype_slug: "beach-club",
+    moment_name: "Beach Club & Long Lunch",
+    narrative:
+      "A slow afternoon at the beach club — cabana shade, a long lunch by the water, and the heat softening into gold.",
+    editorial_order: 5,
+    moment_card_image: getCanonicalDayImage("day-2", "hero"),
+    hero_banner_image: getCanonicalDayImage("day-2", "hero"),
+    outfit_image: getCanonicalDayImage("day-2", "hero"),
+    legacy_day: "/portofino/day-2",
+    legacy_look_title: "Beach Club Morning",
+    legacy_day_slug: "day-2",
+    look_slug: "look-a",
+  },
+  {
+    moment_slug: "pool-lounging-shopping",
+    archetype_slug: "pool-lounging-shopping",
+    moment_name: "Pool Lounging & Shopping",
+    narrative:
+      "Relaxed poolside hours, boutique discoveries, and an afternoon that drifts effortlessly into town.",
+    editorial_order: 6,
+    moment_card_image: poolLoungingShoppingImage.url,
+    hero_banner_image: poolLoungingShoppingImage.url,
+    outfit_image: poolLoungingShoppingImage.url,
+    legacy_day: "/portofino/day-3",
+    legacy_look_title: "Poolside",
+    legacy_day_slug: "day-3",
+    look_slug: "look-a",
+  },
 ];
+
+/**
+ * Canonical Portofino editorial journey — all moments in narrative order
+ * (Arrival → Market → Exploring → Yacht → Beach Club → Pool → Aperitivo →
+ * Sunset → Riviera Dinner). Single source of truth for every public surface
+ * that lists or sequences Portofino moments.
+ */
+export const PORTOFINO_JOURNEY: PortofinoMomentDef[] = [
+  ...PORTOFINO_MOMENT_DEFS,
+  ...PORTOFINO_ADDITIONAL_MOMENT_DEFS,
+].sort((a, b) => a.editorial_order - b.editorial_order);
+
+/** Adjacent moments in editorial order — last loops back to /portofino. */
+export function getJourneyNeighbors(slug: string): {
+  prev: PortofinoMomentDef | null;
+  next: PortofinoMomentDef | null;
+} {
+  const i = PORTOFINO_JOURNEY.findIndex((m) => m.moment_slug === slug);
+  if (i === -1) return { prev: null, next: null };
+  return {
+    prev: i > 0 ? PORTOFINO_JOURNEY[i - 1] : null,
+    next: i < PORTOFINO_JOURNEY.length - 1 ? PORTOFINO_JOURNEY[i + 1] : null,
+  };
+}
 
 /**
  * Three "Additional Looks" — secondary canonical Portofino outfits that

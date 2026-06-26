@@ -19,9 +19,6 @@ import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
 import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
 import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
-import poolLoungingShoppingAsset from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
-import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
-const editD1aAdditional = exploringHarborAsset.url;
 // Day 1 hero card on /portofino — read from the canonical Day Image
 // Registry so a founder-approved swap propagates here automatically.
 const lookYacht = getCanonicalDayImage("day-1", "destination_card");
@@ -203,100 +200,23 @@ function PortofinoPage() {
         </div>
       </section>
 
-      {/* SIX DESTINATION MOMENTS — editorial chapter index */}
+      {/* NINE DESTINATION MOMENTS — editorial chapter index, in journey order */}
       <section className="bg-ivory">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-8 md:pt-12 pb-10 md:pb-14">
           <div className="max-w-3xl mx-auto text-center mb-6 md:mb-8">
-            <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">The Edit</span>
+            <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">Editorial Itinerary</span>
             <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-2 text-ink">
               Nine Curated Moments in Portofino
             </h2>
             <div className="mx-auto my-3 h-px w-12 bg-gold" />
             <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
-              Each moment is its own chapter — a single look, dressed for one place at one hour of the day.
+              From arrival to dinner — nine chapters of a single Portofino day, in the order you'll live them.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {moments.map((m) => (
               <PortofinoMomentCardView key={m.moment_slug} m={m} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* MORE WAYS TO DRESS FOR PORTOFINO — additional looks */}
-      <section className="bg-ivory border-t border-border/40">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-8 md:pt-12 pb-10 md:pb-14">
-          <div className="max-w-3xl mx-auto text-center mb-6 md:mb-8">
-            <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">More Ways To Dress For Portofino</span>
-            <h2 className="font-display text-2xl md:text-4xl tracking-[0.04em] mt-2 text-ink">
-              Additional outfit ideas
-            </h2>
-            <div className="mx-auto my-3 h-px w-12 bg-gold" />
-            <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
-              For beach clubs, harbor lunches, shopping afternoons, and sunset reservations.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-            {[
-              {
-                title: "Beach Club & Long Lunch",
-                image: lookBeachOverride,
-                to: DAY_PATHS["day-2"],
-                moment: undefined as string | undefined,
-              },
-              {
-                title: "Pool Lounging & Shopping",
-                image: poolLoungingShoppingAsset.url,
-                to: undefined,
-                moment: "pool-lounging-shopping",
-              },
-              {
-                title: "Exploring the Harbor",
-                image: editD1aAdditional,
-                to: undefined,
-                moment: "exploring-the-harbor",
-              },
-            ].map((l) => (
-              <article
-                key={l.title}
-                className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden bg-cream/40">
-                  <img
-                    src={l.image}
-                    alt={`${l.title} — Portofino additional look`}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  />
-                  <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-                    ADDITIONAL LOOK
-                  </span>
-                </div>
-                <div className="p-5 md:p-6 flex flex-col flex-1">
-                  <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">
-                    {l.title}
-                  </h3>
-                  {l.moment ? (
-                    <Link
-                      to="/portofino/$moment"
-                      params={{ moment: l.moment }}
-                      className="mt-4 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start"
-                    >
-                      Get The Look →
-                    </Link>
-                  ) : (
-                    <Link
-                      to={l.to!}
-                      className="mt-4 inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.3em] text-gold group-hover:text-ink border-b border-gold/60 group-hover:border-ink pb-1 self-start"
-                    >
-                      Get The Look →
-                    </Link>
-                  )}
-                </div>
-              </article>
             ))}
           </div>
         </div>

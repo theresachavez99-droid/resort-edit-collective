@@ -5,6 +5,7 @@ import type { Database, Json } from "@/integrations/supabase/types";
 import {
   PORTOFINO_MOMENT_DEFS,
   PORTOFINO_MOMENT_SLUGS,
+  PORTOFINO_JOURNEY,
   getPortofinoMomentDef,
   type PortofinoMomentDef,
 } from "./portofino-moment-fallbacks";
@@ -102,10 +103,10 @@ async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard>
   };
 }
 
-/** Public — landing page (all six moments, in order, fully resolved). */
+/** Public — landing page (all nine editorial-journey moments, in order). */
 export const listPortofinoMomentsForLanding = createServerFn({ method: "GET" }).handler(
   async () => {
-    const cards = await Promise.all(PORTOFINO_MOMENT_DEFS.map(resolveOne));
+    const cards = await Promise.all(PORTOFINO_JOURNEY.map(resolveOne));
     return { ok: true as const, moments: cards };
   },
 );
@@ -127,7 +128,7 @@ export const getPortofinoMomentVerdicts = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     requireAdmin(data.password);
-    const cards = await Promise.all(PORTOFINO_MOMENT_DEFS.map(resolveOne));
+    const cards = await Promise.all(PORTOFINO_JOURNEY.map(resolveOne));
     const verdicts = cards.map((c) => ({
       moment_slug: c.moment_slug,
       source: c.resolved.source,
