@@ -50,8 +50,6 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
-import { DAY_PATHS, type DaySlug } from "@/components/PortofinoDayPage";
-import { type LookSlug } from "@/lib/portofino-spec";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
