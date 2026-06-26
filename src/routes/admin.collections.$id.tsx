@@ -324,6 +324,9 @@ function CollectionDetail() {
       </header>
 
       <CollectionInsightsPanel insights={insights} />
+      <SwimArchetypeDiagnosticsPanel
+        diagnostics={(collection as { diagnostics?: { swimDiagnostics?: SwimDxData; decisionDeviations?: DeviationData[] } }).diagnostics ?? null}
+      />
 
       <section className="border rounded p-4 space-y-3">
         <h2 className="font-semibold">Collection status</h2>
