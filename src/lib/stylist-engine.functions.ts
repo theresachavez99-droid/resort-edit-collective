@@ -1945,6 +1945,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             assembly: { lookScores, error: assemblyError },
             swimDiagnostics,
             decisionDeviations,
+            editorialDiagnostics,
+            editorialDecisions,
           },
           collectionScore,
         });
@@ -1971,6 +1973,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       lookScores,
       swimDiagnostics,
       decisionDeviations,
+      editorialDiagnostics,
+      editorialDecisions,
       looks: looks.map((l) => ({
         ...l,
         slots: l.slots.map((s) => {
