@@ -127,25 +127,20 @@ function Index() {
           </p>
           <p className="eyebrow text-ink/65 text-[0.7rem] sm:text-[0.74rem] tracking-[0.24em] mt-2.5">
             {featured.country} <span className="text-gold/70">•</span>{" "}
-            {featured.totalLooks} Looks{" "}
-            <span className="text-gold/70">•</span>{" "}
-            {featured.totalMoments} Moments
+            {featured.totalMoments} Curated Moments
           </p>
           <p
             className="font-serif italic text-[1.2rem] sm:text-[1.32rem] lg:text-[1.45rem] leading-[1.15] mt-2.5 text-ink"
           >
-            {featured.tagline}
+            Every moment thoughtfully curated—from your first espresso to sunset overlooking the harbor.
           </p>
           <div className="mt-3 mb-2.5 h-px w-24 bg-gold/80" />
-          <p className="font-serif text-[1rem] lg:text-[1.05rem] text-ink/75 leading-[1.5] max-w-xl">
-            Curated outfits, hotels, experiences, and insider recommendations designed around how women actually travel.
-          </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               to={featured.primaryCtaHref as "/"}
               className="bg-gold text-ivory eyebrow text-[0.78rem] tracking-[0.28em] px-10 py-[18px] hover:bg-ink transition-colors"
             >
-              Explore {featured.name}
+              Discover {featured.name}
             </Link>
             <Link
               to="/destinations"
@@ -182,8 +177,8 @@ function Index() {
 
       {/* DESTINATION INTRO — editorial context, intentionally understated */}
       <section className={`${wrap} mt-14 lg:mt-20`}>
-        <p className="mx-auto max-w-2xl text-center font-serif italic text-[1.05rem] sm:text-[1.15rem] lg:text-[1.22rem] leading-[1.55] text-ink/75">
-          Portofino is a harbor town on the Italian Riviera known for pastel waterfront buildings, yacht culture, beach clubs, long lunches, and sunset aperitivos.
+        <p className="mx-auto max-w-3xl text-center font-serif italic text-[1.05rem] sm:text-[1.15rem] lg:text-[1.22rem] leading-[1.55] text-ink/75">
+          Every Resort Edit begins with a destination. We then curate where to stay, what to experience, and what to wear for every memorable moment along the way.
         </p>
       </section>
 
@@ -195,10 +190,10 @@ function Index() {
           <div className="h-px w-16 bg-gold/50" />
         </div>
         <p className="mt-1 text-center font-serif italic text-[1rem] sm:text-[1.08rem] text-ink/80 max-w-2xl mx-auto leading-snug">
-          Six destination moments. One editorial wardrobe.
+          Nine curated moments. One editorial wardrobe.
         </p>
         <p className="mb-10 mt-2 text-center font-serif italic text-[0.92rem] sm:text-[0.98rem] text-ink/60 max-w-2xl mx-auto leading-relaxed">
-          From market mornings and yacht afternoons to sunset cocktails and Riviera dinners.
+          From arrival afternoons and market mornings to yacht days, harbor aperitivos, and long Riviera dinners.
         </p>
         <HomeItinerary />
       </section>
@@ -351,14 +346,14 @@ function Index() {
         </p>
         <ul className="mx-auto max-w-4xl flex flex-wrap items-center justify-center gap-x-7 gap-y-3 lg:gap-x-10">
           {[
-            "Zimmermann",
+            "ERES",
             "Johanna Ortiz",
+            "Zimmermann",
+            "ViX Paula Hermanny",
+            "Callas Milano",
+            "Pucci",
+            "Missoni",
             "Alexandra Miro",
-            "Agua by Agua Bendita",
-            "Alemais",
-            "Posse",
-            "SIR.",
-            "Faithfull the Brand",
           ].map((name, i, arr) => (
             <li key={name} className="flex items-center gap-x-7 lg:gap-x-10">
               <Link
