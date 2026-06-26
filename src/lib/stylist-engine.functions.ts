@@ -1704,6 +1704,10 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             palette: c?.palette ?? null,
             editorialScore: c?.editorialScore ?? null,
             commerceSource: c?.commerceSource ?? null,
+            approvalLevel: c?.approvalLevel ?? null,
+            familyMatched: c?.familyMatched ?? null,
+            constructionScore: c?.constructionScore ?? null,
+            curationReason: c?.curationReason ?? null,
           };
         }),
       })),
