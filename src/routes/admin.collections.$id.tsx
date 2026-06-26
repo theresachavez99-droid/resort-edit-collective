@@ -597,6 +597,16 @@ function CollectionDetail() {
       <SwimArchetypeDiagnosticsPanel
         diagnostics={(collection as { diagnostics?: { swimDiagnostics?: SwimDxData; decisionDeviations?: DeviationData[] } }).diagnostics ?? null}
       />
+      <EditorialCollectionDiagnosticsPanel
+        diagnostics={
+          (collection as {
+            diagnostics?: {
+              editorialDiagnostics?: EditorialDxData;
+              editorialDecisions?: EditorialDecision[];
+            };
+          }).diagnostics ?? null
+        }
+      />
 
       <section className="border rounded p-4 space-y-3">
         <h2 className="font-semibold">Collection status</h2>
