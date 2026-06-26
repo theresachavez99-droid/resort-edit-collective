@@ -674,6 +674,13 @@ export async function discoverForSlot(args: {
           const title = item.title ?? item.metadata?.title ?? null;
           const description =
             item.description ?? item.snippet ?? item.metadata?.description ?? null;
+          const image =
+            (typeof item.metadata?.ogImage === "string" && item.metadata.ogImage) ||
+            (typeof item.metadata?.["og:image"] === "string" && item.metadata["og:image"]) ||
+            (typeof item.metadata?.image === "string" && item.metadata.image) ||
+            (typeof item.ogImage === "string" && item.ogImage) ||
+            (typeof item.image === "string" && item.image) ||
+            null;
           const sig = detectBrandSignals(brand.name, url, title, description);
           if (sig.matchedSources.length === 0) {
             bump("brand_mismatch");
