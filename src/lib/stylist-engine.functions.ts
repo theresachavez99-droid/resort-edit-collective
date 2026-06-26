@@ -80,7 +80,12 @@ import {
   type CoverageStatus,
   type DiscoveryMode,
 } from "./discovery-pipeline";
-import { bumpUsage, lookupCache, upsertCache, type CachedCandidate } from "./product-cache.server";
+import type { CachedCandidate } from "./product-cache.server";
+
+/** Lazy loader for the server-only product-cache module. */
+async function cacheModule() {
+  return await import("./product-cache.server");
+}
 
 // ──────────────────────────────────────────────────────────────
 // Slot specs — every required slot has its own brand categories,
