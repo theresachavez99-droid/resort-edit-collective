@@ -77,7 +77,7 @@ export const Route = createFileRoute("/portofino/$day/$look")({
     const isBeachClub = params.day === "day-2" && params.look === "look-a";
     const isHarbor = params.day === "day-3" && params.look === "look-b";
     const title = isBeachClub
-      ? "Beach Club + Long Lunch in Portofino — Resort Edit"
+      ? "Beach Club & Long Lunch in Portofino — Resort Edit"
       : isHarbor
         ? "Exploring the Harbor in Portofino — Resort Edit"
         : "Shop the Full Look — Portofino | Resort Edit | Dressed for the destination";
@@ -110,7 +110,7 @@ function ViewFullLookPage() {
   const isBeachClub = day === "day-2" && look === "look-a";
   const isHarbor = day === "day-3" && look === "look-b";
   const displayTitle = isBeachClub
-    ? "Beach Club + Long Lunch"
+    ? "Beach Club & Long Lunch"
     : isHarbor
       ? "Exploring the Harbor"
       : lookData.title;

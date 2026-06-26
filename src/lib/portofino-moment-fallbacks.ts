@@ -167,7 +167,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
   {
     moment_slug: "pool-lounging-shopping",
     archetype_slug: "pool-lounging-shopping",
-    moment_name: "Pool Lounging + Shopping",
+    moment_name: "Pool Lounging & Shopping",
     narrative:
       "Relaxed poolside hours, boutique discoveries, and an afternoon that drifts effortlessly into town.",
     moment_card_image: poolLoungingShoppingImage.url,
@@ -205,8 +205,8 @@ export type PortofinoAdditionalLook = {
 };
 
 export const PORTOFINO_ADDITIONAL_LOOKS: PortofinoAdditionalLook[] = [
-  { canonical_name: "Beach Club + Long Lunch", legacy_day_slug: "day-2", look_slug: "look-a" },
-  { canonical_name: "Pool Lounging + Shopping", legacy_day_slug: "day-3", look_slug: "look-a" },
+  { canonical_name: "Beach Club & Long Lunch", legacy_day_slug: "day-2", look_slug: "look-a" },
+  { canonical_name: "Pool Lounging & Shopping", legacy_day_slug: "day-3", look_slug: "look-a" },
   { canonical_name: "Exploring the Harbor", legacy_day_slug: "day-3", look_slug: "look-b" },
 ];
 

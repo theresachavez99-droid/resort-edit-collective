@@ -1,4 +1,8 @@
 import heroMuseAsset from "@/assets/hero-lilla-portofino-waterfront-floral.png.asset.json";
+import {
+  PORTOFINO_MOMENT_DEFS,
+  PORTOFINO_ADDITIONAL_MOMENT_DEFS,
+} from "@/lib/portofino-moment-fallbacks";
 
 /**
  * Featured Destination — single source of truth for the homepage editorial cover.
@@ -34,6 +38,16 @@ export type FeaturedDestination = {
 
 export const featuredDestinationSlug = "portofino";
 
+/**
+ * Editorial moment order for Portofino — derived from the canonical
+ * moment registries so the homepage hero nav always reflects every
+ * published moment without manual updates.
+ */
+const portofinoMomentLabels: FeaturedMoment[] = [
+  ...PORTOFINO_MOMENT_DEFS,
+  ...PORTOFINO_ADDITIONAL_MOMENT_DEFS,
+].map((m) => ({ label: m.moment_name, slug: m.moment_slug }));
+
 const FEATURED_DESTINATIONS: Record<string, FeaturedDestination> = {
   portofino: {
     slug: "portofino",
@@ -44,16 +58,9 @@ const FEATURED_DESTINATIONS: Record<string, FeaturedDestination> = {
       "Lilla walking along the Portofino waterfront in an elegant floral resort dress overlooking the Italian Riviera.",
     tagline: "Dressed for the destination.",
     totalLooks: 25,
-    totalMoments: 9,
+    totalMoments: portofinoMomentLabels.length,
     primaryCtaHref: "/portofino",
-    momentLabels: [
-      { label: "Arrival Day", slug: "arrival-day" },
-      { label: "Market Morning", slug: "market-morning" },
-      { label: "Yacht Day", slug: "yacht-day" },
-      { label: "Harbor Aperitivo", slug: "harbor-aperitivo" },
-      { label: "Sunset Views", slug: "sunset-views" },
-      { label: "Riviera Dinner", slug: "riviera-dinner" },
-    ],
+    momentLabels: portofinoMomentLabels,
   },
 };
 

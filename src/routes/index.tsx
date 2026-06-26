@@ -44,8 +44,8 @@ const baseLooks: Array<{
   look: "look-a" | "look-b" | "look-c";
   momentSlug?: string;
 }> = [
-  { tag: "Additional Look", title: "Beach Club + Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
-  { tag: "Additional Look", title: "Pool Lounging + Shopping", image: poolLoungingShoppingAsset.url, day: "day-3", look: "look-a", momentSlug: "pool-lounging-shopping" },
+  { tag: "Additional Look", title: "Beach Club & Long Lunch", image: editD2a, day: "day-2", look: "look-a" },
+  { tag: "Additional Look", title: "Pool Lounging & Shopping", image: poolLoungingShoppingAsset.url, day: "day-3", look: "look-a", momentSlug: "pool-lounging-shopping" },
   { tag: "Additional Look", title: "Exploring the Harbor", image: exploringHarborAsset.url, day: "day-3", look: "look-b", momentSlug: "exploring-the-harbor" },
 ];
 
@@ -153,15 +153,15 @@ function Index() {
           {/* Chapter navigation — communicates depth above the fold */}
           <nav
             aria-label={`${featured.name} chapters`}
-            className="mt-5 -mx-4 sm:mx-0 overflow-x-auto lg:overflow-visible"
+            className="mt-5"
           >
-            <ul className="flex lg:flex-wrap items-center gap-x-5 gap-y-2 px-4 sm:px-0 whitespace-nowrap lg:whitespace-normal">
+            <ul className="flex flex-wrap items-center gap-x-5 gap-y-3">
               {featured.momentLabels.map((m, i) => (
                 <li key={m.slug} className="flex items-center gap-x-5">
                   <Link
                     to="/portofino/$moment"
                     params={{ moment: m.slug }}
-                    className="eyebrow text-[0.68rem] tracking-[0.22em] text-ink/70 hover:text-gold transition-colors"
+                    className="eyebrow text-[0.72rem] sm:text-[0.7rem] tracking-[0.22em] text-ink/70 hover:text-gold transition-colors py-1"
                   >
                     {m.label}
                   </Link>
