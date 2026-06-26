@@ -22,7 +22,7 @@ export function PortofinoMomentCard({ m }: { m: PortofinoMomentCardData }) {
           style={
             m.moment_slug === "sunset-views" ||
             m.moment_slug === "harbor-aperitivo" ||
-            m.moment_slug === "arrival-day" ||
+            m.moment_slug === "arrival" ||
             m.moment_slug === "riviera-dinner"
               ? { objectPosition: "center top" }
               : undefined
