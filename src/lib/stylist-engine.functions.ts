@@ -68,6 +68,19 @@ import {
   fingerprintLook,
 } from "./visual-fingerprint";
 import { containsBannedPhrase, rewriteCollectionCopy } from "./editorial-copy";
+import {
+  BudgetMeter,
+  CACHE_MIN_EDITORIAL_SCORE,
+  DISCOVERY_MODE_LABEL,
+  SLOT_FIRECRAWL_BUDGET_DEFAULTS,
+  buildSiteScopedQuery,
+  coverageStatusFor,
+  isApprovedRetailerHost,
+  retailersForSlot,
+  type CoverageStatus,
+  type DiscoveryMode,
+} from "./discovery-pipeline";
+import { bumpUsage, lookupCache, upsertCache, type CachedCandidate } from "./product-cache.server";
 
 // ──────────────────────────────────────────────────────────────
 // Slot specs — every required slot has its own brand categories,
