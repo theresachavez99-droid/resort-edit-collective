@@ -1,9 +1,13 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
-import { getPortofinoMomentDef, getJourneyNeighbors } from "@/lib/portofino-moment-fallbacks";
+import {
+  getPortofinoMomentDef,
+  getJourneyNeighbors,
+  PORTOFINO_MOMENT_SLUG_ALIASES,
+} from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
 import { absoluteUrl } from "@/lib/site";
 import { findLook, lookbook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type Look, type LookProduct } from "@/data/lookbook";
@@ -21,6 +25,15 @@ const momentQuery = (slug: string) =>
 
 export const Route = createFileRoute("/portofino/$moment")({
   loader: async ({ params, context }) => {
+    // Redirect legacy/alias slugs to the canonical moment slug.
+    const aliased = PORTOFINO_MOMENT_SLUG_ALIASES[params.moment];
+    if (aliased) {
+      throw redirect({
+        to: "/portofino/$moment",
+        params: { moment: aliased },
+        replace: true,
+      });
+    }
     const def = getPortofinoMomentDef(params.moment);
     if (!def) throw notFound();
     await context.queryClient.ensureQueryData(momentQuery(params.moment));
