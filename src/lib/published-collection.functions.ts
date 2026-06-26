@@ -208,7 +208,7 @@ async function resolvePublishedCollection(
     collection: {
       destination: collection.destination,
       activity: collection.activity,
-      collection_name: collection.title,
+      collection_name: collection.title ?? `${collection.destination} — ${collection.activity}`,
       season: collection.season ?? null,
       version: `${collection.id}:${collection.updated_at ? new Date(collection.updated_at).getTime() : 0}`,
       published_at: collection.published_at ?? null,
