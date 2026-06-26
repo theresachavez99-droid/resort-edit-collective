@@ -33,9 +33,13 @@ function StylistEnginePage() {
   const [result, setResult] = useState<RunResult | null>(null);
   const [targetLooks, setTargetLooks] = useState(6);
   const [maxBrandsPerSlot, setMaxBrandsPerSlot] = useState(8);
-  const [retailersPerBrand, setRetailersPerBrand] = useState(6);
-  const [resultsPerSearch, setResultsPerSearch] = useState(4);
+  const [retailersPerBrand, setRetailersPerBrand] = useState(3);
+  const [resultsPerSearch, setResultsPerSearch] = useState(3);
   const [persist, setPersist] = useState(true);
+  // v4.7 — Discovery Strategy. Fast Review is the long-term default; the
+  // engine reads cache first and trims Firecrawl spend hard.
+  const [discoveryMode, setDiscoveryMode] = useState<"fast" | "balanced" | "deep">("fast");
+  const [enableCache, setEnableCache] = useState(true);
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
@@ -74,6 +78,8 @@ function StylistEnginePage() {
           retailersPerBrand,
           resultsPerSearch,
           persist,
+          discoveryMode,
+          enableCache,
         },
       }),
     onSuccess: (r) => setResult(r),
@@ -124,6 +130,31 @@ function StylistEnginePage() {
       </header>
 
       <section className="border rounded-lg p-5 bg-stone-50 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label className="flex flex-col text-sm">
+            <span className="text-stone-500 text-xs mb-1 uppercase tracking-wide">
+              Discovery Strategy
+            </span>
+            <select
+              value={discoveryMode}
+              onChange={(e) => setDiscoveryMode(e.target.value as typeof discoveryMode)}
+              className="border px-3 py-2 rounded bg-white"
+            >
+              <option value="fast">Fast Review — cache-first, minimal Firecrawl (default)</option>
+              <option value="balanced">Balanced — cache + limited Firecrawl</option>
+              <option value="deep">Deep Discovery — broad search, more credits</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-2 text-sm mt-6">
+            <input
+              type="checkbox"
+              checked={enableCache}
+              onChange={(e) => setEnableCache(e.target.checked)}
+              className="h-5 w-5"
+            />
+            <span>Use product cache (recommended)</span>
+          </label>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
           <Field label="Target looks" value={targetLooks} set={setTargetLooks} min={3} max={12} />
           <Field label="Brands per slot" value={maxBrandsPerSlot} set={setMaxBrandsPerSlot} min={2} max={20} />
@@ -161,6 +192,7 @@ function StylistEnginePage() {
 
       {result && result.ok && (
         <>
+          <CostReport result={result} />
           <RegistryCoverage result={result} />
           <SlotCoverage result={result} />
           <ExpansionReport result={result} />
