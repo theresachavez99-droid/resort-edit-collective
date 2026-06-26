@@ -84,12 +84,26 @@ function BrandsPage() {
                           {brand.name}
                         </span>
                         <span className="eyebrow text-[0.55rem] text-ink/40 group-hover:text-gold transition-colors">
-                          View →
+                          Why We Love It →
                         </span>
                       </div>
                       {brand.blurb && (
                         <p className="mt-1.5 font-serif text-[0.9rem] text-ink/65 leading-snug">
                           {brand.blurb}
+                        </p>
+                      )}
+                      {(brand.bestFor && brand.bestFor.length > 0) && (
+                        <p className="mt-2 eyebrow text-[0.55rem] text-ink/55">
+                          <span className="text-gold">Best for</span>
+                          <span className="mx-1.5 text-ink/30">·</span>
+                          {brand.bestFor.join(" · ")}
+                        </p>
+                      )}
+                      {(brand.resortEditLoves && brand.resortEditLoves.length > 0) && (
+                        <p className="mt-1 eyebrow text-[0.55rem] text-ink/55">
+                          <span className="text-gold">Resort Edit loves</span>
+                          <span className="mx-1.5 text-ink/30">·</span>
+                          {brand.resortEditLoves.join(" · ")}
                         </p>
                       )}
                     </Link>
