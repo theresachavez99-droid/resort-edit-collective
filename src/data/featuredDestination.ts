@@ -42,9 +42,9 @@ const FEATURED_DESTINATIONS: Record<string, FeaturedDestination> = {
     heroImage: heroMuseAsset.url,
     heroImageAlt:
       "Lilla walking along the Portofino waterfront in an elegant floral resort dress overlooking the Italian Riviera.",
-    tagline: "Five Days. Five Looks. One Perfect Destination.",
+    tagline: "Dressed for the destination.",
     totalLooks: 25,
-    totalMoments: 6,
+    totalMoments: 9,
     primaryCtaHref: "/portofino",
     momentLabels: [
       { label: "Arrival Day", slug: "arrival-day" },

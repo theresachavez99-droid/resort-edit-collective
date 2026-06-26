@@ -59,10 +59,10 @@ import { type LookSlug } from "@/lib/portofino-spec";
 export const Route = createFileRoute("/portofino")({
   head: () => ({
     meta: [
-      { title: "Portofino — Six Moments | Resort Edit | Dressed for the Destination" },
-      { name: "description", content: "Six destination moments in Portofino — Arrival Day, Market Morning, Yacht Day, Harbor Aperitivo, Sunset Views, Riviera Dinner. A luxury editorial guide to the Italian Riviera." },
-      { property: "og:title", content: "Portofino — Six Moments | Resort Edit" },
-      { property: "og:description", content: "Browse Portofino through six destination moments. Dressed for the Destination." },
+      { title: "Portofino — Nine Curated Moments | Resort Edit | Dressed for the Destination" },
+      { name: "description", content: "Nine curated moments in Portofino — from arrival afternoons and market mornings to yacht days, harbor aperitivos, and long Riviera dinners. A luxury editorial guide to the Italian Riviera." },
+      { property: "og:title", content: "Portofino — Nine Curated Moments | Resort Edit" },
+      { property: "og:description", content: "Discover Portofino through nine curated destination moments. Dressed for the Destination." },
       { property: "og:image", content: absoluteUrl(portofinoImg) },
       { property: "og:url", content: absoluteUrl("/portofino") },
       { name: "twitter:image", content: absoluteUrl(portofinoImg) },
@@ -198,7 +198,7 @@ function PortofinoPage() {
             Portofino
           </h1>
           <p className="font-serif italic text-base md:text-xl text-ivory/90 mt-2 max-w-2xl leading-relaxed">
-            A pastel harbor on the Italian Riviera — six destination moments, one editorial language.
+            A pastel harbor on the Italian Riviera — nine curated moments, one editorial language.
           </p>
         </div>
       </section>
@@ -209,7 +209,7 @@ function PortofinoPage() {
           <div className="max-w-3xl mx-auto text-center mb-6 md:mb-8">
             <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">The Edit</span>
             <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-2 text-ink">
-              Six Moments in Portofino
+              Nine Curated Moments in Portofino
             </h2>
             <div className="mx-auto my-3 h-px w-12 bg-gold" />
             <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
