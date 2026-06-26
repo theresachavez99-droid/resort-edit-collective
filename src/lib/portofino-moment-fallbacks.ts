@@ -163,10 +163,42 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
 ];
 
 export function getPortofinoMomentDef(slug: string): PortofinoMomentDef | undefined {
+  const canonical = PORTOFINO_MOMENT_SLUG_ALIASES[slug] ?? slug;
   return (
-    PORTOFINO_MOMENT_DEFS.find((m) => m.moment_slug === slug) ??
-    PORTOFINO_ADDITIONAL_MOMENT_DEFS.find((m) => m.moment_slug === slug)
+    PORTOFINO_MOMENT_DEFS.find((m) => m.moment_slug === canonical) ??
+    PORTOFINO_ADDITIONAL_MOMENT_DEFS.find((m) => m.moment_slug === canonical)
   );
+}
+
+/**
+ * Legacy/short-form moment slugs we still need to honor for redirects and
+ * for any persisted `look_candidates.moment_slug` rows that pre-date the
+ * Sep-2025 slug cleanup. Always resolve to the new canonical slug.
+ */
+export const PORTOFINO_MOMENT_SLUG_ALIASES: Record<string, string> = {
+  "arrival-day": "arrival",
+  "pool-lounging-shopping": "pool-lounging",
+};
+
+/**
+ * Resolve a legacy `(daySlug, lookSlug)` pair to a canonical moment slug.
+ * Looks without a canonical moment fall back to the day's primary moment
+ * (look-a) so legacy bookmarks never 404 during the transition.
+ */
+export function momentSlugForLookKey(
+  daySlug: LegacyDaySlug,
+  lookSlug?: string,
+): string {
+  const exact = PORTOFINO_JOURNEY.find(
+    (m) => m.legacy_day_slug === daySlug && m.look_slug === lookSlug,
+  );
+  if (exact) return exact.moment_slug;
+  const primary = PORTOFINO_JOURNEY.find(
+    (m) => m.legacy_day_slug === daySlug && m.look_slug === "look-a",
+  );
+  if (primary) return primary.moment_slug;
+  const anyForDay = PORTOFINO_JOURNEY.find((m) => m.legacy_day_slug === daySlug);
+  return anyForDay?.moment_slug ?? "arrival";
 }
 
 export const PORTOFINO_MOMENT_SLUGS = PORTOFINO_MOMENT_DEFS.map((m) => m.moment_slug);
