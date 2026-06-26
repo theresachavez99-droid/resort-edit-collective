@@ -71,7 +71,7 @@ export type PortofinoMomentDef = {
  */
 export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
   {
-    moment_slug: "arrival-day",
+    moment_slug: "arrival",
     archetype_slug: "arrival",
     moment_name: "Arrival Day",
     narrative:
@@ -207,7 +207,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     look_slug: "look-a",
   },
   {
-    moment_slug: "pool-lounging-shopping",
+    moment_slug: "pool-lounging",
     archetype_slug: "pool-lounging-shopping",
     moment_name: "Pool Lounging & Shopping",
     narrative:
