@@ -207,6 +207,8 @@ function CollectionDetail() {
   const replaceSlot = useServerFn(replaceSlotProduct);
   const regenSlot = useServerFn(regenerateSlot);
   const regenLook = useServerFn(regenerateLook);
+  const featureCollection = useServerFn(setFeaturedCollection);
+  const unfeatureCol = useServerFn(unfeatureCollection);
 
   const [pw, setPw] = useState("");
   const [authed, setAuthed] = useState(false);
