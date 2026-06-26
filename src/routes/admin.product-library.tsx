@@ -670,10 +670,10 @@ function GapReport() {
       <header>
         <h1 className="font-serif text-3xl">Gap Report</h1>
         <p className="text-sm text-ink/70 mt-2 max-w-3xl">
-          What the live <code>/portofino/day-N/look-X</code> pages actually render today,
-          slot-by-slot. Each look has 7 required categories × 3 tiers = 21 slots, across 15 looks (5
-          days × 3 looks) = <strong>{total} total slots</strong>. Anything marked "placeholder"
-          needs Firecrawl sourcing of an exact affiliate product URL + thumbnail.
+          What the live <code>/portofino/{`{moment}`}</code> moment pages actually render today,
+          slot-by-slot. Each look has 7 required categories × 3 tiers = 21 slots, across 15 looks
+          (Portofino's full editorial library) = <strong>{total} total slots</strong>. Anything
+          marked "placeholder" needs Firecrawl sourcing of an exact affiliate product URL + thumbnail.
         </p>
       </header>
 
