@@ -111,7 +111,7 @@ export const LOOK_DNA: Record<string, LookDNA> = {
   // ── Day 3 · Pool + Shopping ────────────────────────────────────────
   "day-3/look-a": {
     destination: "portofino",
-    momentSlug: "pool-lounging-shopping",
+    momentSlug: "pool-lounging",
     styleFamilies: [
       "destination_glamour",
       "poolside_luxury",
@@ -194,7 +194,7 @@ export const LOOK_DNA: Record<string, LookDNA> = {
   },
   "day-5/look-c": {
     destination: "portofino",
-    momentSlug: "arrival-day",
+    momentSlug: "arrival",
     styleFamilies: ["raffia_luxury", "mediterranean_embroidery"],
     activityTags: ["arrival_day", "market_morning"],
     excludeActivities: ["yacht_day"],
