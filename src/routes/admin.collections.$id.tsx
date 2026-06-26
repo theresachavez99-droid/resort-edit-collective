@@ -15,6 +15,10 @@ import {
   regenerateSlot,
   regenerateLook,
 } from "@/lib/editorial-review.functions";
+import {
+  setFeaturedCollection,
+  unfeatureCollection,
+} from "@/lib/inventory-health.functions";
 
 export const Route = createFileRoute("/admin/collections/$id")({
   head: () => ({
@@ -203,6 +207,8 @@ function CollectionDetail() {
   const replaceSlot = useServerFn(replaceSlotProduct);
   const regenSlot = useServerFn(regenerateSlot);
   const regenLook = useServerFn(regenerateLook);
+  const featureCollection = useServerFn(setFeaturedCollection);
+  const unfeatureCol = useServerFn(unfeatureCollection);
 
   const [pw, setPw] = useState("");
   const [authed, setAuthed] = useState(false);
@@ -338,6 +344,59 @@ function CollectionDetail() {
               {s}
             </button>
           ))}
+        </div>
+        <div className="border-t border-stone-200 pt-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium">
+                Featured Editorial Collection{" "}
+                {(collection as { featured?: boolean }).featured ? (
+                  <span className="ml-2 bg-black text-white text-[10px] px-1.5 py-0.5 uppercase tracking-widest align-middle">
+                    Featured
+                  </span>
+                ) : null}
+              </p>
+              <p className="text-xs text-stone-500 mt-1">
+                Only one collection per Destination + Activity can be featured. Other
+                collections (seasonal, holiday, editor's favourites) remain in the
+                database. Requires status <em>approved</em>.
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                disabled={
+                  !!busy ||
+                  collection.status !== "approved" ||
+                  !!(collection as { featured?: boolean }).featured
+                }
+                onClick={() =>
+                  run("feature-collection", () =>
+                    featureCollection({
+                      data: { password: pw, collectionId: collection.id },
+                    }),
+                  )
+                }
+                className="px-3 py-1 rounded border text-sm bg-black text-white disabled:opacity-40"
+              >
+                Mark as Featured
+              </button>
+              <button
+                disabled={
+                  !!busy || !(collection as { featured?: boolean }).featured
+                }
+                onClick={() =>
+                  run("unfeature-collection", () =>
+                    unfeatureCol({
+                      data: { password: pw, collectionId: collection.id },
+                    }),
+                  )
+                }
+                className="px-3 py-1 rounded border text-sm disabled:opacity-40"
+              >
+                Unfeature
+              </button>
+            </div>
+          </div>
         </div>
         <NotesEditor
           initial={collection.notes ?? ""}

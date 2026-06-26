@@ -462,11 +462,16 @@ export type Database = {
           brand: string | null
           created_at: string
           currency: string | null
+          fallback_active: boolean
+          health_attempts: number
+          health_status: string
           id: string
           image_url: string | null
+          last_health_check_at: string | null
           locked: boolean
           look_id: string
           metadata: Json
+          original_source_url: string | null
           position: number
           price: number | null
           product_name: string | null
@@ -482,11 +487,16 @@ export type Database = {
           brand?: string | null
           created_at?: string
           currency?: string | null
+          fallback_active?: boolean
+          health_attempts?: number
+          health_status?: string
           id?: string
           image_url?: string | null
+          last_health_check_at?: string | null
           locked?: boolean
           look_id: string
           metadata?: Json
+          original_source_url?: string | null
           position?: number
           price?: number | null
           product_name?: string | null
@@ -502,11 +512,16 @@ export type Database = {
           brand?: string | null
           created_at?: string
           currency?: string | null
+          fallback_active?: boolean
+          health_attempts?: number
+          health_status?: string
           id?: string
           image_url?: string | null
+          last_health_check_at?: string | null
           locked?: boolean
           look_id?: string
           metadata?: Json
+          original_source_url?: string | null
           position?: number
           price?: number | null
           product_name?: string | null
@@ -605,9 +620,13 @@ export type Database = {
           created_at: string
           destination: string
           diagnostics: Json
+          featured: boolean
+          featured_look_id: string | null
           id: string
           notes: string | null
+          published_at: string | null
           scoring: Json
+          season: string | null
           status: string
           title: string | null
           updated_at: string
@@ -618,9 +637,13 @@ export type Database = {
           created_at?: string
           destination: string
           diagnostics?: Json
+          featured?: boolean
+          featured_look_id?: string | null
           id?: string
           notes?: string | null
+          published_at?: string | null
           scoring?: Json
+          season?: string | null
           status?: string
           title?: string | null
           updated_at?: string
@@ -631,9 +654,13 @@ export type Database = {
           created_at?: string
           destination?: string
           diagnostics?: Json
+          featured?: boolean
+          featured_look_id?: string | null
           id?: string
           notes?: string | null
+          published_at?: string | null
           scoring?: Json
+          season?: string | null
           status?: string
           title?: string | null
           updated_at?: string
@@ -753,6 +780,70 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      editorial_review_queue: {
+        Row: {
+          collection_id: string | null
+          created_at: string
+          id: string
+          look_id: string | null
+          payload: Json
+          priority: string
+          reason: string
+          resolution_note: string | null
+          resolved_at: string | null
+          slot_id: string | null
+          status: string
+        }
+        Insert: {
+          collection_id?: string | null
+          created_at?: string
+          id?: string
+          look_id?: string | null
+          payload?: Json
+          priority?: string
+          reason: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          slot_id?: string | null
+          status?: string
+        }
+        Update: {
+          collection_id?: string | null
+          created_at?: string
+          id?: string
+          look_id?: string | null
+          payload?: Json
+          priority?: string
+          reason?: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          slot_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editorial_review_queue_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "editorial_review_queue_look_id_fkey"
+            columns: ["look_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_collection_looks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "editorial_review_queue_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_collection_look_slots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       founder_reference_products: {
         Row: {
@@ -882,6 +973,67 @@ export type Database = {
           url?: string
         }
         Relationships: []
+      }
+      inventory_health_events: {
+        Row: {
+          collection_id: string | null
+          created_at: string
+          event_type: string
+          http_status: number | null
+          id: string
+          look_id: string | null
+          message: string | null
+          outcome: string
+          payload: Json
+          slot_id: string | null
+        }
+        Insert: {
+          collection_id?: string | null
+          created_at?: string
+          event_type: string
+          http_status?: number | null
+          id?: string
+          look_id?: string | null
+          message?: string | null
+          outcome: string
+          payload?: Json
+          slot_id?: string | null
+        }
+        Update: {
+          collection_id?: string | null
+          created_at?: string
+          event_type?: string
+          http_status?: number | null
+          id?: string
+          look_id?: string | null
+          message?: string | null
+          outcome?: string
+          payload?: Json
+          slot_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_health_events_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_health_events_look_id_fkey"
+            columns: ["look_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_collection_looks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_health_events_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_collection_look_slots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       look_candidate_slots: {
         Row: {

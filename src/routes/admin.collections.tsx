@@ -100,6 +100,14 @@ function CollectionsPage() {
           Internal review queue for stylist-engine output. Approving a collection here marks
           it as approved for the founder; it does not publish to any public route.
         </p>
+        <div className="flex gap-3 text-xs uppercase tracking-widest pt-2">
+          <a href="/admin/inventory-health" className="underline">
+            Inventory Health →
+          </a>
+          <a href="/admin/editorial-review-queue" className="underline">
+            Editorial Review Queue →
+          </a>
+        </div>
       </header>
 
       <nav className="flex gap-2 flex-wrap">

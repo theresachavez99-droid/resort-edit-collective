@@ -34,8 +34,10 @@ import { Route as AdminReviewQueueRouteImport } from './routes/admin.review-queu
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
 import { Route as AdminLookStudioRouteImport } from './routes/admin.look-studio'
+import { Route as AdminInventoryHealthRouteImport } from './routes/admin.inventory-health'
 import { Route as AdminImageRepairQueueRouteImport } from './routes/admin.image-repair-queue'
 import { Route as AdminFounderLearningRouteImport } from './routes/admin.founder-learning'
+import { Route as AdminEditorialReviewQueueRouteImport } from './routes/admin.editorial-review-queue'
 import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editorial-library'
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
 import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
@@ -171,6 +173,11 @@ const AdminLookStudioRoute = AdminLookStudioRouteImport.update({
   path: '/admin/look-studio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
+  id: '/admin/inventory-health',
+  path: '/admin/inventory-health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminImageRepairQueueRoute = AdminImageRepairQueueRouteImport.update({
   id: '/admin/image-repair-queue',
   path: '/admin/image-repair-queue',
@@ -181,6 +188,12 @@ const AdminFounderLearningRoute = AdminFounderLearningRouteImport.update({
   path: '/admin/founder-learning',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminEditorialReviewQueueRoute =
+  AdminEditorialReviewQueueRouteImport.update({
+    id: '/admin/editorial-review-queue',
+    path: '/admin/editorial-review-queue',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminEditorialLibraryRoute = AdminEditorialLibraryRouteImport.update({
   id: '/admin/editorial-library',
   path: '/admin/editorial-library',
@@ -244,8 +257,10 @@ export interface FileRoutesByFullPath {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
+  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -282,8 +297,10 @@ export interface FileRoutesByTo {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
+  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -321,8 +338,10 @@ export interface FileRoutesById {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
+  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -361,8 +380,10 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/editorial-review-queue'
     | '/admin/founder-learning'
     | '/admin/image-repair-queue'
+    | '/admin/inventory-health'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -399,8 +420,10 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/editorial-review-queue'
     | '/admin/founder-learning'
     | '/admin/image-repair-queue'
+    | '/admin/inventory-health'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -437,8 +460,10 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/editorial-review-queue'
     | '/admin/founder-learning'
     | '/admin/image-repair-queue'
+    | '/admin/inventory-health'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -476,8 +501,10 @@ export interface RootRouteChildren {
   AdminDayImagesRoute: typeof AdminDayImagesRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
   AdminEditorialLibraryRoute: typeof AdminEditorialLibraryRoute
+  AdminEditorialReviewQueueRoute: typeof AdminEditorialReviewQueueRoute
   AdminFounderLearningRoute: typeof AdminFounderLearningRoute
   AdminImageRepairQueueRoute: typeof AdminImageRepairQueueRoute
+  AdminInventoryHealthRoute: typeof AdminInventoryHealthRoute
   AdminLookStudioRoute: typeof AdminLookStudioRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
@@ -665,6 +692,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLookStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/inventory-health': {
+      id: '/admin/inventory-health'
+      path: '/admin/inventory-health'
+      fullPath: '/admin/inventory-health'
+      preLoaderRoute: typeof AdminInventoryHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/image-repair-queue': {
       id: '/admin/image-repair-queue'
       path: '/admin/image-repair-queue'
@@ -677,6 +711,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/founder-learning'
       fullPath: '/admin/founder-learning'
       preLoaderRoute: typeof AdminFounderLearningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/editorial-review-queue': {
+      id: '/admin/editorial-review-queue'
+      path: '/admin/editorial-review-queue'
+      fullPath: '/admin/editorial-review-queue'
+      preLoaderRoute: typeof AdminEditorialReviewQueueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/editorial-library': {
@@ -822,8 +863,10 @@ const rootRouteChildren: RootRouteChildren = {
   AdminDayImagesRoute: AdminDayImagesRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
   AdminEditorialLibraryRoute: AdminEditorialLibraryRoute,
+  AdminEditorialReviewQueueRoute: AdminEditorialReviewQueueRoute,
   AdminFounderLearningRoute: AdminFounderLearningRoute,
   AdminImageRepairQueueRoute: AdminImageRepairQueueRoute,
+  AdminInventoryHealthRoute: AdminInventoryHealthRoute,
   AdminLookStudioRoute: AdminLookStudioRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
