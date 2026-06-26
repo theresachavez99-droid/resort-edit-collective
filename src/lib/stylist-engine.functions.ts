@@ -1389,13 +1389,18 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const candidatesById = new Map<string, SlotCandidate>();
     for (const r of slotResults) r.candidates.forEach((c) => candidatesById.set(c.id, c));
 
-    // ── v4.2 — Swim archetype plan + boost.
+    // ── v4.5 — Editorial Collection Director.
     //
-    // Assign one distinct archetype per look slot, then re-score every
-    // swim candidate by its best-matching archetype. Signature pieces
-    // (Vix Firenze Sade, Missoni Chevron, Karla Colletto Floral) get
-    // additional boosts. Higher editorialScore = preferred by Gemini.
-    const archetypeAssignments = assignArchetypes(data.targetLooks, `${destination}|${activity}|${new Date().toISOString().slice(0, 10)}`);
+    // Plan the six-page editorial BEFORE re-scoring candidates. Each
+    // LookPlan carries a rhythm role, mood, color direction, silhouette,
+    // and the archetype to source against. The first hero is the
+    // Statement Arrival; diagnostics may reassign post-assembly.
+    const planSeed = `${destination}|${activity}|${new Date().toISOString().slice(0, 10)}`;
+    const lookPlans: LookPlan[] = planEditorialCollection(data.targetLooks, planSeed);
+    const archetypeAssignments: SwimArchetypeId[] = lookPlans.map((p) => p.archetype);
+    // Legacy fallback path (engine elsewhere still calls assignArchetypes
+    // via tests). Reference once so the import isn't tree-shaken away.
+    void assignArchetypes;
     const swimResult = slotResults.find((r) => r.slot === "swim");
     if (swimResult) {
       for (const c of swimResult.candidates) {
@@ -1407,6 +1412,51 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         c.editorialScore = Math.round((c.editorialScore + bestBoost) * 1000) / 1000;
       }
       swimResult.candidates.sort((a, b) => b.editorialScore - a.editorialScore);
+    }
+
+    // ── v4.5 — Soft rotation re-rank, per slot.
+    //
+    // For each slot, when the top-N candidates contain a dominant brand,
+    // promote near-tied alternates from other brands (within
+    // ROTATION_TIE_THRESHOLD score gap). Truly stronger products keep
+    // their position — the rule is "rhythm over repetition" but never
+    // weaker products.
+    const rotationTradeoffs: Array<{ slot: string; brand: string; gap: number }> = [];
+    for (const r of slotResults) {
+      if (r.candidates.length < 4) continue;
+      const reranked: typeof r.candidates = [];
+      const remaining = [...r.candidates];
+      const brandUseInTop = new Map<string, number>();
+      const topN = Math.min(remaining.length, data.targetLooks);
+      while (reranked.length < topN && remaining.length > 0) {
+        remaining.sort((a, b) => {
+          const penA = rotationPenalty(brandUseInTop.get(a.brand) ?? 0);
+          const penB = rotationPenalty(brandUseInTop.get(b.brand) ?? 0);
+          return b.editorialScore - penB - (a.editorialScore - penA);
+        });
+        const chosen = remaining.shift()!;
+        // If the natural top was rotated down, record the trade-off.
+        const natural = r.candidates[reranked.length];
+        if (natural && natural.id !== chosen.id) {
+          const gap = natural.editorialScore - chosen.editorialScore;
+          if (gap <= ROTATION_TIE_THRESHOLD) {
+            rotationTradeoffs.push({ slot: r.slot, brand: natural.brand, gap: Math.round(gap * 1000) / 1000 });
+          } else {
+            // Strong product wins — undo this swap.
+            remaining.unshift(chosen);
+            remaining.sort((a, b) => b.editorialScore - a.editorialScore);
+            const winner = remaining.shift()!;
+            brandUseInTop.set(winner.brand, (brandUseInTop.get(winner.brand) ?? 0) + 1);
+            reranked.push(winner);
+            continue;
+          }
+        }
+        brandUseInTop.set(chosen.brand, (brandUseInTop.get(chosen.brand) ?? 0) + 1);
+        reranked.push(chosen);
+      }
+      // Append everything else by raw score.
+      remaining.sort((a, b) => b.editorialScore - a.editorialScore);
+      r.candidates = [...reranked, ...remaining];
     }
 
     // v4 — commerce source mix across the candidate pool.
