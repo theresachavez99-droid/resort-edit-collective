@@ -47,7 +47,6 @@ import {
 } from "./swim-archetypes";
 import {
   evaluateProductFamily,
-  brandCurationProfile,
   type ApprovalLevel,
 } from "./product-family-curation";
 
