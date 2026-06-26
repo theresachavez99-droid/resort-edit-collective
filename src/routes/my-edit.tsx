@@ -135,8 +135,8 @@ function LooksGrid({ looks }: { looks: SavedLook[] }) {
 function SavedLookCard({ look }: { look: SavedLook }) {
   return (
     <article className="group flex flex-col bg-ivory border border-border/60">
-      <Link
-        to={look.url}
+      <a
+        href={look.url}
         onClick={() =>
           trackMyEditEvent("view_saved_look", {
             look_id: look.id,
@@ -162,7 +162,7 @@ function SavedLookCard({ look }: { look: SavedLook }) {
         <span className="absolute top-3 left-3 eyebrow text-[0.55rem] tracking-[0.3em] bg-ivory/95 text-ink px-2 py-1">
           {look.destination.toUpperCase()}
         </span>
-      </Link>
+      </a>
       <div className="p-5 flex flex-col flex-1">
         <p className="eyebrow text-[0.6rem] tracking-[0.28em] text-gold">{look.activity}</p>
         <h3 className="font-display text-xl tracking-[0.04em] text-ink leading-tight mt-2">
@@ -174,8 +174,8 @@ function SavedLookCard({ look }: { look: SavedLook }) {
           </p>
         )}
         <div className="mt-5 flex items-center justify-between gap-3 pt-4 border-t border-ink/10">
-          <Link
-            to={look.url}
+          <a
+            href={look.url}
             onClick={() =>
               trackMyEditEvent("shop_this_look_from_my_edit", {
                 look_id: look.id,
@@ -186,7 +186,7 @@ function SavedLookCard({ look }: { look: SavedLook }) {
             className="eyebrow text-[0.62rem] tracking-[0.3em] text-ink border-b border-gold/60 hover:border-ink pb-0.5"
           >
             Shop This Look
-          </Link>
+          </a>
           <button
             type="button"
             onClick={() => removeLook(look.id, "my_edit")}
