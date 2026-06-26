@@ -91,6 +91,103 @@ export function invalidatePublishedCollection(destination?: string, activity?: s
   CACHE.delete(cacheKey(destination, activity));
 }
 
+// ---------- ID-based invalidation helpers (Phase 5.6) ----------
+//
+// Editorial workflows (approval, featuring, look/slot mutations, health
+// sweeps) work with collection / look / slot ids — they don't carry the
+// destination/activity tuple directly. These helpers translate an id into
+// the cache key and log the invalidation. All helpers are best-effort and
+// must NOT throw — cache-invalidation failures should never break the
+// underlying editorial mutation.
+
+type InvalidationLog = {
+  destination: string;
+  activity: string;
+  collectionId: string;
+  reason: string;
+  at: string;
+};
+
+function logInvalidation(entry: InvalidationLog) {
+  // Keep one structured line so admin log scrapers can grep for it.
+  console.info("[published-cache] invalidate", entry);
+}
+
+export async function invalidatePublishedCollectionForId(
+  collectionId: string,
+  reason: string,
+): Promise<void> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("editorial_collections")
+      .select("destination,activity")
+      .eq("id", collectionId)
+      .maybeSingle();
+    if (!data?.destination || !data?.activity) return;
+    invalidatePublishedCollection(data.destination, data.activity);
+    logInvalidation({
+      destination: data.destination,
+      activity: data.activity,
+      collectionId,
+      reason,
+      at: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.warn("[published-cache] invalidate (collection) failed", {
+      collectionId,
+      reason,
+      error: String((err as Error)?.message ?? err),
+    });
+  }
+}
+
+export async function invalidatePublishedCollectionForLookId(
+  lookId: string,
+  reason: string,
+): Promise<void> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("editorial_collection_looks")
+      .select("collection_id")
+      .eq("id", lookId)
+      .maybeSingle();
+    if (data?.collection_id) {
+      await invalidatePublishedCollectionForId(data.collection_id, reason);
+    }
+  } catch (err) {
+    console.warn("[published-cache] invalidate (look) failed", {
+      lookId,
+      reason,
+      error: String((err as Error)?.message ?? err),
+    });
+  }
+}
+
+export async function invalidatePublishedCollectionForSlotId(
+  slotId: string,
+  reason: string,
+): Promise<void> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("editorial_collection_look_slots")
+      .select("look_id")
+      .eq("id", slotId)
+      .maybeSingle();
+    if (data?.look_id) {
+      await invalidatePublishedCollectionForLookId(data.look_id, reason);
+    }
+  } catch (err) {
+    console.warn("[published-cache] invalidate (slot) failed", {
+      slotId,
+      reason,
+      error: String((err as Error)?.message ?? err),
+    });
+  }
+}
+
 // ---------- Core resolver ----------
 
 async function resolvePublishedCollection(
