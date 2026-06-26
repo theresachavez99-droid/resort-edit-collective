@@ -19,6 +19,7 @@ import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PortofinoDay5RouteImport } from './routes/portofino.day-5'
 import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
 import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
@@ -97,6 +98,11 @@ const AboutRoute = AboutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortofinoDay5Route = PortofinoDay5RouteImport.update({
@@ -284,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
+  '/admin/': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
@@ -325,6 +332,7 @@ export interface FileRoutesByTo {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
+  '/admin': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
@@ -367,6 +375,7 @@ export interface FileRoutesById {
   '/portofino/day-3': typeof PortofinoDay3Route
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
+  '/admin/': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
   '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
@@ -410,6 +419,7 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
+    | '/admin/'
     | '/admin/collections/$id'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
@@ -451,6 +461,7 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
+    | '/admin'
     | '/admin/collections/$id'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
@@ -492,6 +503,7 @@ export interface FileRouteTypes {
     | '/portofino/day-3'
     | '/portofino/day-4'
     | '/portofino/day-5'
+    | '/admin/'
     | '/admin/collections/$id'
     | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
@@ -526,6 +538,7 @@ export interface RootRouteChildren {
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminYachtDayPilotRoute: typeof AdminYachtDayPilotRoute
   LookSlugRoute: typeof LookSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -598,6 +611,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portofino/day-5': {
@@ -896,6 +916,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSubscribersRoute: AdminSubscribersRoute,
   AdminYachtDayPilotRoute: AdminYachtDayPilotRoute,
   LookSlugRoute: LookSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
