@@ -33,6 +33,18 @@ import {
   looksLikePdp,
   retailerOf,
 } from "./yacht-day-pilot.functions";
+import {
+  SWIM_BRAND_CAPS,
+  SIGNATURE_SWIM,
+  SUPPORTING_ONLY_BRANDS,
+  type SwimArchetypeId,
+  type SwimDiagnostics,
+  assignArchetypes,
+  cohesionMatch,
+  detectArchetypeForSwim,
+  getArchetype,
+  swimArchetypeBoost,
+} from "./swim-archetypes";
 
 // ──────────────────────────────────────────────────────────────
 // Slot specs — every required slot has its own brand categories,
