@@ -34,6 +34,7 @@ import { Route as AdminReviewQueueRouteImport } from './routes/admin.review-queu
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
 import { Route as AdminLookStudioRouteImport } from './routes/admin.look-studio'
+import { Route as AdminInventoryHealthRouteImport } from './routes/admin.inventory-health'
 import { Route as AdminImageRepairQueueRouteImport } from './routes/admin.image-repair-queue'
 import { Route as AdminFounderLearningRouteImport } from './routes/admin.founder-learning'
 import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editorial-library'
@@ -171,6 +172,11 @@ const AdminLookStudioRoute = AdminLookStudioRouteImport.update({
   path: '/admin/look-studio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
+  id: '/admin/inventory-health',
+  path: '/admin/inventory-health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminImageRepairQueueRoute = AdminImageRepairQueueRouteImport.update({
   id: '/admin/image-repair-queue',
   path: '/admin/image-repair-queue',
@@ -246,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
+  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -284,6 +291,7 @@ export interface FileRoutesByTo {
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
+  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
+  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -363,6 +372,7 @@ export interface FileRouteTypes {
     | '/admin/editorial-library'
     | '/admin/founder-learning'
     | '/admin/image-repair-queue'
+    | '/admin/inventory-health'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/admin/editorial-library'
     | '/admin/founder-learning'
     | '/admin/image-repair-queue'
+    | '/admin/inventory-health'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -439,6 +450,7 @@ export interface FileRouteTypes {
     | '/admin/editorial-library'
     | '/admin/founder-learning'
     | '/admin/image-repair-queue'
+    | '/admin/inventory-health'
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
@@ -478,6 +490,7 @@ export interface RootRouteChildren {
   AdminEditorialLibraryRoute: typeof AdminEditorialLibraryRoute
   AdminFounderLearningRoute: typeof AdminFounderLearningRoute
   AdminImageRepairQueueRoute: typeof AdminImageRepairQueueRoute
+  AdminInventoryHealthRoute: typeof AdminInventoryHealthRoute
   AdminLookStudioRoute: typeof AdminLookStudioRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
@@ -665,6 +678,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLookStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/inventory-health': {
+      id: '/admin/inventory-health'
+      path: '/admin/inventory-health'
+      fullPath: '/admin/inventory-health'
+      preLoaderRoute: typeof AdminInventoryHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/image-repair-queue': {
       id: '/admin/image-repair-queue'
       path: '/admin/image-repair-queue'
@@ -824,6 +844,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminEditorialLibraryRoute: AdminEditorialLibraryRoute,
   AdminFounderLearningRoute: AdminFounderLearningRoute,
   AdminImageRepairQueueRoute: AdminImageRepairQueueRoute,
+  AdminInventoryHealthRoute: AdminInventoryHealthRoute,
   AdminLookStudioRoute: AdminLookStudioRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
