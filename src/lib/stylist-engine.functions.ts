@@ -1714,6 +1714,218 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const lookScores = looks.map((l) => ({ title: l.title, ...scoreLook(l, candidatesById) }));
     const collectionScore = scoreCollection(looks, candidatesById);
 
+    // ──────────────────────────────────────────────────────────────
+    // v4.5 — Editorial Collection Diagnostics
+    //
+    // After all assembly + cap-swap + supporting-only demotion has
+    // settled, measure the collection as an editorial artifact:
+    //   - visual repetition (fingerprint overlap)
+    //   - accessory rotation
+    //   - brand dominance
+    //   - hero strength + possible reassignment
+    //   - editorial rhythm (role sequencing)
+    //   - luxury perception + memorability
+    //
+    // Rotation re-rank earlier was "soft" — when the best product
+    // repeated a brand, it stayed. We record that decision here.
+    // ──────────────────────────────────────────────────────────────
+    const editorialDecisions: Array<{
+      kind: string;
+      lookIndex?: number;
+      detail: string;
+    }> = rotationTradeoffs.map((t) => ({
+      kind: "soft_rotation_swap",
+      detail: `Slot ${t.slot}: rotated ${t.brand} → alternate brand (score gap ${t.gap}).`,
+    }));
+
+    // Stamp rhythm role + (initial) hero from the LookPlan onto each look.
+    looks.forEach((l, i) => {
+      const plan = lookPlans[i];
+      if (!plan) return;
+      l.rhythmRole = plan.role;
+      l.rhythmRoleLabel = plan.roleLabel;
+      l.isHero = plan.isHero;
+    });
+
+    // Per-look fingerprint + hero strength.
+    const lookFingerprints = looks.map((l) => {
+      const slotsForFp = l.slots
+        .map((s) => {
+          const c = candidatesById.get(s.candidateId);
+          if (!c) return null;
+          return {
+            slot: s.slot,
+            brand: c.brand,
+            title: c.title ?? null,
+            description: c.description ?? null,
+            silhouette: c.silhouette,
+            palette: c.palette,
+          };
+        })
+        .filter((x): x is NonNullable<typeof x> => x !== null);
+      return fingerprintLook(slotsForFp);
+    });
+
+    const looksForDiag = looks.map((l) => ({
+      slots: l.slots.map((s) => {
+        const c = candidatesById.get(s.candidateId);
+        return {
+          slot: s.slot,
+          brand: c?.brand ?? null,
+          editorialScore: c?.editorialScore ?? null,
+          brandAffinity: c?.brandAffinity ?? null,
+        };
+      }),
+    }));
+
+    const heroStrengths = looks.map((l, i) => {
+      const swimCohesion =
+        swimDiagnostics.cohesionScores.find((c) => c.lookIndex === i)?.score ?? 0;
+      return computeHeroStrength(looksForDiag[i], swimCohesion);
+    });
+    heroStrengths.forEach((s, i) => {
+      looks[i].heroStrength = s;
+    });
+
+    // Hero reassignment: the strongest look becomes the hero. If the
+    // planned hero is overtaken by another look (margin ≥ 8 points),
+    // crown the stronger one and record the reassignment.
+    const plannedHeroIndex = looks.findIndex((l) => l.isHero);
+    const strongestIndex = heroStrengths.reduce(
+      (best, val, i) => (val > heroStrengths[best] ? i : best),
+      0,
+    );
+    let heroReassigned: { from: number; to: number; margin: number } | null = null;
+    if (
+      plannedHeroIndex >= 0 &&
+      strongestIndex !== plannedHeroIndex &&
+      heroStrengths[strongestIndex] - heroStrengths[plannedHeroIndex] >= 8
+    ) {
+      looks[plannedHeroIndex].isHero = false;
+      looks[strongestIndex].isHero = true;
+      heroReassigned = {
+        from: plannedHeroIndex,
+        to: strongestIndex,
+        margin: heroStrengths[strongestIndex] - heroStrengths[plannedHeroIndex],
+      };
+      editorialDecisions.push({
+        kind: "hero_reassigned",
+        lookIndex: strongestIndex,
+        detail: `Hero crown moved from Look ${plannedHeroIndex + 1} (${
+          looks[plannedHeroIndex].rhythmRoleLabel ?? "?"
+        }) to Look ${strongestIndex + 1} (${
+          looks[strongestIndex].rhythmRoleLabel ?? "?"
+        }) — heroStrength margin ${heroReassigned.margin}.`,
+      });
+    }
+
+    const visualRepetition = computeVisualRepetitionScore(lookFingerprints);
+    const accessoryRotation = computeAccessoryRotationScore(looksForDiag);
+    const brandDominance = computeBrandDominanceScore(looksForDiag);
+    const rhythmScore = computeEditorialRhythmScore(
+      looks.map((l) => l.rhythmRole ?? "unknown"),
+    );
+    const luxuryPerception = computeLuxuryPerceptionScore(looksForDiag);
+    const heroLookStrength = heroStrengths[looks.findIndex((l) => l.isHero)] ?? 0;
+    const memorability = computeMemorabilityScore(
+      visualRepetition.score,
+      luxuryPerception,
+      heroLookStrength,
+    );
+
+    // Soft trade-off bookkeeping: brand caused dominance but won on quality.
+    for (const w of brandDominance.warnings) {
+      editorialDecisions.push({ kind: "brand_dominance_allowed", detail: `${w} Strongest editorial choice retained.` });
+    }
+    for (const w of accessoryRotation.warnings) {
+      editorialDecisions.push({ kind: "accessory_rotation_flat", detail: w });
+    }
+    for (const p of visualRepetition.pairs) {
+      editorialDecisions.push({
+        kind: "visual_repetition_pair",
+        detail: `Look ${p.a + 1} and Look ${p.b + 1} share ${p.overlap} visual signals.`,
+      });
+    }
+
+    // ── v4.5 — Editorial copy rewrite (one batched Gemini call).
+    const copyWarnings: string[] = [];
+    try {
+      const rewriteInput = looks.map((l, i) => {
+        const plan = lookPlans[i];
+        const hookProducts = l.slots
+          .slice(0, 3)
+          .map((s) => {
+            const c = candidatesById.get(s.candidateId);
+            return c ? `${c.brand} ${c.title ?? ""}`.trim() : "";
+          })
+          .filter(Boolean);
+        return {
+          index: i,
+          roleLabel: plan?.roleLabel ?? l.rhythmRoleLabel ?? `Look ${i + 1}`,
+          archetype: plan?.archetype ?? archetypeAssignments[i] ?? "unknown",
+          mood: plan?.mood ?? "",
+          personality: plan?.personality ?? "",
+          colorDirection: plan?.colorDirection ?? [],
+          hero: !!l.isHero,
+          hookProducts,
+        };
+      });
+      const rewritten = await rewriteCollectionCopy({
+        destination: brief.destination,
+        activity: brief.activity,
+        looks: rewriteInput,
+      });
+      for (const r of rewritten) {
+        if (r.index < 0 || r.index >= looks.length) continue;
+        if (r.title) looks[r.index].title = r.title;
+        if (r.subtitle) looks[r.index].subtitle = r.subtitle;
+        if (r.description) looks[r.index].description = r.description;
+      }
+      // Banned-phrase audit (safety net after strip).
+      for (let i = 0; i < looks.length; i++) {
+        const blob = `${looks[i].title} ${looks[i].subtitle ?? ""} ${looks[i].description}`;
+        const hit = containsBannedPhrase(blob);
+        if (hit) copyWarnings.push(`Look ${i + 1} copy contains banned phrase "${hit}".`);
+      }
+    } catch (e) {
+      copyWarnings.push(`Editorial copy rewrite failed: ${String((e as Error)?.message ?? e)}`);
+    }
+
+    const editorialDiagnostics = {
+      rhythmPlan: lookPlans.map((p) => ({
+        index: p.index,
+        role: p.role,
+        roleLabel: p.roleLabel,
+        archetype: p.archetype,
+        plannedHero: p.isHero,
+        colorDirection: p.colorDirection,
+        silhouette: p.silhouette,
+      })),
+      heroStrengths,
+      heroLookIndex: looks.findIndex((l) => l.isHero),
+      heroReassigned,
+      scores: {
+        visualRepetition: visualRepetition.score,
+        accessoryRotation: accessoryRotation.score,
+        brandDominance: brandDominance.score,
+        editorialRhythm: rhythmScore,
+        luxuryPerception,
+        heroLookStrength,
+        memorability,
+      },
+      warnings: [
+        ...brandDominance.warnings,
+        ...accessoryRotation.warnings,
+        ...visualRepetition.pairs.map(
+          (p) => `Look ${p.a + 1} ↔ Look ${p.b + 1}: ${p.overlap} visual overlaps.`,
+        ),
+        ...copyWarnings,
+      ],
+      brandCounts: brandDominance.brandCounts,
+      topBrand: brandDominance.topBrand,
+      copyWarnings,
+    };
+
     // ── Slot Effectiveness Report — computed AFTER assembly so it can
     // count how many candidates each slot actually contributed to the
     // final looks (not just discovery yield).
