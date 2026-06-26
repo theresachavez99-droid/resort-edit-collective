@@ -191,18 +191,25 @@ export type Database = {
         Row: {
           activities: string[]
           affinity_signals: Json
+          approval_level: string
+          approved_product_families: string[]
           categories: string[]
           commerce_sources: Json
           created_at: string
           destination_strength: string[]
           destinations: string[]
           editorial_affinity: Json
+          editorial_notes: string | null
+          excluded_product_families: string[]
           id: string
           is_hero: boolean
           materials: string[]
           name: string
           notes: string | null
           preferred_commerce_source: string
+          preferred_construction: string[]
+          preferred_design_language: string[]
+          preferred_materials: string[]
           retailer_hints: Json
           slug: string
           status: string
@@ -215,18 +222,25 @@ export type Database = {
         Insert: {
           activities?: string[]
           affinity_signals?: Json
+          approval_level?: string
+          approved_product_families?: string[]
           categories?: string[]
           commerce_sources?: Json
           created_at?: string
           destination_strength?: string[]
           destinations?: string[]
           editorial_affinity?: Json
+          editorial_notes?: string | null
+          excluded_product_families?: string[]
           id?: string
           is_hero?: boolean
           materials?: string[]
           name: string
           notes?: string | null
           preferred_commerce_source?: string
+          preferred_construction?: string[]
+          preferred_design_language?: string[]
+          preferred_materials?: string[]
           retailer_hints?: Json
           slug: string
           status?: string
@@ -239,18 +253,25 @@ export type Database = {
         Update: {
           activities?: string[]
           affinity_signals?: Json
+          approval_level?: string
+          approved_product_families?: string[]
           categories?: string[]
           commerce_sources?: Json
           created_at?: string
           destination_strength?: string[]
           destinations?: string[]
           editorial_affinity?: Json
+          editorial_notes?: string | null
+          excluded_product_families?: string[]
           id?: string
           is_hero?: boolean
           materials?: string[]
           name?: string
           notes?: string | null
           preferred_commerce_source?: string
+          preferred_construction?: string[]
+          preferred_design_language?: string[]
+          preferred_materials?: string[]
           retailer_hints?: Json
           slug?: string
           status?: string
