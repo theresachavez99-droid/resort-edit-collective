@@ -530,6 +530,8 @@ export type SlotCandidate = {
   familyMatched?: string | null;
   constructionScore?: number;
   curationReason?: string;
+  /** v4.6 — retailer product image extracted from search metadata. */
+  image?: string | null;
 };
 
 export type SlotDiscoveryResult = {
@@ -672,6 +674,13 @@ export async function discoverForSlot(args: {
           const title = item.title ?? item.metadata?.title ?? null;
           const description =
             item.description ?? item.snippet ?? item.metadata?.description ?? null;
+          const image =
+            (typeof item.metadata?.ogImage === "string" && item.metadata.ogImage) ||
+            (typeof item.metadata?.["og:image"] === "string" && item.metadata["og:image"]) ||
+            (typeof item.metadata?.image === "string" && item.metadata.image) ||
+            (typeof item.ogImage === "string" && item.ogImage) ||
+            (typeof item.image === "string" && item.image) ||
+            null;
           const sig = detectBrandSignals(brand.name, url, title, description);
           if (sig.matchedSources.length === 0) {
             bump("brand_mismatch");
@@ -753,6 +762,7 @@ export async function discoverForSlot(args: {
             familyMatched: verdict.familyMatched,
             constructionScore: verdict.constructionScore,
             curationReason: verdict.reason,
+            image,
           });
         }
       }
@@ -1144,7 +1154,7 @@ async function persistCollection(args: {
           retailer: c.retailer,
           source_url: c.url,
           affiliate_url: c.url,
-          image_url: null,
+          image_url: c.image ?? null,
           price: null,
           reasoning: s.reasoning ?? null,
           metadata: {
@@ -1997,6 +2007,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             familyMatched: c?.familyMatched ?? null,
             constructionScore: c?.constructionScore ?? null,
             curationReason: c?.curationReason ?? null,
+            image: c?.image ?? null,
           };
         }),
       })),

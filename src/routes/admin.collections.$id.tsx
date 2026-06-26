@@ -19,6 +19,10 @@ import {
   setFeaturedCollection,
   unfeatureCollection,
 } from "@/lib/inventory-health.functions";
+import {
+  VisualCollectionBoard,
+  type BoardLook,
+} from "@/components/VisualCollectionBoard";
 
 export const Route = createFileRoute("/admin/collections/$id")({
   head: () => ({
@@ -91,6 +95,99 @@ type EditorialDxData = {
   copyWarnings?: string[];
 };
 type EditorialDecision = { kind: string; lookIndex?: number; detail: string };
+
+function CollectionVisualBoard({
+  collectionName,
+  destination,
+  activity,
+  looks,
+  diagnostics,
+  insights,
+  busy,
+  onApproveLook,
+  onRejectLook,
+  onRegenLook,
+  onFeatureLook,
+  onLockSlot,
+}: {
+  collectionName: string;
+  destination: string;
+  activity: string;
+  looks: Look[];
+  diagnostics: EditorialDxData | null;
+  insights: ReturnType<typeof collectionInsights>;
+  busy: string | null;
+  onApproveLook: (lookId: string) => void;
+  onRejectLook: (lookId: string) => void;
+  onRegenLook: (lookId: string) => void;
+  onFeatureLook: (lookId: string, pinned: boolean) => void;
+  onLockSlot: (slotId: string, locked: boolean) => void;
+}) {
+  const heroIdx = diagnostics?.heroLookIndex ?? -1;
+  const rhythm = diagnostics?.rhythmPlan ?? [];
+  const boardLooks: BoardLook[] = looks.map((l, i) => ({
+    key: l.id,
+    index: i,
+    title: l.title,
+    subtitle: l.subtitle ?? null,
+    rhythmRoleLabel: rhythm.find((r) => r.index === i)?.roleLabel ?? null,
+    isHero: heroIdx === i || l.pinned,
+    status: l.status,
+    slots: l.slots.map((s) => ({
+      id: s.id,
+      slot: s.slot,
+      brand: s.brand,
+      productName: s.product_name,
+      retailer: s.retailer,
+      url: s.source_url,
+      image: s.image_url,
+      editorialScore: pickNumber(s.metadata, "editorialScore"),
+      constructionScore: pickNumber(s.metadata, "constructionScore"),
+      approvalLevel: pickString(s.metadata, "approvalLevel"),
+      locked: s.locked,
+    })),
+  }));
+
+  const scrollTo = (id: string) => {
+    if (typeof window === "undefined") return;
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  return (
+    <VisualCollectionBoard
+      looks={boardLooks}
+      warnings={diagnostics?.warnings ?? []}
+      summary={{
+        collectionName,
+        destination,
+        activity,
+        editorialDiversity: insights.brandDiversity,
+        visualRepetition: diagnostics?.scores?.visualRepetition ?? null,
+        brandDominance: diagnostics?.scores?.brandDominance ?? null,
+        accessoryRotation: diagnostics?.scores?.accessoryRotation ?? null,
+        luxuryPerception: diagnostics?.scores?.luxuryPerception ?? null,
+        memorability: diagnostics?.scores?.memorability ?? null,
+        heroLabel: heroIdx >= 0 ? `Look ${heroIdx + 1}` : null,
+      }}
+      actions={{
+        onApproveLook: (l) => !busy && onApproveLook(String(l.key)),
+        onRejectLook: (l) => !busy && onRejectLook(String(l.key)),
+        onRegenerateLook: (l) => !busy && onRegenLook(String(l.key)),
+        onFeatureLook: (l) => {
+          const orig = looks.find((x) => x.id === String(l.key));
+          if (orig && !busy) onFeatureLook(orig.id, orig.pinned);
+        },
+        onViewLook: (l) => scrollTo(`look-${String(l.key)}`),
+        onReplaceProduct: (_l, s) => s.id && scrollTo(`slot-${s.id}`),
+        onLockProduct: (_l, s, next) => s.id && !busy && onLockSlot(s.id, next),
+        onOpenRetailer: (s) => {
+          if (s.url) window.open(s.url, "_blank", "noopener");
+        },
+      }}
+    />
+  );
+}
 
 function SwimArchetypeDiagnosticsPanel({
   diagnostics,
@@ -597,6 +694,52 @@ function CollectionDetail() {
       <SwimArchetypeDiagnosticsPanel
         diagnostics={(collection as { diagnostics?: { swimDiagnostics?: SwimDxData; decisionDeviations?: DeviationData[] } }).diagnostics ?? null}
       />
+      <CollectionVisualBoard
+        collectionName={`${collection.destination} · ${collection.activity}`}
+        destination={collection.destination}
+        activity={collection.activity}
+        looks={typedLooks}
+        diagnostics={
+          (collection as {
+            diagnostics?: {
+              editorialDiagnostics?: EditorialDxData;
+            };
+          }).diagnostics?.editorialDiagnostics ?? null
+        }
+        insights={insights}
+        busy={busy}
+        onApproveLook={(lookId) =>
+          run("approve-look", () =>
+            setLookStatus({ data: { password: pw, lookId, status: "approved" } }),
+          )
+        }
+        onRejectLook={(lookId) => {
+          const reason = prompt("Rejection reason (optional)") ?? undefined;
+          run("reject-look", () =>
+            setLookStatus({
+              data: { password: pw, lookId, status: "rejected", rejectedReason: reason },
+            }),
+          );
+        }}
+        onRegenLook={(lookId) =>
+          confirm("Regenerate every unlocked slot in this look?") &&
+          run("regen-look", () => regenLook({ data: { password: pw, lookId } }))
+        }
+        onFeatureLook={(lookId, pinned) =>
+          run("feature", () =>
+            feature({
+              data: {
+                password: pw,
+                collectionId: collection.id,
+                lookId: pinned ? null : lookId,
+              },
+            }),
+          )
+        }
+        onLockSlot={(slotId, locked) =>
+          run("lock-slot", () => lockSlot({ data: { password: pw, slotId, locked } }))
+        }
+      />
       <EditorialCollectionDiagnosticsPanel
         diagnostics={
           (collection as {
@@ -857,7 +1000,10 @@ function SlotRow({
   });
 
   return (
-    <div className={`border rounded p-3 text-sm ${slot.locked ? "bg-stone-50" : ""}`}>
+    <div
+      id={`slot-${slot.id}`}
+      className={`border rounded p-3 text-sm ${slot.locked ? "bg-stone-50" : ""}`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2">
@@ -1140,7 +1286,7 @@ function EditorialLookCard({
     score != null && avgEditorial != null ? score - avgEditorial : null;
 
   return (
-    <article className="border rounded bg-white">
+    <article id={`look-${look.id}`} className="border rounded bg-white">
       {/* Editorial summary */}
       <div className="p-5 space-y-4">
         <div className="flex items-start justify-between gap-3">
