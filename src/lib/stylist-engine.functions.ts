@@ -762,6 +762,7 @@ export async function discoverForSlot(args: {
             familyMatched: verdict.familyMatched,
             constructionScore: verdict.constructionScore,
             curationReason: verdict.reason,
+            image,
           });
         }
       }
