@@ -62,7 +62,7 @@ export const Route = createFileRoute("/portofino/$moment")({
         <p className="eyebrow text-gold tracking-[0.3em] text-[0.7rem]">Portofino</p>
         <h1 className="font-display text-2xl mt-2">That moment doesn't exist in Portofino — yet.</h1>
         <Link to="/portofino" className="mt-4 inline-block eyebrow tracking-[0.28em] text-[0.7rem] border-b border-gold text-gold">
-          Browse the six moments
+          Browse all curated moments
         </Link>
       </div>
     </main>
