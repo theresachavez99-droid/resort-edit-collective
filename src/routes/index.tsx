@@ -1,5 +1,4 @@
-import { Ship, Umbrella, Camera, Compass } from "lucide-react";
-import { Ship as ShipIcon, Umbrella as UmbrellaIcon, Sailboat, UtensilsCrossed } from "lucide-react";
+import { Ship, Umbrella, Sailboat, UtensilsCrossed } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-still-life.jpg";
 import lookDinner from "@/assets/generated/resort-edit/look-dinner-card-thumb.jpg";
@@ -84,8 +83,8 @@ const hotels = [
 ];
 
 const ctas = [
-  { label: "Book a Yacht", Icon: ShipIcon },
-  { label: "Reserve a Beach Club", Icon: UmbrellaIcon },
+  { label: "Book a Yacht", Icon: Ship },
+  { label: "Reserve a Beach Club", Icon: Umbrella },
   { label: "Boat Excursions", Icon: Sailboat },
   { label: "Cooking Classes", Icon: UtensilsCrossed },
 ];
