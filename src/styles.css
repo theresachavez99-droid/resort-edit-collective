@@ -184,6 +184,59 @@
   vertical-align: middle;
 }
 
+/*
+ * Editorial vertical rhythm system.
+ *
+ * Five spacing tokens — used across every public page — so the site
+ * feels like one continuous editorial publication rather than a stack of
+ * independent website modules. Benchmark: /portofino/$moment.
+ *
+ *   rhythm-hero      Hero → first editorial section (largest)
+ *   rhythm-major     Major editorial section → next major section
+ *   rhythm-section   Section heading → its content
+ *   rhythm-group     Card / item groups inside a section
+ *   rhythm-tight     Compact, internal copy spacing
+ *
+ * Each token ships a margin-top variant and an inner-padding pair
+ * (pad-*) for full-bleed background sections.
+ */
+@utility rhythm-hero {
+  margin-top: 4rem;
+  @media (min-width: 768px) { margin-top: 5rem; }
+  @media (min-width: 1024px) { margin-top: 6rem; }
+}
+@utility rhythm-major {
+  margin-top: 4rem;
+  @media (min-width: 768px) { margin-top: 5rem; }
+}
+@utility rhythm-section {
+  margin-top: 2.5rem;
+  @media (min-width: 768px) { margin-top: 3rem; }
+}
+@utility rhythm-group {
+  margin-top: 1.75rem;
+  @media (min-width: 768px) { margin-top: 2.25rem; }
+}
+@utility rhythm-tight {
+  margin-top: 1rem;
+  @media (min-width: 768px) { margin-top: 1.25rem; }
+}
+
+@utility pad-rhythm-hero {
+  padding-top: 4rem; padding-bottom: 4rem;
+  @media (min-width: 768px) { padding-top: 6rem; padding-bottom: 6rem; }
+}
+@utility pad-rhythm-major {
+  padding-top: 4rem; padding-bottom: 4rem;
+  @media (min-width: 768px) { padding-top: 5rem; padding-bottom: 5rem; }
+}
+
+/* Heading → content within a section (matches benchmark moment page). */
+@utility rhythm-heading-gap {
+  margin-bottom: 2.5rem;
+  @media (min-width: 768px) { margin-bottom: 3rem; }
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

@@ -176,14 +176,14 @@ function Index() {
       </section>
 
       {/* DESTINATION INTRO — editorial context, intentionally understated */}
-      <section className={`${wrap} mt-14 lg:mt-20`}>
+      <section className={`${wrap} rhythm-hero`}>
         <p className="mx-auto max-w-3xl text-center font-serif italic text-[1.05rem] sm:text-[1.15rem] lg:text-[1.22rem] leading-[1.55] text-ink/75">
           Every Resort Edit begins with a destination. We then curate where to stay, what to experience, and what to wear for every memorable moment along the way.
         </p>
       </section>
 
       {/* PORTOFINO ITINERARY */}
-      <section className={`${wrap} mt-16 lg:mt-24`}>
+      <section className={`${wrap} rhythm-major`}>
         <div className="flex items-center gap-4 justify-center mb-4">
           <div className="h-px w-16 bg-gold/50" />
           <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">PORTOFINO ITINERARY</h2>
@@ -199,7 +199,7 @@ function Index() {
       </section>
 
       {/* SHOP THE LOOKS + TIP */}
-      <section className={`${wrap} mt-24 lg:mt-32`}>
+      <section className={`${wrap} rhythm-major`}>
           <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE WAYS TO DRESS FOR PORTOFINO</h2>
@@ -255,7 +255,7 @@ function Index() {
       </section>
 
       {/* WHERE TO STAY */}
-      <section className={`${wrap} mt-24 lg:mt-32`}>
+      <section className={`${wrap} rhythm-major`}>
           <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
@@ -308,7 +308,7 @@ function Index() {
       </section>
 
       {/* BOOK YOUR PORTOFINO EXPERIENCE — booking rail */}
-      <section className="mt-24 lg:mt-32">
+      <section className="rhythm-major">
         <div className={`${wrap} mb-8`}>
           <div className="flex items-center gap-4 justify-center mb-4">
             <div className="h-px w-16 bg-gold/50" />
@@ -335,7 +335,7 @@ function Index() {
 
       {/* DISCLOSURE — visually secondary, well below CTAs */}
       {/* BRANDS WE LOVE — minimalist trust signal, no logos/carousels */}
-      <section className={`${wrap} mt-24 lg:mt-32`}>
+      <section className={`${wrap} rhythm-major`}>
         <div className="flex items-center gap-4 justify-center mb-4">
           <div className="h-px w-16 bg-gold/50" />
           <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BRANDS WE LOVE</h2>
@@ -378,7 +378,7 @@ function Index() {
         </div>
       </section>
 
-      <div className={`${wrap} mt-24 lg:mt-32 pb-16`}>
+      <div className={`${wrap} rhythm-major pb-16`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
         <p className="mt-8 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
           Prices and availability may change. Some links may earn a commission at no additional cost to you.

@@ -29,7 +29,7 @@ function BrandsPage() {
     s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   return (
     <div className="bg-ivory">
-      <div className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-24 pb-20">
+      <div className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20 pb-20">
         <header className="text-center max-w-2xl mx-auto">
           <span className="eyebrow text-gold">The Index</span>
           <h1 className="font-display text-4xl md:text-6xl tracking-[0.06em] mt-5 text-ink">
@@ -57,7 +57,7 @@ function BrandsPage() {
           </ul>
         </nav>
 
-        <div className="mt-20 space-y-20">
+        <div className="rhythm-major space-y-16 md:space-y-20">
           {brandCategories.map((cat) => (
             <section key={cat.title} id={slugify(cat.title)} className="scroll-mt-24">
               <div className="flex items-baseline justify-between gap-6 border-b border-border/60 pb-4">
@@ -114,12 +114,12 @@ function BrandsPage() {
           ))}
         </div>
 
-        <p className="mt-24 text-center eyebrow text-[0.55rem] text-ink/50 max-w-xl mx-auto">
+        <p className="rhythm-major text-center eyebrow text-[0.55rem] text-ink/50 max-w-xl mx-auto">
           Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
         </p>
 
         {/* Partner CTA */}
-        <section className="mt-20 border border-border/60 bg-cream/60 px-8 py-14 text-center">
+        <section className="rhythm-major border border-border/60 bg-cream/60 px-8 py-14 text-center">
           <span className="eyebrow text-gold">Partnerships</span>
           <h2 className="font-display text-3xl md:text-4xl tracking-wide mt-4 text-ink">
             Partner with Resort Edit
