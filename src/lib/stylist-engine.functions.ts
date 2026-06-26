@@ -530,6 +530,8 @@ export type SlotCandidate = {
   familyMatched?: string | null;
   constructionScore?: number;
   curationReason?: string;
+  /** v4.6 — retailer product image extracted from search metadata. */
+  image?: string | null;
 };
 
 export type SlotDiscoveryResult = {
