@@ -15,7 +15,7 @@ import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira11 from "@/assets/uploads/cira/cira-11.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
-import arrivalDayImage from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v2.png.asset.json";
+import arrivalDayImage from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v3.png.asset.json";
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
