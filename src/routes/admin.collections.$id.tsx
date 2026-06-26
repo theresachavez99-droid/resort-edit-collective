@@ -15,6 +15,10 @@ import {
   regenerateSlot,
   regenerateLook,
 } from "@/lib/editorial-review.functions";
+import {
+  setFeaturedCollection,
+  unfeatureCollection,
+} from "@/lib/inventory-health.functions";
 
 export const Route = createFileRoute("/admin/collections/$id")({
   head: () => ({
