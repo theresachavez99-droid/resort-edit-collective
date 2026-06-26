@@ -171,7 +171,7 @@ function DestinationPage() {
       </section>
 
       {/* Itinerary */}
-      <section className="bg-cream/60 py-24">
+      <section className="bg-cream/60 pad-rhythm-major">
         <div className="mx-auto max-w-4xl px-6">
           <div className="text-center">
             <span className="eyebrow text-gold">The Itinerary</span>
@@ -189,7 +189,7 @@ function DestinationPage() {
       </section>
 
       {/* Dining */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
+      <section className="mx-auto max-w-6xl px-6 pad-rhythm-major">
         <div className="text-center">
           <span className="eyebrow text-gold">Restaurants & Beach Clubs</span>
           <h2 className="font-display text-3xl md:text-4xl mt-4 tracking-wide">Where to eat & lounge</h2>
@@ -257,7 +257,7 @@ function DestinationPage() {
       )}
 
       {related.length > 0 && (
-        <section className="bg-ink text-ivory py-24">
+        <section className="bg-ink text-ivory pad-rhythm-major">
           <div className="mx-auto max-w-6xl px-6">
             <div className="text-center">
               <span className="eyebrow text-gold-soft">Related Destinations</span>
