@@ -68,9 +68,16 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="border-t border-ivory/10">
-          <div className="mx-auto max-w-7xl px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-3 text-ivory/50 text-xs tracking-widest uppercase">
-            <span>© {new Date().getFullYear()} Resort Edit</span>
-            <span className="tracking-[0.3em]">Dressed for the Destination™</span>
+          <div className="relative mx-auto max-w-7xl px-6 py-4 flex flex-col md:block items-center gap-3 text-ivory/50 text-xs tracking-widest uppercase">
+            <span className="md:absolute md:left-6 md:top-1/2 md:-translate-y-1/2">
+              © {new Date().getFullYear()} Resort Edit
+            </span>
+            <span
+              className="eyebrow text-ivory/55 md:block md:text-center"
+              style={{ fontSize: "0.68rem" }}
+            >
+              Dressed for the Destination<span className="tracking-normal">™</span>
+            </span>
           </div>
         </div>
       </div>
