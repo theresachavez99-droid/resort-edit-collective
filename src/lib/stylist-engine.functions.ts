@@ -507,6 +507,11 @@ export type SlotCandidate = {
   source: "core" | "expansion";
   /** v4 — resolved commerce channel for this candidate. */
   commerceSource: CommerceSourceKind;
+  /** v4.4 — product-family curation verdict. */
+  approvalLevel?: ApprovalLevel;
+  familyMatched?: string | null;
+  constructionScore?: number;
+  curationReason?: string;
 };
 
 export type SlotDiscoveryResult = {
