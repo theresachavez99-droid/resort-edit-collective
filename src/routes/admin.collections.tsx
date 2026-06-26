@@ -101,11 +101,14 @@ function CollectionsPage() {
           it as approved for the founder; it does not publish to any public route.
         </p>
         <div className="flex gap-3 text-xs uppercase tracking-widest pt-2">
-          <a href="/admin/inventory-health" className="underline">
-            Inventory Health →
+          <a href="/admin" className="underline">
+            ← Admin Hub
           </a>
           <a href="/admin/editorial-review-queue" className="underline">
-            Editorial Review Queue →
+            Review Queue →
+          </a>
+          <a href="/admin/inventory-health" className="underline">
+            Inventory Health →
           </a>
         </div>
       </header>
