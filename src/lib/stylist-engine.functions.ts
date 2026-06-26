@@ -613,6 +613,12 @@ export async function discoverForSlot(args: {
   /** v5 — context for affinity-based ranking. */
   destination?: string;
   activity?: string;
+  /** v4.7 — pre-fill from product cache. Counted toward early-stop. */
+  seedCandidates?: SlotCandidate[];
+  /** v4.7 — per-slot Firecrawl budget meter. */
+  budget?: BudgetMeter;
+  /** v4.7 — slot-specific retailer priority order (overrides APPROVED_RETAILERS rotation). */
+  retailerPriority?: string[];
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
@@ -630,10 +636,15 @@ export async function discoverForSlot(args: {
   const destination = args.destination ?? "Portofino";
   const activity = args.activity ?? spec.slot;
 
+  const seeds = args.seedCandidates ?? [];
   const candidates: SlotCandidate[] = [];
   const rejections: Record<string, number> = {};
   const bump = (k: string) => (rejections[k] = (rejections[k] ?? 0) + 1);
   const retailersQueried = new Set<string>();
+  const budget = args.budget;
+  // Effective starting count includes seeds; the inner loop terminates
+  // when candidates.length + seeds.length + startingCount >= targetMax.
+  const seedAndStart = startingCount + seeds.length;
 
   // Brands relevant to this slot.
   const slotBrands = brands.filter((b) =>
@@ -642,20 +653,32 @@ export async function discoverForSlot(args: {
 
   let searchesIssued = 0;
   let rawResults = 0;
+  let budgetExhausted = false;
 
   outer: for (let bi = 0; bi < slotBrands.length; bi++) {
     const brand = slotBrands[bi];
-    // Rotate retailers per brand to diversify.
-    const retailers: string[] = [];
-    const rc = Math.min(retailersPerBrand, APPROVED_RETAILERS.length);
-    for (let k = 0; k < rc; k++) {
-      retailers.push(APPROVED_RETAILERS[(brandOffset + bi + k) % APPROVED_RETAILERS.length]);
-    }
+    // v4.7 — prefer slot-specific retailer priority list when provided.
+    const retailers: string[] = args.retailerPriority
+      ? retailersForSlot(spec.slot, args.retailerPriority, retailersPerBrand)
+      : (() => {
+          const rc = Math.min(retailersPerBrand, APPROVED_RETAILERS.length);
+          const out: string[] = [];
+          for (let k = 0; k < rc; k++) {
+            out.push(APPROVED_RETAILERS[(brandOffset + bi + k) % APPROVED_RETAILERS.length]);
+          }
+          return out;
+        })();
     for (const retailer of retailers) {
       retailersQueried.add(retailer);
       for (const tpl of spec.templates) {
-        if (candidates.length >= spec.targetMax) break outer;
-        const query = `${tpl.replace("{brand}", brand.name)} site:${retailer}${QUERY_EXCLUSIONS}`;
+        // v4.7 — early-stop when (seeds + accepted) hits the slot's max.
+        if (candidates.length + seedAndStart >= spec.targetMax) break outer;
+        // v4.7 — budget gate. Stop the slot entirely once exhausted.
+        if (budget && !budget.take(spec.slot)) {
+          budgetExhausted = true;
+          break outer;
+        }
+        const query = buildSiteScopedQuery(tpl, brand.name, retailer, QUERY_EXCLUSIONS);
         searchesIssued++;
         let items: any[] = [];
         try {
@@ -789,9 +812,14 @@ export async function discoverForSlot(args: {
 
   // Sort by editorial score, retain up to targetMax.
   candidates.sort((a, b) => b.editorialScore - a.editorialScore);
-  const remaining = Math.max(0, spec.targetMax - startingCount);
+  const remaining = Math.max(0, spec.targetMax - seedAndStart);
   const kept = candidates.slice(0, remaining);
-  const retailersRepresented = Array.from(new Set(kept.map((c) => c.retailer)));
+  // v4.7 — seeds are always included; they're cache hits we want to keep.
+  const finalKept = [...seeds, ...kept];
+  const retailersRepresented = Array.from(new Set(finalKept.map((c) => c.retailer)));
+  if (budgetExhausted) {
+    rejections["budget_exhausted"] = (rejections["budget_exhausted"] ?? 0) + 1;
+  }
 
   return {
     slot: spec.slot,
@@ -800,11 +828,11 @@ export async function discoverForSlot(args: {
     targetMin: spec.targetMin,
     targetMax: spec.targetMax,
     brandsConsidered: slotBrands.map((b) => b.name),
-    candidates: kept,
+    candidates: finalKept,
     searchesIssued,
     rawResults,
     rejections,
-    shortfall: Math.max(0, spec.targetMin - (kept.length + startingCount)),
+    shortfall: Math.max(0, spec.targetMin - (finalKept.length + startingCount)),
     retailersPerBrand,
     retailersQueried: Array.from(retailersQueried),
     retailersRepresented,
