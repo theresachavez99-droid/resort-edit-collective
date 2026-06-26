@@ -433,10 +433,6 @@ function ExpansionReport({ result }: { result: Extract<RunResult, { ok: true }> 
 }
 
 function LooksGrid({ result }: { result: Extract<RunResult, { ok: true; gated: false }> }) {
-  void 0;
-  return _OriginalLooksGrid({ result });
-}
-function _OriginalLooksGrid({ result }: { result: Extract<RunResult, { ok: true; gated: false }> }) {
   if (result.looks.length === 0) {
     return (
       <section className="border rounded p-6 text-stone-600">
