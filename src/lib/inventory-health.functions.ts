@@ -20,6 +20,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireAdmin } from "./admin-auth.server";
+import {
+  invalidatePublishedCollection,
+  invalidatePublishedCollectionForId,
+  invalidatePublishedCollectionForSlotId,
+} from "./published-collection.functions";
 
 const pw = z.object({ password: z.string().min(1) });
 
@@ -73,6 +78,11 @@ export const setFeaturedCollection = createServerFn({ method: "POST" })
       .update({ featured: true, published_at: new Date().toISOString() })
       .eq("id", col.id);
     if (setErr) throw new Error(setErr.message);
+    // Featuring changes what the public read returns for this slot — and
+    // the previously-featured collection at the same (destination, activity)
+    // shares the cache key, so a single invalidation covers both.
+    invalidatePublishedCollection(col.destination, col.activity);
+    await invalidatePublishedCollectionForId(col.id, "collection.featured");
     return { ok: true as const };
   });
 
@@ -88,6 +98,10 @@ export const unfeatureCollection = createServerFn({ method: "POST" })
       .update({ featured: false })
       .eq("id", data.collectionId);
     if (error) throw new Error(error.message);
+    await invalidatePublishedCollectionForId(
+      data.collectionId,
+      "collection.unfeatured",
+    );
     return { ok: true as const };
   });
 
