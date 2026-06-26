@@ -169,12 +169,12 @@ function PortofinoPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
               {[
-                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", look: DAY_PATHS["day-2"], badge: "MOST INSTAGRAMMABLE", badgeStyle: "gold" as const },
-                { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", look: DAY_PATHS["day-1"], badge: null, badgeStyle: null },
-                { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", look: DAY_PATHS["day-1"], badge: "BOOK FIRST", badgeStyle: "ink" as const },
-                { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", look: DAY_PATHS["day-4"], badge: "INSIDER FAVORITE", badgeStyle: "outline" as const },
-                { name: "Private Driver Transfer", image: expHarbor, desc: "Black-car arrival from Genoa, Milan, or Nice — no parking, no stress.", href: "https://www.getyourguide.com/portofino-l1093/transfers", look: DAY_PATHS["day-5"], badge: null, badgeStyle: null },
-                { name: "Reserve Harbor Dinner", image: expCooking, desc: "A candlelit table on the piazzetta — book weeks ahead.", href: "https://www.opentable.com/landmark/restaurants-near-portofino", look: DAY_PATHS["day-4"], badge: null, badgeStyle: null },
+                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", moment: "beach-club-long-lunch", badge: "MOST INSTAGRAMMABLE", badgeStyle: "gold" as const },
+                { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", moment: "yacht-day", badge: null, badgeStyle: null },
+                { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", moment: "yacht-day", badge: "BOOK FIRST", badgeStyle: "ink" as const },
+                { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", moment: "sunset-views", badge: "INSIDER FAVORITE", badgeStyle: "outline" as const },
+                { name: "Private Driver Transfer", image: expHarbor, desc: "Black-car arrival from Genoa, Milan, or Nice — no parking, no stress.", href: "https://www.getyourguide.com/portofino-l1093/transfers", moment: "arrival", badge: null, badgeStyle: null },
+                { name: "Reserve Harbor Dinner", image: expCooking, desc: "A candlelit table on the piazzetta — book weeks ahead.", href: "https://www.opentable.com/landmark/restaurants-near-portofino", moment: "riviera-dinner", badge: null, badgeStyle: null },
               ].map((exp) => (
                 <article key={exp.name} className="bg-ivory border border-border/60 flex flex-col">
                   <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -201,7 +201,7 @@ function PortofinoPage() {
                       <a href={exp.href} target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink hover:text-gold">
                         BOOK →
                       </a>
-                      <Link to={exp.look} className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink">
+                      <Link to="/portofino/$moment" params={{ moment: exp.moment }} className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink">
                         WHAT TO WEAR HERE →
                       </Link>
                     </div>
