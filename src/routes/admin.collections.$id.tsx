@@ -857,7 +857,10 @@ function SlotRow({
   });
 
   return (
-    <div className={`border rounded p-3 text-sm ${slot.locked ? "bg-stone-50" : ""}`}>
+    <div
+      id={`slot-${slot.id}`}
+      className={`border rounded p-3 text-sm ${slot.locked ? "bg-stone-50" : ""}`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2">
