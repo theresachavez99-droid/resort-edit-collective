@@ -139,13 +139,13 @@ function MomentPage() {
               tone="light"
               source="portofino_moment_hero"
               look={{
-                id: `portofino/${params.moment}`,
+                id: `portofino/${slug}`,
                 destination: "Portofino",
                 activity: card.moment_name,
                 title: card.moment_name,
                 description: card.narrative,
                 image: card.hero_banner_image ?? heroImage,
-                url: `/portofino/${params.moment}`,
+                url: `/portofino/${slug}`,
               }}
             />
           </div>
