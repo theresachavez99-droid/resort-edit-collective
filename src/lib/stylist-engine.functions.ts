@@ -797,6 +797,11 @@ type AssembledLook = {
   reasoning?: string;
   complete: boolean;
   missing: string[];
+  // v4.5 — populated post-assembly by the Editorial Collection Director.
+  rhythmRole?: string;
+  rhythmRoleLabel?: string;
+  isHero?: boolean;
+  heroStrength?: number;
 };
 
 async function callGeminiJson(system: string, user: string): Promise<unknown> {
