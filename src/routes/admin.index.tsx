@@ -1,29 +1,24 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { verifyAdmin } from "@/lib/admin-auth.functions";
+import { getAdminMetrics } from "@/lib/admin-metrics.functions";
 
 /**
- * Founder admin hub.
+ * Founder dashboard at /admin — the permanent editorial home.
  *
- * Information architecture (editorial production era):
- *   Primary workflow:  Review Queue → Look Studio → Product Library
- *   Maintenance:       Inventory Health
- *   Advanced / system: Product Vault, Image Repair, Founder Learning,
- *                      Stylist Engine, Brand Performance, Brands,
- *                      Editorial Library, Destination Moments,
- *                      Day Images, Subscribers, Yacht Day Pilot,
- *                      Editorial Collections.
- *
- * No backend functionality is removed. Routes still exist and remain
- * reachable; this page just hides development utilities from the
- * everyday founder flow.
+ * Workflow:  Look Studio → Review Queue → Publish.
+ * Backend routes/functions are unchanged; this page just curates IA.
  */
 export const Route = createFileRoute("/admin/")({
   head: () => ({
     meta: [
-      { title: "Admin — Resort Edit" },
+      { title: "Founder Dashboard — Resort Edit" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  component: AdminHub,
+  component: AdminDashboard,
 });
 
 type NavItem = {
@@ -36,20 +31,17 @@ const PRIMARY: NavItem[] = [
   {
     label: "Review Queue",
     to: "/admin/editorial-review-queue",
-    description:
-      "Review newly created looks. Approve or reject. Final editorial QA before publishing.",
+    description: "Approve, reject, and publish editorial looks.",
   },
   {
     label: "Look Studio",
     to: "/admin/look-studio",
-    description:
-      "Edit looks, replace products, update editorial copy, swap images, final styling.",
+    description: "Create and edit destination looks.",
   },
   {
     label: "Product Library",
     to: "/admin/product-library",
-    description:
-      "Browse approved products and reuse them across looks. Avoid duplicate product creation.",
+    description: "Browse and reuse approved products.",
   },
 ];
 
@@ -125,85 +117,213 @@ const ADVANCED: NavItem[] = [
   },
 ];
 
-function AdminHub() {
-  return (
-    <main className="mx-auto max-w-4xl px-6 py-12 space-y-12">
-      <header className="space-y-2">
-        <p className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500">
+const STORAGE_KEY = "admin_dashboard_pw";
+
+function AdminDashboard() {
+  const verify = useServerFn(verifyAdmin);
+  const metricsFn = useServerFn(getAdminMetrics);
+
+  const [pw, setPw] = useState("");
+  const [authed, setAuthed] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+
+  useEffect(() => {
+    const c = sessionStorage.getItem(STORAGE_KEY);
+    if (c) setPw(c);
+  }, []);
+
+  const auth = useMutation({
+    mutationFn: () => {
+      if (!pw) throw new Error("Password required");
+      return verify({ data: { password: pw } });
+    },
+    onSuccess: () => {
+      sessionStorage.setItem(STORAGE_KEY, pw);
+      setAuthed(true);
+    },
+  });
+
+  const metrics = useQuery({
+    queryKey: ["admin-metrics"],
+    enabled: authed,
+    queryFn: () => metricsFn({ data: { password: pw } }),
+  });
+
+  if (!authed) {
+    return (
+      <main className="mx-auto max-w-md px-6 py-16">
+        <p className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 mb-2">
           Founder · Internal Only
         </p>
-        <h1 className="font-serif text-3xl">Resort Edit Admin</h1>
-        <p className="text-stone-600 text-sm max-w-xl">
-          Editorial production workflow: Review Queue → Look Studio → Product Library → Publish.
+        <h1 className="font-serif text-3xl mb-6">Resort Edit</h1>
+        <input
+          type="password"
+          value={pw}
+          onChange={(e) => setPw(e.target.value)}
+          placeholder="Admin password"
+          className="w-full border border-stone-300 px-3 py-2 mb-3"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") auth.mutate();
+          }}
+        />
+        <button
+          onClick={() => auth.mutate()}
+          disabled={!pw}
+          className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.24em] uppercase disabled:opacity-40"
+        >
+          Enter
+        </button>
+        {auth.error && (
+          <p className="text-red-600 text-xs mt-3">{(auth.error as Error).message}</p>
+        )}
+      </main>
+    );
+  }
+
+  const m = metrics.data?.metrics;
+
+  return (
+    <main className="mx-auto max-w-5xl px-6 py-10 space-y-10">
+      <header className="flex items-end justify-between">
+        <div>
+          <p className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500">
+            Founder Dashboard
+          </p>
+          <h1 className="font-serif text-3xl">Resort Edit</h1>
+        </div>
+        <p className="text-xs text-stone-500 italic max-w-xs text-right hidden sm:block">
+          Look Studio → Review Queue → Publish
         </p>
       </header>
 
-      <Section title="Workflow" items={PRIMARY} emphasis />
-      <Section title="Maintenance" items={MAINTENANCE} />
-      <Section title="Advanced" items={ADVANCED} muted />
+      {/* Metrics */}
+      <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+        <Metric label="Draft" value={m?.looksDraft} />
+        <Metric label="Awaiting Review" value={m?.looksAwaiting} />
+        <Metric label="Approved" value={m?.looksApproved} />
+        <Metric label="Published" value={m?.looksPublished} accent="emerald" />
+        <Metric label="Products" value={m?.productsLibrary} />
+        <Metric label="Inventory Issues" value={m?.inventoryIssues} accent="amber" />
+      </section>
+
+      {/* Quick actions */}
+      <section className="flex flex-wrap gap-2">
+        <QuickAction to="/admin/look-studio" label="Create New Look" />
+        <QuickAction to="/admin/editorial-review-queue" label="Open Review Queue" />
+        <QuickAction to="/admin/product-library" label="Browse Product Library" />
+        <QuickAction to="/admin/inventory-health" label="Run Inventory Health Scan" />
+      </section>
+
+      {/* Workflow */}
+      <section className="space-y-4">
+        <h2 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2">
+          Workflow
+        </h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          {PRIMARY.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="group block border border-ink bg-ink text-ivory p-6 hover:bg-ink/90 transition min-h-[140px]"
+            >
+              <div className="text-sm tracking-[0.2em] uppercase">{item.label}</div>
+              <div className="text-xs text-ivory/75 mt-3 leading-relaxed">
+                {item.description}
+              </div>
+              <div className="text-[0.65rem] tracking-[0.3em] uppercase text-ivory/60 mt-4 group-hover:text-ivory">
+                Open →
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Maintenance */}
+      <section className="space-y-4">
+        <h2 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2">
+          Maintenance
+        </h2>
+        <div className="grid gap-3 md:grid-cols-2">
+          {MAINTENANCE.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="block border border-stone-300 p-4 hover:border-stone-500 transition"
+            >
+              <div className="text-sm font-medium">{item.label}</div>
+              <div className="text-xs text-stone-500 mt-1 leading-relaxed">
+                {item.description}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Advanced */}
+      <section className="space-y-3">
+        <button
+          onClick={() => setAdvancedOpen((v) => !v)}
+          className="w-full flex items-center justify-between text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2 hover:text-ink"
+        >
+          <span>Advanced</span>
+          <span>{advancedOpen ? "−" : "+"}</span>
+        </button>
+        {advancedOpen && (
+          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {ADVANCED.map((item) => (
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  className="block border border-stone-200 p-3 hover:border-stone-400 transition text-stone-700"
+                >
+                  <div className="text-sm font-medium">{item.label}</div>
+                  <div className="text-xs text-stone-500 mt-1 leading-relaxed">
+                    {item.description}
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   );
 }
 
-function Section({
-  title,
-  items,
-  emphasis,
-  muted,
+function Metric({
+  label,
+  value,
+  accent,
 }: {
-  title: string;
-  items: NavItem[];
-  emphasis?: boolean;
-  muted?: boolean;
+  label: string;
+  value: number | undefined;
+  accent?: "emerald" | "amber";
 }) {
+  const color =
+    accent === "emerald"
+      ? "text-emerald-700"
+      : accent === "amber"
+        ? "text-amber-700"
+        : "text-ink";
   return (
-    <section className="space-y-4">
-      <h2 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2">
-        {title}
-      </h2>
-      <ul
-        className={
-          emphasis
-            ? "grid gap-3 sm:grid-cols-3"
-            : muted
-              ? "grid gap-2 sm:grid-cols-2"
-              : "grid gap-3"
-        }
-      >
-        {items.map((item) => (
-          <li key={item.to}>
-            <Link
-              to={item.to}
-              className={
-                emphasis
-                  ? "block border border-ink bg-ink text-ivory p-4 hover:bg-ink/90 transition"
-                  : muted
-                    ? "block border border-stone-200 p-3 hover:border-stone-400 transition text-stone-700"
-                    : "block border border-stone-300 p-4 hover:border-stone-500 transition"
-              }
-            >
-              <div
-                className={
-                  emphasis
-                    ? "text-sm tracking-[0.2em] uppercase"
-                    : "text-sm font-medium"
-                }
-              >
-                {item.label}
-              </div>
-              <div
-                className={
-                  emphasis
-                    ? "text-[0.7rem] text-ivory/75 mt-1 leading-relaxed normal-case tracking-normal"
-                    : "text-xs text-stone-500 mt-1 leading-relaxed"
-                }
-              >
-                {item.description}
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <div className="border border-stone-200 p-3">
+      <div className="text-[0.6rem] tracking-[0.24em] uppercase text-stone-500">
+        {label}
+      </div>
+      <div className={`text-2xl font-light mt-1 ${color}`}>
+        {value ?? "—"}
+      </div>
+    </div>
+  );
+}
+
+function QuickAction({ to, label }: { to: string; label: string }) {
+  return (
+    <Link
+      to={to}
+      className="border border-stone-300 px-3 py-2 text-[0.65rem] tracking-[0.24em] uppercase hover:bg-ink hover:text-ivory transition"
+    >
+      {label}
+    </Link>
   );
 }
