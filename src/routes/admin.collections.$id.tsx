@@ -1143,7 +1143,7 @@ function EditorialLookCard({
     score != null && avgEditorial != null ? score - avgEditorial : null;
 
   return (
-    <article className="border rounded bg-white">
+    <article id={`look-${look.id}`} className="border rounded bg-white">
       {/* Editorial summary */}
       <div className="p-5 space-y-4">
         <div className="flex items-start justify-between gap-3">
