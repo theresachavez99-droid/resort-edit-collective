@@ -452,6 +452,7 @@ async function regenerateSingleSlot(args: {
     .update(patch as never)
     .eq("id", slot.id);
   if (upErr) throw new Error(upErr.message);
+  await invalidatePublishedCollectionForSlotId(slot.id, "slot.regenerated");
   return {
     ok: true as const,
     candidate: {
