@@ -1242,10 +1242,19 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
          * Default raised from 3 → 6 because accessory inventory is
          * fragmented across many retailers.
          */
-        retailersPerBrand: z.number().int().min(1).max(12).default(6),
-        resultsPerSearch: z.number().int().min(1).max(10).default(4),
+        retailersPerBrand: z.number().int().min(1).max(12).default(3),
+        resultsPerSearch: z.number().int().min(1).max(10).default(3),
         persist: z.boolean().default(true),
         includeOptional: z.boolean().default(true),
+        /**
+         * v4.7 — Discovery Strategy. Fast Review is the long-term default
+         * once the cache is populated. Balanced is the recommended mode
+         * during early warm-up. Deep Discovery is opt-in and consumes
+         * the most credits.
+         */
+        discoveryMode: z.enum(["fast", "balanced", "deep"]).default("fast"),
+        /** v4.7 — disable to debug a cold-start run. */
+        enableCache: z.boolean().default(true),
       })
       .parse(input),
   )
