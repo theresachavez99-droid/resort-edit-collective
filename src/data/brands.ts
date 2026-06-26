@@ -29,6 +29,7 @@ export const brandCategories: BrandCategory[] = [
       b("Pucci", "Florentine prints, Capri-coded since 1947."),
       b("Etro", "Milanese paisleys and pan-Mediterranean color."),
       b("La DoubleJ", "Milan via Sicily — vintage prints, modern cut."),
+      b("Missoni", "The Varese knit house — chevrons, color, Italian heritage resort."),
       b("Missoni Mare", "Varese-knit zigzags, eternal Riviera."),
       b("Emporio Sirenuse", "Made in Positano, embroidered by the cliffside."),
       b("Loretta Caponi", "Florentine hand-embroidery, generational craft."),
@@ -44,6 +45,7 @@ export const brandCategories: BrandCategory[] = [
     brands: [
       b("Melissa Odabash", "The Riviera swim authority."),
       b("Eres", "Paris-made, sculpted, discreet."),
+      b("Karla Colletto", "Architectural American swim — sculptural cuts, retro Riviera necklines."),
       b("Oséree", "Milanese lamé and crochet — golden hour swim."),
       b("Hunza G", "Crinkle one-pieces, iconic and forever."),
       b("Maygel Coronel", "Venezuelan one-pieces with sculptural lines."),

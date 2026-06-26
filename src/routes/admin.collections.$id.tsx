@@ -41,6 +41,123 @@ const EDITORIAL_QUESTIONS = [
 ] as const;
 type EditorialAnswer = "yes" | "no" | null;
 type LookAnswers = Record<string, EditorialAnswer>;
+
+// v4.2 — Swim Archetype diagnostics types (mirror of server payload)
+type SwimDxData = {
+  archetypesAssigned?: string[];
+  archetypesDetected?: Array<{ lookIndex: number; assigned: string; detected: string | null; match: boolean }>;
+  uniqueArchetypeCount?: number;
+  brandCapBreaches?: Array<{ brand: string; cap: number; actual: number }>;
+  signaturePiecesMatched?: Array<{ lookIndex: number; brand: string; name: string }>;
+  cohesionScores?: Array<{ lookIndex: number; score: number; slotsCohesive: number; slotsTotal: number }>;
+  averageCohesion?: number;
+  warnings?: string[];
+  silhouetteBalance?: Record<string, number>;
+  printVsNeutral?: { print: number; neutral: number };
+  hardwareUsage?: number;
+  crochetUsage?: number;
+  cutoutUsage?: number;
+  heroBrandShare?: number;
+  discoveryBrandShare?: number;
+};
+type DeviationData = { reason: string; detail: string; lookIndex?: number };
+
+function SwimArchetypeDiagnosticsPanel({
+  diagnostics,
+}: {
+  diagnostics: { swimDiagnostics?: SwimDxData; decisionDeviations?: DeviationData[] } | null;
+}) {
+  const sd = diagnostics?.swimDiagnostics;
+  const dev = diagnostics?.decisionDeviations ?? [];
+  if (!sd) {
+    return (
+      <section className="border rounded p-4 text-sm text-stone-500">
+        Swim archetype diagnostics unavailable for this collection.
+      </section>
+    );
+  }
+  const cohesionOk = (sd.averageCohesion ?? 0) >= 0.75;
+  return (
+    <section className="border rounded p-4 space-y-3">
+      <header className="flex items-baseline justify-between">
+        <h2 className="font-semibold">Swim Archetype Diagnostics · v4.2</h2>
+        <div className="text-xs text-stone-500">
+          {sd.uniqueArchetypeCount ?? 0} distinct archetypes · avg cohesion{" "}
+          <span className={cohesionOk ? "text-emerald-600" : "text-amber-600"}>
+            {((sd.averageCohesion ?? 0) * 100).toFixed(0)}%
+          </span>
+        </div>
+      </header>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+        <div>
+          <p className="text-xs uppercase tracking-widest text-stone-500 mb-1">Per-look archetypes</p>
+          <ul className="space-y-1">
+            {(sd.archetypesDetected ?? []).map((a) => (
+              <li key={a.lookIndex} className="flex justify-between gap-3">
+                <span>Look {a.lookIndex + 1}</span>
+                <span className="text-stone-600">
+                  {a.assigned}
+                  {a.detected && a.detected !== a.assigned ? ` → ${a.detected}` : ""}
+                  {a.match ? " ✓" : " ⚠"}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-widest text-stone-500 mb-1">Cohesion scores</p>
+          <ul className="space-y-1">
+            {(sd.cohesionScores ?? []).map((c) => (
+              <li key={c.lookIndex} className="flex justify-between gap-3">
+                <span>Look {c.lookIndex + 1}</span>
+                <span className={c.score >= 0.75 ? "text-emerald-600" : "text-amber-600"}>
+                  {(c.score * 100).toFixed(0)}% ({c.slotsCohesive}/{c.slotsTotal})
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      {(sd.brandCapBreaches?.length ?? 0) > 0 && (
+        <div className="text-sm text-amber-700">
+          <p className="font-medium">Brand cap breaches</p>
+          <ul className="list-disc pl-5">
+            {sd.brandCapBreaches!.map((b) => (
+              <li key={b.brand}>{b.brand}: {b.actual} used (cap {b.cap})</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {(sd.signaturePiecesMatched?.length ?? 0) > 0 && (
+        <div className="text-sm">
+          <p className="text-xs uppercase tracking-widest text-stone-500 mb-1">Signature pieces matched</p>
+          <ul className="list-disc pl-5">
+            {sd.signaturePiecesMatched!.map((s, i) => (
+              <li key={i}>Look {s.lookIndex + 1}: {s.brand} — {s.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <div className="text-xs text-stone-500">
+        Hero/Discovery share: {((sd.heroBrandShare ?? 0) * 100).toFixed(0)}% / {((sd.discoveryBrandShare ?? 0) * 100).toFixed(0)}% (guideline 25–35% hero)
+      </div>
+      {(sd.warnings?.length ?? 0) > 0 && (
+        <ul className="text-xs text-amber-700 list-disc pl-5">
+          {sd.warnings!.map((w, i) => <li key={i}>{w}</li>)}
+        </ul>
+      )}
+      {dev.length > 0 && (
+        <div className="text-xs text-stone-600 border-t pt-2">
+          <p className="font-medium mb-1">Decision deviations</p>
+          <ul className="list-disc pl-5">
+            {dev.map((d, i) => <li key={i}>{d.reason}: {d.detail}</li>)}
+          </ul>
+        </div>
+      )}
+    </section>
+  );
+}
+
 const answersStorageKey = (collectionId: string) =>
   `admin_editorial_answers:${collectionId}`;
 
@@ -324,6 +441,9 @@ function CollectionDetail() {
       </header>
 
       <CollectionInsightsPanel insights={insights} />
+      <SwimArchetypeDiagnosticsPanel
+        diagnostics={(collection as { diagnostics?: { swimDiagnostics?: SwimDxData; decisionDeviations?: DeviationData[] } }).diagnostics ?? null}
+      />
 
       <section className="border rounded p-4 space-y-3">
         <h2 className="font-semibold">Collection status</h2>
