@@ -1,5 +1,32 @@
-/destinations/portofino/day-1-yacht-harbour-aperitivo   /portofino/day-1   301!
-/destinations/portofino                                  /portofino         301!
-/destinations/portofino/*                                /portofino         301!
-/portofino/day-3/look-a                                  /portofino/pool-lounging-shopping   301!
-/portofino/day-3/look-b                                  /portofino/exploring-the-harbor     301!
+# Legacy destination URLs
+/destinations/portofino/day-1-yacht-harbour-aperitivo   /portofino/yacht-day                 301!
+/destinations/portofino                                  /portofino                           301!
+/destinations/portofino/*                                /portofino                           301!
+
+# Legacy /portofino/day-N → canonical moments (primary look per day)
+/portofino/day-1                                         /portofino/yacht-day                 301!
+/portofino/day-2                                         /portofino/beach-club-long-lunch     301!
+/portofino/day-3                                         /portofino/pool-lounging             301!
+/portofino/day-4                                         /portofino/sunset-views              301!
+/portofino/day-5                                         /portofino/arrival                   301!
+
+# Legacy /portofino/day-N/look-X → canonical moments
+/portofino/day-1/look-a                                  /portofino/yacht-day                 301!
+/portofino/day-1/look-b                                  /portofino/yacht-day                 301!
+/portofino/day-1/look-c                                  /portofino/harbor-aperitivo          301!
+/portofino/day-2/look-a                                  /portofino/beach-club-long-lunch     301!
+/portofino/day-2/look-b                                  /portofino/beach-club-long-lunch     301!
+/portofino/day-2/look-c                                  /portofino/beach-club-long-lunch     301!
+/portofino/day-3/look-a                                  /portofino/pool-lounging             301!
+/portofino/day-3/look-b                                  /portofino/exploring-the-harbor      301!
+/portofino/day-3/look-c                                  /portofino/pool-lounging             301!
+/portofino/day-4/look-a                                  /portofino/sunset-views              301!
+/portofino/day-4/look-b                                  /portofino/riviera-dinner            301!
+/portofino/day-4/look-c                                  /portofino/riviera-dinner            301!
+/portofino/day-5/look-a                                  /portofino/market-morning            301!
+/portofino/day-5/look-b                                  /portofino/arrival                   301!
+/portofino/day-5/look-c                                  /portofino/arrival                   301!
+
+# Slug cleanup (Sep 2026): shorter canonical slugs
+/portofino/arrival-day                                   /portofino/arrival                   301!
+/portofino/pool-lounging-shopping                        /portofino/pool-lounging             301!
