@@ -62,6 +62,36 @@ type SwimDxData = {
 };
 type DeviationData = { reason: string; detail: string; lookIndex?: number };
 
+// v4.5 — Editorial Collection diagnostics
+type EditorialDxData = {
+  rhythmPlan?: Array<{
+    index: number;
+    role: string;
+    roleLabel: string;
+    archetype: string;
+    plannedHero: boolean;
+    colorDirection?: string[];
+    silhouette?: string;
+  }>;
+  heroStrengths?: number[];
+  heroLookIndex?: number;
+  heroReassigned?: { from: number; to: number; margin: number } | null;
+  scores?: {
+    visualRepetition?: number;
+    accessoryRotation?: number;
+    brandDominance?: number;
+    editorialRhythm?: number;
+    luxuryPerception?: number;
+    heroLookStrength?: number;
+    memorability?: number;
+  };
+  warnings?: string[];
+  brandCounts?: Record<string, number>;
+  topBrand?: string | null;
+  copyWarnings?: string[];
+};
+type EditorialDecision = { kind: string; lookIndex?: number; detail: string };
+
 function SwimArchetypeDiagnosticsPanel({
   diagnostics,
 }: {
