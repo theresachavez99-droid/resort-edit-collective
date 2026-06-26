@@ -210,6 +210,13 @@ async function checkOneSlot(slot: SlotRow, collectionId: string) {
     payload: { thumbnailOk, url, image_url: slot.image_url },
   });
 
+  // Health-status change can flip publication eligibility (broken slot in
+  // featured look → unavailable). Invalidate the cache so the next public
+  // read re-evaluates the gate. fallback_active toggles are written
+  // separately by recovery flows; those should also invalidate (this call
+  // covers the health-status path).
+  await invalidatePublishedCollectionForSlotId(slot.id, `health:${status}`);
+
   return { status, probe, thumbnailOk };
 }
 
