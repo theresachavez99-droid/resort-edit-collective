@@ -1350,6 +1350,26 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const candidatesById = new Map<string, SlotCandidate>();
     for (const r of slotResults) r.candidates.forEach((c) => candidatesById.set(c.id, c));
 
+    // ── v4.2 — Swim archetype plan + boost.
+    //
+    // Assign one distinct archetype per look slot, then re-score every
+    // swim candidate by its best-matching archetype. Signature pieces
+    // (Vix Firenze Sade, Missoni Chevron, Karla Colletto Floral) get
+    // additional boosts. Higher editorialScore = preferred by Gemini.
+    const archetypeAssignments = assignArchetypes(data.targetLooks, `${destination}|${activity}|${new Date().toISOString().slice(0, 10)}`);
+    const swimResult = slotResults.find((r) => r.slot === "swim");
+    if (swimResult) {
+      for (const c of swimResult.candidates) {
+        let bestBoost = 0;
+        for (const aid of new Set(archetypeAssignments)) {
+          const boost = swimArchetypeBoost({ brand: c.brand, title: c.title, archetype: aid });
+          if (boost > bestBoost) bestBoost = boost;
+        }
+        c.editorialScore = Math.round((c.editorialScore + bestBoost) * 1000) / 1000;
+      }
+      swimResult.candidates.sort((a, b) => b.editorialScore - a.editorialScore);
+    }
+
     // v4 — commerce source mix across the candidate pool.
     const commerceSourceMix = (() => {
       const counts: Record<string, number> = {};
@@ -1391,10 +1411,211 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     let looks: AssembledLook[] = [];
     let assemblyError: string | null = null;
     try {
-      looks = await assembleLooks(brief, slotResults, specs, data.targetLooks);
+      looks = await assembleLooks(brief, slotResults, specs, data.targetLooks, archetypeAssignments);
     } catch (e) {
       assemblyError = String((e as Error)?.message ?? e);
     }
+
+    // ── v4.2 — Enforce collection-wide swim brand caps (Missoni ≤1).
+    // Walks complete looks in order. When a cap is breached, attempts
+    // to swap the offending look's swim slot for a non-capped candidate
+    // matching the look's archetype hint. Records every swap or
+    // unresolved breach in decision-deviations.
+    const decisionDeviations: Array<{
+      reason: string;
+      detail: string;
+      lookIndex?: number;
+    }> = [];
+    const swimUsage = new Map<string, number>();
+    const usedCandidateIds = new Set<string>();
+    for (const l of looks) for (const s of l.slots) usedCandidateIds.add(s.candidateId);
+    if (swimResult) {
+      for (let i = 0; i < looks.length; i++) {
+        const look = looks[i];
+        if (!look.complete) continue;
+        const swimSlot = look.slots.find((s) => s.slot === "swim");
+        if (!swimSlot) continue;
+        const cand = candidatesById.get(swimSlot.candidateId);
+        if (!cand) continue;
+        const cap = SWIM_BRAND_CAPS[cand.brand];
+        const used = swimUsage.get(cand.brand) ?? 0;
+        if (cap != null && used >= cap) {
+          // Find an unused, non-capped, non-same-brand alternative.
+          const alt = swimResult.candidates.find((c) => {
+            if (usedCandidateIds.has(c.id)) return false;
+            const altCap = SWIM_BRAND_CAPS[c.brand];
+            const altUsed = swimUsage.get(c.brand) ?? 0;
+            if (altCap != null && altUsed >= altCap) return false;
+            return c.brand.toLowerCase() !== cand.brand.toLowerCase();
+          });
+          if (alt) {
+            usedCandidateIds.delete(swimSlot.candidateId);
+            usedCandidateIds.add(alt.id);
+            swimSlot.candidateId = alt.id;
+            swimSlot.reasoning = `[v4.2 cap swap] Replaced ${cand.brand} swim — collection cap = ${cap}. Substituted ${alt.brand}.`;
+            swimUsage.set(alt.brand, (swimUsage.get(alt.brand) ?? 0) + 1);
+            decisionDeviations.push({
+              reason: "swim_cap_enforced",
+              detail: `Look ${i + 1}: swapped ${cand.brand} → ${alt.brand} (cap ${cap}).`,
+              lookIndex: i,
+            });
+          } else {
+            decisionDeviations.push({
+              reason: "swim_cap_breach_unresolved",
+              detail: `Look ${i + 1}: ${cand.brand} swim cap=${cap} exceeded, no replacement available in pool.`,
+              lookIndex: i,
+            });
+            swimUsage.set(cand.brand, used + 1);
+          }
+        } else {
+          swimUsage.set(cand.brand, used + 1);
+        }
+      }
+    }
+
+    // ── v4.2 — Hero Look guardrail. Demote any look whose swim brand is
+    // supporting-only (e.g. St. Barths) to position > 0 if it landed at
+    // position 0. Records a deviation note.
+    if (looks.length > 1) {
+      const heroSwim = looks[0].slots.find((s) => s.slot === "swim");
+      const heroCand = heroSwim ? candidatesById.get(heroSwim.candidateId) : null;
+      if (heroCand && SUPPORTING_ONLY_BRANDS.has(heroCand.brand)) {
+        // Find a non-supporting look to swap with.
+        const swapIdx = looks.findIndex((l, i) => {
+          if (i === 0) return false;
+          const s = l.slots.find((sl) => sl.slot === "swim");
+          const c = s ? candidatesById.get(s.candidateId) : null;
+          return c ? !SUPPORTING_ONLY_BRANDS.has(c.brand) : false;
+        });
+        if (swapIdx > 0) {
+          const tmp = looks[0];
+          looks[0] = looks[swapIdx];
+          looks[swapIdx] = tmp;
+          decisionDeviations.push({
+            reason: "supporting_only_demoted",
+            detail: `Demoted ${heroCand.brand} from Hero Look — supporting-only swim brand.`,
+          });
+        }
+      }
+    }
+
+    // ── v4.2 — Swim diagnostics + cohesion scoring.
+    const swimDiagnostics: SwimDiagnostics = (() => {
+      const detected: SwimDiagnostics["archetypesDetected"] = [];
+      const cohesionScores: SwimDiagnostics["cohesionScores"] = [];
+      const signatureMatched: SwimDiagnostics["signaturePiecesMatched"] = [];
+      const silhouetteBalance: Record<string, number> = {};
+      let printCount = 0;
+      let neutralCount = 0;
+      let hardwareUsage = 0;
+      let crochetUsage = 0;
+      let cutoutUsage = 0;
+      const brandCounts = new Map<string, number>();
+
+      looks.forEach((l, i) => {
+        if (!l.complete) return;
+        const swimSlot = l.slots.find((s) => s.slot === "swim");
+        const swim = swimSlot ? candidatesById.get(swimSlot.candidateId) : null;
+        const assigned = archetypeAssignments[i] ?? archetypeAssignments[0];
+        const det = swim ? detectArchetypeForSwim({ brand: swim.brand, title: swim.title }) : null;
+        detected.push({ lookIndex: i, assigned, detected: det, match: det === assigned });
+        if (swim) {
+          brandCounts.set(swim.brand, (brandCounts.get(swim.brand) ?? 0) + 1);
+          silhouetteBalance[swim.silhouette] = (silhouetteBalance[swim.silhouette] ?? 0) + 1;
+          const t = (swim.title ?? "").toLowerCase();
+          if (/(print|floral|chevron|paisley|tile|majolica)/.test(t)) printCount++; else neutralCount++;
+          if (/(hardware|ring|chain|gold|buckle)/.test(t)) hardwareUsage++;
+          if (/(crochet|knit|woven|lace)/.test(t)) crochetUsage++;
+          if (/(cut[ -]?out|open back)/.test(t)) cutoutUsage++;
+
+          for (const sig of SIGNATURE_SWIM) {
+            if (sig.brand.toLowerCase() === swim.brand.toLowerCase()) {
+              const toks = sig.name.toLowerCase().split(/\s+/).filter((x) => x.length > 3);
+              const overlap = toks.filter((tok) => t.includes(tok)).length;
+              if (overlap >= 2) signatureMatched.push({ lookIndex: i, brand: sig.brand, name: sig.name });
+            }
+          }
+        }
+
+        // Cohesion: count cohesive non-swim slots / total non-swim slots.
+        const recipe = det ?? assigned;
+        const nonSwim = l.slots.filter((s) => s.slot !== "swim");
+        let cohesive = 0;
+        for (const s of nonSwim) {
+          const c = candidatesById.get(s.candidateId);
+          if (!c) continue;
+          const slotKey = (s.slot === "coverup" || s.slot === "bag" || s.slot === "jewelry" || s.slot === "shoes" || s.slot === "sunglasses") ? s.slot : null;
+          if (!slotKey) continue;
+          if (cohesionMatch({ slot: slotKey, archetype: recipe, brand: c.brand, title: c.title, palette: c.palette })) cohesive++;
+        }
+        cohesionScores.push({
+          lookIndex: i,
+          score: nonSwim.length ? Math.round((cohesive / nonSwim.length) * 1000) / 1000 : 0,
+          slotsCohesive: cohesive,
+          slotsTotal: nonSwim.length,
+        });
+      });
+
+      const brandCapBreaches: SwimDiagnostics["brandCapBreaches"] = [];
+      for (const [brand, cap] of Object.entries(SWIM_BRAND_CAPS)) {
+        const actual = brandCounts.get(brand) ?? 0;
+        if (actual > cap) brandCapBreaches.push({ brand, cap, actual });
+      }
+
+      const detectedSet = new Set(detected.map((d) => d.detected ?? d.assigned));
+      const warnings: string[] = [];
+      if (detectedSet.size < detected.length) {
+        warnings.push(`Only ${detectedSet.size} distinct archetypes across ${detected.length} looks — duplicate swim stories detected.`);
+      }
+      brandCapBreaches.forEach((b) =>
+        warnings.push(`${b.brand} swim used ${b.actual}× (cap = ${b.cap}).`),
+      );
+      cohesionScores
+        .filter((c) => c.score < 0.75)
+        .forEach((c) => warnings.push(`Look ${c.lookIndex + 1} cohesion ${(c.score * 100).toFixed(0)}% (target ≥75%).`));
+
+      // Hero vs discovery share — guideline, not enforcement.
+      const filledLooks = looks.filter((l) => l.complete);
+      let heroBrand = 0;
+      let totalProducts = 0;
+      for (const l of filledLooks) {
+        for (const s of l.slots) {
+          const c = candidatesById.get(s.candidateId);
+          if (!c) continue;
+          totalProducts++;
+          if (c.brandTier === "luxury") heroBrand++;
+        }
+      }
+      const heroShare = totalProducts ? heroBrand / totalProducts : 0;
+      const discoveryShare = totalProducts ? 1 - heroShare : 0;
+      if (totalProducts > 0 && (heroShare < 0.25 || heroShare > 0.35)) {
+        decisionDeviations.push({
+          reason: "hero_discovery_ratio_relaxed",
+          detail: `Hero brand share ${(heroShare * 100).toFixed(0)}% (target 25–35%). Editorial quality favored over ratio.`,
+        });
+      }
+
+      return {
+        archetypesAssigned: archetypeAssignments,
+        archetypesDetected: detected,
+        uniqueArchetypeCount: detectedSet.size,
+        brandCapBreaches,
+        signaturePiecesMatched: signatureMatched,
+        cohesionScores,
+        averageCohesion:
+          cohesionScores.length
+            ? Math.round((cohesionScores.reduce((a, b) => a + b.score, 0) / cohesionScores.length) * 1000) / 1000
+            : 0,
+        warnings,
+        silhouetteBalance,
+        printVsNeutral: { print: printCount, neutral: neutralCount },
+        hardwareUsage,
+        crochetUsage,
+        cutoutUsage,
+        heroBrandShare: Math.round(heroShare * 1000) / 1000,
+        discoveryBrandShare: Math.round(discoveryShare * 1000) / 1000,
+      };
+    })();
 
     const lookScores = looks.map((l) => ({ title: l.title, ...scoreLook(l, candidatesById) }));
     const collectionScore = scoreCollection(looks, candidatesById);
@@ -1416,6 +1637,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           diagnostics: {
             slotCoverage,
             assembly: { lookScores, error: assemblyError },
+            swimDiagnostics,
+            decisionDeviations,
           },
           collectionScore,
         });
@@ -1440,6 +1663,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       collectionId,
       collectionScore,
       lookScores,
+      swimDiagnostics,
+      decisionDeviations,
       looks: looks.map((l) => ({
         ...l,
         slots: l.slots.map((s) => {
