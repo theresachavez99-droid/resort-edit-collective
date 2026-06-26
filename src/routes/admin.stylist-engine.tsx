@@ -649,3 +649,55 @@ function SlotEffectivenessReport({
     </section>
   );
 }
+
+function EngineVisualBoard({
+  result,
+}: {
+  result: Extract<RunResult, { ok: true; gated: false }>;
+}) {
+  const dx = result.editorialDiagnostics ?? null;
+  const heroIdx = dx?.heroLookIndex ?? -1;
+  const looks: BoardLook[] = result.looks.map((l, i) => ({
+    key: i,
+    index: i,
+    title: l.title,
+    subtitle: l.subtitle ?? null,
+    rhythmRoleLabel: (l as { rhythmRoleLabel?: string }).rhythmRoleLabel ?? null,
+    isHero: heroIdx === i || !!(l as { isHero?: boolean }).isHero,
+    status: l.complete ? "complete" : "incomplete",
+    slots: l.slots.map((s) => ({
+      id: s.candidateId,
+      slot: s.slot,
+      brand: s.brand ?? null,
+      productName: s.title ?? null,
+      retailer: s.retailer ?? null,
+      url: s.url ?? null,
+      image: (s as { image?: string | null }).image ?? null,
+      editorialScore: s.editorialScore ?? null,
+      constructionScore: s.constructionScore ?? null,
+      approvalLevel: s.approvalLevel ?? null,
+    })),
+  }));
+  return (
+    <VisualCollectionBoard
+      looks={looks}
+      warnings={dx?.warnings ?? []}
+      summary={{
+        collectionName: `${result.brief.destination} · ${result.brief.activity}`,
+        destination: result.brief.destination,
+        activity: result.brief.activity,
+        visualRepetition: dx?.scores?.visualRepetition ?? null,
+        brandDominance: dx?.scores?.brandDominance ?? null,
+        accessoryRotation: dx?.scores?.accessoryRotation ?? null,
+        luxuryPerception: dx?.scores?.luxuryPerception ?? null,
+        memorability: dx?.scores?.memorability ?? null,
+        heroLabel: heroIdx >= 0 ? `Look ${heroIdx + 1}` : null,
+      }}
+      actions={{
+        onOpenRetailer: (s) => {
+          if (s.url) window.open(s.url, "_blank", "noopener");
+        },
+      }}
+    />
+  );
+}
