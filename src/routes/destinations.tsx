@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, useMatch } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { destinations, destinationHref } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
