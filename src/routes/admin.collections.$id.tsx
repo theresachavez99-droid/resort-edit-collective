@@ -62,6 +62,36 @@ type SwimDxData = {
 };
 type DeviationData = { reason: string; detail: string; lookIndex?: number };
 
+// v4.5 — Editorial Collection diagnostics
+type EditorialDxData = {
+  rhythmPlan?: Array<{
+    index: number;
+    role: string;
+    roleLabel: string;
+    archetype: string;
+    plannedHero: boolean;
+    colorDirection?: string[];
+    silhouette?: string;
+  }>;
+  heroStrengths?: number[];
+  heroLookIndex?: number;
+  heroReassigned?: { from: number; to: number; margin: number } | null;
+  scores?: {
+    visualRepetition?: number;
+    accessoryRotation?: number;
+    brandDominance?: number;
+    editorialRhythm?: number;
+    luxuryPerception?: number;
+    heroLookStrength?: number;
+    memorability?: number;
+  };
+  warnings?: string[];
+  brandCounts?: Record<string, number>;
+  topBrand?: string | null;
+  copyWarnings?: string[];
+};
+type EditorialDecision = { kind: string; lookIndex?: number; detail: string };
+
 function SwimArchetypeDiagnosticsPanel({
   diagnostics,
 }: {
@@ -151,6 +181,129 @@ function SwimArchetypeDiagnosticsPanel({
           <p className="font-medium mb-1">Decision deviations</p>
           <ul className="list-disc pl-5">
             {dev.map((d, i) => <li key={i}>{d.reason}: {d.detail}</li>)}
+          </ul>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function scoreClass(v: number | undefined) {
+  if (v == null) return "text-stone-500";
+  if (v >= 80) return "text-emerald-700";
+  if (v >= 65) return "text-stone-800";
+  if (v >= 50) return "text-amber-700";
+  return "text-rose-700";
+}
+
+function EditorialCollectionDiagnosticsPanel({
+  diagnostics,
+}: {
+  diagnostics:
+    | { editorialDiagnostics?: EditorialDxData; editorialDecisions?: EditorialDecision[] }
+    | null;
+}) {
+  const ed = diagnostics?.editorialDiagnostics;
+  const decisions = diagnostics?.editorialDecisions ?? [];
+  if (!ed) {
+    return (
+      <section className="border rounded p-4 text-sm text-stone-500">
+        Editorial collection diagnostics unavailable for this collection (v4.5 not yet applied).
+      </section>
+    );
+  }
+  const s = ed.scores ?? {};
+  return (
+    <section className="border rounded p-4 space-y-4 bg-stone-50/40">
+      <header className="flex items-baseline justify-between">
+        <h2 className="font-semibold">Editorial Collection Diagnostics (v4.5)</h2>
+        {ed.heroReassigned && (
+          <span className="text-xs text-amber-700">
+            Hero reassigned · Look {ed.heroReassigned.from + 1} → Look {ed.heroReassigned.to + 1}{" "}
+            (margin {ed.heroReassigned.margin})
+          </span>
+        )}
+      </header>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+        {(
+          [
+            ["Visual Repetition", s.visualRepetition],
+            ["Accessory Rotation", s.accessoryRotation],
+            ["Brand Diversity", s.brandDominance],
+            ["Editorial Rhythm", s.editorialRhythm],
+            ["Luxury Perception", s.luxuryPerception],
+            ["Hero Strength", s.heroLookStrength],
+            ["Memorability", s.memorability],
+          ] as const
+        ).map(([label, val]) => (
+          <div key={label} className="border rounded p-2 bg-white">
+            <p className="text-[10px] uppercase tracking-widest text-stone-500">{label}</p>
+            <p className={`text-xl font-serif ${scoreClass(val ?? undefined)}`}>{val ?? "—"}</p>
+          </div>
+        ))}
+      </div>
+
+      {(ed.rhythmPlan?.length ?? 0) > 0 && (
+        <div className="text-sm">
+          <p className="text-xs uppercase tracking-widest text-stone-500 mb-1">
+            Rhythm plan (6 roles)
+          </p>
+          <ol className="space-y-1">
+            {ed.rhythmPlan!.map((p) => {
+              const isHero = ed.heroLookIndex === p.index;
+              return (
+                <li key={p.index} className="flex items-baseline gap-2">
+                  <span className="text-stone-500 w-12">Look {p.index + 1}</span>
+                  <span className="font-medium">{p.roleLabel}</span>
+                  <span className="text-xs text-stone-500">· {p.archetype}</span>
+                  {isHero && (
+                    <span className="text-[10px] uppercase tracking-widest bg-black text-white px-1.5 py-0.5 rounded">
+                      Hero
+                    </span>
+                  )}
+                  {p.plannedHero && !isHero && (
+                    <span className="text-[10px] text-amber-700">(planned hero)</span>
+                  )}
+                  <span className="text-xs text-stone-500 ml-auto">
+                    strength {(ed.heroStrengths?.[p.index] ?? 0)}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      )}
+
+      {ed.topBrand && (
+        <div className="text-xs text-stone-600">
+          Top brand: <span className="font-medium">{ed.topBrand}</span> ·{" "}
+          {Object.entries(ed.brandCounts ?? {})
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 6)
+            .map(([b, n]) => `${b} (${n})`)
+            .join(" · ")}
+        </div>
+      )}
+
+      {(ed.warnings?.length ?? 0) > 0 && (
+        <div>
+          <p className="text-xs uppercase tracking-widest text-stone-500 mb-1">Editorial warnings</p>
+          <ul className="text-xs text-amber-700 list-disc pl-5">
+            {ed.warnings!.map((w, i) => <li key={i}>{w}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {decisions.length > 0 && (
+        <div className="text-xs text-stone-600 border-t pt-2">
+          <p className="font-medium mb-1">Editorial decisions (trade-offs recorded)</p>
+          <ul className="list-disc pl-5">
+            {decisions.map((d, i) => (
+              <li key={i}>
+                <span className="font-medium">{d.kind}</span>: {d.detail}
+              </li>
+            ))}
           </ul>
         </div>
       )}
@@ -443,6 +596,16 @@ function CollectionDetail() {
       <CollectionInsightsPanel insights={insights} />
       <SwimArchetypeDiagnosticsPanel
         diagnostics={(collection as { diagnostics?: { swimDiagnostics?: SwimDxData; decisionDeviations?: DeviationData[] } }).diagnostics ?? null}
+      />
+      <EditorialCollectionDiagnosticsPanel
+        diagnostics={
+          (collection as {
+            diagnostics?: {
+              editorialDiagnostics?: EditorialDxData;
+              editorialDecisions?: EditorialDecision[];
+            };
+          }).diagnostics ?? null
+        }
       />
 
       <section className="border rounded p-4 space-y-3">
