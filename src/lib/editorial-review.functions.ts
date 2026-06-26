@@ -12,6 +12,11 @@ import { z } from "zod";
 import { requireAdmin } from "./admin-auth.server";
 import type { Json } from "@/integrations/supabase/types";
 import {
+  invalidatePublishedCollectionForId,
+  invalidatePublishedCollectionForLookId,
+  invalidatePublishedCollectionForSlotId,
+} from "./published-collection.functions";
+import {
   discoverForSlot,
   getSlotSpecs,
   loadEngineBrands,
@@ -161,6 +166,10 @@ export const updateCollectionStatus = createServerFn({ method: "POST" })
       .update(patch as never)
       .eq("id", data.id);
     if (error) throw new Error(error.message);
+    await invalidatePublishedCollectionForId(
+      data.id,
+      `collection.status:${data.status}`,
+    );
     return { ok: true as const };
   });
 
@@ -221,6 +230,10 @@ export const updateLookStatus = createServerFn({ method: "POST" })
       .update(patch as never)
       .eq("id", data.lookId);
     if (error) throw new Error(error.message);
+    await invalidatePublishedCollectionForLookId(
+      data.lookId,
+      `look.status:${data.status}`,
+    );
     return { ok: true as const };
   });
 
@@ -247,6 +260,10 @@ export const setFeaturedLook = createServerFn({ method: "POST" })
         .eq("collection_id", data.collectionId);
       if (error) throw new Error(error.message);
     }
+    await invalidatePublishedCollectionForId(
+      data.collectionId,
+      "featured_look.changed",
+    );
     return { ok: true as const };
   });
 
@@ -270,6 +287,10 @@ export const reorderLooks = createServerFn({ method: "POST" })
         .eq("collection_id", data.collectionId);
       if (error) throw new Error(error.message);
     }
+    await invalidatePublishedCollectionForId(
+      data.collectionId,
+      "looks.reordered",
+    );
     return { ok: true as const };
   });
 
@@ -289,6 +310,10 @@ export const setSlotLocked = createServerFn({ method: "POST" })
       .update({ locked: data.locked, updated_at: new Date().toISOString() } as never)
       .eq("id", data.slotId);
     if (error) throw new Error(error.message);
+    await invalidatePublishedCollectionForSlotId(
+      data.slotId,
+      `slot.locked:${data.locked}`,
+    );
     return { ok: true as const };
   });
 
@@ -329,6 +354,10 @@ export const replaceSlotProduct = createServerFn({ method: "POST" })
       .update(patch as never)
       .eq("id", data.slotId);
     if (error) throw new Error(error.message);
+    await invalidatePublishedCollectionForSlotId(
+      data.slotId,
+      "slot.product_replaced",
+    );
     return { ok: true as const };
   });
 
