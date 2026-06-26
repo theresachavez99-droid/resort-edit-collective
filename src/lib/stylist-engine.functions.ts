@@ -45,6 +45,11 @@ import {
   getArchetype,
   swimArchetypeBoost,
 } from "./swim-archetypes";
+import {
+  evaluateProductFamily,
+  brandCurationProfile,
+  type ApprovalLevel,
+} from "./product-family-curation";
 
 // ──────────────────────────────────────────────────────────────
 // Slot specs — every required slot has its own brand categories,
