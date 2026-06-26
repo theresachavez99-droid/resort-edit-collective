@@ -19,6 +19,10 @@ import {
   setFeaturedCollection,
   unfeatureCollection,
 } from "@/lib/inventory-health.functions";
+import {
+  VisualCollectionBoard,
+  type BoardLook,
+} from "@/components/VisualCollectionBoard";
 
 export const Route = createFileRoute("/admin/collections/$id")({
   head: () => ({
@@ -596,6 +600,52 @@ function CollectionDetail() {
       <CollectionInsightsPanel insights={insights} />
       <SwimArchetypeDiagnosticsPanel
         diagnostics={(collection as { diagnostics?: { swimDiagnostics?: SwimDxData; decisionDeviations?: DeviationData[] } }).diagnostics ?? null}
+      />
+      <CollectionVisualBoard
+        collectionName={`${collection.destination} · ${collection.activity}`}
+        destination={collection.destination}
+        activity={collection.activity}
+        looks={typedLooks}
+        diagnostics={
+          (collection as {
+            diagnostics?: {
+              editorialDiagnostics?: EditorialDxData;
+            };
+          }).diagnostics?.editorialDiagnostics ?? null
+        }
+        insights={insights}
+        busy={busy}
+        onApproveLook={(lookId) =>
+          run("approve-look", () =>
+            setLookStatus({ data: { password: pw, lookId, status: "approved" } }),
+          )
+        }
+        onRejectLook={(lookId) => {
+          const reason = prompt("Rejection reason (optional)") ?? undefined;
+          run("reject-look", () =>
+            setLookStatus({
+              data: { password: pw, lookId, status: "rejected", rejectedReason: reason },
+            }),
+          );
+        }}
+        onRegenLook={(lookId) =>
+          confirm("Regenerate every unlocked slot in this look?") &&
+          run("regen-look", () => regenLook({ data: { password: pw, lookId } }))
+        }
+        onFeatureLook={(lookId, pinned) =>
+          run("feature", () =>
+            feature({
+              data: {
+                password: pw,
+                collectionId: collection.id,
+                lookId: pinned ? null : lookId,
+              },
+            }),
+          )
+        }
+        onLockSlot={(slotId, locked) =>
+          run("lock-slot", () => lockSlot({ data: { password: pw, slotId, locked } }))
+        }
       />
       <EditorialCollectionDiagnosticsPanel
         diagnostics={
