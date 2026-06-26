@@ -1666,6 +1666,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
     if (missingRequiredSlots.length > 0) {
       const slotEffectivenessGated = buildSlotEffectiveness(slotResults, [], candidatesById);
+      const gatedBudget = budget.report();
+      const gatedHits = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.hits, 0);
       return {
         ok: true as const,
         ranAt: new Date().toISOString(),
@@ -1682,6 +1684,22 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         collectionScore: null,
         lookScores: [],
         discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
+        slotCoverageStatus,
+        costReport: {
+          discoveryMode: data.discoveryMode,
+          discoveryModeLabel: DISCOVERY_MODE_LABEL[data.discoveryMode as DiscoveryMode],
+          cacheEnabled: !!cache,
+          firecrawlRequests: gatedBudget.totalSpent,
+          estimatedCreditsUsed: gatedBudget.totalSpent,
+          estimatedCreditsSaved: gatedHits,
+          cacheHits: gatedHits,
+          cacheHitRate: 0,
+          productsReused: gatedHits,
+          productsNewlyDiscovered: candidatesById.size - gatedHits,
+          productsNewlyCached: 0,
+          productsRejectedFromCache: 0,
+          perSlot: {},
+        },
       };
     }
 
