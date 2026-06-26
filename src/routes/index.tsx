@@ -155,6 +155,9 @@ function Index() {
             aria-label={`${featured.name} chapters`}
             className="mt-5"
           >
+            <p className="eyebrow text-gold text-[0.62rem] tracking-[0.34em] mb-2">
+              Editorial Itinerary
+            </p>
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-3">
               {featured.momentLabels.map((m, i) => (
                 <li key={m.slug} className="flex items-center gap-x-5">
@@ -199,59 +202,19 @@ function Index() {
       </section>
 
       {/* SHOP THE LOOKS + TIP */}
+      {/* RESORT EDIT TIP — quiet editorial pause between itinerary and hotels */}
       <section className={`${wrap} rhythm-major`}>
-          <div className="flex items-center gap-4 justify-center mb-4">
-            <div className="h-px w-16 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">MORE WAYS TO DRESS FOR PORTOFINO</h2>
-            <div className="h-px w-16 bg-gold/50" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6 max-w-4xl mx-auto">
+          <div className="bg-gold/15 border border-gold/30 p-6 lg:col-span-2 flex flex-col justify-center">
+            <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">✦ Resort Edit Tip</div>
+            <p className="mt-5 font-serif italic text-lg text-ink/85 leading-relaxed">
+              Book a cabana. Sip limoncello. Stay until sunset.
+            </p>
           </div>
-          <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-            Additional outfit ideas for beach clubs, harbor lunches, shopping afternoons, and sunset reservations.
-          </p>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 lg:gap-6">
-            {looks.map((l) => (
-              <article key={l.title} className="bg-card border border-border/50 flex flex-col">
-                <div className="text-center pt-5 px-3">
-                  <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">{l.tag}</div>
-                  <h3 className="mt-3 eyebrow text-[0.72rem] tracking-[0.2em] text-ink">{l.title}</h3>
-                </div>
-                <div className="relative aspect-[5/6] mt-4 overflow-hidden bg-muted">
-                  <img src={l.image} alt={l.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                </div>
-                {l.momentSlug ? (
-                  <Link
-                    to="/portofino/$moment"
-                    params={{ moment: l.momentSlug }}
-                    className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
-                  >
-                    Get the Look →
-                  </Link>
-                ) : (
-                  <Link
-                    to="/portofino/$day/$look"
-                    params={{ day: l.day, look: l.look }}
-                    className="text-center py-4 eyebrow text-[0.65rem] tracking-[0.24em] text-gold hover:text-ink border-t border-border/50 transition-colors"
-                  >
-                    Get the Look →
-                  </Link>
-                )}
-              </article>
-            ))}
-
-            {/* Resort Edit Tip */}
-            <aside className="flex flex-col gap-5">
-              <div className="bg-gold/15 border border-gold/30 p-6 flex-1 flex flex-col">
-                <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">✦ Resort Edit Tip</div>
-                <p className="mt-5 font-serif italic text-lg text-ink/85 leading-relaxed">
-                  Book a cabana.<br />Sip limoncello.<br />Stay until sunset.
-                </p>
-              </div>
-              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-              </div>
-            </aside>
+          <div className="relative aspect-[4/3] lg:aspect-auto overflow-hidden bg-muted">
+            <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
           </div>
+        </div>
       </section>
 
       {/* WHERE TO STAY */}
