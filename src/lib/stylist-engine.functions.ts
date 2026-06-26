@@ -2007,6 +2007,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             familyMatched: c?.familyMatched ?? null,
             constructionScore: c?.constructionScore ?? null,
             curationReason: c?.curationReason ?? null,
+            image: c?.image ?? null,
           };
         }),
       })),
