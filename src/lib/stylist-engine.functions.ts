@@ -1386,15 +1386,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
               palette: "cached",
               editorialScore: row.editorial_score,
               brandAffinity: affinityFor(
-                slotBrands.find((b) => b.name === row.brand) ?? {
-                  name: row.brand,
-                  slug: "",
-                  tier: null,
-                  categories: [],
-                  commerceSources: [],
-                  preferredCommerceSource: "affiliate_retailer",
-                  editorialAffinity: {},
-                },
+                slotBrands.find((b) => b.name === row.brand) ?? { tier: null, editorialAffinity: {} },
                 destination,
                 activity,
               ),
