@@ -4,6 +4,10 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
 import { generateYachtDayCollection } from "@/lib/stylist-engine.functions";
+import {
+  VisualCollectionBoard,
+  type BoardLook,
+} from "@/components/VisualCollectionBoard";
 
 export const Route = createFileRoute("/admin/stylist-engine")({
   head: () => ({
@@ -170,6 +174,7 @@ function StylistEnginePage() {
             </section>
           ) : (
             <>
+              <EngineVisualBoard result={result} />
               <CollectionReport result={result} />
               <SlotEffectivenessReport result={result} />
               <LooksGrid result={result} />
