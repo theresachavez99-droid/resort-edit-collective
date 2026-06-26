@@ -47,7 +47,6 @@ import { Route as AdminCollectionsRouteImport } from './routes/admin.collections
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminBrandPerformanceRouteImport } from './routes/admin.brand-performance'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
-import { Route as DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport } from './routes/destinations.portofino.day-1-yacht-harbour-aperitivo'
 import { Route as AdminCollectionsIdRouteImport } from './routes/admin.collections.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -241,12 +240,6 @@ const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
   path: '/$day/$look',
   getParentRoute: () => PortofinoRoute,
 } as any)
-const DestinationsPortofinoDay1YachtHarbourAperitivoRoute =
-  DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport.update({
-    id: '/portofino/day-1-yacht-harbour-aperitivo',
-    path: '/portofino/day-1-yacht-harbour-aperitivo',
-    getParentRoute: () => DestinationsRoute,
-  } as any)
 const AdminCollectionsIdRoute = AdminCollectionsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -292,7 +285,6 @@ export interface FileRoutesByFullPath {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
-  '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
 export interface FileRoutesByTo {
@@ -334,7 +326,6 @@ export interface FileRoutesByTo {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
-  '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
 export interface FileRoutesById {
@@ -377,7 +368,6 @@ export interface FileRoutesById {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
-  '/destinations/portofino/day-1-yacht-harbour-aperitivo': typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
 export interface FileRouteTypes {
@@ -421,7 +411,6 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin/'
     | '/admin/collections/$id'
-    | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -463,7 +452,6 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin'
     | '/admin/collections/$id'
-    | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   id:
     | '__root__'
@@ -505,7 +493,6 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin/'
     | '/admin/collections/$id'
-    | '/destinations/portofino/day-1-yacht-harbour-aperitivo'
     | '/portofino/$day/$look'
   fileRoutesById: FileRoutesById
 }
@@ -809,13 +796,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortofinoDayLookRouteImport
       parentRoute: typeof PortofinoRoute
     }
-    '/destinations/portofino/day-1-yacht-harbour-aperitivo': {
-      id: '/destinations/portofino/day-1-yacht-harbour-aperitivo'
-      path: '/portofino/day-1-yacht-harbour-aperitivo'
-      fullPath: '/destinations/portofino/day-1-yacht-harbour-aperitivo'
-      preLoaderRoute: typeof DestinationsPortofinoDay1YachtHarbourAperitivoRouteImport
-      parentRoute: typeof DestinationsRoute
-    }
     '/admin/collections/$id': {
       id: '/admin/collections/$id'
       path: '/$id'
@@ -839,13 +819,10 @@ const BrandsRouteWithChildren =
 
 interface DestinationsRouteChildren {
   DestinationsSlugRoute: typeof DestinationsSlugRoute
-  DestinationsPortofinoDay1YachtHarbourAperitivoRoute: typeof DestinationsPortofinoDay1YachtHarbourAperitivoRoute
 }
 
 const DestinationsRouteChildren: DestinationsRouteChildren = {
   DestinationsSlugRoute: DestinationsSlugRoute,
-  DestinationsPortofinoDay1YachtHarbourAperitivoRoute:
-    DestinationsPortofinoDay1YachtHarbourAperitivoRoute,
 }
 
 const DestinationsRouteWithChildren = DestinationsRoute._addFileChildren(
