@@ -242,13 +242,13 @@ function PortofinoPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {[
               {
-                title: "Beach Club + Long Lunch",
+                title: "Beach Club & Long Lunch",
                 image: lookBeachOverride,
                 to: DAY_PATHS["day-2"],
                 moment: undefined as string | undefined,
               },
               {
-                title: "Pool Lounging + Shopping",
+                title: "Pool Lounging & Shopping",
                 image: poolLoungingShoppingAsset.url,
                 to: undefined,
                 moment: "pool-lounging-shopping",
