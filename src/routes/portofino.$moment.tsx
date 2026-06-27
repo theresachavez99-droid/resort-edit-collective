@@ -299,7 +299,7 @@ function MomentPage() {
  */
 const SHORT_MOMENT_NAME: Record<string, string> = {
   "arrival": "Arrival",
-  "market-morning": "Market Morning",
+  "espresso-morning": "Espresso",
   "yacht-day": "Yacht",
   "harbor-aperitivo": "Harbor",
   "sunset-views": "Sunset",

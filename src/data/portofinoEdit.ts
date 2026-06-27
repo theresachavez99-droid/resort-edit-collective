@@ -519,7 +519,7 @@ const day4Looks: LookEdit[] = [
 const day5Looks: LookEdit[] = [
   {
     id: "print",
-    name: "Morning Espresso & Market",
+    name: "Morning Espresso",
     category: "Print Forward",
     fabric: "Cotton poplin stripe • Linen blend shorts • Woven leather",
     description: "A signature blue Riviera stripe shirt, white shorts, a woven tote.",

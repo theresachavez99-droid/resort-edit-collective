@@ -23,10 +23,11 @@
 /portofino/day-4/look-a                                  /portofino/sunset-views              301!
 /portofino/day-4/look-b                                  /portofino/riviera-dinner            301!
 /portofino/day-4/look-c                                  /portofino/riviera-dinner            301!
-/portofino/day-5/look-a                                  /portofino/market-morning            301!
+/portofino/day-5/look-a                                  /portofino/espresso-morning          301!
 /portofino/day-5/look-b                                  /portofino/arrival                   301!
 /portofino/day-5/look-c                                  /portofino/arrival                   301!
 
 # Slug cleanup (Sep 2026): shorter canonical slugs
 /portofino/arrival-day                                   /portofino/arrival                   301!
 /portofino/pool-lounging-shopping                        /portofino/pool-lounging             301!
+/portofino/market-morning                                /portofino/espresso-morning          301!
