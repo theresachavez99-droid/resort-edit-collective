@@ -28,7 +28,7 @@ export function OtherPortofinoMoments({
             Other Moments in Portofino
           </h3>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4 md:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
           {moments.map((m) => (
             <Link
               key={m.moment_slug}

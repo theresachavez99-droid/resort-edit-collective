@@ -96,6 +96,7 @@ function MomentPage() {
   const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
   const featuredShop = resolveShopProducts(card.legacy_day_slug, card.look_slug);
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
+  const featuredSlots = summarizeSlots(featuredShop);
 
   // Sibling looks within the same day — "More Ways to Dress for {moment}".
   const siblings: Look[] = lookbook.filter(
@@ -127,27 +128,27 @@ function MomentPage() {
       </nav>
 
       {/* HERO */}
-      <section className="relative h-[44vh] md:h-[58vh] min-h-[320px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[36vh] md:h-[48vh] min-h-[280px] w-full overflow-hidden bg-ink">
         <img
           src={heroImage}
           alt={`${card.moment_name} — Portofino`}
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/10 to-black/45" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-8 md:pb-10 text-ivory">
+        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
           <Link
             to="/portofino"
             className="eyebrow text-[0.62rem] tracking-[0.34em] text-ivory/85 hover:text-gold border-b border-ivory/40 hover:border-gold pb-1"
           >
             PORTOFINO
           </Link>
-          <h1 className="font-display text-4xl md:text-6xl mt-3 tracking-[0.05em] leading-[1.05]">
+          <h1 className="font-display text-4xl md:text-5xl mt-3 tracking-[0.05em] leading-[1.05]">
             {card.moment_name}
           </h1>
-          <p className="font-serif italic text-base md:text-xl text-ivory/90 mt-3 max-w-2xl leading-relaxed">
+          <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-2xl leading-relaxed">
             {card.narrative}
           </p>
-          <div className="mt-5">
+          <div className="mt-4">
             <SaveLookButton
               tone="light"
               source="portofino_moment_hero"
@@ -167,8 +168,8 @@ function MomentPage() {
 
       {/* FEATURED LOOK — editorial hero styling recommendation */}
       <section className="bg-ivory">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-16 md:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_minmax(280px,0.9fr)] gap-10 md:gap-16 items-center">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_minmax(280px,0.9fr)] gap-8 md:gap-12 items-center">
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
               <img
                 src={resolved.image}
@@ -176,7 +177,7 @@ function MomentPage() {
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
             </div>
-            <div className="space-y-5 lg:pl-4">
+            <div className="space-y-4 lg:pl-4">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
                 Editor's Pick
               </span>
@@ -186,6 +187,21 @@ function MomentPage() {
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
                 {featuredLook?.caption ?? card.narrative}
               </p>
+              {featuredSlots.length > 0 && (
+                <div className="border-t border-border/60 pt-4">
+                  <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">
+                    Complete Outfit Includes
+                  </span>
+                  <ul className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 font-serif italic text-[0.92rem] text-ink/80">
+                    {featuredSlots.map((s) => (
+                      <li key={s} className="flex items-baseline gap-2">
+                        <span className="text-gold/70 text-[0.6rem]">●</span>
+                        <span>{s}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {resolved.best_for && resolved.best_for.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
                   {resolved.best_for.map((b) => (
@@ -199,7 +215,7 @@ function MomentPage() {
                 </div>
               )}
               {featuredShop.length > 0 && (
-                <div className="pt-3">
+                <div className="pt-2 flex flex-wrap items-center gap-4">
                   <button
                     type="button"
                     onClick={() =>
@@ -207,17 +223,17 @@ function MomentPage() {
                     }
                     aria-expanded={openShop === "featured"}
                     aria-controls="shop-featured"
-                    className="inline-flex items-center gap-3 eyebrow text-[0.68rem] tracking-[0.32em] text-ink border-b border-gold pb-1 hover:text-gold transition-colors"
+                    className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
                   >
-                    {openShop === "featured" ? "Hide The Look" : "Shop This Look"}
+                    {openShop === "featured" ? "Hide Complete Look" : "Shop Complete Look"}
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform ${openShop === "featured" ? "rotate-180" : ""}`}
                     />
                   </button>
                   {featuredPieceCount > 0 && (
-                    <p className="font-serif italic text-[0.85rem] text-ink/55 mt-2">
-                      {featuredPieceCount} pieces curated by Resort Edit
-                    </p>
+                    <span className="font-serif italic text-[0.85rem] text-ink/55">
+                      {featuredPieceCount} curated pieces
+                    </span>
                   )}
                 </div>
               )}
@@ -237,8 +253,8 @@ function MomentPage() {
       {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid */}
       {siblings.length > 0 && (
         <section className="bg-cream/40 border-t border-border/40">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-16 md:py-20">
-            <div className="mb-10 md:mb-12 max-w-2xl">
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
+            <div className="mb-8 md:mb-10 max-w-2xl">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
                 THE EDIT
               </span>
@@ -250,7 +266,7 @@ function MomentPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
               {siblings.map((sib) => (
                 <EditorialLookCard
                   key={sib.id}
@@ -361,6 +377,28 @@ function shopEntryIsLive(entry: ShopEntry): boolean {
   return !p.isPlaceholder;
 }
 
+/**
+ * Build a short, deduped list of slot labels for the "Complete Outfit Includes"
+ * summary. Counts live (non-placeholder) entries only, preserves canonical order,
+ * and falls back gracefully for override-driven looks.
+ */
+function summarizeSlots(entries: ShopEntry[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const e of entries) {
+    if (!shopEntryIsLive(e)) continue;
+    let label: string | undefined;
+    if (e.kind === "category") label = e.category;
+    else label = (e.product as OverrideItem).slotLabel;
+    if (!label) continue;
+    const norm = label.trim();
+    if (seen.has(norm.toLowerCase())) continue;
+    seen.add(norm.toLowerCase());
+    out.push(norm);
+  }
+  return out;
+}
+
 function EditorialLookCard({
   look,
   isOpen,
@@ -382,34 +420,32 @@ function EditorialLookCard({
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-          ADDITIONAL LOOK
+          COMPLETE OUTFIT
         </span>
       </div>
-      <div className="p-6 md:p-8 flex flex-col gap-4">
+      <div className="p-6 md:p-8 flex flex-col gap-3">
         <h4 className="font-display text-2xl md:text-[1.75rem] tracking-[0.04em] text-ink leading-[1.15]">
           {look.title}
         </h4>
         <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed line-clamp-3">
           {look.caption}
         </p>
-        <div className="flex items-center justify-between pt-1">
+        <p className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60">
+          Complete Outfit{liveCount > 0 ? ` · ${liveCount} Curated Pieces` : ""}
+        </p>
+        <div className="flex items-center justify-between pt-2">
           <button
             type="button"
             onClick={onToggle}
             aria-expanded={isOpen}
             aria-controls={`shop-${look.daySlug}-${look.lookSlug}`}
-            className="inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.32em] text-ink border-b border-gold pb-1 hover:text-gold transition-colors self-start"
+            className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
           >
-            {isOpen ? "Hide The Look" : "Shop This Look"}
+            {isOpen ? "Hide Complete Look" : "View Complete Look"}
             <ChevronDown
               className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
             />
           </button>
-          {liveCount > 0 && (
-            <span className="font-serif italic text-[0.78rem] text-ink/50">
-              {liveCount} pieces
-            </span>
-          )}
         </div>
       </div>
       {isOpen && entries.length > 0 && (
