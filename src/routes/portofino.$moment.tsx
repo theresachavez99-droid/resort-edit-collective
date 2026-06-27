@@ -264,10 +264,10 @@ function MomentPage() {
                 THE EDIT
               </span>
               <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
-                More Ways to Dress for {card.moment_name}
+                More {shortMomentName} Looks
               </h3>
               <p className="font-serif italic text-[0.95rem] text-ink/70 mt-3 leading-relaxed">
-                Additional looks styled for this moment — each one a complete outfit, ready when you are.
+                Other ways to dress the moment — each one a complete edit, ready when you are.
               </p>
             </div>
 
