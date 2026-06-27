@@ -17,7 +17,7 @@ import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
 import arrivalDayImage from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v4.png.asset.json";
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
-import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
+import espressoMorningCanonical from "@/assets/uploads/portofino/espresso-morning-lilla-green-eyelet.png.asset.json";
 import espressoMorningBanner from "@/assets/uploads/portofino/espresso-morning-banner-cafe-portofino.png.asset.json";
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
 import sunsetViewsHero from "@/assets/uploads/portofino/sunset-views-harbor-golden-hour.png.asset.json";
@@ -98,10 +98,10 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Espresso Morning",
     narrative: "Espresso first, then wherever the harbor leads.",
     editorial_order: 2,
-    moment_card_image: marketMorningCard.url,
+    moment_card_image: espressoMorningCanonical.url,
     // Moment-specific banner override — applies ONLY to /portofino/espresso-morning.
     hero_banner_image: espressoMorningBanner.url,
-    outfit_image: marketMorningCard.url,
+    outfit_image: espressoMorningCanonical.url,
     legacy_day: "/portofino/day-5",
     legacy_look_title: "Morning Espresso & Market",
     legacy_day_slug: "day-5",
