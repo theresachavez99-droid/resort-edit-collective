@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -8,6 +8,12 @@ import {
   resolveReviewItem,
   recheckSlot,
 } from "@/lib/inventory-health.functions";
+import {
+  deriveBadges,
+  aggregateBadges,
+  badgeToneClasses,
+  type ReviewBadge,
+} from "@/lib/review-badges";
 
 export const Route = createFileRoute("/admin/editorial-review-queue")({
   head: () => ({
@@ -91,6 +97,37 @@ function ReviewQueuePage() {
   const items = q.data?.items ?? [];
   const byPriority = (p: string) => items.filter((i) => i.priority === p);
 
+  // Group by collection for the summary section.
+  const byCollection = useMemo(() => {
+    const map = new Map<
+      string,
+      {
+        id: string;
+        title: string;
+        destination: string;
+        activity: string;
+        featured: boolean;
+        items: typeof items;
+      }
+    >();
+    for (const it of items) {
+      const c = it.collection;
+      const key = it.collection_id ?? "__none";
+      if (!map.has(key)) {
+        map.set(key, {
+          id: it.collection_id ?? "__none",
+          title: c?.title ?? "Unassigned",
+          destination: c?.destination ?? "—",
+          activity: c?.activity ?? "—",
+          featured: !!c?.featured,
+          items: [],
+        });
+      }
+      map.get(key)!.items.push(it);
+    }
+    return Array.from(map.values()).sort((a, b) => Number(b.featured) - Number(a.featured));
+  }, [items]);
+
   return (
     <div className="mx-auto max-w-6xl p-8">
       <div className="flex justify-between items-end mb-6">
@@ -123,6 +160,62 @@ function ReviewQueuePage() {
         </div>
       )}
 
+      {status === "open" && byCollection.length > 0 && (
+        <section className="mb-8 border border-stone-200">
+          <header className="px-4 py-2 border-b border-stone-200 bg-stone-50">
+            <h2 className="text-[10px] uppercase tracking-widest text-stone-600">
+              Issues by Collection
+            </h2>
+          </header>
+          <div className="divide-y divide-stone-200">
+            {byCollection.map((c) => {
+              const badges = aggregateBadges(c.items);
+              return (
+                <div
+                  key={c.id}
+                  className="px-4 py-3 flex items-start justify-between gap-4"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      {c.featured && (
+                        <span className="bg-black text-white text-[9px] px-1.5 py-0.5 uppercase tracking-widest">
+                          Featured
+                        </span>
+                      )}
+                      {c.id !== "__none" ? (
+                        <a
+                          className="text-sm font-medium underline truncate"
+                          href={`/admin/collections/${c.id}`}
+                        >
+                          {c.title}
+                        </a>
+                      ) : (
+                        <span className="text-sm font-medium text-stone-500">
+                          {c.title}
+                        </span>
+                      )}
+                      <span className="text-xs text-stone-500">
+                        {c.destination} / {c.activity}
+                      </span>
+                      <span className="text-[10px] text-stone-500 ml-auto">
+                        {c.items.length} {c.items.length === 1 ? "issue" : "issues"}
+                      </span>
+                    </div>
+                    {badges.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {badges.map((b) => (
+                          <BadgeChip key={b.id} badge={b} count={b.count} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       <div className="space-y-3">
         {items.map((it) => (
           <div
@@ -142,6 +235,17 @@ function ReviewQueuePage() {
                 )}
               </div>
               <div className="text-sm font-medium">{it.reason}</div>
+              {(() => {
+                const badges = deriveBadges(it);
+                if (!badges.length) return null;
+                return (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {badges.map((b) => (
+                      <BadgeChip key={b.id} badge={b} />
+                    ))}
+                  </div>
+                );
+              })()}
               <div className="text-xs text-stone-600 mt-1">
                 {it.collection ? (
                   <>
@@ -212,6 +316,22 @@ function ReviewQueuePage() {
         )}
       </div>
     </div>
+  );
+}
+
+function BadgeChip({ badge, count }: { badge: ReviewBadge; count?: number }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1 text-[10px] uppercase tracking-widest border px-1.5 py-0.5 ${badgeToneClasses(
+        badge.tone,
+      )}`}
+      title={badge.label}
+    >
+      {badge.label}
+      {typeof count === "number" && count > 1 && (
+        <span className="font-medium">·{count}</span>
+      )}
+    </span>
   );
 }
 
