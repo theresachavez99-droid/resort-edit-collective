@@ -951,3 +951,71 @@ function LookCandidateCard({
     </article>
   );
 }
+
+function LibraryTab() {
+  const listFn = useServerFn(listEditorialReferences);
+  const q = useQuery({
+    queryKey: ["editorial-references"],
+    queryFn: () => listFn(),
+  });
+  const refs = (q.data?.references ?? []) as EditorialReferenceRow[];
+  const grouped = useMemo(() => {
+    const g: Record<string, EditorialReferenceRow[]> = {};
+    for (const r of refs) (g[r.collection || "Other"] ??= []).push(r);
+    return g;
+  }, [refs]);
+
+  return (
+    <div className="max-w-[1700px] mx-auto px-4 md:px-8 py-8">
+      <div className="mb-6">
+        <h2 className="font-display tracking-[0.18em] uppercase text-lg">Editorial Reference Library</h2>
+        <p className="font-serif italic text-ink/65 text-sm mt-1">
+          The visual substrate Resort Edit looks are styled against. Browse references by collection.
+        </p>
+      </div>
+      {q.isLoading && <p className="text-sm text-ink/55">Loading library…</p>}
+      {!q.isLoading && !refs.length && (
+        <p className="text-sm text-ink/55 italic">No editorial references yet.</p>
+      )}
+      <div className="space-y-10">
+        {Object.entries(grouped).map(([coll, rows]) => (
+          <section key={coll}>
+            <h3 className="font-display tracking-[0.2em] uppercase text-base border-b border-ink/15 pb-2 mb-4">
+              {coll}{" "}
+              <span className="text-[0.62rem] tracking-[0.24em] text-ink/45">
+                ({rows.length})
+              </span>
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {rows.map((r) => (
+                <article key={r.id} className="border border-ink/15 bg-ivory">
+                  {r.reference_image ? (
+                    <img
+                      src={r.reference_image}
+                      alt={r.title}
+                      className="w-full aspect-[3/4] object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full aspect-[3/4] bg-cream/40" />
+                  )}
+                  <div className="p-3">
+                    <p className="font-display tracking-[0.08em] text-sm truncate">{r.title}</p>
+                    <p className="text-[0.62rem] tracking-[0.18em] uppercase text-ink/45 mt-1">
+                      {r.destination ?? "—"} · {r.mood ?? r.occasion ?? r.source_type}
+                    </p>
+                    {r.editorial_story && (
+                      <p className="font-serif italic text-ink/70 text-xs mt-2 line-clamp-3">
+                        {r.editorial_story}
+                      </p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
+}
