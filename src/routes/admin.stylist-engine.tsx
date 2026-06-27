@@ -122,10 +122,15 @@ function StylistEnginePage() {
           Gemini if any required slot has zero candidates. Persists complete looks only.
         </p>
         <p className="text-xs text-stone-500 max-w-2xl">
-          Retailers / brand is a <strong>floor</strong>. Each slot has an
-          intrinsic override (swim 4 · coverup 5 · shoes 7 · bag 7 · sunglasses 9 ·
-          jewelry 9 · hat 7) — accessory slots search broader because their
-          inventory is fragmented across more retailers.
+          The engine selects a broader brand pool for each outfit slot, then
+          searches a minimum number of approved affiliate retailers per brand.
+          Accessory slots may search more retailers because inventory is
+          distributed across more partners.
+        </p>
+        <p className="text-xs text-stone-600 max-w-2xl bg-stone-100 border border-stone-200 rounded px-3 py-2">
+          <strong>Fast Review</strong> uses cache first and stops early once
+          enough high-quality candidates are found. It does not search every
+          possible brand or retailer unless coverage is insufficient.
         </p>
       </header>
 
@@ -157,17 +162,17 @@ function StylistEnginePage() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
           <Field label="Target looks" value={targetLooks} set={setTargetLooks} min={3} max={12} />
-          <Field label="Brands per slot" value={maxBrandsPerSlot} set={setMaxBrandsPerSlot} min={2} max={20} />
+          <Field label="Brands to Consider per Slot" value={maxBrandsPerSlot} set={setMaxBrandsPerSlot} min={2} max={20} />
           <Field
-            label="Retailers / brand (floor)"
+            label="Minimum Retailers to Search per Brand"
             value={retailersPerBrand}
             set={setRetailersPerBrand}
             min={1}
             max={12}
           />
-          <Field label="Results / search" value={resultsPerSearch} set={setResultsPerSearch} min={1} max={10} />
+          <Field label="Maximum Products to Keep per Search" value={resultsPerSearch} set={setResultsPerSearch} min={1} max={10} />
           <label className="flex flex-col">
-            <span className="text-stone-500 text-xs mb-1">Persist as draft</span>
+            <span className="text-stone-500 text-xs mb-1">Save Draft Collection</span>
             <input
               type="checkbox"
               checked={persist}
@@ -176,6 +181,11 @@ function StylistEnginePage() {
             />
           </label>
         </div>
+        <p className="text-xs text-stone-500 max-w-2xl">
+          Example: 8 brands per slot × 3 retailers per brand means the engine
+          may evaluate up to 24 targeted retailer searches for that slot before
+          early stopping.
+        </p>
         <button
           onClick={() => mutation.mutate()}
           disabled={isRunning}
