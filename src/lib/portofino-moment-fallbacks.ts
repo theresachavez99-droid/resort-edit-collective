@@ -127,7 +127,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "harbor-aperitivo",
     moment_name: "Harbor Aperitivo",
     narrative:
-      "A spritz at sunset overlooking the harbor — yachts lit, hills pink. The hinge moment between day and dinner.",
+      "A spritz overlooking the harbor as golden hour settles over Portofino.",
     editorial_order: 7,
     moment_card_image: harborAperitivoCard.url,
     hero_banner_image: harborAperitivoBanner.url,
