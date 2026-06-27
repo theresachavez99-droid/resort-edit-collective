@@ -236,7 +236,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "beach-club",
     moment_name: "Beach Club & Long Lunch",
     narrative:
-      "A slow afternoon at the beach club — cabana shade, a long lunch by the water, and the heat softening into gold.",
+      "Cabana shade, a long lunch, and nowhere else to be.",
     editorial_order: 5,
     moment_card_image: getCanonicalDayImage("day-2", "hero"),
     // Moment-specific banner override — applies ONLY to
