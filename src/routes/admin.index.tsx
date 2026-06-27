@@ -27,93 +27,67 @@ type NavItem = {
   description: string;
 };
 
-const PRIMARY: NavItem[] = [
+const WORKFLOW: NavItem[] = [
   {
-    label: "Review Queue",
-    to: "/admin/editorial-review-queue",
-    description: "Approve, reject, and publish editorial looks.",
+    label: "Stylist Engine",
+    to: "/admin/stylist-engine",
+    description: "Generate complete editorial looks for any destination moment.",
   },
   {
     label: "Look Studio",
     to: "/admin/look-studio",
-    description: "Create and edit destination looks.",
+    description: "Refine styling, swap products, choose heroes.",
   },
   {
-    label: "Product Library",
-    to: "/admin/product-library",
-    description: "Browse and reuse approved products.",
+    label: "Editorial Review",
+    to: "/admin/editorial-review-queue",
+    description: "Final founder approval before publication.",
+  },
+  {
+    label: "Publishing",
+    to: "/admin/publishing",
+    description: "Mission control — every destination and moment in one place.",
   },
 ];
 
-const MAINTENANCE: NavItem[] = [
-  {
-    label: "Inventory Health",
-    to: "/admin/inventory-health",
-    description:
-      "Sold out products, broken affiliate links, missing thumbnails, inventory issues.",
-  },
-];
-
-const ADVANCED: NavItem[] = [
-  {
-    label: "Product Vault",
-    to: "/admin/product-vault",
-    description: "Raw imported affiliate inventory and staging products.",
-  },
-  {
-    label: "Image Repair",
-    to: "/admin/image-repair-queue",
-    description: "Troubleshoot broken or missing product imagery.",
-  },
-  {
-    label: "Founder Learning",
-    to: "/admin/founder-learning",
-    description: "Internal AI training tool. Not part of the everyday publishing workflow.",
-  },
-  {
-    label: "Stylist Engine",
-    to: "/admin/stylist-engine",
-    description: "Editorial generation pipeline (dry run, founder review, production).",
-  },
-  {
-    label: "Editorial Collections",
-    to: "/admin/collections",
-    description: "Internal review of stylist-engine output, pre-approval.",
-  },
-  {
-    label: "Editorial Library",
-    to: "/admin/editorial-library",
-    description: "Reference imagery and editorial DNA.",
-  },
+const EDITORIAL_LIBRARY: NavItem[] = [
   {
     label: "Destination Moments",
     to: "/admin/destination-moments",
-    description: "Destination + moment configuration.",
+    description: "Destinations, moments, banners, editorial metadata.",
   },
   {
     label: "Day Images",
     to: "/admin/day-images",
-    description: "Per-day hero imagery management.",
+    description: "Canonical hero imagery for every moment.",
+  },
+  {
+    label: "Product Vault",
+    to: "/admin/product-vault",
+    description: "Single source of truth for every product in Resort Edit.",
   },
   {
     label: "Brands",
     to: "/admin/brands",
-    description: "Brand registry, affinity, and curation tags.",
+    description: "Approved brands, affiliate status, editorial quality, performance.",
   },
+];
+
+const OPERATIONS: NavItem[] = [
   {
-    label: "Brand Performance",
-    to: "/admin/brand-performance",
-    description: "Sourcing performance and brand ROI diagnostics.",
-  },
-  {
-    label: "Yacht Day Pilot",
-    to: "/admin/yacht-day-pilot",
-    description: "Legacy hardened sourcing pilot.",
+    label: "Inventory Health",
+    to: "/admin/inventory-health",
+    description: "Sold-out items, broken links, missing thumbnails.",
   },
   {
     label: "Subscribers",
     to: "/admin/subscribers",
     description: "Newsletter list management.",
+  },
+  {
+    label: "Founder Learning",
+    to: "/admin/founder-learning",
+    description: "Internal AI training signals — not part of the daily workflow.",
   },
 ];
 
@@ -191,8 +165,8 @@ function AdminDashboard() {
           </p>
           <h1 className="font-serif text-3xl">Resort Edit</h1>
         </div>
-        <p className="text-xs text-stone-500 italic max-w-xs text-right hidden sm:block">
-          Look Studio → Review Queue → Publish
+      <p className="text-xs text-stone-500 italic max-w-xs text-right hidden sm:block">
+          Stylist Engine → Look Studio → Editorial Review → Publishing
         </p>
       </header>
 
@@ -208,10 +182,10 @@ function AdminDashboard() {
 
       {/* Quick actions */}
       <section className="flex flex-wrap gap-2">
-        <QuickAction to="/admin/look-studio" label="Create New Look" />
-        <QuickAction to="/admin/editorial-review-queue" label="Open Review Queue" />
-        <QuickAction to="/admin/product-library" label="Browse Product Library" />
-        <QuickAction to="/admin/inventory-health" label="Run Inventory Health Scan" />
+        <QuickAction to="/admin/stylist-engine" label="Generate Looks" />
+        <QuickAction to="/admin/look-studio" label="Refine in Look Studio" />
+        <QuickAction to="/admin/editorial-review-queue" label="Open Editorial Review" />
+        <QuickAction to="/admin/publishing" label="Open Publishing" />
       </section>
 
       {/* Workflow */}
@@ -219,8 +193,8 @@ function AdminDashboard() {
         <h2 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2">
           Workflow
         </h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          {PRIMARY.map((item) => (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {WORKFLOW.map((item) => (
             <Link
               key={item.to}
               to={item.to}
@@ -238,13 +212,13 @@ function AdminDashboard() {
         </div>
       </section>
 
-      {/* Maintenance */}
+      {/* Editorial Library */}
       <section className="space-y-4">
         <h2 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2">
-          Maintenance
+          Editorial Library
         </h2>
         <div className="grid gap-3 md:grid-cols-2">
-          {MAINTENANCE.map((item) => (
+          {EDITORIAL_LIBRARY.map((item) => (
             <Link
               key={item.to}
               to={item.to}
@@ -259,18 +233,18 @@ function AdminDashboard() {
         </div>
       </section>
 
-      {/* Advanced */}
+      {/* Operations */}
       <section className="space-y-3">
         <button
           onClick={() => setAdvancedOpen((v) => !v)}
           className="w-full flex items-center justify-between text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2 hover:text-ink"
         >
-          <span>Advanced</span>
+          <span>Operations</span>
           <span>{advancedOpen ? "−" : "+"}</span>
         </button>
         {advancedOpen && (
           <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {ADVANCED.map((item) => (
+            {OPERATIONS.map((item) => (
               <li key={item.to}>
                 <Link
                   to={item.to}
