@@ -79,7 +79,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "arrival",
     moment_name: "Arrival Day",
     narrative:
-      "The first afternoon in Portofino—sun on the harbor, luggage unpacked, and nowhere to be but here.",
+      "The first afternoon in Portofino—bags unpacked, sun on the harbor, the trip begins.",
     editorial_order: 1,
     moment_card_image: arrivalDayImage.url,
     // Moment-specific banner override — applies ONLY to /portofino/arrival.
