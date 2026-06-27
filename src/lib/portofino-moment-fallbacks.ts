@@ -27,6 +27,7 @@ import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-
 import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
 import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-white-eyelet.png.asset.json";
 const exploringHarborImage = exploringHarborAsset.url;
+import beachClubLongLunchBanner from "@/assets/uploads/portofino/beach-club-long-lunch-banner-cabanas.png.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
@@ -231,7 +232,10 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
       "A slow afternoon at the beach club — cabana shade, a long lunch by the water, and the heat softening into gold.",
     editorial_order: 5,
     moment_card_image: getCanonicalDayImage("day-2", "hero"),
-    hero_banner_image: getCanonicalDayImage("day-2", "hero"),
+    // Moment-specific banner override — applies ONLY to
+    // /portofino/beach-club-long-lunch. Card + outfit images keep the
+    // canonical day-2 image so no other moment is affected.
+    hero_banner_image: beachClubLongLunchBanner.url,
     outfit_image: getCanonicalDayImage("day-2", "hero"),
     legacy_day: "/portofino/day-2",
     legacy_look_title: "Beach Club Morning",
