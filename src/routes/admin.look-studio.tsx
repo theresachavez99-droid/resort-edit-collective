@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -28,6 +28,7 @@ import {
   LOOK_SLOT_LABELS,
   type LookSlot,
 } from "@/lib/lookScoring";
+import { listEditorialReferences, type EditorialReferenceRow } from "@/lib/editorial-library.functions";
 
 export const Route = createFileRoute("/admin/look-studio")({
   head: () => ({
@@ -35,6 +36,9 @@ export const Route = createFileRoute("/admin/look-studio")({
       { title: "Look Studio — Resort Edit Admin" },
       { name: "robots", content: "noindex, nofollow" },
     ],
+  }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab: search.tab === "library" ? ("library" as const) : ("studio" as const),
   }),
   component: LookStudioPage,
 });
