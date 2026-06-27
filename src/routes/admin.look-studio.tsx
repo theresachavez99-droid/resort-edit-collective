@@ -104,6 +104,8 @@ function LookStudioPage() {
 
 function StudioBoard({ password }: { password: string }) {
   const qc = useQueryClient();
+  const { tab } = Route.useSearch();
+  const navigate = useNavigate();
   const queueFn = useServerFn(listLookDNAQueue);
   const queue = useQuery({
     queryKey: ["look-studio-queue"],
@@ -137,8 +139,30 @@ function StudioBoard({ password }: { password: string }) {
             Refresh
           </button>
         </div>
+        <div className="max-w-[1700px] mx-auto mt-4 flex gap-1 border-b border-ink/10 -mb-6">
+          {([
+            { id: "studio", label: "Studio" },
+            { id: "library", label: "Library" },
+          ] as const).map((t) => {
+            const active = tab === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => navigate({ to: "/admin/look-studio", search: { tab: t.id } })}
+                className={`px-4 py-2 text-[0.7rem] tracking-[0.24em] uppercase border-b-2 -mb-px ${
+                  active ? "border-ink text-ink" : "border-transparent text-ink/50 hover:text-ink"
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
       </header>
 
+      {tab === "library" ? (
+        <LibraryTab />
+      ) : (
       <div className="max-w-[1700px] mx-auto grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-0">
         <aside className="border-r border-ink/10 px-4 py-6 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto">
           <h2 className="text-[0.65rem] tracking-[0.28em] uppercase text-ink/55 px-2 mb-3">Look DNA</h2>
@@ -187,6 +211,7 @@ function StudioBoard({ password }: { password: string }) {
           )}
         </section>
       </div>
+      )}
     </main>
   );
 }
