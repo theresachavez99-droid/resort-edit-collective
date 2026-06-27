@@ -30,6 +30,7 @@ const exploringHarborImage = exploringHarborAsset.url;
 import exploringHarborBannerAsset from "@/assets/uploads/portofino/exploring-the-harbor-banner-lemon-quay.png.asset.json";
 const exploringHarborBanner = exploringHarborBannerAsset.url;
 import beachClubLongLunchBanner from "@/assets/uploads/portofino/beach-club-long-lunch-banner-cabanas.png.asset.json";
+import arrivalBanner from "@/assets/uploads/portofino/arrival-banner-peach-facade-bougainvillea.png.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
@@ -81,7 +82,9 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
       "The first afternoon in Portofino—sun on the harbor, luggage unpacked, and nowhere to be but here.",
     editorial_order: 1,
     moment_card_image: arrivalDayImage.url,
-    hero_banner_image: arrivalDayImage.url,
+    // Moment-specific banner override — applies ONLY to /portofino/arrival.
+    // Card + outfit images keep the canonical arrival look image.
+    hero_banner_image: arrivalBanner.url,
     outfit_image: arrivalDayImage.url,
     legacy_day: "/portofino/day-5",
     legacy_look_title: "The Slow Departure",
