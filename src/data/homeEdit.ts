@@ -403,13 +403,13 @@ export const homeDays: HomeDay[] = [
   {
     n: 5,
     dayLabel: "Day 5",
-    title: "Market Strolls + Coastal Goodbyes",
+    title: "Espresso Morning + Coastal Goodbyes",
     subtitle: "Espresso, linen, and one long last lunch.",
     caption:
       "Climb the path to Castello Brown for one last look over the harbor, then drift down to a waterside table where lunch turns into the kind of farewell that already feels like a return.",
     image: market,
-    momentSlug: "market-morning",
-    momentLabel: "Market Morning",
+    momentSlug: "espresso-morning",
+    momentLabel: "Espresso Morning",
     outfit: [
       {
         category: "Outfit",

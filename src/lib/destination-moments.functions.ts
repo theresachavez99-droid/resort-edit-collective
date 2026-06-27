@@ -47,7 +47,7 @@ export type DestinationMomentRow = {
 const ARCHETYPE_SEEDS: Array<Omit<MomentArchetypeRow, "id">> = [
   // Core six — every destination needs these, and the moment name MUST include the destination.
   { archetype_slug: "arrival", archetype_name: "Arrival Day", description: "Travel-in look — polished, considered, made to be photographed stepping off a boat or out of a car.", sort_order: 10, moment_type: "core", destination_required: true },
-  { archetype_slug: "market-morning", archetype_name: "Market Morning", description: "Easy daywear for an early walk through a village or harbor market.", sort_order: 20, moment_type: "core", destination_required: true },
+  { archetype_slug: "market-morning", archetype_name: "Espresso Morning", description: "Easy daywear for a slow first espresso and a walk through the village before the heat lands.", sort_order: 20, moment_type: "core", destination_required: true },
   { archetype_slug: "yacht-day", archetype_name: "Yacht Day", description: "On-water styling — sun, salt, breeze. Functional luxury, never costumey.", sort_order: 30, moment_type: "core", destination_required: true },
   { archetype_slug: "harbor-aperitivo", archetype_name: "Harbor Aperitivo", description: "Pre-dinner spritz with a view of the boats. Elevated daywear into evening.", sort_order: 40, moment_type: "core", destination_required: true },
   { archetype_slug: "sunset-views", archetype_name: "Sunset Views", description: "Golden-hour look from a terrace or cliffside.", sort_order: 50, moment_type: "core", destination_required: true },
@@ -81,13 +81,13 @@ const PORTOFINO_MOMENT_SEEDS: Array<Omit<DestinationMomentRow, "id">> = [
   },
   {
     destination_slug: "portofino",
-    moment_slug: "market-morning",
-    moment_name: "Market Morning",
+    moment_slug: "espresso-morning",
+    moment_name: "Espresso Morning",
     archetype_slug: "market-morning",
     time_of_day: "morning",
     sort_order: 20,
     active: true,
-    narrative: "Walking up to the Saturday market for peaches and flowers before the heat lands. Cotton, raffia, espresso in hand.",
+    narrative: "A slow first espresso along the harbor before the heat lands. Cotton, raffia, the morning paper.",
     styling_cues: {
       silhouette: "Cotton poplin dress or a tank + wide trouser.",
       palette: ["white", "natural straw", "pop of lemon or terracotta"],

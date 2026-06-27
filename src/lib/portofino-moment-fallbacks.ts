@@ -18,6 +18,7 @@ import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
 import arrivalDayImage from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v4.png.asset.json";
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import marketMorningCard from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
+import espressoMorningBanner from "@/assets/uploads/portofino/espresso-morning-banner-cafe-portofino.png.asset.json";
 import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
 import sunsetViewsHero from "@/assets/uploads/portofino/sunset-views-harbor-golden-hour.png.asset.json";
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
@@ -92,14 +93,15 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     look_slug: "look-c",
   },
   {
-    moment_slug: "market-morning",
+    moment_slug: "espresso-morning",
     archetype_slug: "market-morning",
-    moment_name: "Market Morning",
+    moment_name: "Espresso Morning",
     narrative:
-      "Walking up for peaches and flowers before the heat lands — cotton, raffia, espresso in hand.",
+      "A slow espresso, flower-lined streets, and the harbor waking with the morning.",
     editorial_order: 2,
     moment_card_image: marketMorningCard.url,
-    hero_banner_image: marketMorningCard.url,
+    // Moment-specific banner override — applies ONLY to /portofino/espresso-morning.
+    hero_banner_image: espressoMorningBanner.url,
     outfit_image: marketMorningCard.url,
     legacy_day: "/portofino/day-5",
     legacy_look_title: "Morning Espresso & Market",
@@ -184,6 +186,7 @@ export function getPortofinoMomentDef(slug: string): PortofinoMomentDef | undefi
 export const PORTOFINO_MOMENT_SLUG_ALIASES: Record<string, string> = {
   "arrival-day": "arrival",
   "pool-lounging-shopping": "pool-lounging",
+  "market-morning": "espresso-morning",
 };
 
 /**

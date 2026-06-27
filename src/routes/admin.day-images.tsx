@@ -35,7 +35,7 @@ const DAY_LABEL: Record<DaySlug, string> = {
   "day-2": "Beach Club & Long Lunch",
   "day-3": "Pool Lounging & Shopping",
   "day-4": "Sunset Views & Riviera Dinner",
-  "day-5": "Market Morning & Exploring the Harbor",
+  "day-5": "Espresso Morning & Exploring the Harbor",
 };
 
 async function fileToBase64(file: File): Promise<string> {

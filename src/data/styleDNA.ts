@@ -178,7 +178,7 @@ export const LOOK_DNA: Record<string, LookDNA> = {
   // ── Day 5 · Market + Departure ─────────────────────────────────────
   "day-5/look-a": {
     destination: "portofino",
-    momentSlug: "market-morning",
+    momentSlug: "espresso-morning",
     styleFamilies: ["mediterranean_embroidery", "blue_white_porcelain", "raffia_luxury"],
     activityTags: ["market_morning", "arrival_day"],
     excludeActivities: ["yacht_day", "riviera_dinner"],
@@ -186,11 +186,11 @@ export const LOOK_DNA: Record<string, LookDNA> = {
   },
   "day-5/look-b": {
     destination: "portofino",
-    momentSlug: "market-morning",
+    momentSlug: "espresso-morning",
     styleFamilies: ["mediterranean_embroidery", "riviera_floral"],
     activityTags: ["market_morning"],
     excludeActivities: ["yacht_day", "riviera_dinner"],
-    editorialLabel: "Market Morning",
+    editorialLabel: "Espresso Morning",
   },
   "day-5/look-c": {
     destination: "portofino",
