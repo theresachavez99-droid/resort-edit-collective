@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -28,6 +28,7 @@ import {
   LOOK_SLOT_LABELS,
   type LookSlot,
 } from "@/lib/lookScoring";
+import { listEditorialReferences, type EditorialReferenceRow } from "@/lib/editorial-library.functions";
 
 export const Route = createFileRoute("/admin/look-studio")({
   head: () => ({
@@ -35,6 +36,9 @@ export const Route = createFileRoute("/admin/look-studio")({
       { title: "Look Studio — Resort Edit Admin" },
       { name: "robots", content: "noindex, nofollow" },
     ],
+  }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab: search.tab === "library" ? ("library" as const) : ("studio" as const),
   }),
   component: LookStudioPage,
 });
@@ -100,6 +104,8 @@ function LookStudioPage() {
 
 function StudioBoard({ password }: { password: string }) {
   const qc = useQueryClient();
+  const { tab } = Route.useSearch();
+  const navigate = useNavigate();
   const queueFn = useServerFn(listLookDNAQueue);
   const queue = useQuery({
     queryKey: ["look-studio-queue"],
@@ -133,8 +139,30 @@ function StudioBoard({ password }: { password: string }) {
             Refresh
           </button>
         </div>
+        <div className="max-w-[1700px] mx-auto mt-4 flex gap-1 border-b border-ink/10 -mb-6">
+          {([
+            { id: "studio", label: "Studio" },
+            { id: "library", label: "Library" },
+          ] as const).map((t) => {
+            const active = tab === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => navigate({ to: "/admin/look-studio", search: { tab: t.id } })}
+                className={`px-4 py-2 text-[0.7rem] tracking-[0.24em] uppercase border-b-2 -mb-px ${
+                  active ? "border-ink text-ink" : "border-transparent text-ink/50 hover:text-ink"
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
       </header>
 
+      {tab === "library" ? (
+        <LibraryTab />
+      ) : (
       <div className="max-w-[1700px] mx-auto grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-0">
         <aside className="border-r border-ink/10 px-4 py-6 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto">
           <h2 className="text-[0.65rem] tracking-[0.28em] uppercase text-ink/55 px-2 mb-3">Look DNA</h2>
@@ -183,6 +211,7 @@ function StudioBoard({ password }: { password: string }) {
           )}
         </section>
       </div>
+      )}
     </main>
   );
 }
@@ -920,5 +949,73 @@ function LookCandidateCard({
         </div>
       )}
     </article>
+  );
+}
+
+function LibraryTab() {
+  const listFn = useServerFn(listEditorialReferences);
+  const q = useQuery({
+    queryKey: ["editorial-references"],
+    queryFn: () => listFn(),
+  });
+  const refs = (q.data?.references ?? []) as EditorialReferenceRow[];
+  const grouped = useMemo(() => {
+    const g: Record<string, EditorialReferenceRow[]> = {};
+    for (const r of refs) (g[r.collection || "Other"] ??= []).push(r);
+    return g;
+  }, [refs]);
+
+  return (
+    <div className="max-w-[1700px] mx-auto px-4 md:px-8 py-8">
+      <div className="mb-6">
+        <h2 className="font-display tracking-[0.18em] uppercase text-lg">Editorial Reference Library</h2>
+        <p className="font-serif italic text-ink/65 text-sm mt-1">
+          The visual substrate Resort Edit looks are styled against. Browse references by collection.
+        </p>
+      </div>
+      {q.isLoading && <p className="text-sm text-ink/55">Loading library…</p>}
+      {!q.isLoading && !refs.length && (
+        <p className="text-sm text-ink/55 italic">No editorial references yet.</p>
+      )}
+      <div className="space-y-10">
+        {Object.entries(grouped).map(([coll, rows]) => (
+          <section key={coll}>
+            <h3 className="font-display tracking-[0.2em] uppercase text-base border-b border-ink/15 pb-2 mb-4">
+              {coll}{" "}
+              <span className="text-[0.62rem] tracking-[0.24em] text-ink/45">
+                ({rows.length})
+              </span>
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {rows.map((r) => (
+                <article key={r.id} className="border border-ink/15 bg-ivory">
+                  {r.reference_image ? (
+                    <img
+                      src={r.reference_image}
+                      alt={r.title}
+                      className="w-full aspect-[3/4] object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full aspect-[3/4] bg-cream/40" />
+                  )}
+                  <div className="p-3">
+                    <p className="font-display tracking-[0.08em] text-sm truncate">{r.title}</p>
+                    <p className="text-[0.62rem] tracking-[0.18em] uppercase text-ink/45 mt-1">
+                      {r.destination ?? "—"} · {r.mood ?? r.occasion ?? r.source_type}
+                    </p>
+                    {r.editorial_story && (
+                      <p className="font-serif italic text-ink/70 text-xs mt-2 line-clamp-3">
+                        {r.editorial_story}
+                      </p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
   );
 }

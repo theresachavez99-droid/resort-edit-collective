@@ -54,7 +54,7 @@ const EDITORIAL_LIBRARY: NavItem[] = [
   {
     label: "Destination Moments",
     to: "/admin/destination-moments",
-    description: "Destinations, moments, banners, editorial metadata.",
+    description: "Moments, archetypes, and every editorial Collection in one place.",
   },
   {
     label: "Day Images",
@@ -64,12 +64,12 @@ const EDITORIAL_LIBRARY: NavItem[] = [
   {
     label: "Product Vault",
     to: "/admin/product-vault",
-    description: "Single source of truth for every product in Resort Edit.",
+    description: "The single inventory surface — every product, sourced and approved.",
   },
   {
     label: "Brands",
     to: "/admin/brands",
-    description: "Approved brands, affiliate status, editorial quality, performance.",
+    description: "Approved brands plus the Performance tab — affinity, approvals, publications.",
   },
 ];
 
