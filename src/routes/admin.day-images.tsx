@@ -31,11 +31,11 @@ export const Route = createFileRoute("/admin/day-images")({
 const STORAGE_KEY = "admin_day_images_pw";
 const DAYS: DaySlug[] = ["day-1", "day-2", "day-3", "day-4", "day-5"];
 const DAY_LABEL: Record<DaySlug, string> = {
-  "day-1": "Day 1 · Yacht & Harbour",
-  "day-2": "Day 2 · Beach Club Lunch",
-  "day-3": "Day 3 · Pool & Shopping",
-  "day-4": "Day 4 · Sunset Dinner",
-  "day-5": "Day 5 · Market Strolls",
+  "day-1": "Yacht & Harbour Aperitivo",
+  "day-2": "Beach Club & Long Lunch",
+  "day-3": "Pool Lounging & Shopping",
+  "day-4": "Sunset Views & Riviera Dinner",
+  "day-5": "Market Morning & Exploring the Harbor",
 };
 
 async function fileToBase64(file: File): Promise<string> {

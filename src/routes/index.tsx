@@ -38,7 +38,7 @@ const hotels = [
     vibe: "ICONIC · CLIFFTOP VIEWS",
     pick: "Resort Edit Favorite",
     desc: "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied view on the Riviera.",
-    signals: ["The Resort Edit top pick", "Harbour-facing rooms only", "Private pool terrace & cabanas"],
+    signals: ["Resort Edit top pick", "Harbour-facing rooms only", "Private pool terrace & cabanas"],
     note: "Where to stay if this trip is the trip.",
     href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
   },
