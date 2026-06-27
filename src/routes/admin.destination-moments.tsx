@@ -341,3 +341,67 @@ function CueRow({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function CollectionsTab({ password }: { password: string }) {
+  const fn = useServerFn(listEditorialCollections);
+  const q = useQuery({
+    queryKey: ["editorial-collections-index"],
+    queryFn: () => fn({ data: { password, limit: 100 } }),
+  });
+  const rows = ((q.data as { ok: true; collections: Array<Record<string, unknown>> } | undefined)
+    ?.collections ?? []) as Array<{
+    id: string;
+    destination: string;
+    activity: string;
+    title: string | null;
+    status: string;
+    updated_at: string | null;
+    look_counts?: { total: number; approved: number; rejected: number };
+  }>;
+  return (
+    <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-8">
+      <header className="mb-6">
+        <h2 className="font-display tracking-[0.18em] uppercase text-lg">Editorial Collections</h2>
+        <p className="font-serif italic text-ink/65 text-sm mt-1">
+          Every collection the Stylist Engine has produced. Open one to review looks and approve for publication.
+        </p>
+      </header>
+      {q.isLoading && <p className="text-sm text-ink/55">Loading collections…</p>}
+      {!q.isLoading && !rows.length && (
+        <p className="text-sm text-ink/55 italic">No collections yet — generate one from the Stylist Engine.</p>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        {rows.map((c) => (
+          <Link
+            key={c.id}
+            to="/admin/collections/$id"
+            params={{ id: c.id }}
+            className="block border border-ink/15 bg-ivory p-4 hover:border-ink/40 transition"
+          >
+            <div className="flex items-baseline justify-between gap-2">
+              <p className="font-display tracking-[0.1em] text-sm uppercase">
+                {c.destination} · {c.activity}
+              </p>
+              <span className="text-[0.55rem] tracking-[0.22em] uppercase text-ink/55 border border-ink/20 px-1.5 py-0.5">
+                {c.status}
+              </span>
+            </div>
+            {c.title && (
+              <p className="font-serif italic text-ink/75 text-sm mt-2">"{c.title}"</p>
+            )}
+            {c.look_counts && (
+              <p className="text-[0.62rem] tracking-[0.18em] uppercase text-ink/55 mt-3">
+                {c.look_counts.total} looks · {c.look_counts.approved} approved
+              </p>
+            )}
+            {c.updated_at && (
+              <p className="text-[0.62rem] text-ink/45 mt-1">
+                Updated {new Date(c.updated_at).toLocaleDateString()}
+              </p>
+            )}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
