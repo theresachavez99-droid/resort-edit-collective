@@ -27,6 +27,8 @@ import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-
 import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
 import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-white-eyelet.png.asset.json";
 const exploringHarborImage = exploringHarborAsset.url;
+import exploringHarborBannerAsset from "@/assets/uploads/portofino/exploring-the-harbor-banner-lemon-quay.png.asset.json";
+const exploringHarborBanner = exploringHarborBannerAsset.url;
 import beachClubLongLunchBanner from "@/assets/uploads/portofino/beach-club-long-lunch-banner-cabanas.png.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
@@ -217,7 +219,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
       "A slow afternoon along the quay — boutique windows, espresso stops, and the harbor catching the light.",
     editorial_order: 3,
     moment_card_image: exploringHarborImage,
-    hero_banner_image: exploringHarborImage,
+    hero_banner_image: exploringHarborBanner,
     outfit_image: exploringHarborImage,
     legacy_day: "/portofino/day-3",
     legacy_look_title: "Exploring the Harbor",
