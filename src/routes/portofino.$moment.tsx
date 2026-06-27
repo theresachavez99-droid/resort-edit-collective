@@ -454,7 +454,7 @@ function EditorialLookCard({
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-          COMPLETE OUTFIT
+          THE EDIT
         </span>
       </div>
       <div className="p-6 md:p-8 flex flex-col gap-3">
@@ -462,10 +462,10 @@ function EditorialLookCard({
           {look.title}
         </h4>
         <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed line-clamp-3">
-          {look.caption}
+          {SIBLING_CAPTION_OVERRIDES[`${look.daySlug}/${look.lookSlug}`] ?? look.caption}
         </p>
         <p className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60">
-          Complete Outfit{liveCount > 0 ? ` · ${liveCount} Curated Pieces` : ""}
+          The Complete Edit{liveCount > 0 ? ` · ${liveCount} Curated Pieces` : ""}
         </p>
         <div className="flex items-center justify-between pt-2">
           <button
