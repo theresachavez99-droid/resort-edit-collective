@@ -293,6 +293,35 @@ function MomentPage() {
   );
 }
 
+/**
+ * Short, conversational moment names for editorial section headings such as
+ * "More {Short} Looks". Falls back to full moment name when missing.
+ */
+const SHORT_MOMENT_NAME: Record<string, string> = {
+  "arrival": "Arrival",
+  "market-morning": "Market Morning",
+  "yacht-day": "Yacht",
+  "harbor-aperitivo": "Harbor",
+  "sunset-views": "Sunset",
+  "riviera-dinner": "Riviera Dinner",
+  "exploring-the-harbor": "Harbor",
+  "beach-club-long-lunch": "Beach Club",
+  "pool-lounging": "Pool",
+};
+
+/**
+ * Experiential rewrites for sibling "More X Looks" cards — sells the moment,
+ * not the garment. Keyed by `${daySlug}/${lookSlug}`.
+ */
+const SIBLING_CAPTION_OVERRIDES: Record<string, string> = {
+  "day-5/look-a":
+    "For your first espresso, flower markets, and a slow morning discovering Portofino.",
+  "day-5/look-b":
+    "For the long walk home through quiet streets after dinner by the water.",
+  "day-2/look-a":
+    "For stretching the afternoon beneath striped umbrellas before lunch overlooking the sea.",
+};
+
 function JourneyPrevNext({ slug }: { slug: string }) {
   const { prev, next } = getJourneyNeighbors(slug);
   return (
