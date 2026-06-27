@@ -98,6 +98,9 @@ function MomentPage() {
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
   const featuredSlots = summarizeSlots(featuredShop);
 
+  const shortMomentName = SHORT_MOMENT_NAME[slug] ?? card.moment_name;
+  const editorPickLabel = `Editor's ${shortMomentName} Pick`;
+
   // Sibling looks within the same day — "More Ways to Dress for {moment}".
   const siblings: Look[] = lookbook.filter(
     (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
@@ -145,7 +148,7 @@ function MomentPage() {
           <h1 className="font-display text-4xl md:text-5xl mt-3 tracking-[0.05em] leading-[1.05]">
             {card.moment_name}
           </h1>
-          <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-2xl leading-relaxed">
+          <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-3xl leading-snug line-clamp-2">
             {card.narrative}
           </p>
           <div className="mt-4">
@@ -169,7 +172,7 @@ function MomentPage() {
       {/* FEATURED LOOK — editorial hero styling recommendation */}
       <section className="bg-ivory">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_minmax(280px,0.9fr)] gap-8 md:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(300px,1fr)] gap-8 md:gap-12 items-center">
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
               <img
                 src={resolved.image}
@@ -179,7 +182,7 @@ function MomentPage() {
             </div>
             <div className="space-y-4 lg:pl-4">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                Editor's Pick
+                {editorPickLabel}
               </span>
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {featuredLook?.title ?? resolved.title}
@@ -189,9 +192,16 @@ function MomentPage() {
               </p>
               {featuredSlots.length > 0 && (
                 <div className="border-t border-border/60 pt-4">
-                  <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">
-                    Complete Outfit Includes
-                  </span>
+                  <div className="flex items-baseline justify-between gap-4 flex-wrap">
+                    <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">
+                      The Complete Edit
+                    </span>
+                    {featuredPieceCount > 0 && (
+                      <span className="font-serif italic text-[0.85rem] text-gold">
+                        {featuredPieceCount} Curated Pieces
+                      </span>
+                    )}
+                  </div>
                   <ul className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 font-serif italic text-[0.92rem] text-ink/80">
                     {featuredSlots.map((s) => (
                       <li key={s} className="flex items-baseline gap-2">
@@ -225,16 +235,11 @@ function MomentPage() {
                     aria-controls="shop-featured"
                     className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
                   >
-                    {openShop === "featured" ? "Hide Complete Look" : "Shop Complete Look"}
+                    {openShop === "featured" ? "Hide Complete Look" : "View Complete Look"}
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform ${openShop === "featured" ? "rotate-180" : ""}`}
                     />
                   </button>
-                  {featuredPieceCount > 0 && (
-                    <span className="font-serif italic text-[0.85rem] text-ink/55">
-                      {featuredPieceCount} curated pieces
-                    </span>
-                  )}
                 </div>
               )}
             </div>
