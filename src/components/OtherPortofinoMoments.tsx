@@ -46,7 +46,7 @@ export function OtherPortofinoMoments({
               </div>
               <div className="p-4">
                 <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold">
-                  Portofino Moment
+                  Portofino
                 </span>
                 <h4 className="font-display text-base md:text-lg tracking-[0.03em] text-ink mt-1.5 group-hover:text-gold transition-colors">
                   {m.moment_name}

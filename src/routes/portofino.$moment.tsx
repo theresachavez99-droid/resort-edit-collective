@@ -98,6 +98,9 @@ function MomentPage() {
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
   const featuredSlots = summarizeSlots(featuredShop);
 
+  const shortMomentName = SHORT_MOMENT_NAME[slug] ?? card.moment_name;
+  const editorPickLabel = `Editor's ${shortMomentName} Pick`;
+
   // Sibling looks within the same day — "More Ways to Dress for {moment}".
   const siblings: Look[] = lookbook.filter(
     (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
@@ -145,7 +148,7 @@ function MomentPage() {
           <h1 className="font-display text-4xl md:text-5xl mt-3 tracking-[0.05em] leading-[1.05]">
             {card.moment_name}
           </h1>
-          <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-2xl leading-relaxed">
+          <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-3xl leading-snug line-clamp-2">
             {card.narrative}
           </p>
           <div className="mt-4">
@@ -169,7 +172,7 @@ function MomentPage() {
       {/* FEATURED LOOK — editorial hero styling recommendation */}
       <section className="bg-ivory">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_minmax(280px,0.9fr)] gap-8 md:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(300px,1fr)] gap-8 md:gap-12 items-center">
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
               <img
                 src={resolved.image}
@@ -179,7 +182,7 @@ function MomentPage() {
             </div>
             <div className="space-y-4 lg:pl-4">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                Editor's Pick
+                {editorPickLabel}
               </span>
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {featuredLook?.title ?? resolved.title}
@@ -189,9 +192,16 @@ function MomentPage() {
               </p>
               {featuredSlots.length > 0 && (
                 <div className="border-t border-border/60 pt-4">
-                  <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">
-                    Complete Outfit Includes
-                  </span>
+                  <div className="flex items-baseline justify-between gap-4 flex-wrap">
+                    <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">
+                      The Complete Edit
+                    </span>
+                    {featuredPieceCount > 0 && (
+                      <span className="font-serif italic text-[0.85rem] text-gold">
+                        {featuredPieceCount} Curated Pieces
+                      </span>
+                    )}
+                  </div>
                   <ul className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 font-serif italic text-[0.92rem] text-ink/80">
                     {featuredSlots.map((s) => (
                       <li key={s} className="flex items-baseline gap-2">
@@ -225,16 +235,11 @@ function MomentPage() {
                     aria-controls="shop-featured"
                     className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
                   >
-                    {openShop === "featured" ? "Hide Complete Look" : "Shop Complete Look"}
+                    {openShop === "featured" ? "Hide Complete Look" : "View Complete Look"}
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform ${openShop === "featured" ? "rotate-180" : ""}`}
                     />
                   </button>
-                  {featuredPieceCount > 0 && (
-                    <span className="font-serif italic text-[0.85rem] text-ink/55">
-                      {featuredPieceCount} curated pieces
-                    </span>
-                  )}
                 </div>
               )}
             </div>
@@ -259,10 +264,10 @@ function MomentPage() {
                 THE EDIT
               </span>
               <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
-                More Ways to Dress for {card.moment_name}
+                More {shortMomentName} Looks
               </h3>
               <p className="font-serif italic text-[0.95rem] text-ink/70 mt-3 leading-relaxed">
-                Additional looks styled for this moment — each one a complete outfit, ready when you are.
+                Other ways to dress the moment — each one a complete edit, ready when you are.
               </p>
             </div>
 
@@ -287,6 +292,35 @@ function MomentPage() {
     </div>
   );
 }
+
+/**
+ * Short, conversational moment names for editorial section headings such as
+ * "More {Short} Looks". Falls back to full moment name when missing.
+ */
+const SHORT_MOMENT_NAME: Record<string, string> = {
+  "arrival": "Arrival",
+  "market-morning": "Market Morning",
+  "yacht-day": "Yacht",
+  "harbor-aperitivo": "Harbor",
+  "sunset-views": "Sunset",
+  "riviera-dinner": "Riviera Dinner",
+  "exploring-the-harbor": "Harbor",
+  "beach-club-long-lunch": "Beach Club",
+  "pool-lounging": "Pool",
+};
+
+/**
+ * Experiential rewrites for sibling "More X Looks" cards — sells the moment,
+ * not the garment. Keyed by `${daySlug}/${lookSlug}`.
+ */
+const SIBLING_CAPTION_OVERRIDES: Record<string, string> = {
+  "day-5/look-a":
+    "For your first espresso, flower markets, and a slow morning discovering Portofino.",
+  "day-5/look-b":
+    "For the long walk home through quiet streets after dinner by the water.",
+  "day-2/look-a":
+    "For stretching the afternoon beneath striped umbrellas before lunch overlooking the sea.",
+};
 
 function JourneyPrevNext({ slug }: { slug: string }) {
   const { prev, next } = getJourneyNeighbors(slug);
@@ -420,7 +454,7 @@ function EditorialLookCard({
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-          COMPLETE OUTFIT
+          THE EDIT
         </span>
       </div>
       <div className="p-6 md:p-8 flex flex-col gap-3">
@@ -428,10 +462,10 @@ function EditorialLookCard({
           {look.title}
         </h4>
         <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed line-clamp-3">
-          {look.caption}
+          {SIBLING_CAPTION_OVERRIDES[`${look.daySlug}/${look.lookSlug}`] ?? look.caption}
         </p>
         <p className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60">
-          Complete Outfit{liveCount > 0 ? ` · ${liveCount} Curated Pieces` : ""}
+          The Complete Edit{liveCount > 0 ? ` · ${liveCount} Curated Pieces` : ""}
         </p>
         <div className="flex items-center justify-between pt-2">
           <button
@@ -478,7 +512,7 @@ function InlineShop({
       <div className="flex items-end justify-between mb-6">
         <div>
           <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
-            Shop The Look
+            Shop Individual Pieces
           </span>
           <h4 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink mt-2">
             {heading}

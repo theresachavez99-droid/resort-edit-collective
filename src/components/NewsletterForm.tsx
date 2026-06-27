@@ -5,7 +5,7 @@ import { subscribeEmail } from "@/lib/subscribers.functions";
 type Variant = "footer" | "inline-light";
 
 const CONSENT_COPY =
-  "Join for destination edits, hotel finds, and destination dressing inspiration. Unsubscribe anytime.";
+  "Be the first to receive new destination edits, hotel discoveries, curated packing guides, and exclusive Resort Edit releases.";
 
 function deriveDestination(pathname: string): string | undefined {
   // /portofino, /portofino/..., /destinations/portofino...
