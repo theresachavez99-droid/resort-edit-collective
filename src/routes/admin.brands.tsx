@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -11,6 +11,7 @@ import {
   PRIMARY_CATEGORIES,
   ACTIVITY_STRENGTHS,
 } from "@/lib/brands.functions";
+import { getBrandPerformance } from "@/lib/brand-performance.functions";
 
 export const Route = createFileRoute("/admin/brands")({
   head: () => ({
@@ -18,6 +19,9 @@ export const Route = createFileRoute("/admin/brands")({
       { title: "Brands — Admin (Resort Edit)" },
       { name: "robots", content: "noindex, nofollow" },
     ],
+  }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab: search.tab === "performance" ? ("performance" as const) : ("brands" as const),
   }),
   component: BrandsAdminPage,
 });
