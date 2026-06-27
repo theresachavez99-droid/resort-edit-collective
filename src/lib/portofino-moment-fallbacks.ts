@@ -96,8 +96,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_slug: "espresso-morning",
     archetype_slug: "market-morning",
     moment_name: "Espresso Morning",
-    narrative:
-      "A slow espresso, flower-lined streets, and the harbor waking with the morning.",
+    narrative: "Espresso first, then wherever the harbor leads.",
     editorial_order: 2,
     moment_card_image: marketMorningCard.url,
     // Moment-specific banner override — applies ONLY to /portofino/espresso-morning.
