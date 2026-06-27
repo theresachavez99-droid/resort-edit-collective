@@ -512,7 +512,7 @@ function InlineShop({
       <div className="flex items-end justify-between mb-6">
         <div>
           <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
-            Shop The Look
+            Shop Individual Pieces
           </span>
           <h4 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink mt-2">
             {heading}
