@@ -32,6 +32,7 @@ import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminStylistEngineRouteImport } from './routes/admin.stylist-engine'
 import { Route as AdminReviewQueueRouteImport } from './routes/admin.review-queue'
+import { Route as AdminPublishingRouteImport } from './routes/admin.publishing'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
 import { Route as AdminLookStudioRouteImport } from './routes/admin.look-studio'
@@ -163,6 +164,11 @@ const AdminReviewQueueRoute = AdminReviewQueueRouteImport.update({
   path: '/admin/review-queue',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPublishingRoute = AdminPublishingRouteImport.update({
+  id: '/admin/publishing',
+  path: '/admin/publishing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
   id: '/admin/product-vault',
   path: '/admin/product-vault',
@@ -264,6 +270,7 @@ export interface FileRoutesByFullPath {
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
+  '/admin/publishing': typeof AdminPublishingRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
   '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -304,6 +311,7 @@ export interface FileRoutesByTo {
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
+  '/admin/publishing': typeof AdminPublishingRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
   '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -345,6 +353,7 @@ export interface FileRoutesById {
   '/admin/look-studio': typeof AdminLookStudioRoute
   '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
+  '/admin/publishing': typeof AdminPublishingRoute
   '/admin/review-queue': typeof AdminReviewQueueRoute
   '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -387,6 +396,7 @@ export interface FileRouteTypes {
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
+    | '/admin/publishing'
     | '/admin/review-queue'
     | '/admin/stylist-engine'
     | '/admin/subscribers'
@@ -427,6 +437,7 @@ export interface FileRouteTypes {
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
+    | '/admin/publishing'
     | '/admin/review-queue'
     | '/admin/stylist-engine'
     | '/admin/subscribers'
@@ -467,6 +478,7 @@ export interface FileRouteTypes {
     | '/admin/look-studio'
     | '/admin/product-library'
     | '/admin/product-vault'
+    | '/admin/publishing'
     | '/admin/review-queue'
     | '/admin/stylist-engine'
     | '/admin/subscribers'
@@ -508,6 +520,7 @@ export interface RootRouteChildren {
   AdminLookStudioRoute: typeof AdminLookStudioRoute
   AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
+  AdminPublishingRoute: typeof AdminPublishingRoute
   AdminReviewQueueRoute: typeof AdminReviewQueueRoute
   AdminStylistEngineRoute: typeof AdminStylistEngineRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
@@ -676,6 +689,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/review-queue'
       fullPath: '/admin/review-queue'
       preLoaderRoute: typeof AdminReviewQueueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/publishing': {
+      id: '/admin/publishing'
+      path: '/admin/publishing'
+      fullPath: '/admin/publishing'
+      preLoaderRoute: typeof AdminPublishingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/product-vault': {
@@ -868,6 +888,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLookStudioRoute: AdminLookStudioRoute,
   AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
+  AdminPublishingRoute: AdminPublishingRoute,
   AdminReviewQueueRoute: AdminReviewQueueRoute,
   AdminStylistEngineRoute: AdminStylistEngineRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
