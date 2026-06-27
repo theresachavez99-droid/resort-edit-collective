@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -13,6 +13,7 @@ import {
 } from "@/lib/destination-moments.functions";
 import { NamingWarningChip } from "@/components/admin/NamingWarningChip";
 import { getPortofinoMomentVerdicts } from "@/lib/portofino-moments.functions";
+import { listEditorialCollections } from "@/lib/editorial-review.functions";
 
 export const Route = createFileRoute("/admin/destination-moments")({
   head: () => ({
@@ -20,6 +21,9 @@ export const Route = createFileRoute("/admin/destination-moments")({
       { title: "Destination Moments — Resort Edit Admin" },
       { name: "robots", content: "noindex, nofollow" },
     ],
+  }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab: search.tab === "collections" ? ("collections" as const) : ("moments" as const),
   }),
   component: DestinationMomentsPage,
 });
