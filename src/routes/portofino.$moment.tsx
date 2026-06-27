@@ -377,6 +377,28 @@ function shopEntryIsLive(entry: ShopEntry): boolean {
   return !p.isPlaceholder;
 }
 
+/**
+ * Build a short, deduped list of slot labels for the "Complete Outfit Includes"
+ * summary. Counts live (non-placeholder) entries only, preserves canonical order,
+ * and falls back gracefully for override-driven looks.
+ */
+function summarizeSlots(entries: ShopEntry[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const e of entries) {
+    if (!shopEntryIsLive(e)) continue;
+    let label: string | undefined;
+    if (e.kind === "category") label = e.category;
+    else label = (e.product as OverrideItem).slotLabel;
+    if (!label) continue;
+    const norm = label.trim();
+    if (seen.has(norm.toLowerCase())) continue;
+    seen.add(norm.toLowerCase());
+    out.push(norm);
+  }
+  return out;
+}
+
 function EditorialLookCard({
   look,
   isOpen,
@@ -398,34 +420,32 @@ function EditorialLookCard({
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-          ADDITIONAL LOOK
+          COMPLETE OUTFIT
         </span>
       </div>
-      <div className="p-6 md:p-8 flex flex-col gap-4">
+      <div className="p-6 md:p-8 flex flex-col gap-3">
         <h4 className="font-display text-2xl md:text-[1.75rem] tracking-[0.04em] text-ink leading-[1.15]">
           {look.title}
         </h4>
         <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed line-clamp-3">
           {look.caption}
         </p>
-        <div className="flex items-center justify-between pt-1">
+        <p className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60">
+          Complete Outfit{liveCount > 0 ? ` · ${liveCount} Curated Pieces` : ""}
+        </p>
+        <div className="flex items-center justify-between pt-2">
           <button
             type="button"
             onClick={onToggle}
             aria-expanded={isOpen}
             aria-controls={`shop-${look.daySlug}-${look.lookSlug}`}
-            className="inline-flex items-center gap-2 eyebrow text-[0.62rem] tracking-[0.32em] text-ink border-b border-gold pb-1 hover:text-gold transition-colors self-start"
+            className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
           >
-            {isOpen ? "Hide The Look" : "Shop This Look"}
+            {isOpen ? "Hide Complete Look" : "View Complete Look"}
             <ChevronDown
               className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
             />
           </button>
-          {liveCount > 0 && (
-            <span className="font-serif italic text-[0.78rem] text-ink/50">
-              {liveCount} pieces
-            </span>
-          )}
         </div>
       </div>
       {isOpen && entries.length > 0 && (
