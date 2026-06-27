@@ -112,7 +112,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "yacht-day",
     moment_name: "Yacht Day",
     narrative:
-      "A long day on the water — Paraggi, Camogli, lunch on board. Swim under, throw-on over, considered finish.",
+      "From Portofino to hidden coves, the Riviera is best explored by sea.",
     editorial_order: 4,
     moment_card_image: getCanonicalDayImage("day-1", "hero"),
     hero_banner_image: yachtDayHero.url,
