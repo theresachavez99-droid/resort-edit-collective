@@ -58,8 +58,8 @@ export const destinations: Destination[] = [
     whatToWear: ["Silk caftans", "Crisp linen sets", "Espadrille wedges", "Gold hoop earrings"],
     shopEdits: [{ label: "The Portofino Edit", href: "/portofino" }],
     itinerary: [
-      { day: "Day 1", plan: "Late breakfast at Belmond Splendido, harbor stroll, sunset Negroni at Chuflay." },
-      { day: "Day 2", plan: "Boat to San Fruttuoso abbey, long lunch at Da Puny, evening walk to the lighthouse." },
+      { day: "Arrival", plan: "Late breakfast at Belmond Splendido, harbor stroll, sunset Negroni at Chuflay." },
+      { day: "The Coast", plan: "Boat to San Fruttuoso abbey, long lunch at Da Puny, evening walk to the lighthouse." },
     ],
     dining: [
       { name: "Da Puny", type: "Restaurant", note: "The harborside trattoria everyone whispers about." },
