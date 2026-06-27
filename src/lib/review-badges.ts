@@ -51,7 +51,7 @@ export function badgeMeta(id: ReviewBadgeId): ReviewBadge {
 type ReviewItem = {
   reason: string | null;
   priority: string | null;
-  payload: Record<string, unknown> | null;
+  payload: unknown;
   slot?: {
     image_url?: string | null;
     source_url?: string | null;
@@ -68,14 +68,17 @@ function bool(v: unknown): boolean {
   return v === true;
 }
 function reasonText(it: ReviewItem): string {
-  return `${it.reason ?? ""} ${String((it.payload as Record<string, unknown> | null)?.reason ?? "")}`.toLowerCase();
+  const p = (it.payload && typeof it.payload === "object") ? (it.payload as Record<string, unknown>) : {};
+  return `${it.reason ?? ""} ${String(p.reason ?? "")}`.toLowerCase();
 }
 
 /** Derive the badge set for one review-queue item. */
 export function deriveBadges(it: ReviewItem): ReviewBadge[] {
   const ids = new Set<ReviewBadgeId>();
   const r = reasonText(it);
-  const p = (it.payload ?? {}) as Record<string, unknown>;
+  const p = (it.payload && typeof it.payload === "object")
+    ? (it.payload as Record<string, unknown>)
+    : {};
   const health = it.slot?.health_status ?? null;
 
   // Inventory / link / sold-out signals — straight from health_status.
