@@ -1113,7 +1113,15 @@ function resolveSlotImage(
   };
 }
 
-function OutfitBody({ run, revealed }: { run: RunPayload; revealed: boolean }) {
+function OutfitBody({
+  run,
+  revealed,
+  feedback,
+}: {
+  run: RunPayload;
+  revealed: boolean;
+  feedback: FeedbackCtx;
+}) {
   if (run.ok === false) {
     return (
       <div className="text-xs text-red-600 space-y-2">
@@ -1179,6 +1187,7 @@ function OutfitBody({ run, revealed }: { run: RunPayload; revealed: boolean }) {
             unified={u}
             cand={u.data?.candidateId ? candById.get(u.data.candidateId) : undefined}
             revealed={revealed}
+            feedback={feedback}
           />
         ))}
       </div>
