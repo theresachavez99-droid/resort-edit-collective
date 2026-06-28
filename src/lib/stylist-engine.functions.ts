@@ -672,6 +672,11 @@ export async function discoverForSlot(args: {
     b.categories.some((c) => spec.brandCategories.includes(c)),
   );
 
+  // v5.1 — preload Founder Learning evaluator once for the whole slot loop.
+  const fcModule = args.founderContext
+    ? await import("./founder-context.server")
+    : null;
+
   let searchesIssued = 0;
   let rawResults = 0;
   let budgetExhausted = false;
@@ -800,9 +805,8 @@ export async function discoverForSlot(args: {
             Math.round((baseScore + verdict.constructionScore) * 1000) / 1000;
           // v5.1 — Founder Learning is a top-weight scoring axis.
           let fSig: FounderSignal | null = null;
-          if (args.founderContext) {
-            const fc = await import("./founder-context.server");
-            fSig = fc.evaluateFounderSignal({
+          if (fcModule && args.founderContext) {
+            fSig = fcModule.evaluateFounderSignal({
               slot: spec.slot,
               brand: brand.name,
               title,
