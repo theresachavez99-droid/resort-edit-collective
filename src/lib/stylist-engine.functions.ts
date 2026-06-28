@@ -81,6 +81,10 @@ import {
   type DiscoveryMode,
 } from "./discovery-pipeline";
 import type { CachedCandidate } from "./product-cache.server";
+import type {
+  FounderContext,
+  FounderSignal,
+} from "./founder-context.server";
 
 /** Lazy loader for the server-only product-cache module. */
 async function cacheModule() {
@@ -550,6 +554,19 @@ export type SlotCandidate = {
   curationReason?: string;
   /** v4.6 — retailer product image extracted from search metadata. */
   image?: string | null;
+  /** v5.1 — Founder Learning attribution. */
+  baseEditorialScore?: number;
+  founderBoost?: number;
+  founderPenalty?: number;
+  founderMatchedRefIds?: string[];
+  founderPenalties?: Array<{ id: string; label: string; delta: number }>;
+  founderReasons?: string[];
+  eligibilitySource?:
+    | "registry"
+    | "static"
+    | "founder_approved"
+    | "founder_selective"
+    | "ineligible";
 };
 
 export type SlotDiscoveryResult = {
@@ -619,6 +636,10 @@ export async function discoverForSlot(args: {
   budget?: BudgetMeter;
   /** v4.7 — slot-specific retailer priority order (overrides APPROVED_RETAILERS rotation). */
   retailerPriority?: string[];
+  /** v5.1 — Founder Learning context for per-candidate boost + penalty. */
+  founderContext?: FounderContext;
+  /** v5.1 — brand→eligibility source resolved at run start (registry|founder_*). */
+  eligibilityMap?: Map<string, SlotCandidate["eligibilitySource"]>;
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
@@ -650,6 +671,11 @@ export async function discoverForSlot(args: {
   const slotBrands = brands.filter((b) =>
     b.categories.some((c) => spec.brandCategories.includes(c)),
   );
+
+  // v5.1 — preload Founder Learning evaluator once for the whole slot loop.
+  const fcModule = args.founderContext
+    ? await import("./founder-context.server")
+    : null;
 
   let searchesIssued = 0;
   let rawResults = 0;
@@ -775,7 +801,28 @@ export async function discoverForSlot(args: {
             brandTier: brand.tier,
             affinity: brandAffinity,
           });
-          const score = Math.round((baseScore + verdict.constructionScore) * 1000) / 1000;
+          const baseEditorialScore =
+            Math.round((baseScore + verdict.constructionScore) * 1000) / 1000;
+          // v5.1 — Founder Learning is a top-weight scoring axis.
+          let fSig: FounderSignal | null = null;
+          if (fcModule && args.founderContext) {
+            fSig = fcModule.evaluateFounderSignal({
+              slot: spec.slot,
+              brand: brand.name,
+              title,
+              description,
+              palette,
+              silhouette,
+              context: args.founderContext,
+            });
+          }
+          const score =
+            Math.round(
+              (baseEditorialScore +
+                (fSig?.boost ?? 0) +
+                (fSig?.penalty ?? 0)) *
+                1000,
+            ) / 1000;
           // v4 — gate on approved commerce source before accepting.
           const cs = resolveCommerceSource(brand, matchedRetailer);
           if (!cs.approved) {
@@ -804,6 +851,14 @@ export async function discoverForSlot(args: {
             constructionScore: verdict.constructionScore,
             curationReason: verdict.reason,
             image,
+            baseEditorialScore,
+            founderBoost: fSig?.boost ?? 0,
+            founderPenalty: fSig?.penalty ?? 0,
+            founderMatchedRefIds: fSig?.matchedRefIds ?? [],
+            founderPenalties: fSig?.penaltiesApplied ?? [],
+            founderReasons: fSig?.reasons ?? [],
+            eligibilitySource:
+              args.eligibilityMap?.get(brand.slug) ?? "registry",
           });
         }
       }
@@ -1290,6 +1345,62 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       };
     }
 
+    // ── v5.1 — Founder Learning retrieval (additive eligibility layer).
+    //
+    // 1. Pull approved brand records, founder reference products, and
+    //    completed uploaded URLs scoped to this destination + activity.
+    // 2. Inject founder-approved brands the static registry doesn't yet
+    //    carry, when we can derive a category from the reference library.
+    // 3. Build an eligibility-source map so every candidate can report
+    //    why its brand was admitted (registry / founder_approved /
+    //    founder_selective).
+    const fcModule = await import("./founder-context.server");
+    let founderContext = await fcModule.loadFounderContext(destination, activity);
+    const eligibilityMap = new Map<string, SlotCandidate["eligibilitySource"]>();
+    for (const b of brands) eligibilityMap.set(b.slug, "registry");
+
+    const registrySlugs = new Set(brands.map((b) => b.slug));
+    const injectedFounderBrands: Array<{
+      name: string;
+      source: "founder_approved" | "founder_selective";
+    }> = [];
+    for (const rec of founderContext.brandRecords.values()) {
+      if (registrySlugs.has(rec.slug)) continue;
+      const cats = founderContext.brandCategoriesFromRefs.get(
+        fcModule.normBrand(rec.brand),
+      );
+      if (!cats || cats.length === 0) continue; // need a category to slot it
+      const elig = fcModule.brandEligibility({
+        brand: rec.brand,
+        staticEligible: false,
+        inRegistry: false,
+        context: founderContext,
+      });
+      if (!elig.eligible) continue;
+      brands.push({
+        name: rec.brand,
+        slug: rec.slug,
+        tier: null,
+        categories: cats,
+        commerceSources: [],
+        preferredCommerceSource: "affiliate_retailer",
+        editorialAffinity: {},
+      });
+      eligibilityMap.set(
+        rec.slug,
+        elig.source === "founder_approved"
+          ? "founder_approved"
+          : "founder_selective",
+      );
+      injectedFounderBrands.push({
+        name: rec.brand,
+        source:
+          elig.source === "founder_approved"
+            ? "founder_approved"
+            : "founder_selective",
+      });
+    }
+
     // ── Registry analytics: count Yacht Day brands per category and flag
     // underrepresented accessory categories before discovery runs.
     const registryByCategory: Record<string, number> = {};
@@ -1418,6 +1529,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         activity,
         seedCandidates,
         budget,
+        founderContext,
+        eligibilityMap,
       });
 
       // Tier-2 controlled accessory expansion.
@@ -1453,6 +1566,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           startingCount: r.candidates.length,
           destination,
           activity,
+          founderContext,
+          eligibilityMap,
         });
         const acceptedExpansion = exp.candidates.length;
         // Merge expansion candidates into the slot.
@@ -1665,6 +1780,11 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
     // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
     if (missingRequiredSlots.length > 0) {
+      const founderRetrievalGated = buildFounderRetrieval(
+        founderContext,
+        injectedFounderBrands,
+        candidatesById,
+      );
       const slotEffectivenessGated = buildSlotEffectiveness(slotResults, [], candidatesById);
       const gatedBudget = budget.report();
       const gatedHits = Object.values(cacheStatsPerSlot).reduce((s, v) => s + v.hits, 0);
@@ -1685,6 +1805,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         lookScores: [],
         discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
         slotCoverageStatus,
+        founderRetrieval: founderRetrievalGated,
         costReport: {
           discoveryMode: data.discoveryMode,
           discoveryModeLabel: DISCOVERY_MODE_LABEL[data.discoveryMode as DiscoveryMode],
@@ -2229,6 +2350,11 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       editorialDecisions,
       costReport,
       slotCoverageStatus,
+      founderRetrieval: buildFounderRetrieval(
+        founderContext,
+        injectedFounderBrands,
+        candidatesById,
+      ),
       looks: looks.map((l) => ({
         ...l,
         slots: l.slots.map((s) => {
@@ -2260,6 +2386,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
 function aggregateTelemetry(results: SlotDiscoveryResult[], totalCandidates: number) {
   let searches = 0;
+  // (founder helper below is a no-op placeholder anchor)
   let raw = 0;
   const allRej: Record<string, number> = {};
   let expansionSearches = 0;
@@ -2394,4 +2521,63 @@ function buildSlotEffectiveness(
       coverage: rating,
     };
   });
+}
+
+// ──────────────────────────────────────────────────────────────
+// v5.1 — Founder Learning diagnostics summary
+// ──────────────────────────────────────────────────────────────
+
+import type { FounderContext as _FC } from "./founder-context.server";
+
+function buildFounderRetrieval(
+  ctx: _FC,
+  injected: Array<{ name: string; source: "founder_approved" | "founder_selective" }>,
+  candidatesById: Map<string, SlotCandidate>,
+) {
+  const cands = [...candidatesById.values()];
+  const boosted = cands.filter((c) => (c.founderBoost ?? 0) > 0);
+  const penalized = cands.filter((c) => (c.founderPenalty ?? 0) < 0);
+  const refUsage = new Map<string, number>();
+  for (const c of cands) {
+    for (const id of c.founderMatchedRefIds ?? []) {
+      refUsage.set(id, (refUsage.get(id) ?? 0) + 1);
+    }
+  }
+  const topRefsUsed = [...refUsage.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([id, uses]) => {
+      const ref = ctx.references.find((r) => r.id === id);
+      return {
+        id,
+        uses,
+        brand: ref?.brand ?? null,
+        category: ref?.product_category ?? null,
+        print: ref?.print_language ?? null,
+      };
+    });
+  const eligibilityBreakdown: Record<string, number> = {};
+  for (const c of cands) {
+    const k = c.eligibilitySource ?? "registry";
+    eligibilityBreakdown[k] = (eligibilityBreakdown[k] ?? 0) + 1;
+  }
+  return {
+    counts: ctx.counts,
+    topFounderBrands: ctx.topBrands,
+    topFounderReferences: ctx.topReferences,
+    topReferencesUsed: topRefsUsed,
+    injectedBrands: injected,
+    candidatesBoosted: boosted.length,
+    candidatesPenalized: penalized.length,
+    eligibilityBreakdown,
+    negativeRuleHits: cands.reduce(
+      (acc, c) => {
+        for (const p of c.founderPenalties ?? []) {
+          acc[p.id] = (acc[p.id] ?? 0) + 1;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    ),
+  };
 }
