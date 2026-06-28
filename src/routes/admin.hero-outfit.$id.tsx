@@ -17,6 +17,8 @@ import {
   clearSlotCandidates,
   validateHeroOutfitForPublish,
   publishFounderLookFromOutfit,
+  regenerateSlotWithAI,
+  rejectSlotCandidate,
 } from "@/lib/hero-outfit.functions";
 import { slotsForMoment, profileForMoment } from "@/lib/hero-outfit-slots";
 
