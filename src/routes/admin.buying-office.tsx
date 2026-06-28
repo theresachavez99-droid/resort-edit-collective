@@ -1391,13 +1391,21 @@ function Pill({ label, value, tone }: { label: string; value: string; tone?: "ok
 }
 
 function ActionBtn({
-  label, onClick, tone,
-}: { label: string; onClick: () => void; tone?: "primary" }) {
+  label, onClick, tone, disabled, title,
+}: {
+  label: string;
+  onClick: () => void;
+  tone?: "primary";
+  disabled?: boolean;
+  title?: string;
+}) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
+      title={title}
       className={
-        "px-2 py-2 " +
+        "px-2 py-2 disabled:opacity-40 disabled:cursor-not-allowed " +
         (tone === "primary"
           ? "bg-ink text-ivory"
           : "border border-stone-300 hover:bg-stone-100")
