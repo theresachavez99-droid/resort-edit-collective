@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroAsset from "@/assets/about-hero-portofino-golden-harbor.png.asset.json";
 import { absoluteUrl } from "@/lib/site";
+import { EditorialHero } from "@/components/EditorialHero";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -24,19 +25,27 @@ export const Route = createFileRoute("/about")({
 function AboutPage() {
   return (
     <div>
-      <section className="relative h-[38vh] md:h-[50vh] min-h-[320px] max-h-[520px]">
-        <img
-          src={heroAsset.url}
-          alt="Golden-hour view overlooking Portofino harbor with a woman in a white dress and straw hat enjoying the Italian Riviera."
-          width={1920}
-          height={800}
-          fetchPriority="high"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover object-[78%_center] md:object-[center_center]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/15 via-transparent to-transparent" />
+      <EditorialHero
+        src={heroAsset.url}
+        alt="Golden-hour view overlooking Portofino harbor with a woman in a white dress and straw hat enjoying the Italian Riviera."
+        priority
+        // Subject (face + hat) sits in the upper-right of the source image. Each
+        // breakpoint shifts the focal point so the head, hat and harbor stay in frame.
+        focal={{
+          base: { x: 82, y: 28 },   // mobile — tight on the model
+          sm:   { x: 80, y: 28 },
+          md:   { x: 76, y: 30 },   // tablet — pull in a little more harbor
+          lg:   { x: 70, y: 32 },   // standard desktop — balanced composition
+          xl:   { x: 62, y: 34 },   // large desktop — full scene
+          "2xl":{ x: 56, y: 36 },
+        }}
+        heightClassName="h-[44vh] md:h-[56vh] lg:h-[62vh] min-h-[380px] max-h-[640px]"
+        overlay={
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/15 via-transparent to-transparent" />
+        }
+      >
         <h1 className="sr-only">About Resort Edit</h1>
-      </section>
+      </EditorialHero>
 
       <section className="mx-auto max-w-3xl px-6 py-16 md:py-20 text-center">
         <span className="eyebrow text-gold">Who We Are</span>
@@ -46,15 +55,24 @@ function AboutPage() {
         </p>
         <div className="my-12 h-px w-24 bg-gold mx-auto" />
         <p className="font-serif text-lg leading-relaxed text-ink/80">
-          Every edit begins with a place — then thoughtfully brings together where to stay, what to experience, and what to wear for every moment along the way.
+          Every Resort Edit begins with a destination — not a suitcase.
         </p>
         <p className="font-serif text-lg leading-relaxed text-ink/80 mt-6">
-          From yacht days and beach clubs to market mornings, harbor aperitivos, and dinners that linger long after sunset, we curate complete destination wardrobes designed to travel beautifully together.
+          We thoughtfully curate where to stay, what to experience, and what to wear, creating complete destination wardrobes inspired by the places themselves.
         </p>
         <p className="font-serif text-lg leading-relaxed text-ink/80 mt-6">
-          Because getting dressed should feel as memorable as the journey itself.
+          From first espresso to sunset aperitivo, every recommendation is chosen to help you travel beautifully and dress with intention.
         </p>
-        <p className="mt-8 eyebrow text-gold">Curated escapes. Dressed for the destination.</p>
+        <p className="font-serif italic text-base leading-relaxed text-ink/65 mt-10 max-w-2xl mx-auto">
+          Every destination is personally researched and curated using the same editorial process we would use when planning our own travels.
+        </p>
+        <p className="font-serif text-lg leading-relaxed text-ink/80 mt-10">
+          Because the best trips deserve an unforgettable wardrobe.
+        </p>
+        <div className="my-12 h-px w-16 bg-gold mx-auto" />
+        <p className="font-display italic text-xl md:text-2xl text-ink/80 tracking-wide">
+          Welcome to Resort Edit.
+        </p>
       </section>
     </div>
   );

@@ -241,3 +241,11 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
+
+/* Editorial hero: per-breakpoint object-position via focal-point CSS vars. */
+.editorial-hero__img { object-position: var(--focal-base); }
+@media (min-width: 640px)  { .editorial-hero__img { object-position: var(--focal-sm); } }
+@media (min-width: 768px)  { .editorial-hero__img { object-position: var(--focal-md); } }
+@media (min-width: 1024px) { .editorial-hero__img { object-position: var(--focal-lg); } }
+@media (min-width: 1280px) { .editorial-hero__img { object-position: var(--focal-xl); } }
+@media (min-width: 1536px) { .editorial-hero__img { object-position: var(--focal-2xl); } }
