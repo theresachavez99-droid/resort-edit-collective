@@ -134,7 +134,7 @@ const founderFavorites = FOUNDER_FAVORITE_SLUGS.map((slug) =>
 
 const FILTERS = [
   "All",
-  "Founder Favorites",
+  "Editor's Picks",
   "Mediterranean Icons",
   "Swim & Beach Club",
   "Resortwear & Kaftans",
@@ -247,7 +247,7 @@ function BrandsPage() {
   const searchResults = React.useMemo(() => {
     if (!isSearchActive) return [];
     return allBrands.filter((b) => {
-      if (filter === "Founder Favorites") {
+      if (filter === "Editor's Picks") {
         if (!FOUNDER_FAVORITE_SLUGS.includes(b.slug)) return false;
       } else if (filter !== "All") {
         if (b.category !== filter) return false;
@@ -291,17 +291,10 @@ function BrandsPage() {
           </div>
           <div className="md:col-span-7 space-y-4 font-serif text-lg text-ink/75 leading-relaxed">
             <p>
-              Every brand on Resort Edit is personally curated. Nothing is included because
-              it is trending or paid for placement.
+              Every brand featured on Resort Edit is evaluated through the same editorial lens. We look for exceptional craftsmanship, destination relevance, timeless design, and the ability to create wardrobes that feel both beautiful and effortless to travel with.
             </p>
             <p>
-              Selection is based on five quiet criteria: <em>destination relevance,
-              craftsmanship, quality, longevity,</em> and <em>editorial fit</em>.
-            </p>
-            <p>
-              These designers are chosen because they solve specific travel wardrobe
-              moments — the linen for the harbor lunch, the swim for the yacht, the sandal
-              that finishes everything else.
+              Some are globally recognized luxury houses. Others are remarkable discoveries. What they share is a place within the Resort Edit point of view.
             </p>
           </div>
         </div>
