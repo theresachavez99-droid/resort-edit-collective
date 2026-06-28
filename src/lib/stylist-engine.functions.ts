@@ -1154,6 +1154,7 @@ async function assembleLooks(
   specs: SlotSpec[],
   targetLookCount: number,
   archetypeAssignments: SwimArchetypeId[] = [],
+  lockedHeroBySlot: Map<string, SlotCandidate> = new Map(),
 ): Promise<AssembledLook[]> {
   const slotLines = specs
     .map(
@@ -1179,7 +1180,23 @@ async function assembleLooks(
     ? `Suggested editorial themes (use, rename, or invent your own): ${brief.collectionThemes.join(", ")}.`
     : "";
 
-  const requiredSlotNames = specs.filter((s) => s.required).map((s) => s.slot);
+  // v5.3 — required ONLY if (a) the spec marks it required AND (b) the
+  // candidate pool is non-empty. Slots with zero candidates are flagged
+  // as "refinement required" instead of disqualifying the entire look.
+  const slotPoolCounts = new Map(slotResults.map((r) => [r.slot, r.candidates.length]));
+  const requiredSlotNames = specs
+    .filter((s) => s.required && (slotPoolCounts.get(s.slot) ?? 0) > 0)
+    .map((s) => s.slot);
+  const unavailableRequiredSlots = specs
+    .filter((s) => s.required && (slotPoolCounts.get(s.slot) ?? 0) === 0)
+    .map((s) => s.slot);
+  const lockedSlots = [...lockedHeroBySlot.keys()];
+  const lockedLines = lockedSlots
+    .map((slot) => {
+      const c = lockedHeroBySlot.get(slot)!;
+      return `  - slot "${slot}" MUST use candidateId "${c.id}" (${c.brand} — ${c.title ?? "Founder Hero"}). Do not substitute.`;
+    })
+    .join("\n");
 
   // v4.2 — per-look archetype briefs steer Gemini to compose each look
   // around a distinct swim story and apply the cohesion recipe to the
@@ -1206,6 +1223,14 @@ Swim is the editorial anchor of every Yacht Day look. PICK THE SWIM PIECE FIRST,
 then style the rest of the outfit around it using the per-look cohesion recipe.
 Return strict JSON only. Never invent products or ids not in the pool.`;
 
+  const lockedBlock = lockedSlots.length
+    ? `\nFOUNDER HERO LOCKS — these are NON-NEGOTIABLE editorial decisions already made by the Founder. Use the exact candidateId for each locked slot in every look:\n${lockedLines}\n`
+    : "";
+
+  const unavailableBlock = unavailableRequiredSlots.length
+    ? `\nUNAVAILABLE SLOTS (no candidates were sourced — omit gracefully, do not invent): ${unavailableRequiredSlots.join(", ")}\n`
+    : "";
+
   const user = `EDITORIAL BRIEF
 Destination: ${brief.destination}
 Activity: ${brief.activity}
@@ -1214,7 +1239,7 @@ Palette: ${brief.palette.join(", ")}
 Style DNA: ${brief.styleDna.join(", ")}
 Notes: ${brief.notes}
 ${themes}
-
+${lockedBlock}${unavailableBlock}
 SWIM ARCHETYPE PLAN (one distinct archetype per look — do not duplicate)
 ${archetypeBriefs}
 
@@ -1282,6 +1307,7 @@ CRITICAL RULES
   const allIds = new Set<string>();
   for (const r of slotResults) r.candidates.forEach((c) => allIds.add(c.id));
   const requiredSet = new Set(requiredSlotNames);
+  const lockedSlotSet = new Set(lockedSlots);
 
   for (const item of looksRaw) {
     if (!item || typeof item !== "object") continue;
@@ -1301,6 +1327,29 @@ CRITICAL RULES
       usedIds.add(candidateId);
       filled.add(slot);
       slotRecs.push({ slot, candidateId, reasoning });
+    }
+    // v5.3 — Force-inject Founder Hero locks if Gemini omitted them or
+    // tried to substitute. Hero locks are exempt from the usedIds dedupe
+    // (the same locked piece appears in every generated look).
+    for (const lockedSlot of lockedSlotSet) {
+      if (filled.has(lockedSlot)) {
+        // Replace any substitution with the locked candidate.
+        const idx = slotRecs.findIndex((s) => s.slot === lockedSlot);
+        const locked = lockedHeroBySlot.get(lockedSlot)!;
+        slotRecs[idx] = {
+          slot: lockedSlot,
+          candidateId: locked.id,
+          reasoning: "Founder Hero — locked",
+        };
+      } else {
+        const locked = lockedHeroBySlot.get(lockedSlot)!;
+        slotRecs.unshift({
+          slot: lockedSlot,
+          candidateId: locked.id,
+          reasoning: "Founder Hero — locked",
+        });
+        filled.add(lockedSlot);
+      }
     }
     const missing = [...requiredSet].filter((s) => !filled.has(s));
     looks.push({
