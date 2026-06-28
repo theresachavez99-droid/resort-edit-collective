@@ -190,6 +190,7 @@ export function getPortofinoMomentDef(slug: string): PortofinoMomentDef | undefi
 export const PORTOFINO_MOMENT_SLUG_ALIASES: Record<string, string> = {
   "arrival-day": "arrival",
   "pool-lounging-shopping": "pool-lounging",
+  "beach-club-long-lunch": "beach-club",
   "market-morning": "espresso-morning",
 };
 
