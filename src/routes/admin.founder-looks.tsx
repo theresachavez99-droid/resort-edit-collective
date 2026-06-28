@@ -470,6 +470,45 @@ function BuilderTab({ pw, id }: { pw: string; id: string | null }) {
 /* Blind A/B validation harness                                        */
 /* ─────────────────────────────────────────────────────────────────── */
 
+type RunPayload = {
+  ok?: boolean;
+  error?: string;
+  gated?: boolean;
+  assemblyError?: string | null;
+  looks?: Array<{
+    title?: string;
+    subtitle?: string | null;
+    isHero?: boolean;
+    slots?: Array<{
+      slot?: string;
+      candidateId?: string;
+      brand?: string | null;
+      title?: string | null;
+      image?: string | null;
+      editorialScore?: number | null;
+    }>;
+  }>;
+  candidates?: Array<{
+    id?: string;
+    slot?: string;
+    brand?: string | null;
+    title?: string | null;
+    image?: string | null;
+    editorialScore?: number;
+    baseEditorialScore?: number;
+    founderSimilarity?: number;
+    founderBoost?: number;
+    founderPenalty?: number;
+    founderHits?: Array<{ id: string; label: string; severity: string; delta: number }>;
+    rankDeltaFromFounder?: number;
+    founderReasons?: string[];
+  }>;
+  founderRetrieval?: unknown;
+  heroLookApplied?: unknown;
+};
+
+type RunStatus = "idle" | "loading" | "done" | "error";
+
 function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
   const get = useServerFn(getFounderLook);
   const generate = useServerFn(generateYachtDayCollection);
@@ -480,21 +519,34 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
     enabled: !!id,
   });
 
-  const [runs, setRuns] = useState<{
-    A: unknown | null;
-    B: unknown | null;
-    revealed: boolean;
-    founderSide: "A" | "B" | null;
-  }>({ A: null, B: null, revealed: false, founderSide: null });
-  const [running, setRunning] = useState(false);
+  // sideOrder: which engine variant ("founder" | "baseline") sits in slot 1 vs slot 2.
+  // The slots are presented to the founder as anonymous "Outfit 1" / "Outfit 2".
+  const [sideOrder, setSideOrder] = useState<["founder" | "baseline", "founder" | "baseline"]>([
+    "founder",
+    "baseline",
+  ]);
+  const [slot1, setSlot1] = useState<{ status: RunStatus; run: RunPayload | null; err?: string }>({
+    status: "idle",
+    run: null,
+  });
+  const [slot2, setSlot2] = useState<{ status: RunStatus; run: RunPayload | null; err?: string }>({
+    status: "idle",
+    run: null,
+  });
+  const [revealed, setRevealed] = useState(false);
 
   const look = detail.data && "ok" in detail.data && detail.data.ok ? detail.data.look : null;
 
   async function runAB() {
     if (!look) return;
-    setRunning(true);
-    // Randomize which side gets Founder Learning.
-    const founderSide: "A" | "B" = Math.random() < 0.5 ? "A" : "B";
+    setRevealed(false);
+    // Randomize which slot gets Founder Learning.
+    const order: ["founder" | "baseline", "founder" | "baseline"] =
+      Math.random() < 0.5 ? ["founder", "baseline"] : ["baseline", "founder"];
+    setSideOrder(order);
+    setSlot1({ status: "loading", run: null });
+    setSlot2({ status: "loading", run: null });
+
     const base = {
       password: pw,
       destination: look.destination,
@@ -504,144 +556,352 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
       discoveryMode: "fast" as const,
       enableCache: true,
     };
-    try {
-      const [a, b] = await Promise.all([
-        generate({
+    const buildPayload = (variant: "founder" | "baseline", label: "A" | "B") => ({
+      ...base,
+      activity: look.moment,
+      founderLearning: variant === "founder",
+      founderLookId: variant === "founder" ? look.id : null,
+      validationLabel: label,
+    });
+
+    const runOne = async (
+      variant: "founder" | "baseline",
+      label: "A" | "B",
+      setter: typeof setSlot1,
+    ) => {
+      try {
+        const r = (await generate({ data: buildPayload(variant, label) as never })) as RunPayload;
+        setter({ status: "done", run: r });
+        return r;
+      } catch (e) {
+        const msg = String((e as Error)?.message ?? e);
+        setter({ status: "error", run: null, err: msg });
+        return null;
+      }
+    };
+
+    const [a, b] = await Promise.all([
+      runOne(order[0], "A", setSlot1),
+      runOne(order[1], "B", setSlot2),
+    ]);
+
+    if (a && b) {
+      try {
+        await record({
           data: {
-            ...base,
-            activity: look.moment,
-            founderLearning: founderSide === "A",
-            founderLookId: founderSide === "A" ? look.id : null,
-            validationLabel: "A",
-          } as never,
-        }),
-        generate({
-          data: {
-            ...base,
-            activity: look.moment,
-            founderLearning: founderSide === "B",
-            founderLookId: founderSide === "B" ? look.id : null,
-            validationLabel: "B",
-          } as never,
-        }),
-      ]);
-      setRuns({ A: a, B: b, revealed: false, founderSide });
-      // Persist for audit.
-      await record({
-        data: {
-          password: pw,
-          founder_look_id: look.id,
-          destination: look.destination,
-          moment: look.moment,
-          run_a: a,
-          run_b: b,
-          founder_side: founderSide,
-        },
-      });
-    } finally {
-      setRunning(false);
+            password: pw,
+            founder_look_id: look.id,
+            destination: look.destination,
+            moment: look.moment,
+            run_a: a as unknown,
+            run_b: b as unknown,
+            founder_side: order[0] === "founder" ? "A" : "B",
+          },
+        });
+      } catch {
+        /* audit-only; ignore */
+      }
     }
   }
 
   if (!look) return <div className="text-sm text-neutral-500">Select a Founder Look first.</div>;
 
+  const bothDone = slot1.status === "done" && slot2.status === "done";
+  const anyRunning = slot1.status === "loading" || slot2.status === "loading";
+
   return (
     <div>
       <div className="mb-4 text-sm">
-        Blind A/B for <span className="font-medium">{look.title}</span> ({look.destination} · {look.moment}).
+        Blind A/B for <span className="font-medium">{look.title}</span> · {look.destination} ·{" "}
+        {look.moment}
       </div>
       <button
         onClick={runAB}
-        disabled={running}
-        className="bg-black text-white px-4 py-2 text-sm mb-6"
+        disabled={anyRunning}
+        className="bg-black text-white px-4 py-2 text-sm mb-6 disabled:opacity-50"
       >
-        {running ? "Running both sides…" : "Run blind A/B"}
+        {anyRunning ? "Generating both outfits…" : "Run blind A/B"}
       </button>
+
       <div className="grid grid-cols-2 gap-6">
-        <Side label="A" run={runs.A} revealed={runs.revealed} founderSide={runs.founderSide} />
-        <Side label="B" run={runs.B} revealed={runs.revealed} founderSide={runs.founderSide} />
+        <OutfitPanel
+          slotLabel="Outfit 1"
+          status={slot1.status}
+          run={slot1.run}
+          err={slot1.err}
+          revealed={revealed}
+          variant={sideOrder[0]}
+        />
+        <OutfitPanel
+          slotLabel="Outfit 2"
+          status={slot2.status}
+          run={slot2.run}
+          err={slot2.err}
+          revealed={revealed}
+          variant={sideOrder[1]}
+        />
       </div>
-      {Boolean(runs.A) && Boolean(runs.B) && !runs.revealed && (
-        <button
-          onClick={() => setRuns({ ...runs, revealed: true })}
-          className="mt-6 border border-black px-4 py-2 text-sm"
-        >
-          Reveal which side used Founder Learning
-        </button>
+
+      {bothDone && !revealed && (
+        <div className="mt-8 border-t pt-6">
+          <div className="text-sm text-neutral-600 mb-3">
+            Choose the outfit that feels more <em>Resort Edit</em>, then reveal.
+          </div>
+          <button
+            onClick={() => setRevealed(true)}
+            className="bg-black text-white px-4 py-2 text-sm"
+          >
+            Reveal
+          </button>
+        </div>
+      )}
+
+      {bothDone && revealed && (
+        <div className="mt-8 grid grid-cols-2 gap-6">
+          <DiagnosticsPanel
+            slotLabel="Outfit 1"
+            variant={sideOrder[0]}
+            run={slot1.run!}
+          />
+          <DiagnosticsPanel
+            slotLabel="Outfit 2"
+            variant={sideOrder[1]}
+            run={slot2.run!}
+          />
+        </div>
       )}
     </div>
   );
 }
 
-function Side({
-  label,
+function OutfitPanel({
+  slotLabel,
+  status,
   run,
+  err,
   revealed,
-  founderSide,
+  variant,
 }: {
-  label: "A" | "B";
-  run: unknown;
+  slotLabel: string;
+  status: RunStatus;
+  run: RunPayload | null;
+  err?: string;
   revealed: boolean;
-  founderSide: "A" | "B" | null;
+  variant: "founder" | "baseline";
 }) {
-  if (!run) return <div className="border p-6 text-sm text-neutral-400">—</div>;
-  const r = run as {
-    ok?: boolean;
-    looks?: Array<{
-      title?: string;
-      slots?: Array<{ slot?: string; brand?: string; product_name?: string; image_url?: string | null }>;
-    }>;
-    candidates?: Array<{
-      slot?: string;
-      brand?: string;
-      title?: string | null;
-      image?: string | null;
-      editorialScore?: number;
-      founderSimilarity?: number;
-      founderHits?: Array<{ id: string; label: string; severity: string; delta: number }>;
-      rankDeltaFromFounder?: number;
-      founderReasons?: string[];
-    }>;
-  };
-  const top = (r.candidates ?? []).slice(0, 24);
-  const isFounder = revealed && founderSide === label;
+  const isFounder = variant === "founder";
+  const headerSuffix = revealed ? (
+    <span className={`ml-2 text-[11px] ${isFounder ? "text-green-700" : "text-neutral-400"}`}>
+      {isFounder ? "★ Founder Learning ON" : "baseline"}
+    </span>
+  ) : null;
+
   return (
-    <div className={`border p-4 ${revealed && isFounder ? "border-green-600" : ""}`}>
-      <div className="text-sm uppercase tracking-wider mb-3">
-        Side {label}
-        {revealed && (
-          <span className={`ml-2 text-xs ${isFounder ? "text-green-700" : "text-neutral-400"}`}>
-            {isFounder ? "★ Founder Learning ON" : "baseline"}
-          </span>
-        )}
+    <div
+      className={`border p-4 ${revealed && isFounder ? "border-green-600" : "border-neutral-200"}`}
+    >
+      <div className="text-sm uppercase tracking-wider mb-4">
+        {slotLabel}
+        {headerSuffix}
       </div>
-      <div className="grid grid-cols-2 gap-3">
-        {top.map((c, i) => (
-          <div key={i} className="text-[11px]">
-            {c.image ? (
-              <img src={c.image} alt="" className="w-full aspect-[3/4] object-cover bg-neutral-100" />
-            ) : (
-              <div className="w-full aspect-[3/4] bg-neutral-100" />
-            )}
-            <div className="mt-1 text-neutral-700">{c.brand}</div>
-            <div className="text-neutral-400 line-clamp-1">{c.title ?? ""}</div>
-            <div className="flex justify-between text-neutral-400">
-              <span>{c.slot}</span>
-              <span>{(c.editorialScore ?? 0).toFixed(1)}</span>
-            </div>
-            {revealed && c.founderSimilarity != null && (
-              <div className="text-[10px] text-neutral-500">
-                sim {c.founderSimilarity.toFixed(2)} · Δ{c.rankDeltaFromFounder ?? 0}
-                {c.founderHits?.length ? (
-                  <span className="ml-1 text-red-500">
-                    [{c.founderHits.map((h) => h.id).join(",")}]
-                  </span>
-                ) : null}
-              </div>
-            )}
-          </div>
+
+      {status === "idle" && (
+        <div className="text-xs text-neutral-400">Click “Run blind A/B” to generate.</div>
+      )}
+
+      {status === "loading" && <LoadingState />}
+
+      {status === "error" && (
+        <div className="text-xs text-red-600 whitespace-pre-wrap">{err ?? "Generation failed."}</div>
+      )}
+
+      {status === "done" && run && (
+        <OutfitBody run={run} revealed={revealed} />
+      )}
+    </div>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="space-y-3">
+      <div className="text-xs text-neutral-500 animate-pulse">Generating outfit…</div>
+      <div className="grid grid-cols-3 gap-2">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <div key={i} className="aspect-[3/4] bg-neutral-100 animate-pulse" />
         ))}
       </div>
+    </div>
+  );
+}
+
+const SLOT_ORDER = [
+  "swim",
+  "coverup",
+  "cover-up",
+  "dress",
+  "top",
+  "bottom",
+  "shoes",
+  "bag",
+  "sunglasses",
+  "earrings",
+  "necklace",
+  "bracelet",
+  "ring",
+  "hat",
+];
+
+function pickHeroLook(run: RunPayload) {
+  const looks = run.looks ?? [];
+  if (!looks.length) return null;
+  return looks.find((l) => l.isHero) ?? looks[0];
+}
+
+function orderSlots(slots: NonNullable<NonNullable<RunPayload["looks"]>[number]["slots"]>) {
+  return [...slots].sort((a, b) => {
+    const ai = SLOT_ORDER.indexOf((a.slot ?? "").toLowerCase());
+    const bi = SLOT_ORDER.indexOf((b.slot ?? "").toLowerCase());
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+}
+
+function OutfitBody({ run, revealed }: { run: RunPayload; revealed: boolean }) {
+  if (run.ok === false) {
+    return <div className="text-xs text-red-600">{run.error ?? "Engine returned no result."}</div>;
+  }
+  const hero = pickHeroLook(run);
+  if (!hero || !hero.slots?.length) {
+    return (
+      <div className="text-xs text-amber-700">
+        Engine returned no assembled outfit
+        {run.assemblyError ? <>: {run.assemblyError}</> : null}.
+        {(run.candidates?.length ?? 0) > 0 && (
+          <div className="mt-2 text-neutral-500">
+            {run.candidates!.length} candidates discovered but assembly was gated.
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const slots = orderSlots(hero.slots);
+  const candById = new Map((run.candidates ?? []).map((c) => [c.id, c]));
+
+  return (
+    <div>
+      {hero.title && (
+        <div className="mb-3 text-xs italic text-neutral-500">{hero.title}</div>
+      )}
+      <div className="grid grid-cols-3 gap-3">
+        {slots.map((s, i) => {
+          const cand = s.candidateId ? candById.get(s.candidateId) : undefined;
+          return (
+            <div key={i} className="text-[11px]">
+              {s.image ? (
+                <img
+                  src={s.image}
+                  alt={s.title ?? ""}
+                  className="w-full aspect-[3/4] object-cover bg-neutral-100"
+                />
+              ) : (
+                <div className="w-full aspect-[3/4] bg-neutral-100 flex items-center justify-center text-[10px] text-neutral-400">
+                  no image
+                </div>
+              )}
+              <div className="mt-1 text-neutral-400 uppercase tracking-wider text-[10px]">
+                {s.slot}
+              </div>
+              <div className="text-neutral-800">{s.brand}</div>
+              <div className="text-neutral-500 line-clamp-2">{s.title ?? ""}</div>
+              {revealed && (
+                <div className="mt-1 text-[10px] text-neutral-500">
+                  score {(s.editorialScore ?? 0).toFixed(1)}
+                  {cand?.founderSimilarity != null && (
+                    <> · sim {cand.founderSimilarity.toFixed(2)}</>
+                  )}
+                  {typeof cand?.rankDeltaFromFounder === "number" &&
+                    cand.rankDeltaFromFounder !== 0 && (
+                      <> · Δ{cand.rankDeltaFromFounder}</>
+                    )}
+                  {cand?.founderHits?.length ? (
+                    <div className="text-red-500">
+                      {cand.founderHits.map((h) => h.id).join(", ")}
+                    </div>
+                  ) : null}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function DiagnosticsPanel({
+  slotLabel,
+  variant,
+  run,
+}: {
+  slotLabel: string;
+  variant: "founder" | "baseline";
+  run: RunPayload;
+}) {
+  const hero = pickHeroLook(run);
+  const slots = hero ? orderSlots(hero.slots ?? []) : [];
+  const candById = new Map((run.candidates ?? []).map((c) => [c.id, c]));
+  const heroSlotCands = slots
+    .map((s) => (s.candidateId ? candById.get(s.candidateId) : undefined))
+    .filter((c): c is NonNullable<typeof c> => !!c);
+
+  const avgSim =
+    heroSlotCands.length && variant === "founder"
+      ? heroSlotCands.reduce((a, c) => a + (c.founderSimilarity ?? 0), 0) / heroSlotCands.length
+      : null;
+  const boosts = heroSlotCands.filter((c) => (c.founderBoost ?? 0) > 0).length;
+  const penalties = heroSlotCands.filter((c) => (c.founderPenalty ?? 0) > 0).length;
+  const rankShifts = heroSlotCands.filter(
+    (c) => typeof c.rankDeltaFromFounder === "number" && c.rankDeltaFromFounder !== 0,
+  );
+  const hardHits = heroSlotCands.flatMap((c) =>
+    (c.founderHits ?? []).filter((h) => h.severity === "hard"),
+  );
+
+  return (
+    <div className="border border-neutral-200 p-4 text-xs">
+      <div className="uppercase tracking-wider mb-3">
+        {slotLabel} · {variant === "founder" ? "Founder Learning ON" : "Baseline"}
+      </div>
+      {variant === "founder" ? (
+        <ul className="space-y-1 text-neutral-700">
+          <li>Avg hero similarity: <b>{avgSim != null ? avgSim.toFixed(2) : "—"}</b></li>
+          <li>Slots boosted: <b>{boosts}</b></li>
+          <li>Slots penalized: <b>{penalties}</b></li>
+          <li>Ranking shifts in hero: <b>{rankShifts.length}</b></li>
+          <li>Hard excludes triggered: <b>{hardHits.length}</b></li>
+        </ul>
+      ) : (
+        <div className="text-neutral-500">
+          Editorial baseline — no Founder Learning signal applied.
+        </div>
+      )}
+      {variant === "founder" && rankShifts.length > 0 && (
+        <div className="mt-3">
+          <div className="text-neutral-500 uppercase tracking-wider mb-1">Why these won</div>
+          <ul className="space-y-1">
+            {rankShifts.slice(0, 6).map((c) => (
+              <li key={c.id} className="text-neutral-700">
+                <b>{c.slot}</b> · {c.brand} — moved {c.rankDeltaFromFounder! < 0 ? "up" : "down"}{" "}
+                {Math.abs(c.rankDeltaFromFounder!)} ranks
+                {c.founderReasons?.length ? (
+                  <span className="text-neutral-500"> ({c.founderReasons.join(", ")})</span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
