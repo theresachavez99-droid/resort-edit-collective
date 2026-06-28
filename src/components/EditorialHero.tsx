@@ -22,19 +22,12 @@ export type ResponsiveFocal = {
   "2xl"?: FocalPoint;
 };
 
-export type ResponsiveHeight = {
-  base: string;
-  md?: string;
-  lg?: string;
-  min?: string;
-  max?: string;
-};
-
 type Props = {
   src: string;
   alt: string;
   focal: ResponsiveFocal;
-  height?: ResponsiveHeight;
+  /** Tailwind height classes, e.g. "h-[42vh] md:h-[55vh] lg:h-[60vh] min-h-[360px] max-h-[640px]" */
+  heightClassName?: string;
   width?: number;
   imgHeight?: number;
   priority?: boolean;
@@ -61,7 +54,7 @@ export function EditorialHero({
   src,
   alt,
   focal,
-  height,
+  heightClassName = "h-[42vh] md:h-[55vh] lg:h-[60vh] min-h-[360px] max-h-[640px]",
   width = 1920,
   imgHeight = 800,
   priority,
@@ -81,20 +74,10 @@ export function EditorialHero({
       pos(focal["2xl"]) ?? pos(focal.xl) ?? pos(focal.lg) ?? pos(focal.md) ?? pos(focal.sm) ?? pos(focal.base)!,
   } as React.CSSProperties;
 
-  const h = height ?? { base: "42vh", md: "55vh", min: "360px", max: "600px" };
-  const sectionStyle = {
-    ...style,
-    height: h.base,
-    minHeight: h.min,
-    maxHeight: h.max,
-  } as React.CSSProperties;
-
   return (
     <section
-      className={"relative editorial-hero " + (className ?? "")}
-      style={sectionStyle}
-      data-md-h={h.md}
-      data-lg-h={h.lg}
+      className={"relative editorial-hero " + heightClassName + " " + (className ?? "")}
+      style={style}
     >
       <img
         src={src}
