@@ -564,41 +564,62 @@ function DuplicateReport({
   report,
 }: {
   report: {
-    exactMatches: Array<{ url: string; brand: string; productName: string | null; usageCount: number; destinations: string[] }>;
-    similarMatches: Array<{ url: string; brand: string; productName: string | null; reason: string }>;
-    brandConcentration: Array<{ brand: string; share: number; uses: number }>;
-    colorConcentration: Array<{ color: string; share: number; uses: number }>;
-    summary: string;
+    destination: string;
+    totalDestinationUses: number;
+    brandConcentration: Array<{ key: string; uses: number; share: number }>;
+    colorConcentration: Array<{ key: string; uses: number; share: number }>;
+    heroFindings: Array<{
+      url: string;
+      brand: string;
+      exact_reuse_count: number;
+      destination_reuse_count: number;
+      brand_uses_in_destination: number;
+      brand_share_in_destination: number;
+      signature_piece: boolean;
+      severity: "fresh" | "soft" | "moderate" | "strong";
+      similar_products: Array<{ url: string; brand: string; product_name: string | null }>;
+    }>;
   };
 }) {
+  const exact = report.heroFindings.filter((h) => h.exact_reuse_count > 0);
+  const similar = report.heroFindings.filter(
+    (h) => h.exact_reuse_count === 0 && h.similar_products.length > 0,
+  );
   return (
     <div className="mt-4 border border-stone-300 p-3 text-xs space-y-3">
       <div className="text-[10px] tracking-[0.24em] uppercase text-stone-500">
         Editorial Memory · Duplicate Analysis
       </div>
-      <p className="text-stone-700">{report.summary}</p>
-      {report.exactMatches.length > 0 && (
+      <p className="text-stone-700">
+        {report.destination} · {report.totalDestinationUses} prior product uses in memory.
+      </p>
+      {exact.length > 0 && (
         <div>
           <div className="font-medium text-red-700 mb-1">
-            Exact duplicates ({report.exactMatches.length})
+            Exact duplicates ({exact.length})
           </div>
           <ul className="space-y-0.5">
-            {report.exactMatches.map((m) => (
+            {exact.map((m) => (
               <li key={m.url}>
-                · {m.brand} — {m.productName ?? m.url} <span className="text-stone-500">({m.usageCount}× in {m.destinations.join(", ")})</span>
+                · {m.brand} — {m.url} <span className="text-stone-500">
+                  ({m.exact_reuse_count}× before · severity {m.severity}
+                  {m.signature_piece ? " · ★ signature" : ""})
+                </span>
               </li>
             ))}
           </ul>
         </div>
       )}
-      {report.similarMatches.length > 0 && (
+      {similar.length > 0 && (
         <div>
           <div className="font-medium text-amber-700 mb-1">
-            Near-identical ({report.similarMatches.length})
+            Near-identical ({similar.length})
           </div>
           <ul className="space-y-0.5">
-            {report.similarMatches.map((m) => (
-              <li key={m.url}>· {m.brand} — {m.productName ?? "—"} <span className="text-stone-500">({m.reason})</span></li>
+            {similar.map((m) => (
+              <li key={m.url}>
+                · {m.brand} — {m.similar_products.length} similar in memory
+              </li>
             ))}
           </ul>
         </div>
@@ -608,8 +629,8 @@ function DuplicateReport({
           <div className="font-medium mb-1">Brand share (destination)</div>
           <ul className="space-y-0.5">
             {report.brandConcentration.slice(0, 5).map((b) => (
-              <li key={b.brand}>
-                · {b.brand} — {(b.share * 100).toFixed(0)}% ({b.uses}×)
+              <li key={b.key}>
+                · {b.key} — {(b.share * 100).toFixed(0)}% ({b.uses}×)
               </li>
             ))}
           </ul>
@@ -620,7 +641,7 @@ function DuplicateReport({
           <div className="font-medium mb-1">Color share</div>
           <ul className="space-y-0.5">
             {report.colorConcentration.slice(0, 5).map((c) => (
-              <li key={c.color}>· {c.color} — {(c.share * 100).toFixed(0)}%</li>
+              <li key={c.key}>· {c.key} — {(c.share * 100).toFixed(0)}%</li>
             ))}
           </ul>
         </div>
