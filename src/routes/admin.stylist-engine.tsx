@@ -204,6 +204,7 @@ function StylistEnginePage() {
         <>
           <CostReport result={result} />
           <RegistryCoverage result={result} />
+          <FounderRetrievalReport result={result} />
           <SlotCoverage result={result} />
           <ExpansionReport result={result} />
           {result.gated ? (
