@@ -550,7 +550,7 @@ function BuilderTab({ pw, id }: { pw: string; id: string | null }) {
           </div>
         )}
         {dupM.data && "ok" in dupM.data && dupM.data.ok && (
-          <DuplicateReport report={dupM.data} />
+          <DuplicateReport report={dupM.data.report} />
         )}
         {dupM.data && "ok" in dupM.data && !dupM.data.ok && (
           <div className="text-xs text-red-600">{dupM.data.error}</div>
@@ -564,7 +564,6 @@ function DuplicateReport({
   report,
 }: {
   report: {
-    ok: true;
     exactMatches: Array<{ url: string; brand: string; productName: string | null; usageCount: number; destinations: string[] }>;
     similarMatches: Array<{ url: string; brand: string; productName: string | null; reason: string }>;
     brandConcentration: Array<{ brand: string; share: number; uses: number }>;
