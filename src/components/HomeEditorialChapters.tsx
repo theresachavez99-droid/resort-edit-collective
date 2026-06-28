@@ -13,7 +13,7 @@ type Chapter = {
 };
 
 /**
- * Four editorial chapters that organize Portofino's nine moments into
+ * Four editorial chapters that organize Portofino's twelve moments into
  * the rhythm of a single day on the Riviera. Order within each chapter
  * matches `editorial_order` on the moment defs.
  */
