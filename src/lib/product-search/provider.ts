@@ -22,16 +22,21 @@ export type SearchStrategy =
 
 export type SearchDepth = "quick" | "standard" | "deep_buy";
 
-export interface HeroCategoryGroup {
-  /** Primary anchor category, e.g. "tailored_coordinated_short_set". */
-  primary: string;
-  /** Adjacent editorially-equivalent categories searched in parallel. */
-  adjacent: string[];
+/**
+ * Editorial Category Set — the primary search driver. Replaces single
+ * "Hero Category". Generated from the locked Founder Hero Brief +
+ * MOMENT_CATEGORY_SETS. Garment categories are retrieval strategies,
+ * not editorial constraints.
+ */
+export interface EditorialCategorySetInput {
+  moment: string;
+  primary: string[];
+  secondary: string[];
 }
 
 export interface ProductSearchInput {
   sessionId: string;
-  heroCategory: HeroCategoryGroup;
+  categorySet: EditorialCategorySetInput;
   retailers: ApprovedRetailer[];
   strategy: SearchStrategy;
   depth: SearchDepth;
@@ -49,7 +54,8 @@ export interface NormalizedCandidate {
   price: number | null;
   currency: string | null;
   image_url: string | null;
-  category_match: string; // which group entry surfaced it
+  category_match: string; // which editorial category surfaced it
+  category_tier: "primary" | "secondary"; // tier within the Moment's set
   raw: Record<string, unknown>;
 }
 
