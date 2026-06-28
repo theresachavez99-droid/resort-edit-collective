@@ -12,10 +12,11 @@ export type MomentKey =
   | "arrival"
   | "espresso-morning"
   | "yacht-day"
-  | "beach-club"
+  | "beach-club-long-lunch"
   | "pool-lounging"
   | "exploring-the-harbor"
   | "harbor-aperitivo"
+  | "sunset-views"
   | "riviera-dinner";
 
 export interface EditorialCategorySet {
@@ -53,8 +54,8 @@ export const MOMENT_CATEGORY_SETS: Record<MomentKey, EditorialCategorySet> = {
     primary: ["elevated_matching_set", "tailored_linen_set"],
     secondary: ["luxury_shirt_dress", "modern_daywear_set"],
   },
-  "beach-club": {
-    moment: "beach-club",
+  "beach-club-long-lunch": {
+    moment: "beach-club-long-lunch",
     primary: ["elevated_matching_set"],
     secondary: ["luxury_shirt_dress", "modern_daywear_set"],
   },
@@ -70,6 +71,11 @@ export const MOMENT_CATEGORY_SETS: Record<MomentKey, EditorialCategorySet> = {
   },
   "harbor-aperitivo": {
     moment: "harbor-aperitivo",
+    primary: ["structured_day_dress", "elevated_matching_set"],
+    secondary: ["luxury_shirt_dress", "modern_daywear_set"],
+  },
+  "sunset-views": {
+    moment: "sunset-views",
     primary: ["structured_day_dress", "elevated_matching_set"],
     secondary: ["luxury_shirt_dress", "modern_daywear_set"],
   },
