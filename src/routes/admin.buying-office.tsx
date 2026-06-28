@@ -1627,11 +1627,19 @@ function FinalistsPanel({
 function HeroCelebration({
   hero, onAnother, onExit,
 }: { hero: any; onAnother: () => void; onExit: () => void }) {
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      document.getElementById("hero-celebration")?.scrollIntoView({
+        behavior: "smooth", block: "start",
+      });
+    });
+  }, []);
   return (
-    <section className="border-2 border-ink p-8 bg-stone-50/60 space-y-5 text-center">
+    <section id="hero-celebration" className="border-2 border-ink p-8 bg-stone-50/60 space-y-5 text-center scroll-mt-10">
       <p className="text-[0.65rem] tracking-[0.4em] uppercase text-ink">
         ✓ Founder Hero Created
       </p>
+      <p className="text-xs text-stone-600">Buying Review Complete</p>
       <h3 className="font-serif text-3xl">
         {hero.brand} — {hero.product_name}
       </h3>
@@ -1643,22 +1651,27 @@ function HeroCelebration({
       {hero.notes && (
         <p className="text-sm text-stone-600 max-w-md mx-auto italic">"{hero.notes}"</p>
       )}
+      <p className="text-[0.6rem] tracking-[0.3em] uppercase text-stone-500 pt-2">
+        Next Actions
+      </p>
       <div className="flex flex-wrap justify-center gap-3 pt-2">
-        <Link
-          to="/admin/buying-office"
+        <button
+          onClick={onAnother}
           className="bg-ink text-ivory px-6 py-3 text-[0.7rem] tracking-[0.3em] uppercase"
-          onClick={(e) => { e.preventDefault(); onAnother(); }}
         >
-          Create Another Buying Review
-        </Link>
+          Begin Accessory Sourcing
+        </button>
         <button
           onClick={onAnother}
           className="border border-ink px-6 py-3 text-[0.7rem] tracking-[0.3em] uppercase"
         >
-          Begin Accessory Sourcing
+          Create Another Buying Review
         </button>
+        <Link to="/admin/editorial-memory" className="border border-stone-300 px-6 py-3 text-[0.7rem] tracking-[0.3em] uppercase">
+          Review Collection Progress
+        </Link>
         <Link to="/admin" className="border border-stone-300 px-6 py-3 text-[0.7rem] tracking-[0.3em] uppercase">
-          Return to Dashboard
+          Return to Founder Dashboard
         </Link>
       </div>
       <p className="text-[0.65rem] text-stone-500 pt-2">
