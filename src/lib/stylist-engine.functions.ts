@@ -2678,7 +2678,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         candidatesById,
       ),
       /** v5.2 — active HeroLook used for blended similarity, if any. */
-      heroLookApplied: heroLook
+      heroLookApplied: data.founderLearning && heroLook
         ? {
             id: heroLook.id,
             slug: heroLook.slug,
