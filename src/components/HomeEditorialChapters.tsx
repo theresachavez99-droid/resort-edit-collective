@@ -8,6 +8,7 @@ import type { PortofinoMomentCard as PortofinoMomentCardData } from "@/lib/porto
 type Chapter = {
   key: string;
   title: string;
+  subtitle: string;
   blurb: string;
   slugs: string[];
 };
@@ -21,24 +22,28 @@ const CHAPTERS: Chapter[] = [
   {
     key: "arrival",
     title: "Arrival",
+    subtitle: "Your First Moments",
     blurb: "Ease into la dolce vita.",
     slugs: ["arrival", "espresso-morning", "exploring-the-harbor"],
   },
   {
     key: "by-the-water",
     title: "By the Water",
+    subtitle: "Life by the Sea",
     blurb: "Sun, sea, and effortless Mediterranean glamour.",
     slugs: ["yacht-day", "beach-club", "pool-lounging"],
   },
   {
     key: "around-town",
     title: "Around Town",
+    subtitle: "The Heart of Portofino",
     blurb: "Slow afternoons exploring Portofino's boutiques, cafés, and harbor.",
     slugs: ["shopping", "long-lunch", "harbor-aperitivo"],
   },
   {
     key: "evening",
     title: "Evening",
+    subtitle: "Golden Hour & After Dark",
     blurb: "Golden light gives way to unforgettable nights.",
     slugs: ["sunset-views", "riviera-dinner", "nightcap"],
   },
@@ -70,6 +75,9 @@ export function HomeEditorialChapters() {
                 >
                   {ch.title}
                 </h3>
+                <p className="mt-1 eyebrow text-[0.62rem] tracking-[0.3em] text-ink/55 uppercase">
+                  {ch.subtitle}
+                </p>
                 <p className="mt-2 font-serif italic text-[1rem] text-ink/65 leading-snug max-w-[22ch]">
                   {ch.blurb}
                 </p>
