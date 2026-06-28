@@ -387,23 +387,41 @@ export const updateBuyingSession = createServerFn({ method: "POST" })
         notes: z.string().max(2000).nullable().optional(),
         depth: z.string().max(80).nullable().optional(),
         benchmark: z.string().max(400).nullable().optional(),
+        editorial_story: z.string().max(1200).nullable().optional(),
+        moment_energy: z.string().max(400).nullable().optional(),
+        color_direction: z.string().max(400).nullable().optional(),
+        exclusions: z.string().max(800).nullable().optional(),
+        brief_locked: z.boolean().optional(),
+        wizard_stage: z.enum(["setup", "brief", "import", "review"]).optional(),
+        hero_celebration_seen: z.boolean().optional(),
       }),
     }).parse(input),
   )
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const db = await admin();
-    const { depth, benchmark, ...direct } = data.patch;
+    const {
+      depth, benchmark,
+      editorial_story, moment_energy, color_direction, exclusions,
+      brief_locked, wizard_stage, hero_celebration_seen,
+      ...direct
+    } = data.patch;
     const patch: Record<string, unknown> = { ...direct };
-    if (depth !== undefined || benchmark !== undefined) {
+    const diagKeys = {
+      depth, benchmark, editorial_story, moment_energy, color_direction,
+      exclusions, brief_locked, wizard_stage, hero_celebration_seen,
+    };
+    const hasDiag = Object.values(diagKeys).some((v) => v !== undefined);
+    if (hasDiag) {
       const cur = await db
         .from("buying_search_sessions")
         .select("source_diagnostics")
         .eq("id", data.id)
         .single();
       const diag = (cur.data?.source_diagnostics ?? {}) as Record<string, unknown>;
-      if (depth !== undefined) diag.depth = depth;
-      if (benchmark !== undefined) diag.benchmark = benchmark;
+      for (const [k, v] of Object.entries(diagKeys)) {
+        if (v !== undefined) diag[k] = v;
+      }
       patch.source_diagnostics = diag as never;
     }
     const r = await db
