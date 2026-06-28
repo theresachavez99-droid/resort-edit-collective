@@ -2895,6 +2895,9 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         injectedFounderBrands,
         candidatesById,
       ),
+      /** v5.3 — Founder Hero lock diagnostics. */
+      heroPiecesLocked: heroPiecesLockedReport,
+      slotsRequiringRefinement,
       /** v5.2 — active HeroLook used for blended similarity, if any. */
       heroLookApplied: data.founderLearning && heroLook
         ? {
