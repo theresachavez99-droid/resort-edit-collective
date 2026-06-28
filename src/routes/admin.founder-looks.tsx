@@ -561,7 +561,7 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
         <Side label="A" run={runs.A} revealed={runs.revealed} founderSide={runs.founderSide} />
         <Side label="B" run={runs.B} revealed={runs.revealed} founderSide={runs.founderSide} />
       </div>
-      {runs.A && runs.B && !runs.revealed && (
+      {Boolean(runs.A) && Boolean(runs.B) && !runs.revealed && (
         <button
           onClick={() => setRuns({ ...runs, revealed: true })}
           className="mt-6 border border-black px-4 py-2 text-sm"
