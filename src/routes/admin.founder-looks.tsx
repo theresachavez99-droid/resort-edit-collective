@@ -955,20 +955,43 @@ function unifiedSlotsFor(run: RunPayload): UnifiedSlot[] {
   });
 }
 
-function describeImageFailure(
+/**
+ * Resolve a slot's image with a canonical fallback chain. The engine's primary
+ * field is `image_url` (v6+); legacy candidates emit `image`. Both are accepted
+ * and a precise reason is returned when nothing resolves.
+ */
+function resolveSlotImage(
   s: NonNullable<NonNullable<RunPayload["looks"]>[number]["slots"]>[number],
-  cand?: { image?: string | null; url?: string | null } | undefined,
-): { url: string | null; reason: string } {
-  const url = s.image ?? cand?.image ?? null;
-  if (!url) {
+  cand?: { image?: string | null; image_url?: string | null; url?: string | null } | undefined,
+): { url: string | null; source: string | null; reason: string } {
+  const chain: Array<[string, string | null | undefined]> = [
+    ["slot.image_url", s.image_url],
+    ["slot.image", s.image],
+    ["candidate.image_url", cand?.image_url],
+    ["candidate.image", cand?.image],
+  ];
+  for (const [src, v] of chain) {
+    if (typeof v === "string" && v.trim().length > 0) {
+      return {
+        url: v,
+        source: src,
+        reason: "Image URL resolved — if it still does not render, the host blocked the request (CORS / 404 / hotlink).",
+      };
+    }
+  }
+  if (!cand) {
     return {
       url: null,
-      reason: cand
-        ? "Candidate has no image — Firecrawl search result missing og:image / image metadata."
-        : "Slot resolved to no candidate (no image source available).",
+      source: null,
+      reason: "Slot resolved to no candidate — no image source available.",
     };
   }
-  return { url, reason: "Image URL present — runtime <img> failed to load (CORS / 404 / blocked)." };
+  return {
+    url: null,
+    source: null,
+    reason:
+      "Candidate has no image_url/image — discovery result missing og:image, twitter:image, and image_src.",
+  };
 }
 
 function OutfitBody({ run, revealed }: { run: RunPayload; revealed: boolean }) {
