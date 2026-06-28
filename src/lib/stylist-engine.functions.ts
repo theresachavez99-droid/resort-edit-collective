@@ -1599,9 +1599,34 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const destination = data.destination;
     const activity = data.activity;
     const brief = briefFor(destination, activity);
-    const specs = getSlotSpecs(destination, activity).filter(
-      (s) => s.required || data.includeOptional,
-    );
+    // v6 — Moment Slot Template (editorial tiers) overrides the universal
+    // SLOT_SPECS surface area. A slot with tier "omit" is never sourced;
+    // contextual/conditional slots only enter discovery when the founder
+    // explicitly opted into optional slots.
+    const momentTemplate: MomentSlotTemplate | null = resolveMomentTemplate(destination, activity);
+    const allSpecs = getSlotSpecs(destination, activity);
+    const specs = allSpecs.filter((s) => {
+      // Default behaviour when no template exists — keep legacy required/optional split.
+      if (!momentTemplate) return s.required || data.includeOptional;
+      const tier = tierForEngineSlot(momentTemplate, s.slot);
+      if (tier === "omit") return false;
+      if (tier === null) return s.required || data.includeOptional;
+      if (tier === "locked_hero" || tier === "required" || tier === "strongly_preferred") return true;
+      // contextual / conditional → only when the run opted in.
+      return data.includeOptional;
+    });
+    const editorialOmissions: Array<{ slot: string; reason: string }> = [];
+    if (momentTemplate) {
+      for (const s of allSpecs) {
+        const tier = tierForEngineSlot(momentTemplate, s.slot);
+        if (tier === "omit") {
+          editorialOmissions.push({
+            slot: s.slot,
+            reason: momentTemplate.note ?? `Not part of the ${momentTemplate.moment} template.`,
+          });
+        }
+      }
+    }
 
     // v4 — load brands via destination-agnostic helper. Pulls commerce
     // metadata so the engine can stamp + gate by commerce source.
