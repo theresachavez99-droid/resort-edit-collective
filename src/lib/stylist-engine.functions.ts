@@ -289,6 +289,35 @@ const SLOT_SPECS_BY_KEY: Record<string, SlotSpec[]> = {
   "Portofino|Pool Lounging": POOL_LOUNGING_SLOT_SPECS,
 };
 
+// ──────────────────────────────────────────────────────────────
+// v5.3 — Founder Hero Lock
+//
+// When a Founder Look exists, its hero garments (swim, coverup, dress,
+// skirt, etc.) are LOCKED into the generated outfit. The engine never
+// searches for replacements and assembly cannot drop them. Only the
+// remaining accessory slots are sourced via discovery.
+// ──────────────────────────────────────────────────────────────
+
+/** Map a Founder Look hero category to an outfit slot, or null if it
+ *  is a non-locking accessory (let normal discovery handle it). */
+export function heroCategoryToSlot(cat: string | null | undefined): string | null {
+  if (!cat) return null;
+  const k = cat.toLowerCase().trim();
+  if (/swim|bikini|maillot|one[- ]?piece/.test(k)) return "swim";
+  if (
+    /coverup|cover[- ]?up|kaftan|caftan|sarong|pareo|dress|gown|skirt|top|pant|trouser|matching set|set|jacket|outerwear|linen shirt|shirt/.test(
+      k,
+    )
+  ) return "coverup";
+  // Accessory slots also lock when the founder hand-picked them.
+  if (/sandal|shoe|mule|espadrille|footwear/.test(k)) return "shoes";
+  if (/bag|tote|clutch|basket/.test(k)) return "bag";
+  if (/sunglass|eyewear/.test(k)) return "sunglasses";
+  if (/jewel|earring|necklace|bracelet|ring/.test(k)) return "jewelry";
+  if (/\bhat\b|panama|fedora|straw hat/.test(k)) return "hat";
+  return null;
+}
+
 export function getSlotSpecs(destination: string, activity: string): SlotSpec[] {
   const key = `${destination}|${activity}`;
   return (
@@ -1125,6 +1154,7 @@ async function assembleLooks(
   specs: SlotSpec[],
   targetLookCount: number,
   archetypeAssignments: SwimArchetypeId[] = [],
+  lockedHeroBySlot: Map<string, SlotCandidate> = new Map(),
 ): Promise<AssembledLook[]> {
   const slotLines = specs
     .map(
@@ -1150,7 +1180,23 @@ async function assembleLooks(
     ? `Suggested editorial themes (use, rename, or invent your own): ${brief.collectionThemes.join(", ")}.`
     : "";
 
-  const requiredSlotNames = specs.filter((s) => s.required).map((s) => s.slot);
+  // v5.3 — required ONLY if (a) the spec marks it required AND (b) the
+  // candidate pool is non-empty. Slots with zero candidates are flagged
+  // as "refinement required" instead of disqualifying the entire look.
+  const slotPoolCounts = new Map(slotResults.map((r) => [r.slot, r.candidates.length]));
+  const requiredSlotNames = specs
+    .filter((s) => s.required && (slotPoolCounts.get(s.slot) ?? 0) > 0)
+    .map((s) => s.slot);
+  const unavailableRequiredSlots = specs
+    .filter((s) => s.required && (slotPoolCounts.get(s.slot) ?? 0) === 0)
+    .map((s) => s.slot);
+  const lockedSlots = [...lockedHeroBySlot.keys()];
+  const lockedLines = lockedSlots
+    .map((slot) => {
+      const c = lockedHeroBySlot.get(slot)!;
+      return `  - slot "${slot}" MUST use candidateId "${c.id}" (${c.brand} — ${c.title ?? "Founder Hero"}). Do not substitute.`;
+    })
+    .join("\n");
 
   // v4.2 — per-look archetype briefs steer Gemini to compose each look
   // around a distinct swim story and apply the cohesion recipe to the
@@ -1177,6 +1223,14 @@ Swim is the editorial anchor of every Yacht Day look. PICK THE SWIM PIECE FIRST,
 then style the rest of the outfit around it using the per-look cohesion recipe.
 Return strict JSON only. Never invent products or ids not in the pool.`;
 
+  const lockedBlock = lockedSlots.length
+    ? `\nFOUNDER HERO LOCKS — these are NON-NEGOTIABLE editorial decisions already made by the Founder. Use the exact candidateId for each locked slot in every look:\n${lockedLines}\n`
+    : "";
+
+  const unavailableBlock = unavailableRequiredSlots.length
+    ? `\nUNAVAILABLE SLOTS (no candidates were sourced — omit gracefully, do not invent): ${unavailableRequiredSlots.join(", ")}\n`
+    : "";
+
   const user = `EDITORIAL BRIEF
 Destination: ${brief.destination}
 Activity: ${brief.activity}
@@ -1185,7 +1239,7 @@ Palette: ${brief.palette.join(", ")}
 Style DNA: ${brief.styleDna.join(", ")}
 Notes: ${brief.notes}
 ${themes}
-
+${lockedBlock}${unavailableBlock}
 SWIM ARCHETYPE PLAN (one distinct archetype per look — do not duplicate)
 ${archetypeBriefs}
 
@@ -1253,6 +1307,7 @@ CRITICAL RULES
   const allIds = new Set<string>();
   for (const r of slotResults) r.candidates.forEach((c) => allIds.add(c.id));
   const requiredSet = new Set(requiredSlotNames);
+  const lockedSlotSet = new Set(lockedSlots);
 
   for (const item of looksRaw) {
     if (!item || typeof item !== "object") continue;
@@ -1272,6 +1327,29 @@ CRITICAL RULES
       usedIds.add(candidateId);
       filled.add(slot);
       slotRecs.push({ slot, candidateId, reasoning });
+    }
+    // v5.3 — Force-inject Founder Hero locks if Gemini omitted them or
+    // tried to substitute. Hero locks are exempt from the usedIds dedupe
+    // (the same locked piece appears in every generated look).
+    for (const lockedSlot of lockedSlotSet) {
+      if (filled.has(lockedSlot)) {
+        // Replace any substitution with the locked candidate.
+        const idx = slotRecs.findIndex((s) => s.slot === lockedSlot);
+        const locked = lockedHeroBySlot.get(lockedSlot)!;
+        slotRecs[idx] = {
+          slot: lockedSlot,
+          candidateId: locked.id,
+          reasoning: "Founder Hero — locked",
+        };
+      } else {
+        const locked = lockedHeroBySlot.get(lockedSlot)!;
+        slotRecs.unshift({
+          slot: lockedSlot,
+          candidateId: locked.id,
+          reasoning: "Founder Hero — locked",
+        });
+        filled.add(lockedSlot);
+      }
     }
     const missing = [...requiredSet].filter((s) => !filled.has(s));
     looks.push({
@@ -1538,6 +1616,16 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     // explicit founderLookId we use it; otherwise we pick the most
     // recently approved/published look that matches destination+moment.
     let heroLook: import("./founder-similarity").HeroLook | null = null;
+    // v5.3 — captured from the founder_looks row so we can lock hero
+    // garments into the outfit instead of re-sourcing them.
+    let heroPiecesRaw: Array<{
+      brand?: string;
+      category?: string;
+      product_name?: string;
+      url?: string;
+      image_url?: string;
+      role?: string;
+    }> = [];
     // Resolve the Founder Look for both Founder Learning and baseline runs.
     // Even when scoring is OFF, the hero brands are allowed to bootstrap a
     // new editorial moment so registry tagging can never block generation.
@@ -1562,7 +1650,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             destination: string;
             moment: string;
             style_family: string[];
-            hero_urls: Array<{ brand?: string; category?: string }>;
+            hero_urls: Array<{
+              brand?: string;
+              category?: string;
+              product_name?: string;
+              url?: string;
+              image_url?: string;
+              role?: string;
+            }>;
             color_palette: { include?: string[]; exclude?: string[] };
             positive_rules: Record<string, string[]>;
             negative_rules: Record<string, string[]>;
@@ -1572,6 +1667,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         | undefined;
       if (row) {
         const heroes = Array.isArray(row.hero_urls) ? row.hero_urls : [];
+        heroPiecesRaw = heroes;
         heroLook = {
           id: row.id,
           slug: row.slug,
@@ -1685,6 +1781,77 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       };
     }
 
+    // ── v5.3 — Lock Founder Hero pieces.
+    //
+    // Build a synthetic SlotCandidate for each hero garment in the
+    // Founder Look. These bypass discovery, scoring, and replacement.
+    // The slot is removed from the discovery loop entirely and a
+    // single-candidate SlotDiscoveryResult is synthesised so the
+    // downstream pipeline (Gemini assembly, scoring, diagnostics) can
+    // treat them as already-resolved.
+    const lockedHeroBySlot = new Map<string, SlotCandidate>();
+    const heroPiecesLockedReport: Array<{
+      slot: string;
+      brand: string;
+      productName: string | null;
+      category: string | null;
+      url: string;
+    }> = [];
+    if (heroLook && heroPiecesRaw.length) {
+      let hi = 0;
+      for (const hp of heroPiecesRaw) {
+        const brand = (hp.brand ?? "").trim();
+        const url = (hp.url ?? "").trim();
+        if (!brand || !url) continue;
+        const slot = heroCategoryToSlot(hp.category ?? null);
+        if (!slot) continue;
+        // One lock per slot — first hero wins.
+        if (lockedHeroBySlot.has(slot)) continue;
+        const retailer = retailerOf(url) ?? brand.toLowerCase().replace(/[^a-z0-9]+/g, "");
+        const id = `hero-lock-${slot}-${hi++}`;
+        const locked: SlotCandidate = {
+          id,
+          slot,
+          brand,
+          brandTier: "founder_hero",
+          retailer,
+          title: hp.product_name ?? null,
+          description: `[LOCKED — Founder Hero Piece from ${heroLook.title}]`,
+          url,
+          canonicalKey: url,
+          silhouette: "hero-lock",
+          palette: "hero-lock",
+          editorialScore: 9.999,
+          brandAffinity: 100,
+          matchedQuery: "[founder-hero-lock]",
+          source: "core",
+          commerceSource: "brand_direct",
+          approvalLevel: "core",
+          familyMatched: hp.category ?? null,
+          constructionScore: 0,
+          curationReason: "founder_hero_locked",
+          image: hp.image_url ?? null,
+          baseEditorialScore: 9.999,
+          founderBoost: 0,
+          founderPenalty: 0,
+          founderMatchedRefIds: [],
+          founderPenalties: [],
+          founderReasons: ["Locked Founder Hero piece"],
+          founderHardExcluded: false,
+          founderBlendWeight: 0,
+          eligibilitySource: "founder_hero",
+        };
+        lockedHeroBySlot.set(slot, locked);
+        heroPiecesLockedReport.push({
+          slot,
+          brand,
+          productName: hp.product_name ?? null,
+          category: hp.category ?? null,
+          url,
+        });
+      }
+    }
+
     // ── Registry analytics: count Yacht Day brands per category and flag
     // underrepresented accessory categories before discovery runs.
     const registryByCategory: Record<string, number> = {};
@@ -1731,6 +1898,38 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const cache = data.enableCache ? await cacheModule() : null;
 
     for (const spec of specs) {
+      // v5.3 — Founder Hero lock: skip discovery entirely and synthesise
+      // a one-candidate SlotDiscoveryResult so downstream code is unchanged.
+      if (lockedHeroBySlot.has(spec.slot)) {
+        const locked = lockedHeroBySlot.get(spec.slot)!;
+        // Reserve the canonical key so other slots can't dupe it.
+        canonicalSeen.set(locked.canonicalKey, locked.url);
+        seenUrls.add(locked.url);
+        slotResults.push({
+          slot: spec.slot,
+          label: spec.label,
+          required: spec.required,
+          targetMin: spec.targetMin,
+          targetMax: spec.targetMax,
+          brandsConsidered: [locked.brand],
+          candidates: [locked],
+          searchesIssued: 0,
+          rawResults: 0,
+          rejections: {},
+          shortfall: 0,
+          retailersPerBrand: 0,
+          retailersQueried: [],
+          retailersRepresented: [locked.retailer],
+          expansion: null,
+        });
+        cacheStatsPerSlot[spec.slot] = {
+          hits: 0,
+          written: 0,
+          rejected: 0,
+          rejectionReasons: {},
+        };
+        continue;
+      }
       // Cap brands per slot for budget.
       const slotBrands = brands
         .filter((b) => b.categories.some((c) => spec.brandCategories.includes(c)))
@@ -1995,9 +2194,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       expandable: EXPANDABLE_SLOTS.has(r.slot),
     }));
 
+    // v5.3 — "missing required" excludes slots locked by Founder Hero
+    // pieces (they always have a candidate) and slots that have no
+    // candidates at all (those are flagged for refinement instead of
+    // gating assembly).
     const missingRequiredSlots = slotResults
       .filter((r) => r.required && r.candidates.length === 0)
       .map((r) => r.slot);
+    const slotsRequiringRefinement = missingRequiredSlots.slice();
 
     const candidatesById = new Map<string, SlotCandidate>();
     for (const r of slotResults) r.candidates.forEach((c) => candidatesById.set(c.id, c));
@@ -2087,8 +2291,15 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       };
     })();
 
-    // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
-    if (missingRequiredSlots.length > 0) {
+    // PRE-ASSEMBLY GATE (v5.3).
+    //
+    // Founder Look architecture: never gate the entire collection
+    // because an accessory slot is empty. Only bail if the candidate
+    // pool is completely empty AND no Founder Hero pieces were locked
+    // (i.e., the engine has literally nothing to assemble).
+    const totalCandidates = slotResults.reduce((s, r) => s + r.candidates.length, 0);
+    const shouldGate = totalCandidates === 0 && lockedHeroBySlot.size === 0;
+    if (shouldGate) {
       const founderRetrievalGated = buildFounderRetrieval(
         founderContext,
         injectedFounderBrands,
@@ -2115,6 +2326,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
         slotCoverageStatus,
         founderRetrieval: founderRetrievalGated,
+        heroPiecesLocked: heroPiecesLockedReport,
+        slotsRequiringRefinement,
         heroLookApplied: data.founderLearning && heroLook
           ? {
               id: heroLook.id,
@@ -2150,7 +2363,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     let looks: AssembledLook[] = [];
     let assemblyError: string | null = null;
     try {
-      looks = await assembleLooks(brief, slotResults, specs, data.targetLooks, archetypeAssignments);
+      looks = await assembleLooks(
+        brief,
+        slotResults,
+        specs,
+        data.targetLooks,
+        archetypeAssignments,
+        lockedHeroBySlot,
+      );
     } catch (e) {
       assemblyError = String((e as Error)?.message ?? e);
     }
@@ -2677,6 +2897,9 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         injectedFounderBrands,
         candidatesById,
       ),
+      /** v5.3 — Founder Hero lock diagnostics. */
+      heroPiecesLocked: heroPiecesLockedReport,
+      slotsRequiringRefinement,
       /** v5.2 — active HeroLook used for blended similarity, if any. */
       heroLookApplied: data.founderLearning && heroLook
         ? {
