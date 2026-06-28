@@ -2234,6 +2234,39 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       });
     }
 
+    // ── v6 — Editorial accessory scoring.
+    //
+    // Apply keyword penalties/rewards + visual-weight balancing to every
+    // accessory candidate (bag / sunglasses / jewelry / shoes). Hard-
+    // rejects are dropped from the candidate pool entirely. The original
+    // editorial score is preserved on `baseEditorialScore` for diagnostics.
+    const editorialAdjustments = new Map<
+      string,
+      { multiplier: number; reasons: string[]; visualWeight: VisualWeight }
+    >();
+    for (const r of slotResults) {
+      if (!["bag", "sunglasses", "jewelry", "shoes"].includes(r.slot)) continue;
+      const kept: typeof r.candidates = [];
+      for (const c of r.candidates) {
+        if (c.brandTier === "founder_hero") {
+          kept.push(c);
+          continue;
+        }
+        const adj = scoreAccessoryEditorial(r.slot, c.title, editorialHeroWeight);
+        if (adj.hardReject) continue;
+        c.editorialScore = Math.round(c.editorialScore * adj.multiplier * 1000) / 1000;
+        const vw = accessoryVisualWeight(c.title);
+        editorialAdjustments.set(c.id, {
+          multiplier: adj.multiplier,
+          reasons: adj.reasons,
+          visualWeight: vw,
+        });
+        kept.push(c);
+      }
+      r.candidates = kept;
+      r.candidates.sort((a, b) => b.editorialScore - a.editorialScore);
+    }
+
     // Slot coverage report.
     const slotCoverage = slotResults.map((r) => ({
       slot: r.slot,
