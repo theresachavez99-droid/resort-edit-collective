@@ -2350,6 +2350,11 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       editorialDecisions,
       costReport,
       slotCoverageStatus,
+      founderRetrieval: buildFounderRetrieval(
+        founderContext,
+        injectedFounderBrands,
+        candidatesById,
+      ),
       looks: looks.map((l) => ({
         ...l,
         slots: l.slots.map((s) => {
