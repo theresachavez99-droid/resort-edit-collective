@@ -665,11 +665,13 @@ function ImportPanel({
   sessionId,
   invalidateKey,
   hasCandidates,
+  candidateCount,
 }: {
   password: string;
   sessionId: string;
   invalidateKey: readonly unknown[];
   hasCandidates: boolean;
+  candidateCount: number;
 }) {
   const importUrls = useServerFn(importUrlsToSession);
   const importRows = useServerFn(importRowsToSession);
@@ -677,17 +679,26 @@ function ImportPanel({
 
   const [urlText, setUrlText] = useState("");
   const [csvText, setCsvText] = useState("");
-  const [lastResult, setLastResult] = useState<{ count: number; brands: string[] } | null>(null);
+  const [importType, setImportType] = useState<"shopping" | "editorial_inspiration">("shopping");
+  const [lastResult, setLastResult] = useState<
+    { count: number; skipped: number; type: "shopping" | "editorial_inspiration" } | null
+  >(null);
+
+  const preview = useMemo(() => analyzeUrlPaste(urlText), [urlText]);
 
   const urlMut = useMutation({
     mutationFn: () => {
-      const urls = urlText.split(/\s+/).map((u) => u.trim()).filter((u) => /^https?:\/\//i.test(u));
-      if (!urls.length) throw new Error("Paste at least one URL");
-      return importUrls({ data: { password, sessionId, urls } });
+      const urls = preview.valid;
+      if (!urls.length) throw new Error("Paste at least one valid URL");
+      return importUrls({ data: { password, sessionId, urls, importType } });
     },
     onSuccess: (r) => {
       setUrlText("");
-      setLastResult({ count: r.inserted.length, brands: [] });
+      setLastResult({
+        count: r.inserted.length,
+        skipped: r.skipped.length,
+        type: importType,
+      });
       qc.invalidateQueries({ queryKey: invalidateKey as unknown[] });
       requestAnimationFrame(() => {
         document.getElementById("review-anchor")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -699,11 +710,15 @@ function ImportPanel({
     mutationFn: () => {
       const rows = parseCsv(csvText);
       if (!rows.length) throw new Error("No rows parsed");
-      return importRows({ data: { password, sessionId, rows } });
+      return importRows({ data: { password, sessionId, rows, importType } });
     },
     onSuccess: (r) => {
       setCsvText("");
-      setLastResult({ count: r.inserted.length, brands: [] });
+      setLastResult({
+        count: r.inserted.length,
+        skipped: r.skipped.length,
+        type: importType,
+      });
       qc.invalidateQueries({ queryKey: invalidateKey as unknown[] });
       requestAnimationFrame(() => {
         document.getElementById("review-anchor")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -717,42 +732,93 @@ function ImportPanel({
     reader.readAsText(file);
   };
 
+  const placeholder =
+    importType === "shopping"
+      ? `Paste one product URL per line.\n\nExamples:\n  • https://www.revolve.com/dp/PRODUCT\n  • https://www.mytheresa.com/.../PRODUCT.html\n  • https://www.net-a-porter.com/.../PRODUCT\n  • https://www.shopbop.com/.../PRODUCT\n  • https://alexandramiro.com/products/PRODUCT`
+      : `Paste one inspiration URL per line.\n\nExamples:\n  • Stephen Dann lookbook page\n  • Designer runway / collection page\n  • Editorial magazine feature\n  • Pinterest reference image\n\nThese influence comparison and curation but cannot be promoted to Founder Hero.`;
+
   return (
-    <section className="space-y-6">
+    <section id="import-anchor" className="space-y-6 scroll-mt-10">
       <WizardStepHeader step={3} of={3} label="Import products" />
 
+      <BuyingProgress count={candidateCount} />
+
       <p className="text-xs text-stone-600 italic border-l-2 border-stone-300 pl-3">
-        Build the strongest Buying Review by importing exceptional candidates from
-        multiple retailers rather than reviewing one retailer at a time.
+        The strongest Founder Heroes come from comparing exceptional products across
+        multiple retailers — not reviewing one retailer at a time.
       </p>
 
       {lastResult && (
         <div className="border border-emerald-600 bg-emerald-50/40 px-4 py-3 text-xs text-emerald-800 flex items-center justify-between">
-          <span>✓ {lastResult.count} products imported successfully.</span>
+          <span>
+            ✓ {lastResult.count}{" "}
+            {lastResult.type === "editorial_inspiration" ? "inspiration references" : "products"}{" "}
+            imported successfully.
+            {lastResult.skipped > 0 && (
+              <span className="text-emerald-700/70"> · {lastResult.skipped} skipped</span>
+            )}
+          </span>
           <a href="#review-anchor" className="underline">Review now →</a>
         </div>
       )}
 
+      <div className="flex gap-2 text-[0.65rem] tracking-[0.24em] uppercase border-b border-stone-200">
+        <button
+          onClick={() => setImportType("shopping")}
+          className={
+            "px-4 py-2 -mb-px border-b-2 " +
+            (importType === "shopping"
+              ? "border-ink text-ink"
+              : "border-transparent text-stone-500 hover:text-ink")
+          }
+        >
+          Shopping Product
+        </button>
+        <button
+          onClick={() => setImportType("editorial_inspiration")}
+          className={
+            "px-4 py-2 -mb-px border-b-2 " +
+            (importType === "editorial_inspiration"
+              ? "border-ink text-ink"
+              : "border-transparent text-stone-500 hover:text-ink")
+          }
+        >
+          Editorial Inspiration
+        </button>
+        <span className="ml-auto self-end text-[0.6rem] text-stone-500 normal-case tracking-normal pb-2">
+          {importType === "shopping"
+            ? "Purchasable through affiliate retailers — eligible for Founder Hero."
+            : "Reference only — never promoted directly to Founder Hero."}
+        </span>
+      </div>
+
       <div className="grid gap-4 lg:grid-cols-3">
-        <div className="border border-stone-300 p-5 space-y-3 lg:col-span-1">
+        <div className="border border-stone-300 p-5 space-y-3 lg:col-span-2">
           <h3 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500">
-            Paste Product URLs
+            {importType === "shopping" ? "Paste Product URLs" : "Paste Inspiration URLs"}
           </h3>
           <textarea
             value={urlText}
             onChange={(e) => setUrlText(e.target.value)}
-            rows={8}
+            rows={12}
             className="w-full border border-stone-300 px-3 py-2 text-xs font-mono"
-            placeholder={
-              "Paste one product URL per line.\n\nSupported retailers include Revolve, Mytheresa, Net-a-Porter, Shopbop, FWRD, Nordstrom, Saks, Neiman Marcus, Bloomingdale's, Luisaviaroma, and brand-direct URLs."
-            }
+            placeholder={placeholder}
           />
+
+          {preview.total > 0 && (
+            <ImportPreview preview={preview} />
+          )}
+
           <button
             onClick={() => urlMut.mutate()}
-            disabled={urlMut.isPending}
+            disabled={urlMut.isPending || preview.valid.length === 0}
             className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase w-full disabled:opacity-40"
           >
-            {urlMut.isPending ? "Importing…" : "Import URLs"}
+            {urlMut.isPending
+              ? "Importing…"
+              : preview.valid.length > 0
+                ? `Import ${preview.valid.length} ${importType === "shopping" ? "Products" : "References"}`
+                : "Import"}
           </button>
           {urlMut.error && (
             <p className="text-xs text-red-600">{(urlMut.error as Error).message}</p>
@@ -788,29 +854,109 @@ function ImportPanel({
           )}
         </div>
 
-        <div className="border border-stone-200 p-5 space-y-2 lg:col-span-1 opacity-60">
-          <h3 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500">
-            Affiliate Feed Search
-          </h3>
-          <p className="text-xs text-stone-500">
-            Coming Soon — pulls curated candidates directly from Rakuten, Awin, Impact,
-            CJ, and Skimlinks once network credentials are linked.
-          </p>
-          <button
-            disabled
-            className="border border-stone-300 px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase w-full"
-          >
-            Disabled
-          </button>
-        </div>
       </div>
 
       {!hasCandidates && !lastResult && (
-        <p className="text-xs text-stone-500 text-center">
-          Import products to begin your Buying Review.
+        <p className="text-xs text-stone-500 text-center border border-dashed border-stone-300 py-6">
+          No products imported yet. Paste URLs above to begin your Buying Review.
         </p>
       )}
     </section>
+  );
+}
+
+function BuyingProgress({ count }: { count: number }) {
+  const pct = Math.min(100, Math.round((count / TARGET_CANDIDATES) * 100));
+  return (
+    <div className="border border-stone-200 p-4 space-y-2">
+      <div className="flex justify-between text-[0.65rem] tracking-[0.3em] uppercase text-stone-500">
+        <span>Buying Review Progress</span>
+        <span className="text-ink">
+          Imported {count} / {TARGET_CANDIDATES} products
+        </span>
+      </div>
+      <div className="h-1.5 bg-stone-100">
+        <div className="h-full bg-ink transition-all" style={{ width: `${pct}%` }} />
+      </div>
+      <p className="text-[0.65rem] text-stone-500">
+        Target: 20–30 Hero candidates. Import across multiple retailers for the strongest review.
+      </p>
+    </div>
+  );
+}
+
+type UrlPreview = {
+  total: number;
+  valid: string[];
+  duplicates: string[];
+  broken: string[];
+  unsupported: string[];
+  retailers: Record<string, number>;
+};
+
+function analyzeUrlPaste(text: string): UrlPreview {
+  const lines = text.split(/\s+/).map((u) => u.trim()).filter(Boolean);
+  const out: UrlPreview = {
+    total: lines.length,
+    valid: [],
+    duplicates: [],
+    broken: [],
+    unsupported: [],
+    retailers: {},
+  };
+  const seen = new Set<string>();
+  for (const raw of lines) {
+    let u: URL;
+    try {
+      u = new URL(raw);
+    } catch {
+      out.broken.push(raw);
+      continue;
+    }
+    const host = u.hostname.toLowerCase().replace(/^www\./, "");
+    const key = u.origin + u.pathname;
+    if (seen.has(key)) {
+      out.duplicates.push(raw);
+      continue;
+    }
+    seen.add(key);
+    const approved = APPROVED_HOSTS.some((h) => host === h || host.endsWith("." + h));
+    out.retailers[host] = (out.retailers[host] ?? 0) + 1;
+    if (!approved) out.unsupported.push(host);
+    out.valid.push(raw);
+  }
+  return out;
+}
+
+function ImportPreview({ preview }: { preview: UrlPreview }) {
+  const retailerCount = Object.keys(preview.retailers).length;
+  return (
+    <div className="border border-stone-200 bg-stone-50/60 p-3 text-[0.7rem] space-y-1">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-stone-700">
+        <span><strong>{preview.total}</strong> URLs detected</span>
+        <span><strong>{preview.valid.length}</strong> valid</span>
+        <span><strong>{retailerCount}</strong> retailers</span>
+        {preview.duplicates.length > 0 && (
+          <span className="text-amber-700">{preview.duplicates.length} duplicates</span>
+        )}
+        {preview.unsupported.length > 0 && (
+          <span className="text-amber-700">
+            {preview.unsupported.length} non-approved retailer{preview.unsupported.length === 1 ? "" : "s"}
+          </span>
+        )}
+        {preview.broken.length > 0 && (
+          <span className="text-red-700">{preview.broken.length} broken</span>
+        )}
+      </div>
+      {retailerCount > 0 && (
+        <div className="text-stone-500 truncate">
+          From:{" "}
+          {Object.entries(preview.retailers)
+            .map(([h, n]) => `${h} (${n})`)
+            .join(" · ")}
+        </div>
+      )}
+    </div>
   );
 }
 
