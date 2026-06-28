@@ -1,108 +1,215 @@
-## More Like This — Editorial Discovery Engine
+# Founder Buying Office V1 — FINAL APPROVED (Architecture Freeze)
 
-Add a horizontally scrollable "More Like This" carousel to every Portofino look page, surfacing 6–10 destination-aware alternative products selected by editorial DNA (destination + activity + style family) rather than brand. Seed Portofino with a small, curated, editorially-tagged product set including the Milly Lela, Milly Lene, Farm Rio Porcelain Garden, D&G Majolica Shirt Dress, Alice + Olivia Glinda, and Alice + Olivia Miriam from the uploaded references.
+> The Buying Office searches the market. The Founder reviews the market. The Stylist Engine learns from the Founder.
 
-### Placement on `/portofino/$day/$look`
+After this ships: **architecture is frozen.** Engineering shifts to building the Founder Buying Office, curating the 20 Portofino Founder Heroes, and validating the workflow through real curation. Only small, evidence-based improvements from here.
 
-Inserted as a new section, in this order:
+---
 
-```text
-Complete the Look (existing)
-… existing sections …
-Editor's Alternatives (existing)
-─ NEW ─  More Like This
-Continue to Day X (Next Look CTA — existing)
-```
+## 1. Immutable Search Sessions *(final addition)*
 
-Title: **More Like This**  
-Subtitle: *Explore similar pieces with the same destination energy.*
+A Search Session is a permanent editorial record. Once it begins, **nothing that affects ranking changes inside that session.** Changing any ranking input opens a **new** Search Session.
 
-The earlier "Editor's Alternatives" section stays as-is (it's per-look manually curated); "More Like This" is the automated DNA-matched discovery layer.
+**Locked at Search-start (immutable for the life of the session):**
+- Founder Hero Brief
+- Founder Vision version
+- Editorial Benchmark
+- Search Strategy *(Editorial First / Brand Discovery / Brand Focus / Replacement Mode)*
+- Search Depth *(Quick / Standard / Deep Buy)*
+- Search results *(retailer responses + ranking snapshot)*
+- Approved Retailer set, Hero Category, Price band, Brand Include/Exclude, Editorial Exclusions, Moment Energy
 
-### Editorial matching model
+**Editable inside an open session (provenance only — never ranking):**
+- Per-candidate state: Favorite · Review Later · Reject (with tags) · Shortlist · Promote to Founder Finalist
+- Founder notes on candidates
 
-New module `src/data/styleDNA.ts` — pure data, no runtime cost.
+**New Session triggers** (UI auto-prompts "Start New Search Session"):
+- Edit Brief
+- Bump Vision version
+- Change Benchmark / Strategy / Depth / Retailers / Category / Price / Brand filters / Exclusions / Moment Energy
+- Re-run Search
 
-Each look gets a `LookDNA` record:
-```ts
-{ destination, momentSlug, styleFamilies[], activityTags[], excludeFamilies[] }
-```
+Implementation:
+- `buying_search_sessions` is **append-only**. Columns: `hero_brief jsonb`, `hero_brief_locked_at`, `vision_version int`, `editorial_benchmark`, `search_strategy`, `search_depth`, `retailer_set jsonb`, `filters jsonb`, `search_results_snapshot jsonb`, `ranking_snapshot jsonb`, `parent_session_id uuid null`, `created_at`.
+- Server functions reject mutations to locked fields with `423 Locked` and surface "Start New Search Session" in the UI.
+- `parent_session_id` links a new session to the one it forked from, preserving the editorial lineage.
+- Sessions are **never deleted**; archived only.
 
-Each product gets a `ProductDNA` record:
-```ts
-{ id, brand, name, price, image, href, retailer,
-  destinations[], styleFamilies[], activityTags[], momentSlugs[],
-  brandTier: 'familiar' | 'discovery',
-  editorialLabel?  // "Mediterranean Embroidery", "Porcelain Prints", etc.
-}
-```
+---
 
-Style families seeded: `mediterranean_embroidery`, `blue_white_porcelain`, `riviera_floral`, `coastal_knit`, `crochet_resort`, `raffia_luxury`, `yacht_swim`, `harbor_aperitivo`, `sunset_glamour`, `destination_print`.
+## 2. Founder Vision Versioning
 
-Activity tags seeded: `yacht_day`, `beach_club_lunch`, `harbor_aperitivo`, `market_morning`, `sunset_views`, `riviera_dinner`, `pool_day`, `arrival_day`, `shopping_afternoon`.
+`founder_visions` table stores immutable v1 → v2 → v3 per (destination, moment) with `change_summary` and `is_current`. `founder_looks` and `buying_search_sessions` both carry `vision_version`. Backfill creates v1 from current values. Surfaced as a small "Vision vN · what changed" disclosure — no new admin page.
 
-### Scoring function (`src/lib/moreLikeThis.ts`)
+---
 
-```text
-score =  destinationMatch     × 5.0   // hard prefilter; zero = excluded
-       + styleFamilyOverlap   × 3.0   // count of shared families
-       + activityFidelity     × 4.0   // shared activity, with hard excludes
-       + editorialUniqueness  × 1.0   // boost rarely-shown products
-       + luxuryAppeal         × 0.5   // price/brand-tier signal
-       − sameBrandPenalty     × 2.0   // applied during diversification
-```
+## 3. Founder Collection Roadmap *(top of Buying Office)*
 
-Hard rules enforced after scoring:
-- Drop any product whose `activityTags` overlap the look's `excludeFamilies` (e.g. yacht coverup under a dinner look).
-- Drop products with no image, no href, or `soldOut: true` (uses existing fallback inventory logic).
-- Diversify: greedy pick top-scored, cap at **2 per brand**, target **6 cards** (8 max).
-- Brand mix target: ~30% familiar / ~70% discovery; if the discovery pool is too small, top up with familiar to hit 6.
+Per destination: Hero target, completed/remaining per moment, Editorial Coverage, Suggested Next Hero (one-click prefill), Collection Balance Snapshot. Targets configurable; Portofino default = 20. Counts active Heroes only.
 
-### Seed product library
+---
 
-Add `src/data/productLibrary.ts` with ~14 seeded items so the carousel renders meaningfully on every Portofino look:
+## 4. Founder Hero Brief *(required before every Buying Review)*
 
-| Brand | Product | Families | Activities | Tier |
-|---|---|---|---|---|
-| Milly | Lela Embroidered Midi | mediterranean_embroidery, blue_white_porcelain | market_morning, beach_club_lunch | discovery |
-| Milly | Lene Embroidered Mini | mediterranean_embroidery, blue_white_porcelain | beach_club_lunch, arrival_day | discovery |
-| Farm Rio | Off-White Porcelain Garden Cut-Out Midi | blue_white_porcelain, destination_print | market_morning, sunset_views | discovery |
-| Dolce & Gabbana | Majolica Twill Shirt Dress | blue_white_porcelain, destination_print | riviera_dinner, sunset_views | familiar |
-| Alice + Olivia | Glinda Majolica Tassel Mini | blue_white_porcelain, sunset_glamour | sunset_views, harbor_aperitivo | familiar |
-| Alice + Olivia | Miriam Linen Sweetheart Top | blue_white_porcelain | harbor_aperitivo, beach_club_lunch | familiar |
-| + 8 existing Resort Edit pieces re-tagged from `portofino.ts` (raffia tote, Eres swimsuit, Gianvito sandals, etc.) for yacht/beach/aperitivo coverage |
+Auto-generated from current Founder Vision (vN) + Moment Template. Editable during setup. **Locks the moment the Founder clicks Search** and snapshots into the Session. To change the Brief: **Edit Brief → New Search Session**. The locked Brief is pinned above the Buying Review with a "Locked at Search · Vision vN" badge.
 
-Images for the six uploaded references are added via lovable-assets pointers from `/mnt/user-uploads/` (not copied into the repo). Each product `href` points to its retailer page so existing `trackOutbound` analytics work unchanged.
+Brief fields: Editorial Story · Hero Silhouette · Moment Energy · Color Direction · Avoid (seeds Editorial Exclusions) · Photography Goal.
 
-### UI
+---
 
-New component `src/components/MoreLikeThis.tsx`:
-- Horizontal scroll-snap rail (`overflow-x-auto snap-x snap-mandatory`), no JS carousel dep
-- Card: 240px wide, image (3:4), brand eyebrow, name, price, optional editorial label chip (e.g. "Mediterranean Embroidery"), Save heart (reuses `src/lib/saved.ts`), Shop outbound link
-- Mobile: snap rail; Desktop: same rail with subtle arrow affordance; matches existing ivory/ink/gold tokens
+## 5. Founder Search Panel
 
-### Files
+Destination · Moment · Hero Category *(required anchor; never Brand)* · Hero Brief · Editorial Benchmark (Stephen Dann · Julianne Hope · Founder Library · Custom Upload) · Price (Max default $1,000) · Search Depth · Search Strategy · Approved Retailers (all on by default) · Brand Include/Exclude · Editorial Exclusions · Moment Energy.
 
-**New:**
-- `src/data/styleDNA.ts` — LookDNA map for all existing Portofino looks
-- `src/data/productLibrary.ts` — seeded ProductDNA records
-- `src/lib/moreLikeThis.ts` — scorer + diversifier (pure function, fully testable)
-- `src/components/MoreLikeThis.tsx`
-- 6 lovable-assets pointer JSONs under `src/assets/products/` for the uploaded references
+---
 
-**Edited:**
-- `src/routes/portofino.$day.$look.tsx` — render `<MoreLikeThis lookId={…} />` between Editor's Alternatives and the Continue-to-Day-X CTA
+## 6. Search Execution
 
-### Out of scope (per prior constraints)
+Firecrawl `/search` is **scoped to Hero Category per retailer**; whole-retailer crawls forbidden. `Search → Normalize → Deduplicate → Editorial Ranking → Buying Review`. Search Summary + Market Coverage shown every run, snapshotted onto the Session.
 
-- No new admin UI, no DB migration, no sourcing changes, no new archetypes, no /capsules/editorial/essentials.
-- Quick View modal not built this pass — card opens the retailer in a new tab like existing `ProductCard`.
+---
 
-### Verification
+## 7. Buying Review
 
-- Build clean
-- Visit `/portofino/day-1/look-a` (Yacht): carousel shows yacht/coverup/raffia items, **no** dinner dresses
-- Visit `/portofino/day-4/look-a` (Sunset/Dinner): shows D&G Majolica, A+O Glinda, Farm Rio Porcelain, **no** yacht swim
-- Visit `/portofino/day-2/look-a` (Beach Club): shows Milly Lene, Milly Lela, knit/crochet alts
-- Brand cap verified: never more than 2 Milly tiles in one rail
-- Mobile screenshot at 420px confirms snap scroll + readable copy
+States: `Discovered → Shortlisted → Buying Review → Founder Finalist → Founder Hero → Archived`, plus `Review Later`. Archived ≠ deleted.
+
+---
+
+## 8. Editorial Scorecard (six dimensions)
+
+Editorial Impact · Moment Authenticity · Destination Authenticity · Founder Library Contribution · Photography Presence · Styling Flexibility. *Stephen Dann Similarity* renamed project-wide to **Editorial Benchmark Similarity**.
+
+---
+
+## 9. Editorial Confidence
+
+Plain-language explanation per candidate. Not a score; doesn't affect ranking.
+
+---
+
+## 10. Candidate Cards & Actions
+
+**Display:** image · Brand · Retailer · Affiliate · Price · Editorial Score · Editorial Benchmark Similarity · Editorial Confidence · Moment Fit · Photography · Visual Weight · Editorial Family · Hero Category · Availability.
+
+**Actions:** Compare (2/3/4) · Favorite · Review Later · Reject (tagged) · Archive · Promote · Duplicate · Open Retailer · **Why Didn't This Rank Higher?** chips.
+
+---
+
+## 11. Founder Favorites
+
+Save without destination. Permanent inspiration archive.
+
+---
+
+## 12. Hero Promotion + Collection Balance
+
+`Buying Review → Founder Finalist → Review (Brief + Vision vN restated) → Collection Balance → Twenty Looks Forever → required Promotion Note → Founder Hero`. **Hero Lock** on promotion. Hero stamped with `vision_version` + originating `search_session_id`. Writes a Decision Log entry.
+
+---
+
+## 13. Founder Hero Retirement *(backend now · UI hidden in V1)*
+
+Backend: `status='retired'` + `retired_at/reason/note/successor_founder_look_id`, `src/lib/founder-retirement.functions.ts`, engine/memory/roadmap filter to **active** Heroes.
+
+**UI reveal rule:** Retire / Restore / Retired tab visible only when at least one Hero is retired **or** the destination reaches `hero_target`.
+
+---
+
+## 14. Founder Decision Log *(destination-level timeline)*
+
+Auto-written events: Hero promotion · Finalist rejection · Slot replacement (with Replacement Impact + why_better_tags) · Hero Lock override · Hero retirement/restoration · Founder Vision version bump · New Editorial Family or Hero Category · Roadmap milestone · **New Search Session forked from session X** · **Mutation attempted on locked session** *(audit only)*.
+
+---
+
+## 15. Hero Then Accessories
+
+Strictly sequential: `Hero approved → Shoes → Bag → Jewelry → Sunglasses → Hat → Layer`. Accessory sourcing never influences Hero selection.
+
+---
+
+## 16. Replace This Piece + Replacement Impact
+
+Per-dimension explanation, Revision Timeline, respects Hero Lock, writes Decision Log entry. `regenerateSlot` supports Replace · Pin · Show 6 more · Compare. Stored in `founder_slot_revisions` (admin-only RLS) with `impact_breakdown jsonb` and `why_better_tags text[]`.
+
+---
+
+## 17. Hero Piece Diversity (replaces Hero Brand Uniqueness)
+
+Silhouette · Editorial Family · Color Story · Texture · Photography · Accessory Story · Luxury Positioning · Moment Energy · Editorial Language. Brand repetition = warning only. Computed over active Heroes.
+
+---
+
+## 18. Collection Planning & Health
+
+**Planning (editorial-identity first):** Hero Image · Moment · Editorial Family · Hero Category · Silhouette · Color Story · Moment Energy · Editorial Score · Visual Weight · Price · Brand · Vision version. Embeds destination Decision Log. Retired tab gated by §13.
+
+**Health:** passive, on-demand editorial gap report over active Heroes.
+
+---
+
+## 19. Permanently Out of Scope
+
+Scheduled Firecrawl searches · Background crawling · Daily buying recommendations · Trend monitoring · Automatic opportunity detection · AI shopping agents · Autonomous buyers · Trend prediction · Additional scoring systems · Any further admin pages, AI features, workflows, or scoring after this ships.
+
+---
+
+## 20. Phase 4 Vision Engine (carried)
+
+- **Layer 1 — Canonical Founder Vision** (versioned per §2); mirrored onto `founder_looks` for fast reads.
+- **Layer 2 — AI Suggestions** via role-tagged reference images (overall/shoes/bag/sunglasses/jewelry/hat/other), per-field Accept · Edit · Ignore. Storage bucket `founder-references` (admin RW). `src/lib/editorial-dna.server.ts` via Lovable AI Gateway (Gemini). `src/lib/founder-vision.ts` synthesizes — Layer 1 always wins.
+- **Founder Similarity v2** weights: Founder Vision · Hero Silhouette · Reference DNA · Hero Products · Brand.
+- **Editorial Fidelity** gates on silhouette, proportion, visual weight, color harmony, accessory personality, mood, luxury positioning, Moment Energy.
+- **Templates:** `founder_look_templates` per (destination, moment) with Moment Energy, hero_silhouette_skeleton, accessory philosophy, expected slots, `hero_target int`. Seeded for Portofino.
+- **Editorial Families:** `editorial_families` + `brand_editorial_families` (primary | secondary). Seeded, founder-editable.
+
+---
+
+## 21. Migrations
+
+All admin tables: `GRANT` to `authenticated` + `service_role`; RLS enabled; policies via `has_role(auth.uid(),'admin')`. No `USING(true)`. No `anon` grants.
+
+- **A** — `app_role` + `user_roles` + `has_role()` (if missing); Layer 1 + `vision_version` on `founder_looks`; `status='retired'` + retirement columns; `founder_slot_revisions` with `impact_breakdown jsonb`; storage bucket `founder-references`.
+- **B** — `founder_look_templates` + Portofino seeds with Moment Energy + `hero_target int`.
+- **C** — `editorial_families` + `brand_editorial_families` + seeds.
+- **D** — `buying_search_sessions` (immutable: hero_brief, hero_brief_locked_at, vision_version, editorial_benchmark, search_strategy, search_depth, retailer_set, filters, search_results_snapshot, ranking_snapshot, parent_session_id); `buying_review` states; `founder_favorites`; `editorial_benchmarks`; `hero_categories`; `editorial_exclusion_tags`; `founder_decision_log`.
+- **E** — `founder_visions` (destination, moment, vision_version, Layer 1 fields, change_summary, is_current, created_at). Unique partial index for one current per (destination, moment). Backfill v1 from current `founder_looks`.
+
+---
+
+## 22. Files
+
+**New:** `src/lib/editorial-dna.server.ts` · `src/lib/founder-vision.ts` · `src/lib/founder-revisions.functions.ts` · `src/lib/founder-visions.functions.ts` · `src/lib/editorial-family.ts` · `src/lib/editorial-similarity.ts` · `src/lib/founder-templates.functions.ts` · `src/lib/collection-health.functions.ts` · `src/lib/collection-planning.functions.ts` · `src/lib/collection-roadmap.ts` · `src/lib/founder-hero-brief.ts` · `src/lib/founder-decision-log.functions.ts` · `src/lib/founder-retirement.functions.ts` · `src/lib/buying-search.functions.ts` (enforces session immutability + forks new sessions) · `src/lib/buying-review.functions.ts` · `src/lib/buying-sessions.functions.ts` · `src/lib/founder-favorites.functions.ts` · `src/lib/editorial-scorecard.ts` · `src/lib/editorial-confidence.ts` · `src/lib/replacement-impact.ts` · `src/lib/editorial-benchmarks.functions.ts` · `src/routes/admin.founder-buying.tsx` (Roadmap · Brief w/ lock · Buying Review · Sessions tab w/ fork lineage · Favorites · Decision Log) · `src/routes/admin.editorial-families.tsx` · `src/routes/admin.collection-health.tsx` · `src/routes/admin.collection-planning.tsx` · `src/routes/admin.editorial-benchmarks.tsx`.
+
+**Edited:** `src/lib/stylist-engine.functions.ts` (regenerateSlot · Replacement Impact · DNA-first sourcing · Moment Energy fidelity · silhouette fallback · Hero Piece Diversity · Hero Lock · accessory pipeline only after Hero approval · filter Retired Heroes · respect vision_version · Decision Log writes) · `src/lib/founder-looks.functions.ts` (Layer 1 persistence · reference images · template hydration · Hero Lock · Collection Balance · Twenty Looks Forever · required Promotion Note · stamp vision_version + search_session_id · Retirement surfaces UI-gated) · `src/lib/founder-similarity.ts` (v2 weights) · `src/lib/editorial-stylist.ts` (`editorialFidelityScore` + Moment Energy) · `src/lib/collection-director.ts` (`analyzeMomentGaps` over active Heroes) · `src/lib/editorial-memory.server.ts` (retain Retired for reuse warnings; exclude from active diversity counts) · `src/lib/founder-context.server.ts` (rejection tags + why_better_tags + Promotion Notes + recent Decision Log + active Vision) · `src/lib/discovery-pipeline.ts` (Quick / Standard / Deep Buy tiers; strategy routing) · `src/routes/admin.founder-looks.tsx` (Template picker · Vision panel w/ version history · Silhouette editor · Reference gallery Accept/Edit/Ignore · Brief preview · Replace + Replacement Impact + Show 6 more + Compare · Revision Timeline · Hero Lock badge · Collection Balance · Twenty-Looks-Forever toggle · required Promotion Note · candidate pre-seed · Retire/Restore gated) · `src/routes/admin.index.tsx` (Buying Office promoted to top; Core Philosophy banner).
+
+---
+
+## 23. Definition of Done
+
+Founder can:
+- See the **Roadmap** (progress, coverage, suggested next Hero, balance) at top of Buying Office with one-click prefill.
+- See an auto-generated **Hero Brief** stamped with current **Vision version**, edit it during setup, and have it **lock** on Search.
+- Open a **New Search Session** by editing the Brief or any ranking input — never mutate an open session.
+- Define structured editorial intent and search by Hero Category across approved retailers (Firecrawl scoped to category).
+- Review a curated **Buying Review** with Search Summary + Market Coverage + pinned locked Brief.
+- See **Editorial Confidence** with a plain-language reason.
+- Compare up to four products and read **Why Didn't This Rank Higher?**.
+- Save to **Favorites** or **Review Later**; reject with structured tags.
+- See **Collection Balance** before Twenty Looks Forever; promote a Hero with required Promotion Note stamped with `vision_version` and `search_session_id`.
+- See **Replacement Impact** on any slot swap; **Hero Lock** on promotion.
+- Read a per-destination **Founder Decision Log** linked back to source events, including new-session forks and any blocked mutations on locked sessions.
+- Bump **Founder Vision** to v2/v3 with change summary; every existing Hero/Session keeps its original version stamp.
+- Retire / Restore Heroes via backend today; UI appears under §13 reveal rule.
+- Trust every Search Session as an immutable editorial record.
+
+---
+
+## 24. Architecture Freeze (final)
+
+After ship: **architecture complete.** Engineering redirects almost entirely to:
+1. Building the Founder Buying Office.
+2. Curating the 20 Portofino Founder Heroes.
+3. Using those real curation sessions to validate the workflow.
+4. Small, evidence-based improvements only when actual usage exposes friction.
+
+Resort Edit's next leap comes from exceptional editorial curation — not more features.
