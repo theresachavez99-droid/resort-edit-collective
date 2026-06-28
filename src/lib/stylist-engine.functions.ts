@@ -90,6 +90,21 @@ import type {
   FounderContext,
   FounderSignal,
 } from "./founder-context.server";
+import {
+  resolveMomentTemplate,
+  tierForEngineSlot,
+  evaluateNeckline,
+  heroVisualWeight,
+  accessoryVisualWeight,
+  scoreAccessoryEditorial,
+  founderQualityScore,
+  explainSelection,
+  explainOmission,
+  type MomentSlotTemplate,
+  type NecklineDecision,
+  type VisualWeight,
+  type SlotTier,
+} from "./editorial-stylist";
 
 /** Lazy loader for the server-only product-cache module. */
 async function cacheModule() {
