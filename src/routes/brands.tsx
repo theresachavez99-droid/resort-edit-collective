@@ -71,15 +71,15 @@ const FAVORITE_TAGLINES: Record<string, string> = {
 
 // Founder hierarchy badges
 const BRAND_BADGE: Record<string, string> = {
-  "johanna-ortiz": "Founder Favorite",
-  "alexandra-miro": "Founder Favorite",
+  "johanna-ortiz": "Editor's Pick",
+  "alexandra-miro": "Editor's Pick",
   "zimmermann": "Resort Edit Essential",
-  "agua-by-agua-bendita": "Founder Favorite",
+  "agua-by-agua-bendita": "Editor's Pick",
   "la-doublej": "Mediterranean Icon",
   "eres": "Resort Edit Essential",
   "missoni": "Mediterranean Icon",
   "loewe": "Mediterranean Icon",
-  "hereu": "Founder Favorite",
+  "hereu": "Editor's Pick",
   "aquazzura": "Resort Edit Essential",
   "pucci": "Mediterranean Icon",
   "etro": "Mediterranean Icon",
@@ -90,13 +90,13 @@ const BRAND_BADGE: Record<string, string> = {
   "dolce-and-gabbana": "Mediterranean Icon",
   "melissa-odabash": "Resort Edit Essential",
   "karla-colletto": "Resort Edit Essential",
-  "oseree": "Founder Favorite",
-  "matteau": "Founder Favorite",
+  "oseree": "Editor's Pick",
+  "matteau": "Editor's Pick",
   "maygel-coronel": "Emerging Designer",
   "marysia": "Emerging Designer",
   "vix-paula-hermanny": "Emerging Designer",
   "posse": "Emerging Designer",
-  "sir": "Founder Favorite",
+  "sir": "Editor's Pick",
   "alemais": "Emerging Designer",
   "borgo-de-nor": "Emerging Designer",
   "silvia-tcherassi": "Emerging Designer",
@@ -108,10 +108,10 @@ const BRAND_BADGE: Record<string, string> = {
   "manolo-blahnik": "Mediterranean Icon",
   "rene-caovilla": "Mediterranean Icon",
   "castaner": "Mediterranean Icon",
-  "dragon-diffusion": "Founder Favorite",
-  "cult-gaia": "Founder Favorite",
+  "dragon-diffusion": "Editor's Pick",
+  "cult-gaia": "Editor's Pick",
   "heimat-atlantica": "Emerging Designer",
-  "farm-rio": "Founder Favorite",
+  "farm-rio": "Editor's Pick",
 };
 
 // Optional founder insider notes shown beneath selected brands
@@ -134,7 +134,7 @@ const founderFavorites = FOUNDER_FAVORITE_SLUGS.map((slug) =>
 
 const FILTERS = [
   "All",
-  "Founder Favorites",
+  "Editor's Picks",
   "Mediterranean Icons",
   "Swim & Beach Club",
   "Resortwear & Kaftans",
@@ -181,7 +181,7 @@ function BrandCard({ brand }: { brand: Brand & { category?: string } }) {
       {note && (
         <p className="mt-4 border-t border-border/40 pt-3 font-serif italic text-[0.85rem] text-ink/60 leading-snug">
           <span className="eyebrow not-italic text-[0.55rem] text-gold block mb-1">
-            Founder Note
+            Editor's Note
           </span>
           “{note}”
         </p>
@@ -247,7 +247,7 @@ function BrandsPage() {
   const searchResults = React.useMemo(() => {
     if (!isSearchActive) return [];
     return allBrands.filter((b) => {
-      if (filter === "Founder Favorites") {
+      if (filter === "Editor's Picks") {
         if (!FOUNDER_FAVORITE_SLUGS.includes(b.slug)) return false;
       } else if (filter !== "All") {
         if (b.category !== filter) return false;
@@ -284,24 +284,17 @@ function BrandsPage() {
       <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20 pb-10 md:pb-14">
         <div className="grid md:grid-cols-12 gap-10 items-start">
           <div className="md:col-span-5">
-            <span className="eyebrow text-gold">The Selection</span>
+    <span className="eyebrow text-gold">Our Standard</span>
             <h2 className="mt-4 font-display text-3xl md:text-4xl tracking-[0.04em] text-ink">
-              Why We Choose <br className="hidden md:block" />These Designers
+              Our Editorial Standard
             </h2>
           </div>
           <div className="md:col-span-7 space-y-4 font-serif text-lg text-ink/75 leading-relaxed">
             <p>
-              Every brand on Resort Edit is personally curated. Nothing is included because
-              it is trending or paid for placement.
+              Every brand featured on Resort Edit is evaluated through the same editorial lens. We look for exceptional craftsmanship, destination relevance, timeless design, and the ability to create wardrobes that feel both beautiful and effortless to travel with.
             </p>
             <p>
-              Selection is based on five quiet criteria: <em>destination relevance,
-              craftsmanship, quality, longevity,</em> and <em>editorial fit</em>.
-            </p>
-            <p>
-              These designers are chosen because they solve specific travel wardrobe
-              moments — the linen for the harbor lunch, the swim for the yacht, the sandal
-              that finishes everything else.
+              Some are globally recognized luxury houses. Others are remarkable discoveries. What they share is a place within the Resort Edit point of view.
             </p>
           </div>
         </div>
@@ -363,13 +356,12 @@ function BrandsPage() {
       <section className="bg-cream/40 border-y border-border/40">
         <div className="mx-auto max-w-[1360px] px-6 pt-12 md:pt-16 pb-16 md:pb-20">
           <div className="text-center max-w-2xl mx-auto">
-            <span className="eyebrow text-gold">The Heart of the Edit</span>
+            <span className="eyebrow text-gold">The Edit</span>
             <h2 className="mt-4 font-display text-4xl md:text-5xl tracking-[0.04em] text-ink">
-              Founder Favorites
+              Editor's Picks
             </h2>
             <p className="mt-5 font-serif italic text-ink/65">
-              The houses we return to season after season — the ten labels that most
-              define the Resort Edit point of view.
+              A curated collection of designers that best represent the Resort Edit aesthetic and editorial point of view.
             </p>
           </div>
           <div className="mt-14 md:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -381,7 +373,7 @@ function BrandsPage() {
                 className="group block bg-ivory border border-border/50 hover:border-gold transition-colors p-7"
               >
                 <span className="eyebrow text-[0.55rem] text-gold">
-                  {BRAND_BADGE[brand.slug] ?? "Founder Favorite"}
+                  {BRAND_BADGE[brand.slug] ?? "Editor's Pick"}
                 </span>
                 <h3 className="mt-3 font-display text-3xl tracking-wide text-ink group-hover:text-gold transition-colors">
                   {brand.name}
