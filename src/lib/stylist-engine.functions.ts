@@ -2028,6 +2028,19 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
         slotCoverageStatus,
         founderRetrieval: founderRetrievalGated,
+        heroLookApplied: heroLook
+          ? {
+              id: heroLook.id,
+              slug: heroLook.slug,
+              title: heroLook.title,
+              destination: heroLook.destination,
+              moment: heroLook.moment,
+              heroBrands: heroLook.heroBrands,
+              paletteInclude: heroLook.paletteInclude,
+              paletteExclude: heroLook.paletteExclude,
+            }
+          : null,
+        validationLabel: data.validationLabel ?? null,
         costReport: {
           discoveryMode: data.discoveryMode,
           discoveryModeLabel: DISCOVERY_MODE_LABEL[data.discoveryMode as DiscoveryMode],
