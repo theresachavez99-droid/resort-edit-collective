@@ -2577,6 +2577,21 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         injectedFounderBrands,
         candidatesById,
       ),
+      /** v5.2 — active HeroLook used for blended similarity, if any. */
+      heroLookApplied: heroLook
+        ? {
+            id: heroLook.id,
+            slug: heroLook.slug,
+            title: heroLook.title,
+            destination: heroLook.destination,
+            moment: heroLook.moment,
+            heroBrands: heroLook.heroBrands,
+            paletteInclude: heroLook.paletteInclude,
+            paletteExclude: heroLook.paletteExclude,
+          }
+        : null,
+      /** v5.2 — A/B label echoed for downstream persistence. */
+      validationLabel: data.validationLabel ?? null,
       looks: looks.map((l) => ({
         ...l,
         slots: l.slots.map((s) => {
