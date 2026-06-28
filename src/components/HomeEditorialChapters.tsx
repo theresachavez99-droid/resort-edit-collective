@@ -19,27 +19,27 @@ type Chapter = {
  */
 const CHAPTERS: Chapter[] = [
   {
-    key: "arrival",
-    title: "Arrival",
-    subtitle: "Your First Moments",
+    key: "first-impressions",
+    title: "First Impressions",
+    subtitle: "Your first day in Portofino.",
     slugs: ["arrival", "espresso-morning", "exploring-the-harbor"],
   },
   {
-    key: "by-the-water",
-    title: "By the Water",
-    subtitle: "Life by the Sea",
-    slugs: ["yacht-day", "beach-club", "pool-lounging"],
+    key: "on-the-water",
+    title: "On the Water",
+    subtitle: "The Riviera at its most iconic.",
+    slugs: ["yacht-day", "beach-club", "harbor-aperitivo"],
   },
   {
-    key: "around-town",
-    title: "Around Town",
-    subtitle: "The Heart of Portofino",
-    slugs: ["shopping", "long-lunch", "harbor-aperitivo"],
+    key: "slow-afternoons",
+    title: "Slow Afternoons",
+    subtitle: "The quieter side of Portofino.",
+    slugs: ["pool-lounging", "shopping", "long-lunch"],
   },
   {
     key: "evening",
     title: "Evening",
-    subtitle: "Golden Hour & After Dark",
+    subtitle: "After sunset.",
     slugs: ["sunset-views", "riviera-dinner", "nightcap"],
   },
 ];
@@ -70,7 +70,7 @@ export function HomeEditorialChapters() {
                 >
                   {ch.title}
                 </h3>
-                <p className="mt-1 eyebrow text-[0.62rem] tracking-[0.3em] text-ink/55 uppercase">
+                <p className="mt-1 font-serif italic text-[0.82rem] text-ink/55">
                   {ch.subtitle}
                 </p>
                 <div className="mt-3 h-px w-12 bg-gold/60" />
