@@ -32,6 +32,11 @@ import exploringHarborBannerAsset from "@/assets/uploads/portofino/exploring-the
 const exploringHarborBanner = exploringHarborBannerAsset.url;
 import beachClubLongLunchBanner from "@/assets/uploads/portofino/beach-club-long-lunch-banner-cabanas.png.asset.json";
 import arrivalBanner from "@/assets/uploads/portofino/arrival-banner-peach-facade-bougainvillea.png.asset.json";
+import beachClubLemon from "@/assets/uploads/lilla/lilla-lemon-beach-club.png.asset.json";
+import longLunchCard from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
+import shoppingCard from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v3.png.asset.json";
+import shoppingBanner from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
+import nightcapCard from "@/assets/uploads/portofino/riviera-dinner-lilla-floral-terrace.png.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
@@ -143,7 +148,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Sunset Views",
     narrative:
       "The harbor at golden hour — terrace views, warm light, and the slow transition into evening.",
-    editorial_order: 8,
+    editorial_order: 10,
     moment_card_image: sunsetViewsCard.url,
     hero_banner_image: sunsetViewsHero.url,
     outfit_image: sunsetViewsCard.url,
@@ -158,7 +163,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Riviera Dinner",
     narrative:
       "Candlelit terraces, harbor lights, and the best reservation of the trip.",
-    editorial_order: 9,
+    editorial_order: 11,
     moment_card_image: rivieraDinnerCard.url,
     hero_banner_image: rivieraDinnerHero.url,
     outfit_image: rivieraDinnerCard.url,
@@ -185,6 +190,7 @@ export function getPortofinoMomentDef(slug: string): PortofinoMomentDef | undefi
 export const PORTOFINO_MOMENT_SLUG_ALIASES: Record<string, string> = {
   "arrival-day": "arrival",
   "pool-lounging-shopping": "pool-lounging",
+  "beach-club-long-lunch": "beach-club",
   "market-morning": "espresso-morning",
 };
 
@@ -219,7 +225,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
   {
     moment_slug: "exploring-the-harbor",
     archetype_slug: "exploring-the-harbor",
-    moment_name: "Exploring the Harbor",
+    moment_name: "Explore the Harbor",
     narrative:
       "A slow afternoon along the quay — boutique windows, espresso stops, and the harbor catching the light.",
     editorial_order: 3,
@@ -227,23 +233,22 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     hero_banner_image: exploringHarborBanner,
     outfit_image: exploringHarborImage,
     legacy_day: "/portofino/day-3",
-    legacy_look_title: "Exploring the Harbor",
+    legacy_look_title: "Explore the Harbor",
     legacy_day_slug: "day-3",
     look_slug: "look-b",
   },
   {
-    moment_slug: "beach-club-long-lunch",
+    moment_slug: "beach-club",
     archetype_slug: "beach-club",
-    moment_name: "Beach Club & Long Lunch",
+    moment_name: "Beach Club",
     narrative:
-      "Cabana shade, a long lunch, and nowhere else to be.",
+      "Designer swimwear, cabana shade, and the Mediterranean stretched out to the horizon.",
     editorial_order: 5,
-    moment_card_image: getCanonicalDayImage("day-2", "hero"),
+    moment_card_image: beachClubLemon.url,
     // Moment-specific banner override — applies ONLY to
-    // /portofino/beach-club-long-lunch. Card + outfit images keep the
-    // canonical day-2 image so no other moment is affected.
+    // /portofino/beach-club.
     hero_banner_image: beachClubLongLunchBanner.url,
-    outfit_image: getCanonicalDayImage("day-2", "hero"),
+    outfit_image: beachClubLemon.url,
     legacy_day: "/portofino/day-2",
     legacy_look_title: "Beach Club Morning",
     legacy_day_slug: "day-2",
@@ -251,10 +256,10 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
   },
   {
     moment_slug: "pool-lounging",
-    archetype_slug: "pool-lounging-shopping",
-    moment_name: "Pool Lounging & Shopping",
+    archetype_slug: "pool-lounging",
+    moment_name: "Pool Lounging",
     narrative:
-      "Relaxed poolside hours, boutique discoveries, and an afternoon that drifts effortlessly into town.",
+      "Cabanas, a paperback, and the quiet luxury of a long afternoon at the hotel pool.",
     editorial_order: 6,
     moment_card_image: poolLoungingShoppingImage.url,
     hero_banner_image: poolLoungingShoppingImage.url,
@@ -263,6 +268,51 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     legacy_look_title: "Poolside",
     legacy_day_slug: "day-3",
     look_slug: "look-a",
+  },
+  {
+    moment_slug: "shopping",
+    archetype_slug: "shopping",
+    moment_name: "Shopping",
+    narrative:
+      "Linen daywear and a slow walk through Portofino's boutiques.",
+    editorial_order: 7.5,
+    moment_card_image: shoppingCard.url,
+    hero_banner_image: shoppingBanner.url,
+    outfit_image: shoppingCard.url,
+    legacy_day: "/portofino/day-3",
+    legacy_look_title: "Shopping in Portofino",
+    legacy_day_slug: "day-3",
+    look_slug: "look-c",
+  },
+  {
+    moment_slug: "long-lunch",
+    archetype_slug: "long-lunch",
+    moment_name: "Long Lunch",
+    narrative:
+      "A Mediterranean dress, linen tailoring, and a lingering lunch overlooking the sea.",
+    editorial_order: 8,
+    moment_card_image: longLunchCard.url,
+    hero_banner_image: beachClubLongLunchBanner.url,
+    outfit_image: longLunchCard.url,
+    legacy_day: "/portofino/day-2",
+    legacy_look_title: "Long Lunch by the Sea",
+    legacy_day_slug: "day-2",
+    look_slug: "look-b",
+  },
+  {
+    moment_slug: "nightcap",
+    archetype_slug: "nightcap",
+    moment_name: "Nightcap",
+    narrative:
+      "One last drink on the piazzetta — the harbor empties, the locals come out.",
+    editorial_order: 12,
+    moment_card_image: nightcapCard.url,
+    hero_banner_image: sunsetViewsHero.url,
+    outfit_image: nightcapCard.url,
+    legacy_day: "/portofino/day-4",
+    legacy_look_title: "Nightcap on the Piazzetta",
+    legacy_day_slug: "day-4",
+    look_slug: "look-c",
   },
 ];
 
@@ -301,9 +351,12 @@ export type PortofinoAdditionalLook = {
 };
 
 export const PORTOFINO_ADDITIONAL_LOOKS: PortofinoAdditionalLook[] = [
-  { canonical_name: "Beach Club & Long Lunch", legacy_day_slug: "day-2", look_slug: "look-a" },
-  { canonical_name: "Pool Lounging & Shopping", legacy_day_slug: "day-3", look_slug: "look-a" },
-  { canonical_name: "Exploring the Harbor", legacy_day_slug: "day-3", look_slug: "look-b" },
+  { canonical_name: "Beach Club", legacy_day_slug: "day-2", look_slug: "look-a" },
+  { canonical_name: "Long Lunch", legacy_day_slug: "day-2", look_slug: "look-b" },
+  { canonical_name: "Pool Lounging", legacy_day_slug: "day-3", look_slug: "look-a" },
+  { canonical_name: "Shopping", legacy_day_slug: "day-3", look_slug: "look-c" },
+  { canonical_name: "Explore the Harbor", legacy_day_slug: "day-3", look_slug: "look-b" },
+  { canonical_name: "Nightcap", legacy_day_slug: "day-4", look_slug: "look-c" },
 ];
 
 /**

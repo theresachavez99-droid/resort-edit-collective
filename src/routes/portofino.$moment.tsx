@@ -305,7 +305,10 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
   "sunset-views": "Sunset",
   "riviera-dinner": "Riviera Dinner",
   "exploring-the-harbor": "Harbor",
-  "beach-club-long-lunch": "Beach Club",
+  "beach-club": "Beach Club",
+  "long-lunch": "Long Lunch",
+  "shopping": "Shopping",
+  "nightcap": "Nightcap",
   "pool-lounging": "Pool",
 };
 
