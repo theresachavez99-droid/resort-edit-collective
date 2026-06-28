@@ -1732,6 +1732,77 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       };
     }
 
+    // ── v5.3 — Lock Founder Hero pieces.
+    //
+    // Build a synthetic SlotCandidate for each hero garment in the
+    // Founder Look. These bypass discovery, scoring, and replacement.
+    // The slot is removed from the discovery loop entirely and a
+    // single-candidate SlotDiscoveryResult is synthesised so the
+    // downstream pipeline (Gemini assembly, scoring, diagnostics) can
+    // treat them as already-resolved.
+    const lockedHeroBySlot = new Map<string, SlotCandidate>();
+    const heroPiecesLockedReport: Array<{
+      slot: string;
+      brand: string;
+      productName: string | null;
+      category: string | null;
+      url: string;
+    }> = [];
+    if (heroLook && heroPiecesRaw.length) {
+      let hi = 0;
+      for (const hp of heroPiecesRaw) {
+        const brand = (hp.brand ?? "").trim();
+        const url = (hp.url ?? "").trim();
+        if (!brand || !url) continue;
+        const slot = heroCategoryToSlot(hp.category ?? null);
+        if (!slot) continue;
+        // One lock per slot — first hero wins.
+        if (lockedHeroBySlot.has(slot)) continue;
+        const retailer = retailerOf(url) ?? brand.toLowerCase().replace(/[^a-z0-9]+/g, "");
+        const id = `hero-lock-${slot}-${hi++}`;
+        const locked: SlotCandidate = {
+          id,
+          slot,
+          brand,
+          brandTier: "founder_hero",
+          retailer,
+          title: hp.product_name ?? null,
+          description: `[LOCKED — Founder Hero Piece from ${heroLook.title}]`,
+          url,
+          canonicalKey: url,
+          silhouette: "hero-lock",
+          palette: "hero-lock",
+          editorialScore: 9.999,
+          brandAffinity: 100,
+          matchedQuery: "[founder-hero-lock]",
+          source: "core",
+          commerceSource: "brand_direct",
+          approvalLevel: "approved",
+          familyMatched: hp.category ?? null,
+          constructionScore: 0,
+          curationReason: "founder_hero_locked",
+          image: hp.image_url ?? null,
+          baseEditorialScore: 9.999,
+          founderBoost: 0,
+          founderPenalty: 0,
+          founderMatchedRefIds: [],
+          founderPenalties: [],
+          founderReasons: ["Locked Founder Hero piece"],
+          founderHardExcluded: false,
+          founderBlendWeight: 0,
+          eligibilitySource: "founder_hero",
+        };
+        lockedHeroBySlot.set(slot, locked);
+        heroPiecesLockedReport.push({
+          slot,
+          brand,
+          productName: hp.product_name ?? null,
+          category: hp.category ?? null,
+          url,
+        });
+      }
+    }
+
     // ── Registry analytics: count Yacht Day brands per category and flag
     // underrepresented accessory categories before discovery runs.
     const registryByCategory: Record<string, number> = {};
