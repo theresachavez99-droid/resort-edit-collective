@@ -1499,6 +1499,61 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     //    founder_selective).
     const fcModule = await import("./founder-context.server");
     let founderContext = await fcModule.loadFounderContext(destination, activity);
+
+    // v5.2 — Resolve HeroLook (Founder Look). If the run supplies an
+    // explicit founderLookId we use it; otherwise we pick the most
+    // recently approved/published look that matches destination+moment.
+    let heroLook: import("./founder-similarity").HeroLook | null = null;
+    if (data.founderLearning) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      let q = supabaseAdmin
+        .from("founder_looks")
+        .select("*")
+        .in("status", ["approved", "published"])
+        .eq("destination", destination)
+        .eq("moment", activity)
+        .order("published_at", { ascending: false, nullsFirst: false })
+        .order("updated_at", { ascending: false })
+        .limit(1);
+      if (data.founderLookId) q = supabaseAdmin.from("founder_looks").select("*").eq("id", data.founderLookId).limit(1);
+      const { data: rows } = await q;
+      const row = rows?.[0] as
+        | (Record<string, unknown> & {
+            id: string;
+            slug: string;
+            title: string;
+            destination: string;
+            moment: string;
+            style_family: string[];
+            hero_urls: Array<{ brand?: string; category?: string }>;
+            color_palette: { include?: string[]; exclude?: string[] };
+            positive_rules: Record<string, string[]>;
+            negative_rules: Record<string, string[]>;
+            accessory_philosophy: string | null;
+            luxury_level: "editorial" | "heritage" | "mass-luxury";
+          })
+        | undefined;
+      if (row) {
+        const heroes = Array.isArray(row.hero_urls) ? row.hero_urls : [];
+        heroLook = {
+          id: row.id,
+          slug: row.slug,
+          title: row.title,
+          destination: row.destination,
+          moment: row.moment,
+          styleFamily: row.style_family ?? [],
+          heroBrands: Array.from(new Set(heroes.map((h) => String(h.brand ?? "")).filter(Boolean))),
+          heroCategories: Array.from(new Set(heroes.map((h) => String(h.category ?? "")).filter(Boolean))),
+          paletteInclude: row.color_palette?.include ?? [],
+          paletteExclude: row.color_palette?.exclude ?? [],
+          positiveRules: row.positive_rules ?? {},
+          negativeRules: row.negative_rules ?? {},
+          accessoryPhilosophy: row.accessory_philosophy,
+          luxuryLevel: row.luxury_level,
+        };
+      }
+    }
+
     const eligibilityMap = new Map<string, SlotCandidate["eligibilitySource"]>();
     for (const b of brands) eligibilityMap.set(b.slug, "registry");
 
