@@ -35,6 +35,13 @@ const STATUS_LABEL: Record<string, string> = {
   rejected: "Rejected",
 };
 
+const TARGET_CANDIDATES = 30;
+const APPROVED_HOSTS = [
+  "revolve.com","mytheresa.com","net-a-porter.com","shopbop.com","fwrd.com",
+  "nordstrom.com","saksfifthavenue.com","neimanmarcus.com","bloomingdales.com",
+  "luisaviaroma.com",
+];
+
 /* =========================================================================
    Shell
    ========================================================================= */
