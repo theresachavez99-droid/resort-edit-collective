@@ -18,7 +18,7 @@ function deriveDestination(pathname: string): string | undefined {
 export function NewsletterForm({
   ctaSource,
   variant = "footer",
-  buttonLabel = "Notify Me",
+  buttonLabel = "Get the Next Edit",
   placeholder = "Enter your email",
 }: {
   ctaSource: string;

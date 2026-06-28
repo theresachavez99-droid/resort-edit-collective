@@ -33,7 +33,7 @@ export function SiteFooter() {
         <NewsletterForm
           ctaSource="footer"
           variant="footer"
-          buttonLabel="Notify Me"
+          buttonLabel="Get the Next Edit"
           placeholder="Enter your email"
         />
         <a
