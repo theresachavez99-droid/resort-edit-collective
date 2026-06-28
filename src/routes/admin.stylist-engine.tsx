@@ -901,6 +901,7 @@ function FounderRetrievalReport({
         category: string | null;
         print: string | null;
       }>;
+      compatibleActivities?: string[];
       injectedBrands: Array<{ name: string; source: string }>;
       candidatesBoosted: number;
       candidatesPenalized: number;
@@ -997,6 +998,11 @@ function FounderRetrievalReport({
               </span>
             ))}
           </div>
+          {fr.compatibleActivities && fr.compatibleActivities.length > 0 && (
+            <div className="mt-2 text-xs text-stone-500">
+              Compatible activities: {fr.compatibleActivities.join(" → ")}
+            </div>
+          )}
         </div>
         <div>
           <h3 className="text-xs uppercase tracking-widest text-stone-500 mb-1">
