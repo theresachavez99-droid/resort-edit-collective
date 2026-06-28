@@ -5,7 +5,7 @@ import { subscribeEmail } from "@/lib/subscribers.functions";
 type Variant = "footer" | "inline-light";
 
 const CONSENT_COPY =
-  "Thoughtfully curated destination inspiration. Occasionally delivered.";
+  "Thoughtfully curated inspiration. Occasionally delivered.";
 
 function deriveDestination(pathname: string): string | undefined {
   // /portofino, /portofino/..., /destinations/portofino...
