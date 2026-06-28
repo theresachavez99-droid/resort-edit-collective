@@ -1849,6 +1849,38 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const cache = data.enableCache ? await cacheModule() : null;
 
     for (const spec of specs) {
+      // v5.3 — Founder Hero lock: skip discovery entirely and synthesise
+      // a one-candidate SlotDiscoveryResult so downstream code is unchanged.
+      if (lockedHeroBySlot.has(spec.slot)) {
+        const locked = lockedHeroBySlot.get(spec.slot)!;
+        // Reserve the canonical key so other slots can't dupe it.
+        canonicalSeen.set(locked.canonicalKey, locked.url);
+        seenUrls.add(locked.url);
+        slotResults.push({
+          slot: spec.slot,
+          label: spec.label,
+          required: spec.required,
+          targetMin: spec.targetMin,
+          targetMax: spec.targetMax,
+          brandsConsidered: [locked.brand],
+          candidates: [locked],
+          searchesIssued: 0,
+          rawResults: 0,
+          rejections: {},
+          shortfall: 0,
+          retailersPerBrand: 0,
+          retailersQueried: [],
+          retailersRepresented: [locked.retailer],
+          expansion: null,
+        });
+        cacheStatsPerSlot[spec.slot] = {
+          hits: 0,
+          written: 0,
+          rejected: 0,
+          rejectionReasons: {},
+        };
+        continue;
+      }
       // Cap brands per slot for budget.
       const slotBrands = brands
         .filter((b) => b.categories.some((c) => spec.brandCategories.includes(c)))
