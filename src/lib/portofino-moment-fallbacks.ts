@@ -148,7 +148,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Sunset Views",
     narrative:
       "The harbor at golden hour — terrace views, warm light, and the slow transition into evening.",
-    editorial_order: 8,
+    editorial_order: 10,
     moment_card_image: sunsetViewsCard.url,
     hero_banner_image: sunsetViewsHero.url,
     outfit_image: sunsetViewsCard.url,
@@ -163,7 +163,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_name: "Riviera Dinner",
     narrative:
       "Candlelit terraces, harbor lights, and the best reservation of the trip.",
-    editorial_order: 9,
+    editorial_order: 11,
     moment_card_image: rivieraDinnerCard.url,
     hero_banner_image: rivieraDinnerHero.url,
     outfit_image: rivieraDinnerCard.url,
