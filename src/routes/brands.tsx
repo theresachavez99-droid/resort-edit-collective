@@ -181,7 +181,7 @@ function BrandCard({ brand }: { brand: Brand & { category?: string } }) {
       {note && (
         <p className="mt-4 border-t border-border/40 pt-3 font-serif italic text-[0.85rem] text-ink/60 leading-snug">
           <span className="eyebrow not-italic text-[0.55rem] text-gold block mb-1">
-            Founder Note
+            Editor's Note
           </span>
           “{note}”
         </p>
@@ -356,13 +356,12 @@ function BrandsPage() {
       <section className="bg-cream/40 border-y border-border/40">
         <div className="mx-auto max-w-[1360px] px-6 pt-12 md:pt-16 pb-16 md:pb-20">
           <div className="text-center max-w-2xl mx-auto">
-            <span className="eyebrow text-gold">The Heart of the Edit</span>
+            <span className="eyebrow text-gold">The Edit</span>
             <h2 className="mt-4 font-display text-4xl md:text-5xl tracking-[0.04em] text-ink">
-              Founder Favorites
+              Editor's Picks
             </h2>
             <p className="mt-5 font-serif italic text-ink/65">
-              The houses we return to season after season — the ten labels that most
-              define the Resort Edit point of view.
+              A curated collection of designers that best represent the Resort Edit aesthetic and editorial point of view.
             </p>
           </div>
           <div className="mt-14 md:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
