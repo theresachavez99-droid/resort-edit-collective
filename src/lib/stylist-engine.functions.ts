@@ -427,15 +427,15 @@ export async function loadEngineBrands(
     editorialAffinity: ((b as { editorial_affinity?: Record<string, number> | null })
       .editorial_affinity ?? {}) as Record<string, number>,
   }));
-  const eligible = mapped
-    .filter(
-      (b) =>
-        !activityExplicitlyExcluded({
-          destination,
-          requestedActivity: activity,
-          candidateActivities: b.activities,
-        }),
-    )
+  const nonExcluded = mapped.filter(
+    (b) =>
+      !activityExplicitlyExcluded({
+        destination,
+        requestedActivity: activity,
+        candidateActivities: b.activities,
+      }),
+  );
+  const eligible = nonExcluded
     .map((b) => ({
       brand: b,
       rank: activityCompatibilityRank({
@@ -453,7 +453,7 @@ export async function loadEngineBrands(
           | "registry"
           | "compatible_activity",
       }))
-    : mapped.map((brand) => ({ ...brand, eligibilitySource: "static" as const }));
+    : nonExcluded.map((brand) => ({ ...brand, eligibilitySource: "static" as const }));
 
   // v5 — sort by hierarchy strength, then editorial affinity for this
   // destination + activity so discovery leads with the most aligned brands.
