@@ -22,6 +22,7 @@ import {
   FEEDBACK_REASONS,
   type FeedbackReasonCode,
 } from "@/lib/founder-feedback.functions";
+import { analyzeFounderLookDuplicates } from "@/lib/editorial-memory.functions";
 
 export const Route = createFileRoute("/admin/founder-looks")({
   head: () => ({
@@ -417,6 +418,12 @@ function BuilderTab({ pw, id }: { pw: string; id: string | null }) {
     mutationFn: () => publish({ data: { password: pw, id: savedId! } }),
   });
 
+  // ── Phase 3 — Duplicate Analysis (pre-publish).
+  const dupFn = useServerFn(analyzeFounderLookDuplicates);
+  const dupM = useMutation({
+    mutationFn: () => dupFn({ data: { password: pw, id: savedId! } }),
+  });
+
   function field(label: string, k: keyof FormState, multiline = false, hint?: string) {
     return (
       <label className="block">
@@ -516,6 +523,14 @@ function BuilderTab({ pw, id }: { pw: string; id: string | null }) {
             {saveM.isPending ? "Saving…" : "Save"}
           </button>
           <button
+            onClick={() => dupM.mutate()}
+            disabled={!savedId || dupM.isPending}
+            className="border border-stone-400 px-4 py-2 text-sm"
+            title="Check Editorial Memory before publishing"
+          >
+            {dupM.isPending ? "Checking…" : "Duplicate Analysis"}
+          </button>
+          <button
             onClick={() => publishM.mutate()}
             disabled={!savedId || publishM.isPending}
             className="border border-black px-4 py-2 text-sm"
@@ -529,9 +544,91 @@ function BuilderTab({ pw, id }: { pw: string; id: string | null }) {
         {publishM.data && "ok" in publishM.data && publishM.data.ok && (
           <div className="text-xs text-green-700">
             Published. {publishM.data.refsWritten} refs · {publishM.data.brandsWritten} brand records.
+            {typeof publishM.data.memoryWrites === "number" && (
+              <> · {publishM.data.memoryWrites} memory entries.</>
+            )}
           </div>
         )}
+        {dupM.data && "ok" in dupM.data && dupM.data.ok && (
+          <DuplicateReport report={dupM.data} />
+        )}
+        {dupM.data && "ok" in dupM.data && !dupM.data.ok && (
+          <div className="text-xs text-red-600">{dupM.data.error}</div>
+        )}
       </div>
+    </div>
+  );
+}
+
+function DuplicateReport({
+  report,
+}: {
+  report: {
+    ok: true;
+    exactMatches: Array<{ url: string; brand: string; productName: string | null; usageCount: number; destinations: string[] }>;
+    similarMatches: Array<{ url: string; brand: string; productName: string | null; reason: string }>;
+    brandConcentration: Array<{ brand: string; share: number; uses: number }>;
+    colorConcentration: Array<{ color: string; share: number; uses: number }>;
+    summary: string;
+  };
+}) {
+  return (
+    <div className="mt-4 border border-stone-300 p-3 text-xs space-y-3">
+      <div className="text-[10px] tracking-[0.24em] uppercase text-stone-500">
+        Editorial Memory · Duplicate Analysis
+      </div>
+      <p className="text-stone-700">{report.summary}</p>
+      {report.exactMatches.length > 0 && (
+        <div>
+          <div className="font-medium text-red-700 mb-1">
+            Exact duplicates ({report.exactMatches.length})
+          </div>
+          <ul className="space-y-0.5">
+            {report.exactMatches.map((m) => (
+              <li key={m.url}>
+                · {m.brand} — {m.productName ?? m.url} <span className="text-stone-500">({m.usageCount}× in {m.destinations.join(", ")})</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {report.similarMatches.length > 0 && (
+        <div>
+          <div className="font-medium text-amber-700 mb-1">
+            Near-identical ({report.similarMatches.length})
+          </div>
+          <ul className="space-y-0.5">
+            {report.similarMatches.map((m) => (
+              <li key={m.url}>· {m.brand} — {m.productName ?? "—"} <span className="text-stone-500">({m.reason})</span></li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {report.brandConcentration.length > 0 && (
+        <div>
+          <div className="font-medium mb-1">Brand share (destination)</div>
+          <ul className="space-y-0.5">
+            {report.brandConcentration.slice(0, 5).map((b) => (
+              <li key={b.brand}>
+                · {b.brand} — {(b.share * 100).toFixed(0)}% ({b.uses}×)
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {report.colorConcentration.length > 0 && (
+        <div>
+          <div className="font-medium mb-1">Color share</div>
+          <ul className="space-y-0.5">
+            {report.colorConcentration.slice(0, 5).map((c) => (
+              <li key={c.color}>· {c.color} — {(c.share * 100).toFixed(0)}%</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <p className="text-stone-500 italic">
+        Publishing is never blocked — this is an editorial conscience.
+      </p>
     </div>
   );
 }

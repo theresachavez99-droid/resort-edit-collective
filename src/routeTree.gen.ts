@@ -41,6 +41,7 @@ import { Route as AdminImageRepairQueueRouteImport } from './routes/admin.image-
 import { Route as AdminFounderLooksRouteImport } from './routes/admin.founder-looks'
 import { Route as AdminFounderLearningRouteImport } from './routes/admin.founder-learning'
 import { Route as AdminEditorialReviewQueueRouteImport } from './routes/admin.editorial-review-queue'
+import { Route as AdminEditorialMemoryRouteImport } from './routes/admin.editorial-memory'
 import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editorial-library'
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
 import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
@@ -211,6 +212,11 @@ const AdminEditorialReviewQueueRoute =
     path: '/admin/editorial-review-queue',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AdminEditorialMemoryRoute = AdminEditorialMemoryRouteImport.update({
+  id: '/admin/editorial-memory',
+  path: '/admin/editorial-memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminEditorialLibraryRoute = AdminEditorialLibraryRouteImport.update({
   id: '/admin/editorial-library',
   path: '/admin/editorial-library',
@@ -269,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
   '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
@@ -311,6 +318,7 @@ export interface FileRoutesByTo {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
   '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
@@ -354,6 +362,7 @@ export interface FileRoutesById {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-library': typeof AdminEditorialLibraryRoute
+  '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
   '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
   '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
@@ -398,6 +407,7 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/editorial-memory'
     | '/admin/editorial-review-queue'
     | '/admin/founder-learning'
     | '/admin/founder-looks'
@@ -440,6 +450,7 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/editorial-memory'
     | '/admin/editorial-review-queue'
     | '/admin/founder-learning'
     | '/admin/founder-looks'
@@ -482,6 +493,7 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-library'
+    | '/admin/editorial-memory'
     | '/admin/editorial-review-queue'
     | '/admin/founder-learning'
     | '/admin/founder-looks'
@@ -525,6 +537,7 @@ export interface RootRouteChildren {
   AdminDayImagesRoute: typeof AdminDayImagesRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
   AdminEditorialLibraryRoute: typeof AdminEditorialLibraryRoute
+  AdminEditorialMemoryRoute: typeof AdminEditorialMemoryRoute
   AdminEditorialReviewQueueRoute: typeof AdminEditorialReviewQueueRoute
   AdminFounderLearningRoute: typeof AdminFounderLearningRoute
   AdminFounderLooksRoute: typeof AdminFounderLooksRoute
@@ -767,6 +780,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEditorialReviewQueueRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/editorial-memory': {
+      id: '/admin/editorial-memory'
+      path: '/admin/editorial-memory'
+      fullPath: '/admin/editorial-memory'
+      preLoaderRoute: typeof AdminEditorialMemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/editorial-library': {
       id: '/admin/editorial-library'
       path: '/admin/editorial-library'
@@ -901,6 +921,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminDayImagesRoute: AdminDayImagesRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
   AdminEditorialLibraryRoute: AdminEditorialLibraryRoute,
+  AdminEditorialMemoryRoute: AdminEditorialMemoryRoute,
   AdminEditorialReviewQueueRoute: AdminEditorialReviewQueueRoute,
   AdminFounderLearningRoute: AdminFounderLearningRoute,
   AdminFounderLooksRoute: AdminFounderLooksRoute,

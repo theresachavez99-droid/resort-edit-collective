@@ -738,6 +738,116 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_memory_products: {
+        Row: {
+          brand: string
+          category: string | null
+          color_family: string | null
+          created_at: string
+          destinations: string[]
+          first_used_at: string | null
+          founder_override_reason: string | null
+          image_url: string | null
+          last_used_at: string | null
+          material: string | null
+          moments: string[]
+          product_name: string | null
+          product_url: string
+          retailer: string | null
+          signature_piece: boolean
+          signature_reason: string | null
+          silhouette: string | null
+          style_family: string[]
+          updated_at: string
+          usage_count: number
+        }
+        Insert: {
+          brand: string
+          category?: string | null
+          color_family?: string | null
+          created_at?: string
+          destinations?: string[]
+          first_used_at?: string | null
+          founder_override_reason?: string | null
+          image_url?: string | null
+          last_used_at?: string | null
+          material?: string | null
+          moments?: string[]
+          product_name?: string | null
+          product_url: string
+          retailer?: string | null
+          signature_piece?: boolean
+          signature_reason?: string | null
+          silhouette?: string | null
+          style_family?: string[]
+          updated_at?: string
+          usage_count?: number
+        }
+        Update: {
+          brand?: string
+          category?: string | null
+          color_family?: string | null
+          created_at?: string
+          destinations?: string[]
+          first_used_at?: string | null
+          founder_override_reason?: string | null
+          image_url?: string | null
+          last_used_at?: string | null
+          material?: string | null
+          moments?: string[]
+          product_name?: string | null
+          product_url?: string
+          retailer?: string | null
+          signature_piece?: boolean
+          signature_reason?: string | null
+          silhouette?: string | null
+          style_family?: string[]
+          updated_at?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
+      editorial_memory_usages: {
+        Row: {
+          destination: string
+          founder_look_id: string | null
+          id: string
+          moment: string
+          product_url: string
+          role: string | null
+          slot: string | null
+          used_at: string
+        }
+        Insert: {
+          destination: string
+          founder_look_id?: string | null
+          id?: string
+          moment: string
+          product_url: string
+          role?: string | null
+          slot?: string | null
+          used_at?: string
+        }
+        Update: {
+          destination?: string
+          founder_look_id?: string | null
+          id?: string
+          moment?: string
+          product_url?: string
+          role?: string | null
+          slot?: string | null
+          used_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editorial_memory_usages_product_url_fkey"
+            columns: ["product_url"]
+            isOneToOne: false
+            referencedRelation: "editorial_memory_products"
+            referencedColumns: ["product_url"]
+          },
+        ]
+      }
       editorial_reference_library: {
         Row: {
           accessory_strategy: string | null
@@ -2036,6 +2146,26 @@ export type Database = {
           brands_written: number
           refs_written: number
         }[]
+      }
+      record_editorial_memory_usage: {
+        Args: {
+          p_brand: string
+          p_category: string
+          p_color_family: string
+          p_destination: string
+          p_founder_look_id: string
+          p_image_url: string
+          p_material: string
+          p_moment: string
+          p_product_name: string
+          p_product_url: string
+          p_retailer: string
+          p_role: string
+          p_silhouette: string
+          p_slot: string
+          p_style_family: string[]
+        }
+        Returns: number
       }
     }
     Enums: {
