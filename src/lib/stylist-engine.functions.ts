@@ -230,6 +230,45 @@ const ACTIVITY_SLOTS: Record<string, SlotSpec[]> = {
   "Yacht Day": YACHT_DAY_SLOT_SPECS,
 };
 
+// v5.2 — Pool Lounging & Shopping (Portofino) shares Yacht Day's slot
+// surface area: swim/coverup base + full accessory stack. Templates
+// nudge toward boutique-walking elegance vs deck-only utility.
+const POOL_LOUNGING_SLOT_SPECS: SlotSpec[] = YACHT_DAY_SLOT_SPECS.map((s) => {
+  if (s.slot === "shoes") {
+    return {
+      ...s,
+      templates: [
+        "{brand} flat leather sandal cream",
+        "{brand} raffia slide",
+        "{brand} espadrille tan",
+        "{brand} flat sandal champagne",
+      ],
+    };
+  }
+  if (s.slot === "bag") {
+    return {
+      ...s,
+      templates: [
+        "{brand} raffia tote handwoven",
+        "{brand} structured straw bag",
+        "{brand} woven shoulder bag natural",
+        "{brand} basket bag minimal",
+      ],
+    };
+  }
+  if (s.slot === "sunglasses") {
+    return {
+      ...s,
+      templates: [
+        "{brand} oversized tortoise sunglasses",
+        "{brand} honey acetate sunglasses",
+        "{brand} vintage round sunglasses",
+      ],
+    };
+  }
+  return s;
+});
+
 // ──────────────────────────────────────────────────────────────
 // v4 — Destination-agnostic slot resolver.
 //
@@ -241,6 +280,8 @@ const ACTIVITY_SLOTS: Record<string, SlotSpec[]> = {
 
 const SLOT_SPECS_BY_KEY: Record<string, SlotSpec[]> = {
   "Portofino|Yacht Day": YACHT_DAY_SLOT_SPECS,
+  "Portofino|Pool Lounging & Shopping": POOL_LOUNGING_SLOT_SPECS,
+  "Portofino|Pool Lounging": POOL_LOUNGING_SLOT_SPECS,
 };
 
 export function getSlotSpecs(destination: string, activity: string): SlotSpec[] {
@@ -507,6 +548,39 @@ const BRIEFS: Record<string, EditorialBrief> = {
       "Sunset Sail",
     ],
   },
+  "Portofino|Pool Lounging & Shopping": {
+    destination: "Portofino",
+    activity: "Pool Lounging & Shopping",
+    mood:
+      "Splendido pool to long lunch to walking the Piazzetta into the boutiques. The print is hero; accessories elevate without competing.",
+    palette: [
+      "tomato red",
+      "warm ivory",
+      "cream",
+      "natural raffia",
+      "warm camel",
+      "honey",
+      "olive",
+      "warm gold",
+    ],
+    styleDna: [
+      "Mediterranean Glamour",
+      "Italian Riviera",
+      "Vintage Resort",
+      "Dolce-inspired",
+      "Quiet Luxury",
+      "Editorial Resortwear",
+    ],
+    notes:
+      "Sequence: hotel pool → lunch → walk into town → boutique shopping → gelato → return. " +
+      "Restraint is the look. Avoid bright white, jet black, cool silver, logos, sport cues.",
+    collectionThemes: [
+      "Pietra Rosa Hero",
+      "Quiet Luxury Pool",
+      "Boutique Walk",
+      "Splendido Afternoon",
+    ],
+  },
 };
 
 function briefFor(destination: string, activity: string): EditorialBrief {
@@ -561,6 +635,26 @@ export type SlotCandidate = {
   founderMatchedRefIds?: string[];
   founderPenalties?: Array<{ id: string; label: string; delta: number }>;
   founderReasons?: string[];
+  /** v5.2 — HeroLook similarity (0..1) + structured diagnostics. */
+  founderSimilarity?: number;
+  founderSimilarityComponents?: {
+    palette: number;
+    brand: number;
+    style: number;
+    silhouette: number;
+    aesthetic: number;
+  };
+  founderHits?: Array<{
+    id: string;
+    label: string;
+    slot: string;
+    severity: "hard" | "soft";
+    delta: number;
+  }>;
+  founderHardExcluded?: boolean;
+  founderBlendWeight?: number;
+  /** v5.2 — rank delta caused by Founder Learning (negative = moved up). */
+  rankDeltaFromFounder?: number;
   eligibilitySource?:
     | "registry"
     | "static"
@@ -640,6 +734,10 @@ export async function discoverForSlot(args: {
   founderContext?: FounderContext;
   /** v5.1 — brand→eligibility source resolved at run start (registry|founder_*). */
   eligibilityMap?: Map<string, SlotCandidate["eligibilitySource"]>;
+  /** v5.2 — HeroLook for blended similarity scoring + hard-exclude. */
+  heroLook?: import("./founder-similarity").HeroLook;
+  /** v5.2 — master switch for Founder Learning (A/B harness). */
+  founderLearningEnabled?: boolean;
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
@@ -805,7 +903,7 @@ export async function discoverForSlot(args: {
             Math.round((baseScore + verdict.constructionScore) * 1000) / 1000;
           // v5.1 — Founder Learning is a top-weight scoring axis.
           let fSig: FounderSignal | null = null;
-          if (fcModule && args.founderContext) {
+          if (fcModule && args.founderContext && args.founderLearningEnabled !== false) {
             fSig = fcModule.evaluateFounderSignal({
               slot: spec.slot,
               brand: brand.name,
@@ -816,7 +914,38 @@ export async function discoverForSlot(args: {
               context: args.founderContext,
             });
           }
+          // v5.2 — HeroLook similarity (blended at slot-weighted W).
+          let heroSim: import("./founder-similarity").SimilarityResult | null = null;
+          let blendedScore: number | null = null;
+          let blendWeight = 0;
+          if (args.heroLook && args.founderLearningEnabled !== false) {
+            const fsModule = await import("./founder-similarity");
+            heroSim = fsModule.evaluateSimilarity({
+              slot: spec.slot,
+              brand: brand.name,
+              title,
+              description,
+              palette,
+              silhouette,
+              look: args.heroLook,
+            });
+            if (heroSim.hardExcluded) {
+              const id = heroSim.hits.find((h) => h.severity === "hard")?.id ?? "founder_hard_exclude";
+              bump(`founder_hard:${id}`);
+              continue;
+            }
+            const blended = fsModule.blendScore({
+              slot: spec.slot,
+              baseEditorial: baseEditorialScore + (fSig?.boost ?? 0) + (fSig?.penalty ?? 0),
+              similarity: heroSim.similarity,
+            });
+            blendedScore = blended.blended;
+            blendWeight = blended.weight;
+          }
           const score =
+            blendedScore !== null
+              ? blendedScore
+              :
             Math.round(
               (baseEditorialScore +
                 (fSig?.boost ?? 0) +
@@ -857,6 +986,11 @@ export async function discoverForSlot(args: {
             founderMatchedRefIds: fSig?.matchedRefIds ?? [],
             founderPenalties: fSig?.penaltiesApplied ?? [],
             founderReasons: fSig?.reasons ?? [],
+            founderSimilarity: heroSim ? heroSim.similarity : undefined,
+            founderSimilarityComponents: heroSim?.components,
+            founderHits: heroSim?.hits,
+            founderHardExcluded: false,
+            founderBlendWeight: heroSim ? blendWeight : 0,
             eligibilitySource:
               args.eligibilityMap?.get(brand.slug) ?? "registry",
           });
@@ -1310,6 +1444,15 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         discoveryMode: z.enum(["fast", "balanced", "deep"]).default("fast"),
         /** v4.7 — disable to debug a cold-start run. */
         enableCache: z.boolean().default(true),
+        /** v5.2 — destination/activity override. Defaults preserve Yacht Day behavior. */
+        destination: z.string().min(1).max(80).default("Portofino"),
+        activity: z.string().min(1).max(80).default("Yacht Day"),
+        /** v5.2 — master switch for Founder Learning blending. */
+        founderLearning: z.boolean().default(true),
+        /** v5.2 — optional HeroLook to drive blended similarity. */
+        founderLookId: z.string().uuid().nullable().optional(),
+        /** v5.2 — persist this run as one side of an A/B comparison. */
+        validationLabel: z.enum(["A", "B"]).nullable().optional(),
       })
       .parse(input),
   )
@@ -1318,8 +1461,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const apiKey = process.env.FIRECRAWL_API_KEY;
     if (!apiKey) return { ok: false as const, stage: "config" as const, error: "FIRECRAWL_API_KEY missing" };
 
-    const destination = "Portofino";
-    const activity = "Yacht Day";
+    const destination = data.destination;
+    const activity = data.activity;
     const brief = briefFor(destination, activity);
     const specs = getSlotSpecs(destination, activity).filter(
       (s) => s.required || data.includeOptional,
@@ -1356,6 +1499,61 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     //    founder_selective).
     const fcModule = await import("./founder-context.server");
     let founderContext = await fcModule.loadFounderContext(destination, activity);
+
+    // v5.2 — Resolve HeroLook (Founder Look). If the run supplies an
+    // explicit founderLookId we use it; otherwise we pick the most
+    // recently approved/published look that matches destination+moment.
+    let heroLook: import("./founder-similarity").HeroLook | null = null;
+    if (data.founderLearning) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      let q = supabaseAdmin
+        .from("founder_looks")
+        .select("*")
+        .in("status", ["approved", "published"])
+        .eq("destination", destination)
+        .eq("moment", activity)
+        .order("published_at", { ascending: false, nullsFirst: false })
+        .order("updated_at", { ascending: false })
+        .limit(1);
+      if (data.founderLookId) q = supabaseAdmin.from("founder_looks").select("*").eq("id", data.founderLookId).limit(1);
+      const { data: rows } = await q;
+      const row = rows?.[0] as
+        | (Record<string, unknown> & {
+            id: string;
+            slug: string;
+            title: string;
+            destination: string;
+            moment: string;
+            style_family: string[];
+            hero_urls: Array<{ brand?: string; category?: string }>;
+            color_palette: { include?: string[]; exclude?: string[] };
+            positive_rules: Record<string, string[]>;
+            negative_rules: Record<string, string[]>;
+            accessory_philosophy: string | null;
+            luxury_level: "editorial" | "heritage" | "mass-luxury";
+          })
+        | undefined;
+      if (row) {
+        const heroes = Array.isArray(row.hero_urls) ? row.hero_urls : [];
+        heroLook = {
+          id: row.id,
+          slug: row.slug,
+          title: row.title,
+          destination: row.destination,
+          moment: row.moment,
+          styleFamily: row.style_family ?? [],
+          heroBrands: Array.from(new Set(heroes.map((h) => String(h.brand ?? "")).filter(Boolean))),
+          heroCategories: Array.from(new Set(heroes.map((h) => String(h.category ?? "")).filter(Boolean))),
+          paletteInclude: row.color_palette?.include ?? [],
+          paletteExclude: row.color_palette?.exclude ?? [],
+          positiveRules: row.positive_rules ?? {},
+          negativeRules: row.negative_rules ?? {},
+          accessoryPhilosophy: row.accessory_philosophy,
+          luxuryLevel: row.luxury_level,
+        };
+      }
+    }
+
     const eligibilityMap = new Map<string, SlotCandidate["eligibilitySource"]>();
     for (const b of brands) eligibilityMap.set(b.slug, "registry");
 
@@ -1531,6 +1729,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         budget,
         founderContext,
         eligibilityMap,
+        heroLook: heroLook ?? undefined,
+        founderLearningEnabled: data.founderLearning,
       });
 
       // Tier-2 controlled accessory expansion.
@@ -1568,6 +1768,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           activity,
           founderContext,
           eligibilityMap,
+          heroLook: heroLook ?? undefined,
+          founderLearningEnabled: data.founderLearning,
         });
         const acceptedExpansion = exp.candidates.length;
         // Merge expansion candidates into the slot.
@@ -1613,6 +1815,26 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
       slotResults.push(r);
       brandOffset += slotBrands.length;
+
+      // v5.2 — annotate each candidate with rankDeltaFromFounder. Compare
+      // its blended rank within the slot against the rank it would have
+      // held by base editorial score alone (negative = moved up).
+      if (heroLook && data.founderLearning) {
+        const blendedOrder = [...r.candidates].sort(
+          (a, b) => b.editorialScore - a.editorialScore,
+        );
+        const baselineOrder = [...r.candidates].sort(
+          (a, b) =>
+            (b.baseEditorialScore ?? b.editorialScore) -
+            (a.baseEditorialScore ?? a.editorialScore),
+        );
+        const blendedRank = new Map(blendedOrder.map((c, i) => [c.id, i]));
+        const baselineRank = new Map(baselineOrder.map((c, i) => [c.id, i]));
+        for (const c of r.candidates) {
+          c.rankDeltaFromFounder =
+            (blendedRank.get(c.id) ?? 0) - (baselineRank.get(c.id) ?? 0);
+        }
+      }
 
       // ── v4.7 — Stage 3: write newly discovered (non-seed) candidates
       // to the cache, subject to quality + approved-retailer gates.
@@ -1806,6 +2028,19 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
         slotCoverageStatus,
         founderRetrieval: founderRetrievalGated,
+        heroLookApplied: heroLook
+          ? {
+              id: heroLook.id,
+              slug: heroLook.slug,
+              title: heroLook.title,
+              destination: heroLook.destination,
+              moment: heroLook.moment,
+              heroBrands: heroLook.heroBrands,
+              paletteInclude: heroLook.paletteInclude,
+              paletteExclude: heroLook.paletteExclude,
+            }
+          : null,
+        validationLabel: data.validationLabel ?? null,
         costReport: {
           discoveryMode: data.discoveryMode,
           discoveryModeLabel: DISCOVERY_MODE_LABEL[data.discoveryMode as DiscoveryMode],
@@ -2355,6 +2590,21 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         injectedFounderBrands,
         candidatesById,
       ),
+      /** v5.2 — active HeroLook used for blended similarity, if any. */
+      heroLookApplied: heroLook
+        ? {
+            id: heroLook.id,
+            slug: heroLook.slug,
+            title: heroLook.title,
+            destination: heroLook.destination,
+            moment: heroLook.moment,
+            heroBrands: heroLook.heroBrands,
+            paletteInclude: heroLook.paletteInclude,
+            paletteExclude: heroLook.paletteExclude,
+          }
+        : null,
+      /** v5.2 — A/B label echoed for downstream persistence. */
+      validationLabel: data.validationLabel ?? null,
       looks: looks.map((l) => ({
         ...l,
         slots: l.slots.map((s) => {

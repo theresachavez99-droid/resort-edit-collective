@@ -29,6 +29,12 @@ type NavItem = {
 
 const WORKFLOW: NavItem[] = [
   {
+    label: "Founder Look Builder",
+    to: "/admin/founder-looks",
+    description:
+      "Author the hero look per moment — editorial DNA, accessory rules, palette. Publishing fans out to references + brands automatically.",
+  },
+  {
     label: "Stylist Engine",
     to: "/admin/stylist-engine",
     description: "Generate complete editorial looks for any destination moment.",
