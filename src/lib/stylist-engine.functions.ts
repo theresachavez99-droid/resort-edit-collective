@@ -734,6 +734,10 @@ export async function discoverForSlot(args: {
   founderContext?: FounderContext;
   /** v5.1 — brand→eligibility source resolved at run start (registry|founder_*). */
   eligibilityMap?: Map<string, SlotCandidate["eligibilitySource"]>;
+  /** v5.2 — HeroLook for blended similarity scoring + hard-exclude. */
+  heroLook?: import("./founder-similarity").HeroLook;
+  /** v5.2 — master switch for Founder Learning (A/B harness). */
+  founderLearningEnabled?: boolean;
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
