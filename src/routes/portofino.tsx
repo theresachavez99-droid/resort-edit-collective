@@ -169,7 +169,7 @@ function PortofinoPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
               {[
-                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", moment: "beach-club-long-lunch", badge: "MOST INSTAGRAMMABLE", badgeStyle: "gold" as const },
+                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", moment: "beach-club", badge: "MOST INSTAGRAMMABLE", badgeStyle: "gold" as const },
                 { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", moment: "yacht-day", badge: null, badgeStyle: null },
                 { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", moment: "yacht-day", badge: "BOOK FIRST", badgeStyle: "ink" as const },
                 { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", moment: "sunset-views", badge: "INSIDER FAVORITE", badgeStyle: "outline" as const },
