@@ -796,7 +796,29 @@ export async function discoverForSlot(args: {
             brandTier: brand.tier,
             affinity: brandAffinity,
           });
-          const score = Math.round((baseScore + verdict.constructionScore) * 1000) / 1000;
+          const baseEditorialScore =
+            Math.round((baseScore + verdict.constructionScore) * 1000) / 1000;
+          // v5.1 — Founder Learning is a top-weight scoring axis.
+          let fSig: FounderSignal | null = null;
+          if (args.founderContext) {
+            const fc = await import("./founder-context.server");
+            fSig = fc.evaluateFounderSignal({
+              slot: spec.slot,
+              brand: brand.name,
+              title,
+              description,
+              palette,
+              silhouette,
+              context: args.founderContext,
+            });
+          }
+          const score =
+            Math.round(
+              (baseEditorialScore +
+                (fSig?.boost ?? 0) +
+                (fSig?.penalty ?? 0)) *
+                1000,
+            ) / 1000;
           // v4 — gate on approved commerce source before accepting.
           const cs = resolveCommerceSource(brand, matchedRetailer);
           if (!cs.approved) {
@@ -825,6 +847,14 @@ export async function discoverForSlot(args: {
             constructionScore: verdict.constructionScore,
             curationReason: verdict.reason,
             image,
+            baseEditorialScore,
+            founderBoost: fSig?.boost ?? 0,
+            founderPenalty: fSig?.penalty ?? 0,
+            founderMatchedRefIds: fSig?.matchedRefIds ?? [],
+            founderPenalties: fSig?.penaltiesApplied ?? [],
+            founderReasons: fSig?.reasons ?? [],
+            eligibilitySource:
+              args.eligibilityMap?.get(brand.slug) ?? "registry",
           });
         }
       }
