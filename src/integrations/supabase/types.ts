@@ -351,6 +351,7 @@ export type Database = {
           id: string
           image_missing: boolean
           image_url: string | null
+          import_type: string
           imported_by: string | null
           notes: string | null
           price: number | null
@@ -384,6 +385,7 @@ export type Database = {
           id?: string
           image_missing?: boolean
           image_url?: string | null
+          import_type?: string
           imported_by?: string | null
           notes?: string | null
           price?: number | null
@@ -417,6 +419,7 @@ export type Database = {
           id?: string
           image_missing?: boolean
           image_url?: string | null
+          import_type?: string
           imported_by?: string | null
           notes?: string | null
           price?: number | null

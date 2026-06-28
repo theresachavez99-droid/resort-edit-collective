@@ -1,0 +1,1 @@
+ALTER TABLE public.buying_candidates ADD COLUMN IF NOT EXISTS import_type TEXT NOT NULL DEFAULT 'shopping'; CREATE INDEX IF NOT EXISTS idx_buying_candidates_import_type ON public.buying_candidates(import_type);
