@@ -131,6 +131,11 @@ export const saveFounderLook = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // Auto-enrich hero pieces with og:image so locked Founder Hero cards
+    // render in the Blind A/B studio. This runs at save time so the
+    // expensive HTML fetches don't happen during outfit generation.
+    const { enrichHeroUrlsWithImages } = await import("./og-image.server");
+    const enriched = await enrichHeroUrlsWithImages(data.hero_urls);
     const slug = data.slug ?? slugify(`${data.destination}-${data.moment}-${data.title}`);
     const payload = {
       slug,
@@ -138,7 +143,7 @@ export const saveFounderLook = createServerFn({ method: "POST" })
       destination: data.destination,
       moment: data.moment,
       style_family: data.style_family,
-      hero_urls: data.hero_urls,
+      hero_urls: enriched.heroUrls,
       activity_sequence: data.activity_sequence,
       color_palette: data.color_palette,
       positive_rules: data.positive_rules,
@@ -167,7 +172,70 @@ export const saveFounderLook = createServerFn({ method: "POST" })
       if (error) return { ok: false as const, error: error.message };
       id = row.id;
     }
-    return { ok: true as const, id, slug };
+    return { ok: true as const, id, slug, imageReport: enriched.report };
+  });
+
+/**
+ * Explicit re-enrichment of an existing Founder Look's hero images.
+ * Use when image extraction failed at save time (e.g. retailer was down)
+ * or after editing hero URLs. Returns a per-URL diagnostic report so the
+ * UI can surface exactly why any image is still missing.
+ */
+export const refreshFounderLookHeroImages = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z
+      .object({
+        password: pw,
+        id: z.string().uuid(),
+        force: z.boolean().default(false),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { enrichHeroUrlsWithImages } = await import("./og-image.server");
+    const { data: row, error } = await supabaseAdmin
+      .from("founder_looks")
+      .select("hero_urls")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (error || !row) {
+      return { ok: false as const, error: error?.message ?? "not_found" };
+    }
+    const heroes = Array.isArray(row.hero_urls) ? row.hero_urls : [];
+    // `force` clears existing image_url so every hero re-fetches.
+    const seed = data.force
+      ? heroes.map((h) => ({ ...(h as Record<string, unknown>), image_url: null }))
+      : (heroes as Array<{ url?: string | null; image_url?: string | null }>);
+    const enriched = await enrichHeroUrlsWithImages(
+      seed as Array<{ url?: string | null; image_url?: string | null }>,
+    );
+    const { error: upErr } = await supabaseAdmin
+      .from("founder_looks")
+      .update({ hero_urls: enriched.heroUrls as never })
+      .eq("id", data.id);
+    if (upErr) return { ok: false as const, error: upErr.message };
+    // Also update any matching founder_reference_products rows so accessory
+    // discovery and learning loops see the same canonical image_url.
+    for (const h of enriched.heroUrls) {
+      const hh = h as { url?: string | null; image_url?: string | null };
+      if (!hh.url || !hh.image_url) continue;
+      try {
+        await supabaseAdmin
+          .from("founder_reference_products")
+          .update({ image_url: hh.image_url })
+          .eq("source_url", hh.url);
+      } catch {
+        // image_url column may not exist on the references table — non-fatal.
+      }
+    }
+    return {
+      ok: true as const,
+      report: enriched.report,
+      filled: enriched.report.filter((r) => r.ok && r.image_url).length,
+      total: enriched.report.length,
+    };
   });
 
 /** Publish (or re-publish): runs the SQL pipeline that fans out to

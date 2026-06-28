@@ -10,6 +10,7 @@ import {
   publishFounderLook,
   seedPoolLoungingValidationLook,
   recordValidationRun,
+  refreshFounderLookHeroImages,
 } from "@/lib/founder-looks.functions";
 import { generateYachtDayCollection } from "@/lib/stylist-engine.functions";
 
@@ -119,6 +120,7 @@ function ListTab({
 }) {
   const list = useServerFn(listFounderLooks);
   const seed = useServerFn(seedPoolLoungingValidationLook);
+  const refresh = useServerFn(refreshFounderLookHeroImages);
   const q = useQuery({
     queryKey: ["founder-looks", pw],
     queryFn: () => list({ data: { password: pw } }),
@@ -127,6 +129,15 @@ function ListTab({
     mutationFn: () => seed({ data: { password: pw } }),
     onSuccess: () => q.refetch(),
   });
+  const refreshM = useMutation({
+    mutationFn: (vars: { id: string; force: boolean }) =>
+      refresh({ data: { password: pw, id: vars.id, force: vars.force } }),
+    onSuccess: () => q.refetch(),
+  });
+  const [refreshReport, setRefreshReport] = useState<{
+    id: string;
+    report: Array<{ url: string; ok: boolean; image_url: string | null; reason: string | null; source: string | null; status: number | null }>;
+  } | null>(null);
 
   return (
     <div>
@@ -149,21 +160,71 @@ function ListTab({
       )}
       <div className="space-y-2">
         {(q.data && "ok" in q.data && q.data.ok ? q.data.looks : []).map((l) => (
-          <div key={l.id} className="border p-4 flex items-center justify-between">
-            <div>
-              <div className="text-sm font-medium">{l.title}</div>
-              <div className="text-xs text-neutral-500">
-                {l.destination} · {l.moment} · {l.status}
+          <div key={l.id} className="border p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm font-medium">{l.title}</div>
+                <div className="text-xs text-neutral-500">
+                  {l.destination} · {l.moment} · {l.status}
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button onClick={() => onEdit(l.id)} className="text-xs underline">
+                  Edit
+                </button>
+                <button
+                  onClick={async () => {
+                    const r = await refreshM.mutateAsync({ id: l.id, force: true });
+                    if (r && "ok" in r && r.ok) {
+                      setRefreshReport({ id: l.id, report: r.report });
+                    } else {
+                      setRefreshReport({
+                        id: l.id,
+                        report: [
+                          {
+                            url: "",
+                            ok: false,
+                            image_url: null,
+                            source: null,
+                            status: null,
+                            reason: (r as { error?: string })?.error ?? "unknown",
+                          },
+                        ],
+                      });
+                    }
+                  }}
+                  disabled={refreshM.isPending}
+                  className="text-xs underline"
+                >
+                  {refreshM.isPending && refreshM.variables?.id === l.id
+                    ? "Refreshing…"
+                    : "Refresh hero images"}
+                </button>
+                <button onClick={() => onValidate(l.id)} className="text-xs underline">
+                  Blind A/B
+                </button>
               </div>
             </div>
-            <div className="flex gap-2">
-              <button onClick={() => onEdit(l.id)} className="text-xs underline">
-                Edit
-              </button>
-              <button onClick={() => onValidate(l.id)} className="text-xs underline">
-                Blind A/B
-              </button>
-            </div>
+            {refreshReport && refreshReport.id === l.id && (
+              <div className="mt-2 border-t border-neutral-100 pt-2 text-[11px] space-y-1">
+                <div className="uppercase tracking-wider text-neutral-400">
+                  Hero image extraction: {refreshReport.report.filter((r) => r.ok && r.image_url).length}/{refreshReport.report.length} OK
+                </div>
+                {refreshReport.report.map((r, i) => (
+                  <div key={i} className={r.ok && r.image_url ? "text-neutral-700" : "text-red-700"}>
+                    {r.ok && r.image_url ? "✓" : "✗"}{" "}
+                    <span className="break-all">{r.url || "(no url)"}</span>
+                    {r.image_url && (
+                      <a href={r.image_url} target="_blank" rel="noreferrer" className="ml-2 underline">
+                        image{r.source ? ` (${r.source})` : ""}
+                      </a>
+                    )}
+                    {r.status != null && <span className="ml-2 text-neutral-400">HTTP {r.status}</span>}
+                    {r.reason && <div className="text-neutral-500 ml-4 italic">{r.reason}</div>}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -488,6 +549,7 @@ type RunPayload = {
       brand?: string | null;
       title?: string | null;
       image?: string | null;
+      image_url?: string | null;
       url?: string | null;
       retailer?: string | null;
       editorialScore?: number | null;
@@ -504,6 +566,7 @@ type RunPayload = {
     brand?: string | null;
     title?: string | null;
     image?: string | null;
+      image_url?: string | null;
     url?: string | null;
     retailer?: string | null;
     editorialScore?: number;
@@ -952,20 +1015,43 @@ function unifiedSlotsFor(run: RunPayload): UnifiedSlot[] {
   });
 }
 
-function describeImageFailure(
+/**
+ * Resolve a slot's image with a canonical fallback chain. The engine's primary
+ * field is `image_url` (v6+); legacy candidates emit `image`. Both are accepted
+ * and a precise reason is returned when nothing resolves.
+ */
+function resolveSlotImage(
   s: NonNullable<NonNullable<RunPayload["looks"]>[number]["slots"]>[number],
-  cand?: { image?: string | null; url?: string | null } | undefined,
-): { url: string | null; reason: string } {
-  const url = s.image ?? cand?.image ?? null;
-  if (!url) {
+  cand?: { image?: string | null; image_url?: string | null; url?: string | null } | undefined,
+): { url: string | null; source: string | null; reason: string } {
+  const chain: Array<[string, string | null | undefined]> = [
+    ["slot.image_url", s.image_url],
+    ["slot.image", s.image],
+    ["candidate.image_url", cand?.image_url],
+    ["candidate.image", cand?.image],
+  ];
+  for (const [src, v] of chain) {
+    if (typeof v === "string" && v.trim().length > 0) {
+      return {
+        url: v,
+        source: src,
+        reason: "Image URL resolved — if it still does not render, the host blocked the request (CORS / 404 / hotlink).",
+      };
+    }
+  }
+  if (!cand) {
     return {
       url: null,
-      reason: cand
-        ? "Candidate has no image — Firecrawl search result missing og:image / image metadata."
-        : "Slot resolved to no candidate (no image source available).",
+      source: null,
+      reason: "Slot resolved to no candidate — no image source available.",
     };
   }
-  return { url, reason: "Image URL present — runtime <img> failed to load (CORS / 404 / blocked)." };
+  return {
+    url: null,
+    source: null,
+    reason:
+      "Candidate has no image_url/image — discovery result missing og:image, twitter:image, and image_src.",
+  };
 }
 
 function OutfitBody({ run, revealed }: { run: RunPayload; revealed: boolean }) {
@@ -1131,7 +1217,7 @@ function SlotCard({
 
   // selected
   const s = unified.data!;
-  const img = describeImageFailure(s, cand);
+  const img = resolveSlotImage(s, cand);
   const isLocked = !!s.isLockedHero;
   return (
     <div
