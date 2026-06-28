@@ -2994,6 +2994,19 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       /** v5.3 — Founder Hero lock diagnostics. */
       heroPiecesLocked: heroPiecesLockedReport,
       slotsRequiringRefinement,
+      /** v6 — Editorial Decision Engine diagnostics. */
+      momentTemplate: momentTemplate
+        ? {
+            key: momentTemplate.key,
+            note: momentTemplate.note ?? null,
+            tiers: momentTemplate.tiers,
+          }
+        : null,
+      editorialContext: {
+        heroVisualWeight: editorialHeroWeight,
+        neckline: necklineDecision,
+        omissions: editorialOmissions,
+      },
       /** v5.2 — active HeroLook used for blended similarity, if any. */
       heroLookApplied: data.founderLearning && heroLook
         ? {
@@ -3009,10 +3022,24 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         : null,
       /** v5.2 — A/B label echoed for downstream persistence. */
       validationLabel: data.validationLabel ?? null,
-      looks: looks.map((l) => ({
-        ...l,
-        slots: l.slots.map((s) => {
+      looks: looks.map((l) => {
+        const mappedSlots = l.slots.map((s) => {
           const c = candidatesById.get(s.candidateId);
+          const adj = editorialAdjustments.get(s.candidateId);
+          const isLocked = c?.brandTier === "founder_hero";
+          const vw: VisualWeight = isLocked
+            ? editorialHeroWeight
+            : (adj?.visualWeight ?? accessoryVisualWeight(c?.title));
+          const tier = momentTemplate ? tierForEngineSlot(momentTemplate, s.slot) : null;
+          const explanation = explainSelection({
+            slot: s.slot,
+            brand: c?.brand ?? null,
+            title: c?.title ?? null,
+            founderSimilarity: c?.founderSimilarity ?? null,
+            visualWeight: vw,
+            editorialReasons: adj?.reasons ?? c?.founderReasons ?? [],
+            isLockedHero: isLocked,
+          });
           return {
             slot: s.slot,
             candidateId: s.candidateId,
@@ -3032,9 +3059,52 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             constructionScore: c?.constructionScore ?? null,
             curationReason: c?.curationReason ?? null,
             image: c?.image ?? null,
+            // v6 — editorial overlay
+            tier,
+            visualWeight: vw,
+            isLockedHero: isLocked,
+            explanation,
+            editorialReasons: adj?.reasons ?? [],
           };
-        }),
-      })),
+        });
+        // Quality score per look.
+        const lookSlotsForScore = mappedSlots.map((s) => ({
+          slot: s.slot,
+          tier: (s.tier ?? null) as SlotTier | null,
+          brand: s.brand,
+          editorialScore: s.editorialScore,
+          founderSimilarity: candidatesById.get(s.candidateId)?.founderSimilarity ?? null,
+          visualWeight: s.visualWeight as VisualWeight,
+          isLockedHero: s.isLockedHero,
+          filled: true,
+          intentionallyOmitted: false,
+        }));
+        // Add intentionally-omitted entries (necklace, hat, etc.) so the
+        // restraint score rewards principled omission.
+        for (const omission of editorialOmissions) {
+          lookSlotsForScore.push({
+            slot: omission.slot,
+            tier:
+              (momentTemplate ? tierForEngineSlot(momentTemplate, omission.slot) : null) ?? null,
+            brand: null,
+            editorialScore: null,
+            founderSimilarity: null,
+            visualWeight: "low" as VisualWeight,
+            isLockedHero: false,
+            filled: false,
+            intentionallyOmitted: true,
+          });
+        }
+        const quality = founderQualityScore(lookSlotsForScore);
+        const omissionNotes = editorialOmissions.map((o) => explainOmission(o.slot, o.reason));
+        return {
+          ...l,
+          slots: mappedSlots,
+          founderQualityScore: quality.score,
+          founderQualityBreakdown: quality.breakdown,
+          omissions: omissionNotes,
+        };
+      }),
     };
   });
 
