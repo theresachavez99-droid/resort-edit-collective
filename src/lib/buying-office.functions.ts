@@ -8,6 +8,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { isHttpUrl } from "./safe-url";
 import { requireAdmin } from "./admin-auth.server";
 import {
   normalizeManualRow,
@@ -329,9 +330,9 @@ export const updateCandidate = createServerFn({ method: "POST" })
       patch: z.object({
         status: z.enum(STATUSES).optional(),
         rejection_reason: z.string().max(500).nullable().optional(),
-        affiliate_url: z.string().url().nullable().optional(),
-        image_url: z.string().url().nullable().optional(),
-        product_url: z.string().url().optional(),
+        affiliate_url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }).nullable().optional(),
+        image_url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }).nullable().optional(),
+        product_url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }).optional(),
         notes: z.string().max(2000).nullable().optional(),
         brand: z.string().max(120).nullable().optional(),
         product_name: z.string().max(300).nullable().optional(),
