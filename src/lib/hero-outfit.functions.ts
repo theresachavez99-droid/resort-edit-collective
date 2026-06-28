@@ -925,7 +925,7 @@ Return ${data.count} candidates for the "${data.slot}" slot.`;
       if (!ins.error && ins.data) inserted.push(ins.data as Record<string, unknown>);
     }
 
-    return { inserted: inserted.length, candidates: inserted };
+    return { inserted: inserted.length };
   });
 
 export const rejectSlotCandidate = createServerFn({ method: "POST" })
