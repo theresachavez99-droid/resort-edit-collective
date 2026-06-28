@@ -332,7 +332,7 @@ export type EngineBrand = {
    * Replaces static tier as the primary ranking signal.
    */
   editorialAffinity: Record<string, number>;
-  eligibilitySource?: Extract<EligibilitySource, "registry" | "compatible_activity" | "static">;
+  eligibilitySource?: Exclude<EligibilitySource, "ineligible">;
 };
 
 function resolveCommerceSource(
@@ -2865,7 +2865,7 @@ import type { FounderContext as _FC } from "./founder-context.server";
 
 function buildFounderRetrieval(
   ctx: _FC,
-  injected: Array<{ name: string; source: "founder_approved" | "founder_selective" }>,
+  injected: Array<{ name: string; source: "founder_hero" | "founder_approved" | "founder_selective" }>,
   candidatesById: Map<string, SlotCandidate>,
 ) {
   const cands = [...candidatesById.values()];
