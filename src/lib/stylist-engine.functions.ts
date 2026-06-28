@@ -1777,7 +1777,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           matchedQuery: "[founder-hero-lock]",
           source: "core",
           commerceSource: "brand_direct",
-          approvalLevel: "approved",
+          approvalLevel: "core",
           familyMatched: hp.category ?? null,
           constructionScore: 0,
           curationReason: "founder_hero_locked",
