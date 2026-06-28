@@ -67,6 +67,121 @@ Destination · Moment · Hero Category *(required anchor; never Brand)* · Hero 
 
 Firecrawl `/search` is **scoped to Hero Category per retailer**; whole-retailer crawls forbidden. `Search → Normalize → Deduplicate → Editorial Ranking → Buying Review`. Search Summary + Market Coverage shown every run, snapshotted onto the Session.
 
+See §6a for the **Live Product Retrieval** guardrail — the Buying Office is incomplete without it.
+
+---
+
+## 6a. Live Product Retrieval *(required guardrail — non-negotiable)*
+
+The Buying Office is **not UI-only**. Every Buying Search must retrieve real products from approved retailers and return them into the Buying Review. Static product data is allowed only in explicit **Offline Mode**.
+
+### Product Search Provider abstraction
+
+Firecrawl is **never imported directly** by Buying Office code. All retrieval flows through a pluggable interface:
+
+```ts
+// src/lib/product-search/provider.ts
+export interface ProductSearchProvider {
+  id: 'firecrawl' | 'affiliate_feed' | 'retailer_api' | 'internal_index' | 'manual_import' | 'brand_direct' | 'offline_fixture'
+  search(input: ProductSearchInput): Promise<ProductSearchResult>
+}
+
+export interface ProductSearchInput {
+  sessionId: string                 // immutable Search Session
+  heroBrief: LockedHeroBrief        // locked snapshot
+  heroCategory: string              // required anchor
+  retailers: ApprovedRetailer[]     // from §6a retailer list
+  benchmark: EditorialBenchmark
+  momentEnergy: number              // 1–10
+  priceCeiling: number              // default $1000
+  exclusions: EditorialExclusionTag[]
+  strategy: 'editorial_first' | 'brand_discovery' | 'brand_focus' | 'replacement'
+  depth: 'quick' | 'standard' | 'deep_buy'
+}
+
+export interface NormalizedCandidate {
+  product_name: string
+  brand: string
+  retailer: ApprovedRetailer
+  price: number
+  currency: string
+  image_url: string
+  canonical_url: string             // dedup key
+  affiliate_url: string | null
+  availability: 'in_stock' | 'low_stock' | 'out_of_stock' | 'unknown'
+  category: string
+  color: string | null
+  source: { provider: string; retrieved_at: string; raw_ref: string }
+}
+
+export interface MarketCoverageRow {
+  retailer: ApprovedRetailer
+  queried: boolean
+  raw_results: number
+  normalized: number
+  after_dedup: number
+  shortlisted: number
+  error: string | null
+}
+
+export interface ProductSearchResult {
+  candidates: NormalizedCandidate[]
+  coverage: MarketCoverageRow[]
+  provider_id: string
+  errors: Array<{ retailer: ApprovedRetailer; message: string }>
+}
+```
+
+**Default provider:** `firecrawl`.
+**Future providers** (interface-compatible, wired in without touching the Buying Office): `affiliate_feed`, `retailer_api`, `internal_index`, `manual_import`, `brand_direct`, `offline_fixture`.
+
+### Approved retailers (live retrieval)
+
+Revolve · Mytheresa · Net-a-Porter · Shopbop · Saks · Neiman Marcus · Bloomingdale's · Nordstrom · FWRD · Luisaviaroma. **Brand Direct** is used only when no approved affiliate retailer carries the piece.
+
+### Pipeline (per Search Session)
+
+`Locked Brief → Provider.search(input) → Normalize → Apply Brief/Benchmark/Exclusions/Price/Energy → Deduplicate by canonical_url → Editorial Ranking (§8) → Buying Review`.
+
+Snapshotted onto `buying_search_sessions`: `provider_id`, `retailer_set`, raw provider response refs, normalized candidate set, coverage, ranking snapshot — all immutable.
+
+### Firecrawl-specific rules *(apply to the default provider only)*
+
+- Searches scoped to `{heroCategory} site:{retailer.domain}` — one call per (retailer × category).
+- **Never** crawl entire retailers. **Never** run generic queries (e.g. "luxury Portofino outfit"). **Never** issue a search without a locked Brief + Session.
+- Depth tiers map to Firecrawl budgets: Quick / Standard / Deep Buy.
+- Any provider change forks a new Search Session (per §1).
+
+### Offline mode
+
+- Only entered explicitly by the Founder (toggle in the Search Panel) and is recorded on the Session.
+- Uses the `offline_fixture` provider against curated local fixtures.
+- Buying Review is clearly badged **Offline Mode** and excluded from Market Coverage analytics.
+
+### Failure behavior *(no silent fakes)*
+
+If the live provider returns zero usable candidates **or** errors across all queried retailers:
+
+- **No Buying Review is created.**
+- The Session is marked `status='retrieval_failed'` with the per-retailer errors retained.
+- UI shows exactly: **"Live product retrieval failed. No Buying Review was created."** plus the Market Coverage table and a "Retry as New Session" action.
+- Never populate Buying Review with placeholder, empty, or fabricated cards.
+- Decision Log records `retrieval_failed` with provider, retailers, and error summary.
+
+### Success criteria *(must pass before Buying Office is considered shipped)*
+
+Founder selects: Destination Portofino · Moment Arrival Day · Hero Category Tailored Short Set · Strategy Editorial First · Depth Standard.
+
+The system:
+1. Queries each approved retailer scoped to "Tailored Short Set".
+2. Returns real live products.
+3. Normalizes to `NormalizedCandidate`.
+4. Applies locked Brief, Benchmark, Moment Energy, $1,000 ceiling, Editorial Exclusions.
+5. Deduplicates by `canonical_url`.
+6. Scores via §8 + §9 + Editorial Benchmark Similarity.
+7. Renders Buying Review with image · price · retailer · affiliate badge · Editorial Score · Editorial Benchmark Similarity · Editorial Confidence.
+8. Renders Market Coverage showing what each retailer returned.
+
 ---
 
 ## 7. Buying Review
