@@ -54,10 +54,10 @@ import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 export const Route = createFileRoute("/portofino")({
   head: () => ({
     meta: [
-      { title: "Portofino — Nine Curated Moments | Resort Edit | Dressed for the Destination" },
-      { name: "description", content: "Nine curated moments in Portofino — from arrival afternoons and market mornings to yacht days, harbor aperitivos, and long Riviera dinners. A luxury editorial guide to the Italian Riviera." },
-      { property: "og:title", content: "Portofino — Nine Curated Moments | Resort Edit" },
-      { property: "og:description", content: "Discover Portofino through nine curated destination moments. Dressed for the Destination." },
+      { title: "Portofino — Twelve Curated Moments | Resort Edit | Dressed for the Destination" },
+      { name: "description", content: "Twelve curated moments in Portofino — from arrival afternoons and espresso mornings to yacht days, long lunches, harbor aperitivos, and a final nightcap on the piazzetta." },
+      { property: "og:title", content: "Portofino — Twelve Curated Moments | Resort Edit" },
+      { property: "og:description", content: "Discover Portofino through twelve curated destination moments. Dressed for the Destination." },
       { property: "og:image", content: absoluteUrl(portofinoImg) },
       { property: "og:url", content: absoluteUrl("/portofino") },
       { name: "twitter:image", content: absoluteUrl(portofinoImg) },
@@ -119,7 +119,7 @@ function PortofinoPage() {
             Portofino
           </h1>
           <p className="font-serif italic text-base md:text-xl text-ivory/90 mt-2 max-w-2xl leading-relaxed">
-            A pastel harbor on the Italian Riviera — nine curated moments, one editorial language.
+            A pastel harbor on the Italian Riviera — twelve curated moments, one editorial language.
           </p>
         </div>
       </section>
@@ -130,11 +130,11 @@ function PortofinoPage() {
           <div className="max-w-3xl mx-auto text-center mb-6 md:mb-8">
             <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">Editorial Itinerary</span>
             <h2 className="font-display text-3xl md:text-5xl tracking-[0.04em] mt-2 text-ink">
-              Nine Curated Moments in Portofino
+              Twelve Curated Moments in Portofino
             </h2>
             <div className="mx-auto my-3 h-px w-12 bg-gold" />
             <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed">
-              From arrival to dinner — nine chapters of a single Portofino day, in the order you'll live them.
+              From arrival to nightcap — twelve chapters of a single Portofino day, in the order you'll live them.
             </p>
           </div>
 
