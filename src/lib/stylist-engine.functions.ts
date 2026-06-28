@@ -1539,7 +1539,10 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     // explicit founderLookId we use it; otherwise we pick the most
     // recently approved/published look that matches destination+moment.
     let heroLook: import("./founder-similarity").HeroLook | null = null;
-    if (data.founderLearning) {
+    // Resolve the Founder Look for both Founder Learning and baseline runs.
+    // Even when scoring is OFF, the hero brands are allowed to bootstrap a
+    // new editorial moment so registry tagging can never block generation.
+    {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       let q = supabaseAdmin
         .from("founder_looks")
@@ -1812,7 +1815,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         budget,
         founderContext,
         eligibilityMap,
-        heroLook: heroLook ?? undefined,
+        heroLook: data.founderLearning ? heroLook ?? undefined : undefined,
         founderLearningEnabled: data.founderLearning,
       });
 
@@ -1852,7 +1855,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           activity,
           founderContext,
           eligibilityMap,
-          heroLook: heroLook ?? undefined,
+          heroLook: data.founderLearning ? heroLook ?? undefined : undefined,
           founderLearningEnabled: data.founderLearning,
         });
         const acceptedExpansion = exp.candidates.length;
