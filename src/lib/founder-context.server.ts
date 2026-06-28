@@ -299,6 +299,15 @@ export function brandEligibility(args: {
   const rec = args.context.brandRecords.get(normBrand(args.brand));
   if (!rec) return { eligible: false, source: "ineligible" };
   if (rec.status === "approved") {
+    if (
+      activityExplicitlyExcluded({
+        destination: args.context.destination,
+        requestedActivity: args.context.activity,
+        candidateActivities: rec.suggested_activities,
+      })
+    ) {
+      return { eligible: false, source: "ineligible" };
+    }
     return { eligible: true, source: "founder_approved" };
   }
   if (rec.status === "approved_selectively") {
