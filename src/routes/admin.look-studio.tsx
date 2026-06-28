@@ -161,7 +161,7 @@ function StudioBoard({ password }: { password: string }) {
       </header>
 
       {tab === "library" ? (
-        <LibraryTab password={pw} />
+        <LibraryTab password={password} />
       ) : (
       <div className="max-w-[1700px] mx-auto grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-0">
         <aside className="border-r border-ink/10 px-4 py-6 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto">
@@ -952,11 +952,11 @@ function LookCandidateCard({
   );
 }
 
-function LibraryTab() {
+function LibraryTab({ password }: { password: string }) {
   const listFn = useServerFn(listEditorialReferences);
   const q = useQuery({
     queryKey: ["editorial-references"],
-    queryFn: () => listFn(),
+    queryFn: () => listFn({ data: { password } }),
   });
   const refs = (q.data?.references ?? []) as EditorialReferenceRow[];
   const grouped = useMemo(() => {
