@@ -779,7 +779,24 @@ function OutfitBody({ run, revealed }: { run: RunPayload; revealed: boolean }) {
     return <div className="text-xs text-red-600">{run.error ?? "Engine returned no result."}</div>;
   }
   const hero = pickHeroLook(run);
+  const lockedCount = run.heroPiecesLocked?.length ?? 0;
+  const refinement = run.slotsRequiringRefinement ?? [];
   if (!hero || !hero.slots?.length) {
+    if (lockedCount > 0) {
+      return (
+        <div className="text-xs text-amber-700">
+          Founder Look assembled with {lockedCount} locked hero piece
+          {lockedCount === 1 ? "" : "s"}, but assembly produced no rendered
+          outfit.
+          {refinement.length > 0 && (
+            <div className="mt-1 text-neutral-500">
+              {refinement.length} accessory slot{refinement.length === 1 ? "" : "s"} require refinement:{" "}
+              {refinement.join(", ")}.
+            </div>
+          )}
+        </div>
+      );
+    }
     return (
       <div className="text-xs text-amber-700">
         Engine returned no assembled outfit
@@ -800,6 +817,18 @@ function OutfitBody({ run, revealed }: { run: RunPayload; revealed: boolean }) {
     <div>
       {hero.title && (
         <div className="mb-3 text-xs italic text-neutral-500">{hero.title}</div>
+      )}
+      {(lockedCount > 0 || refinement.length > 0) && (
+        <div className="mb-3 text-[11px] text-neutral-500 space-y-0.5">
+          {lockedCount > 0 && (
+            <div>✓ {lockedCount} Founder Hero piece{lockedCount === 1 ? "" : "s"} locked</div>
+          )}
+          {refinement.length > 0 && (
+            <div className="text-amber-700">
+              {refinement.length} accessory slot{refinement.length === 1 ? "" : "s"} require refinement: {refinement.join(", ")}
+            </div>
+          )}
+        </div>
       )}
       <div className="grid grid-cols-3 gap-3">
         {slots.map((s, i) => {
