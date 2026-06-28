@@ -519,6 +519,14 @@ function BriefPanel({
       depth,
       brief_locked: true,
       wizard_stage: "import",
+    }, {
+      onSuccess: () => {
+        requestAnimationFrame(() => {
+          document.getElementById("import-anchor")?.scrollIntoView({
+            behavior: "smooth", block: "start",
+          });
+        });
+      },
     });
 
   const unlock = () => mut.mutate({ brief_locked: false, wizard_stage: "brief" });
