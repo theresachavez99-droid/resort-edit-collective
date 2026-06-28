@@ -27,19 +27,19 @@ const CHAPTERS: Chapter[] = [
   {
     key: "by-the-water",
     title: "By the Water",
-    blurb: "Sun, salt, and a slow Italian afternoon.",
+    blurb: "Sun, sea, and effortless Mediterranean glamour.",
     slugs: ["yacht-day", "beach-club", "pool-lounging"],
   },
   {
     key: "around-town",
     title: "Around Town",
-    blurb: "Boutique windows, linen daywear, and a long lunch by the sea.",
+    blurb: "Slow afternoons exploring Portofino's boutiques, cafés, and harbor.",
     slugs: ["shopping", "long-lunch", "harbor-aperitivo"],
   },
   {
     key: "evening",
     title: "Evening",
-    blurb: "The harbor turns gold, then candlelit.",
+    blurb: "Golden light gives way to unforgettable nights.",
     slugs: ["sunset-views", "riviera-dinner", "nightcap"],
   },
 ];
