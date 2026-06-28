@@ -1444,6 +1444,15 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         discoveryMode: z.enum(["fast", "balanced", "deep"]).default("fast"),
         /** v4.7 — disable to debug a cold-start run. */
         enableCache: z.boolean().default(true),
+        /** v5.2 — destination/activity override. Defaults preserve Yacht Day behavior. */
+        destination: z.string().min(1).max(80).default("Portofino"),
+        activity: z.string().min(1).max(80).default("Yacht Day"),
+        /** v5.2 — master switch for Founder Learning blending. */
+        founderLearning: z.boolean().default(true),
+        /** v5.2 — optional HeroLook to drive blended similarity. */
+        founderLookId: z.string().uuid().nullable().optional(),
+        /** v5.2 — persist this run as one side of an A/B comparison. */
+        validationLabel: z.enum(["A", "B"]).nullable().optional(),
       })
       .parse(input),
   )
@@ -1452,8 +1461,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     const apiKey = process.env.FIRECRAWL_API_KEY;
     if (!apiKey) return { ok: false as const, stage: "config" as const, error: "FIRECRAWL_API_KEY missing" };
 
-    const destination = "Portofino";
-    const activity = "Yacht Day";
+    const destination = data.destination;
+    const activity = data.activity;
     const brief = briefFor(destination, activity);
     const specs = getSlotSpecs(destination, activity).filter(
       (s) => s.required || data.includeOptional,
