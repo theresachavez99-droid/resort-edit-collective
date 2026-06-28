@@ -67,6 +67,121 @@ Destination · Moment · Hero Category *(required anchor; never Brand)* · Hero 
 
 Firecrawl `/search` is **scoped to Hero Category per retailer**; whole-retailer crawls forbidden. `Search → Normalize → Deduplicate → Editorial Ranking → Buying Review`. Search Summary + Market Coverage shown every run, snapshotted onto the Session.
 
+See §6a for the **Live Product Retrieval** guardrail — the Buying Office is incomplete without it.
+
+---
+
+## 6a. Live Product Retrieval *(required guardrail — non-negotiable)*
+
+The Buying Office is **not UI-only**. Every Buying Search must retrieve real products from approved retailers and return them into the Buying Review. Static product data is allowed only in explicit **Offline Mode**.
+
+### Product Search Provider abstraction
+
+Firecrawl is **never imported directly** by Buying Office code. All retrieval flows through a pluggable interface:
+
+```ts
+// src/lib/product-search/provider.ts
+export interface ProductSearchProvider {
+  id: 'firecrawl' | 'affiliate_feed' | 'retailer_api' | 'internal_index' | 'manual_import' | 'brand_direct' | 'offline_fixture'
+  search(input: ProductSearchInput): Promise<ProductSearchResult>
+}
+
+export interface ProductSearchInput {
+  sessionId: string                 // immutable Search Session
+  heroBrief: LockedHeroBrief        // locked snapshot
+  heroCategory: string              // required anchor
+  retailers: ApprovedRetailer[]     // from §6a retailer list
+  benchmark: EditorialBenchmark
+  momentEnergy: number              // 1–10
+  priceCeiling: number              // default $1000
+  exclusions: EditorialExclusionTag[]
+  strategy: 'editorial_first' | 'brand_discovery' | 'brand_focus' | 'replacement'
+  depth: 'quick' | 'standard' | 'deep_buy'
+}
+
+export interface NormalizedCandidate {
+  product_name: string
+  brand: string
+  retailer: ApprovedRetailer
+  price: number
+  currency: string
+  image_url: string
+  canonical_url: string             // dedup key
+  affiliate_url: string | null
+  availability: 'in_stock' | 'low_stock' | 'out_of_stock' | 'unknown'
+  category: string
+  color: string | null
+  source: { provider: string; retrieved_at: string; raw_ref: string }
+}
+
+export interface MarketCoverageRow {
+  retailer: ApprovedRetailer
+  queried: boolean
+  raw_results: number
+  normalized: number
+  after_dedup: number
+  shortlisted: number
+  error: string | null
+}
+
+export interface ProductSearchResult {
+  candidates: NormalizedCandidate[]
+  coverage: MarketCoverageRow[]
+  provider_id: string
+  errors: Array<{ retailer: ApprovedRetailer; message: string }>
+}
+```
+
+**Default provider:** `firecrawl`.
+**Future providers** (interface-compatible, wired in without touching the Buying Office): `affiliate_feed`, `retailer_api`, `internal_index`, `manual_import`, `brand_direct`, `offline_fixture`.
+
+### Approved retailers (live retrieval)
+
+Revolve · Mytheresa · Net-a-Porter · Shopbop · Saks · Neiman Marcus · Bloomingdale's · Nordstrom · FWRD · Luisaviaroma. **Brand Direct** is used only when no approved affiliate retailer carries the piece.
+
+### Pipeline (per Search Session)
+
+`Locked Brief → Provider.search(input) → Normalize → Apply Brief/Benchmark/Exclusions/Price/Energy → Deduplicate by canonical_url → Editorial Ranking (§8) → Buying Review`.
+
+Snapshotted onto `buying_search_sessions`: `provider_id`, `retailer_set`, raw provider response refs, normalized candidate set, coverage, ranking snapshot — all immutable.
+
+### Firecrawl-specific rules *(apply to the default provider only)*
+
+- Searches scoped to `{heroCategory} site:{retailer.domain}` — one call per (retailer × category).
+- **Never** crawl entire retailers. **Never** run generic queries (e.g. "luxury Portofino outfit"). **Never** issue a search without a locked Brief + Session.
+- Depth tiers map to Firecrawl budgets: Quick / Standard / Deep Buy.
+- Any provider change forks a new Search Session (per §1).
+
+### Offline mode
+
+- Only entered explicitly by the Founder (toggle in the Search Panel) and is recorded on the Session.
+- Uses the `offline_fixture` provider against curated local fixtures.
+- Buying Review is clearly badged **Offline Mode** and excluded from Market Coverage analytics.
+
+### Failure behavior *(no silent fakes)*
+
+If the live provider returns zero usable candidates **or** errors across all queried retailers:
+
+- **No Buying Review is created.**
+- The Session is marked `status='retrieval_failed'` with the per-retailer errors retained.
+- UI shows exactly: **"Live product retrieval failed. No Buying Review was created."** plus the Market Coverage table and a "Retry as New Session" action.
+- Never populate Buying Review with placeholder, empty, or fabricated cards.
+- Decision Log records `retrieval_failed` with provider, retailers, and error summary.
+
+### Success criteria *(must pass before Buying Office is considered shipped)*
+
+Founder selects: Destination Portofino · Moment Arrival Day · Hero Category Tailored Short Set · Strategy Editorial First · Depth Standard.
+
+The system:
+1. Queries each approved retailer scoped to "Tailored Short Set".
+2. Returns real live products.
+3. Normalizes to `NormalizedCandidate`.
+4. Applies locked Brief, Benchmark, Moment Energy, $1,000 ceiling, Editorial Exclusions.
+5. Deduplicates by `canonical_url`.
+6. Scores via §8 + §9 + Editorial Benchmark Similarity.
+7. Renders Buying Review with image · price · retailer · affiliate badge · Editorial Score · Editorial Benchmark Similarity · Editorial Confidence.
+8. Renders Market Coverage showing what each retailer returned.
+
 ---
 
 ## 7. Buying Review
@@ -180,6 +295,10 @@ All admin tables: `GRANT` to `authenticated` + `service_role`; RLS enabled; poli
 
 **New:** `src/lib/editorial-dna.server.ts` · `src/lib/founder-vision.ts` · `src/lib/founder-revisions.functions.ts` · `src/lib/founder-visions.functions.ts` · `src/lib/editorial-family.ts` · `src/lib/editorial-similarity.ts` · `src/lib/founder-templates.functions.ts` · `src/lib/collection-health.functions.ts` · `src/lib/collection-planning.functions.ts` · `src/lib/collection-roadmap.ts` · `src/lib/founder-hero-brief.ts` · `src/lib/founder-decision-log.functions.ts` · `src/lib/founder-retirement.functions.ts` · `src/lib/buying-search.functions.ts` (enforces session immutability + forks new sessions) · `src/lib/buying-review.functions.ts` · `src/lib/buying-sessions.functions.ts` · `src/lib/founder-favorites.functions.ts` · `src/lib/editorial-scorecard.ts` · `src/lib/editorial-confidence.ts` · `src/lib/replacement-impact.ts` · `src/lib/editorial-benchmarks.functions.ts` · `src/routes/admin.founder-buying.tsx` (Roadmap · Brief w/ lock · Buying Review · Sessions tab w/ fork lineage · Favorites · Decision Log) · `src/routes/admin.editorial-families.tsx` · `src/routes/admin.collection-health.tsx` · `src/routes/admin.collection-planning.tsx` · `src/routes/admin.editorial-benchmarks.tsx`.
 
+**Product Search Provider layer (new):** `src/lib/product-search/provider.ts` (interface + types) · `src/lib/product-search/registry.ts` (provider lookup) · `src/lib/product-search/normalize.ts` (raw → `NormalizedCandidate`) · `src/lib/product-search/dedupe.ts` · `src/lib/product-search/firecrawl-provider.server.ts` (default; only file allowed to import Firecrawl) · `src/lib/product-search/offline-fixture-provider.ts` · `src/lib/product-search/retailers.ts` (approved retailer registry + domain map) · `src/lib/product-search/coverage.ts` (Market Coverage builder).
+
+Buying Office code (`src/lib/buying-search.functions.ts`, admin routes) imports **only** the provider interface + registry — never Firecrawl directly. A lint rule / grep guard enforces this.
+
 **Edited:** `src/lib/stylist-engine.functions.ts` (regenerateSlot · Replacement Impact · DNA-first sourcing · Moment Energy fidelity · silhouette fallback · Hero Piece Diversity · Hero Lock · accessory pipeline only after Hero approval · filter Retired Heroes · respect vision_version · Decision Log writes) · `src/lib/founder-looks.functions.ts` (Layer 1 persistence · reference images · template hydration · Hero Lock · Collection Balance · Twenty Looks Forever · required Promotion Note · stamp vision_version + search_session_id · Retirement surfaces UI-gated) · `src/lib/founder-similarity.ts` (v2 weights) · `src/lib/editorial-stylist.ts` (`editorialFidelityScore` + Moment Energy) · `src/lib/collection-director.ts` (`analyzeMomentGaps` over active Heroes) · `src/lib/editorial-memory.server.ts` (retain Retired for reuse warnings; exclude from active diversity counts) · `src/lib/founder-context.server.ts` (rejection tags + why_better_tags + Promotion Notes + recent Decision Log + active Vision) · `src/lib/discovery-pipeline.ts` (Quick / Standard / Deep Buy tiers; strategy routing) · `src/routes/admin.founder-looks.tsx` (Template picker · Vision panel w/ version history · Silhouette editor · Reference gallery Accept/Edit/Ignore · Brief preview · Replace + Replacement Impact + Show 6 more + Compare · Revision Timeline · Hero Lock badge · Collection Balance · Twenty-Looks-Forever toggle · required Promotion Note · candidate pre-seed · Retire/Restore gated) · `src/routes/admin.index.tsx` (Buying Office promoted to top; Core Philosophy banner).
 
 ---
@@ -201,6 +320,7 @@ Founder can:
 - Bump **Founder Vision** to v2/v3 with change summary; every existing Hero/Session keeps its original version stamp.
 - Retire / Restore Heroes via backend today; UI appears under §13 reveal rule.
 - Trust every Search Session as an immutable editorial record.
+- Run a real Buying Search that hits approved retailers via the Product Search Provider, sees Market Coverage, and gets a curated Buying Review with images, prices, retailer links, affiliate badges, Editorial Score, Editorial Benchmark Similarity, and Editorial Confidence — or, on failure, sees **"Live product retrieval failed. No Buying Review was created."** with zero placeholder cards.
 
 ---
 
