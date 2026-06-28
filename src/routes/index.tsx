@@ -5,7 +5,8 @@ import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
-import { HomeItinerary, portofinoMomentsQuery } from "@/components/HomeItinerary";
+import { portofinoMomentsQuery } from "@/components/HomeItinerary";
+import { HomeEditorialChapters } from "@/components/HomeEditorialChapters";
 import { getFeaturedDestination } from "@/data/featuredDestination";
 
 const featured = getFeaturedDestination();
@@ -72,12 +73,13 @@ const ctas = [
 ];
 
 function Index() {
-  const wrap = "px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24";
+  // Wider editorial canvas — up to ~1440px content width on desktop.
+  const wrap = "px-4 sm:px-6 lg:px-10 xl:px-14 mx-auto max-w-[1440px]";
   return (
     <div className="bg-ivory w-full">
       {/* HERO — editorial cover: photography-led, destination-first hierarchy */}
       <section
-        className={`${wrap} pt-6 lg:pt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
+        className={`${wrap} pt-6 lg:pt-10 pb-8 lg:pb-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
       >
         {/* Photography — full-body editorial portrait, never cropped at head or hem */}
         <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-cream/40 lg:col-span-7">
@@ -154,57 +156,39 @@ function Index() {
         </div>
       </section>
 
-      {/* DESTINATION INTRO — editorial context, intentionally understated */}
-      <section className={`${wrap} rhythm-hero`}>
-        <p className="mx-auto max-w-3xl text-center font-serif italic text-[1.05rem] sm:text-[1.15rem] lg:text-[1.22rem] leading-[1.55] text-ink/75">
-          Every Resort Edit begins with a destination. We then curate where to stay, what to experience, and what to wear for every memorable moment along the way.
-        </p>
-      </section>
-
-      {/* PORTOFINO ITINERARY */}
-      <section className={`${wrap} rhythm-major`}>
-        <div className="flex items-center gap-4 justify-center mb-4">
-          <div className="h-px w-16 bg-gold/50" />
-          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">PORTOFINO ITINERARY</h2>
-          <div className="h-px w-16 bg-gold/50" />
+      {/* THE PORTOFINO EDIT — editorial chapter collection */}
+      <section className={`${wrap} mt-10 md:mt-14`}>
+        <div className="text-center max-w-3xl mx-auto">
+          <p className="eyebrow text-gold text-[0.7rem] tracking-[0.34em]">
+            THE PORTOFINO EDIT
+          </p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl tracking-[0.02em] text-ink leading-[0.95]">
+            Nine Editorial Moments. <br className="hidden sm:block" />
+            One Unforgettable Destination.
+          </h2>
+          <p className="mt-4 font-serif italic text-[1.02rem] sm:text-[1.1rem] text-ink/70 leading-relaxed">
+            A single day on the Riviera, told in four chapters — from a first espresso on the piazzetta to candlelight on the harbor. Every moment styled, shoppable, and ready to live in.
+          </p>
+          <div className="mt-5 mx-auto h-px w-16 bg-gold/60" />
         </div>
-        <p className="mt-1 text-center font-serif italic text-[1rem] sm:text-[1.08rem] text-ink/80 max-w-2xl mx-auto leading-snug">
-          Nine curated moments. One editorial wardrobe.
-        </p>
-        <p className="mb-10 mt-2 text-center font-serif italic text-[0.92rem] sm:text-[0.98rem] text-ink/60 max-w-2xl mx-auto leading-relaxed">
-          From arrival afternoons and market mornings to yacht days, harbor aperitivos, and long Riviera dinners.
-        </p>
-        <HomeItinerary />
-      </section>
 
-      {/* SHOP THE LOOKS + TIP */}
-      {/* RESORT EDIT TIP — quiet editorial pause between itinerary and hotels */}
-      <section className={`${wrap} rhythm-major`}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6 max-w-4xl mx-auto">
-          <div className="bg-gold/15 border border-gold/30 p-6 lg:col-span-2 flex flex-col justify-center">
-            <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">✦ Resort Edit Tip</div>
-            <p className="mt-5 font-serif italic text-lg text-ink/85 leading-relaxed">
-              Book a cabana. Sip limoncello. Stay until sunset.
-            </p>
-          </div>
-          <div className="relative aspect-[4/3] lg:aspect-auto overflow-hidden bg-muted">
-            <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-          </div>
+        <div className="mt-10 md:mt-12">
+          <HomeEditorialChapters />
         </div>
       </section>
 
-      {/* WHERE TO STAY */}
-      <section className={`${wrap} rhythm-major`}>
-          <div className="flex items-center gap-4 justify-center mb-4">
-            <div className="h-px w-16 bg-gold/50" />
+      {/* WHERE TO STAY — moves immediately after the editorial collection */}
+      <section className={`${wrap} mt-14 md:mt-20`}>
+          <div className="flex items-center gap-4 justify-center mb-3">
+            <div className="h-px w-12 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
-            <div className="h-px w-16 bg-gold/50" />
+            <div className="h-px w-12 bg-gold/50" />
           </div>
-          <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+          <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
             Hotels chosen as part of the destination — where to stay, why it fits, and the experience it delivers.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {hotels.map((h) => (
               <article key={h.name} className="bg-card border border-border/50 flex flex-col">
                 <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-muted">
@@ -239,7 +223,7 @@ function Index() {
             ))}
           </div>
 
-          <div className="mt-10 pt-6 border-t border-ink/15 text-center">
+          <div className="mt-6 pt-5 border-t border-ink/15 text-center">
             <p className="font-serif italic text-[0.9rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
               Rates available on enquiry. Some properties book out months in advance — we recommend reserving before your flights.
             </p>
@@ -247,18 +231,18 @@ function Index() {
       </section>
 
       {/* BOOK YOUR PORTOFINO EXPERIENCE — booking rail */}
-      <section className="rhythm-major">
-        <div className={`${wrap} mb-8`}>
-          <div className="flex items-center gap-4 justify-center mb-4">
-            <div className="h-px w-16 bg-gold/50" />
+      <section className="mt-12 md:mt-16">
+        <div className={`${wrap} mb-6`}>
+          <div className="flex items-center gap-4 justify-center mb-3">
+            <div className="h-px w-12 bg-gold/50" />
             <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink text-center">BOOK YOUR PORTOFINO EXPERIENCE</h2>
-            <div className="h-px w-16 bg-gold/50" />
+            <div className="h-px w-12 bg-gold/50" />
           </div>
           <p className="text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
             The restaurants, beach clubs, yacht charters, and experiences that complete the trip.
           </p>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+        <div className={`${wrap} grid grid-cols-2 lg:grid-cols-4 gap-1`}>
           {ctas.map(({ label, Icon }) => (
             <Link
               key={label}
@@ -272,15 +256,29 @@ function Index() {
         </div>
       </section>
 
-      {/* DISCLOSURE — visually secondary, well below CTAs */}
-      {/* BRANDS WE LOVE — minimalist trust signal, no logos/carousels */}
-      <section className={`${wrap} rhythm-major`}>
-        <div className="flex items-center gap-4 justify-center mb-4">
-          <div className="h-px w-16 bg-gold/50" />
-          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BRANDS WE LOVE</h2>
-          <div className="h-px w-16 bg-gold/50" />
+      {/* RESORT EDIT TIP — quiet editorial pause */}
+      <section className={`${wrap} mt-12 md:mt-16`}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <div className="bg-gold/15 border border-gold/30 p-6 lg:col-span-2 flex flex-col justify-center">
+            <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">✦ Resort Edit Tip</div>
+            <p className="mt-4 font-serif italic text-lg text-ink/85 leading-relaxed">
+              Book a cabana. Sip limoncello. Stay until sunset.
+            </p>
+          </div>
+          <div className="relative aspect-[4/3] lg:aspect-auto overflow-hidden bg-muted">
+            <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+          </div>
         </div>
-        <p className="mb-10 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+      </section>
+
+      {/* BRANDS WE LOVE — minimalist trust signal, no logos/carousels */}
+      <section className={`${wrap} mt-12 md:mt-16`}>
+        <div className="flex items-center gap-4 justify-center mb-3">
+          <div className="h-px w-12 bg-gold/50" />
+          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BRANDS WE LOVE</h2>
+          <div className="h-px w-12 bg-gold/50" />
+        </div>
+        <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
           A short list of the ateliers and houses we keep returning to across destinations.
         </p>
         <ul className="mx-auto max-w-4xl flex flex-wrap items-center justify-center gap-x-7 gap-y-3 lg:gap-x-10">
@@ -307,7 +305,7 @@ function Index() {
             </li>
           ))}
         </ul>
-        <div className="mt-8 text-center">
+        <div className="mt-6 text-center">
           <Link
             to="/brands"
             className="eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 hover:text-ink hover:border-ink transition-colors"
@@ -317,9 +315,9 @@ function Index() {
         </div>
       </section>
 
-      <div className={`${wrap} rhythm-major pb-16`}>
+      <div className={`${wrap} mt-12 md:mt-16 pb-12`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
-        <p className="mt-8 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
+        <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
           Prices and availability may change. Some links may earn a commission at no additional cost to you.
         </p>
       </div>
