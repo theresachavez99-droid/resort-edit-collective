@@ -929,6 +929,8 @@ function ImportPanel({
           No products imported yet. Paste URLs above to begin your Buying Review.
         </p>
       )}
+        </div>
+      </details>
     </section>
   );
 }
