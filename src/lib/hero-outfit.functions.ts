@@ -870,7 +870,7 @@ Return ${data.count} candidates for the "${data.slot}" slot.`;
     const suggestions = Array.isArray(parsed.suggestions) ? parsed.suggestions.slice(0, data.count) : [];
     if (suggestions.length === 0) throw new Error("AI returned no suggestions — try again.");
 
-    const inserted: unknown[] = [];
+    const inserted: Record<string, unknown>[] = [];
     const runId = crypto.randomUUID();
     for (let i = 0; i < suggestions.length; i++) {
       const s = suggestions[i];
@@ -922,7 +922,7 @@ Return ${data.count} candidates for the "${data.slot}" slot.`;
         })
         .select()
         .single();
-      if (!ins.error) inserted.push(ins.data);
+      if (!ins.error && ins.data) inserted.push(ins.data as Record<string, unknown>);
     }
 
     return { inserted: inserted.length, candidates: inserted };
