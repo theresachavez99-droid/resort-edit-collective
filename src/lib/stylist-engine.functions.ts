@@ -2326,6 +2326,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
         slotCoverageStatus,
         founderRetrieval: founderRetrievalGated,
+        heroPiecesLocked: heroPiecesLockedReport,
+        slotsRequiringRefinement,
         heroLookApplied: data.founderLearning && heroLook
           ? {
               id: heroLook.id,
