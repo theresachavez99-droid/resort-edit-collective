@@ -216,7 +216,7 @@ function CategorySection({
             {intro}
           </p>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
           {visible.map((brand) => (
             <BrandCard key={brand.slug} brand={brand} />
           ))}
@@ -281,7 +281,7 @@ function BrandsPage() {
       <h1 className="sr-only">Brands We Love</h1>
 
       {/* WHY THESE BRANDS */}
-      <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20 pb-12 md:pb-16">
+      <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20 pb-10 md:pb-14">
         <div className="grid md:grid-cols-12 gap-10 items-start">
           <div className="md:col-span-5">
             <span className="eyebrow text-gold">The Selection</span>
@@ -307,47 +307,8 @@ function BrandsPage() {
         </div>
       </section>
 
-      {/* FOUNDER FAVORITES */}
-      <section className="bg-cream/40 border-y border-border/40">
-        <div className="mx-auto max-w-[1360px] px-6 py-16 md:py-20">
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="eyebrow text-gold">The Heart of the Edit</span>
-            <h2 className="mt-4 font-display text-4xl md:text-5xl tracking-[0.04em] text-ink">
-              Founder Favorites
-            </h2>
-            <p className="mt-5 font-serif italic text-ink/65">
-              The houses we return to season after season — the ten labels that most
-              define the Resort Edit point of view.
-            </p>
-          </div>
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {founderFavorites.map((brand) => (
-              <Link
-                key={brand.slug}
-                to="/brands/$slug"
-                params={{ slug: brand.slug }}
-                className="group block bg-ivory border border-border/50 hover:border-gold transition-colors p-7"
-              >
-                <span className="eyebrow text-[0.55rem] text-gold">
-                  {BRAND_BADGE[brand.slug] ?? "Founder Favorite"}
-                </span>
-                <h3 className="mt-3 font-display text-3xl tracking-wide text-ink group-hover:text-gold transition-colors">
-                  {brand.name}
-                </h3>
-                <p className="mt-3 font-serif italic text-[0.95rem] text-ink/70 leading-snug min-h-[2.75rem]">
-                  {FAVORITE_TAGLINES[brand.slug] ?? brand.blurb}
-                </p>
-                <span className="mt-6 inline-block eyebrow text-[0.6rem] text-ink border-b border-gold/60 pb-0.5 group-hover:text-gold transition-colors">
-                  Explore Brand →
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* SEARCH + FILTERS */}
-      <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20" id="discover">
+      <section className="mx-auto max-w-[1180px] px-6 pt-10 md:pt-14 pb-8 md:pb-10" id="discover">
         <div className="text-center max-w-2xl mx-auto">
           <span className="eyebrow text-gold">Discover</span>
           <h2 className="mt-4 font-display text-3xl md:text-4xl tracking-[0.04em] text-ink">
@@ -398,34 +359,63 @@ function BrandsPage() {
         )}
       </section>
 
+      {/* FOUNDER FAVORITES */}
+      <section className="bg-cream/40 border-y border-border/40">
+        <div className="mx-auto max-w-[1360px] px-6 pt-12 md:pt-16 pb-16 md:pb-20">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="eyebrow text-gold">The Heart of the Edit</span>
+            <h2 className="mt-4 font-display text-4xl md:text-5xl tracking-[0.04em] text-ink">
+              Founder Favorites
+            </h2>
+            <p className="mt-5 font-serif italic text-ink/65">
+              The houses we return to season after season — the ten labels that most
+              define the Resort Edit point of view.
+            </p>
+          </div>
+          <div className="mt-14 md:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {founderFavorites.map((brand) => (
+              <Link
+                key={brand.slug}
+                to="/brands/$slug"
+                params={{ slug: brand.slug }}
+                className="group block bg-ivory border border-border/50 hover:border-gold transition-colors p-7"
+              >
+                <span className="eyebrow text-[0.55rem] text-gold">
+                  {BRAND_BADGE[brand.slug] ?? "Founder Favorite"}
+                </span>
+                <h3 className="mt-3 font-display text-3xl tracking-wide text-ink group-hover:text-gold transition-colors">
+                  {brand.name}
+                </h3>
+                <p className="mt-3 font-serif italic text-[0.95rem] text-ink/70 leading-snug min-h-[2.75rem]">
+                  {FAVORITE_TAGLINES[brand.slug] ?? brand.blurb}
+                </p>
+                <span className="mt-6 inline-block eyebrow text-[0.6rem] text-ink border-b border-gold/60 pb-0.5 group-hover:text-gold transition-colors">
+                  Explore Brand →
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CATEGORY SECTIONS */}
-      <div className="mt-10 md:mt-12 space-y-10 md:space-y-12">
+      <div className="mt-8 md:mt-10 space-y-8 md:space-y-10">
         {brandCategories.map((cat) => (
           <CategorySection key={cat.title} category={cat} />
         ))}
       </div>
 
       {/* AFFILIATE DISCLOSURE */}
-      <p className="mt-16 text-center eyebrow text-[0.55rem] text-ink/45 max-w-xl mx-auto px-6">
+      <p className="mt-10 text-center eyebrow text-[0.55rem] text-ink/45 max-w-xl mx-auto px-6">
         Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
       </p>
 
-      {/* PARTNER CTA */}
-      <section className="mx-auto max-w-[1180px] px-6 mt-12 mb-20">
-        <div className="border border-border/60 bg-cream/60 px-8 py-14 text-center">
-          <span className="eyebrow text-gold">Partnerships</span>
-          <h2 className="font-display text-3xl md:text-4xl tracking-wide mt-4 text-ink">
-            Partner with Resort Edit
-          </h2>
-          <p className="mt-4 font-serif italic text-ink/70 max-w-xl mx-auto">
-            Brand collaborations, featured edits, and curated placements for labels we love.
+      {/* EDITORIAL SIGN-OFF */}
+      <section className="mx-auto max-w-[1180px] px-6 pt-10 pb-16 md:pb-20 text-center">
+        <div className="border-t border-border/30 pt-10 md:pt-14">
+          <p className="font-serif italic text-base md:text-lg text-ink/55 max-w-2xl mx-auto leading-relaxed">
+            Every designer featured here has earned a place in the Resort Edit wardrobe.
           </p>
-          <Link
-            to="/about"
-            className="mt-8 inline-block eyebrow bg-ink text-ivory px-8 py-4 rounded-sm hover:bg-gold transition-colors"
-          >
-            Get in touch →
-          </Link>
         </div>
       </section>
     </div>
