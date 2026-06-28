@@ -372,3 +372,46 @@ export const getAffiliateNetworkStatus = createServerFn({ method: "POST" })
       },
     };
   });
+
+// ---------- Session metadata ----------
+
+export const updateBuyingSession = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z.object({
+      ...pwShape,
+      id: z.string().uuid(),
+      patch: z.object({
+        founder_look_id: z.string().uuid().nullable().optional(),
+        strategy: z.string().max(200).nullable().optional(),
+        status: z.string().max(40).nullable().optional(),
+        notes: z.string().max(2000).nullable().optional(),
+        depth: z.string().max(80).nullable().optional(),
+        benchmark: z.string().max(400).nullable().optional(),
+      }),
+    }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const db = await admin();
+    const { depth, benchmark, ...direct } = data.patch;
+    const patch: Record<string, unknown> = { ...direct };
+    if (depth !== undefined || benchmark !== undefined) {
+      const cur = await db
+        .from("buying_search_sessions")
+        .select("source_diagnostics")
+        .eq("id", data.id)
+        .single();
+      const diag = (cur.data?.source_diagnostics ?? {}) as Record<string, unknown>;
+      if (depth !== undefined) diag.depth = depth;
+      if (benchmark !== undefined) diag.benchmark = benchmark;
+      patch.source_diagnostics = diag as never;
+    }
+    const r = await db
+      .from("buying_search_sessions")
+      .update(patch as never)
+      .eq("id", data.id)
+      .select()
+      .single();
+    if (r.error) throw new Error(r.error.message);
+    return { session: r.data };
+  });
