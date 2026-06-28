@@ -25,10 +25,10 @@ export function SiteFooter() {
           </span>
         </div>
         <h2 className="mt-6 font-display text-3xl md:text-5xl tracking-wide text-ivory">
-          The Next Destination Awaits
+          Your Next Escape Starts Here
         </h2>
         <p className="mt-3 text-ivory/85 max-w-xl font-serif text-lg md:text-xl italic">
-          Receive new destination guides, curated hotel discoveries, and beautifully edited wardrobes for every journey.
+          Receive beautifully curated travel inspiration, exceptional hotel discoveries, timeless packing ideas, and unforgettable places worth exploring.
         </p>
         <NewsletterForm
           ctaSource="footer"
