@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import stillLife from "@/assets/portofino-still-life.jpg";
 import experienceYacht from "@/assets/experience-yacht.jpg";
 import experienceBeachClub from "@/assets/experience-beach-club.jpg";
 import experienceBoat from "@/assets/experience-boat.jpg";
