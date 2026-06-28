@@ -289,6 +289,35 @@ const SLOT_SPECS_BY_KEY: Record<string, SlotSpec[]> = {
   "Portofino|Pool Lounging": POOL_LOUNGING_SLOT_SPECS,
 };
 
+// ──────────────────────────────────────────────────────────────
+// v5.3 — Founder Hero Lock
+//
+// When a Founder Look exists, its hero garments (swim, coverup, dress,
+// skirt, etc.) are LOCKED into the generated outfit. The engine never
+// searches for replacements and assembly cannot drop them. Only the
+// remaining accessory slots are sourced via discovery.
+// ──────────────────────────────────────────────────────────────
+
+/** Map a Founder Look hero category to an outfit slot, or null if it
+ *  is a non-locking accessory (let normal discovery handle it). */
+export function heroCategoryToSlot(cat: string | null | undefined): string | null {
+  if (!cat) return null;
+  const k = cat.toLowerCase().trim();
+  if (/swim|bikini|maillot|one[- ]?piece/.test(k)) return "swim";
+  if (
+    /coverup|cover[- ]?up|kaftan|caftan|sarong|pareo|dress|gown|skirt|top|pant|trouser|matching set|set|jacket|outerwear|linen shirt|shirt/.test(
+      k,
+    )
+  ) return "coverup";
+  // Accessory slots also lock when the founder hand-picked them.
+  if (/sandal|shoe|mule|espadrille|footwear/.test(k)) return "shoes";
+  if (/bag|tote|clutch|basket/.test(k)) return "bag";
+  if (/sunglass|eyewear/.test(k)) return "sunglasses";
+  if (/jewel|earring|necklace|bracelet|ring/.test(k)) return "jewelry";
+  if (/\bhat\b|panama|fedora|straw hat/.test(k)) return "hat";
+  return null;
+}
+
 export function getSlotSpecs(destination: string, activity: string): SlotSpec[] {
   const key = `${destination}|${activity}`;
   return (
