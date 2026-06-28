@@ -2900,6 +2900,7 @@ function buildFounderRetrieval(
   }
   return {
     counts: ctx.counts,
+    compatibleActivities: ctx.compatibleActivities,
     topFounderBrands: ctx.topBrands,
     topFounderReferences: ctx.topReferences,
     topReferencesUsed: topRefsUsed,
