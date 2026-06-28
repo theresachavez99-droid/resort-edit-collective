@@ -636,6 +636,10 @@ export async function discoverForSlot(args: {
   budget?: BudgetMeter;
   /** v4.7 — slot-specific retailer priority order (overrides APPROVED_RETAILERS rotation). */
   retailerPriority?: string[];
+  /** v5.1 — Founder Learning context for per-candidate boost + penalty. */
+  founderContext?: FounderContext;
+  /** v5.1 — brand→eligibility source resolved at run start (registry|founder_*). */
+  eligibilityMap?: Map<string, SlotCandidate["eligibilitySource"]>;
 }): Promise<SlotDiscoveryResult> {
   const {
     apiKey,
