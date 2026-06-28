@@ -550,6 +550,19 @@ export type SlotCandidate = {
   curationReason?: string;
   /** v4.6 — retailer product image extracted from search metadata. */
   image?: string | null;
+  /** v5.1 — Founder Learning attribution. */
+  baseEditorialScore?: number;
+  founderBoost?: number;
+  founderPenalty?: number;
+  founderMatchedRefIds?: string[];
+  founderPenalties?: Array<{ id: string; label: string; delta: number }>;
+  founderReasons?: string[];
+  eligibilitySource?:
+    | "registry"
+    | "static"
+    | "founder_approved"
+    | "founder_selective"
+    | "ineligible";
 };
 
 export type SlotDiscoveryResult = {
