@@ -872,6 +872,32 @@ function ComparisonTable({
   );
 }
 
+type SendFeedbackFn = (opts: { data: {
+  password: string;
+  founder_look_id?: string | null;
+  destination?: string | null;
+  moment?: string | null;
+  slot: string;
+  brand?: string | null;
+  product_title?: string | null;
+  product_url?: string | null;
+  retailer?: string | null;
+  image_url?: string | null;
+  reason_code: FeedbackReasonCode;
+  reason_label?: string | null;
+  notes?: string | null;
+  variant?: string | null;
+} }) => Promise<unknown>;
+
+type FeedbackCtx = {
+  password: string;
+  founderLookId: string | null;
+  destination: string | null;
+  moment: string | null;
+  variant: "founder" | "baseline";
+  sendFeedback: SendFeedbackFn;
+};
+
 function OutfitPanel({
   slotLabel,
   status,
@@ -879,6 +905,9 @@ function OutfitPanel({
   err,
   revealed,
   variant,
+  look,
+  password,
+  sendFeedback,
 }: {
   slotLabel: string;
   status: RunStatus;
@@ -886,6 +915,9 @@ function OutfitPanel({
   err?: string;
   revealed: boolean;
   variant: "founder" | "baseline";
+  look: { id: string; destination: string; moment: string } | null;
+  password: string;
+  sendFeedback: SendFeedbackFn;
 }) {
   const isFounder = variant === "founder";
   const headerSuffix = revealed ? (
@@ -914,7 +946,18 @@ function OutfitPanel({
       )}
 
       {status === "done" && run && (
-        <OutfitBody run={run} revealed={revealed} />
+        <OutfitBody
+          run={run}
+          revealed={revealed}
+          feedback={{
+            password,
+            founderLookId: look?.id ?? null,
+            destination: look?.destination ?? null,
+            moment: look?.moment ?? null,
+            variant,
+            sendFeedback,
+          }}
+        />
       )}
     </div>
   );
