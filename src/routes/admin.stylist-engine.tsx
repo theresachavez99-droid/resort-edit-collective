@@ -870,3 +870,172 @@ function EngineVisualBoard({
     />
   );
 }
+
+function FounderRetrievalReport({
+  result,
+}: {
+  result: Extract<RunResult, { ok: true }>;
+}) {
+  const fr = (result as unknown as {
+    founderRetrieval?: {
+      counts: {
+        referencesTotal: number;
+        referencesMatched: number;
+        brandIntelligenceApproved: number;
+        brandIntelligenceSelective: number;
+        uploadedUrlsTotal: number;
+        uploadedUrlsCompleted: number;
+      };
+      topFounderBrands: Array<{ brand: string; refs: number }>;
+      topFounderReferences: Array<{
+        id: string;
+        brand: string;
+        product_category: string | null;
+        print_language: string | null;
+        silhouette: string | null;
+      }>;
+      topReferencesUsed: Array<{
+        id: string;
+        uses: number;
+        brand: string | null;
+        category: string | null;
+        print: string | null;
+      }>;
+      injectedBrands: Array<{ name: string; source: string }>;
+      candidatesBoosted: number;
+      candidatesPenalized: number;
+      eligibilityBreakdown: Record<string, number>;
+      negativeRuleHits: Record<string, number>;
+    };
+  }).founderRetrieval;
+  if (!fr) return null;
+  return (
+    <section className="border rounded-lg p-5 bg-amber-50/50 border-amber-200 space-y-3">
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-xl font-serif">Founder Learning</h2>
+        <span className="text-xs uppercase tracking-widest text-amber-800">
+          v5.1 · additive layer
+        </span>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-3 text-sm">
+        <Stat label="Refs matched" value={fr.counts.referencesMatched} />
+        <Stat label="Refs total" value={fr.counts.referencesTotal} />
+        <Stat label="Brand intel approved" value={fr.counts.brandIntelligenceApproved} />
+        <Stat label="Brand intel selective" value={fr.counts.brandIntelligenceSelective} />
+        <Stat label="Uploaded URLs (done)" value={fr.counts.uploadedUrlsCompleted} />
+        <Stat label="Uploaded URLs (total)" value={fr.counts.uploadedUrlsTotal} />
+        <Stat label="Candidates boosted" value={fr.candidatesBoosted} />
+        <Stat label="Candidates penalized" value={fr.candidatesPenalized} />
+        <Stat label="Brands injected" value={fr.injectedBrands.length} />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-stone-500 mb-1">
+            Top founder brands
+          </h3>
+          <ul className="text-sm space-y-0.5">
+            {fr.topFounderBrands.slice(0, 5).map((b) => (
+              <li key={b.brand}>
+                {b.brand} <span className="text-stone-500">({b.refs})</span>
+              </li>
+            ))}
+            {fr.topFounderBrands.length === 0 && (
+              <li className="text-stone-500">none</li>
+            )}
+          </ul>
+        </div>
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-stone-500 mb-1">
+            Top references retrieved
+          </h3>
+          <ul className="text-sm space-y-0.5">
+            {fr.topFounderReferences.slice(0, 5).map((r) => (
+              <li key={r.id}>
+                {r.brand}{" "}
+                <span className="text-stone-500">
+                  · {r.product_category ?? "—"}
+                  {r.print_language ? ` · ${r.print_language}` : ""}
+                </span>
+              </li>
+            ))}
+            {fr.topFounderReferences.length === 0 && (
+              <li className="text-stone-500">none</li>
+            )}
+          </ul>
+        </div>
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-stone-500 mb-1">
+            References used in scoring
+          </h3>
+          <ul className="text-sm space-y-0.5">
+            {fr.topReferencesUsed.slice(0, 5).map((r) => (
+              <li key={r.id}>
+                {r.brand ?? "—"}{" "}
+                <span className="text-stone-500">
+                  · {r.category ?? "—"} · used {r.uses}×
+                </span>
+              </li>
+            ))}
+            {fr.topReferencesUsed.length === 0 && (
+              <li className="text-stone-500">no candidates matched a reference</li>
+            )}
+          </ul>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-stone-500 mb-1">
+            Eligibility source breakdown
+          </h3>
+          <div className="text-sm flex flex-wrap gap-2">
+            {Object.entries(fr.eligibilityBreakdown).map(([k, v]) => (
+              <span
+                key={k}
+                className="px-2 py-0.5 rounded bg-white border text-stone-700"
+              >
+                {k}: <strong>{v}</strong>
+              </span>
+            ))}
+          </div>
+        </div>
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-stone-500 mb-1">
+            Negative rule hits
+          </h3>
+          <div className="text-sm flex flex-wrap gap-2">
+            {Object.keys(fr.negativeRuleHits).length === 0 ? (
+              <span className="text-stone-500">none</span>
+            ) : (
+              Object.entries(fr.negativeRuleHits).map(([k, v]) => (
+                <span
+                  key={k}
+                  className="px-2 py-0.5 rounded bg-rose-100 border border-rose-200 text-rose-800"
+                >
+                  {k}: <strong>{v}</strong>
+                </span>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+      {fr.injectedBrands.length > 0 && (
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-stone-500 mb-1">
+            Founder-only brands injected this run
+          </h3>
+          <div className="text-sm flex flex-wrap gap-2">
+            {fr.injectedBrands.map((b) => (
+              <span
+                key={b.name}
+                className="px-2 py-0.5 rounded bg-emerald-100 border border-emerald-200 text-emerald-900"
+              >
+                {b.name}{" "}
+                <span className="text-stone-500">· {b.source}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
