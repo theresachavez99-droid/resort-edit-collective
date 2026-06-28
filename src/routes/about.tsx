@@ -29,17 +29,18 @@ function AboutPage() {
         src={heroAsset.url}
         alt="Golden-hour view overlooking Portofino harbor with a woman in a white dress and straw hat enjoying the Italian Riviera."
         priority
-        // Subject (face + hat) sits in the upper-right of the source image. Each
-        // breakpoint shifts the focal point so the head, hat and harbor stay in frame.
+        // Subject (hat + face) sits in the upper-right of the source image. We
+        // bias y low (toward the top of the image) at every breakpoint so the
+        // hat is never clipped, with generous breathing room above.
         focal={{
-          base: { x: 82, y: 28 },   // mobile — tight on the model
-          sm:   { x: 80, y: 28 },
-          md:   { x: 76, y: 30 },   // tablet — pull in a little more harbor
-          lg:   { x: 70, y: 32 },   // standard desktop — balanced composition
-          xl:   { x: 62, y: 34 },   // large desktop — full scene
-          "2xl":{ x: 56, y: 36 },
+          base: { x: 78, y: 18 },   // mobile
+          sm:   { x: 76, y: 20 },
+          md:   { x: 74, y: 24 },   // tablet
+          lg:   { x: 70, y: 32 },   // desktop — per spec
+          xl:   { x: 66, y: 34 },
+          "2xl":{ x: 60, y: 36 },
         }}
-        heightClassName="h-[44vh] md:h-[56vh] lg:h-[62vh] min-h-[380px] max-h-[640px]"
+        heightClassName="h-[52vh] md:h-[64vh] lg:h-[72vh] min-h-[460px] max-h-[760px]"
         overlay={
           <div className="absolute inset-0 bg-gradient-to-t from-ink/15 via-transparent to-transparent" />
         }
@@ -47,30 +48,26 @@ function AboutPage() {
         <h1 className="sr-only">About Resort Edit</h1>
       </EditorialHero>
 
-      <section className="mx-auto max-w-3xl px-6 py-16 md:py-20 text-center">
+      <section className="mx-auto max-w-2xl px-6 py-16 md:py-24 text-center">
         <span className="eyebrow text-gold">Who We Are</span>
-        <div className="my-8 h-px w-16 bg-gold mx-auto" />
-        <p className="font-serif italic text-2xl md:text-3xl leading-relaxed text-ink">
+        <p className="mt-8 font-serif italic text-[1.75rem] md:text-[2.25rem] leading-[1.25] text-ink">
           Resort Edit is for women who believe the destination should inspire the wardrobe.
         </p>
-        <div className="my-12 h-px w-24 bg-gold mx-auto" />
-        <p className="font-serif text-lg leading-relaxed text-ink/80">
-          Every Resort Edit begins with a destination — not a suitcase.
-        </p>
-        <p className="font-serif text-lg leading-relaxed text-ink/80 mt-6">
-          We thoughtfully curate where to stay, what to experience, and what to wear, creating complete destination wardrobes inspired by the places themselves.
-        </p>
-        <p className="font-serif text-lg leading-relaxed text-ink/80 mt-6">
-          From first espresso to sunset aperitivo, every recommendation is chosen to help you travel beautifully and dress with intention.
-        </p>
-        <p className="font-serif italic text-base leading-relaxed text-ink/65 mt-10 max-w-2xl mx-auto">
-          Every destination is personally researched and curated using the same editorial process we would use when planning our own travels.
-        </p>
-        <p className="font-serif text-lg leading-relaxed text-ink/80 mt-10">
-          Because the best trips deserve an unforgettable wardrobe.
-        </p>
-        <div className="my-12 h-px w-16 bg-gold mx-auto" />
-        <p className="font-display italic text-xl md:text-2xl text-ink/80 tracking-wide">
+        <div className="my-10 h-px w-16 bg-gold mx-auto" />
+        <div className="space-y-6 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/85">
+          <p>Every Resort Edit begins with a destination — not a suitcase.</p>
+          <p>
+            We thoughtfully curate where to stay, what to experience, and what to wear, creating complete destination wardrobes inspired by the places themselves.
+          </p>
+          <p>
+            From first espresso to sunset aperitivo, every recommendation is chosen to help you travel beautifully and dress with intention.
+          </p>
+          <p className="text-ink/75">
+            Every destination is personally researched and curated using the same editorial process we would use when planning our own travels.
+          </p>
+          <p>Because the best trips deserve an unforgettable wardrobe.</p>
+        </div>
+        <p className="mt-12 font-serif italic text-base md:text-lg text-ink/70 tracking-wide">
           Welcome to Resort Edit.
         </p>
       </section>
