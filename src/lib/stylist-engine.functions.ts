@@ -83,7 +83,6 @@ import {
 import {
   activityCompatibilityRank,
   activityExplicitlyExcluded,
-  getCompatibleActivities,
 } from "./activity-hierarchy";
 import type { CachedCandidate } from "./product-cache.server";
 import type {
