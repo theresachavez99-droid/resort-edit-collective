@@ -221,10 +221,14 @@ export const refreshFounderLookHeroImages = createServerFn({ method: "POST" })
     for (const h of enriched.heroUrls) {
       const hh = h as { url?: string | null; image_url?: string | null };
       if (!hh.url || !hh.image_url) continue;
-      await supabaseAdmin
-        .from("founder_reference_products")
-        .update({ image_url: hh.image_url })
-        .eq("source_url", hh.url);
+      try {
+        await supabaseAdmin
+          .from("founder_reference_products")
+          .update({ image_url: hh.image_url })
+          .eq("source_url", hh.url);
+      } catch {
+        // image_url column may not exist on the references table — non-fatal.
+      }
     }
     return {
       ok: true as const,
