@@ -2361,7 +2361,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     let looks: AssembledLook[] = [];
     let assemblyError: string | null = null;
     try {
-      looks = await assembleLooks(brief, slotResults, specs, data.targetLooks, archetypeAssignments);
+      looks = await assembleLooks(
+        brief,
+        slotResults,
+        specs,
+        data.targetLooks,
+        archetypeAssignments,
+        lockedHeroBySlot,
+      );
     } catch (e) {
       assemblyError = String((e as Error)?.message ?? e);
     }
