@@ -28,9 +28,6 @@ export function PortofinoMomentCard({ m }: { m: PortofinoMomentCardData }) {
               : undefined
           }
         />
-        <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-          {m.archetype_slug.replace(/-/g, " ").toUpperCase()}
-        </span>
       </div>
       <div className="p-5 md:p-6 flex flex-col flex-1">
         <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">

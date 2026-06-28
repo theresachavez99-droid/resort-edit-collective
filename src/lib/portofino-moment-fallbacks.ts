@@ -85,7 +85,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "arrival",
     moment_name: "Arrival Day",
     narrative:
-      "The first afternoon in Portofino—bags unpacked, sun on the harbor, the trip begins.",
+      "Your first walk through Portofino after checking into Splendido.",
     editorial_order: 1,
     moment_card_image: arrivalDayImage.url,
     // Moment-specific banner override — applies ONLY to /portofino/arrival.
@@ -101,7 +101,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_slug: "espresso-morning",
     archetype_slug: "market-morning",
     moment_name: "Espresso Morning",
-    narrative: "Espresso first, then wherever the harbor leads.",
+    narrative: "A slow Italian morning that begins with espresso on the piazzetta.",
     editorial_order: 2,
     moment_card_image: espressoMorningCanonical.url,
     // Moment-specific banner override — applies ONLY to /portofino/espresso-morning.
@@ -117,7 +117,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "yacht-day",
     moment_name: "Yacht Day",
     narrative:
-      "From Portofino to hidden coves, the Riviera is best explored by sea.",
+      "Cruise the Ligurian coastline in effortless Riviera style.",
     editorial_order: 4,
     moment_card_image: getCanonicalDayImage("day-1", "hero"),
     hero_banner_image: yachtDayHero.url,
@@ -132,7 +132,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "harbor-aperitivo",
     moment_name: "Harbor Aperitivo",
     narrative:
-      "A spritz overlooking the harbor as golden hour settles over Portofino.",
+      "Golden hour cocktails overlooking the harbor.",
     editorial_order: 7,
     moment_card_image: harborAperitivoCard.url,
     hero_banner_image: harborAperitivoBanner.url,
@@ -147,7 +147,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "sunset-views",
     moment_name: "Sunset Views",
     narrative:
-      "The harbor at golden hour — terrace views, warm light, and the slow transition into evening.",
+      "Watch the Riviera glow as the sun disappears into the sea.",
     editorial_order: 10,
     moment_card_image: sunsetViewsCard.url,
     hero_banner_image: sunsetViewsHero.url,
@@ -162,7 +162,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "riviera-dinner",
     moment_name: "Riviera Dinner",
     narrative:
-      "Candlelit terraces, harbor lights, and the best reservation of the trip.",
+      "An unforgettable dinner beneath the lights of Portofino.",
     editorial_order: 11,
     moment_card_image: rivieraDinnerCard.url,
     hero_banner_image: rivieraDinnerHero.url,
@@ -227,7 +227,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "exploring-the-harbor",
     moment_name: "Explore the Harbor",
     narrative:
-      "A slow afternoon along the quay — boutique windows, espresso stops, and the harbor catching the light.",
+      "Discover hidden corners, colorful streets, and waterfront boutiques.",
     editorial_order: 3,
     moment_card_image: exploringHarborImage,
     hero_banner_image: exploringHarborBanner,
@@ -242,7 +242,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "beach-club",
     moment_name: "Beach Club",
     narrative:
-      "Designer swimwear, cabana shade, and the Mediterranean stretched out to the horizon.",
+      "A leisurely afternoon beside the Mediterranean.",
     editorial_order: 5,
     moment_card_image: beachClubLemon.url,
     // Moment-specific banner override — applies ONLY to
@@ -259,7 +259,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "pool-lounging",
     moment_name: "Pool Lounging",
     narrative:
-      "Cabanas, a paperback, and the quiet luxury of a long afternoon at the hotel pool.",
+      "An elegant afternoon spent beneath striped umbrellas.",
     editorial_order: 6,
     moment_card_image: poolLoungingShoppingImage.url,
     hero_banner_image: poolLoungingShoppingImage.url,
@@ -274,7 +274,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "shopping",
     moment_name: "Shopping",
     narrative:
-      "Linen daywear and a slow walk through Portofino's boutiques.",
+      "Browse beautifully curated boutiques tucked along Portofino's harbor.",
     editorial_order: 7.5,
     moment_card_image: shoppingCard.url,
     hero_banner_image: shoppingBanner.url,
@@ -289,7 +289,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "long-lunch",
     moment_name: "Long Lunch",
     narrative:
-      "A Mediterranean dress, linen tailoring, and a lingering lunch overlooking the sea.",
+      "A lingering lunch where time slows down with every course.",
     editorial_order: 8,
     moment_card_image: longLunchCard.url,
     hero_banner_image: beachClubLongLunchBanner.url,
@@ -304,7 +304,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "nightcap",
     moment_name: "Nightcap",
     narrative:
-      "One last drink on the piazzetta — the harbor empties, the locals come out.",
+      "One final cocktail before the perfect day comes to a close.",
     editorial_order: 12,
     moment_card_image: nightcapCard.url,
     hero_banner_image: sunsetViewsHero.url,
