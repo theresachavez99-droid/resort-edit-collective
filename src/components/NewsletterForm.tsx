@@ -98,7 +98,7 @@ export function NewsletterForm({
             maxLength={255}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email address"
+            placeholder={placeholder}
             disabled={state.kind === "loading"}
             className="flex-1 h-14 bg-transparent border border-ivory/30 px-5 text-sm text-ivory placeholder:text-ivory/40 focus:outline-none focus:border-gold disabled:opacity-60"
           />
