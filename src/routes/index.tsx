@@ -140,7 +140,7 @@ function Index() {
           <p
             className="font-serif italic text-[1.2rem] sm:text-[1.32rem] lg:text-[1.45rem] leading-[1.15] mt-2.5 text-ink"
           >
-            Every moment thoughtfully curated—from your first espresso to sunset overlooking the harbor.
+            From your first espresso overlooking the harbor to sunset aperitivos, beach clubs, and candlelit dinners above the Ligurian Sea — discover twelve thoughtfully curated Portofino moments, each paired with a wardrobe designed for the experience.
           </p>
           <div className="mt-3 mb-2.5 h-px w-24 bg-gold/80" />
           <div className="mt-4 flex flex-wrap gap-3">
@@ -192,11 +192,13 @@ function Index() {
           <p className="eyebrow text-gold text-[0.7rem] tracking-[0.34em]">
             THE PORTOFINO EDIT
           </p>
-          <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.02em] text-ink leading-[0.95]">
-            Your Portofino Wardrobe
+          <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.02em] text-ink leading-[1.05]">
+            Twelve Editorial Moments.
+            <br />
+            One Unforgettable Portofino.
           </h2>
-          <p className="mt-2 font-serif italic text-[0.92rem] sm:text-[0.98rem] text-ink/60 leading-relaxed">
-            Curated for every unforgettable moment.
+          <p className="mt-3 font-serif italic text-[0.95rem] sm:text-[1.02rem] text-ink/65 leading-relaxed max-w-2xl mx-auto">
+            Explore Portofino exactly as we would — from elegant arrivals and leisurely mornings to yacht days, long lunches, sunset aperitivos, and unforgettable evenings. Every moment is thoughtfully paired with an editorial wardrobe designed for the experience.
           </p>
           <div className="mt-4 mx-auto h-px w-16 bg-gold/60" />
         </div>
@@ -214,7 +216,7 @@ function Index() {
             <div className="h-px w-12 bg-gold/50" />
           </div>
           <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-            Hotels chosen as part of the destination — where to stay, why it fits, and the experience it delivers.
+            Every unforgettable Portofino itinerary begins with choosing where to stay. These are the properties we would happily return to again and again.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
@@ -267,7 +269,7 @@ function Index() {
           <div className="h-px w-12 bg-gold/50" />
         </div>
         <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-          Curated experiences to elevate your Portofino escape.
+          Reserve the experiences that define a memorable stay — from private yacht charters to beach clubs, cooking classes, and unforgettable days along the Ligurian coast.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -275,9 +277,11 @@ function Index() {
             <article key={e.name} className="bg-card border border-border/50 flex flex-col">
               <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-muted">
                 <img src={e.image} alt={e.name} loading="lazy" width={1024} height={768} className="absolute inset-0 h-full w-full object-cover" />
-                <span className="absolute left-4 bottom-4 bg-ink/75 text-ivory eyebrow text-[0.6rem] tracking-[0.26em] px-3 py-1.5 backdrop-blur-sm">
-                  {e.category}
-                </span>
+                {e.badge && (
+                  <span className="absolute left-4 bottom-4 bg-ink/75 text-ivory eyebrow text-[0.6rem] tracking-[0.26em] px-3 py-1.5 backdrop-blur-sm">
+                    {e.badge}
+                  </span>
+                )}
               </div>
               <div className="p-6 flex flex-col flex-1">
                 <h3 className="font-display text-2xl tracking-wide text-ink">{e.name}</h3>
@@ -304,7 +308,7 @@ function Index() {
           <div className="h-px w-12 bg-gold/50" />
         </div>
         <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-          A short list of the ateliers and houses we keep returning to across destinations.
+          The designers behind every Resort Edit wardrobe — chosen for exceptional craftsmanship, destination relevance, and timeless style.
         </p>
         <ul className="mx-auto max-w-4xl flex flex-wrap items-center justify-center gap-x-7 gap-y-3 lg:gap-x-10">
           {[
