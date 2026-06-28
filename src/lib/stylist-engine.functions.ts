@@ -80,8 +80,13 @@ import {
   type CoverageStatus,
   type DiscoveryMode,
 } from "./discovery-pipeline";
+import {
+  activityCompatibilityRank,
+  activityExplicitlyExcluded,
+} from "./activity-hierarchy";
 import type { CachedCandidate } from "./product-cache.server";
 import type {
+  EligibilitySource,
   FounderContext,
   FounderSignal,
 } from "./founder-context.server";
@@ -318,6 +323,7 @@ export type EngineBrand = {
   slug: string;
   tier: string | null;
   categories: string[];
+  activities: string[];
   commerceSources: CommerceSourceEntry[];
   preferredCommerceSource: CommerceSourceKind;
   /**
@@ -325,6 +331,7 @@ export type EngineBrand = {
    * Replaces static tier as the primary ranking signal.
    */
   editorialAffinity: Record<string, number>;
+  eligibilitySource?: Exclude<EligibilitySource, "ineligible">;
 };
 
 function resolveCommerceSource(
@@ -402,7 +409,6 @@ export async function loadEngineBrands(
       "id,name,slug,tier,categories,activities,commerce_sources,preferred_commerce_source,destination_strength,editorial_affinity",
     )
     .eq("status", "approved")
-    .contains("activities", [activity])
     .order("name", { ascending: true });
   if (error) throw new Error(error.message);
   const mapped: EngineBrand[] = (data ?? []).map((b) => ({
@@ -410,6 +416,7 @@ export async function loadEngineBrands(
     slug: b.slug as string,
     tier: (b.tier as string | null) ?? null,
     categories: ((b as { categories?: string[] }).categories ?? []) as string[],
+    activities: ((b as { activities?: string[] }).activities ?? []) as string[],
     commerceSources: (Array.isArray((b as { commerce_sources?: unknown }).commerce_sources)
       ? ((b as { commerce_sources: unknown[] }).commerce_sources as CommerceSourceEntry[])
       : []),
@@ -419,10 +426,43 @@ export async function loadEngineBrands(
     editorialAffinity: ((b as { editorial_affinity?: Record<string, number> | null })
       .editorial_affinity ?? {}) as Record<string, number>,
   }));
-  // v5 — sort by editorial affinity for this destination + activity so
-  // discovery batches lead with the most context-aligned brands.
-  mapped.sort((a, b) => affinityFor(b, destination, activity) - affinityFor(a, destination, activity));
-  return mapped;
+  const nonExcluded = mapped.filter(
+    (b) =>
+      !activityExplicitlyExcluded({
+        destination,
+        requestedActivity: activity,
+        candidateActivities: b.activities,
+      }),
+  );
+  const eligible = nonExcluded
+    .map((b) => ({
+      brand: b,
+      rank: activityCompatibilityRank({
+        destination,
+        requestedActivity: activity,
+        candidateActivities: b.activities,
+      }),
+    }))
+    .filter((r) => r.rank < 100);
+
+  const sourcePool: EngineBrand[] = eligible.length
+    ? eligible.map(({ brand, rank }) => ({
+        ...brand,
+        eligibilitySource: (rank === 0 ? "registry" : "compatible_activity") as
+          | "registry"
+          | "compatible_activity",
+      }))
+    : nonExcluded.map((brand) => ({ ...brand, eligibilitySource: "static" as const }));
+
+  // v5 — sort by hierarchy strength, then editorial affinity for this
+  // destination + activity so discovery leads with the most aligned brands.
+  sourcePool.sort((a, b) => {
+    const ar = activityCompatibilityRank({ destination, requestedActivity: activity, candidateActivities: a.activities });
+    const br = activityCompatibilityRank({ destination, requestedActivity: activity, candidateActivities: b.activities });
+    if (ar !== br) return ar - br;
+    return affinityFor(b, destination, activity) - affinityFor(a, destination, activity);
+  });
+  return sourcePool;
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -657,6 +697,8 @@ export type SlotCandidate = {
   rankDeltaFromFounder?: number;
   eligibilitySource?:
     | "registry"
+    | "compatible_activity"
+    | "founder_hero"
     | "static"
     | "founder_approved"
     | "founder_selective"
@@ -1480,14 +1522,6 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         error: String((e as Error)?.message ?? e),
       };
     }
-    if (!brands.length) {
-      return {
-        ok: false as const,
-        stage: "discovery" as const,
-        error: `No approved brands tagged ${activity} in the registry.`,
-      };
-    }
-
     // ── v5.1 — Founder Learning retrieval (additive eligibility layer).
     //
     // 1. Pull approved brand records, founder reference products, and
@@ -1504,7 +1538,10 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     // explicit founderLookId we use it; otherwise we pick the most
     // recently approved/published look that matches destination+moment.
     let heroLook: import("./founder-similarity").HeroLook | null = null;
-    if (data.founderLearning) {
+    // Resolve the Founder Look for both Founder Learning and baseline runs.
+    // Even when scoring is OFF, the hero brands are allowed to bootstrap a
+    // new editorial moment so registry tagging can never block generation.
+    {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       let q = supabaseAdmin
         .from("founder_looks")
@@ -1555,13 +1592,47 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     }
 
     const eligibilityMap = new Map<string, SlotCandidate["eligibilitySource"]>();
-    for (const b of brands) eligibilityMap.set(b.slug, "registry");
+    for (const b of brands) eligibilityMap.set(b.slug, b.eligibilitySource ?? "registry");
 
     const registrySlugs = new Set(brands.map((b) => b.slug));
     const injectedFounderBrands: Array<{
       name: string;
-      source: "founder_approved" | "founder_selective";
+      source: "founder_hero" | "founder_approved" | "founder_selective";
     }> = [];
+
+    // Founder Look override: hero brands are always eligible for the moment,
+    // even when the registry has not duplicated the new editorial activity tag.
+    if (heroLook) {
+      for (const heroBrand of heroLook.heroBrands) {
+        const heroSlug = heroBrand.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        const existing = brands.find((b) => b.slug === heroSlug || b.name.toLowerCase() === heroBrand.toLowerCase());
+        if (existing) {
+          existing.eligibilitySource = "founder_hero";
+          eligibilityMap.set(existing.slug, "founder_hero");
+          injectedFounderBrands.push({ name: existing.name, source: "founder_hero" });
+          continue;
+        }
+        const heroCategories = Array.from(
+          new Set(heroLook.heroCategories.flatMap((cat) => fcModule.refCategoryToBrandCategories(cat))),
+        );
+        if (!heroCategories.length) heroCategories.push("swimwear", "coverups", "dresses", "separates");
+        brands.push({
+          name: heroBrand,
+          slug: heroSlug,
+          tier: null,
+          categories: heroCategories,
+          activities: [activity],
+          commerceSources: [],
+          preferredCommerceSource: "affiliate_retailer",
+          editorialAffinity: {},
+          eligibilitySource: "founder_hero",
+        });
+        registrySlugs.add(heroSlug);
+        eligibilityMap.set(heroSlug, "founder_hero");
+        injectedFounderBrands.push({ name: heroBrand, source: "founder_hero" });
+      }
+    }
+
     for (const rec of founderContext.brandRecords.values()) {
       if (registrySlugs.has(rec.slug)) continue;
       const cats = founderContext.brandCategoriesFromRefs.get(
@@ -1580,10 +1651,16 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         slug: rec.slug,
         tier: null,
         categories: cats,
+        activities: [activity],
         commerceSources: [],
         preferredCommerceSource: "affiliate_retailer",
         editorialAffinity: {},
+        eligibilitySource:
+          elig.source === "founder_approved"
+            ? "founder_approved"
+            : "founder_selective",
       });
+      registrySlugs.add(rec.slug);
       eligibilityMap.set(
         rec.slug,
         elig.source === "founder_approved"
@@ -1597,6 +1674,15 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             ? "founder_approved"
             : "founder_selective",
       });
+    }
+
+    if (!brands.length) {
+      return {
+        ok: false as const,
+        stage: "discovery" as const,
+        error:
+          `No eligible brands available for ${activity}. Tried Founder Look hero brands, founder-approved brands, compatible activity brands (${founderContext.compatibleActivities.join(", ")}), and static approved brands.`,
+      };
     }
 
     // ── Registry analytics: count Yacht Day brands per category and flag
@@ -1729,7 +1815,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         budget,
         founderContext,
         eligibilityMap,
-        heroLook: heroLook ?? undefined,
+        heroLook: data.founderLearning ? heroLook ?? undefined : undefined,
         founderLearningEnabled: data.founderLearning,
       });
 
@@ -1748,6 +1834,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
           tier: "expansion",
           categories: spec.brandCategories,
+          activities: [activity],
           commerceSources: [],
           preferredCommerceSource: "affiliate_retailer" as const,
           editorialAffinity: {},
@@ -1768,7 +1855,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           activity,
           founderContext,
           eligibilityMap,
-          heroLook: heroLook ?? undefined,
+          heroLook: data.founderLearning ? heroLook ?? undefined : undefined,
           founderLearningEnabled: data.founderLearning,
         });
         const acceptedExpansion = exp.candidates.length;
@@ -2028,7 +2115,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
         slotCoverageStatus,
         founderRetrieval: founderRetrievalGated,
-        heroLookApplied: heroLook
+        heroLookApplied: data.founderLearning && heroLook
           ? {
               id: heroLook.id,
               slug: heroLook.slug,
@@ -2591,7 +2678,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         candidatesById,
       ),
       /** v5.2 — active HeroLook used for blended similarity, if any. */
-      heroLookApplied: heroLook
+      heroLookApplied: data.founderLearning && heroLook
         ? {
             id: heroLook.id,
             slug: heroLook.slug,
@@ -2781,7 +2868,7 @@ import type { FounderContext as _FC } from "./founder-context.server";
 
 function buildFounderRetrieval(
   ctx: _FC,
-  injected: Array<{ name: string; source: "founder_approved" | "founder_selective" }>,
+  injected: Array<{ name: string; source: "founder_hero" | "founder_approved" | "founder_selective" }>,
   candidatesById: Map<string, SlotCandidate>,
 ) {
   const cands = [...candidatesById.values()];
@@ -2813,6 +2900,7 @@ function buildFounderRetrieval(
   }
   return {
     counts: ctx.counts,
+    compatibleActivities: ctx.compatibleActivities,
     topFounderBrands: ctx.topBrands,
     topFounderReferences: ctx.topReferences,
     topReferencesUsed: topRefsUsed,

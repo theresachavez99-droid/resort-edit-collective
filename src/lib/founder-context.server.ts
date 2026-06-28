@@ -17,9 +17,17 @@
  * handlers via `await import("./founder-context.server")`.
  */
 
+import {
+  activityExplicitlyExcluded,
+  activityMatchesHierarchy,
+  getCompatibleActivities,
+} from "./activity-hierarchy";
+
 export type EligibilitySource =
   | "static"
   | "registry"
+  | "compatible_activity"
+  | "founder_hero"
   | "founder_approved"
   | "founder_selective"
   | "ineligible";
@@ -105,6 +113,7 @@ export const FOUNDER_NEGATIVE_RULES: NegativeRule[] = [
 export type FounderContext = {
   destination: string;
   activity: string;
+  compatibleActivities: string[];
   references: FounderRef[];
   brandRecords: Map<string, FounderBrandRecord>;
   /** Categories observed in references per brand (normalized keys). */
@@ -164,6 +173,7 @@ export async function loadFounderContext(
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const dKey = destination.toLowerCase();
   const aKey = activity.toLowerCase();
+  const compatibleActivities = getCompatibleActivities(destination, activity);
 
   const [refsRes, biRes, uuRes] = await Promise.all([
     supabaseAdmin
@@ -193,7 +203,13 @@ export async function loadFounderContext(
     const dt = (r.destination_tags ?? []).map((x) => x.toLowerCase());
     const at = (r.activity_tags ?? []).map((x) => x.toLowerCase());
     const dHit = dt.some((t) => t.includes(dKey) || dKey.includes(t));
-    const aHit = at.some((t) => t.includes(aKey) || aKey.includes(t));
+    const aHit =
+      at.some((t) => t.includes(aKey) || aKey.includes(t)) ||
+      activityMatchesHierarchy({
+        destination,
+        requestedActivity: activity,
+        candidateActivities: r.activity_tags,
+      });
     return dHit || aHit || (dt.length === 0 && at.length === 0);
   });
 
@@ -252,6 +268,7 @@ export async function loadFounderContext(
   return {
     destination,
     activity,
+    compatibleActivities,
     references: matched,
     brandRecords,
     brandCategoriesFromRefs,
@@ -273,22 +290,42 @@ export function brandEligibility(args: {
   brand: string;
   staticEligible: boolean;
   inRegistry: boolean;
+  heroBrand?: boolean;
   context: FounderContext;
 }): { eligible: boolean; source: EligibilitySource } {
+  if (args.heroBrand) return { eligible: true, source: "founder_hero" };
   if (args.inRegistry) return { eligible: true, source: "registry" };
   if (args.staticEligible) return { eligible: true, source: "static" };
   const rec = args.context.brandRecords.get(normBrand(args.brand));
   if (!rec) return { eligible: false, source: "ineligible" };
   if (rec.status === "approved") {
+    if (
+      activityExplicitlyExcluded({
+        destination: args.context.destination,
+        requestedActivity: args.context.activity,
+        candidateActivities: rec.suggested_activities,
+      })
+    ) {
+      return { eligible: false, source: "ineligible" };
+    }
     return { eligible: true, source: "founder_approved" };
   }
   if (rec.status === "approved_selectively") {
     const dKey = args.context.destination.toLowerCase();
-    const aKey = args.context.activity.toLowerCase();
     const sd = (rec.suggested_destinations ?? []).map((s) => s.toLowerCase());
-    const sa = (rec.suggested_activities ?? []).map((s) => s.toLowerCase());
     const dOk = sd.length === 0 || sd.some((t) => t.includes(dKey) || dKey.includes(t));
-    const aOk = sa.length === 0 || sa.some((t) => t.includes(aKey) || aKey.includes(t));
+    const aOk =
+      rec.suggested_activities.length === 0 ||
+      (!activityExplicitlyExcluded({
+        destination: args.context.destination,
+        requestedActivity: args.context.activity,
+        candidateActivities: rec.suggested_activities,
+      }) &&
+        activityMatchesHierarchy({
+          destination: args.context.destination,
+          requestedActivity: args.context.activity,
+          candidateActivities: rec.suggested_activities,
+        }));
     return { eligible: dOk && aOk, source: "founder_selective" };
   }
   return { eligible: false, source: "ineligible" };
