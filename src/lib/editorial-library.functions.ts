@@ -370,18 +370,21 @@ export type EditorialReferenceRow = {
   updated_at: string;
 };
 
-/** Public read — anyone can browse the library. */
-export const listEditorialReferences = createServerFn({ method: "GET" }).handler(
-  async (): Promise<{ ok: true; references: EditorialReferenceRow[] }> => {
-    const { data, error } = await supabaseAdmin
-      .from("editorial_reference_library")
-      .select("*")
-      .order("source_type", { ascending: true })
-      .order("created_at", { ascending: true });
-    if (error) throw new Error(error.message);
-    return { ok: true, references: (data ?? []) as EditorialReferenceRow[] };
-  },
-);
+/** Admin-only read — surfaces internal extraction payloads + unlock keywords. */
+export const listEditorialReferences = createServerFn({ method: "POST" })
+  .inputValidator((input) => z.object({ password: pw }).parse(input))
+  .handler(
+    async ({ data }): Promise<{ ok: true; references: EditorialReferenceRow[] }> => {
+      requireAdmin(data.password);
+      const { data: rows, error } = await supabaseAdmin
+        .from("editorial_reference_library")
+        .select("*")
+        .order("source_type", { ascending: true })
+        .order("created_at", { ascending: true });
+      if (error) throw new Error(error.message);
+      return { ok: true, references: (rows ?? []) as EditorialReferenceRow[] };
+    },
+  );
 
 /**
  * Insert any of the 13 seed references that aren't already present (matched
