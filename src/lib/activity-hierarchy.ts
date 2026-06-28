@@ -110,7 +110,7 @@ export function activityCompatibilityRank(args: {
     .map(splitActivityDirective)
     .filter((a) => !a.excluded)
     .map((a) => normalizeActivity(a.activity));
-  if (candidateActivities.length === 0) return 90;
+  if (candidateActivities.length === 0) return 100;
 
   const requested = normalizeActivity(args.requestedActivity);
   if (candidateActivities.includes(requested)) return 0;
