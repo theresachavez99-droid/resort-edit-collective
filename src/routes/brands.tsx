@@ -5,13 +5,6 @@ import { absoluteUrl } from "@/lib/site";
 import { Input } from "@/components/ui/input";
 
 import heroEditorial from "@/assets/about-hero-portofino-golden-harbor.png.asset.json";
-import bannerMedIcons from "@/assets/uploads/portofino/arrival-banner-peach-facade-bougainvillea.png.asset.json";
-import bannerSwim from "@/assets/uploads/portofino/beach-club-long-lunch-banner-cabanas.png.asset.json";
-import bannerResort from "@/assets/uploads/portofino/exploring-the-harbor-banner-lemon-quay.png.asset.json";
-import bannerAccessories from "@/assets/uploads/portofino/harbor-aperitivo-banner-golden-hour.png.asset.json";
-import bannerJewelry from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
-import bannerFootwear from "@/assets/uploads/portofino/sunset-views-harbor-golden-hour.png.asset.json";
-import bannerBeyond from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 
 export const Route = createFileRoute("/brands")({
   head: () => ({
@@ -38,42 +31,15 @@ export const Route = createFileRoute("/brands")({
 const slugify = (s: string) =>
   s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-const CATEGORY_BANNERS: Record<string, { url: string; intro: string }> = {
-  "Mediterranean Icons": {
-    url: bannerMedIcons.url,
-    intro: "The houses that define modern Riviera dressing.",
-  },
-  "Swim & Beach Club": {
-    url: bannerSwim.url,
-    intro: "Sculptural swim for yachts, cabanas, and long afternoons by the sea.",
-  },
-  "Resortwear & Kaftans": {
-    url: bannerResort.url,
-    intro: "Linen, embroidery, and breezy separates built for heat and light.",
-  },
-  "Accessories & Raffia": {
-    url: bannerAccessories.url,
-    intro: "The hand-woven and Italian-leather pieces that finish every look.",
-  },
-  Jewelry: {
-    url: bannerJewelry.url,
-    intro: "Saltwater-proof gold and the heirlooms we layer from morning to night.",
-  },
-  "Resort Footwear": {
-    url: bannerFootwear.url,
-    intro: "Greek sandals, Spanish espadrilles, Florentine evening heels.",
-  },
-  "Beyond the Riviera": {
-    url: bannerBeyond.url,
-    intro: "The labels that take Resort Edit beyond the Mediterranean.",
-  },
+const CATEGORY_INTROS: Record<string, string> = {
+  "Mediterranean Icons": "The houses that define modern Riviera dressing.",
+  "Swim & Beach Club": "Sculptural swim for yachts, cabanas, and long afternoons by the sea.",
+  "Resortwear & Kaftans": "Linen, embroidery, and breezy separates built for heat and light.",
+  "Accessories & Raffia": "The hand-woven and Italian-leather pieces that finish every look.",
+  Jewelry: "Saltwater-proof gold and the heirlooms we layer from morning to night.",
+  "Resort Footwear": "Greek sandals, Spanish espadrilles, Florentine evening heels.",
+  "Beyond the Riviera": "The labels that take Resort Edit beyond the Mediterranean.",
 };
-
-const EMPHASIS_CATEGORIES = new Set([
-  "Mediterranean Icons",
-  "Swim & Beach Club",
-  "Resortwear & Kaftans",
-]);
 
 // Editorial tagline overrides for Founder Favorites
 const FOUNDER_FAVORITE_SLUGS = [
@@ -229,68 +195,33 @@ function CategorySection({
   category: { title: string; brands: Brand[] };
 }) {
   const [expanded, setExpanded] = React.useState(false);
-  const banner = CATEGORY_BANNERS[category.title];
-  const emphasis = EMPHASIS_CATEGORIES.has(category.title);
+  const intro = CATEGORY_INTROS[category.title];
   const visible = expanded ? category.brands : category.brands.slice(0, INITIAL_VISIBLE);
   const hidden = Math.max(0, category.brands.length - INITIAL_VISIBLE);
 
   return (
     <section id={slugify(category.title)} className="scroll-mt-24">
-      {banner && (
-        <div
-          className={
-            "relative overflow-hidden " +
-            (emphasis ? "h-[260px] md:h-[280px]" : "h-[200px] md:h-[220px]")
-          }
-        >
-          <img
-            src={banner.url}
-            alt={`${category.title} editorial banner`}
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/15 via-transparent to-ink/55" />
-          <div className="absolute inset-x-0 bottom-0 px-6 md:px-10 py-5 md:py-6">
-            <div className="mx-auto max-w-[1180px] flex items-end justify-between gap-6">
-              <div>
-                <span className="eyebrow text-[0.55rem] text-ivory/80">The Edit</span>
-                <h2
-                  className={
-                    "mt-1.5 font-display tracking-[0.05em] text-ivory " +
-                    (emphasis ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl")
-                  }
-                >
-                  {category.title}
-                </h2>
-              </div>
-              <span className="eyebrow text-[0.55rem] text-ivory/75 whitespace-nowrap pb-1">
-                {String(category.brands.length).padStart(2, "0")} Labels
-              </span>
-            </div>
-          </div>
+      <div className="mx-auto max-w-[1180px] px-6">
+        <div className="flex items-baseline justify-between gap-4 border-b border-border/40 pb-4">
+          <h2 className="font-display text-2xl md:text-3xl tracking-[0.04em] text-ink">
+            {category.title}
+          </h2>
+          <span className="eyebrow text-[0.55rem] text-ink/45 whitespace-nowrap">
+            {String(category.brands.length).padStart(2, "0")} Labels
+          </span>
         </div>
-      )}
-      <div className="mx-auto max-w-[1180px] px-6 mt-6 md:mt-7">
-        <p
-          className={
-            "font-serif italic text-ink/70 leading-snug max-w-2xl " +
-            (emphasis ? "text-lg" : "text-base")
-          }
-        >
-          {banner?.intro}
-        </p>
-        <div
-          className={
-            "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 " +
-            (emphasis ? "mt-7" : "mt-6")
-          }
-        >
+        {intro && (
+          <p className="mt-4 font-serif italic text-base text-ink/65 leading-snug max-w-2xl">
+            {intro}
+          </p>
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
           {visible.map((brand) => (
             <BrandCard key={brand.slug} brand={brand} />
           ))}
         </div>
         {hidden > 0 && (
-          <div className="mt-6 text-center">
+          <div className="mt-5 text-center">
             <button
               type="button"
               onClick={() => setExpanded((v) => !v)}
@@ -354,7 +285,7 @@ function BrandsPage() {
       </div>
 
       {/* WHY THESE BRANDS */}
-      <section className="mx-auto max-w-[1180px] px-6 pt-20 md:pt-24 pb-16 md:pb-20">
+      <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20 pb-12 md:pb-16">
         <div className="grid md:grid-cols-12 gap-10 items-start">
           <div className="md:col-span-5">
             <span className="eyebrow text-gold">The Selection</span>
@@ -362,7 +293,7 @@ function BrandsPage() {
               Why We Choose <br className="hidden md:block" />These Designers
             </h2>
           </div>
-          <div className="md:col-span-7 space-y-5 font-serif text-lg text-ink/75 leading-relaxed">
+          <div className="md:col-span-7 space-y-4 font-serif text-lg text-ink/75 leading-relaxed">
             <p>
               Every brand on Resort Edit is personally curated. Nothing is included because
               it is trending or paid for placement.
@@ -382,7 +313,7 @@ function BrandsPage() {
 
       {/* FOUNDER FAVORITES */}
       <section className="bg-cream/40 border-y border-border/40">
-        <div className="mx-auto max-w-[1360px] px-6 py-20 md:py-24">
+        <div className="mx-auto max-w-[1360px] px-6 py-16 md:py-20">
           <div className="text-center max-w-2xl mx-auto">
             <span className="eyebrow text-gold">The Heart of the Edit</span>
             <h2 className="mt-4 font-display text-4xl md:text-5xl tracking-[0.04em] text-ink">
@@ -393,7 +324,7 @@ function BrandsPage() {
               define the Resort Edit point of view.
             </p>
           </div>
-          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {founderFavorites.map((brand) => (
               <Link
                 key={brand.slug}
@@ -419,54 +350,8 @@ function BrandsPage() {
         </div>
       </section>
 
-      {/* BROWSE BY STYLE — visual tiles */}
-      <section className="mx-auto max-w-[1360px] px-6 pt-20 md:pt-24">
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="eyebrow text-gold">The Categories</span>
-          <h2 className="mt-4 font-display text-3xl md:text-4xl tracking-[0.04em] text-ink">
-            Browse by Style
-          </h2>
-          <p className="mt-4 font-serif italic text-ink/65">
-            Seven editorial worlds — choose the one that matches the moment.
-          </p>
-        </div>
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {brandCategories.map((cat) => {
-            const banner = CATEGORY_BANNERS[cat.title];
-            return (
-              <a
-                key={cat.title}
-                href={`#${slugify(cat.title)}`}
-                className="group relative block overflow-hidden aspect-[4/5]"
-              >
-                {banner && (
-                  <img
-                    src={banner.url}
-                    alt=""
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-6">
-                  <span className="eyebrow text-[0.55rem] text-ivory/80">
-                    {String(cat.brands.length).padStart(2, "0")} Labels
-                  </span>
-                  <h3 className="mt-2 font-display text-2xl md:text-3xl tracking-wide text-ivory">
-                    {cat.title}
-                  </h3>
-                  <p className="mt-2 font-serif italic text-sm text-ivory/85 leading-snug line-clamp-2">
-                    {cat.description.split(".")[0]}.
-                  </p>
-                </div>
-              </a>
-            );
-          })}
-        </div>
-      </section>
-
       {/* SEARCH + FILTERS */}
-      <section className="mx-auto max-w-[1180px] px-6 pt-20 md:pt-24" id="discover">
+      <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20" id="discover">
         <div className="text-center max-w-2xl mx-auto">
           <span className="eyebrow text-gold">Discover</span>
           <h2 className="mt-4 font-display text-3xl md:text-4xl tracking-[0.04em] text-ink">
@@ -518,20 +403,20 @@ function BrandsPage() {
       </section>
 
       {/* CATEGORY SECTIONS */}
-      <div className="mt-14 md:mt-16 space-y-14 md:space-y-16">
+      <div className="mt-10 md:mt-12 space-y-10 md:space-y-12">
         {brandCategories.map((cat) => (
           <CategorySection key={cat.title} category={cat} />
         ))}
       </div>
 
       {/* AFFILIATE DISCLOSURE */}
-      <p className="mt-24 text-center eyebrow text-[0.55rem] text-ink/45 max-w-xl mx-auto px-6">
+      <p className="mt-16 text-center eyebrow text-[0.55rem] text-ink/45 max-w-xl mx-auto px-6">
         Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
       </p>
 
       {/* PARTNER CTA */}
-      <section className="mx-auto max-w-[1180px] px-6 mt-16 mb-24">
-        <div className="border border-border/60 bg-cream/60 px-8 py-16 text-center">
+      <section className="mx-auto max-w-[1180px] px-6 mt-12 mb-20">
+        <div className="border border-border/60 bg-cream/60 px-8 py-14 text-center">
           <span className="eyebrow text-gold">Partnerships</span>
           <h2 className="font-display text-3xl md:text-4xl tracking-wide mt-4 text-ink">
             Partner with Resort Edit
