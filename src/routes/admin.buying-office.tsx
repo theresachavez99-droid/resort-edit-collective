@@ -327,11 +327,12 @@ function SessionWorkspace({
   const hasCandidates = candidates.length > 0;
 
   return (
-    <section className="space-y-10">
-      <SessionHeader session={session} onExit={onExit} />
+    <section className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_260px]">
+      <div className="space-y-10 min-w-0">
+        <SessionHeader session={session} onExit={onExit} />
 
-      {/* Stage A: Brief (editable until locked) */}
-      <BriefPanel
+        {/* Stage A: Brief (editable until locked) */}
+        <BriefPanel
         password={password}
         session={session}
         diag={diag}
@@ -340,50 +341,109 @@ function SessionWorkspace({
         invalidateKey={key}
       />
 
-      {/* Stage B: Import (only once brief is locked) */}
-      {briefLocked && (
+        {/* Stage B: Import (only once brief is locked) */}
+        {briefLocked && (
         <ImportPanel
           password={password}
           sessionId={sessionId}
           invalidateKey={key}
           hasCandidates={hasCandidates}
+          candidateCount={candidates.length}
         />
-      )}
+        )}
 
-      {/* Stage C: Review (only once candidates exist) */}
-      {briefLocked && hasCandidates && (
+        {/* Stage C: Review (only once candidates exist) */}
+        {briefLocked && hasCandidates && (
         <ReviewPanel
           password={password}
           candidates={candidates}
           invalidateKey={key}
         />
-      )}
+        )}
 
-      {/* Stage D: Finalists (only once one is marked) */}
-      {briefLocked && finalists.length > 0 && (
+        {/* Stage D: Finalists (only once one is marked) */}
+        {briefLocked && (
         <FinalistsPanel
           password={password}
           finalists={finalists}
           invalidateKey={key}
         />
-      )}
+        )}
 
-      {/* Stage E: Hero celebration */}
-      {hero && (
+        {/* Stage E: Hero celebration */}
+        {hero && (
         <HeroCelebration
           hero={hero}
           onAnother={onNew}
           onExit={onExit}
         />
-      )}
+        )}
 
-      {/* Always-on collapsed decision log */}
-      {hasCandidates && (
+        {/* Always-on collapsed decision log */}
+        {hasCandidates && (
         <CollapsibleSection title="Decision Log" defaultOpen={false}>
           <DecisionLog candidates={candidates} session={session} />
         </CollapsibleSection>
-      )}
+        )}
+      </div>
+
+      <aside className="hidden lg:block">
+        <SessionSummarySidebar session={session} candidates={candidates} />
+      </aside>
     </section>
+  );
+}
+
+function SessionSummarySidebar({
+  session, candidates,
+}: { session: any; candidates: any[] }) {
+  const counts = useMemo(() => {
+    const by = (s: string) => candidates.filter((c) => c.status === s).length;
+    return {
+      imported: candidates.length,
+      favorite: by("favorite"),
+      later: by("review_later"),
+      finalist: by("finalist"),
+      rejected: by("rejected"),
+      hero: candidates.find((c) => c.status === "founder_hero"),
+      inspiration: candidates.filter((c) => c.import_type === "editorial_inspiration").length,
+    };
+  }, [candidates]);
+
+  return (
+    <div className="sticky top-6 border border-stone-200 p-5 space-y-3 bg-white text-xs">
+      <p className="text-[0.6rem] tracking-[0.3em] uppercase text-stone-500">
+        Buying Review
+      </p>
+      <p className="font-serif text-base leading-tight">
+        {session.destination} — {session.moment}
+      </p>
+      <div className="border-t border-stone-100 pt-3 space-y-1.5">
+        <Row label="Imported" value={counts.imported} />
+        <Row label="Editorial Inspiration" value={counts.inspiration} muted />
+        <Row label="Favorites" value={counts.favorite} />
+        <Row label="Later" value={counts.later} />
+        <Row label="Finalists" value={counts.finalist} />
+        <Row label="Rejected" value={counts.rejected} muted />
+      </div>
+      <div className="border-t border-stone-100 pt-3">
+        <p className="text-[0.55rem] uppercase tracking-[0.24em] text-stone-500">
+          Founder Hero
+        </p>
+        <p className="font-serif text-sm mt-1">
+          {counts.hero ? `${counts.hero.brand ?? ""} — ${counts.hero.product_name ?? ""}` : "Not Selected"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Row({ label, value, muted }: { label: string; value: number; muted?: boolean }) {
+  return (
+    <div className={"flex justify-between " + (muted ? "text-stone-500" : "")}>
+      <span>{label}</span>
+      <span className="font-medium">{value}</span>
+    </div>
   );
 }
 
