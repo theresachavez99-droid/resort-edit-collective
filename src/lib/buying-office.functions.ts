@@ -153,6 +153,7 @@ async function persistRows(
   rows: ManualImportRow[],
   adapter: "url_paste" | "row_import",
   brief: HeroBrief,
+  importType: "shopping" | "editorial_inspiration" = "shopping",
 ) {
   const db = await admin();
   const inserted: string[] = [];
@@ -193,6 +194,7 @@ async function persistRows(
           session_id: sessionId,
           source: normalized.source,
           source_adapter: normalized.source_adapter,
+          import_type: importType,
           product_url: normalized.product_url,
           canonical_url: normalized.canonical_url,
           affiliate_url: normalized.affiliate_url,
@@ -263,6 +265,7 @@ export const importUrlsToSession = createServerFn({ method: "POST" })
       ...pwShape,
       sessionId: z.string().uuid(),
       urls: z.array(z.string().url()).min(1).max(100),
+      importType: z.enum(["shopping", "editorial_inspiration"]).optional(),
     }).parse(input),
   )
   .handler(async ({ data }) => {
@@ -277,7 +280,13 @@ export const importUrlsToSession = createServerFn({ method: "POST" })
       rows.push({ product_url: u });
     }
     const brief = await loadBrief(data.sessionId);
-    return await persistRows(data.sessionId, rows, "url_paste", brief);
+    return await persistRows(
+      data.sessionId,
+      rows,
+      "url_paste",
+      brief,
+      data.importType ?? "shopping",
+    );
   });
 
 export const importRowsToSession = createServerFn({ method: "POST" })
@@ -286,12 +295,19 @@ export const importRowsToSession = createServerFn({ method: "POST" })
       ...pwShape,
       sessionId: z.string().uuid(),
       rows: z.array(importRow).min(1).max(200),
+      importType: z.enum(["shopping", "editorial_inspiration"]).optional(),
     }).parse(input),
   )
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const brief = await loadBrief(data.sessionId);
-    return await persistRows(data.sessionId, data.rows as ManualImportRow[], "row_import", brief);
+    return await persistRows(
+      data.sessionId,
+      data.rows as ManualImportRow[],
+      "row_import",
+      brief,
+      data.importType ?? "shopping",
+    );
   });
 
 // ---------- Candidate lifecycle ----------
