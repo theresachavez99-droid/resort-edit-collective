@@ -31,6 +31,7 @@ import {
   validateForPublish,
   isHeroGarmentCategory,
 } from "./hero-outfit-slots";
+import { APPROVED_RETAILERS } from "./yacht-day-pilot.functions";
 
 const pw = { password: z.string().min(1).max(200) };
 
@@ -724,4 +725,220 @@ export const publishFounderLookFromOutfit = createServerFn({ method: "POST" })
       .eq("id", data.outfitId);
 
     return { ok: true as const, founderLookId: look.data.id };
+  });
+
+// ──────────────────────────────────────────────────────────
+// Stage 7 — Regenerate slot with AI (Lovable AI Gateway)
+// ──────────────────────────────────────────────────────────
+
+type AISuggestion = {
+  brand: string;
+  retailer: string;
+  product_name: string;
+  category: string;
+  color?: string;
+  estimated_price?: number | null;
+  editorial_score: number; // 0–100
+  founder_similarity: number; // 0–100
+  why_works: string;
+  why_fits: string;
+};
+
+async function callGeminiJSON(system: string, user: string): Promise<unknown> {
+  const key = process.env.LOVABLE_API_KEY;
+  if (!key) throw new Error("LOVABLE_API_KEY missing");
+  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "google/gemini-3-flash-preview",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+      response_format: { type: "json_object" },
+    }),
+  });
+  if (res.status === 429) throw new Error("AI gateway rate limit — try again in a moment.");
+  if (res.status === 402) throw new Error("AI gateway credits exhausted.");
+  if (!res.ok) throw new Error(`AI gateway ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+  try {
+    return JSON.parse(json.choices?.[0]?.message?.content ?? "{}");
+  } catch {
+    return {};
+  }
+}
+
+export const regenerateSlotWithAI = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z
+      .object({
+        ...pw,
+        outfitId: z.string().uuid(),
+        slot: z.enum(VALID_SLOTS),
+        count: z.number().int().min(2).max(8).default(6),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const db = await admin();
+
+    const outfit = await db
+      .from("founder_hero_outfits")
+      .select("*")
+      .eq("id", data.outfitId)
+      .single();
+    if (outfit.error) throw new Error(outfit.error.message);
+
+    const cands = await db
+      .from("buying_candidates")
+      .select(
+        "id, brand, retailer, product_name, category, color, is_hero_garment, stylist_slot, selected_for_look, image_url, product_url",
+      )
+      .eq("hero_outfit_id", data.outfitId);
+    if (cands.error) throw new Error(cands.error.message);
+
+    const heroes = (cands.data ?? []).filter((c) => c.is_hero_garment);
+    if (heroes.length === 0) {
+      throw new Error("Promote the Hero Outfit before regenerating slot candidates.");
+    }
+    const otherFilled = (cands.data ?? []).filter(
+      (c) => !c.is_hero_garment && c.selected_for_look && c.stylist_slot !== data.slot,
+    );
+
+    // Approved brands registry (curation source of truth).
+    const brandsQ = await db
+      .from("brand_intelligence")
+      .select("brand, suggested_activities")
+      .eq("status", "approved");
+    const approvedBrands = (brandsQ.data ?? []).map((b) => b.brand).filter(Boolean);
+
+    const palette = (outfit.data.color_palette as string[] | null) ?? [];
+    const dna = (outfit.data.editorial_dna as Record<string, unknown> | null) ?? {};
+
+    const system = `You are the Resort Edit Stylist Engine — a luxury personal stylist who completes outfits around a locked Founder Hero Outfit. The Hero Garments are non-negotiable; you ONLY recommend the requested accessory slot.
+
+RULES:
+- Recommend brands ONLY from the approved list provided.
+- Recommend retailers ONLY from: ${APPROVED_RETAILERS.join(", ")}.
+- No logo-heavy bags, no sporty/athletic silhouettes, no Scandi minimalism unless the brief asks for it.
+- Warm gold over silver for jewelry; raffia/handwoven/leather over synthetic.
+- Each recommendation must explain (a) why it works with the Hero Outfit and (b) why it fits the moment.
+- Score editorial_score (0–100) for how PORTER/Moda Operandi-worthy it reads.
+- Score founder_similarity (0–100) for how close it sits to the Founder's editorial DNA (palette, fabric, mood).
+
+Return JSON: { "suggestions": [ { brand, retailer, product_name, category, color, estimated_price, editorial_score, founder_similarity, why_works, why_fits } ] } with exactly ${data.count} suggestions.`;
+
+    const heroText = heroes
+      .map(
+        (h) =>
+          `• ${h.brand ?? "?"} — ${h.product_name ?? h.category ?? "garment"}${h.color ? ` (${h.color})` : ""}`,
+      )
+      .join("\n");
+    const filledText = otherFilled.length
+      ? otherFilled
+          .map((c) => `• ${c.stylist_slot}: ${c.brand ?? "?"} — ${c.product_name ?? ""}`)
+          .join("\n")
+      : "(none yet)";
+
+    const user = `DESTINATION: ${outfit.data.destination}
+MOMENT: ${outfit.data.moment}
+SLOT TO FILL: ${data.slot}
+
+LOCKED HERO OUTFIT (do NOT modify):
+${heroText}
+
+OTHER SELECTED ACCESSORIES:
+${filledText}
+
+COLOR PALETTE: ${palette.join(", ") || "(open)"}
+SILHOUETTE: ${outfit.data.silhouette ?? "(open)"}
+ACTIVITY: ${outfit.data.activity ?? outfit.data.moment}
+EDITORIAL DNA: ${JSON.stringify(dna).slice(0, 600)}
+FOUNDER NOTES: ${(outfit.data.founder_notes ?? "").slice(0, 600)}
+
+APPROVED BRANDS (pick only from these):
+${approvedBrands.join(", ")}
+
+Return ${data.count} candidates for the "${data.slot}" slot.`;
+
+    const parsed = (await callGeminiJSON(system, user)) as {
+      suggestions?: AISuggestion[];
+    };
+    const suggestions = Array.isArray(parsed.suggestions) ? parsed.suggestions.slice(0, data.count) : [];
+    if (suggestions.length === 0) throw new Error("AI returned no suggestions — try again.");
+
+    const inserted: Record<string, unknown>[] = [];
+    const runId = crypto.randomUUID();
+    for (let i = 0; i < suggestions.length; i++) {
+      const s = suggestions[i];
+      // Build a clickable retailer search URL so the founder can locate the piece.
+      const q = encodeURIComponent(`${s.brand} ${s.product_name}`);
+      const retailer = APPROVED_RETAILERS.includes(s.retailer as never)
+        ? s.retailer
+        : "net-a-porter.com";
+      const productUrl = `https://www.google.com/search?q=site%3A${retailer}+${q}#aiRun=${runId}-${i}`;
+
+      const editorial = Math.max(0, Math.min(10, (s.editorial_score ?? 0) / 10));
+      const similarity = Math.max(0, Math.min(1, (s.founder_similarity ?? 0) / 100));
+
+      const ins = await db
+        .from("buying_candidates")
+        .insert({
+          session_id: outfit.data.session_id,
+          hero_outfit_id: data.outfitId,
+          source: "ai_recommendation",
+          source_adapter: "lovable_ai",
+          import_type: "shopping",
+          product_url: productUrl,
+          canonical_url: productUrl,
+          affiliate_url: null,
+          affiliate_status: "pending",
+          retailer,
+          brand: s.brand,
+          product_name: s.product_name,
+          category: s.category ?? data.slot,
+          color: s.color ?? null,
+          price: s.estimated_price ?? null,
+          currency: s.estimated_price ? "USD" : null,
+          image_url: null,
+          image_missing: true,
+          description: null,
+          notes: `${s.why_works}\n\nWhy it fits: ${s.why_fits}`,
+          editorial_score: editorial,
+          benchmark_similarity: similarity,
+          ranking_reasons: {
+            why_works: s.why_works,
+            why_fits: s.why_fits,
+            ai_run_id: runId,
+          } as never,
+          raw: { ai_suggestion: s } as never,
+          status: "review",
+          stylist_slot: data.slot,
+          stylist_source: "ai",
+          is_hero_garment: false,
+        })
+        .select()
+        .single();
+      if (!ins.error && ins.data) inserted.push(ins.data as Record<string, unknown>);
+    }
+
+    return { inserted: inserted.length };
+  });
+
+export const rejectSlotCandidate = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z.object({ ...pw, candidateId: z.string().uuid() }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const db = await admin();
+    const r = await db
+      .from("buying_candidates")
+      .update({ status: "rejected", selected_for_look: false })
+      .eq("id", data.candidateId);
+    if (r.error) throw new Error(r.error.message);
+    return { ok: true as const };
   });

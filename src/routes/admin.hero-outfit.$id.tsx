@@ -17,6 +17,8 @@ import {
   clearSlotCandidates,
   validateHeroOutfitForPublish,
   publishFounderLookFromOutfit,
+  regenerateSlotWithAI,
+  rejectSlotCandidate,
 } from "@/lib/hero-outfit.functions";
 import { slotsForMoment, profileForMoment } from "@/lib/hero-outfit-slots";
 
@@ -582,6 +584,18 @@ function SlotRow({
   const addManual = useServerFn(addManualSlotCandidate);
   const select = useServerFn(selectSlotCandidate);
   const clearSlot = useServerFn(clearSlotCandidates);
+  const regenerate = useServerFn(regenerateSlotWithAI);
+  const reject = useServerFn(rejectSlotCandidate);
+  const [regenLoading, setRegenLoading] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(6);
+
+  const visibleCandidates = candidates
+    .filter((c) => c.status !== "rejected")
+    .slice(0, visibleCount);
+  const hiddenCount = Math.max(
+    0,
+    candidates.filter((c) => c.status !== "rejected").length - visibleCandidates.length,
+  );
 
   return (
     <div className="border border-stone-200 p-4 space-y-3">
@@ -599,49 +613,147 @@ function SlotRow({
             </span>
           )}
         </div>
-        {!disabled && candidates.length > 0 && (
-          <button
-            onClick={async () => {
-              if (!confirm(`Clear all ${label} candidates?`)) return;
-              await clearSlot({ data: { password, outfitId, slot: slot as any } });
-              onChange();
-            }}
-            className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 hover:text-red-600"
-          >
-            Clear
-          </button>
+        {!disabled && (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={async () => {
+                setRegenLoading(true);
+                try {
+                  await regenerate({
+                    data: { password, outfitId, slot: slot as any, count: 6 },
+                  });
+                  setVisibleCount(6);
+                  onChange();
+                  toast.success(`AI recommended ${label.toLowerCase()} candidates.`);
+                } catch (e) {
+                  toast.error((e as Error).message);
+                } finally {
+                  setRegenLoading(false);
+                }
+              }}
+              disabled={regenLoading}
+              className="text-[0.6rem] tracking-[0.25em] uppercase bg-ink text-ivory px-2 py-1 disabled:opacity-40"
+            >
+              {regenLoading ? "Thinking…" : "Regenerate with AI"}
+            </button>
+            {candidates.length > 0 && (
+              <button
+                onClick={async () => {
+                  if (!confirm(`Clear all ${label} candidates?`)) return;
+                  await clearSlot({ data: { password, outfitId, slot: slot as any } });
+                  onChange();
+                }}
+                className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 hover:text-red-600"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         )}
       </div>
 
       {/* Candidates */}
-      {candidates.length > 0 && (
+      {visibleCandidates.length > 0 && (
         <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-          {candidates.map((c) => (
-            <button
-              key={c.id}
-              disabled={disabled}
-              onClick={async () => {
-                await select({
-                  data: { password, outfitId, slot: slot as any, candidateId: c.id },
-                });
-                onChange();
-              }}
-              className={
-                "border p-2 text-xs text-left " +
-                (c.id === selectedId ? "border-emerald-600 bg-emerald-50/40" : "border-stone-300")
-              }
-            >
-              <div className="font-medium">{c.brand ?? "—"}</div>
-              <div className="text-stone-500 line-clamp-2">{c.product_name ?? c.product_url}</div>
-              {c.image_url ? (
-                <img src={c.image_url} alt="" className="w-full h-24 object-cover mt-1" />
-              ) : (
-                <div className="w-full h-24 bg-stone-100 mt-1" />
-              )}
-              <div className="text-[0.6rem] text-stone-400 mt-1">{c.retailer}</div>
-            </button>
-          ))}
+          {visibleCandidates.map((c) => {
+            const rr = (c.ranking_reasons ?? {}) as {
+              why_works?: string;
+              why_fits?: string;
+            };
+            const isAI = c.stylist_source === "ai";
+            const editorial = c.editorial_score != null ? Math.round(Number(c.editorial_score) * 10) : null;
+            const similarity =
+              c.benchmark_similarity != null ? Math.round(Number(c.benchmark_similarity) * 100) : null;
+            return (
+              <div
+                key={c.id}
+                className={
+                  "border p-2 text-xs space-y-1 " +
+                  (c.id === selectedId ? "border-emerald-600 bg-emerald-50/40" : "border-stone-300")
+                }
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium truncate">{c.brand ?? "—"}</span>
+                  {isAI && (
+                    <span className="text-[0.55rem] tracking-[0.25em] uppercase text-violet-700">
+                      AI
+                    </span>
+                  )}
+                </div>
+                <div className="text-stone-600 line-clamp-2">
+                  {c.product_name ?? c.product_url}
+                </div>
+                {c.image_url ? (
+                  <img src={c.image_url} alt="" className="w-full h-24 object-cover" />
+                ) : (
+                  <div className="w-full h-24 bg-stone-100 flex items-center justify-center text-[0.6rem] text-stone-400">
+                    {isAI ? "AI suggestion — find via retailer" : "no image"}
+                  </div>
+                )}
+                <div className="flex items-center justify-between text-[0.6rem] text-stone-500">
+                  <span>{c.retailer ?? "—"}</span>
+                  <span>
+                    {c.price ? `$${Math.round(Number(c.price))}` : "—"} ·{" "}
+                    {c.affiliate_status ?? "pending"}
+                  </span>
+                </div>
+                {(editorial != null || similarity != null) && (
+                  <div className="flex gap-3 text-[0.6rem] text-stone-500">
+                    {editorial != null && <span>Editorial {editorial}</span>}
+                    {similarity != null && <span>Founder sim {similarity}%</span>}
+                  </div>
+                )}
+                {(rr.why_works || rr.why_fits) && (
+                  <details className="text-[0.65rem] text-stone-600">
+                    <summary className="cursor-pointer text-stone-500">Why it works</summary>
+                    {rr.why_works && <p className="mt-1">{rr.why_works}</p>}
+                    {rr.why_fits && <p className="mt-1 italic">Fits moment: {rr.why_fits}</p>}
+                  </details>
+                )}
+                <div className="flex gap-2 pt-1">
+                  <button
+                    disabled={disabled}
+                    onClick={async () => {
+                      await select({
+                        data: { password, outfitId, slot: slot as any, candidateId: c.id },
+                      });
+                      onChange();
+                    }}
+                    className="flex-1 bg-ink text-ivory px-2 py-1 text-[0.6rem] tracking-[0.2em] uppercase disabled:opacity-40"
+                  >
+                    {c.id === selectedId ? "Selected ✓" : "Select"}
+                  </button>
+                  <a
+                    href={c.product_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="border border-stone-300 px-2 py-1 text-[0.6rem] tracking-[0.2em] uppercase text-stone-600"
+                  >
+                    View
+                  </a>
+                  <button
+                    disabled={disabled}
+                    onClick={async () => {
+                      await reject({ data: { password, candidateId: c.id } });
+                      onChange();
+                    }}
+                    className="border border-stone-300 px-2 py-1 text-[0.6rem] tracking-[0.2em] uppercase text-stone-500 hover:text-red-600 disabled:opacity-40"
+                  >
+                    Reject
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
+      )}
+      {hiddenCount > 0 && (
+        <button
+          onClick={() => setVisibleCount((v) => v + 6)}
+          className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 hover:text-ink"
+        >
+          Show {hiddenCount} more
+        </button>
       )}
 
       {/* Manual paste */}
@@ -651,7 +763,7 @@ function SlotRow({
             type="url"
             value={pasteUrl}
             onChange={(e) => setPasteUrl(e.target.value)}
-            placeholder={`Paste a ${label.toLowerCase()} URL…`}
+            placeholder={`Paste URL instead — manual override for ${label.toLowerCase()}`}
             className="flex-1 border border-stone-300 px-2 py-1 text-xs"
           />
           <button
@@ -677,8 +789,22 @@ function SlotRow({
 
       {candidates.length === 0 && (
         <p className="text-[0.7rem] text-stone-500 italic">
-          AI sourcing for this slot is queued. Paste a specific URL to fill manually.
+          Click "Regenerate with AI" to source candidates, or paste a URL to fill manually.
         </p>
+      )}
+      {selectedId && !disabled && (
+        <button
+          onClick={async () => {
+            await select({
+              data: { password, outfitId, slot: slot as any, candidateId: null },
+            });
+            onChange();
+            toast.message(`${label} left empty.`);
+          }}
+          className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 hover:text-ink"
+        >
+          Leave empty temporarily
+        </button>
       )}
     </div>
   );
