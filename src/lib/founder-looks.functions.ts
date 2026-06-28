@@ -350,8 +350,8 @@ export const recordValidationRun = createServerFn({ method: "POST" })
         founder_look_id: z.string().uuid(),
         destination: z.string().min(1).max(80),
         moment: z.string().min(1).max(120),
-        run_a: z.unknown(),
-        run_b: z.unknown(),
+        run_a: z.any(),
+        run_b: z.any(),
         founder_side: z.enum(["A", "B"]),
         notes: z.string().max(4000).nullable().optional(),
       })
@@ -366,8 +366,8 @@ export const recordValidationRun = createServerFn({ method: "POST" })
         founder_look_id: data.founder_look_id,
         destination: data.destination,
         moment: data.moment,
-        run_a: data.run_a,
-        run_b: data.run_b,
+        run_a: data.run_a as never,
+        run_b: data.run_b as never,
         founder_side: data.founder_side,
         notes: data.notes ?? null,
       })
