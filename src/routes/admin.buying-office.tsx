@@ -783,6 +783,34 @@ function ImportPanel({
 
       <BuyingProgress count={candidateCount} />
 
+      <div className="border-2 border-ink p-5 bg-ivory">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+              Recommended
+            </div>
+            <h3 className="text-base font-serif mt-1">
+              Open the Hero Outfit Studio
+            </h3>
+            <p className="text-xs text-stone-600 mt-1 max-w-xl">
+              Paste 1–4 Hero garment URLs (dress, vest+pant, swim+coverup) and let the
+              AI complete the look around them. This is the canonical Founder workflow.
+            </p>
+          </div>
+          <a
+            href={`/admin/hero-outfit/${sessionId}`}
+            className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase"
+          >
+            Open Hero Outfit Studio →
+          </a>
+        </div>
+      </div>
+
+      <details className="border border-stone-300 p-5">
+        <summary className="cursor-pointer text-xs tracking-[0.3em] uppercase text-stone-600">
+          Advanced · manual product import
+        </summary>
+        <div className="mt-4 space-y-6">
       <p className="text-xs text-stone-600 italic border-l-2 border-stone-300 pl-3">
         The strongest Founder Heroes come from comparing exceptional products across
         multiple retailers — not reviewing one retailer at a time.
