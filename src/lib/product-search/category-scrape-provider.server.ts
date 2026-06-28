@@ -81,6 +81,7 @@ function normalizeOne(
   raw: Record<string, unknown>,
   retailer: ApprovedRetailer,
   categoryMatch: string,
+  categoryTier: "primary" | "secondary",
 ): NormalizedCandidate | null {
   const url = (raw.url ?? raw["@id"]) as string | undefined;
   const name = raw.name as string | undefined;
@@ -106,6 +107,7 @@ function normalizeOne(
     currency: offer?.priceCurrency ?? null,
     image_url,
     category_match: categoryMatch,
+    category_tier: categoryTier,
     raw,
   };
 }
@@ -122,10 +124,7 @@ function dedupe(candidates: NormalizedCandidate[]): NormalizedCandidate[] {
   return out;
 }
 
-export function makeCategoryScrapeProvider(opts: {
-  /** Editorial category set queried in parallel for this Hero. */
-  categoryKeys: EditorialCategoryKey[];
-}): ProductSearchProvider {
+export function makeCategoryScrapeProvider(): ProductSearchProvider {
   return {
     id: "category_scrape",
     async search(input: ProductSearchInput): Promise<ProductSearchResult> {
@@ -133,10 +132,19 @@ export function makeCategoryScrapeProvider(opts: {
       const coverage: MarketCoveragePerRetailer[] = [];
       const candidates: NormalizedCandidate[] = [];
 
+      const primarySet = new Set(input.categorySet.primary);
+      const categoryKeys = [
+        ...input.categorySet.primary,
+        ...input.categorySet.secondary,
+      ] as EditorialCategoryKey[];
+
       for (const retailer of input.retailers) {
-        for (const categoryKey of opts.categoryKeys) {
+        for (const categoryKey of categoryKeys) {
           const endpoints = endpointsFor(retailer, categoryKey);
           if (endpoints.length === 0) continue;
+          const tier: "primary" | "secondary" = primarySet.has(categoryKey)
+            ? "primary"
+            : "secondary";
 
           const cov: MarketCoveragePerRetailer = {
             retailer,
@@ -163,7 +171,7 @@ export function makeCategoryScrapeProvider(opts: {
                 const raws = extractJsonLdProducts(scraped.html);
                 cov.raw_cards_found += raws.length;
                 for (const raw of raws) {
-                  const norm = normalizeOne(raw, retailer, categoryKey);
+                  const norm = normalizeOne(raw, retailer, categoryKey, tier);
                   if (!norm) continue;
                   if (input.priceCeiling && norm.price && norm.price > input.priceCeiling) continue;
                   candidates.push(norm);
