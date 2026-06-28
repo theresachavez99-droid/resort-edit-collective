@@ -2194,9 +2194,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       expandable: EXPANDABLE_SLOTS.has(r.slot),
     }));
 
+    // v5.3 — "missing required" excludes slots locked by Founder Hero
+    // pieces (they always have a candidate) and slots that have no
+    // candidates at all (those are flagged for refinement instead of
+    // gating assembly).
     const missingRequiredSlots = slotResults
       .filter((r) => r.required && r.candidates.length === 0)
       .map((r) => r.slot);
+    const slotsRequiringRefinement = missingRequiredSlots.slice();
 
     const candidatesById = new Map<string, SlotCandidate>();
     for (const r of slotResults) r.candidates.forEach((c) => candidatesById.set(c.id, c));
@@ -2286,8 +2291,15 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       };
     })();
 
-    // PRE-ASSEMBLY GATE: refuse Gemini call if any required slot is empty.
-    if (missingRequiredSlots.length > 0) {
+    // PRE-ASSEMBLY GATE (v5.3).
+    //
+    // Founder Look architecture: never gate the entire collection
+    // because an accessory slot is empty. Only bail if the candidate
+    // pool is completely empty AND no Founder Hero pieces were locked
+    // (i.e., the engine has literally nothing to assemble).
+    const totalCandidates = slotResults.reduce((s, r) => s + r.candidates.length, 0);
+    const shouldGate = totalCandidates === 0 && lockedHeroBySlot.size === 0;
+    if (shouldGate) {
       const founderRetrievalGated = buildFounderRetrieval(
         founderContext,
         injectedFounderBrands,
