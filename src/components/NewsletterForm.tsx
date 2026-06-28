@@ -18,8 +18,8 @@ function deriveDestination(pathname: string): string | undefined {
 export function NewsletterForm({
   ctaSource,
   variant = "footer",
-  buttonLabel = "Get the Next Edit",
-  placeholder = "Email address",
+  buttonLabel = "Notify Me",
+  placeholder = "Enter your email",
 }: {
   ctaSource: string;
   variant?: Variant;
