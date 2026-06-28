@@ -916,6 +916,78 @@ export type Database = {
           },
         ]
       }
+      founder_looks: {
+        Row: {
+          accessory_philosophy: string | null
+          activity_sequence: string[]
+          color_palette: Json
+          created_at: string
+          destination: string
+          editorial_dna: string | null
+          founder_notes: string | null
+          hero_philosophy: string | null
+          hero_urls: Json
+          id: string
+          luxury_level: string
+          moment: string
+          negative_rules: Json
+          positive_rules: Json
+          published_at: string | null
+          slug: string
+          status: string
+          style_family: string[]
+          title: string
+          updated_at: string
+          visual_weight: string
+        }
+        Insert: {
+          accessory_philosophy?: string | null
+          activity_sequence?: string[]
+          color_palette?: Json
+          created_at?: string
+          destination: string
+          editorial_dna?: string | null
+          founder_notes?: string | null
+          hero_philosophy?: string | null
+          hero_urls?: Json
+          id?: string
+          luxury_level?: string
+          moment: string
+          negative_rules?: Json
+          positive_rules?: Json
+          published_at?: string | null
+          slug: string
+          status?: string
+          style_family?: string[]
+          title: string
+          updated_at?: string
+          visual_weight?: string
+        }
+        Update: {
+          accessory_philosophy?: string | null
+          activity_sequence?: string[]
+          color_palette?: Json
+          created_at?: string
+          destination?: string
+          editorial_dna?: string | null
+          founder_notes?: string | null
+          hero_philosophy?: string | null
+          hero_urls?: Json
+          id?: string
+          luxury_level?: string
+          moment?: string
+          negative_rules?: Json
+          positive_rules?: Json
+          published_at?: string | null
+          slug?: string
+          status?: string
+          style_family?: string[]
+          title?: string
+          updated_at?: string
+          visual_weight?: string
+        }
+        Relationships: []
+      }
       founder_reference_products: {
         Row: {
           activity_tags: string[]
@@ -926,6 +998,7 @@ export type Database = {
           created_at: string
           destination_tags: string[]
           founder_approved: boolean
+          founder_look_id: string | null
           founder_notes: string | null
           id: string
           image_review_status: string | null
@@ -950,6 +1023,7 @@ export type Database = {
           created_at?: string
           destination_tags?: string[]
           founder_approved?: boolean
+          founder_look_id?: string | null
           founder_notes?: string | null
           id?: string
           image_review_status?: string | null
@@ -974,6 +1048,7 @@ export type Database = {
           created_at?: string
           destination_tags?: string[]
           founder_approved?: boolean
+          founder_look_id?: string | null
           founder_notes?: string | null
           id?: string
           image_review_status?: string | null
@@ -989,7 +1064,15 @@ export type Database = {
           texture?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "founder_reference_products_founder_look_id_fkey"
+            columns: ["founder_look_id"]
+            isOneToOne: false
+            referencedRelation: "founder_looks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       founder_uploaded_urls: {
         Row: {
@@ -1044,6 +1127,50 @@ export type Database = {
           url?: string
         }
         Relationships: []
+      }
+      founder_validation_runs: {
+        Row: {
+          created_at: string
+          destination: string
+          founder_look_id: string | null
+          founder_side: string
+          id: string
+          moment: string
+          notes: string | null
+          run_a: Json
+          run_b: Json
+        }
+        Insert: {
+          created_at?: string
+          destination: string
+          founder_look_id?: string | null
+          founder_side: string
+          id?: string
+          moment: string
+          notes?: string | null
+          run_a: Json
+          run_b: Json
+        }
+        Update: {
+          created_at?: string
+          destination?: string
+          founder_look_id?: string | null
+          founder_side?: string
+          id?: string
+          moment?: string
+          notes?: string | null
+          run_a?: Json
+          run_b?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "founder_validation_runs_founder_look_id_fkey"
+            columns: ["founder_look_id"]
+            isOneToOne: false
+            referencedRelation: "founder_looks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       inventory_health_events: {
         Row: {
@@ -1841,7 +1968,13 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      publish_founder_look: {
+        Args: { look_id: string }
+        Returns: {
+          brands_written: number
+          refs_written: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
