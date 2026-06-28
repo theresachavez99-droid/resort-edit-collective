@@ -320,6 +320,7 @@ Founder can:
 - Bump **Founder Vision** to v2/v3 with change summary; every existing Hero/Session keeps its original version stamp.
 - Retire / Restore Heroes via backend today; UI appears under §13 reveal rule.
 - Trust every Search Session as an immutable editorial record.
+- Run a real Buying Search that hits approved retailers via the Product Search Provider, sees Market Coverage, and gets a curated Buying Review with images, prices, retailer links, affiliate badges, Editorial Score, Editorial Benchmark Similarity, and Editorial Confidence — or, on failure, sees **"Live product retrieval failed. No Buying Review was created."** with zero placeholder cards.
 
 ---
 
