@@ -1816,6 +1816,26 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       slotResults.push(r);
       brandOffset += slotBrands.length;
 
+      // v5.2 — annotate each candidate with rankDeltaFromFounder. Compare
+      // its blended rank within the slot against the rank it would have
+      // held by base editorial score alone (negative = moved up).
+      if (heroLook && data.founderLearning) {
+        const blendedOrder = [...r.candidates].sort(
+          (a, b) => b.editorialScore - a.editorialScore,
+        );
+        const baselineOrder = [...r.candidates].sort(
+          (a, b) =>
+            (b.baseEditorialScore ?? b.editorialScore) -
+            (a.baseEditorialScore ?? a.editorialScore),
+        );
+        const blendedRank = new Map(blendedOrder.map((c, i) => [c.id, i]));
+        const baselineRank = new Map(baselineOrder.map((c, i) => [c.id, i]));
+        for (const c of r.candidates) {
+          c.rankDeltaFromFounder =
+            (blendedRank.get(c.id) ?? 0) - (baselineRank.get(c.id) ?? 0);
+        }
+      }
+
       // ── v4.7 — Stage 3: write newly discovered (non-seed) candidates
       // to the cache, subject to quality + approved-retailer gates.
       if (cache) {
