@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -1293,7 +1293,7 @@ function SlotCard({
   const sub = inferJewelrySubSlot(s.slot, s.title);
   const displaySlot = sub ?? (s.slot ?? "");
   const hasUrl = typeof s.url === "string" && s.url.length > 0;
-  const openable = (children: React.ReactNode, cls = "") =>
+  const openable = (children: ReactNode, cls = "") =>
     hasUrl ? (
       <a
         href={s.url!}
