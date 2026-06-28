@@ -54,22 +54,22 @@ function AboutPage() {
           Resort Edit is for women who believe the destination should inspire the wardrobe.
         </p>
         <div className="my-10 h-px w-16 bg-gold mx-auto" />
-        <div className="space-y-6 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/85">
-          <p>Every Resort Edit begins with a destination — not a suitcase.</p>
-          <p>
-            We thoughtfully curate where to stay, what to experience, and what to wear, creating complete destination wardrobes inspired by the places themselves.
-          </p>
-          <p>
-            From first espresso to sunset aperitivo, every recommendation is chosen to help you travel beautifully and dress with intention.
-          </p>
-          <p className="text-ink/75">
-            Every destination is personally researched and curated using the same editorial process we would use when planning our own travels.
-          </p>
-          <p>Because the best trips deserve an unforgettable wardrobe.</p>
+
+        <div className="mx-auto max-w-xl text-left">
+          <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
+            <p>Every Resort Edit begins with a destination — not a suitcase.</p>
+            <p>
+              We thoughtfully curate where to stay, what to experience, and what to wear, creating complete destination wardrobes inspired by the places themselves.
+            </p>
+            <p>
+              From first espresso to sunset aperitivo, every recommendation is chosen to help you travel beautifully and dress with intention.
+            </p>
+            <p className="border-l-2 border-gold/25 pl-5">
+              Every destination is personally researched and curated using the same editorial process we would use when planning our own travels.
+            </p>
+            <p>Because the best trips deserve an unforgettable wardrobe.</p>
+          </div>
         </div>
-        <p className="mt-12 font-serif italic text-base md:text-lg text-ink/70 tracking-wide">
-          Welcome to Resort Edit.
-        </p>
       </section>
     </div>
   );
