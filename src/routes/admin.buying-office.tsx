@@ -1555,7 +1555,13 @@ function FinalistsPanel({
         </div>
       </div>
 
-      <ol className="space-y-2">
+      {sorted.length === 0 ? (
+        <div className="border border-dashed border-stone-300 py-10 text-center text-xs text-stone-500">
+          Mark your strongest candidates as <strong>Finalist</strong> above to build your finalist list.
+        </div>
+      ) : (
+        <>
+        <ol className="space-y-2">
         {sorted.map((c, i) => (
           <li key={c.id} className="border border-stone-200 p-3 flex items-center gap-4">
             <span className="font-serif text-xl w-8 text-stone-400">{i + 1}</span>
@@ -1580,11 +1586,12 @@ function FinalistsPanel({
             </div>
           </li>
         ))}
-      </ol>
-
-      <p className="text-xs text-stone-500">
-        → To promote, open a finalist card above and tap <strong>Promote</strong>.
-      </p>
+        </ol>
+        <p className="text-xs text-stone-500">
+          → To promote, open a finalist card above and tap <strong>Promote</strong>.
+        </p>
+        </>
+      )}
     </section>
   );
 }
