@@ -1729,6 +1729,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         budget,
         founderContext,
         eligibilityMap,
+        heroLook: heroLook ?? undefined,
+        founderLearningEnabled: data.founderLearning,
       });
 
       // Tier-2 controlled accessory expansion.
@@ -1766,6 +1768,8 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           activity,
           founderContext,
           eligibilityMap,
+          heroLook: heroLook ?? undefined,
+          founderLearningEnabled: data.founderLearning,
         });
         const acceptedExpansion = exp.candidates.length;
         // Merge expansion candidates into the slot.
