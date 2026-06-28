@@ -131,10 +131,8 @@ function Index() {
           >
             Dressed for the Destination™
           </p>
-          <p
-            className="font-serif italic text-[1.2rem] sm:text-[1.32rem] lg:text-[1.45rem] leading-[1.15] mt-2.5 text-ink"
-          >
-            From your first espresso overlooking the harbor to sunset aperitivos, beach clubs, and candlelit dinners above the Ligurian Sea — discover twelve thoughtfully curated Portofino moments, each paired with a wardrobe designed for the experience.
+          <p className="font-serif italic text-[1.2rem] sm:text-[1.32rem] lg:text-[1.45rem] leading-[1.15] mt-2.5 text-ink">
+            Every moment thoughtfully curated—from your first arrival to your final nightcap.
           </p>
           <div className="mt-3 mb-2.5 h-px w-24 bg-gold/80" />
           <div className="mt-4 flex flex-wrap gap-3">
@@ -184,8 +182,6 @@ function Index() {
           </p>
           <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.02em] text-ink leading-[1.05]">
             Twelve Editorial Moments.
-            <br />
-            Experience Portofino beautifully—from arrival to nightcap.
           </h2>
           <div className="mt-4 mx-auto h-px w-16 bg-gold/60" />
         </div>
