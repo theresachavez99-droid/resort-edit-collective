@@ -692,18 +692,25 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
       )}
 
       {bothDone && revealed && (
-        <div className="mt-8 grid grid-cols-2 gap-6">
-          <DiagnosticsPanel
-            slotLabel="Outfit 1"
-            variant={sideOrder[0]}
-            run={slot1.run!}
+        <>
+          <div className="mt-8 grid grid-cols-2 gap-6">
+            <DiagnosticsPanel
+              slotLabel="Outfit 1"
+              variant={sideOrder[0]}
+              run={slot1.run!}
+            />
+            <DiagnosticsPanel
+              slotLabel="Outfit 2"
+              variant={sideOrder[1]}
+              run={slot2.run!}
+            />
+          </div>
+          <ComparisonTable
+            sideOrder={sideOrder}
+            slot1={slot1.run!}
+            slot2={slot2.run!}
           />
-          <DiagnosticsPanel
-            slotLabel="Outfit 2"
-            variant={sideOrder[1]}
-            run={slot2.run!}
-          />
-        </div>
+        </>
       )}
     </div>
   );
