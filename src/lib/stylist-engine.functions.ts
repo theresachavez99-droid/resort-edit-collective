@@ -1892,6 +1892,27 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       }
     }
 
+    // ── v6 — Editorial context.
+    // Drives neckline-aware necklace gating, visual-weight balancing,
+    // and per-accessory keyword scoring.
+    const heroForEditorial = heroPiecesRaw.map((h) => ({
+      title: h.product_name ?? null,
+      productName: h.product_name ?? null,
+      category: h.category ?? null,
+    }));
+    const necklineDecision: NecklineDecision = heroForEditorial.length
+      ? evaluateNeckline(heroForEditorial)
+      : { decision: "consider", neckline: "unknown", reason: "No hero garment to evaluate." };
+    const editorialHeroWeight: VisualWeight = heroForEditorial.length
+      ? heroVisualWeight(heroForEditorial)
+      : "medium";
+    // Track whether jewelry should de-prioritise necklace-style searches.
+    // Engine uses a single "jewelry" slot, so this is informational for
+    // diagnostics + explanation text.
+    const necklaceSkipped = necklineDecision.decision === "skip" && heroForEditorial.length > 0;
+    if (necklaceSkipped) {
+      editorialOmissions.push({ slot: "necklace", reason: necklineDecision.reason });
+    }
     // ── Registry analytics: count Yacht Day brands per category and flag
     // underrepresented accessory categories before discovery runs.
     const registryByCategory: Record<string, number> = {};
