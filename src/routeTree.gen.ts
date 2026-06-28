@@ -50,6 +50,7 @@ import { Route as AdminBuyingOfficeRouteImport } from './routes/admin.buying-off
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminBrandPerformanceRouteImport } from './routes/admin.brand-performance'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
+import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
 import { Route as AdminCollectionsIdRouteImport } from './routes/admin.collections.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -258,6 +259,11 @@ const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
   path: '/$day/$look',
   getParentRoute: () => PortofinoRoute,
 } as any)
+const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
+  id: '/admin/hero-outfit/$id',
+  path: '/admin/hero-outfit/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminCollectionsIdRoute = AdminCollectionsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -306,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
+  '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
 export interface FileRoutesByTo {
@@ -350,6 +357,7 @@ export interface FileRoutesByTo {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
+  '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
 export interface FileRoutesById {
@@ -395,6 +403,7 @@ export interface FileRoutesById {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/admin/collections/$id': typeof AdminCollectionsIdRoute
+  '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
 }
 export interface FileRouteTypes {
@@ -441,6 +450,7 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin/'
     | '/admin/collections/$id'
+    | '/admin/hero-outfit/$id'
     | '/portofino/$day/$look'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -485,6 +495,7 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin'
     | '/admin/collections/$id'
+    | '/admin/hero-outfit/$id'
     | '/portofino/$day/$look'
   id:
     | '__root__'
@@ -529,6 +540,7 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin/'
     | '/admin/collections/$id'
+    | '/admin/hero-outfit/$id'
     | '/portofino/$day/$look'
   fileRoutesById: FileRoutesById
 }
@@ -565,6 +577,7 @@ export interface RootRouteChildren {
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   LookSlugRoute: typeof LookSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -856,6 +869,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortofinoDayLookRouteImport
       parentRoute: typeof PortofinoRoute
     }
+    '/admin/hero-outfit/$id': {
+      id: '/admin/hero-outfit/$id'
+      path: '/admin/hero-outfit/$id'
+      fullPath: '/admin/hero-outfit/$id'
+      preLoaderRoute: typeof AdminHeroOutfitIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/collections/$id': {
       id: '/admin/collections/$id'
       path: '/$id'
@@ -957,6 +977,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSubscribersRoute: AdminSubscribersRoute,
   LookSlugRoute: LookSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

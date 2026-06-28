@@ -348,11 +348,13 @@ export type Database = {
           description: string | null
           editorial_confidence: number | null
           editorial_score: number | null
+          hero_outfit_id: string | null
           id: string
           image_missing: boolean
           image_url: string | null
           import_type: string
           imported_by: string | null
+          is_hero_garment: boolean
           notes: string | null
           price: number | null
           product_name: string | null
@@ -362,10 +364,13 @@ export type Database = {
           rejection_reason: string | null
           retailer: string | null
           sale_status: string | null
+          selected_for_look: boolean
           session_id: string
           source: string
           source_adapter: string | null
           status: string
+          stylist_slot: string | null
+          stylist_source: string
           updated_at: string
         }
         Insert: {
@@ -382,11 +387,13 @@ export type Database = {
           description?: string | null
           editorial_confidence?: number | null
           editorial_score?: number | null
+          hero_outfit_id?: string | null
           id?: string
           image_missing?: boolean
           image_url?: string | null
           import_type?: string
           imported_by?: string | null
+          is_hero_garment?: boolean
           notes?: string | null
           price?: number | null
           product_name?: string | null
@@ -396,10 +403,13 @@ export type Database = {
           rejection_reason?: string | null
           retailer?: string | null
           sale_status?: string | null
+          selected_for_look?: boolean
           session_id: string
           source: string
           source_adapter?: string | null
           status?: string
+          stylist_slot?: string | null
+          stylist_source?: string
           updated_at?: string
         }
         Update: {
@@ -416,11 +426,13 @@ export type Database = {
           description?: string | null
           editorial_confidence?: number | null
           editorial_score?: number | null
+          hero_outfit_id?: string | null
           id?: string
           image_missing?: boolean
           image_url?: string | null
           import_type?: string
           imported_by?: string | null
+          is_hero_garment?: boolean
           notes?: string | null
           price?: number | null
           product_name?: string | null
@@ -430,13 +442,23 @@ export type Database = {
           rejection_reason?: string | null
           retailer?: string | null
           sale_status?: string | null
+          selected_for_look?: boolean
           session_id?: string
           source?: string
           source_adapter?: string | null
           status?: string
+          stylist_slot?: string | null
+          stylist_source?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "buying_candidates_hero_outfit_id_fkey"
+            columns: ["hero_outfit_id"]
+            isOneToOne: false
+            referencedRelation: "founder_hero_outfits"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "buying_candidates_session_id_fkey"
             columns: ["session_id"]
@@ -1180,6 +1202,83 @@ export type Database = {
             columns: ["slot_id"]
             isOneToOne: false
             referencedRelation: "editorial_collection_look_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      founder_hero_outfits: {
+        Row: {
+          activity: string | null
+          color_palette: string[]
+          created_at: string
+          destination: string
+          editorial_dna: Json
+          founder_look_id: string | null
+          founder_notes: string | null
+          id: string
+          look_number: number | null
+          moment: string
+          preview_image_url: string | null
+          primary_brand: string | null
+          promoted_at: string | null
+          published_at: string | null
+          retailers: string[]
+          session_id: string
+          silhouette: string | null
+          status: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          activity?: string | null
+          color_palette?: string[]
+          created_at?: string
+          destination: string
+          editorial_dna?: Json
+          founder_look_id?: string | null
+          founder_notes?: string | null
+          id?: string
+          look_number?: number | null
+          moment: string
+          preview_image_url?: string | null
+          primary_brand?: string | null
+          promoted_at?: string | null
+          published_at?: string | null
+          retailers?: string[]
+          session_id: string
+          silhouette?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          activity?: string | null
+          color_palette?: string[]
+          created_at?: string
+          destination?: string
+          editorial_dna?: Json
+          founder_look_id?: string | null
+          founder_notes?: string | null
+          id?: string
+          look_number?: number | null
+          moment?: string
+          preview_image_url?: string | null
+          primary_brand?: string | null
+          promoted_at?: string | null
+          published_at?: string | null
+          retailers?: string[]
+          session_id?: string
+          silhouette?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "founder_hero_outfits_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "buying_search_sessions"
             referencedColumns: ["id"]
           },
         ]

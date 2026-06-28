@@ -1,0 +1,778 @@
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import {
+  getHeroOutfitWorkspace,
+  importHeroGarments,
+  groupGarmentsIntoOutfit,
+  addGarmentToOutfit,
+  removeGarmentFromOutfit,
+  patchHeroGarment,
+  patchHeroOutfit,
+  promoteHeroOutfit,
+  addManualSlotCandidate,
+  selectSlotCandidate,
+  clearSlotCandidates,
+  validateHeroOutfitForPublish,
+  publishFounderLookFromOutfit,
+} from "@/lib/hero-outfit.functions";
+import { slotsForMoment, profileForMoment } from "@/lib/hero-outfit-slots";
+
+export const Route = createFileRoute("/admin/hero-outfit/$id")({
+  component: HeroOutfitStudio,
+});
+
+const PW_KEY = "resort_admin_pw";
+
+function getPw(): string {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem(PW_KEY) ?? "";
+}
+
+function HeroOutfitStudio() {
+  const router = useRouter();
+  const { id: sessionId } = Route.useParams();
+  const [password, setPassword] = useState<string>(getPw());
+  const [pwReady, setPwReady] = useState<boolean>(!!getPw());
+
+  if (!pwReady) {
+    return (
+      <div className="min-h-screen bg-ivory text-ink flex items-center justify-center p-8">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            localStorage.setItem(PW_KEY, password);
+            setPwReady(true);
+          }}
+          className="border border-stone-300 p-8 max-w-sm w-full space-y-4"
+        >
+          <h1 className="text-xs tracking-[0.3em] uppercase">Admin Password</h1>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full border border-stone-300 px-3 py-2 text-sm"
+          />
+          <button className="bg-ink text-ivory px-5 py-2 text-xs tracking-[0.3em] uppercase w-full">
+            Enter Studio
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  return <Workspace sessionId={sessionId} password={password} />;
+}
+
+function Workspace({ sessionId, password }: { sessionId: string; password: string }) {
+  const qc = useQueryClient();
+  const fetchWorkspace = useServerFn(getHeroOutfitWorkspace);
+  const q = useQuery({
+    queryKey: ["hero-workspace", sessionId],
+    queryFn: () => fetchWorkspace({ data: { password, sessionId } }),
+  });
+
+  if (q.isLoading) {
+    return <div className="p-8 text-xs text-stone-500">Loading Hero Outfit Studio…</div>;
+  }
+  if (q.error || !q.data) {
+    return (
+      <div className="p-8 text-xs text-red-600">
+        {(q.error as Error)?.message ?? "Failed to load workspace."}
+      </div>
+    );
+  }
+
+  const { session, outfits, candidates } = q.data;
+  type Outfit = typeof outfits[number];
+  type Candidate = typeof candidates[number];
+
+  // Garments not yet attached to any outfit:
+  const looseGarments = candidates.filter(
+    (c: Candidate) => c.is_hero_garment && !c.hero_outfit_id,
+  );
+  const refetch = () => qc.invalidateQueries({ queryKey: ["hero-workspace", sessionId] });
+
+  return (
+    <div className="min-h-screen bg-ivory text-ink">
+      <header className="border-b border-stone-300 px-6 py-4 flex items-center justify-between">
+        <div>
+          <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+            Hero Outfit Studio
+          </div>
+          <h1 className="text-lg font-serif">
+            {session.destination} · {session.moment}
+          </h1>
+        </div>
+        <a
+          href="/admin/buying-office"
+          className="text-xs tracking-[0.3em] uppercase text-stone-500 hover:text-ink"
+        >
+          ← All sessions
+        </a>
+      </header>
+
+      <div className="max-w-5xl mx-auto px-6 py-8 space-y-12">
+        {/* STAGE 3 — Import Hero Garments */}
+        <ImportStage
+          sessionId={sessionId}
+          password={password}
+          onDone={refetch}
+        />
+
+        {/* Loose garments (not yet grouped) */}
+        {looseGarments.length > 0 && (
+          <LooseGarmentsCard
+            garments={looseGarments}
+            outfits={outfits}
+            password={password}
+            sessionId={sessionId}
+            onChange={refetch}
+          />
+        )}
+
+        {/* STAGE 4-8 — One panel per Hero Outfit */}
+        {outfits.length === 0 && looseGarments.length === 0 && (
+          <div className="border border-dashed border-stone-300 p-8 text-center text-xs text-stone-500">
+            Paste Hero garment URLs above to begin.
+          </div>
+        )}
+
+        {outfits.map((o: Outfit) => (
+          <OutfitPanel
+            key={o.id}
+            outfit={o}
+            candidates={candidates.filter((c: Candidate) => c.hero_outfit_id === o.id)}
+            password={password}
+            onChange={refetch}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ImportStage({
+  sessionId,
+  password,
+  onDone,
+}: {
+  sessionId: string;
+  password: string;
+  onDone: () => void;
+}) {
+  const [urls, setUrls] = useState("");
+  const importFn = useServerFn(importHeroGarments);
+  const mut = useMutation({
+    mutationFn: async () => {
+      const list = urls
+        .split(/\s+/)
+        .map((s) => s.trim())
+        .filter((s) => /^https?:\/\//.test(s));
+      if (list.length === 0) throw new Error("Paste at least one product URL.");
+      return importFn({ data: { password, sessionId, urls: list } });
+    },
+    onSuccess: (r) => {
+      toast.success(
+        `${r.imported} garments imported · ${r.outfitsCreated} Hero Outfit${r.outfitsCreated === 1 ? "" : "s"} detected.`,
+      );
+      setUrls("");
+      onDone();
+    },
+    onError: (e) => toast.error((e as Error).message),
+  });
+
+  return (
+    <section className="border border-stone-300 p-6 space-y-4">
+      <div>
+        <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+          Stage 3
+        </div>
+        <h2 className="text-base font-serif">Import Hero Garments</h2>
+        <p className="text-xs text-stone-600 italic mt-2">
+          Paste one or more product URLs that together form the foundation of this look.
+        </p>
+        <ul className="text-xs text-stone-600 mt-2 space-y-0.5 pl-4 list-disc">
+          <li>Dress · jumpsuit · romper</li>
+          <li>Vest + trousers · top + shorts · skirt + top</li>
+          <li>Swim + cover-up</li>
+        </ul>
+        <p className="text-xs text-stone-500 mt-2">
+          The Stylist Engine will complete the remaining outfit after the Hero is approved.
+        </p>
+      </div>
+      <textarea
+        value={urls}
+        onChange={(e) => setUrls(e.target.value)}
+        rows={6}
+        placeholder="https://www.revolve.com/faithfull-maya-vest-in-natural/dp/FAIB-WS275/&#10;https://www.revolve.com/faithfull-isotta-pant-in-natural/dp/FAIB-WP74/"
+        className="w-full border border-stone-300 px-3 py-2 text-xs font-mono"
+      />
+      <button
+        onClick={() => mut.mutate()}
+        disabled={mut.isPending}
+        className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase disabled:opacity-40"
+      >
+        {mut.isPending ? "Importing…" : "Import Hero Garments"}
+      </button>
+    </section>
+  );
+}
+
+function LooseGarmentsCard({
+  garments,
+  outfits,
+  password,
+  sessionId,
+  onChange,
+}: {
+  garments: any[];
+  outfits: any[];
+  password: string;
+  sessionId: string;
+  onChange: () => void;
+}) {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const groupFn = useServerFn(groupGarmentsIntoOutfit);
+  const addFn = useServerFn(addGarmentToOutfit);
+
+  const toggle = (id: string) => {
+    setSelected((s) => {
+      const next = new Set(s);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  return (
+    <section className="border border-stone-300 p-6 space-y-4">
+      <h2 className="text-sm tracking-[0.3em] uppercase text-stone-700">
+        Unassigned garments
+      </h2>
+      <p className="text-xs text-stone-500">
+        Select two or more and Group as Hero Outfit, or add to an existing outfit.
+      </p>
+      <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+        {garments.map((g) => (
+          <label
+            key={g.id}
+            className={
+              "border p-3 text-xs cursor-pointer " +
+              (selected.has(g.id) ? "border-ink" : "border-stone-300")
+            }
+          >
+            <input
+              type="checkbox"
+              checked={selected.has(g.id)}
+              onChange={() => toggle(g.id)}
+              className="mr-2"
+            />
+            <span className="font-medium">{g.brand ?? "?"}</span>
+            <div className="text-stone-500 mt-1 line-clamp-2">{g.product_name ?? g.product_url}</div>
+            {g.image_url ? (
+              <img src={g.image_url} alt="" className="w-full h-32 object-cover mt-2" />
+            ) : (
+              <div className="w-full h-32 bg-stone-100 mt-2 flex items-center justify-center text-[0.6rem] text-stone-400">
+                no image
+              </div>
+            )}
+          </label>
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <button
+          disabled={selected.size < 1}
+          onClick={async () => {
+            try {
+              await groupFn({ data: { password, sessionId, garmentIds: Array.from(selected) } });
+              toast.success("Hero Outfit created.");
+              setSelected(new Set());
+              onChange();
+            } catch (e) {
+              toast.error((e as Error).message);
+            }
+          }}
+          className="bg-ink text-ivory px-4 py-2 text-[0.65rem] tracking-[0.3em] uppercase disabled:opacity-40"
+        >
+          Group as Hero Outfit
+        </button>
+        {outfits.length > 0 && selected.size === 1 && (
+          <select
+            className="border border-stone-300 text-xs px-2"
+            onChange={async (e) => {
+              if (!e.target.value) return;
+              try {
+                const id = Array.from(selected)[0];
+                await addFn({ data: { password, outfitId: e.target.value, garmentId: id } });
+                toast.success("Added to outfit.");
+                setSelected(new Set());
+                onChange();
+              } catch (err) {
+                toast.error((err as Error).message);
+              }
+            }}
+          >
+            <option value="">Add to existing outfit…</option>
+            {outfits.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.primary_brand ?? "Outfit"} ({o.status})
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function OutfitPanel({
+  outfit,
+  candidates,
+  password,
+  onChange,
+}: {
+  outfit: any;
+  candidates: any[];
+  password: string;
+  onChange: () => void;
+}) {
+  const promoteFn = useServerFn(promoteHeroOutfit);
+  const removeFn = useServerFn(removeGarmentFromOutfit);
+  const patchGarmentFn = useServerFn(patchHeroGarment);
+  const patchOutfitFn = useServerFn(patchHeroOutfit);
+  const validateFn = useServerFn(validateHeroOutfitForPublish);
+  const publishFn = useServerFn(publishFounderLookFromOutfit);
+
+  const heroes = candidates.filter((c) => c.is_hero_garment);
+  const isDraft = outfit.status === "draft";
+  const isPromoted = outfit.status === "promoted" || outfit.status === "published";
+  const isPublished = outfit.status === "published";
+
+  const slotDefs = slotsForMoment(outfit.moment);
+  const profile = profileForMoment(outfit.moment);
+
+  return (
+    <section className="border-2 border-ink/20 p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+            Hero Outfit · status: {outfit.status} · {profile}
+          </div>
+          <h2 className="text-lg font-serif mt-1">
+            {outfit.title ?? outfit.primary_brand ?? "Untitled Hero Outfit"}
+          </h2>
+          {outfit.color_palette?.length > 0 && (
+            <div className="text-xs text-stone-500 mt-1">
+              Palette: {outfit.color_palette.join(" · ")}
+            </div>
+          )}
+        </div>
+        {isPublished && (
+          <div className="text-[0.6rem] tracking-[0.3em] uppercase text-emerald-700">
+            ✓ Published
+          </div>
+        )}
+      </div>
+
+      {/* Stage 4 — Hero garments */}
+      <div className="space-y-3">
+        <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+          Stage 4 — Hero garments
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+          {heroes.map((g) => (
+            <HeroGarmentCard
+              key={g.id}
+              garment={g}
+              editable={!isPublished}
+              onPatchImage={async (image_url) => {
+                await patchGarmentFn({
+                  data: { password, garmentId: g.id, patch: { image_url } },
+                });
+                onChange();
+              }}
+              onRemove={async () => {
+                if (!confirm("Remove from this Hero Outfit?")) return;
+                await removeFn({ data: { password, garmentId: g.id } });
+                onChange();
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Stage 5 — Promote */}
+      {isDraft && (
+        <div className="border-t border-stone-200 pt-4 flex items-center justify-between">
+          <p className="text-xs text-stone-600">
+            Review the Hero garments. Once promoted, the AI fills accessories around them.
+            <br />
+            <span className="text-stone-500 italic">
+              Images aren't required — paste them manually if scraping failed.
+            </span>
+          </p>
+          <button
+            onClick={async () => {
+              try {
+                await promoteFn({ data: { password, outfitId: outfit.id } });
+                toast.success("Hero Outfit promoted. Next: Build Complete Outfit.");
+                onChange();
+              } catch (e) {
+                toast.error((e as Error).message);
+              }
+            }}
+            disabled={heroes.length === 0}
+            className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase disabled:opacity-40"
+          >
+            Promote Hero Outfit
+          </button>
+        </div>
+      )}
+
+      {/* Stage 5 → 6 hand-off */}
+      {isPromoted && !isPublished && (
+        <div className="border border-emerald-300 bg-emerald-50/40 p-4 text-xs text-emerald-900">
+          <div className="font-medium">Hero Outfit Promoted ✓</div>
+          <div className="mt-1 text-emerald-800">
+            Next step: Build Complete Outfit — fill each accessory slot below.
+          </div>
+        </div>
+      )}
+
+      {/* Stages 6+7 — Slot review */}
+      {isPromoted && (
+        <div className="space-y-4">
+          <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+            Stages 6–7 — Build Complete Outfit
+          </div>
+          {slotDefs.map((def) => {
+            const slotCands = candidates.filter((c) => c.stylist_slot === def.slot);
+            const selected = slotCands.find((c) => c.selected_for_look);
+            return (
+              <SlotRow
+                key={def.slot}
+                outfitId={outfit.id}
+                slot={def.slot}
+                label={def.label}
+                required={def.required}
+                candidates={slotCands}
+                selectedId={selected?.id ?? null}
+                password={password}
+                onChange={onChange}
+                disabled={isPublished}
+              />
+            );
+          })}
+        </div>
+      )}
+
+      {/* Stage 8 — Publish */}
+      {isPromoted && !isPublished && (
+        <PublishCard
+          outfit={outfit}
+          password={password}
+          onChange={onChange}
+          validateFn={validateFn}
+          publishFn={publishFn}
+        />
+      )}
+    </section>
+  );
+}
+
+function HeroGarmentCard({
+  garment,
+  editable,
+  onPatchImage,
+  onRemove,
+}: {
+  garment: any;
+  editable: boolean;
+  onPatchImage: (url: string) => Promise<void>;
+  onRemove: () => Promise<void>;
+}) {
+  const [imgEdit, setImgEdit] = useState(false);
+  const [imgUrl, setImgUrl] = useState(garment.image_url ?? "");
+  return (
+    <div className="border border-stone-300 p-3 text-xs space-y-2">
+      <div className="font-medium">{garment.brand ?? "—"}</div>
+      <div className="text-stone-500 line-clamp-2">
+        {garment.product_name ?? garment.product_url}
+      </div>
+      {garment.image_url ? (
+        <img src={garment.image_url} alt="" className="w-full h-40 object-cover" />
+      ) : (
+        <div className="w-full h-40 bg-stone-100 flex items-center justify-center text-[0.65rem] text-stone-400">
+          no image — paste one below
+        </div>
+      )}
+      {editable && (
+        <>
+          <button
+            onClick={() => setImgEdit((v) => !v)}
+            className="text-[0.65rem] tracking-[0.25em] uppercase text-stone-500 hover:text-ink"
+          >
+            {garment.image_url ? "Replace image URL" : "Add image URL"}
+          </button>
+          {imgEdit && (
+            <div className="flex gap-1">
+              <input
+                type="url"
+                value={imgUrl}
+                onChange={(e) => setImgUrl(e.target.value)}
+                placeholder="https://…"
+                className="flex-1 border border-stone-300 px-2 py-1 text-[0.7rem]"
+              />
+              <button
+                onClick={async () => {
+                  await onPatchImage(imgUrl);
+                  setImgEdit(false);
+                }}
+                className="bg-ink text-ivory px-2 text-[0.6rem] uppercase tracking-[0.2em]"
+              >
+                Save
+              </button>
+            </div>
+          )}
+          <button
+            onClick={onRemove}
+            className="text-[0.65rem] tracking-[0.25em] uppercase text-red-600 hover:underline"
+          >
+            Remove from outfit
+          </button>
+        </>
+      )}
+      <a
+        href={garment.product_url}
+        target="_blank"
+        rel="noreferrer"
+        className="block text-[0.65rem] tracking-[0.25em] uppercase text-stone-500 hover:text-ink truncate"
+      >
+        {garment.retailer ?? "view source"} →
+      </a>
+    </div>
+  );
+}
+
+function SlotRow({
+  outfitId,
+  slot,
+  label,
+  required,
+  candidates,
+  selectedId,
+  password,
+  onChange,
+  disabled,
+}: {
+  outfitId: string;
+  slot: string;
+  label: string;
+  required: boolean;
+  candidates: any[];
+  selectedId: string | null;
+  password: string;
+  onChange: () => void;
+  disabled: boolean;
+}) {
+  const [pasteUrl, setPasteUrl] = useState("");
+  const addManual = useServerFn(addManualSlotCandidate);
+  const select = useServerFn(selectSlotCandidate);
+  const clearSlot = useServerFn(clearSlotCandidates);
+
+  return (
+    <div className="border border-stone-200 p-4 space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-sm font-medium">{label}</span>
+          {required && (
+            <span className="ml-2 text-[0.6rem] tracking-[0.25em] uppercase text-red-700">
+              required
+            </span>
+          )}
+          {selectedId && (
+            <span className="ml-2 text-[0.6rem] tracking-[0.25em] uppercase text-emerald-700">
+              ✓ selected
+            </span>
+          )}
+        </div>
+        {!disabled && candidates.length > 0 && (
+          <button
+            onClick={async () => {
+              if (!confirm(`Clear all ${label} candidates?`)) return;
+              await clearSlot({ data: { password, outfitId, slot: slot as any } });
+              onChange();
+            }}
+            className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 hover:text-red-600"
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
+      {/* Candidates */}
+      {candidates.length > 0 && (
+        <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
+          {candidates.map((c) => (
+            <button
+              key={c.id}
+              disabled={disabled}
+              onClick={async () => {
+                await select({
+                  data: { password, outfitId, slot: slot as any, candidateId: c.id },
+                });
+                onChange();
+              }}
+              className={
+                "border p-2 text-xs text-left " +
+                (c.id === selectedId ? "border-emerald-600 bg-emerald-50/40" : "border-stone-300")
+              }
+            >
+              <div className="font-medium">{c.brand ?? "—"}</div>
+              <div className="text-stone-500 line-clamp-2">{c.product_name ?? c.product_url}</div>
+              {c.image_url ? (
+                <img src={c.image_url} alt="" className="w-full h-24 object-cover mt-1" />
+              ) : (
+                <div className="w-full h-24 bg-stone-100 mt-1" />
+              )}
+              <div className="text-[0.6rem] text-stone-400 mt-1">{c.retailer}</div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Manual paste */}
+      {!disabled && (
+        <div className="flex gap-2">
+          <input
+            type="url"
+            value={pasteUrl}
+            onChange={(e) => setPasteUrl(e.target.value)}
+            placeholder={`Paste a ${label.toLowerCase()} URL…`}
+            className="flex-1 border border-stone-300 px-2 py-1 text-xs"
+          />
+          <button
+            onClick={async () => {
+              try {
+                await addManual({
+                  data: { password, outfitId, slot: slot as any, url: pasteUrl },
+                });
+                setPasteUrl("");
+                onChange();
+                toast.success(`${label} added.`);
+              } catch (e) {
+                toast.error((e as Error).message);
+              }
+            }}
+            disabled={!pasteUrl}
+            className="bg-stone-700 text-ivory px-3 text-[0.65rem] tracking-[0.25em] uppercase disabled:opacity-40"
+          >
+            Add
+          </button>
+        </div>
+      )}
+
+      {candidates.length === 0 && (
+        <p className="text-[0.7rem] text-stone-500 italic">
+          AI sourcing for this slot is queued. Paste a specific URL to fill manually.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PublishCard({
+  outfit,
+  password,
+  onChange,
+  validateFn,
+  publishFn,
+}: {
+  outfit: any;
+  password: string;
+  onChange: () => void;
+  validateFn: ReturnType<typeof useServerFn>;
+  publishFn: ReturnType<typeof useServerFn>;
+}) {
+  const [title, setTitle] = useState(outfit.title ?? "");
+  const [notes, setNotes] = useState(outfit.founder_notes ?? "");
+  const [validation, setValidation] = useState<any>(null);
+
+  const runValidate = async () => {
+    try {
+      const r = await validateFn({ data: { password, outfitId: outfit.id } });
+      setValidation(r);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
+
+  return (
+    <div className="border-t border-stone-200 pt-4 space-y-3">
+      <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+        Stage 8 — Publish Founder Look
+      </div>
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Look title (optional)"
+        className="w-full border border-stone-300 px-3 py-2 text-sm"
+      />
+      <textarea
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        placeholder="Editorial notes (optional)"
+        rows={3}
+        className="w-full border border-stone-300 px-3 py-2 text-xs"
+      />
+
+      {validation && !validation.ok && (
+        <div className="border border-red-300 bg-red-50/40 p-3 text-xs text-red-800">
+          <div className="font-medium">Cannot publish yet:</div>
+          <ul className="mt-1 pl-4 list-disc">
+            {validation.heroGarmentCount === 0 && <li>No Hero garments selected.</li>}
+            {validation.missing.map((s: any) => (
+              <li key={s.slot}>Missing required slot: {s.label}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {validation && validation.ok && (
+        <div className="border border-emerald-300 bg-emerald-50/40 p-3 text-xs text-emerald-800">
+          All required slots filled. Ready to publish.
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <button
+          onClick={runValidate}
+          className="border border-ink px-4 py-2 text-[0.65rem] tracking-[0.3em] uppercase"
+        >
+          Validate
+        </button>
+        <button
+          disabled={!validation?.ok}
+          onClick={async () => {
+            if (!validation?.ok) return;
+            try {
+              const r = (await publishFn({
+                data: { password, outfitId: outfit.id, title, notes },
+              })) as { ok: boolean; founderLookId: string };
+              toast.success("Founder Look published ✓");
+              onChange();
+              window.location.href = `/admin/founder-looks?focus=${r.founderLookId}`;
+            } catch (e) {
+              toast.error((e as Error).message);
+            }
+          }}
+          className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase disabled:opacity-40"
+        >
+          Publish Founder Look
+        </button>
+      </div>
+    </div>
+  );
+}
