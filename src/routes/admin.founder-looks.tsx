@@ -10,6 +10,7 @@ import {
   publishFounderLook,
   seedPoolLoungingValidationLook,
   recordValidationRun,
+  refreshFounderLookHeroImages,
 } from "@/lib/founder-looks.functions";
 import { generateYachtDayCollection } from "@/lib/stylist-engine.functions";
 
@@ -488,6 +489,7 @@ type RunPayload = {
       brand?: string | null;
       title?: string | null;
       image?: string | null;
+      image_url?: string | null;
       url?: string | null;
       retailer?: string | null;
       editorialScore?: number | null;
@@ -504,6 +506,7 @@ type RunPayload = {
     brand?: string | null;
     title?: string | null;
     image?: string | null;
+      image_url?: string | null;
     url?: string | null;
     retailer?: string | null;
     editorialScore?: number;
