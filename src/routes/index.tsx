@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import stillLife from "@/assets/portofino-still-life.jpg";
 import experienceYacht from "@/assets/experience-yacht.jpg";
 import experienceBeachClub from "@/assets/experience-beach-club.jpg";
 import experienceBoat from "@/assets/experience-boat.jpg";
@@ -110,7 +109,7 @@ function Index() {
     <div className="bg-ivory w-full">
       {/* HERO — editorial cover: photography-led, destination-first hierarchy */}
       <section
-        className={`${wrap} pt-6 lg:pt-10 pb-8 lg:pb-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
+        className={`${wrap} pt-6 lg:pt-10 pb-6 lg:pb-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
       >
         {/* Photography — full-body editorial portrait, never cropped at head or hem */}
         <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-cream/40 lg:col-span-7">
@@ -188,7 +187,7 @@ function Index() {
       </section>
 
       {/* THE PORTOFINO EDIT — editorial chapter collection */}
-      <section className={`${wrap} mt-10 md:mt-14`}>
+      <section className={`${wrap} mt-8 md:mt-12`}>
         <div className="text-center max-w-3xl mx-auto">
           <p className="eyebrow text-gold text-[0.7rem] tracking-[0.34em]">
             THE PORTOFINO EDIT
@@ -203,16 +202,16 @@ function Index() {
           <div className="mt-5 mx-auto h-px w-16 bg-gold/60" />
         </div>
 
-        <div className="mt-10 md:mt-12">
+        <div className="mt-7 md:mt-9">
           <HomeEditorialChapters />
         </div>
       </section>
 
       {/* WHERE TO STAY — moves immediately after the editorial collection */}
-      <section className={`${wrap} mt-14 md:mt-20`}>
+      <section className={`${wrap} mt-12 md:mt-16`}>
           <div className="flex items-center gap-4 justify-center mb-3">
             <div className="h-px w-12 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
+            <h2 className="font-display text-[1.75rem] sm:text-[2.05rem] font-medium tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
             <div className="h-px w-12 bg-gold/50" />
           </div>
           <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
@@ -262,7 +261,7 @@ function Index() {
       </section>
 
       {/* BOOK YOUR PORTOFINO EXPERIENCE — image-led editorial rail */}
-      <section className={`${wrap} mt-14 md:mt-20`}>
+      <section className={`${wrap} mt-12 md:mt-16`}>
         <div className="flex items-center gap-4 justify-center mb-3">
           <div className="h-px w-12 bg-gold/50" />
           <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BOOK YOUR PORTOFINO EXPERIENCE</h2>
@@ -298,23 +297,8 @@ function Index() {
         </div>
       </section>
 
-      {/* RESORT EDIT TIP — quiet editorial pause */}
-      <section className={`${wrap} mt-12 md:mt-16`}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          <div className="bg-gold/15 border border-gold/30 p-6 lg:col-span-2 flex flex-col justify-center">
-            <div className="eyebrow text-[0.62rem] tracking-[0.28em] text-gold">✦ Resort Edit Tip</div>
-            <p className="mt-4 font-serif italic text-lg text-ink/85 leading-relaxed">
-              Book a cabana. Sip limoncello. Stay until sunset.
-            </p>
-          </div>
-          <div className="relative aspect-[4/3] lg:aspect-auto overflow-hidden bg-muted">
-            <img src={stillLife} alt="Portofino still life" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-          </div>
-        </div>
-      </section>
-
       {/* BRANDS WE LOVE — minimalist trust signal, no logos/carousels */}
-      <section className={`${wrap} mt-12 md:mt-16`}>
+      <section className={`${wrap} mt-10 md:mt-14`}>
         <div className="flex items-center gap-4 justify-center mb-3">
           <div className="h-px w-12 bg-gold/50" />
           <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BRANDS WE LOVE</h2>
@@ -357,7 +341,18 @@ function Index() {
         </div>
       </section>
 
-      <div className={`${wrap} mt-12 md:mt-16 pb-12`}>
+      {/* EDITORIAL CLOSING — single, quiet line that hands off to the footer invitation */}
+      <section className={`${wrap} mt-14 md:mt-20 pb-4`}>
+        <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto h-px w-12 bg-gold/60" />
+          <p className="mt-6 font-serif italic text-[1.35rem] sm:text-[1.55rem] leading-[1.35] text-ink">
+            Every Resort Edit begins with the destination —<br className="hidden sm:block" /> not the outfit.
+          </p>
+          <div className="mt-6 mx-auto h-px w-12 bg-gold/60" />
+        </div>
+      </section>
+
+      <div className={`${wrap} mt-10 md:mt-14 pb-12`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
         <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
           Prices and availability may change. Some links may earn a commission at no additional cost to you.

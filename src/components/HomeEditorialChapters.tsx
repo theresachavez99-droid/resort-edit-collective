@@ -50,7 +50,7 @@ export function HomeEditorialChapters() {
   const bySlug = new Map(moments.map((m) => [m.moment_slug, m]));
 
   return (
-    <div className="space-y-10 md:space-y-14">
+    <div className="space-y-8 md:space-y-12">
       {CHAPTERS.map((ch) => {
         const cards = ch.slugs
           .map((s) => bySlug.get(s))
@@ -58,9 +58,9 @@ export function HomeEditorialChapters() {
         if (!cards.length) return null;
         return (
           <section key={ch.key} aria-labelledby={`chapter-${ch.key}`}>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-5 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-4 lg:gap-x-5 gap-y-4 items-start">
               {/* Chapter title rail — sits beside the cards on desktop */}
-              <header className="lg:col-span-3 lg:sticky lg:top-24">
+              <header className="lg:col-span-3 lg:sticky lg:top-24 lg:pr-2">
                 <p className="eyebrow text-gold text-[0.62rem] tracking-[0.34em]">
                   Chapter {String(CHAPTERS.indexOf(ch) + 1).padStart(2, "0")}
                 </p>
