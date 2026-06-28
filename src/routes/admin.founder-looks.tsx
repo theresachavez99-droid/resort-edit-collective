@@ -13,6 +13,15 @@ import {
   refreshFounderLookHeroImages,
 } from "@/lib/founder-looks.functions";
 import { generateYachtDayCollection } from "@/lib/stylist-engine.functions";
+import {
+  classifyProductSource,
+  inferJewelrySubSlot,
+} from "@/lib/source-classification";
+import {
+  submitFounderProductFeedback,
+  FEEDBACK_REASONS,
+  type FeedbackReasonCode,
+} from "@/lib/founder-feedback.functions";
 
 export const Route = createFileRoute("/admin/founder-looks")({
   head: () => ({
@@ -611,6 +620,7 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
   const get = useServerFn(getFounderLook);
   const generate = useServerFn(generateYachtDayCollection);
   const record = useServerFn(recordValidationRun);
+  const sendFeedback = useServerFn(submitFounderProductFeedback);
   const detail = useQuery({
     queryKey: ["founder-look", id, "validate"],
     queryFn: () => (id ? get({ data: { password: pw, id } }) : Promise.resolve(null)),
@@ -729,6 +739,9 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
           err={slot1.err}
           revealed={revealed}
           variant={sideOrder[0]}
+          look={look}
+          password={pw}
+          sendFeedback={sendFeedback}
         />
         <OutfitPanel
           slotLabel="Outfit 2"
@@ -737,6 +750,9 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
           err={slot2.err}
           revealed={revealed}
           variant={sideOrder[1]}
+          look={look}
+          password={pw}
+          sendFeedback={sendFeedback}
         />
       </div>
 
