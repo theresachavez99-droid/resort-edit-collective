@@ -71,15 +71,15 @@ const FAVORITE_TAGLINES: Record<string, string> = {
 
 // Founder hierarchy badges
 const BRAND_BADGE: Record<string, string> = {
-  "johanna-ortiz": "Founder Favorite",
-  "alexandra-miro": "Founder Favorite",
+  "johanna-ortiz": "Editor's Pick",
+  "alexandra-miro": "Editor's Pick",
   "zimmermann": "Resort Edit Essential",
-  "agua-by-agua-bendita": "Founder Favorite",
+  "agua-by-agua-bendita": "Editor's Pick",
   "la-doublej": "Mediterranean Icon",
   "eres": "Resort Edit Essential",
   "missoni": "Mediterranean Icon",
   "loewe": "Mediterranean Icon",
-  "hereu": "Founder Favorite",
+  "hereu": "Editor's Pick",
   "aquazzura": "Resort Edit Essential",
   "pucci": "Mediterranean Icon",
   "etro": "Mediterranean Icon",
@@ -90,13 +90,13 @@ const BRAND_BADGE: Record<string, string> = {
   "dolce-and-gabbana": "Mediterranean Icon",
   "melissa-odabash": "Resort Edit Essential",
   "karla-colletto": "Resort Edit Essential",
-  "oseree": "Founder Favorite",
-  "matteau": "Founder Favorite",
+  "oseree": "Editor's Pick",
+  "matteau": "Editor's Pick",
   "maygel-coronel": "Emerging Designer",
   "marysia": "Emerging Designer",
   "vix-paula-hermanny": "Emerging Designer",
   "posse": "Emerging Designer",
-  "sir": "Founder Favorite",
+  "sir": "Editor's Pick",
   "alemais": "Emerging Designer",
   "borgo-de-nor": "Emerging Designer",
   "silvia-tcherassi": "Emerging Designer",
@@ -108,10 +108,10 @@ const BRAND_BADGE: Record<string, string> = {
   "manolo-blahnik": "Mediterranean Icon",
   "rene-caovilla": "Mediterranean Icon",
   "castaner": "Mediterranean Icon",
-  "dragon-diffusion": "Founder Favorite",
-  "cult-gaia": "Founder Favorite",
+  "dragon-diffusion": "Editor's Pick",
+  "cult-gaia": "Editor's Pick",
   "heimat-atlantica": "Emerging Designer",
-  "farm-rio": "Founder Favorite",
+  "farm-rio": "Editor's Pick",
 };
 
 // Optional founder insider notes shown beneath selected brands
@@ -373,7 +373,7 @@ function BrandsPage() {
                 className="group block bg-ivory border border-border/50 hover:border-gold transition-colors p-7"
               >
                 <span className="eyebrow text-[0.55rem] text-gold">
-                  {BRAND_BADGE[brand.slug] ?? "Founder Favorite"}
+                  {BRAND_BADGE[brand.slug] ?? "Editor's Pick"}
                 </span>
                 <h3 className="mt-3 font-display text-3xl tracking-wide text-ink group-hover:text-gold transition-colors">
                   {brand.name}
