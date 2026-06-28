@@ -1591,7 +1591,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             destination: string;
             moment: string;
             style_family: string[];
-            hero_urls: Array<{ brand?: string; category?: string }>;
+            hero_urls: Array<{
+              brand?: string;
+              category?: string;
+              product_name?: string;
+              url?: string;
+              image_url?: string;
+              role?: string;
+            }>;
             color_palette: { include?: string[]; exclude?: string[] };
             positive_rules: Record<string, string[]>;
             negative_rules: Record<string, string[]>;
@@ -1601,6 +1608,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         | undefined;
       if (row) {
         const heroes = Array.isArray(row.hero_urls) ? row.hero_urls : [];
+        heroPiecesRaw = heroes;
         heroLook = {
           id: row.id,
           slug: row.slug,
