@@ -716,6 +716,83 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
   );
 }
 
+const COMPARE_SLOTS = ["bag", "shoes", "sunglasses", "earrings", "necklace", "bracelet", "hat"];
+
+function ComparisonTable({
+  sideOrder,
+  slot1,
+  slot2,
+}: {
+  sideOrder: ["baseline" | "founder", "baseline" | "founder"];
+  slot1: RunPayload;
+  slot2: RunPayload;
+}) {
+  const baseline = sideOrder[0] === "baseline" ? slot1 : slot2;
+  const founder = sideOrder[0] === "founder" ? slot1 : slot2;
+
+  const sideFor = (run: RunPayload, slot: string) => {
+    const hero = pickHeroLook(run);
+    const s = hero?.slots?.find((x) => (x.slot ?? "").toLowerCase() === slot);
+    if (s) return { brand: s.brand ?? "—", score: s.editorialScore ?? 0, state: "selected" as const };
+    const om = run.editorialContext?.omissions?.find((o) => o.slot.toLowerCase() === slot);
+    if (om) return { brand: "— omitted", score: 0, state: "omitted" as const };
+    return { brand: "— unavailable", score: 0, state: "unavailable" as const };
+  };
+
+  const heroOf = (r: RunPayload) => pickHeroLook(r);
+  const bQ = heroOf(baseline)?.founderQualityScore ?? 0;
+  const fQ = heroOf(founder)?.founderQualityScore ?? 0;
+
+  return (
+    <div className="mt-8 border border-neutral-200 p-4">
+      <h3 className="text-sm uppercase tracking-wider mb-3">Decision Comparison</h3>
+      <table className="w-full text-[11px]">
+        <thead className="text-neutral-400 uppercase tracking-wider">
+          <tr>
+            <th className="text-left py-1 w-24">Slot</th>
+            <th className="text-left py-1">Baseline</th>
+            <th className="text-left py-1">Founder</th>
+            <th className="text-left py-1 w-24">Winner</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COMPARE_SLOTS.map((slot) => {
+            const b = sideFor(baseline, slot);
+            const f = sideFor(founder, slot);
+            if (b.state !== "selected" && f.state !== "selected") return null;
+            const winner =
+              b.state === "selected" && f.state === "selected"
+                ? f.score > b.score
+                  ? "Founder"
+                  : f.score < b.score
+                    ? "Baseline"
+                    : "Tie"
+                : f.state === "selected"
+                  ? "Founder"
+                  : "Baseline";
+            return (
+              <tr key={slot} className="border-t border-neutral-100">
+                <td className="py-1 uppercase tracking-wider text-neutral-500">{slot}</td>
+                <td className="py-1 text-neutral-700">{b.brand}{b.state === "selected" && ` · ${b.score.toFixed(1)}`}</td>
+                <td className="py-1 text-neutral-700">{f.brand}{f.state === "selected" && ` · ${f.score.toFixed(1)}`}</td>
+                <td className={`py-1 font-medium ${winner === "Founder" ? "text-green-700" : winner === "Baseline" ? "text-neutral-700" : "text-neutral-400"}`}>{winner}</td>
+              </tr>
+            );
+          })}
+          <tr className="border-t-2 border-neutral-300">
+            <td className="py-2 uppercase tracking-wider text-neutral-500">Overall</td>
+            <td className="py-2">Quality {bQ.toFixed(0)}</td>
+            <td className="py-2">Quality {fQ.toFixed(0)}</td>
+            <td className={`py-2 font-medium ${fQ > bQ ? "text-green-700" : fQ < bQ ? "text-neutral-700" : "text-neutral-400"}`}>
+              {fQ > bQ ? "Founder" : fQ < bQ ? "Baseline" : "Tie"}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function OutfitPanel({
   slotLabel,
   status,
