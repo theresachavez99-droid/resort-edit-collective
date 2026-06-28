@@ -1157,7 +1157,7 @@ function SlotCard({
 
   // selected
   const s = unified.data!;
-  const img = describeImageFailure(s, cand);
+  const img = resolveSlotImage(s, cand);
   const isLocked = !!s.isLockedHero;
   return (
     <div
