@@ -3059,6 +3059,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             constructionScore: c?.constructionScore ?? null,
             curationReason: c?.curationReason ?? null,
             image: c?.image ?? null,
+            image_url: c?.image ?? null,
             // v6 — editorial overlay
             tier,
             visualWeight: vw,
