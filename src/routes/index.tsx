@@ -1,6 +1,9 @@
-import { Ship, Umbrella, Sailboat, UtensilsCrossed } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import stillLife from "@/assets/portofino-still-life.jpg";
+import experienceYacht from "@/assets/experience-yacht.jpg";
+import experienceBeachClub from "@/assets/experience-beach-club.jpg";
+import experienceBoat from "@/assets/experience-boat.jpg";
+import experienceCooking from "@/assets/experience-cooking.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
@@ -65,11 +68,39 @@ const hotels = [
   },
 ];
 
-const ctas = [
-  { label: "Book a Yacht", Icon: Ship },
-  { label: "Reserve a Beach Club", Icon: Umbrella },
-  { label: "Boat Excursions", Icon: Sailboat },
-  { label: "Cooking Classes", Icon: UtensilsCrossed },
+const experiences = [
+  {
+    category: "Yacht Charters",
+    name: "Private Yacht Charter",
+    desc: "Sail the Ligurian coast in style, from the harbor to hidden coves.",
+    image: experienceYacht,
+    cta: "Explore Yacht Charters",
+    href: "https://www.getmyboat.com/",
+  },
+  {
+    category: "Beach Clubs",
+    name: "Beach Club Reservation",
+    desc: "Sun, sea, and the perfect lunch on a private deck above the water.",
+    image: experienceBeachClub,
+    cta: "Reserve Beach Club",
+    href: "https://www.bagnicapri.it/",
+  },
+  {
+    category: "Excursions",
+    name: "Boat Excursions",
+    desc: "Discover San Fruttuoso and the coastline by classic Italian boat.",
+    image: experienceBoat,
+    cta: "Explore Boat Excursions",
+    href: "https://www.tigullio.it/",
+  },
+  {
+    category: "Culinary",
+    name: "Cooking Classes",
+    desc: "Learn Ligurian classics—pesto, pasta, and lemon-kissed desserts.",
+    image: experienceCooking,
+    cta: "View Cooking Classes",
+    href: "https://www.tuscanynow.com/experiences/cooking-classes/",
+  },
 ];
 
 function Index() {
@@ -230,28 +261,39 @@ function Index() {
           </div>
       </section>
 
-      {/* BOOK YOUR PORTOFINO EXPERIENCE — booking rail */}
-      <section className="mt-12 md:mt-16">
-        <div className={`${wrap} mb-6`}>
-          <div className="flex items-center gap-4 justify-center mb-3">
-            <div className="h-px w-12 bg-gold/50" />
-            <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink text-center">BOOK YOUR PORTOFINO EXPERIENCE</h2>
-            <div className="h-px w-12 bg-gold/50" />
-          </div>
-          <p className="text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-            The restaurants, beach clubs, yacht charters, and experiences that complete the trip.
-          </p>
+      {/* BOOK YOUR PORTOFINO EXPERIENCE — image-led editorial rail */}
+      <section className={`${wrap} mt-14 md:mt-20`}>
+        <div className="flex items-center gap-4 justify-center mb-3">
+          <div className="h-px w-12 bg-gold/50" />
+          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BOOK YOUR PORTOFINO EXPERIENCE</h2>
+          <div className="h-px w-12 bg-gold/50" />
         </div>
-        <div className={`${wrap} grid grid-cols-2 lg:grid-cols-4 gap-1`}>
-          {ctas.map(({ label, Icon }) => (
-            <Link
-              key={label}
-              to="/portofino"
-              className="h-16 lg:h-20 bg-gold hover:bg-ink text-ivory transition-colors flex items-center justify-center gap-3 eyebrow text-[0.7rem] lg:text-[0.8rem] tracking-[0.22em] text-center px-4"
-            >
-              <Icon className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.5} />
-              <span>{label}</span>
-            </Link>
+        <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+          Curated experiences to elevate your Portofino escape.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          {experiences.map((e) => (
+            <article key={e.name} className="bg-card border border-border/50 flex flex-col">
+              <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-muted">
+                <img src={e.image} alt={e.name} loading="lazy" width={1024} height={768} className="absolute inset-0 h-full w-full object-cover" />
+                <span className="absolute left-4 bottom-4 bg-ink/75 text-ivory eyebrow text-[0.6rem] tracking-[0.26em] px-3 py-1.5 backdrop-blur-sm">
+                  {e.category}
+                </span>
+              </div>
+              <div className="p-6 flex flex-col flex-1">
+                <h3 className="font-display text-2xl tracking-wide text-ink">{e.name}</h3>
+                <p className="mt-3 font-serif text-[0.95rem] text-ink/75 leading-relaxed flex-1">{e.desc}</p>
+                <a
+                  href={e.href}
+                  target="_blank"
+                  rel="noreferrer noopener sponsored"
+                  className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"
+                >
+                  {e.cta} →
+                </a>
+              </div>
+            </article>
           ))}
         </div>
       </section>
