@@ -479,13 +479,23 @@ type RunPayload = {
     title?: string;
     subtitle?: string | null;
     isHero?: boolean;
+    founderQualityScore?: number | null;
+    founderQualityBreakdown?: Record<string, number> | null;
+    omissions?: string[];
     slots?: Array<{
       slot?: string;
       candidateId?: string;
       brand?: string | null;
       title?: string | null;
       image?: string | null;
+      url?: string | null;
+      retailer?: string | null;
       editorialScore?: number | null;
+      visualWeight?: string | null;
+      tier?: string | null;
+      isLockedHero?: boolean;
+      explanation?: string | null;
+      editorialReasons?: string[];
     }>;
   }>;
   candidates?: Array<{
@@ -494,6 +504,8 @@ type RunPayload = {
     brand?: string | null;
     title?: string | null;
     image?: string | null;
+    url?: string | null;
+    retailer?: string | null;
     editorialScore?: number;
     baseEditorialScore?: number;
     founderSimilarity?: number;
@@ -513,6 +525,21 @@ type RunPayload = {
     url: string;
   }>;
   slotsRequiringRefinement?: string[];
+  editorialContext?: {
+    heroVisualWeight?: string;
+    neckline?: { neckline?: string; action?: string; reason?: string } | null;
+    omissions?: Array<{ slot: string; reason: string }>;
+  } | null;
+  momentTemplate?: {
+    key: string;
+    note?: string | null;
+    tiers?: Record<string, string>;
+  } | null;
+  discoveryTelemetry?: {
+    searchesIssued?: number;
+    totalCandidates?: number;
+    rejectionsByReason?: Record<string, number>;
+  };
 };
 
 type RunStatus = "idle" | "loading" | "done" | "error";
