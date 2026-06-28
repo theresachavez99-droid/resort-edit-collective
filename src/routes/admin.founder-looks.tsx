@@ -1236,10 +1236,12 @@ function SlotCard({
   unified,
   cand,
   revealed,
+  feedback,
 }: {
   unified: UnifiedSlot;
   cand?: NonNullable<RunPayload["candidates"]>[number];
   revealed: boolean;
+  feedback: FeedbackCtx;
 }) {
   const tierBadge = unified.tier ? TIER_BADGE[unified.tier] : null;
 
@@ -1287,6 +1289,24 @@ function SlotCard({
   const s = unified.data!;
   const img = resolveSlotImage(s, cand);
   const isLocked = !!s.isLockedHero;
+  const source = classifyProductSource(s.brand, s.url, s.retailer);
+  const sub = inferJewelrySubSlot(s.slot, s.title);
+  const displaySlot = sub ?? (s.slot ?? "");
+  const hasUrl = typeof s.url === "string" && s.url.length > 0;
+  const openable = (children: React.ReactNode, cls = "") =>
+    hasUrl ? (
+      <a
+        href={s.url!}
+        target="_blank"
+        rel="noreferrer"
+        className={`hover:underline ${cls}`}
+      >
+        {children}
+      </a>
+    ) : (
+      <span className={cls}>{children}</span>
+    );
+
   return (
     <div
       className={`border p-2 text-[11px] flex flex-col ${
@@ -1294,18 +1314,35 @@ function SlotCard({
       }`}
     >
       {img.url ? (
-        <img
-          src={img.url}
-          alt={s.title ?? ""}
-          loading="lazy"
-          onError={(e) => {
-            const el = e.currentTarget;
-            el.style.display = "none";
-            const sib = el.nextElementSibling as HTMLElement | null;
-            if (sib) sib.style.display = "flex";
-          }}
-          className="w-full aspect-[3/4] object-cover bg-neutral-100"
-        />
+        hasUrl ? (
+          <a href={s.url!} target="_blank" rel="noreferrer" className="block">
+            <img
+              src={img.url}
+              alt={s.title ?? ""}
+              loading="lazy"
+              onError={(e) => {
+                const el = e.currentTarget;
+                el.style.display = "none";
+                const sib = (el.parentElement?.nextElementSibling ?? null) as HTMLElement | null;
+                if (sib) sib.style.display = "flex";
+              }}
+              className="w-full aspect-[3/4] object-cover bg-neutral-100"
+            />
+          </a>
+        ) : (
+          <img
+            src={img.url}
+            alt={s.title ?? ""}
+            loading="lazy"
+            onError={(e) => {
+              const el = e.currentTarget;
+              el.style.display = "none";
+              const sib = el.nextElementSibling as HTMLElement | null;
+              if (sib) sib.style.display = "flex";
+            }}
+            className="w-full aspect-[3/4] object-cover bg-neutral-100"
+          />
+        )
       ) : null}
       <div
         className="w-full aspect-[3/4] bg-neutral-100 flex-col items-center justify-center text-[9px] text-neutral-500 p-1 text-center"
@@ -1313,38 +1350,34 @@ function SlotCard({
       >
         <div className="text-neutral-400 uppercase tracking-wider mb-1">No image</div>
         <div className="text-neutral-500 break-all line-clamp-3">{img.reason}</div>
-        {img.url && (
-          <a
-            href={img.url}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-1 underline text-neutral-500 break-all line-clamp-2"
-          >
-            {img.url}
-          </a>
-        )}
       </div>
-      <div className="mt-1 flex items-center gap-1 text-neutral-400 uppercase tracking-wider text-[10px]">
-        {s.slot}
+      <div className="mt-1 flex flex-wrap items-center gap-1 text-neutral-400 uppercase tracking-wider text-[10px]">
+        <span>{displaySlot}</span>
+        {sub && (s.slot ?? "").toLowerCase() === "jewelry" && (
+          <span className="text-neutral-300">(jewelry)</span>
+        )}
         {isLocked && <span className="bg-black text-white px-1 text-[8px]">Hero</span>}
         {!isLocked && tierBadge && (
           <span className={`px-1 ${tierBadge.cls} text-[8px]`}>{tierBadge.label}</span>
         )}
-      </div>
-      <div className="text-neutral-800 font-medium">{s.brand}</div>
-      <div className="text-neutral-600 line-clamp-2">{s.title ?? ""}</div>
-      {s.retailer && (
-        <div className="text-neutral-400 text-[10px] mt-0.5">via {s.retailer}</div>
-      )}
-      {s.url && (
-        <a
-          href={s.url}
-          target="_blank"
-          rel="noreferrer"
-          className="text-[10px] underline text-neutral-500 mt-0.5"
+        <span
+          title={source.detail}
+          className={`px-1 text-[8px] tracking-normal normal-case ${source.cls}`}
         >
-          Source ↗
-        </a>
+          {source.label}
+        </span>
+      </div>
+      <div className="text-neutral-800 font-medium">{openable(s.brand ?? "—")}</div>
+      <div className="text-neutral-600 line-clamp-2">
+        {openable(s.title ?? "")}
+      </div>
+      {s.retailer && (
+        <div className="text-neutral-400 text-[10px] mt-0.5">
+          via {openable(s.retailer)}
+        </div>
+      )}
+      {!hasUrl && (
+        <div className="text-[10px] text-red-500 mt-0.5">Product URL unavailable</div>
       )}
       {revealed && (
         <div className="mt-1 pt-1 border-t border-neutral-100 text-[10px] text-neutral-600 space-y-0.5">
@@ -1371,9 +1404,88 @@ function SlotCard({
               {cand.founderHits.map((h) => h.id).join(", ")}
             </div>
           ) : null}
+          <FeedbackChips slot={s} sub={sub} feedback={feedback} />
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * One-click editorial rejection chips. Visible after Reveal. Persists to
+ * `founder_product_feedback` so the engine can learn from the override.
+ */
+function FeedbackChips({
+  slot,
+  sub,
+  feedback,
+}: {
+  slot: NonNullable<NonNullable<RunPayload["looks"]>[number]["slots"]>[number];
+  sub: ReturnType<typeof inferJewelrySubSlot>;
+  feedback: FeedbackCtx;
+}) {
+  const [sent, setSent] = useState<FeedbackReasonCode | null>(null);
+  const [pending, setPending] = useState<FeedbackReasonCode | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function submit(code: FeedbackReasonCode, label: string) {
+    setPending(code);
+    setError(null);
+    try {
+      const r = (await feedback.sendFeedback({
+        data: {
+          password: feedback.password,
+          founder_look_id: feedback.founderLookId,
+          destination: feedback.destination,
+          moment: feedback.moment,
+          slot: sub ?? slot.slot ?? "unknown",
+          brand: slot.brand ?? null,
+          product_title: slot.title ?? null,
+          product_url: slot.url ?? null,
+          retailer: slot.retailer ?? null,
+          image_url: slot.image_url ?? slot.image ?? null,
+          reason_code: code,
+          reason_label: label,
+          variant: feedback.variant,
+        },
+      })) as { ok?: boolean; error?: string };
+      if (r?.ok) setSent(code);
+      else setError(r?.error ?? "save failed");
+    } catch (e) {
+      setError(String((e as Error)?.message ?? e));
+    } finally {
+      setPending(null);
+    }
+  }
+
+  if (sent) {
+    const label = FEEDBACK_REASONS.find((r) => r.code === sent)?.label ?? sent;
+    return (
+      <div className="mt-1 text-[10px] text-green-700">
+        ✓ Feedback recorded — “{label}”. The engine will learn from this.
+      </div>
+    );
+  }
+
+  return (
+    <details className="mt-1">
+      <summary className="cursor-pointer text-[10px] text-neutral-500 hover:text-black">
+        Reject this piece…
+      </summary>
+      <div className="mt-1 flex flex-wrap gap-1">
+        {FEEDBACK_REASONS.map((r) => (
+          <button
+            key={r.code}
+            onClick={() => submit(r.code, r.label)}
+            disabled={pending === r.code}
+            className="px-1 py-0.5 text-[9px] border border-neutral-300 hover:bg-black hover:text-white disabled:opacity-50"
+          >
+            {pending === r.code ? "…" : r.label}
+          </button>
+        ))}
+      </div>
+      {error && <div className="text-[10px] text-red-600 mt-1">{error}</div>}
+    </details>
   );
 }
 
