@@ -635,6 +635,26 @@ export type SlotCandidate = {
   founderMatchedRefIds?: string[];
   founderPenalties?: Array<{ id: string; label: string; delta: number }>;
   founderReasons?: string[];
+  /** v5.2 — HeroLook similarity (0..1) + structured diagnostics. */
+  founderSimilarity?: number;
+  founderSimilarityComponents?: {
+    palette: number;
+    brand: number;
+    style: number;
+    silhouette: number;
+    aesthetic: number;
+  };
+  founderHits?: Array<{
+    id: string;
+    label: string;
+    slot: string;
+    severity: "hard" | "soft";
+    delta: number;
+  }>;
+  founderHardExcluded?: boolean;
+  founderBlendWeight?: number;
+  /** v5.2 — rank delta caused by Founder Learning (negative = moved up). */
+  rankDeltaFromFounder?: number;
   eligibilitySource?:
     | "registry"
     | "static"
