@@ -1523,14 +1523,6 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         error: String((e as Error)?.message ?? e),
       };
     }
-    if (!brands.length) {
-      return {
-        ok: false as const,
-        stage: "discovery" as const,
-        error: `No approved brands tagged ${activity} in the registry.`,
-      };
-    }
-
     // ── v5.1 — Founder Learning retrieval (additive eligibility layer).
     //
     // 1. Pull approved brand records, founder reference products, and
@@ -1598,13 +1590,46 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     }
 
     const eligibilityMap = new Map<string, SlotCandidate["eligibilitySource"]>();
-    for (const b of brands) eligibilityMap.set(b.slug, "registry");
+    for (const b of brands) eligibilityMap.set(b.slug, b.eligibilitySource ?? "registry");
 
     const registrySlugs = new Set(brands.map((b) => b.slug));
     const injectedFounderBrands: Array<{
       name: string;
-      source: "founder_approved" | "founder_selective";
+      source: "founder_hero" | "founder_approved" | "founder_selective";
     }> = [];
+
+    // Founder Look override: hero brands are always eligible for the moment,
+    // even when the registry has not duplicated the new editorial activity tag.
+    if (heroLook) {
+      for (const heroBrand of heroLook.heroBrands) {
+        const heroSlug = heroBrand.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        const existing = brands.find((b) => b.slug === heroSlug || b.name.toLowerCase() === heroBrand.toLowerCase());
+        if (existing) {
+          existing.eligibilitySource = "founder_hero";
+          eligibilityMap.set(existing.slug, "founder_hero");
+          continue;
+        }
+        const heroCategories = Array.from(
+          new Set(heroLook.heroCategories.flatMap((cat) => fcModule.refCategoryToBrandCategories(cat))),
+        );
+        if (!heroCategories.length) heroCategories.push("swimwear", "coverups", "dresses", "separates");
+        brands.push({
+          name: heroBrand,
+          slug: heroSlug,
+          tier: null,
+          categories: heroCategories,
+          activities: [activity],
+          commerceSources: [],
+          preferredCommerceSource: "affiliate_retailer",
+          editorialAffinity: {},
+          eligibilitySource: "founder_hero",
+        });
+        registrySlugs.add(heroSlug);
+        eligibilityMap.set(heroSlug, "founder_hero");
+        injectedFounderBrands.push({ name: heroBrand, source: "founder_hero" });
+      }
+    }
+
     for (const rec of founderContext.brandRecords.values()) {
       if (registrySlugs.has(rec.slug)) continue;
       const cats = founderContext.brandCategoriesFromRefs.get(
@@ -1627,7 +1652,12 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         commerceSources: [],
         preferredCommerceSource: "affiliate_retailer",
         editorialAffinity: {},
+        eligibilitySource:
+          elig.source === "founder_approved"
+            ? "founder_approved"
+            : "founder_selective",
       });
+      registrySlugs.add(rec.slug);
       eligibilityMap.set(
         rec.slug,
         elig.source === "founder_approved"
@@ -1641,6 +1671,15 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             ? "founder_approved"
             : "founder_selective",
       });
+    }
+
+    if (!brands.length) {
+      return {
+        ok: false as const,
+        stage: "discovery" as const,
+        error:
+          `No eligible brands available for ${activity}. Tried Founder Look hero brands, founder-approved brands, compatible activity brands (${founderContext.compatibleActivities.join(", ")}), and static approved brands.`,
+      };
     }
 
     // ── Registry analytics: count Yacht Day brands per category and flag
