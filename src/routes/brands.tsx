@@ -4,7 +4,8 @@ import { brandCategories, type Brand } from "@/data/brands";
 import { absoluteUrl } from "@/lib/site";
 import { Input } from "@/components/ui/input";
 
-import heroEditorial from "@/assets/about-hero-portofino-golden-harbor.png.asset.json";
+import brandsHero from "@/assets/brands-hero-mediterranean-dressing-room.jpg.asset.json";
+import { EditorialHero } from "@/components/EditorialHero";
 
 export const Route = createFileRoute("/brands")({
   head: () => ({
