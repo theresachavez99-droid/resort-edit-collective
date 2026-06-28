@@ -135,8 +135,8 @@ export const getBuyingSession = createServerFn({ method: "POST" })
 // ---------- Imports ----------
 
 const importRow = z.object({
-  product_url: z.string().url(),
-  affiliate_url: z.string().url().nullable().optional(),
+  product_url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }),
+  affiliate_url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }).nullable().optional(),
   product_name: z.string().max(300).nullable().optional(),
   brand: z.string().max(120).nullable().optional(),
   retailer: z.string().max(120).nullable().optional(),
@@ -144,7 +144,7 @@ const importRow = z.object({
   color: z.string().max(80).nullable().optional(),
   price: z.number().nonnegative().nullable().optional(),
   currency: z.string().max(8).nullable().optional(),
-  image_url: z.string().url().nullable().optional(),
+  image_url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }).nullable().optional(),
   description: z.string().max(2000).nullable().optional(),
   notes: z.string().max(1000).nullable().optional(),
 });
