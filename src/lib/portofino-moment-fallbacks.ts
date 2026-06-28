@@ -84,8 +84,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_slug: "arrival",
     archetype_slug: "arrival",
     moment_name: "Arrival Day",
-    narrative:
-      "Your first walk through Portofino after checking into Splendido.",
+    narrative: "Your first walk through the village after checking in.",
     editorial_order: 1,
     moment_card_image: arrivalDayImage.url,
     // Moment-specific banner override — applies ONLY to /portofino/arrival.
@@ -116,8 +115,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_slug: "yacht-day",
     archetype_slug: "yacht-day",
     moment_name: "Yacht Day",
-    narrative:
-      "Cruise the Ligurian coastline in effortless Riviera style.",
+    narrative: "Cruise the coastline in effortless style.",
     editorial_order: 4,
     moment_card_image: getCanonicalDayImage("day-1", "hero"),
     hero_banner_image: yachtDayHero.url,
@@ -146,8 +144,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_slug: "sunset-views",
     archetype_slug: "sunset-views",
     moment_name: "Sunset Views",
-    narrative:
-      "Watch the Riviera glow as the sun disappears into the sea.",
+    narrative: "Watch the coast glow as the sun disappears into the sea.",
     editorial_order: 10,
     moment_card_image: sunsetViewsCard.url,
     hero_banner_image: sunsetViewsHero.url,
@@ -161,8 +158,7 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_slug: "riviera-dinner",
     archetype_slug: "riviera-dinner",
     moment_name: "Riviera Dinner",
-    narrative:
-      "An unforgettable dinner beneath the lights of Portofino.",
+    narrative: "An unforgettable dinner beneath the harbor lights.",
     editorial_order: 11,
     moment_card_image: rivieraDinnerCard.url,
     hero_banner_image: rivieraDinnerHero.url,
@@ -241,8 +237,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_slug: "beach-club",
     archetype_slug: "beach-club",
     moment_name: "Beach Club",
-    narrative:
-      "A leisurely afternoon beside the Mediterranean.",
+    narrative: "A leisurely afternoon beside the sea.",
     editorial_order: 5,
     moment_card_image: beachClubLemon.url,
     // Moment-specific banner override — applies ONLY to
@@ -273,8 +268,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     moment_slug: "shopping",
     archetype_slug: "shopping",
     moment_name: "Shopping",
-    narrative:
-      "Browse beautifully curated boutiques tucked along Portofino's harbor.",
+    narrative: "Browse beautifully curated boutiques tucked along the harbor.",
     editorial_order: 7.5,
     moment_card_image: shoppingCard.url,
     hero_banner_image: shoppingBanner.url,

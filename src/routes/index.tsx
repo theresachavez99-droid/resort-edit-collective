@@ -103,7 +103,6 @@ const experiences = [
 ];
 
 function Index() {
-  // Wider editorial canvas — up to ~1440px content width on desktop.
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-14 mx-auto max-w-[1440px]";
   return (
     <div className="bg-ivory w-full">
@@ -111,7 +110,6 @@ function Index() {
       <section
         className={`${wrap} pt-6 lg:pt-10 pb-6 lg:pb-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
       >
-        {/* Photography — full-body editorial portrait, never cropped at head or hem */}
         <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-cream/40 lg:col-span-7">
           <img
             src={featured.heroImage}
@@ -132,10 +130,6 @@ function Index() {
             style={{ color: "oklch(0.62 0.12 66)" }}
           >
             Dressed for the Destination™
-          </p>
-          <p className="eyebrow text-ink/65 text-[0.7rem] sm:text-[0.74rem] tracking-[0.24em] mt-2.5">
-            {featured.country} <span className="text-gold/70">•</span>{" "}
-            {featured.totalMoments} Curated Moments
           </p>
           <p
             className="font-serif italic text-[1.2rem] sm:text-[1.32rem] lg:text-[1.45rem] leading-[1.15] mt-2.5 text-ink"
@@ -158,14 +152,10 @@ function Index() {
             </Link>
           </div>
 
-          {/* Chapter navigation — communicates depth above the fold */}
           <nav
             aria-label={`${featured.name} chapters`}
             className="mt-5"
           >
-            <p className="eyebrow text-gold text-[0.62rem] tracking-[0.34em] mb-2">
-              Editorial Itinerary
-            </p>
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-3">
               {featured.momentLabels.map((m, i) => (
                 <li key={m.slug} className="flex items-center gap-x-5">
@@ -195,11 +185,8 @@ function Index() {
           <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.02em] text-ink leading-[1.05]">
             Twelve Editorial Moments.
             <br />
-            One Unforgettable Portofino.
+            Experience Portofino beautifully—from arrival to nightcap.
           </h2>
-          <p className="mt-3 font-serif italic text-[0.95rem] sm:text-[1.02rem] text-ink/65 leading-relaxed max-w-2xl mx-auto">
-            Explore Portofino exactly as we would — from elegant arrivals and leisurely mornings to yacht days, long lunches, sunset aperitivos, and unforgettable evenings. Every moment is thoughtfully paired with an editorial wardrobe designed for the experience.
-          </p>
           <div className="mt-4 mx-auto h-px w-16 bg-gold/60" />
         </div>
 
@@ -208,60 +195,60 @@ function Index() {
         </div>
       </section>
 
-      {/* WHERE TO STAY — moves immediately after the editorial collection */}
+      {/* WHERE TO STAY */}
       <section className={`${wrap} mt-12 md:mt-16`}>
-          <div className="flex items-center gap-4 justify-center mb-3">
-            <div className="h-px w-12 bg-gold/50" />
-            <h2 className="font-display text-[1.75rem] sm:text-[2.05rem] font-medium tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
-            <div className="h-px w-12 bg-gold/50" />
-          </div>
-          <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-            Every unforgettable Portofino itinerary begins with choosing where to stay. These are the properties we would happily return to again and again.
+        <div className="flex items-center gap-4 justify-center mb-3">
+          <div className="h-px w-12 bg-gold/50" />
+          <h2 className="font-display text-[1.75rem] sm:text-[2.05rem] font-medium tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
+          <div className="h-px w-12 bg-gold/50" />
+        </div>
+        <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
+          Where Resort Edit would stay—chosen for location, atmosphere, and unforgettable views.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+          {hotels.map((h) => (
+            <article key={h.name} className="bg-card border border-border/50 flex flex-col">
+              <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-muted">
+                <img src={h.image} alt={h.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                <span className="absolute left-4 bottom-4 bg-ink/75 text-ivory eyebrow text-[0.6rem] tracking-[0.26em] px-3 py-1.5 backdrop-blur-sm">
+                  {h.vibe}
+                </span>
+              </div>
+              <div className="p-6 flex flex-col flex-1">
+                <div className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">{h.pick}</div>
+                <h3 className="mt-2 font-display text-2xl tracking-wide text-ink">{h.name}</h3>
+                <p className="mt-3 font-serif text-[0.95rem] text-ink/75 leading-relaxed">{h.desc}</p>
+                <ul className="mt-5 space-y-1.5">
+                  {h.signals.map((s) => (
+                    <li key={s} className="flex gap-2 font-serif text-[0.9rem] text-ink/80">
+                      <span className="text-gold">·</span>
+                      <span>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-5 font-serif italic text-[0.9rem] text-ink/60 flex-1">{h.note}</p>
+                <a
+                  href={h.href}
+                  target="_blank"
+                  rel="noreferrer noopener sponsored"
+                  className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"
+                >
+                  Explore This Stay →
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-6 pt-5 border-t border-ink/15 text-center">
+          <p className="font-serif italic text-[0.9rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
+            Rates available on enquiry. Some properties book out months in advance — we recommend reserving before your flights.
           </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-            {hotels.map((h) => (
-              <article key={h.name} className="bg-card border border-border/50 flex flex-col">
-                <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-muted">
-                  <img src={h.image} alt={h.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                  <span className="absolute left-4 bottom-4 bg-ink/75 text-ivory eyebrow text-[0.6rem] tracking-[0.26em] px-3 py-1.5 backdrop-blur-sm">
-                    {h.vibe}
-                  </span>
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <div className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">{h.pick}</div>
-                  <h3 className="mt-2 font-display text-2xl tracking-wide text-ink">{h.name}</h3>
-                  <p className="mt-3 font-serif text-[0.95rem] text-ink/75 leading-relaxed">{h.desc}</p>
-                  <ul className="mt-5 space-y-1.5">
-                    {h.signals.map((s) => (
-                      <li key={s} className="flex gap-2 font-serif text-[0.9rem] text-ink/80">
-                        <span className="text-gold">·</span>
-                        <span>{s}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="mt-5 font-serif italic text-[0.9rem] text-ink/60 flex-1">{h.note}</p>
-                  <a
-                    href={h.href}
-                    target="_blank"
-                    rel="noreferrer noopener sponsored"
-                    className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"
-                  >
-                    Explore This Stay →
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-6 pt-5 border-t border-ink/15 text-center">
-            <p className="font-serif italic text-[0.9rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
-              Rates available on enquiry. Some properties book out months in advance — we recommend reserving before your flights.
-            </p>
-          </div>
+        </div>
       </section>
 
-      {/* BOOK YOUR PORTOFINO EXPERIENCE — image-led editorial rail */}
+      {/* BOOK YOUR PORTOFINO EXPERIENCE */}
       <section className={`${wrap} mt-12 md:mt-16`}>
         <div className="flex items-center gap-4 justify-center mb-3">
           <div className="h-px w-12 bg-gold/50" />
@@ -269,7 +256,7 @@ function Index() {
           <div className="h-px w-12 bg-gold/50" />
         </div>
         <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-          Reserve the experiences that define a memorable stay — from private yacht charters to beach clubs, cooking classes, and unforgettable days along the Ligurian coast.
+          The experiences we'd book to complete the perfect Portofino itinerary.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -300,15 +287,15 @@ function Index() {
         </div>
       </section>
 
-      {/* BRANDS WE LOVE — minimalist trust signal, no logos/carousels */}
-      <section className={`${wrap} mt-10 md:mt-14`}>
+      {/* BRANDS WE LOVE */}
+      <section className={`${wrap} mt-10 md:mt-14 pb-12 md:pb-20`}>
         <div className="flex items-center gap-4 justify-center mb-3">
           <div className="h-px w-12 bg-gold/50" />
           <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BRANDS WE LOVE</h2>
           <div className="h-px w-12 bg-gold/50" />
         </div>
         <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-          The designers behind every Resort Edit wardrobe — chosen for exceptional craftsmanship, destination relevance, and timeless style.
+          Designers consistently chosen for their craftsmanship, destination relevance, and timeless style.
         </p>
         <ul className="mx-auto max-w-4xl flex flex-wrap items-center justify-center gap-x-7 gap-y-3 lg:gap-x-10">
           {[
@@ -344,18 +331,7 @@ function Index() {
         </div>
       </section>
 
-      {/* EDITORIAL CLOSING — single, quiet line that hands off to the footer invitation */}
-      <section className={`${wrap} mt-14 md:mt-20 pb-4`}>
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="mx-auto h-px w-12 bg-gold/60" />
-          <p className="mt-6 font-serif italic text-[1.35rem] sm:text-[1.55rem] leading-[1.35] text-ink">
-            Every Resort Edit begins with the destination —<br className="hidden sm:block" /> not the outfit.
-          </p>
-          <div className="mt-6 mx-auto h-px w-12 bg-gold/60" />
-        </div>
-      </section>
-
-      <div className={`${wrap} mt-10 md:mt-14 pb-12`}>
+      <div className={`${wrap} pb-16 md:pb-24`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
         <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
           Prices and availability may change. Some links may earn a commission at no additional cost to you.
