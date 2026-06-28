@@ -14,6 +14,12 @@ import {
   updateBuyingSession,
 } from "@/lib/buying-office.functions";
 import { listFounderLooks } from "@/lib/founder-looks.functions";
+import {
+  getPortofinoRoadmap,
+  validatePortofinoRoadmap,
+  PORTOFINO_HERO_TARGET_TOTAL,
+  FOUNDER_HERO_HARD_CAP,
+} from "@/lib/portofino-hero-targets";
 
 export const Route = createFileRoute("/admin/buying-office")({
   head: () => ({
@@ -182,7 +188,9 @@ function NewSessionWizard({
   });
 
   const [destination, setDestination] = useState("Portofino");
-  const [moment, setMoment] = useState("Arrival Day");
+  const roadmap = getPortofinoRoadmap();
+  const warnings = validatePortofinoRoadmap();
+  const [moment, setMoment] = useState<string>(roadmap[0]?.moment_slug ?? "arrival");
   const [founderLookId, setFounderLookId] = useState<string>("");
   const [notes, setNotes] = useState("");
 
@@ -212,7 +220,23 @@ function NewSessionWizard({
 
       <div className="grid gap-4 md:grid-cols-2">
         <LabeledInput label="Destination" value={destination} onChange={setDestination} />
-        <LabeledInput label="Moment" value={moment} onChange={setMoment} />
+        <Labeled label="Moment">
+          <select
+            className="border border-stone-300 px-3 py-2 text-sm w-full bg-white"
+            value={moment}
+            onChange={(e) => setMoment(e.target.value)}
+          >
+            {roadmap.map((m) => (
+              <option key={m.moment_slug} value={m.moment_slug}>
+                {m.editorial_order}. {m.moment_name} — target {m.hero_target}
+              </option>
+            ))}
+          </select>
+          <p className="text-[0.65rem] text-stone-500 mt-1">
+            Roadmap target: {PORTOFINO_HERO_TARGET_TOTAL} Founder Heroes across{" "}
+            {roadmap.length} moments (Portofino).
+          </p>
+        </Labeled>
         <Labeled label="Founder Look (optional)">
           <select
             className="border border-stone-300 px-3 py-2 text-sm w-full bg-white"
@@ -240,6 +264,22 @@ function NewSessionWizard({
           />
         </Labeled>
       </div>
+
+      {warnings.length > 0 && (
+        <div className="border border-amber-400 bg-amber-50 p-4 space-y-2">
+          <p className="text-[0.65rem] tracking-[0.3em] uppercase text-amber-800">
+            Roadmap warnings
+          </p>
+          {warnings.map((w, i) => (
+            <p key={i} className="text-xs text-amber-900">
+              {w.moment_name ? `${w.moment_name}: ` : ""}{w.message}
+              {w.kind === "over_hard_cap" && (
+                <> Cap is {FOUNDER_HERO_HARD_CAP}; current target {PORTOFINO_HERO_TARGET_TOTAL}.</>
+              )}
+            </p>
+          ))}
+        </div>
+      )}
 
       <div className="flex gap-3">
         <button
