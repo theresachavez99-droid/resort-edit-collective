@@ -2386,6 +2386,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
 function aggregateTelemetry(results: SlotDiscoveryResult[], totalCandidates: number) {
   let searches = 0;
+  // (founder helper below is a no-op placeholder anchor)
   let raw = 0;
   const allRej: Record<string, number> = {};
   let expansionSearches = 0;
