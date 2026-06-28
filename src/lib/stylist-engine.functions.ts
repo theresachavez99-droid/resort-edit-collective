@@ -230,6 +230,45 @@ const ACTIVITY_SLOTS: Record<string, SlotSpec[]> = {
   "Yacht Day": YACHT_DAY_SLOT_SPECS,
 };
 
+// v5.2 — Pool Lounging & Shopping (Portofino) shares Yacht Day's slot
+// surface area: swim/coverup base + full accessory stack. Templates
+// nudge toward boutique-walking elegance vs deck-only utility.
+const POOL_LOUNGING_SLOT_SPECS: SlotSpec[] = YACHT_DAY_SLOT_SPECS.map((s) => {
+  if (s.slot === "shoes") {
+    return {
+      ...s,
+      templates: [
+        "{brand} flat leather sandal cream",
+        "{brand} raffia slide",
+        "{brand} espadrille tan",
+        "{brand} flat sandal champagne",
+      ],
+    };
+  }
+  if (s.slot === "bag") {
+    return {
+      ...s,
+      templates: [
+        "{brand} raffia tote handwoven",
+        "{brand} structured straw bag",
+        "{brand} woven shoulder bag natural",
+        "{brand} basket bag minimal",
+      ],
+    };
+  }
+  if (s.slot === "sunglasses") {
+    return {
+      ...s,
+      templates: [
+        "{brand} oversized tortoise sunglasses",
+        "{brand} honey acetate sunglasses",
+        "{brand} vintage round sunglasses",
+      ],
+    };
+  }
+  return s;
+});
+
 // ──────────────────────────────────────────────────────────────
 // v4 — Destination-agnostic slot resolver.
 //
@@ -241,6 +280,8 @@ const ACTIVITY_SLOTS: Record<string, SlotSpec[]> = {
 
 const SLOT_SPECS_BY_KEY: Record<string, SlotSpec[]> = {
   "Portofino|Yacht Day": YACHT_DAY_SLOT_SPECS,
+  "Portofino|Pool Lounging & Shopping": POOL_LOUNGING_SLOT_SPECS,
+  "Portofino|Pool Lounging": POOL_LOUNGING_SLOT_SPECS,
 };
 
 export function getSlotSpecs(destination: string, activity: string): SlotSpec[] {
