@@ -80,8 +80,14 @@ import {
   type CoverageStatus,
   type DiscoveryMode,
 } from "./discovery-pipeline";
+import {
+  activityCompatibilityRank,
+  activityExplicitlyExcluded,
+  getCompatibleActivities,
+} from "./activity-hierarchy";
 import type { CachedCandidate } from "./product-cache.server";
 import type {
+  EligibilitySource,
   FounderContext,
   FounderSignal,
 } from "./founder-context.server";
@@ -318,6 +324,7 @@ export type EngineBrand = {
   slug: string;
   tier: string | null;
   categories: string[];
+  activities: string[];
   commerceSources: CommerceSourceEntry[];
   preferredCommerceSource: CommerceSourceKind;
   /**
@@ -325,6 +332,7 @@ export type EngineBrand = {
    * Replaces static tier as the primary ranking signal.
    */
   editorialAffinity: Record<string, number>;
+  eligibilitySource?: Extract<EligibilitySource, "registry" | "compatible_activity" | "static">;
 };
 
 function resolveCommerceSource(
@@ -402,7 +410,6 @@ export async function loadEngineBrands(
       "id,name,slug,tier,categories,activities,commerce_sources,preferred_commerce_source,destination_strength,editorial_affinity",
     )
     .eq("status", "approved")
-    .contains("activities", [activity])
     .order("name", { ascending: true });
   if (error) throw new Error(error.message);
   const mapped: EngineBrand[] = (data ?? []).map((b) => ({
@@ -410,6 +417,7 @@ export async function loadEngineBrands(
     slug: b.slug as string,
     tier: (b.tier as string | null) ?? null,
     categories: ((b as { categories?: string[] }).categories ?? []) as string[],
+    activities: ((b as { activities?: string[] }).activities ?? []) as string[],
     commerceSources: (Array.isArray((b as { commerce_sources?: unknown }).commerce_sources)
       ? ((b as { commerce_sources: unknown[] }).commerce_sources as CommerceSourceEntry[])
       : []),
@@ -419,10 +427,41 @@ export async function loadEngineBrands(
     editorialAffinity: ((b as { editorial_affinity?: Record<string, number> | null })
       .editorial_affinity ?? {}) as Record<string, number>,
   }));
-  // v5 — sort by editorial affinity for this destination + activity so
-  // discovery batches lead with the most context-aligned brands.
-  mapped.sort((a, b) => affinityFor(b, destination, activity) - affinityFor(a, destination, activity));
-  return mapped;
+  const eligible = mapped
+    .filter(
+      (b) =>
+        !activityExplicitlyExcluded({
+          destination,
+          requestedActivity: activity,
+          candidateActivities: b.activities,
+        }),
+    )
+    .map((b) => ({
+      brand: b,
+      rank: activityCompatibilityRank({
+        destination,
+        requestedActivity: activity,
+        candidateActivities: b.activities,
+      }),
+    }))
+    .filter((r) => r.rank < 100);
+
+  const sourcePool = eligible.length
+    ? eligible.map(({ brand, rank }) => ({
+        ...brand,
+        eligibilitySource: rank === 0 ? "registry" : "compatible_activity",
+      }))
+    : mapped.map((brand) => ({ ...brand, eligibilitySource: "static" as const }));
+
+  // v5 — sort by hierarchy strength, then editorial affinity for this
+  // destination + activity so discovery leads with the most aligned brands.
+  sourcePool.sort((a, b) => {
+    const ar = activityCompatibilityRank({ destination, requestedActivity: activity, candidateActivities: a.activities });
+    const br = activityCompatibilityRank({ destination, requestedActivity: activity, candidateActivities: b.activities });
+    if (ar !== br) return ar - br;
+    return affinityFor(b, destination, activity) - affinityFor(a, destination, activity);
+  });
+  return sourcePool;
 }
 
 // ──────────────────────────────────────────────────────────────
