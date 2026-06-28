@@ -548,6 +548,39 @@ const BRIEFS: Record<string, EditorialBrief> = {
       "Sunset Sail",
     ],
   },
+  "Portofino|Pool Lounging & Shopping": {
+    destination: "Portofino",
+    activity: "Pool Lounging & Shopping",
+    mood:
+      "Splendido pool to long lunch to walking the Piazzetta into the boutiques. The print is hero; accessories elevate without competing.",
+    palette: [
+      "tomato red",
+      "warm ivory",
+      "cream",
+      "natural raffia",
+      "warm camel",
+      "honey",
+      "olive",
+      "warm gold",
+    ],
+    styleDna: [
+      "Mediterranean Glamour",
+      "Italian Riviera",
+      "Vintage Resort",
+      "Dolce-inspired",
+      "Quiet Luxury",
+      "Editorial Resortwear",
+    ],
+    notes:
+      "Sequence: hotel pool → lunch → walk into town → boutique shopping → gelato → return. " +
+      "Restraint is the look. Avoid bright white, jet black, cool silver, logos, sport cues.",
+    collectionThemes: [
+      "Pietra Rosa Hero",
+      "Quiet Luxury Pool",
+      "Boutique Walk",
+      "Splendido Afternoon",
+    ],
+  },
 };
 
 function briefFor(destination: string, activity: string): EditorialBrief {
