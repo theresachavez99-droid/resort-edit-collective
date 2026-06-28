@@ -351,9 +351,12 @@ export type PortofinoAdditionalLook = {
 };
 
 export const PORTOFINO_ADDITIONAL_LOOKS: PortofinoAdditionalLook[] = [
-  { canonical_name: "Beach Club & Long Lunch", legacy_day_slug: "day-2", look_slug: "look-a" },
-  { canonical_name: "Pool Lounging & Shopping", legacy_day_slug: "day-3", look_slug: "look-a" },
-  { canonical_name: "Exploring the Harbor", legacy_day_slug: "day-3", look_slug: "look-b" },
+  { canonical_name: "Beach Club", legacy_day_slug: "day-2", look_slug: "look-a" },
+  { canonical_name: "Long Lunch", legacy_day_slug: "day-2", look_slug: "look-b" },
+  { canonical_name: "Pool Lounging", legacy_day_slug: "day-3", look_slug: "look-a" },
+  { canonical_name: "Shopping", legacy_day_slug: "day-3", look_slug: "look-c" },
+  { canonical_name: "Explore the Harbor", legacy_day_slug: "day-3", look_slug: "look-b" },
+  { canonical_name: "Nightcap", legacy_day_slug: "day-4", look_slug: "look-c" },
 ];
 
 /**
