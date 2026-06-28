@@ -446,10 +446,12 @@ export async function loadEngineBrands(
     }))
     .filter((r) => r.rank < 100);
 
-  const sourcePool = eligible.length
+  const sourcePool: EngineBrand[] = eligible.length
     ? eligible.map(({ brand, rank }) => ({
         ...brand,
-        eligibilitySource: rank === 0 ? "registry" : "compatible_activity",
+        eligibilitySource: (rank === 0 ? "registry" : "compatible_activity") as
+          | "registry"
+          | "compatible_activity",
       }))
     : mapped.map((brand) => ({ ...brand, eligibilitySource: "static" as const }));
 
@@ -696,6 +698,8 @@ export type SlotCandidate = {
   rankDeltaFromFounder?: number;
   eligibilitySource?:
     | "registry"
+    | "compatible_activity"
+    | "founder_hero"
     | "static"
     | "founder_approved"
     | "founder_selective"
@@ -1619,6 +1623,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         slug: rec.slug,
         tier: null,
         categories: cats,
+        activities: [activity],
         commerceSources: [],
         preferredCommerceSource: "affiliate_retailer",
         editorialAffinity: {},
@@ -1787,6 +1792,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
           slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
           tier: "expansion",
           categories: spec.brandCategories,
+          activities: [activity],
           commerceSources: [],
           preferredCommerceSource: "affiliate_retailer" as const,
           editorialAffinity: {},
