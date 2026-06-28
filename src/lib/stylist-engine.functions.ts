@@ -1610,6 +1610,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         if (existing) {
           existing.eligibilitySource = "founder_hero";
           eligibilityMap.set(existing.slug, "founder_hero");
+          injectedFounderBrands.push({ name: existing.name, source: "founder_hero" });
           continue;
         }
         const heroCategories = Array.from(
