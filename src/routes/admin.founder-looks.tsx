@@ -505,6 +505,14 @@ type RunPayload = {
   }>;
   founderRetrieval?: unknown;
   heroLookApplied?: unknown;
+  heroPiecesLocked?: Array<{
+    slot: string;
+    brand: string;
+    productName: string | null;
+    category: string | null;
+    url: string;
+  }>;
+  slotsRequiringRefinement?: string[];
 };
 
 type RunStatus = "idle" | "loading" | "done" | "error";
