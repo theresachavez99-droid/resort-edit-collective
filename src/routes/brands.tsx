@@ -41,40 +41,39 @@ const slugify = (s: string) =>
 const CATEGORY_BANNERS: Record<string, { url: string; intro: string }> = {
   "Mediterranean Icons": {
     url: bannerMedIcons.url,
-    intro:
-      "These designers define the visual language of the modern Mediterranean wardrobe — exceptional craftsmanship, destination prints, and timeless resort dressing inherited season after season.",
+    intro: "The houses that define modern Riviera dressing.",
   },
   "Swim & Beach Club": {
     url: bannerSwim.url,
-    intro:
-      "The swim ateliers we return to for sculptural one-pieces, refined bikinis, and elevated textures designed for yachts, beach clubs, and long afternoons by the sea.",
+    intro: "Sculptural swim for yachts, cabanas, and long afternoons by the sea.",
   },
   "Resortwear & Kaftans": {
     url: bannerResort.url,
-    intro:
-      "Sundresses, kaftans, and breezy separates from Bogotá embroidery houses, Sydney ateliers, and the linen masters who understand light, heat, and movement.",
+    intro: "Linen, embroidery, and breezy separates built for heat and light.",
   },
   "Accessories & Raffia": {
     url: bannerAccessories.url,
-    intro:
-      "Hand-woven baskets, sculptural raffia, and Italian leather — the small luxuries that finish every Resort Edit look from boat to bar.",
+    intro: "The hand-woven and Italian-leather pieces that finish every look.",
   },
   Jewelry: {
     url: bannerJewelry.url,
-    intro:
-      "Saltwater-proof gold, statement resin, and the heirlooms we layer from morning espresso through the table at the harbor.",
+    intro: "Saltwater-proof gold and the heirlooms we layer from morning to night.",
   },
   "Resort Footwear": {
     url: bannerFootwear.url,
-    intro:
-      "Greek leather sandals, Spanish espadrilles, Florentine evening heels — the footwear that takes a Resort Edit look from the morning market to the table at the port.",
+    intro: "Greek sandals, Spanish espadrilles, Florentine evening heels.",
   },
   "Beyond the Riviera": {
     url: bannerBeyond.url,
-    intro:
-      "The labels that extend Resort Edit beyond the Mediterranean — joyful prints, tropical optimism, and modern destination dressing from São Paulo to Sydney to New York.",
+    intro: "The labels that take Resort Edit beyond the Mediterranean.",
   },
 };
+
+const EMPHASIS_CATEGORIES = new Set([
+  "Mediterranean Icons",
+  "Swim & Beach Club",
+  "Resortwear & Kaftans",
+]);
 
 // Editorial tagline overrides for Founder Favorites
 const FOUNDER_FAVORITE_SLUGS = [
@@ -231,44 +230,67 @@ function CategorySection({
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const banner = CATEGORY_BANNERS[category.title];
+  const emphasis = EMPHASIS_CATEGORIES.has(category.title);
   const visible = expanded ? category.brands : category.brands.slice(0, INITIAL_VISIBLE);
   const hidden = Math.max(0, category.brands.length - INITIAL_VISIBLE);
 
   return (
     <section id={slugify(category.title)} className="scroll-mt-24">
       {banner && (
-        <div className="relative aspect-[21/8] overflow-hidden">
+        <div
+          className={
+            "relative overflow-hidden " +
+            (emphasis ? "h-[260px] md:h-[280px]" : "h-[200px] md:h-[220px]")
+          }
+        >
           <img
             src={banner.url}
             alt={`${category.title} editorial banner`}
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-transparent to-ink/40" />
-          <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">
-            <span className="eyebrow text-[0.6rem] text-ivory/85">The Edit</span>
-            <h2 className="mt-2 font-display text-3xl md:text-5xl tracking-[0.06em] text-ivory">
-              {category.title}
-            </h2>
+          <div className="absolute inset-0 bg-gradient-to-b from-ink/15 via-transparent to-ink/55" />
+          <div className="absolute inset-x-0 bottom-0 px-6 md:px-10 py-5 md:py-6">
+            <div className="mx-auto max-w-[1180px] flex items-end justify-between gap-6">
+              <div>
+                <span className="eyebrow text-[0.55rem] text-ivory/80">The Edit</span>
+                <h2
+                  className={
+                    "mt-1.5 font-display tracking-[0.05em] text-ivory " +
+                    (emphasis ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl")
+                  }
+                >
+                  {category.title}
+                </h2>
+              </div>
+              <span className="eyebrow text-[0.55rem] text-ivory/75 whitespace-nowrap pb-1">
+                {String(category.brands.length).padStart(2, "0")} Labels
+              </span>
+            </div>
           </div>
         </div>
       )}
-      <div className="mx-auto max-w-[1180px] px-6 mt-10">
-        <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-start">
-          <p className="md:col-span-2 font-serif text-lg text-ink/75 leading-relaxed">
-            {banner?.intro ?? category.brands[0]?.blurb}
-          </p>
-          <p className="eyebrow text-[0.6rem] text-gold md:text-right">
-            {String(category.brands.length).padStart(2, "0")} Labels
-          </p>
-        </div>
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="mx-auto max-w-[1180px] px-6 mt-6 md:mt-7">
+        <p
+          className={
+            "font-serif italic text-ink/70 leading-snug max-w-2xl " +
+            (emphasis ? "text-lg" : "text-base")
+          }
+        >
+          {banner?.intro}
+        </p>
+        <div
+          className={
+            "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 " +
+            (emphasis ? "mt-7" : "mt-6")
+          }
+        >
           {visible.map((brand) => (
             <BrandCard key={brand.slug} brand={brand} />
           ))}
         </div>
         {hidden > 0 && (
-          <div className="mt-8 text-center">
+          <div className="mt-6 text-center">
             <button
               type="button"
               onClick={() => setExpanded((v) => !v)}
@@ -496,7 +518,7 @@ function BrandsPage() {
       </section>
 
       {/* CATEGORY SECTIONS */}
-      <div className="mt-20 md:mt-24 space-y-24 md:space-y-32">
+      <div className="mt-14 md:mt-16 space-y-14 md:space-y-16">
         {brandCategories.map((cat) => (
           <CategorySection key={cat.title} category={cat} />
         ))}
