@@ -1058,18 +1058,14 @@ function ReviewPanel({
 
   return (
     <section id="review-anchor" className="space-y-5 scroll-mt-10">
-      <div className="flex items-end justify-between border-b border-stone-200 pb-3">
+      <div className="sticky top-0 z-10 -mx-2 px-2 py-3 bg-ivory/95 backdrop-blur border-b border-stone-200 flex items-end justify-between gap-3 flex-wrap">
         <div>
           <p className="text-[0.6rem] tracking-[0.3em] uppercase text-stone-500">
             Stage · Review
           </p>
-          <h3 className="font-serif text-2xl">
+          <h3 className="font-serif text-xl">
             Buying Review · {sorted.length} of {candidates.length}
           </h3>
-          <p className="text-xs text-stone-500 mt-1">
-            Move strong candidates to <strong>Finalist</strong>, then promote one to{" "}
-            <strong>Founder Hero</strong>.
-          </p>
         </div>
         <div className="flex gap-2 text-[0.65rem]">
           <button
