@@ -903,7 +903,7 @@ export async function discoverForSlot(args: {
             Math.round((baseScore + verdict.constructionScore) * 1000) / 1000;
           // v5.1 — Founder Learning is a top-weight scoring axis.
           let fSig: FounderSignal | null = null;
-          if (fcModule && args.founderContext) {
+          if (fcModule && args.founderContext && args.founderLearningEnabled !== false) {
             fSig = fcModule.evaluateFounderSignal({
               slot: spec.slot,
               brand: brand.name,
@@ -914,7 +914,38 @@ export async function discoverForSlot(args: {
               context: args.founderContext,
             });
           }
+          // v5.2 — HeroLook similarity (blended at slot-weighted W).
+          let heroSim: import("./founder-similarity").SimilarityResult | null = null;
+          let blendedScore: number | null = null;
+          let blendWeight = 0;
+          if (args.heroLook && args.founderLearningEnabled !== false) {
+            const fsModule = await import("./founder-similarity");
+            heroSim = fsModule.evaluateSimilarity({
+              slot: spec.slot,
+              brand: brand.name,
+              title,
+              description,
+              palette,
+              silhouette,
+              look: args.heroLook,
+            });
+            if (heroSim.hardExcluded) {
+              const id = heroSim.hits.find((h) => h.severity === "hard")?.id ?? "founder_hard_exclude";
+              bump(`founder_hard:${id}`);
+              continue;
+            }
+            const blended = fsModule.blendScore({
+              slot: spec.slot,
+              baseEditorial: baseEditorialScore + (fSig?.boost ?? 0) + (fSig?.penalty ?? 0),
+              similarity: heroSim.similarity,
+            });
+            blendedScore = blended.blended;
+            blendWeight = blended.weight;
+          }
           const score =
+            blendedScore !== null
+              ? blendedScore
+              :
             Math.round(
               (baseEditorialScore +
                 (fSig?.boost ?? 0) +
@@ -955,6 +986,11 @@ export async function discoverForSlot(args: {
             founderMatchedRefIds: fSig?.matchedRefIds ?? [],
             founderPenalties: fSig?.penaltiesApplied ?? [],
             founderReasons: fSig?.reasons ?? [],
+            founderSimilarity: heroSim ? heroSim.similarity : undefined,
+            founderSimilarityComponents: heroSim?.components,
+            founderHits: heroSim?.hits,
+            founderHardExcluded: false,
+            founderBlendWeight: heroSim ? blendWeight : 0,
             eligibilitySource:
               args.eligibilityMap?.get(brand.slug) ?? "registry",
           });
