@@ -801,104 +801,374 @@ function orderSlots(slots: NonNullable<NonNullable<RunPayload["looks"]>[number][
   });
 }
 
+/**
+ * Build a unified per-slot status list that distinguishes three states:
+ *  - "selected"    → an assembled candidate (locked hero OR newly chosen)
+ *  - "omitted"     → intentional editorial omission (e.g. necklace under halter)
+ *  - "unavailable" → required/preferred slot with no qualifying candidate
+ *
+ * This collapses the engine's three signals (hero.slots, editorialContext.omissions,
+ * slotsRequiringRefinement + momentTemplate.tiers) into a single rendering list.
+ */
+type SlotStatus = "selected" | "omitted" | "unavailable";
+type UnifiedSlot = {
+  slot: string;
+  status: SlotStatus;
+  tier?: string | null;
+  // selected
+  data?: NonNullable<NonNullable<RunPayload["looks"]>[number]["slots"]>[number];
+  // omitted / unavailable
+  reason?: string;
+};
+
+function unifiedSlotsFor(run: RunPayload): UnifiedSlot[] {
+  const hero = pickHeroLook(run);
+  const filled = hero?.slots ? orderSlots(hero.slots) : [];
+  const filledSlotKeys = new Set(filled.map((s) => (s.slot ?? "").toLowerCase()));
+
+  const omissions = run.editorialContext?.omissions ?? [];
+  const omittedKeys = new Set(omissions.map((o) => o.slot.toLowerCase()));
+
+  const unavailable = (run.slotsRequiringRefinement ?? []).filter(
+    (s) => !filledSlotKeys.has(s.toLowerCase()) && !omittedKeys.has(s.toLowerCase()),
+  );
+
+  const tierFor = (slot: string): string | null => {
+    const tiers = run.momentTemplate?.tiers ?? null;
+    if (!tiers) return null;
+    return (tiers as Record<string, string>)[slot.toLowerCase()] ?? null;
+  };
+
+  const all: UnifiedSlot[] = [
+    ...filled.map((s) => ({
+      slot: s.slot ?? "",
+      status: "selected" as const,
+      tier: s.tier ?? tierFor(s.slot ?? ""),
+      data: s,
+    })),
+    ...omissions.map((o) => ({
+      slot: o.slot,
+      status: "omitted" as const,
+      tier: tierFor(o.slot),
+      reason: o.reason,
+    })),
+    ...unavailable.map((s) => ({
+      slot: s,
+      status: "unavailable" as const,
+      tier: tierFor(s),
+      reason: "No qualifying candidate found in discovery.",
+    })),
+  ];
+
+  // Sort by canonical SLOT_ORDER
+  return all.sort((a, b) => {
+    const ai = SLOT_ORDER.indexOf(a.slot.toLowerCase());
+    const bi = SLOT_ORDER.indexOf(b.slot.toLowerCase());
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+}
+
+function describeImageFailure(
+  s: NonNullable<NonNullable<RunPayload["looks"]>[number]["slots"]>[number],
+  cand?: { image?: string | null; url?: string | null } | undefined,
+): { url: string | null; reason: string } {
+  const url = s.image ?? cand?.image ?? null;
+  if (!url) {
+    return {
+      url: null,
+      reason: cand
+        ? "Candidate has no image — Firecrawl search result missing og:image / image metadata."
+        : "Slot resolved to no candidate (no image source available).",
+    };
+  }
+  return { url, reason: "Image URL present — runtime <img> failed to load (CORS / 404 / blocked)." };
+}
+
 function OutfitBody({ run, revealed }: { run: RunPayload; revealed: boolean }) {
   if (run.ok === false) {
-    return <div className="text-xs text-red-600">{run.error ?? "Engine returned no result."}</div>;
+    return (
+      <div className="text-xs text-red-600 space-y-2">
+        <div>{run.error ?? "Engine returned no result."}</div>
+        <FailureDiagnostics run={run} />
+      </div>
+    );
   }
   const hero = pickHeroLook(run);
   const lockedCount = run.heroPiecesLocked?.length ?? 0;
-  const refinement = run.slotsRequiringRefinement ?? [];
+
+  // No hero look at all — show structured failure diagnostics rather than the
+  // old single-line message. The user must see why one side rendered nothing.
   if (!hero || !hero.slots?.length) {
-    if (lockedCount > 0) {
-      return (
-        <div className="text-xs text-amber-700">
-          Founder Look assembled with {lockedCount} locked hero piece
-          {lockedCount === 1 ? "" : "s"}, but assembly produced no rendered
-          outfit.
-          {refinement.length > 0 && (
-            <div className="mt-1 text-neutral-500">
-              {refinement.length} accessory slot{refinement.length === 1 ? "" : "s"} require refinement:{" "}
-              {refinement.join(", ")}.
-            </div>
-          )}
-        </div>
-      );
-    }
     return (
-      <div className="text-xs text-amber-700">
-        Engine returned no assembled outfit
-        {run.assemblyError ? <>: {run.assemblyError}</> : null}.
-        {(run.candidates?.length ?? 0) > 0 && (
-          <div className="mt-2 text-neutral-500">
-            {run.candidates!.length} candidates discovered but assembly was gated.
-          </div>
-        )}
+      <div className="space-y-3">
+        <div className="text-xs text-amber-700">
+          {lockedCount > 0
+            ? `Founder Look locked ${lockedCount} hero piece${lockedCount === 1 ? "" : "s"} but assembly produced no rendered outfit.`
+            : "Engine returned no assembled outfit."}
+          {run.assemblyError ? <span className="block text-red-600 mt-1">↳ {run.assemblyError}</span> : null}
+        </div>
+        <FailureDiagnostics run={run} />
       </div>
     );
   }
 
-  const slots = orderSlots(hero.slots);
   const candById = new Map((run.candidates ?? []).map((c) => [c.id, c]));
+  const unified = unifiedSlotsFor(run);
+  const refinement = run.slotsRequiringRefinement ?? [];
 
   return (
     <div>
-      {hero.title && (
-        <div className="mb-3 text-xs italic text-neutral-500">{hero.title}</div>
+      {hero.title && <div className="mb-3 text-xs italic text-neutral-500">{hero.title}</div>}
+      <div className="mb-3 text-[11px] text-neutral-500 space-y-0.5">
+        {lockedCount > 0 && (
+          <div>✓ {lockedCount} Founder Hero piece{lockedCount === 1 ? "" : "s"} locked</div>
+        )}
+        {refinement.length > 0 && (
+          <div className="text-amber-700">
+            {refinement.length} accessory slot{refinement.length === 1 ? "" : "s"} unavailable:{" "}
+            {refinement.join(", ")}
+          </div>
+        )}
+        {run.editorialContext?.neckline?.action === "skip" && (
+          <div className="text-neutral-500">
+            Neckline: {run.editorialContext.neckline.neckline} → necklace skipped.
+          </div>
+        )}
+      </div>
+
+      {revealed && typeof hero.founderQualityScore === "number" && (
+        <QualityBreakdown
+          score={hero.founderQualityScore}
+          breakdown={hero.founderQualityBreakdown ?? {}}
+        />
       )}
-      {(lockedCount > 0 || refinement.length > 0) && (
-        <div className="mb-3 text-[11px] text-neutral-500 space-y-0.5">
-          {lockedCount > 0 && (
-            <div>✓ {lockedCount} Founder Hero piece{lockedCount === 1 ? "" : "s"} locked</div>
-          )}
-          {refinement.length > 0 && (
-            <div className="text-amber-700">
-              {refinement.length} accessory slot{refinement.length === 1 ? "" : "s"} require refinement: {refinement.join(", ")}
-            </div>
-          )}
+
+      <div className="grid grid-cols-3 gap-3">
+        {unified.map((u, i) => (
+          <SlotCard
+            key={`${u.slot}-${i}`}
+            unified={u}
+            cand={u.data?.candidateId ? candById.get(u.data.candidateId) : undefined}
+            revealed={revealed}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FailureDiagnostics({ run }: { run: RunPayload }) {
+  const c = run.candidates?.length ?? 0;
+  const t = run.discoveryTelemetry;
+  const locked = run.heroPiecesLocked ?? [];
+  const rejections = t?.rejectionsByReason ?? {};
+  const topRejections = Object.entries(rejections)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+  return (
+    <div className="text-[10px] text-neutral-600 border border-neutral-200 bg-neutral-50 p-2 space-y-1">
+      <div className="uppercase tracking-wider text-neutral-400">Failure diagnostics</div>
+      <div>candidates discovered: <b>{c}</b></div>
+      <div>searches issued: <b>{t?.searchesIssued ?? "?"}</b></div>
+      <div>hero locked: <b>{locked.length}</b> {locked.map((l) => `${l.slot}=${l.brand}`).join(", ")}</div>
+      {run.assemblyError && <div className="text-red-600">assemblyError: {run.assemblyError}</div>}
+      {topRejections.length > 0 && (
+        <div>
+          top rejections:{" "}
+          {topRejections.map(([k, v]) => `${k}=${v}`).join(", ")}
         </div>
       )}
-      <div className="grid grid-cols-3 gap-3">
-        {slots.map((s, i) => {
-          const cand = s.candidateId ? candById.get(s.candidateId) : undefined;
-          return (
-            <div key={i} className="text-[11px]">
-              {s.image ? (
-                <img
-                  src={s.image}
-                  alt={s.title ?? ""}
-                  className="w-full aspect-[3/4] object-cover bg-neutral-100"
-                />
-              ) : (
-                <div className="w-full aspect-[3/4] bg-neutral-100 flex items-center justify-center text-[10px] text-neutral-400">
-                  no image
-                </div>
-              )}
-              <div className="mt-1 text-neutral-400 uppercase tracking-wider text-[10px]">
-                {s.slot}
-              </div>
-              <div className="text-neutral-800">{s.brand}</div>
-              <div className="text-neutral-500 line-clamp-2">{s.title ?? ""}</div>
-              {revealed && (
-                <div className="mt-1 text-[10px] text-neutral-500">
-                  score {(s.editorialScore ?? 0).toFixed(1)}
-                  {cand?.founderSimilarity != null && (
-                    <> · sim {cand.founderSimilarity.toFixed(2)}</>
-                  )}
-                  {typeof cand?.rankDeltaFromFounder === "number" &&
-                    cand.rankDeltaFromFounder !== 0 && (
-                      <> · Δ{cand.rankDeltaFromFounder}</>
-                    )}
-                  {cand?.founderHits?.length ? (
-                    <div className="text-red-500">
-                      {cand.founderHits.map((h) => h.id).join(", ")}
-                    </div>
-                  ) : null}
-                </div>
-              )}
-            </div>
-          );
-        })}
+      {(run.slotsRequiringRefinement?.length ?? 0) > 0 && (
+        <div>missing slots: {run.slotsRequiringRefinement!.join(", ")}</div>
+      )}
+    </div>
+  );
+}
+
+const TIER_BADGE: Record<string, { label: string; cls: string }> = {
+  locked_hero: { label: "Locked Hero", cls: "bg-black text-white" },
+  required: { label: "Required", cls: "bg-neutral-800 text-white" },
+  strongly_preferred: { label: "Preferred", cls: "bg-neutral-200 text-neutral-700" },
+  contextual: { label: "Contextual", cls: "bg-neutral-100 text-neutral-600" },
+  conditional: { label: "Optional", cls: "bg-neutral-100 text-neutral-500" },
+  omit: { label: "Omit", cls: "bg-neutral-100 text-neutral-400" },
+};
+
+function SlotCard({
+  unified,
+  cand,
+  revealed,
+}: {
+  unified: UnifiedSlot;
+  cand?: NonNullable<RunPayload["candidates"]>[number];
+  revealed: boolean;
+}) {
+  const tierBadge = unified.tier ? TIER_BADGE[unified.tier] : null;
+
+  if (unified.status === "omitted") {
+    return (
+      <div className="border border-dashed border-neutral-300 p-2 bg-neutral-50 text-[11px] flex flex-col">
+        <div className="aspect-[3/4] flex items-center justify-center text-neutral-400">
+          <div className="text-center px-2">
+            <div className="text-2xl mb-1">—</div>
+            <div className="uppercase tracking-wider text-[9px]">Intentionally omitted</div>
+          </div>
+        </div>
+        <div className="mt-1 text-neutral-400 uppercase tracking-wider text-[10px] flex items-center gap-1">
+          {unified.slot}
+          {tierBadge && (
+            <span className={`px-1 ${tierBadge.cls} text-[8px]`}>{tierBadge.label}</span>
+          )}
+        </div>
+        <div className="text-neutral-600 italic">{unified.reason}</div>
       </div>
+    );
+  }
+
+  if (unified.status === "unavailable") {
+    return (
+      <div className="border border-red-200 bg-red-50/50 p-2 text-[11px] flex flex-col">
+        <div className="aspect-[3/4] flex items-center justify-center text-red-400">
+          <div className="text-center px-2">
+            <div className="text-2xl mb-1">⚠︎</div>
+            <div className="uppercase tracking-wider text-[9px]">Unavailable</div>
+          </div>
+        </div>
+        <div className="mt-1 text-red-500 uppercase tracking-wider text-[10px] flex items-center gap-1">
+          {unified.slot}
+          {tierBadge && (
+            <span className={`px-1 ${tierBadge.cls} text-[8px]`}>{tierBadge.label}</span>
+          )}
+        </div>
+        <div className="text-red-700/80">{unified.reason}</div>
+      </div>
+    );
+  }
+
+  // selected
+  const s = unified.data!;
+  const img = describeImageFailure(s, cand);
+  const isLocked = !!s.isLockedHero;
+  return (
+    <div
+      className={`border p-2 text-[11px] flex flex-col ${
+        isLocked ? "border-black" : "border-neutral-200"
+      }`}
+    >
+      {img.url ? (
+        <img
+          src={img.url}
+          alt={s.title ?? ""}
+          loading="lazy"
+          onError={(e) => {
+            const el = e.currentTarget;
+            el.style.display = "none";
+            const sib = el.nextElementSibling as HTMLElement | null;
+            if (sib) sib.style.display = "flex";
+          }}
+          className="w-full aspect-[3/4] object-cover bg-neutral-100"
+        />
+      ) : null}
+      <div
+        className="w-full aspect-[3/4] bg-neutral-100 flex-col items-center justify-center text-[9px] text-neutral-500 p-1 text-center"
+        style={{ display: img.url ? "none" : "flex" }}
+      >
+        <div className="text-neutral-400 uppercase tracking-wider mb-1">No image</div>
+        <div className="text-neutral-500 break-all line-clamp-3">{img.reason}</div>
+        {img.url && (
+          <a
+            href={img.url}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-1 underline text-neutral-500 break-all line-clamp-2"
+          >
+            {img.url}
+          </a>
+        )}
+      </div>
+      <div className="mt-1 flex items-center gap-1 text-neutral-400 uppercase tracking-wider text-[10px]">
+        {s.slot}
+        {isLocked && <span className="bg-black text-white px-1 text-[8px]">Hero</span>}
+        {!isLocked && tierBadge && (
+          <span className={`px-1 ${tierBadge.cls} text-[8px]`}>{tierBadge.label}</span>
+        )}
+      </div>
+      <div className="text-neutral-800 font-medium">{s.brand}</div>
+      <div className="text-neutral-600 line-clamp-2">{s.title ?? ""}</div>
+      {s.retailer && (
+        <div className="text-neutral-400 text-[10px] mt-0.5">via {s.retailer}</div>
+      )}
+      {s.url && (
+        <a
+          href={s.url}
+          target="_blank"
+          rel="noreferrer"
+          className="text-[10px] underline text-neutral-500 mt-0.5"
+        >
+          Source ↗
+        </a>
+      )}
+      {revealed && (
+        <div className="mt-1 pt-1 border-t border-neutral-100 text-[10px] text-neutral-600 space-y-0.5">
+          <div>
+            score <b>{(s.editorialScore ?? 0).toFixed(1)}</b>
+            {cand?.founderSimilarity != null && (
+              <> · sim <b>{cand.founderSimilarity.toFixed(2)}</b></>
+            )}
+            {s.visualWeight && <> · weight <b>{s.visualWeight}</b></>}
+          </div>
+          {typeof cand?.rankDeltaFromFounder === "number" && cand.rankDeltaFromFounder !== 0 && (
+            <div className="text-green-700">
+              Δrank {cand.rankDeltaFromFounder! < 0 ? "↑" : "↓"} {Math.abs(cand.rankDeltaFromFounder!)}
+            </div>
+          )}
+          {s.explanation && (
+            <div className="text-neutral-500 italic">{s.explanation}</div>
+          )}
+          {(s.editorialReasons?.length ?? 0) > 0 && (
+            <div className="text-neutral-500">{s.editorialReasons!.join(" · ")}</div>
+          )}
+          {cand?.founderHits?.length ? (
+            <div className="text-red-500">
+              {cand.founderHits.map((h) => h.id).join(", ")}
+            </div>
+          ) : null}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function QualityBreakdown({
+  score,
+  breakdown,
+}: {
+  score: number;
+  breakdown: Record<string, number>;
+}) {
+  const entries = Object.entries(breakdown);
+  return (
+    <div className="mb-3 border border-neutral-200 p-2 text-[11px]">
+      <div className="flex items-baseline justify-between mb-2">
+        <div className="uppercase tracking-wider text-neutral-500">Founder Quality</div>
+        <div className="text-xl font-light">{Math.round(score)}</div>
+      </div>
+      {entries.length > 0 && (
+        <div className="space-y-1">
+          {entries.map(([k, v]) => (
+            <div key={k} className="flex items-center gap-2">
+              <div className="w-28 text-neutral-500 capitalize">{k.replace(/([A-Z])/g, " $1").trim()}</div>
+              <div className="flex-1 h-1 bg-neutral-100 relative">
+                <div
+                  className="absolute inset-y-0 left-0 bg-black"
+                  style={{ width: `${Math.max(0, Math.min(100, v))}%` }}
+                />
+              </div>
+              <div className="w-8 text-right text-neutral-600">{Math.round(v)}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
