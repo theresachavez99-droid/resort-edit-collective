@@ -81,6 +81,10 @@ import {
   type DiscoveryMode,
 } from "./discovery-pipeline";
 import type { CachedCandidate } from "./product-cache.server";
+import type {
+  FounderContext,
+  FounderSignal,
+} from "./founder-context.server";
 
 /** Lazy loader for the server-only product-cache module. */
 async function cacheModule() {
