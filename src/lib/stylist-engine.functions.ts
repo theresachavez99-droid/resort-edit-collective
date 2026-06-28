@@ -2236,6 +2236,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
 
     // Slot coverage report.
     const slotCoverage = slotResults.map((r) => ({
+      ...({} as Record<string, never>),
       slot: r.slot,
       label: r.label,
       required: r.required,
