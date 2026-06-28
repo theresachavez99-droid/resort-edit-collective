@@ -187,22 +187,21 @@ function Index() {
       </section>
 
       {/* THE PORTOFINO EDIT — editorial chapter collection */}
-      <section className={`${wrap} mt-8 md:mt-12`}>
+      <section className={`${wrap} mt-8 md:mt-10`}>
         <div className="text-center max-w-3xl mx-auto">
           <p className="eyebrow text-gold text-[0.7rem] tracking-[0.34em]">
             THE PORTOFINO EDIT
           </p>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl tracking-[0.02em] text-ink leading-[0.95]">
-            Nine Editorial Moments. <br className="hidden sm:block" />
-            One Unforgettable Destination.
+          <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.02em] text-ink leading-[0.95]">
+            Your Portofino Wardrobe
           </h2>
-          <p className="mt-4 font-serif italic text-[1.02rem] sm:text-[1.1rem] text-ink/70 leading-relaxed">
-            A single day on the Riviera, told in four chapters — from a first espresso on the piazzetta to candlelight on the harbor. Every moment styled, shoppable, and ready to live in.
+          <p className="mt-2 font-serif italic text-[0.92rem] sm:text-[0.98rem] text-ink/60 leading-relaxed">
+            Curated for every unforgettable moment.
           </p>
-          <div className="mt-5 mx-auto h-px w-16 bg-gold/60" />
+          <div className="mt-4 mx-auto h-px w-16 bg-gold/60" />
         </div>
 
-        <div className="mt-7 md:mt-9">
+        <div className="mt-5 md:mt-7">
           <HomeEditorialChapters />
         </div>
       </section>
