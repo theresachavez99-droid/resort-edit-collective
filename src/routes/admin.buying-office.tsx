@@ -1173,6 +1173,8 @@ function EditorialCard({
 
   const reasons: string[] = Array.isArray(c.ranking_reasons) ? c.ranking_reasons : [];
 
+  const isInspiration = c.import_type === "editorial_inspiration";
+
   return (
     <article
       className={
@@ -1192,9 +1194,16 @@ function EditorialCard({
           <input type="checkbox" checked={checked} onChange={onToggleCompare} />
           Compare
         </label>
-        <span className="absolute top-3 right-3 bg-white/90 border border-stone-300 px-2 py-1 text-[0.65rem]">
-          {STATUS_LABEL[c.status] ?? c.status}
-        </span>
+        <div className="absolute top-3 right-3 flex flex-col gap-1 items-end">
+          {isInspiration && (
+            <span className="bg-amber-50 border border-amber-400 text-amber-800 px-2 py-1 text-[0.6rem] uppercase tracking-[0.2em]">
+              Inspiration
+            </span>
+          )}
+          <span className="bg-white/90 border border-stone-300 px-2 py-1 text-[0.65rem]">
+            {STATUS_LABEL[c.status] ?? c.status}
+          </span>
+        </div>
       </div>
 
       <div className="p-5 space-y-3 flex-1 flex flex-col">
@@ -1243,9 +1252,20 @@ function EditorialCard({
           <div className="grid grid-cols-3 gap-2 text-[0.65rem] tracking-[0.2em] uppercase">
             <ActionBtn onClick={() => patch({ status: "favorite" })} label="Favorite" />
             <ActionBtn onClick={() => patch({ status: "review_later" })} label="Later" />
-            <ActionBtn onClick={() => patch({ status: "finalist" })} label="Finalist" />
+            <ActionBtn
+              onClick={() => patch({ status: "finalist" })}
+              label="Finalist"
+              disabled={isInspiration}
+              title={isInspiration ? "Editorial Inspiration cannot be a Finalist" : undefined}
+            />
             <ActionBtn onClick={() => setShowReject((s) => !s)} label="Reject" />
-            <ActionBtn onClick={() => setShowPromote(true)} label="Promote" tone="primary" />
+            <ActionBtn
+              onClick={() => setShowPromote(true)}
+              label="Promote"
+              tone="primary"
+              disabled={isInspiration}
+              title={isInspiration ? "Match with a purchasable product first" : undefined}
+            />
             <a
               href={c.affiliate_url ?? c.product_url}
               target="_blank" rel="noopener noreferrer"
