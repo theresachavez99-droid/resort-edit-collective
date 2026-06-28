@@ -5,7 +5,7 @@ import { subscribeEmail } from "@/lib/subscribers.functions";
 type Variant = "footer" | "inline-light";
 
 const CONSENT_COPY =
-  "Be the first to receive new destination edits, hotel discoveries, curated packing guides, and exclusive Resort Edit releases.";
+  "Thoughtfully curated destination inspiration. Occasionally delivered.";
 
 function deriveDestination(pathname: string): string | undefined {
   // /portofino, /portofino/..., /destinations/portofino...
@@ -18,8 +18,8 @@ function deriveDestination(pathname: string): string | undefined {
 export function NewsletterForm({
   ctaSource,
   variant = "footer",
-  buttonLabel = "Get the Next Edit",
-  placeholder = "Email address",
+  buttonLabel = "Notify Me",
+  placeholder = "Enter your email",
 }: {
   ctaSource: string;
   variant?: Variant;
@@ -98,7 +98,7 @@ export function NewsletterForm({
             maxLength={255}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email address"
+            placeholder={placeholder}
             disabled={state.kind === "loading"}
             className="flex-1 h-14 bg-transparent border border-ivory/30 px-5 text-sm text-ivory placeholder:text-ivory/40 focus:outline-none focus:border-gold disabled:opacity-60"
           />

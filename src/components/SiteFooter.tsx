@@ -25,17 +25,22 @@ export function SiteFooter() {
           </span>
         </div>
         <h2 className="mt-6 font-display text-3xl md:text-5xl tracking-wide text-ivory">
-          Join Resort Edit
+          The Next Destination Awaits
         </h2>
         <p className="mt-3 text-ivory/85 max-w-xl font-serif text-lg md:text-xl italic">
-          Receive new destination edits, hotel discoveries, and curated packing inspiration.
+          Receive new destination guides, curated hotel discoveries, and beautifully edited wardrobes for every journey.
         </p>
-        <NewsletterForm ctaSource="footer" variant="footer" />
+        <NewsletterForm
+          ctaSource="footer"
+          variant="footer"
+          buttonLabel="Notify Me"
+          placeholder="Enter your email"
+        />
         <a
           href="https://www.instagram.com/resort.edit"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-7 inline-flex items-center gap-3 eyebrow text-ivory hover:text-gold transition-colors"
+          className="mt-12 inline-flex items-center gap-3 eyebrow text-ivory hover:text-gold transition-colors"
         >
           <Instagram className="w-5 h-5" strokeWidth={1.5} />
           <span>Instagram: @resort.edit</span>
