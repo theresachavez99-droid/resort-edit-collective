@@ -284,9 +284,9 @@ function BrandsPage() {
       <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20 pb-10 md:pb-14">
         <div className="grid md:grid-cols-12 gap-10 items-start">
           <div className="md:col-span-5">
-            <span className="eyebrow text-gold">The Selection</span>
+    <span className="eyebrow text-gold">Our Standard</span>
             <h2 className="mt-4 font-display text-3xl md:text-4xl tracking-[0.04em] text-ink">
-              Why We Choose <br className="hidden md:block" />These Designers
+              Our Editorial Standard
             </h2>
           </div>
           <div className="md:col-span-7 space-y-4 font-serif text-lg text-ink/75 leading-relaxed">
