@@ -1345,6 +1345,62 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       };
     }
 
+    // ── v5.1 — Founder Learning retrieval (additive eligibility layer).
+    //
+    // 1. Pull approved brand records, founder reference products, and
+    //    completed uploaded URLs scoped to this destination + activity.
+    // 2. Inject founder-approved brands the static registry doesn't yet
+    //    carry, when we can derive a category from the reference library.
+    // 3. Build an eligibility-source map so every candidate can report
+    //    why its brand was admitted (registry / founder_approved /
+    //    founder_selective).
+    const fcModule = await import("./founder-context.server");
+    let founderContext = await fcModule.loadFounderContext(destination, activity);
+    const eligibilityMap = new Map<string, SlotCandidate["eligibilitySource"]>();
+    for (const b of brands) eligibilityMap.set(b.slug, "registry");
+
+    const registrySlugs = new Set(brands.map((b) => b.slug));
+    const injectedFounderBrands: Array<{
+      name: string;
+      source: "founder_approved" | "founder_selective";
+    }> = [];
+    for (const rec of founderContext.brandRecords.values()) {
+      if (registrySlugs.has(rec.slug)) continue;
+      const cats = founderContext.brandCategoriesFromRefs.get(
+        fcModule.normBrand(rec.brand),
+      );
+      if (!cats || cats.length === 0) continue; // need a category to slot it
+      const elig = fcModule.brandEligibility({
+        brand: rec.brand,
+        staticEligible: false,
+        inRegistry: false,
+        context: founderContext,
+      });
+      if (!elig.eligible) continue;
+      brands.push({
+        name: rec.brand,
+        slug: rec.slug,
+        tier: null,
+        categories: cats,
+        commerceSources: [],
+        preferredCommerceSource: "affiliate_retailer",
+        editorialAffinity: {},
+      });
+      eligibilityMap.set(
+        rec.slug,
+        elig.source === "founder_approved"
+          ? "founder_approved"
+          : "founder_selective",
+      );
+      injectedFounderBrands.push({
+        name: rec.brand,
+        source:
+          elig.source === "founder_approved"
+            ? "founder_approved"
+            : "founder_selective",
+      });
+    }
+
     // ── Registry analytics: count Yacht Day brands per category and flag
     // underrepresented accessory categories before discovery runs.
     const registryByCategory: Record<string, number> = {};
