@@ -447,7 +447,7 @@ function SessionDetail({
             <div className="text-[0.7rem] text-stone-600 leading-relaxed">
               {heroBrief ? (
                 <>
-                  <div>Brands: {heroBrief.brands.join(", ") || "—"}</div>
+                  <div>Brands: {(heroBrief.brands ?? []).join(", ") || "—"}</div>
                   <div>Palette: {(heroBrief.paletteInclude ?? []).join(", ") || "—"}</div>
                   <div>Style: {(heroBrief.styleFamily ?? []).join(", ") || "—"}</div>
                 </>
