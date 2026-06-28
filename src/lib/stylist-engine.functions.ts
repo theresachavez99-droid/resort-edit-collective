@@ -1567,6 +1567,16 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
     // explicit founderLookId we use it; otherwise we pick the most
     // recently approved/published look that matches destination+moment.
     let heroLook: import("./founder-similarity").HeroLook | null = null;
+    // v5.3 — captured from the founder_looks row so we can lock hero
+    // garments into the outfit instead of re-sourcing them.
+    let heroPiecesRaw: Array<{
+      brand?: string;
+      category?: string;
+      product_name?: string;
+      url?: string;
+      image_url?: string;
+      role?: string;
+    }> = [];
     // Resolve the Founder Look for both Founder Learning and baseline runs.
     // Even when scoring is OFF, the hero brands are allowed to bootstrap a
     // new editorial moment so registry tagging can never block generation.
