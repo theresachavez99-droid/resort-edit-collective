@@ -258,6 +258,7 @@ function Field(props: {
 }
 
 function SlotCoverage({ result }: { result: Extract<RunResult, { ok: true }> }) {
+  // placeholder anchor — FounderRetrievalReport is defined below.
   const tel = result.discoveryTelemetry;
   return (
     <section className="space-y-3">
