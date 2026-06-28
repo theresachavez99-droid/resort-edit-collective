@@ -988,6 +988,68 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_product_feedback: {
+        Row: {
+          brand: string | null
+          created_at: string
+          destination: string | null
+          founder_look_id: string | null
+          id: string
+          image_url: string | null
+          moment: string | null
+          notes: string | null
+          product_title: string | null
+          product_url: string | null
+          reason_code: string
+          reason_label: string | null
+          retailer: string | null
+          slot: string
+          variant: string | null
+        }
+        Insert: {
+          brand?: string | null
+          created_at?: string
+          destination?: string | null
+          founder_look_id?: string | null
+          id?: string
+          image_url?: string | null
+          moment?: string | null
+          notes?: string | null
+          product_title?: string | null
+          product_url?: string | null
+          reason_code: string
+          reason_label?: string | null
+          retailer?: string | null
+          slot: string
+          variant?: string | null
+        }
+        Update: {
+          brand?: string | null
+          created_at?: string
+          destination?: string | null
+          founder_look_id?: string | null
+          id?: string
+          image_url?: string | null
+          moment?: string | null
+          notes?: string | null
+          product_title?: string | null
+          product_url?: string | null
+          reason_code?: string
+          reason_label?: string | null
+          retailer?: string | null
+          slot?: string
+          variant?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "founder_product_feedback_founder_look_id_fkey"
+            columns: ["founder_look_id"]
+            isOneToOne: false
+            referencedRelation: "founder_looks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       founder_reference_products: {
         Row: {
           activity_tags: string[]
