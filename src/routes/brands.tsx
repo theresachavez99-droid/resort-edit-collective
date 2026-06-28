@@ -4,7 +4,8 @@ import { brandCategories, type Brand } from "@/data/brands";
 import { absoluteUrl } from "@/lib/site";
 import { Input } from "@/components/ui/input";
 
-import heroEditorial from "@/assets/about-hero-portofino-golden-harbor.png.asset.json";
+import brandsHero from "@/assets/brands-hero-mediterranean-dressing-room.jpg.asset.json";
+import { EditorialHero } from "@/components/EditorialHero";
 
 export const Route = createFileRoute("/brands")({
   head: () => ({
@@ -264,25 +265,20 @@ function BrandsPage() {
   return (
     <div className="bg-ivory">
       {/* HERO */}
-      <section className="mx-auto max-w-[1180px] px-6 pt-14 md:pt-20 pb-10 text-center">
-        <span className="eyebrow text-gold">Founder Edit</span>
-        <h1 className="font-display text-5xl md:text-7xl tracking-[0.04em] mt-5 text-ink">
-          Brands We Love
-        </h1>
-        <p className="mt-6 font-serif italic text-lg md:text-xl text-ink/70 leading-relaxed max-w-2xl mx-auto">
-          The designers shaping the Resort Edit wardrobe — from iconic luxury houses to
-          emerging labels worth discovering.
-        </p>
-      </section>
-
-      {/* Editorial lifestyle image */}
-      <div className="relative w-full aspect-[21/9] md:aspect-[21/8] overflow-hidden">
-        <img
-          src={heroEditorial.url}
-          alt="Resort Edit editorial — golden hour on the Mediterranean"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      </div>
+      <EditorialHero
+        src={brandsHero.url}
+        alt="Mediterranean dressing room — curated resort wardrobe, raffia, and quiet luxury overlooking the sea"
+        focal={{
+          base: { x: 50, y: 55 },
+          md: { x: 50, y: 58 },
+          lg: { x: 50, y: 62 },
+        }}
+        heightClassName="h-[43vw] md:h-[38vw] max-h-[560px] min-h-[180px]"
+        width={1754}
+        imgHeight={896}
+        priority
+      />
+      <h1 className="sr-only">Brands We Love</h1>
 
       {/* WHY THESE BRANDS */}
       <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-20 pb-12 md:pb-16">
