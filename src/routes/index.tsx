@@ -69,7 +69,7 @@ const hotels = [
 
 const experiences = [
   {
-    category: "Yacht Charters",
+    badge: "Editor's Pick",
     name: "Private Yacht Charter",
     desc: "Sail the Ligurian coast in style, from the harbor to hidden coves.",
     image: experienceYacht,
@@ -77,7 +77,7 @@ const experiences = [
     href: "https://www.getmyboat.com/",
   },
   {
-    category: "Beach Clubs",
+    badge: "Most Popular",
     name: "Beach Club Reservation",
     desc: "Sun, sea, and the perfect lunch on a private deck above the water.",
     image: experienceBeachClub,
@@ -85,7 +85,7 @@ const experiences = [
     href: "https://www.bagnicapri.it/",
   },
   {
-    category: "Excursions",
+    badge: "Half-Day Adventure",
     name: "Boat Excursions",
     desc: "Discover San Fruttuoso and the coastline by classic Italian boat.",
     image: experienceBoat,
@@ -93,7 +93,7 @@ const experiences = [
     href: "https://www.tigullio.it/",
   },
   {
-    category: "Culinary",
+    badge: "Authentic Experience",
     name: "Cooking Classes",
     desc: "Learn Ligurian classics—pesto, pasta, and lemon-kissed desserts.",
     image: experienceCooking,
