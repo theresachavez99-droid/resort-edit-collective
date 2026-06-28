@@ -257,10 +257,58 @@ export const publishFounderLook = createServerFn({ method: "POST" })
     });
     if (error) return { ok: false as const, error: error.message };
     const row = Array.isArray(rpc) ? rpc[0] : rpc;
+    // Phase 3 — Editorial Memory.
+    // Record every hero piece as a usage so future Stylist Engine runs
+    // know what has been published before. Best-effort; never blocks the
+    // publish flow.
+    let memoryWrites = 0;
+    try {
+      const { recordMemoryUsage } = await import("./editorial-memory.server");
+      const { data: look } = await supabaseAdmin
+        .from("founder_looks")
+        .select("destination, moment, hero_urls, style_family, color_palette")
+        .eq("id", data.id)
+        .maybeSingle();
+      if (look) {
+        const heroes = Array.isArray(look.hero_urls)
+          ? (look.hero_urls as Array<Record<string, unknown>>)
+          : [];
+        const styleFamily = Array.isArray(look.style_family)
+          ? (look.style_family as string[])
+          : [];
+        const palette =
+          (look.color_palette as { include?: string[] } | null)?.include ?? [];
+        const colorFamily = palette[0] ?? null;
+        for (const h of heroes) {
+          const url = h.url as string | undefined;
+          const brand = h.brand as string | undefined;
+          if (!url || !brand) continue;
+          const res = await recordMemoryUsage(supabaseAdmin, {
+            productUrl: url,
+            brand,
+            retailer: brand, // brand-direct heroes
+            productName: (h.product_name as string | null) ?? null,
+            imageUrl: (h.image_url as string | null) ?? null,
+            category: (h.category as string | null) ?? null,
+            colorFamily,
+            styleFamily,
+            destination: String(look.destination),
+            moment: String(look.moment),
+            slot: (h.category as string | null) ?? null,
+            role: (h.role as string | null) ?? "Hero Garment",
+            founderLookId: data.id,
+          });
+          if (res.ok) memoryWrites += 1;
+        }
+      }
+    } catch {
+      // Editorial Memory write failures are non-fatal — the look is still published.
+    }
     return {
       ok: true as const,
       refsWritten: row?.refs_written ?? 0,
       brandsWritten: row?.brands_written ?? 0,
+      memoryWrites,
     };
   });
 

@@ -77,6 +77,12 @@ const EDITORIAL_LIBRARY: NavItem[] = [
     to: "/admin/brands",
     description: "Approved brands plus the Performance tab — affinity, approvals, publications.",
   },
+  {
+    label: "Editorial Memory",
+    to: "/admin/editorial-memory",
+    description:
+      "Every product ever published. Track brand concentration, mark Signature Pieces, and keep destinations feeling curated.",
+  },
 ];
 
 const OPERATIONS: NavItem[] = [

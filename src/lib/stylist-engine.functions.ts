@@ -747,6 +747,14 @@ export type SlotCandidate = {
     | "founder_approved"
     | "founder_selective"
     | "ineligible";
+  // ── Phase 3 — Editorial Memory diagnostics.
+  editorialDiversityScore?: number;
+  editorialDiversityPenalty?: number;
+  editorialDiversityReasons?: string[];
+  editorialMemorySignature?: boolean;
+  editorialMemoryExactReuse?: number;
+  editorialMemoryDestinationReuse?: number;
+  editorialMemoryBrandShare?: number;
 };
 
 export type SlotDiscoveryResult = {
@@ -2370,6 +2378,102 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       r.candidates = [...reranked, ...remaining];
     }
 
+    // ── Phase 3 — Editorial Memory diversity scoring.
+    //
+    // Soft penalties: nothing is hard-blocked, but products / brands /
+    // materials that have already saturated the destination lose ranking
+    // points so fresh discoveries surface. Signature Pieces are exempt.
+    const editorialMemoryReport = await (async () => {
+      try {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { loadMemorySnapshot, evaluateCandidateDiversity } = await import(
+          "./editorial-memory.server"
+        );
+        const snapshot = await loadMemorySnapshot(supabaseAdmin, destination);
+        const rotated: Array<{
+          slot: string;
+          brand: string;
+          url: string;
+          fromRank: number;
+          toRank: number;
+          penalty: number;
+          reasons: string[];
+        }> = [];
+        for (const r of slotResults) {
+          if (r.candidates.length === 0) continue;
+          const before = r.candidates.map((c) => c.id);
+          for (const c of r.candidates) {
+            // Hero-locked pieces ignore diversity penalties — they are
+            // editorial decisions, not engine choices.
+            if (c.brandTier === "founder_hero") {
+              c.editorialDiversityScore = 100;
+              c.editorialDiversityPenalty = 0;
+              c.editorialDiversityReasons = ["Locked Hero — diversity not evaluated."];
+              continue;
+            }
+            const verdict = evaluateCandidateDiversity(
+              { url: c.url, brand: c.brand, category: c.slot },
+              snapshot,
+            );
+            c.editorialDiversityScore = verdict.diversityScore;
+            c.editorialDiversityPenalty = verdict.penaltyTotal;
+            c.editorialDiversityReasons = verdict.reasons;
+            c.editorialMemorySignature = verdict.isSignature;
+            c.editorialMemoryExactReuse = verdict.exactReuseCount;
+            c.editorialMemoryDestinationReuse = verdict.destinationReuseCount;
+            c.editorialMemoryBrandShare = verdict.brandShareInDestination;
+            if (verdict.penaltyTotal > 0) {
+              c.editorialScore = Math.round((c.editorialScore - verdict.penaltyTotal) * 1000) / 1000;
+            }
+          }
+          r.candidates.sort((a, b) => b.editorialScore - a.editorialScore);
+          const after = r.candidates.map((c) => c.id);
+          for (let i = 0; i < after.length; i++) {
+            const id = after[i];
+            const fromRank = before.indexOf(id);
+            if (fromRank > -1 && fromRank !== i) {
+              const c = r.candidates[i];
+              if ((c.editorialDiversityPenalty ?? 0) > 0) {
+                rotated.push({
+                  slot: r.slot,
+                  brand: c.brand,
+                  url: c.url,
+                  fromRank,
+                  toRank: i,
+                  penalty: c.editorialDiversityPenalty ?? 0,
+                  reasons: c.editorialDiversityReasons ?? [],
+                });
+              }
+            }
+          }
+        }
+        return {
+          ok: true as const,
+          destination,
+          totalDestinationUses: snapshot.totalDestinationUses,
+          uniqueProductsTracked: snapshot.byUrl.size,
+          topBrandShare: Array.from(snapshot.brandUseInDestination.entries())
+            .map(([brand, uses]) => ({
+              brand,
+              uses,
+              share:
+                snapshot.totalDestinationUses > 0
+                  ? Math.round((uses / snapshot.totalDestinationUses) * 1000) / 1000
+                  : 0,
+            }))
+            .sort((a, b) => b.uses - a.uses)
+            .slice(0, 8),
+          rotatedByDiversity: rotated.slice(0, 24),
+          generatedAt: snapshot.generatedAt,
+        };
+      } catch (err) {
+        return {
+          ok: false as const,
+          error: err instanceof Error ? err.message : String(err),
+        };
+      }
+    })();
+
     // v4 — commerce source mix across the candidate pool.
     const commerceSourceMix = (() => {
       const counts: Record<string, number> = {};
@@ -2410,6 +2514,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
         registryCoverage,
         slotEffectiveness: slotEffectivenessGated,
         commerceSourceMix,
+        editorialMemoryReport,
         candidates: [...candidatesById.values()],
         looks: [],
         assemblyError: `Insufficient candidates for complete look generation. Required slots with zero candidates: ${missingRequiredSlots.join(", ")}.`,
@@ -2972,6 +3077,7 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
       registryCoverage,
       slotEffectiveness,
       commerceSourceMix,
+      editorialMemoryReport,
       gated: false as const,
       candidates: [...candidatesById.values()],
       discoveryTelemetry: aggregateTelemetry(slotResults, candidatesById.size),
@@ -3066,6 +3172,14 @@ export const generateYachtDayCollection = createServerFn({ method: "POST" })
             isLockedHero: isLocked,
             explanation,
             editorialReasons: adj?.reasons ?? [],
+            // Phase 3 — Editorial Memory.
+            editorialDiversityScore: c?.editorialDiversityScore ?? null,
+            editorialDiversityPenalty: c?.editorialDiversityPenalty ?? null,
+            editorialDiversityReasons: c?.editorialDiversityReasons ?? [],
+            editorialMemorySignature: c?.editorialMemorySignature ?? false,
+            editorialMemoryExactReuse: c?.editorialMemoryExactReuse ?? 0,
+            editorialMemoryDestinationReuse: c?.editorialMemoryDestinationReuse ?? 0,
+            editorialMemoryBrandShare: c?.editorialMemoryBrandShare ?? null,
           };
         });
         // Quality score per look.
