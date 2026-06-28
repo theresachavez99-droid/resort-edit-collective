@@ -35,6 +35,12 @@ const WORKFLOW: NavItem[] = [
       "Author the hero look per moment — editorial DNA, accessory rules, palette. Publishing fans out to references + brands automatically.",
   },
   {
+    label: "Buying Office",
+    to: "/admin/buying-office",
+    description:
+      "Paste product URLs or import rows to build Founder Heroes. Tracks affiliate network readiness.",
+  },
+  {
     label: "Stylist Engine",
     to: "/admin/stylist-engine",
     description: "Generate complete editorial looks for any destination moment.",

@@ -333,6 +333,161 @@ export type Database = {
         }
         Relationships: []
       }
+      buying_candidates: {
+        Row: {
+          affiliate_status: string
+          affiliate_url: string | null
+          availability: string | null
+          benchmark_similarity: number | null
+          brand: string | null
+          canonical_url: string
+          category: string | null
+          color: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          editorial_confidence: number | null
+          editorial_score: number | null
+          id: string
+          image_missing: boolean
+          image_url: string | null
+          imported_by: string | null
+          notes: string | null
+          price: number | null
+          product_name: string | null
+          product_url: string
+          ranking_reasons: Json
+          raw: Json
+          rejection_reason: string | null
+          retailer: string | null
+          sale_status: string | null
+          session_id: string
+          source: string
+          source_adapter: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_status?: string
+          affiliate_url?: string | null
+          availability?: string | null
+          benchmark_similarity?: number | null
+          brand?: string | null
+          canonical_url: string
+          category?: string | null
+          color?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          editorial_confidence?: number | null
+          editorial_score?: number | null
+          id?: string
+          image_missing?: boolean
+          image_url?: string | null
+          imported_by?: string | null
+          notes?: string | null
+          price?: number | null
+          product_name?: string | null
+          product_url: string
+          ranking_reasons?: Json
+          raw?: Json
+          rejection_reason?: string | null
+          retailer?: string | null
+          sale_status?: string | null
+          session_id: string
+          source: string
+          source_adapter?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_status?: string
+          affiliate_url?: string | null
+          availability?: string | null
+          benchmark_similarity?: number | null
+          brand?: string | null
+          canonical_url?: string
+          category?: string | null
+          color?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          editorial_confidence?: number | null
+          editorial_score?: number | null
+          id?: string
+          image_missing?: boolean
+          image_url?: string | null
+          imported_by?: string | null
+          notes?: string | null
+          price?: number | null
+          product_name?: string | null
+          product_url?: string
+          ranking_reasons?: Json
+          raw?: Json
+          rejection_reason?: string | null
+          retailer?: string | null
+          sale_status?: string | null
+          session_id?: string
+          source?: string
+          source_adapter?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buying_candidates_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "buying_search_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      buying_search_sessions: {
+        Row: {
+          category_set: Json
+          created_at: string
+          destination: string
+          founder_look_id: string | null
+          id: string
+          moment: string
+          notes: string | null
+          session_code: string | null
+          source_diagnostics: Json
+          status: string
+          strategy: string
+          updated_at: string
+        }
+        Insert: {
+          category_set?: Json
+          created_at?: string
+          destination: string
+          founder_look_id?: string | null
+          id?: string
+          moment: string
+          notes?: string | null
+          session_code?: string | null
+          source_diagnostics?: Json
+          status?: string
+          strategy?: string
+          updated_at?: string
+        }
+        Update: {
+          category_set?: Json
+          created_at?: string
+          destination?: string
+          founder_look_id?: string | null
+          id?: string
+          moment?: string
+          notes?: string | null
+          session_code?: string | null
+          source_diagnostics?: Json
+          status?: string
+          strategy?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       canonical_day_images: {
         Row: {
           approved_at: string

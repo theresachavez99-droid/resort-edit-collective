@@ -46,6 +46,7 @@ import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editor
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
 import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
 import { Route as AdminCollectionsRouteImport } from './routes/admin.collections'
+import { Route as AdminBuyingOfficeRouteImport } from './routes/admin.buying-office'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminBrandPerformanceRouteImport } from './routes/admin.brand-performance'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
@@ -237,6 +238,11 @@ const AdminCollectionsRoute = AdminCollectionsRouteImport.update({
   path: '/admin/collections',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBuyingOfficeRoute = AdminBuyingOfficeRouteImport.update({
+  id: '/admin/buying-office',
+  path: '/admin/buying-office',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
   id: '/admin/brands',
   path: '/admin/brands',
@@ -271,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/buying-office': typeof AdminBuyingOfficeRoute
   '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
@@ -314,6 +321,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/buying-office': typeof AdminBuyingOfficeRoute
   '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
@@ -358,6 +366,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/buying-office': typeof AdminBuyingOfficeRoute
   '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
@@ -403,6 +412,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brand-performance'
     | '/admin/brands'
+    | '/admin/buying-office'
     | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
@@ -446,6 +456,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brand-performance'
     | '/admin/brands'
+    | '/admin/buying-office'
     | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
@@ -489,6 +500,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brand-performance'
     | '/admin/brands'
+    | '/admin/buying-office'
     | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
@@ -533,6 +545,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminBrandPerformanceRoute: typeof AdminBrandPerformanceRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminBuyingOfficeRoute: typeof AdminBuyingOfficeRoute
   AdminCollectionsRoute: typeof AdminCollectionsRouteWithChildren
   AdminDayImagesRoute: typeof AdminDayImagesRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
@@ -815,6 +828,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCollectionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/buying-office': {
+      id: '/admin/buying-office'
+      path: '/admin/buying-office'
+      fullPath: '/admin/buying-office'
+      preLoaderRoute: typeof AdminBuyingOfficeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/brands': {
       id: '/admin/brands'
       path: '/admin/brands'
@@ -917,6 +937,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminBrandPerformanceRoute: AdminBrandPerformanceRoute,
   AdminBrandsRoute: AdminBrandsRoute,
+  AdminBuyingOfficeRoute: AdminBuyingOfficeRoute,
   AdminCollectionsRoute: AdminCollectionsRouteWithChildren,
   AdminDayImagesRoute: AdminDayImagesRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
