@@ -2522,3 +2522,62 @@ function buildSlotEffectiveness(
     };
   });
 }
+
+// ──────────────────────────────────────────────────────────────
+// v5.1 — Founder Learning diagnostics summary
+// ──────────────────────────────────────────────────────────────
+
+import type { FounderContext as _FC } from "./founder-context.server";
+
+function buildFounderRetrieval(
+  ctx: _FC,
+  injected: Array<{ name: string; source: "founder_approved" | "founder_selective" }>,
+  candidatesById: Map<string, SlotCandidate>,
+) {
+  const cands = [...candidatesById.values()];
+  const boosted = cands.filter((c) => (c.founderBoost ?? 0) > 0);
+  const penalized = cands.filter((c) => (c.founderPenalty ?? 0) < 0);
+  const refUsage = new Map<string, number>();
+  for (const c of cands) {
+    for (const id of c.founderMatchedRefIds ?? []) {
+      refUsage.set(id, (refUsage.get(id) ?? 0) + 1);
+    }
+  }
+  const topRefsUsed = [...refUsage.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([id, uses]) => {
+      const ref = ctx.references.find((r) => r.id === id);
+      return {
+        id,
+        uses,
+        brand: ref?.brand ?? null,
+        category: ref?.product_category ?? null,
+        print: ref?.print_language ?? null,
+      };
+    });
+  const eligibilityBreakdown: Record<string, number> = {};
+  for (const c of cands) {
+    const k = c.eligibilitySource ?? "registry";
+    eligibilityBreakdown[k] = (eligibilityBreakdown[k] ?? 0) + 1;
+  }
+  return {
+    counts: ctx.counts,
+    topFounderBrands: ctx.topBrands,
+    topFounderReferences: ctx.topReferences,
+    topReferencesUsed: topRefsUsed,
+    injectedBrands: injected,
+    candidatesBoosted: boosted.length,
+    candidatesPenalized: penalized.length,
+    eligibilityBreakdown,
+    negativeRuleHits: cands.reduce(
+      (acc, c) => {
+        for (const p of c.founderPenalties ?? []) {
+          acc[p.id] = (acc[p.id] ?? 0) + 1;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    ),
+  };
+}
