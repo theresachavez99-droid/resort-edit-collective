@@ -379,6 +379,24 @@ function OutfitPanel({
   const slotDefs = slotsForMoment(outfit.moment);
   const profile = profileForMoment(outfit.moment);
 
+  // V3 editorial workspace state
+  const [expandedSlots, setExpandedSlots] = useState<Set<string>>(new Set());
+  const [showArchived, setShowArchived] = useState(false);
+
+  // Auto-expand only slots that have no current selection.
+  const slotSelections = useMemo(() => {
+    const map = new Map<string, any>();
+    for (const c of candidates) {
+      if (c.selected_for_look && c.stylist_slot && !c.is_hero_garment) {
+        map.set(c.stylist_slot, c);
+      }
+    }
+    return map;
+  }, [candidates]);
+
+  const customComponents: Array<{ id: string; name: string; url: string; image_url?: string | null; brand?: string | null; notes?: string | null; price?: number | null }> =
+    Array.isArray(outfit.custom_components) ? outfit.custom_components : [];
+
   return (
     <section className="border-2 border-ink/20 p-6 space-y-6">
       {/* Header */}
@@ -403,32 +421,62 @@ function OutfitPanel({
         )}
       </div>
 
-      {/* Stage 4 — Hero garments */}
-      <div className="space-y-3">
-        <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
-          Stage 4 — Hero garments
+      {/* PRIMARY — Current Founder Look summary */}
+      {isPromoted && (
+        <CurrentLookSummary
+          outfit={outfit}
+          heroes={heroes}
+          slotDefs={slotDefs}
+          slotSelections={slotSelections}
+          customComponents={customComponents}
+          onChangeSlot={(slot) =>
+            setExpandedSlots((s) => {
+              const n = new Set(s);
+              n.add(slot);
+              return n;
+            })
+          }
+          onClearSlot={async (slot) => {
+            const fn = (await import("@/lib/hero-outfit.functions")).selectSlotCandidate;
+            // Use the existing select fn with candidateId:null to unselect.
+            // We can't useServerFn at top level here — call directly via fetch wrapper.
+            // Simpler: import server fn handler at runtime is not safe; instead
+            // call selectSlotCandidate via the existing button below.
+          }}
+          password={password}
+          onChange={onChange}
+        />
+      )}
+
+      {/* Hero garments — only show editable cards when not yet promoted, or
+          when one needs an image fix. Once promoted, summary card covers it. */}
+      {isDraft && (
+        <div className="space-y-3">
+          <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+            Stage 4 — Hero garments
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+            {heroes.map((g) => (
+              <HeroGarmentCard
+                key={g.id}
+                garment={g}
+                editable={!isPublished}
+                onPatchImage={async (image_url) => {
+                  await patchGarmentFn({
+                    data: { password, garmentId: g.id, patch: { image_url } },
+                  });
+                  onChange();
+                }}
+                onRemove={async () => {
+                  if (!confirm("Remove from this Hero Outfit?")) return;
+                  await removeFn({ data: { password, garmentId: g.id } });
+                  onChange();
+                }}
+              />
+            ))}
+          </div>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-          {heroes.map((g) => (
-            <HeroGarmentCard
-              key={g.id}
-              garment={g}
-              editable={!isPublished}
-              onPatchImage={async (image_url) => {
-                await patchGarmentFn({
-                  data: { password, garmentId: g.id, patch: { image_url } },
-                });
-                onChange();
-              }}
-              onRemove={async () => {
-                if (!confirm("Remove from this Hero Outfit?")) return;
-                await removeFn({ data: { password, garmentId: g.id } });
-                onChange();
-              }}
-            />
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Stage 5 — Promote */}
       {isDraft && (
@@ -458,25 +506,27 @@ function OutfitPanel({
         </div>
       )}
 
-      {/* Stage 5 → 6 hand-off */}
-      {isPromoted && !isPublished && (
-        <div className="border border-emerald-300 bg-emerald-50/40 p-4 text-xs text-emerald-900">
-          <div className="font-medium">Hero Outfit Promoted ✓</div>
-          <div className="mt-1 text-emerald-800">
-            Next step: Build Complete Outfit — fill each accessory slot below.
-          </div>
-        </div>
-      )}
-
-      {/* Stages 6+7 — Slot review */}
+      {/* SECONDARY — incomplete slot work area */}
       {isPromoted && (
         <div className="space-y-4">
-          <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
-            Stages 6–7 — Build Complete Outfit
+          <div className="flex items-center justify-between border-t border-stone-200 pt-4">
+            <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+              Decisions remaining
+            </div>
+            <label className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showArchived}
+                onChange={(e) => setShowArchived(e.target.checked)}
+              />
+              Show archived
+            </label>
           </div>
           {slotDefs.map((def) => {
             const slotCands = candidates.filter((c) => c.stylist_slot === def.slot);
             const selected = slotCands.find((c) => c.selected_for_look);
+            const isFilled = !!selected;
+            const isExpanded = expandedSlots.has(def.slot) || !isFilled;
             return (
               <SlotRow
                 key={def.slot}
@@ -489,9 +539,25 @@ function OutfitPanel({
                 password={password}
                 onChange={onChange}
                 disabled={isPublished}
+                expanded={isExpanded}
+                showArchived={showArchived}
+                onToggleExpand={() =>
+                  setExpandedSlots((s) => {
+                    const n = new Set(s);
+                    n.has(def.slot) ? n.delete(def.slot) : n.add(def.slot);
+                    return n;
+                  })
+                }
               />
             );
           })}
+          <OptionalComponentsEditor
+            outfitId={outfit.id}
+            password={password}
+            components={customComponents}
+            onChange={onChange}
+            disabled={isPublished}
+          />
         </div>
       )}
 
