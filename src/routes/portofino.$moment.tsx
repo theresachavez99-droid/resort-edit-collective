@@ -102,7 +102,7 @@ function MomentPage() {
       slotLabel: p.role === "Hero Garment" ? "Hero" : p.category.replace(/_/g, " ").toUpperCase(),
       brand: p.brand || "—",
       title: p.product_name || p.brand || "",
-      url: p.url,
+      url: isUsableShopUrl(p.url) ? p.url : "",
       image: p.image_url ?? "",
     },
   }));
