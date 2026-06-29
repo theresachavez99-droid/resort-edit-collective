@@ -32,6 +32,7 @@ import {
   isHeroGarmentCategory,
 } from "./hero-outfit-slots";
 import { APPROVED_RETAILERS } from "./yacht-day-pilot.functions";
+import { normalizeDestinationSlug, normalizeMomentSlug } from "./moment-slug";
 
 const pw = { password: z.string().min(1).max(200) };
 
