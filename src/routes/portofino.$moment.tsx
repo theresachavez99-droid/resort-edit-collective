@@ -664,7 +664,7 @@ function ShopCard({
 
   // Override item (free-form curated grid)
   const o = product as OverrideItem;
-  const isPlaceholderUrl = !o.url || o.url.startsWith("AFF-");
+  const isPlaceholderUrl = !isUsableShopUrl(o.url);
   if (isPlaceholderUrl) {
     return (
       <div
