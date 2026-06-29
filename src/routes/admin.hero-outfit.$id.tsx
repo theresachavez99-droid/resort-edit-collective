@@ -1109,3 +1109,288 @@ function PublishCard({
     </div>
   );
 }
+
+// ============================================================
+// V3 — Current Founder Look summary
+// ============================================================
+function CurrentLookSummary({
+  outfit,
+  heroes,
+  slotDefs,
+  slotSelections,
+  customComponents,
+  password,
+  onChangeSlot,
+  onChange,
+}: {
+  outfit: any;
+  heroes: any[];
+  slotDefs: Array<{ slot: string; label: string; required: boolean }>;
+  slotSelections: Map<string, any>;
+  customComponents: Array<{ id: string; name: string; url: string; image_url?: string | null; brand?: string | null }>;
+  password: string;
+  onChangeSlot: (slot: string) => void;
+  onChange: () => void;
+}) {
+  const heroImg = heroes.find((h) => !!h.image_url)?.image_url ?? null;
+  const filled = slotDefs.filter((d) => slotSelections.has(d.slot));
+  const remaining = slotDefs.filter((d) => d.required && !slotSelections.has(d.slot));
+
+  return (
+    <div className="border border-emerald-300 bg-emerald-50/30 p-4 space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="text-[0.6rem] tracking-[0.32em] uppercase text-emerald-800">
+          Current Founder Look
+        </div>
+        <div className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500">
+          {filled.length}/{slotDefs.filter((d) => d.required).length} required filled
+          {remaining.length > 0 && (
+            <span className="text-amber-700"> · {remaining.length} remaining</span>
+          )}
+        </div>
+      </div>
+      <div className="grid gap-4 md:grid-cols-[180px_1fr]">
+        <div className="bg-stone-100 aspect-[3/4] flex items-center justify-center overflow-hidden">
+          {heroImg ? (
+            <img src={heroImg} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <span className="text-[0.6rem] text-stone-400">No hero image</span>
+          )}
+        </div>
+        <div className="space-y-2 text-xs">
+          <div>
+            <div className="text-[0.55rem] tracking-[0.3em] uppercase text-stone-500">
+              Hero Garments
+            </div>
+            <ul className="mt-1 space-y-0.5">
+              {heroes.map((h) => (
+                <li key={h.id}>
+                  <span className="font-medium">{h.brand ?? "—"}</span>
+                  {h.product_name ? <span className="text-stone-500"> — {h.product_name}</span> : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div className="text-[0.55rem] tracking-[0.3em] uppercase text-stone-500">
+              Accessories
+            </div>
+            <ul className="mt-1 space-y-0.5">
+              {slotDefs.map((d) => {
+                const sel = slotSelections.get(d.slot);
+                return (
+                  <li
+                    key={d.slot}
+                    className="flex items-center justify-between gap-2 border-b border-emerald-100 last:border-0 py-0.5"
+                  >
+                    <span className="flex items-center gap-2 min-w-0">
+                      <span className="text-[0.55rem] tracking-[0.25em] uppercase text-stone-500 w-24 shrink-0">
+                        {d.label}
+                      </span>
+                      {sel ? (
+                        <span className="truncate">
+                          <span className="font-medium">{sel.brand}</span>
+                          {sel.product_name && (
+                            <span className="text-stone-500"> — {sel.product_name}</span>
+                          )}
+                        </span>
+                      ) : (
+                        <span className="italic text-stone-400">
+                          {d.required ? "needs decision" : "optional"}
+                        </span>
+                      )}
+                    </span>
+                    <button
+                      onClick={() => onChangeSlot(d.slot)}
+                      className="text-[0.55rem] tracking-[0.25em] uppercase text-stone-500 hover:text-ink shrink-0"
+                    >
+                      {sel ? "Change" : "Open"}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          {customComponents.length > 0 && (
+            <div>
+              <div className="text-[0.55rem] tracking-[0.3em] uppercase text-stone-500">
+                Optional Components
+              </div>
+              <ul className="mt-1 space-y-0.5">
+                {customComponents.map((c) => (
+                  <li key={c.id}>
+                    <span className="font-medium">{c.name}</span>
+                    {c.brand ? <span className="text-stone-500"> — {c.brand}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div className="text-[0.55rem] tracking-[0.25em] uppercase text-stone-500 pt-1">
+            Status: {outfit.status}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// V3 — Optional / custom components editor
+// ============================================================
+function OptionalComponentsEditor({
+  outfitId,
+  password,
+  components,
+  onChange,
+  disabled,
+}: {
+  outfitId: string;
+  password: string;
+  components: Array<{ id: string; name: string; url: string; image_url?: string | null; brand?: string | null; notes?: string | null; price?: number | null }>;
+  onChange: () => void;
+  disabled: boolean;
+}) {
+  const addFn = useServerFn(addCustomComponent);
+  const removeFn = useServerFn(removeCustomComponent);
+  const [name, setName] = useState("");
+  const [url, setUrl] = useState("");
+  const [brand, setBrand] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [notes, setNotes] = useState("");
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border border-dashed border-stone-300 p-4 space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
+            Optional Components
+          </div>
+          <div className="text-[0.65rem] text-stone-500 mt-1">
+            Belt, suitcase, scarf, pareo, evening clutch, watch — anything the look needs.
+          </div>
+        </div>
+        {!disabled && (
+          <button
+            onClick={() => setOpen((o) => !o)}
+            className="text-[0.6rem] tracking-[0.25em] uppercase border border-ink px-3 py-1"
+          >
+            {open ? "Cancel" : "Add Custom Item"}
+          </button>
+        )}
+      </div>
+
+      {components.length > 0 && (
+        <ul className="divide-y divide-stone-200">
+          {components.map((c) => (
+            <li key={c.id} className="py-2 flex items-center gap-3">
+              {c.image_url ? (
+                <img src={c.image_url} alt="" className="w-10 h-10 object-cover border border-stone-200" />
+              ) : (
+                <div className="w-10 h-10 bg-stone-100" />
+              )}
+              <div className="flex-1 min-w-0 text-xs">
+                <div className="font-medium truncate">
+                  {c.name}
+                  {c.brand ? <span className="text-stone-500 font-normal"> — {c.brand}</span> : null}
+                </div>
+                {c.url && (
+                  <a
+                    href={c.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[0.6rem] text-stone-500 underline truncate block"
+                  >
+                    {c.url}
+                  </a>
+                )}
+              </div>
+              {!disabled && (
+                <button
+                  onClick={async () => {
+                    if (!confirm(`Remove ${c.name}?`)) return;
+                    await removeFn({ data: { password, outfitId, componentId: c.id } });
+                    onChange();
+                  }}
+                  className="text-[0.55rem] tracking-[0.25em] uppercase text-stone-500 hover:text-red-600"
+                >
+                  Remove
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {open && !disabled && (
+        <div className="grid gap-2 sm:grid-cols-2 pt-2 border-t border-stone-200">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Component name (Suitcase, Belt, Pareo…)"
+            className="border border-stone-300 px-2 py-1 text-xs"
+          />
+          <input
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            placeholder="Brand (optional)"
+            className="border border-stone-300 px-2 py-1 text-xs"
+          />
+          <input
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="Retail URL"
+            className="border border-stone-300 px-2 py-1 text-xs sm:col-span-2"
+          />
+          <input
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="Image URL (optional)"
+            className="border border-stone-300 px-2 py-1 text-xs sm:col-span-2"
+          />
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Notes (optional)"
+            rows={2}
+            className="border border-stone-300 px-2 py-1 text-xs sm:col-span-2"
+          />
+          <button
+            disabled={!name || !url}
+            onClick={async () => {
+              try {
+                await addFn({
+                  data: {
+                    password,
+                    outfitId,
+                    component: {
+                      name,
+                      url,
+                      brand: brand || null,
+                      image_url: imageUrl || null,
+                      notes: notes || null,
+                    },
+                  },
+                });
+                setName("");
+                setUrl("");
+                setBrand("");
+                setImageUrl("");
+                setNotes("");
+                setOpen(false);
+                onChange();
+                toast.success("Custom component added.");
+              } catch (e) {
+                toast.error((e as Error).message);
+              }
+            }}
+            className="bg-ink text-ivory px-3 py-1 text-[0.6rem] tracking-[0.25em] uppercase disabled:opacity-40 sm:col-span-2"
+          >
+            Add to Outfit
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
