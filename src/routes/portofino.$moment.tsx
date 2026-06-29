@@ -94,18 +94,28 @@ function MomentPage() {
   const isFounderLook = resolved.source === "founder_look";
   const founderProducts = resolved.founder_hero_products ?? [];
 
+  // Admin/debug visibility: source badge only renders with ?debug=1.
+  const isDebug =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).has("debug");
+
   // Featured (canonical) look for this moment.
   const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
-  const founderShopEntries: ShopEntry[] = founderProducts.map((p) => ({
-    kind: "override" as const,
-    product: {
-      slotLabel: p.role === "Hero Garment" ? "Hero" : p.category.replace(/_/g, " ").toUpperCase(),
-      brand: p.brand || "—",
-      title: p.product_name || p.brand || "",
-      url: isUsableShopUrl(p.url) ? p.url : "",
-      image: p.image_url ?? "",
-    },
-  }));
+  const founderShopEntries: ShopEntry[] = founderProducts
+    .filter((p) => (p.brand || p.product_name))
+    .map((p) => ({
+      kind: "override" as const,
+      product: {
+        slotLabel:
+          p.role === "Hero Garment"
+            ? "Hero"
+            : p.category.replace(/_/g, " ").toUpperCase(),
+        brand: p.brand || p.product_name.split(" ")[0] || "—",
+        title: p.product_name || p.brand || "",
+        url: isUsableShopUrl(p.url) ? p.url : "",
+        image: p.image_url ?? "",
+      },
+    }));
   const featuredShop = isFounderLook && founderShopEntries.length
     ? founderShopEntries
     : resolveShopProducts(card.legacy_day_slug, card.look_slug);
@@ -114,6 +124,20 @@ function MomentPage() {
 
   const shortMomentName = SHORT_MOMENT_NAME[slug] ?? card.moment_name;
   const editorPickLabel = `Editor's ${shortMomentName} Pick`;
+
+  // Public-facing display title for the featured look. Founder look titles are
+  // often blank or workflow-y; map to an editorial name per moment so the page
+  // never shows internal/legacy names like "The Slow Departure" on Arrival.
+  const founderDisplayTitle =
+    (resolved.title && resolved.title.trim()) ||
+    FOUNDER_LOOK_DISPLAY_TITLE[slug] ||
+    card.moment_name;
+  const featuredDisplayTitle = isFounderLook
+    ? FOUNDER_LOOK_DISPLAY_TITLE[slug] ?? founderDisplayTitle
+    : featuredLook?.title ?? resolved.title;
+  const shopHeading = isFounderLook
+    ? `Shop ${featuredDisplayTitle}`
+    : `Shop ${featuredLook?.title ?? card.moment_name}`;
 
   // Sibling looks within the same day — "More Ways to Dress for {moment}".
   const siblings: Look[] = lookbook.filter(
@@ -144,33 +168,28 @@ function MomentPage() {
         </ol>
       </nav>
 
-      {/* SOURCE INDICATOR — Founder/admin visibility into which data source
-          is rendering this moment (Published Founder Look vs Legacy fallback). */}
-      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pb-3">
-        <span
-          className={
-            "inline-flex items-center gap-2 text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 border " +
-            (resolved.source === "founder_look"
-              ? "border-violet-700/60 text-violet-800 bg-violet-50"
+      {/* SOURCE INDICATOR — admin/debug only (append ?debug=1 to view). */}
+      {isDebug && (
+        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pb-3">
+          <span
+            className={
+              "inline-flex items-center gap-2 text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 border " +
+              (resolved.source === "founder_look"
+                ? "border-violet-700/60 text-violet-800 bg-violet-50"
+                : resolved.source === "tagged"
+                  ? "border-emerald-700/60 text-emerald-800 bg-emerald-50"
+                  : "border-amber-700/60 text-amber-800 bg-amber-50")
+            }
+          >
+            Rendering:{" "}
+            {resolved.source === "founder_look"
+              ? "Founder Look"
               : resolved.source === "tagged"
-                ? "border-emerald-700/60 text-emerald-800 bg-emerald-50"
-                : "border-amber-700/60 text-amber-800 bg-amber-50")
-          }
-          title={
-            resolved.source === "founder_look"
-              ? `Founder Look · ${resolved.founder_look_slug ?? resolved.founder_look_id}`
-              : resolved.source === "tagged"
-                ? "Tagged approved candidate"
-                : "Legacy fallback look"
-          }
-        >
-          {resolved.source === "founder_look"
-            ? "Published Founder Look"
-            : resolved.source === "tagged"
-              ? "Tagged Look"
-              : "Legacy Fallback"}
-        </span>
-      </div>
+                ? "Tagged Look"
+                : "Legacy Fallback"}
+          </span>
+        </div>
+      )}
 
       {/* HERO */}
       <section className="relative h-[36vh] md:h-[48vh] min-h-[280px] w-full overflow-hidden bg-ink">
@@ -213,7 +232,7 @@ function MomentPage() {
 
       {/* FEATURED LOOK — editorial hero styling recommendation */}
       <section className="bg-ivory">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(300px,1fr)] gap-8 md:gap-12 items-center">
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
               <img
@@ -227,7 +246,7 @@ function MomentPage() {
                 {editorPickLabel}
               </span>
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
-                {isFounderLook ? resolved.title : (featuredLook?.title ?? resolved.title)}
+                {featuredDisplayTitle}
               </h2>
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
                 {isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative)}
@@ -290,7 +309,7 @@ function MomentPage() {
           {openShop === "featured" && featuredShop.length > 0 && (
             <InlineShop
               id="shop-featured"
-              heading={`Shop ${featuredLook?.title ?? card.moment_name}`}
+              heading={shopHeading}
               entries={featuredShop}
             />
           )}
@@ -300,8 +319,8 @@ function MomentPage() {
       {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid */}
       {siblings.length > 0 && (
         <section className="bg-cream/40 border-t border-border/40">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
-            <div className="mb-8 md:mb-10 max-w-2xl">
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
+            <div className="mb-6 md:mb-8 max-w-2xl">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
                 THE EDIT
               </span>
