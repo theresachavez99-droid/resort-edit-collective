@@ -794,3 +794,120 @@ function ShopCard({
     </a>
   );
 }
+
+// ──────────────────────────────────────────────────────────────
+// Editorial "Shop This Look" side panel (text-first, link priority)
+// ──────────────────────────────────────────────────────────────
+
+const CATEGORY_LABELS: Record<string, string> = {
+  hero: "The Look",
+  top: "Top",
+  bottom: "Bottom",
+  dress: "Dress",
+  outerwear: "Outerwear",
+  shoes: "Shoes",
+  bag: "Bag",
+  sunglasses: "Sunglasses",
+  hat: "Hat",
+  jewelry: "Jewelry",
+  necklace: "Necklace",
+  earrings: "Earrings",
+  bracelet: "Bracelet",
+  ring: "Ring",
+  scarf: "Scarf",
+  belt: "Belt",
+  swim: "Swim",
+  coverup: "Cover-up",
+};
+
+function prettifyCategory(c: string): string {
+  const key = (c || "").toLowerCase();
+  if (CATEGORY_LABELS[key]) return CATEGORY_LABELS[key];
+  return key
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (m) => m.toUpperCase());
+}
+
+function ShopLookPanel({
+  heading,
+  entries,
+}: {
+  heading: string;
+  entries: ShopEntry[];
+}) {
+  // Founder look entries are all "override" items mapped from hero_urls.
+  const rows = entries
+    .filter((e) => e.kind === "override")
+    .map((e) => e.product as OverrideItem);
+  return (
+    <div className="border-t border-border/60 pt-5 mt-2">
+      <div className="flex items-baseline justify-between gap-4">
+        <h3 className="font-display text-lg md:text-xl tracking-[0.04em] text-ink">
+          {heading}
+        </h3>
+        <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/55">
+          {rows.length} Pieces
+        </span>
+      </div>
+      <ul className="mt-4 divide-y divide-border/50">
+        {rows.map((o, i) => {
+          const href = isUsableShopUrl(o.url) ? o.url : "";
+          const hasImg = !!o.image;
+          const Inner = (
+            <div className="flex items-start gap-3 py-3">
+              {hasImg ? (
+                <div className="shrink-0 w-14 h-14 bg-cream border border-border/50 overflow-hidden flex items-center justify-center">
+                  <img
+                    src={o.image}
+                    alt={`${o.brand} ${o.title}`}
+                    loading="lazy"
+                    className="w-full h-full object-contain p-1"
+                  />
+                </div>
+              ) : null}
+              <div className="min-w-0 flex-1">
+                {o.slotLabel && (
+                  <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80">
+                    {o.slotLabel}
+                  </div>
+                )}
+                <div className="font-serif text-[0.95rem] text-ink leading-snug mt-0.5">
+                  <span className="font-medium">{o.brand}</span>
+                  {o.title ? <span className="text-ink/70"> — {o.title}</span> : null}
+                </div>
+                <div className="mt-1">
+                  {href ? (
+                    <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink group-hover:text-gold transition-colors">
+                      Shop →
+                    </span>
+                  ) : (
+                    <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/45">
+                      Link unavailable
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+          return (
+            <li key={i}>
+              {href ? (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  onClick={() => trackOutbound({ brand: o.brand, item: o.title, href })}
+                  className="group block hover:bg-cream/40 -mx-2 px-2 transition-colors"
+                >
+                  {Inner}
+                </a>
+              ) : (
+                <div className="-mx-2 px-2">{Inner}</div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
