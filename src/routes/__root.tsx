@@ -16,6 +16,7 @@ import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json"
 import { absoluteUrl } from "@/lib/site";
 import { DayImageOverridesProvider } from "@/data/dayImageRegistry";
 import { loadCanonicalDayImageOverrides } from "@/lib/day-images.functions";
+import { Toaster } from "@/components/ui/sonner";
 
 const dayOverridesQueryOptions = queryOptions({
   queryKey: ["canonical-day-image-overrides"],
@@ -156,6 +157,7 @@ function RootInner() {
           <Outlet />
         </main>
         <SiteFooter />
+        <Toaster position="top-center" richColors closeButton />
       </div>
     </DayImageOverridesProvider>
   );
