@@ -910,6 +910,34 @@ function PublishCard({
                 data: { password, outfitId: outfit.id, title, notes },
               })) as { ok: boolean; founderLookId: string };
               toast.success("Founder Look published ✓");
+              // Surface a deep link to the live moment page so the founder
+              // can immediately verify the published look overrides the
+              // legacy fallback. Mapped via normalizeMomentSlug on the
+              // server, so we re-derive the slug from outfit.moment here.
+              const momentSlug = (outfit.moment ?? "")
+                .toLowerCase()
+                .replace(/&/g, " and ")
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+              const devSlugMap: Record<string, string> = {
+                "arrival-day": "arrival",
+                "market-morning": "espresso-morning",
+                "beach-club-long-lunch": "beach-club",
+                "pool-lounging-and-shopping": "pool-lounging",
+                "pool-lounging-shopping": "pool-lounging",
+                "explore-the-harbor": "exploring-the-harbor",
+              };
+              const canonicalMoment = devSlugMap[momentSlug] ?? momentSlug;
+              const devUrl = `/portofino/${canonicalMoment}`;
+              toast.success(
+                <span>
+                  View on Dev Page:{" "}
+                  <a href={devUrl} className="underline" target="_blank" rel="noreferrer">
+                    {devUrl}
+                  </a>
+                </span>,
+                { duration: 10000 },
+              );
               onChange();
               window.location.href = `/admin/founder-looks?focus=${r.founderLookId}`;
             } catch (e) {
