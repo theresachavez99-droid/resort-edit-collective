@@ -917,6 +917,19 @@ Return ${data.count} candidates for the "${data.slot}" slot.`;
 
     const inserted: Record<string, unknown>[] = [];
     const runId = crypto.randomUUID();
+
+    // Archive any prior AI suggestions for this slot — only the latest
+    // generation should be visible. Founder selections (status='selected'
+    // or selected_for_look=true) are preserved untouched.
+    await db
+      .from("buying_candidates")
+      .update({ status: "replaced" })
+      .eq("hero_outfit_id", data.outfitId)
+      .eq("stylist_slot", data.slot)
+      .eq("stylist_source", "ai")
+      .eq("selected_for_look", false)
+      .neq("status", "rejected");
+
     for (let i = 0; i < suggestions.length; i++) {
       const s = suggestions[i];
       // Build a clickable retailer search URL so the founder can locate the piece.
