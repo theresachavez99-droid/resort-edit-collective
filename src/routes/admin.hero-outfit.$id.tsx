@@ -652,6 +652,9 @@ function SlotRow({
   password,
   onChange,
   disabled,
+  expanded = true,
+  showArchived = false,
+  onToggleExpand,
 }: {
   outfitId: string;
   slot: string;
@@ -662,6 +665,9 @@ function SlotRow({
   password: string;
   onChange: () => void;
   disabled: boolean;
+  expanded?: boolean;
+  showArchived?: boolean;
+  onToggleExpand?: () => void;
 }) {
   const [pasteUrl, setPasteUrl] = useState("");
   const addManual = useServerFn(addManualSlotCandidate);
@@ -672,13 +678,67 @@ function SlotRow({
   const [regenLoading, setRegenLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(6);
 
-  const visibleCandidates = candidates
-    .filter((c) => c.status !== "rejected")
-    .slice(0, visibleCount);
-  const hiddenCount = Math.max(
-    0,
-    candidates.filter((c) => c.status !== "rejected").length - visibleCandidates.length,
+  // V3: hide rejected + replaced from primary workflow.
+  const activeCandidates = candidates.filter(
+    (c) => c.status !== "rejected" && c.status !== "replaced",
   );
+  // Only show the latest AI generation. We approximate "latest" by
+  // taking the max created_at among AI siblings (replaced rows are
+  // already filtered above by selectSlotCandidate / regenerate).
+  const aiActive = activeCandidates.filter((c) => c.stylist_source === "ai");
+  let latestAiKey: string | null = null;
+  if (aiActive.length > 0) {
+    const sorted = [...aiActive].sort(
+      (a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
+    );
+    // group by minute bucket as proxy run id
+    latestAiKey = String(sorted[0].created_at ?? "").slice(0, 16);
+  }
+  const liveCandidates = activeCandidates.filter((c) => {
+    if (c.stylist_source !== "ai") return true;
+    return String(c.created_at ?? "").slice(0, 16) === latestAiKey;
+  });
+  const visibleCandidates = liveCandidates.slice(0, visibleCount);
+  const hiddenCount = Math.max(0, liveCandidates.length - visibleCandidates.length);
+  const rejectedCands = candidates.filter((c) => c.status === "rejected");
+  const supersededCount = activeCandidates.length - liveCandidates.length;
+
+  const selected = candidates.find((c) => c.id === selectedId) ?? null;
+
+  // Collapsed (filled) view — one-line summary.
+  if (!expanded && selected) {
+    return (
+      <div className="border border-stone-200 px-4 py-2 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="text-emerald-700 text-xs">✓</span>
+          <span className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 w-24 shrink-0">
+            {label}
+          </span>
+          {selected.image_url && (
+            <img
+              src={selected.image_url}
+              alt=""
+              className="w-8 h-8 object-cover border border-stone-200 shrink-0"
+            />
+          )}
+          <span className="text-xs truncate">
+            <span className="font-medium">{selected.brand ?? "—"}</span>
+            {selected.product_name ? (
+              <span className="text-stone-500"> — {selected.product_name}</span>
+            ) : null}
+          </span>
+        </div>
+        {!disabled && (
+          <button
+            onClick={onToggleExpand}
+            className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 hover:text-ink shrink-0"
+          >
+            Change
+          </button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="border border-stone-200 p-4 space-y-3">
@@ -698,6 +758,14 @@ function SlotRow({
         </div>
         {!disabled && (
           <div className="flex items-center gap-3">
+            {selectedId && onToggleExpand && (
+              <button
+                onClick={onToggleExpand}
+                className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500 hover:text-ink"
+              >
+                Collapse
+              </button>
+            )}
             <button
               onClick={async () => {
                 setRegenLoading(true);
@@ -837,6 +905,34 @@ function SlotRow({
         >
           Show {hiddenCount} more
         </button>
+      )}
+      {(supersededCount > 0 || rejectedCands.length > 0) && (
+        <div className="text-[0.6rem] text-stone-400 italic">
+          {supersededCount > 0 && <span>{supersededCount} superseded · </span>}
+          {rejectedCands.length > 0 && <span>{rejectedCands.length} rejected</span>}
+        </div>
+      )}
+      {showArchived && rejectedCands.length > 0 && (
+        <details className="text-[0.65rem] text-stone-500" open>
+          <summary className="cursor-pointer">Rejected ({rejectedCands.length})</summary>
+          <ul className="mt-2 space-y-1">
+            {rejectedCands.map((c) => (
+              <li key={c.id} className="flex items-center gap-2">
+                <span className="line-through">{c.brand} — {c.product_name}</span>
+                {c.product_url && (
+                  <a
+                    href={c.product_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-stone-400 underline"
+                  >
+                    view
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </details>
       )}
 
       {/* Manual paste */}
