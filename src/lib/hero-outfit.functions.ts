@@ -556,16 +556,19 @@ export const selectSlotCandidate = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const db = await admin();
-    // Clear sibling selections in the same slot.
+    // Mark any previously-selected sibling as `replaced` (memory-preserving)
+    // and clear its selection flag — the Founder will not see it again unless
+    // they toggle "Show rejected/archived".
     await db
       .from("buying_candidates")
-      .update({ selected_for_look: false })
+      .update({ selected_for_look: false, status: "replaced" })
       .eq("hero_outfit_id", data.outfitId)
-      .eq("stylist_slot", data.slot);
+      .eq("stylist_slot", data.slot)
+      .eq("selected_for_look", true);
     if (data.candidateId) {
       const r = await db
         .from("buying_candidates")
-        .update({ selected_for_look: true })
+        .update({ selected_for_look: true, status: "selected" })
         .eq("id", data.candidateId);
       if (r.error) throw new Error(r.error.message);
     }
@@ -695,6 +698,7 @@ export const publishFounderLookFromOutfit = createServerFn({ method: "POST" })
       }
     };
     const offenders: string[] = [];
+    const customs = ((outfit.data.custom_components ?? []) as CustomComponent[]) || [];
     const hero_urls = [...heroes, ...accessories].map((c) => {
       const url = c.affiliate_url ?? c.product_url ?? "";
       if (!isUsable(url)) {
@@ -716,6 +720,28 @@ export const publishFounderLookFromOutfit = createServerFn({ method: "POST" })
         role: c.is_hero_garment ? "Hero Garment" : "Accessory",
       };
     });
+    // Append Founder-defined Optional Components — these render under
+    // "Complete the Look" on the public moment page. Same URL hygiene.
+    for (const c of customs) {
+      const url = c.url;
+      if (!isUsable(url)) {
+        offenders.push(`optional: ${c.brand ?? ""} ${c.name}`.trim());
+        continue;
+      }
+      hero_urls.push({
+        brand: c.brand ?? "",
+        url,
+        product_url: url,
+        affiliate_url: null,
+        retailer: null,
+        price: c.price ?? null,
+        currency: c.currency ?? null,
+        image_url: c.image_url ?? null,
+        product_name: c.name,
+        category: c.name.toLowerCase(),
+        role: "Optional",
+      });
+    }
     if (offenders.length > 0) {
       throw new Error(
         "Cannot publish: the following selected products are missing a real retailer URL. " +
@@ -914,6 +940,19 @@ Return ${data.count} candidates for the "${data.slot}" slot.`;
 
     const inserted: Record<string, unknown>[] = [];
     const runId = crypto.randomUUID();
+
+    // Archive any prior AI suggestions for this slot — only the latest
+    // generation should be visible. Founder selections (status='selected'
+    // or selected_for_look=true) are preserved untouched.
+    await db
+      .from("buying_candidates")
+      .update({ status: "replaced" })
+      .eq("hero_outfit_id", data.outfitId)
+      .eq("stylist_slot", data.slot)
+      .eq("stylist_source", "ai")
+      .eq("selected_for_look", false)
+      .neq("status", "rejected");
+
     for (let i = 0; i < suggestions.length; i++) {
       const s = suggestions[i];
       // Build a clickable retailer search URL so the founder can locate the piece.
@@ -987,5 +1026,100 @@ export const rejectSlotCandidate = createServerFn({ method: "POST" })
       .update({ status: "rejected", selected_for_look: false })
       .eq("id", data.candidateId);
     if (r.error) throw new Error(r.error.message);
+    return { ok: true as const };
+  });
+
+// ──────────────────────────────────────────────────────────
+// Custom Optional Components — flexible per-look additions
+// (Suitcase, belt, beach towel, shawl, watch, anything else).
+// Stored as a jsonb array on founder_hero_outfits.custom_components.
+// ──────────────────────────────────────────────────────────
+
+type CustomComponent = {
+  id: string;
+  name: string;
+  url: string;
+  image_url?: string | null;
+  price?: number | null;
+  currency?: string | null;
+  brand?: string | null;
+  notes?: string | null;
+};
+
+const customComponentSchema = z.object({
+  name: z.string().min(1).max(120),
+  url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }),
+  image_url: z.string().url().refine(isHttpUrl, { message: "URL must use http or https" }).nullable().optional(),
+  price: z.number().nonnegative().nullable().optional(),
+  currency: z.string().max(8).nullable().optional(),
+  brand: z.string().max(120).nullable().optional(),
+  notes: z.string().max(1000).nullable().optional(),
+});
+
+async function readCustomComponents(outfitId: string): Promise<CustomComponent[]> {
+  const db = await admin();
+  const r = await db
+    .from("founder_hero_outfits")
+    .select("custom_components")
+    .eq("id", outfitId)
+    .single();
+  if (r.error) throw new Error(r.error.message);
+  const raw = r.data?.custom_components;
+  return Array.isArray(raw) ? (raw as CustomComponent[]) : [];
+}
+
+async function writeCustomComponents(outfitId: string, items: CustomComponent[]) {
+  const db = await admin();
+  const r = await db
+    .from("founder_hero_outfits")
+    .update({ custom_components: items as never })
+    .eq("id", outfitId);
+  if (r.error) throw new Error(r.error.message);
+}
+
+export const addCustomComponent = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z.object({ ...pw, outfitId: z.string().uuid(), component: customComponentSchema }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const items = await readCustomComponents(data.outfitId);
+    const next: CustomComponent = { id: crypto.randomUUID(), ...data.component };
+    items.push(next);
+    await writeCustomComponents(data.outfitId, items);
+    return { ok: true as const, component: next };
+  });
+
+export const updateCustomComponent = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z
+      .object({
+        ...pw,
+        outfitId: z.string().uuid(),
+        componentId: z.string().min(1),
+        patch: customComponentSchema.partial(),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const items = await readCustomComponents(data.outfitId);
+    const idx = items.findIndex((i) => i.id === data.componentId);
+    if (idx < 0) throw new Error("Custom component not found.");
+    items[idx] = { ...items[idx], ...data.patch } as CustomComponent;
+    await writeCustomComponents(data.outfitId, items);
+    return { ok: true as const, component: items[idx] };
+  });
+
+export const removeCustomComponent = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z.object({ ...pw, outfitId: z.string().uuid(), componentId: z.string().min(1) }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const items = (await readCustomComponents(data.outfitId)).filter(
+      (i) => i.id !== data.componentId,
+    );
+    await writeCustomComponents(data.outfitId, items);
     return { ok: true as const };
   });

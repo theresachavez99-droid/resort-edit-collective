@@ -39,6 +39,8 @@ export type OverrideItem = {
   title: string;
   url: string;
   image: string;
+  /** When true, this row is grouped under "Complete the Look" on the public moment page. */
+  isOptional?: boolean;
 };
 
 export type LookOverride = {

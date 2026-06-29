@@ -1,335 +1,150 @@
-# Founder Buying Office V1 — FINAL APPROVED (Architecture Freeze)
+# Buying Office V3 — Founder-Centric Editorial Workspace
 
-> The Buying Office searches the market. The Founder reviews the market. The Stylist Engine learns from the Founder.
+Refactor Hero Outfit Studio into a quiet editorial workspace that remembers every decision, collapses completed work, and supports any moment via flexible custom components.
 
-After this ships: **architecture is frozen.** Engineering shifts to building the Founder Buying Office, curating the 20 Portofino Founder Heroes, and validating the workflow through real curation. Only small, evidence-based improvements from here.
+## Guiding principle
 
----
+Discover → Curate → Refine → Publish. Each Founder decision permanently reduces visible complexity. Reopening a review never starts over.
 
-## 1. Immutable Search Sessions *(final addition)*
+## 1. Persist all decision states
 
-A Search Session is a permanent editorial record. Once it begins, **nothing that affects ranking changes inside that session.** Changing any ranking input opens a **new** Search Session.
+Extend `buying_candidates.status` semantics and add a `slot_assignment` linking a candidate to a Hero Outfit slot. Statuses respected globally:
 
-**Locked at Search-start (immutable for the life of the session):**
-- Founder Hero Brief
-- Founder Vision version
-- Editorial Benchmark
-- Search Strategy *(Editorial First / Brand Discovery / Brand Focus / Replacement Mode)*
-- Search Depth *(Quick / Standard / Deep Buy)*
-- Search results *(retailer responses + ranking snapshot)*
-- Approved Retailer set, Hero Category, Price band, Brand Include/Exclude, Editorial Exclusions, Moment Energy
+- `review` (default after import)
+- `favorite` / `later`
+- `finalist`
+- `selected` (locked into a slot — new)
+- `replaced` (superseded by a later selection — new)
+- `rejected`
+- `founder_hero` (Hero garment)
 
-**Editable inside an open session (provenance only — never ranking):**
-- Per-candidate state: Favorite · Review Later · Reject (with tags) · Shortlist · Promote to Founder Finalist
-- Founder notes on candidates
+New table `hero_outfit_slot_history` records every AI generation / manual pick per slot so nothing is lost:
 
-**New Session triggers** (UI auto-prompts "Start New Search Session"):
-- Edit Brief
-- Bump Vision version
-- Change Benchmark / Strategy / Depth / Retailers / Category / Price / Brand filters / Exclusions / Moment Energy
-- Re-run Search
-
-Implementation:
-- `buying_search_sessions` is **append-only**. Columns: `hero_brief jsonb`, `hero_brief_locked_at`, `vision_version int`, `editorial_benchmark`, `search_strategy`, `search_depth`, `retailer_set jsonb`, `filters jsonb`, `search_results_snapshot jsonb`, `ranking_snapshot jsonb`, `parent_session_id uuid null`, `created_at`.
-- Server functions reject mutations to locked fields with `423 Locked` and surface "Start New Search Session" in the UI.
-- `parent_session_id` links a new session to the one it forked from, preserving the editorial lineage.
-- Sessions are **never deleted**; archived only.
-
----
-
-## 2. Founder Vision Versioning
-
-`founder_visions` table stores immutable v1 → v2 → v3 per (destination, moment) with `change_summary` and `is_current`. `founder_looks` and `buying_search_sessions` both carry `vision_version`. Backfill creates v1 from current values. Surfaced as a small "Vision vN · what changed" disclosure — no new admin page.
-
----
-
-## 3. Founder Collection Roadmap *(top of Buying Office)*
-
-Per destination: Hero target, completed/remaining per moment, Editorial Coverage, Suggested Next Hero (one-click prefill), Collection Balance Snapshot. Targets configurable; Portofino default = 20. Counts active Heroes only.
-
----
-
-## 4. Founder Hero Brief *(required before every Buying Review)*
-
-Auto-generated from current Founder Vision (vN) + Moment Template. Editable during setup. **Locks the moment the Founder clicks Search** and snapshots into the Session. To change the Brief: **Edit Brief → New Search Session**. The locked Brief is pinned above the Buying Review with a "Locked at Search · Vision vN" badge.
-
-Brief fields: Editorial Story · Hero Silhouette · Moment Energy · Color Direction · Avoid (seeds Editorial Exclusions) · Photography Goal.
-
----
-
-## 5. Founder Search Panel
-
-Destination · Moment · Hero Category *(required anchor; never Brand)* · Hero Brief · Editorial Benchmark (Stephen Dann · Julianne Hope · Founder Library · Custom Upload) · Price (Max default $1,000) · Search Depth · Search Strategy · Approved Retailers (all on by default) · Brand Include/Exclude · Editorial Exclusions · Moment Energy.
-
----
-
-## 6. Search Execution
-
-Firecrawl `/search` is **scoped to Hero Category per retailer**; whole-retailer crawls forbidden. `Search → Normalize → Deduplicate → Editorial Ranking → Buying Review`. Search Summary + Market Coverage shown every run, snapshotted onto the Session.
-
-See §6a for the **Live Product Retrieval** guardrail — the Buying Office is incomplete without it.
-
----
-
-## 6a. Live Product Retrieval *(required guardrail — non-negotiable)*
-
-The Buying Office is **not UI-only**. Every Buying Search must retrieve real products from approved retailers and return them into the Buying Review. Static product data is allowed only in explicit **Offline Mode**.
-
-### Product Search Provider abstraction
-
-Firecrawl is **never imported directly** by Buying Office code. All retrieval flows through a pluggable interface:
-
-```ts
-// src/lib/product-search/provider.ts
-export interface ProductSearchProvider {
-  id: 'firecrawl' | 'affiliate_feed' | 'retailer_api' | 'internal_index' | 'manual_import' | 'brand_direct' | 'offline_fixture'
-  search(input: ProductSearchInput): Promise<ProductSearchResult>
-}
-
-export interface ProductSearchInput {
-  sessionId: string                 // immutable Search Session
-  heroBrief: LockedHeroBrief        // locked snapshot
-  heroCategory: string              // required anchor
-  retailers: ApprovedRetailer[]     // from §6a retailer list
-  benchmark: EditorialBenchmark
-  momentEnergy: number              // 1–10
-  priceCeiling: number              // default $1000
-  exclusions: EditorialExclusionTag[]
-  strategy: 'editorial_first' | 'brand_discovery' | 'brand_focus' | 'replacement'
-  depth: 'quick' | 'standard' | 'deep_buy'
-}
-
-export interface NormalizedCandidate {
-  product_name: string
-  brand: string
-  retailer: ApprovedRetailer
-  price: number
-  currency: string
-  image_url: string
-  canonical_url: string             // dedup key
-  affiliate_url: string | null
-  availability: 'in_stock' | 'low_stock' | 'out_of_stock' | 'unknown'
-  category: string
-  color: string | null
-  source: { provider: string; retrieved_at: string; raw_ref: string }
-}
-
-export interface MarketCoverageRow {
-  retailer: ApprovedRetailer
-  queried: boolean
-  raw_results: number
-  normalized: number
-  after_dedup: number
-  shortlisted: number
-  error: string | null
-}
-
-export interface ProductSearchResult {
-  candidates: NormalizedCandidate[]
-  coverage: MarketCoverageRow[]
-  provider_id: string
-  errors: Array<{ retailer: ApprovedRetailer; message: string }>
-}
+```text
+hero_outfit_slot_history
+  id, outfit_id, slot, candidate_id (nullable),
+  generation_payload jsonb, action (generated|selected|rejected|replaced|cleared),
+  created_at
 ```
 
-**Default provider:** `firecrawl`.
-**Future providers** (interface-compatible, wired in without touching the Buying Office): `affiliate_feed`, `retailer_api`, `internal_index`, `manual_import`, `brand_direct`, `offline_fixture`.
+Server fns: `selectCandidateForSlot`, `clearSlot`, `replaceSlotSelection`, `rejectCandidate`, `restoreCandidate`. All write to history.
 
-### Approved retailers (live retrieval)
+## 2. Default workspace = Current Founder Look
 
-Revolve · Mytheresa · Net-a-Porter · Shopbop · Saks · Neiman Marcus · Bloomingdale's · Nordstrom · FWRD · Luisaviaroma. **Brand Direct** is used only when no approved affiliate retailer carries the piece.
+`/admin/hero-outfit/$id` opens directly on a **Current Founder Look** card:
 
-### Pipeline (per Search Session)
+- Large look image (first hero garment image)
+- Hero garments list (locked)
+- Selected accessory rows (one per filled slot)
+- Optional components list
+- Publication + validation status
+- Per-row actions: **Change · Replace · Remove**
 
-`Locked Brief → Provider.search(input) → Normalize → Apply Brief/Benchmark/Exclusions/Price/Energy → Deduplicate by canonical_url → Editorial Ranking (§8) → Buying Review`.
+Recommendation panels render *below*, only for incomplete required slots, expanded by default. Filled slots render as one-line collapsed rows with a `Change` affordance.
 
-Snapshotted onto `buying_search_sessions`: `provider_id`, `retailer_set`, raw provider response refs, normalized candidate set, coverage, ranking snapshot — all immutable.
+## 3. Collapse / expand behavior
 
-### Firecrawl-specific rules *(apply to the default provider only)*
+- Filled required slot → collapsed summary row.
+- Empty required slot → expanded with current AI generation only.
+- "Change" / "Regenerate" / "Clear" re-expands a filled slot.
+- "Regenerate" archives the prior generation into history; only the latest generation is shown.
 
-- Searches scoped to `{heroCategory} site:{retailer.domain}` — one call per (retailer × category).
-- **Never** crawl entire retailers. **Never** run generic queries (e.g. "luxury Portofino outfit"). **Never** issue a search without a locked Brief + Session.
-- Depth tiers map to Firecrawl budgets: Quick / Standard / Deep Buy.
-- Any provider change forks a new Search Session (per §1).
+## 4. Hide rejected + superseded by default
 
-### Offline mode
+- Rejected candidates filtered out of every slot panel.
+- Toggle `Show rejected` (per slot + global) reveals a collapsible section.
+- Superseded AI generations hidden; `View history` opens a drawer reading `hero_outfit_slot_history`.
 
-- Only entered explicitly by the Founder (toggle in the Search Panel) and is recorded on the Session.
-- Uses the `offline_fixture` provider against curated local fixtures.
-- Buying Review is clearly badged **Offline Mode** and excluded from Market Coverage analytics.
+## 5. Custom Optional Components
 
-### Failure behavior *(no silent fakes)*
+Remove hardcoded Hair Accessory. Replace the optional slots concept with an open list of `custom_components` stored on `founder_hero_outfits.custom_components jsonb`:
 
-If the live provider returns zero usable candidates **or** errors across all queried retailers:
+```text
+{ id, name, url, image_url?, price?, notes?, order }
+```
 
-- **No Buying Review is created.**
-- The Session is marked `status='retrieval_failed'` with the per-retailer errors retained.
-- UI shows exactly: **"Live product retrieval failed. No Buying Review was created."** plus the Market Coverage table and a "Retry as New Session" action.
-- Never populate Buying Review with placeholder, empty, or fabricated cards.
-- Decision Log records `retrieval_failed` with provider, retailers, and error summary.
+UI: **+ Add Custom Item** opens a small form (name, retail URL, optional image, optional notes). Components render in the Current Founder Look summary and publish alongside required slots — no destination-specific code paths.
 
-### Success criteria *(must pass before Buying Office is considered shipped)*
+Required slot defaults (engine-level):
 
-Founder selects: Destination Portofino · Moment Arrival Day · Hero Category Tailored Short Set · Strategy Editorial First · Depth Standard.
+- Day: Shoes, Bag, Sunglasses, Earrings, Necklace, Bracelet, Ring
+- Night: drop Sunglasses
+- Water: same as Day; sandals label for Shoes
 
-The system:
-1. Queries each approved retailer scoped to "Tailored Short Set".
-2. Returns real live products.
-3. Normalizes to `NormalizedCandidate`.
-4. Applies locked Brief, Benchmark, Moment Energy, $1,000 ceiling, Editorial Exclusions.
-5. Deduplicates by `canonical_url`.
-6. Scores via §8 + §9 + Editorial Benchmark Similarity.
-7. Renders Buying Review with image · price · retailer · affiliate badge · Editorial Score · Editorial Benchmark Similarity · Editorial Confidence.
-8. Renders Market Coverage showing what each retailer returned.
+Hat removed from required; Founders add via Optional if wanted.
 
----
+## 6. Publishing changes
 
-## 7. Buying Review
+`publishFounderLookFromOutfit` now emits two grouped sections in the published payload:
 
-States: `Discovered → Shortlisted → Buying Review → Founder Finalist → Founder Hero → Archived`, plus `Review Later`. Archived ≠ deleted.
+- **Shop the Look** — hero garments + required accessories (in canonical order)
+- **Complete the Look** — custom optional components
 
----
+`portofino.$moment.tsx` `ShopLookPanel` renders both groups with a subtle "Complete the Look" subheading; both use identical card styling.
 
-## 8. Editorial Scorecard (six dimensions)
+## 7. UI restructure (`src/routes/admin.hero-outfit.$id.tsx`)
 
-Editorial Impact · Moment Authenticity · Destination Authenticity · Founder Library Contribution · Photography Presence · Styling Flexibility. *Stephen Dann Similarity* renamed project-wide to **Editorial Benchmark Similarity**.
+New component tree:
 
----
+```text
+<HeroOutfitStudio>
+  <CurrentFounderLookCard />        // primary
+  <IncompleteSlotsPanel />          // secondary — auto-expanded
+  <CompletedSlotsList />            // collapsed rows
+  <OptionalComponentsEditor />      // add/edit custom items
+  <ArchiveDrawer />                 // tertiary — rejected + history (opt-in)
+</HeroOutfitStudio>
+```
 
-## 9. Editorial Confidence
+Goal: ≥50% reduction in scroll height for a partially-filled outfit.
 
-Plain-language explanation per candidate. Not a score; doesn't affect ranking.
+## Technical details
 
----
+**Migration**
 
-## 10. Candidate Cards & Actions
+```sql
+alter table public.founder_hero_outfits
+  add column if not exists custom_components jsonb not null default '[]'::jsonb,
+  add column if not exists slot_selections jsonb not null default '{}'::jsonb;
 
-**Display:** image · Brand · Retailer · Affiliate · Price · Editorial Score · Editorial Benchmark Similarity · Editorial Confidence · Moment Fit · Photography · Visual Weight · Editorial Family · Hero Category · Availability.
+create table if not exists public.hero_outfit_slot_history (
+  id uuid primary key default gen_random_uuid(),
+  outfit_id uuid not null references public.founder_hero_outfits(id) on delete cascade,
+  slot text not null,
+  candidate_id uuid references public.buying_candidates(id) on delete set null,
+  action text not null check (action in ('generated','selected','rejected','replaced','cleared','restored')),
+  payload jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+grant all on public.hero_outfit_slot_history to service_role;
+alter table public.hero_outfit_slot_history enable row level security;
+create policy "deny all" on public.hero_outfit_slot_history for all using (false);
 
-**Actions:** Compare (2/3/4) · Favorite · Review Later · Reject (tagged) · Archive · Promote · Duplicate · Open Retailer · **Why Didn't This Rank Higher?** chips.
+-- extend candidate status vocabulary (already free-text; add index)
+create index if not exists buying_candidates_status_idx on public.buying_candidates(session_id, status);
+```
 
----
-
-## 11. Founder Favorites
-
-Save without destination. Permanent inspiration archive.
-
----
-
-## 12. Hero Promotion + Collection Balance
-
-`Buying Review → Founder Finalist → Review (Brief + Vision vN restated) → Collection Balance → Twenty Looks Forever → required Promotion Note → Founder Hero`. **Hero Lock** on promotion. Hero stamped with `vision_version` + originating `search_session_id`. Writes a Decision Log entry.
-
----
-
-## 13. Founder Hero Retirement *(backend now · UI hidden in V1)*
-
-Backend: `status='retired'` + `retired_at/reason/note/successor_founder_look_id`, `src/lib/founder-retirement.functions.ts`, engine/memory/roadmap filter to **active** Heroes.
-
-**UI reveal rule:** Retire / Restore / Retired tab visible only when at least one Hero is retired **or** the destination reaches `hero_target`.
-
----
-
-## 14. Founder Decision Log *(destination-level timeline)*
-
-Auto-written events: Hero promotion · Finalist rejection · Slot replacement (with Replacement Impact + why_better_tags) · Hero Lock override · Hero retirement/restoration · Founder Vision version bump · New Editorial Family or Hero Category · Roadmap milestone · **New Search Session forked from session X** · **Mutation attempted on locked session** *(audit only)*.
-
----
-
-## 15. Hero Then Accessories
-
-Strictly sequential: `Hero approved → Shoes → Bag → Jewelry → Sunglasses → Hat → Layer`. Accessory sourcing never influences Hero selection.
-
----
-
-## 16. Replace This Piece + Replacement Impact
-
-Per-dimension explanation, Revision Timeline, respects Hero Lock, writes Decision Log entry. `regenerateSlot` supports Replace · Pin · Show 6 more · Compare. Stored in `founder_slot_revisions` (admin-only RLS) with `impact_breakdown jsonb` and `why_better_tags text[]`.
-
----
-
-## 17. Hero Piece Diversity (replaces Hero Brand Uniqueness)
-
-Silhouette · Editorial Family · Color Story · Texture · Photography · Accessory Story · Luxury Positioning · Moment Energy · Editorial Language. Brand repetition = warning only. Computed over active Heroes.
-
----
-
-## 18. Collection Planning & Health
-
-**Planning (editorial-identity first):** Hero Image · Moment · Editorial Family · Hero Category · Silhouette · Color Story · Moment Energy · Editorial Score · Visual Weight · Price · Brand · Vision version. Embeds destination Decision Log. Retired tab gated by §13.
-
-**Health:** passive, on-demand editorial gap report over active Heroes.
-
----
-
-## 19. Permanently Out of Scope
-
-Scheduled Firecrawl searches · Background crawling · Daily buying recommendations · Trend monitoring · Automatic opportunity detection · AI shopping agents · Autonomous buyers · Trend prediction · Additional scoring systems · Any further admin pages, AI features, workflows, or scoring after this ships.
-
----
-
-## 20. Phase 4 Vision Engine (carried)
-
-- **Layer 1 — Canonical Founder Vision** (versioned per §2); mirrored onto `founder_looks` for fast reads.
-- **Layer 2 — AI Suggestions** via role-tagged reference images (overall/shoes/bag/sunglasses/jewelry/hat/other), per-field Accept · Edit · Ignore. Storage bucket `founder-references` (admin RW). `src/lib/editorial-dna.server.ts` via Lovable AI Gateway (Gemini). `src/lib/founder-vision.ts` synthesizes — Layer 1 always wins.
-- **Founder Similarity v2** weights: Founder Vision · Hero Silhouette · Reference DNA · Hero Products · Brand.
-- **Editorial Fidelity** gates on silhouette, proportion, visual weight, color harmony, accessory personality, mood, luxury positioning, Moment Energy.
-- **Templates:** `founder_look_templates` per (destination, moment) with Moment Energy, hero_silhouette_skeleton, accessory philosophy, expected slots, `hero_target int`. Seeded for Portofino.
-- **Editorial Families:** `editorial_families` + `brand_editorial_families` (primary | secondary). Seeded, founder-editable.
-
----
-
-## 21. Migrations
-
-All admin tables: `GRANT` to `authenticated` + `service_role`; RLS enabled; policies via `has_role(auth.uid(),'admin')`. No `USING(true)`. No `anon` grants.
-
-- **A** — `app_role` + `user_roles` + `has_role()` (if missing); Layer 1 + `vision_version` on `founder_looks`; `status='retired'` + retirement columns; `founder_slot_revisions` with `impact_breakdown jsonb`; storage bucket `founder-references`.
-- **B** — `founder_look_templates` + Portofino seeds with Moment Energy + `hero_target int`.
-- **C** — `editorial_families` + `brand_editorial_families` + seeds.
-- **D** — `buying_search_sessions` (immutable: hero_brief, hero_brief_locked_at, vision_version, editorial_benchmark, search_strategy, search_depth, retailer_set, filters, search_results_snapshot, ranking_snapshot, parent_session_id); `buying_review` states; `founder_favorites`; `editorial_benchmarks`; `hero_categories`; `editorial_exclusion_tags`; `founder_decision_log`.
-- **E** — `founder_visions` (destination, moment, vision_version, Layer 1 fields, change_summary, is_current, created_at). Unique partial index for one current per (destination, moment). Backfill v1 from current `founder_looks`.
-
----
-
-## 22. Files
-
-**New:** `src/lib/editorial-dna.server.ts` · `src/lib/founder-vision.ts` · `src/lib/founder-revisions.functions.ts` · `src/lib/founder-visions.functions.ts` · `src/lib/editorial-family.ts` · `src/lib/editorial-similarity.ts` · `src/lib/founder-templates.functions.ts` · `src/lib/collection-health.functions.ts` · `src/lib/collection-planning.functions.ts` · `src/lib/collection-roadmap.ts` · `src/lib/founder-hero-brief.ts` · `src/lib/founder-decision-log.functions.ts` · `src/lib/founder-retirement.functions.ts` · `src/lib/buying-search.functions.ts` (enforces session immutability + forks new sessions) · `src/lib/buying-review.functions.ts` · `src/lib/buying-sessions.functions.ts` · `src/lib/founder-favorites.functions.ts` · `src/lib/editorial-scorecard.ts` · `src/lib/editorial-confidence.ts` · `src/lib/replacement-impact.ts` · `src/lib/editorial-benchmarks.functions.ts` · `src/routes/admin.founder-buying.tsx` (Roadmap · Brief w/ lock · Buying Review · Sessions tab w/ fork lineage · Favorites · Decision Log) · `src/routes/admin.editorial-families.tsx` · `src/routes/admin.collection-health.tsx` · `src/routes/admin.collection-planning.tsx` · `src/routes/admin.editorial-benchmarks.tsx`.
-
-**Product Search Provider layer (new):** `src/lib/product-search/provider.ts` (interface + types) · `src/lib/product-search/registry.ts` (provider lookup) · `src/lib/product-search/normalize.ts` (raw → `NormalizedCandidate`) · `src/lib/product-search/dedupe.ts` · `src/lib/product-search/firecrawl-provider.server.ts` (default; only file allowed to import Firecrawl) · `src/lib/product-search/offline-fixture-provider.ts` · `src/lib/product-search/retailers.ts` (approved retailer registry + domain map) · `src/lib/product-search/coverage.ts` (Market Coverage builder).
-
-Buying Office code (`src/lib/buying-search.functions.ts`, admin routes) imports **only** the provider interface + registry — never Firecrawl directly. A lint rule / grep guard enforces this.
-
-**Edited:** `src/lib/stylist-engine.functions.ts` (regenerateSlot · Replacement Impact · DNA-first sourcing · Moment Energy fidelity · silhouette fallback · Hero Piece Diversity · Hero Lock · accessory pipeline only after Hero approval · filter Retired Heroes · respect vision_version · Decision Log writes) · `src/lib/founder-looks.functions.ts` (Layer 1 persistence · reference images · template hydration · Hero Lock · Collection Balance · Twenty Looks Forever · required Promotion Note · stamp vision_version + search_session_id · Retirement surfaces UI-gated) · `src/lib/founder-similarity.ts` (v2 weights) · `src/lib/editorial-stylist.ts` (`editorialFidelityScore` + Moment Energy) · `src/lib/collection-director.ts` (`analyzeMomentGaps` over active Heroes) · `src/lib/editorial-memory.server.ts` (retain Retired for reuse warnings; exclude from active diversity counts) · `src/lib/founder-context.server.ts` (rejection tags + why_better_tags + Promotion Notes + recent Decision Log + active Vision) · `src/lib/discovery-pipeline.ts` (Quick / Standard / Deep Buy tiers; strategy routing) · `src/routes/admin.founder-looks.tsx` (Template picker · Vision panel w/ version history · Silhouette editor · Reference gallery Accept/Edit/Ignore · Brief preview · Replace + Replacement Impact + Show 6 more + Compare · Revision Timeline · Hero Lock badge · Collection Balance · Twenty-Looks-Forever toggle · required Promotion Note · candidate pre-seed · Retire/Restore gated) · `src/routes/admin.index.tsx` (Buying Office promoted to top; Core Philosophy banner).
-
----
-
-## 23. Definition of Done
-
-Founder can:
-- See the **Roadmap** (progress, coverage, suggested next Hero, balance) at top of Buying Office with one-click prefill.
-- See an auto-generated **Hero Brief** stamped with current **Vision version**, edit it during setup, and have it **lock** on Search.
-- Open a **New Search Session** by editing the Brief or any ranking input — never mutate an open session.
-- Define structured editorial intent and search by Hero Category across approved retailers (Firecrawl scoped to category).
-- Review a curated **Buying Review** with Search Summary + Market Coverage + pinned locked Brief.
-- See **Editorial Confidence** with a plain-language reason.
-- Compare up to four products and read **Why Didn't This Rank Higher?**.
-- Save to **Favorites** or **Review Later**; reject with structured tags.
-- See **Collection Balance** before Twenty Looks Forever; promote a Hero with required Promotion Note stamped with `vision_version` and `search_session_id`.
-- See **Replacement Impact** on any slot swap; **Hero Lock** on promotion.
-- Read a per-destination **Founder Decision Log** linked back to source events, including new-session forks and any blocked mutations on locked sessions.
-- Bump **Founder Vision** to v2/v3 with change summary; every existing Hero/Session keeps its original version stamp.
-- Retire / Restore Heroes via backend today; UI appears under §13 reveal rule.
-- Trust every Search Session as an immutable editorial record.
-- Run a real Buying Search that hits approved retailers via the Product Search Provider, sees Market Coverage, and gets a curated Buying Review with images, prices, retailer links, affiliate badges, Editorial Score, Editorial Benchmark Similarity, and Editorial Confidence — or, on failure, sees **"Live product retrieval failed. No Buying Review was created."** with zero placeholder cards.
-
----
-
-## 24. Architecture Freeze (final)
-
-After ship: **architecture complete.** Engineering redirects almost entirely to:
-1. Building the Founder Buying Office.
-2. Curating the 20 Portofino Founder Heroes.
-3. Using those real curation sessions to validate the workflow.
-4. Small, evidence-based improvements only when actual usage exposes friction.
-
-Resort Edit's next leap comes from exceptional editorial curation — not more features.
+**Server fns** (`src/lib/hero-outfit.functions.ts`):
+- `selectCandidateForSlot({ outfitId, slot, candidateId })` — sets candidate.status=`selected`, marks any prior `selected` candidate in that slot as `replaced`, writes history.
+- `clearSlot({ outfitId, slot })` — unsets selection, writes history.
+- `rejectCandidate` / `restoreCandidate` — toggle rejection, write history.
+- `addCustomComponent` / `updateCustomComponent` / `removeCustomComponent` — mutate `custom_components` jsonb.
+- `getOutfitWorkspace({ outfitId })` — returns hero garments, current selections, incomplete slots, optional components, latest generation per empty slot, and counts (rejected, history) without their payloads.
+- `regenerateSlotWithAI` updated to archive the prior generation via history and replace current AI suggestions in-place rather than append.
+
+**Slot config** (`src/lib/hero-outfit-slots.ts`):
+- Remove `hair` from defaults; keep `hat` optional-only via custom components.
+- Add `kind: "required" | "optional"` to `SlotDefinition`; UI only auto-renders required slots.
+
+**Publish payload** (`hero-outfit.functions.ts` → `publishFounderLookFromOutfit`):
+- Group resolved products into `look_products` (required) and `optional_products` (custom components). `founder_looks` gains a `optional_components jsonb` column; `founder_reference_products` already supports the flat list — we additionally attach `is_optional` in the product metadata used by the moment page.
+
+**Public render** (`src/routes/portofino.$moment.tsx`):
+- `ShopLookPanel` reads `optional_products`, renders them under a "Complete the Look" subheading using the same `ShopCard`.
+
+## Out of scope
+
+- No destination-specific component presets.
+- No changes to import/wizard stages 1–3.
+- No new analytics surfaces.
+- Brand/scoring engine untouched.
