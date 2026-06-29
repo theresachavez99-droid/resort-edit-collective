@@ -108,8 +108,8 @@ function MomentPage() {
       product: {
         slotLabel:
           p.role === "Hero Garment"
-            ? "Hero"
-            : p.category.replace(/_/g, " ").toUpperCase(),
+            ? "The Look"
+            : prettifyCategory(p.category),
         brand: p.brand || p.product_name.split(" ")[0] || "—",
         title: p.product_name || p.brand || "",
         url: isUsableShopUrl(p.url) ? p.url : "",
@@ -233,7 +233,7 @@ function MomentPage() {
       {/* FEATURED LOOK — editorial hero styling recommendation */}
       <section className="bg-ivory">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(300px,1fr)] gap-8 md:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start">
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
               <img
                 src={resolved.image}
@@ -241,7 +241,7 @@ function MomentPage() {
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
             </div>
-            <div className="space-y-4 lg:pl-4">
+            <div className="space-y-4 lg:pl-2">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
                 {editorPickLabel}
               </span>
@@ -251,7 +251,7 @@ function MomentPage() {
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
                 {isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative)}
               </p>
-              {featuredSlots.length > 0 && (
+              {!isFounderLook && featuredSlots.length > 0 && (
                 <div className="border-t border-border/60 pt-4">
                   <div className="flex items-baseline justify-between gap-4 flex-wrap">
                     <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">
@@ -285,7 +285,12 @@ function MomentPage() {
                   ))}
                 </div>
               )}
-              {featuredShop.length > 0 && (
+              {/* Founder Look: always-visible shop panel on the right. */}
+              {isFounderLook && featuredShop.length > 0 && (
+                <ShopLookPanel heading={shopHeading} entries={featuredShop} />
+              )}
+              {/* Legacy/tagged look: keep collapsible "View Complete Look". */}
+              {!isFounderLook && featuredShop.length > 0 && (
                 <div className="pt-2 flex flex-wrap items-center gap-4">
                   <button
                     type="button"
@@ -306,7 +311,7 @@ function MomentPage() {
             </div>
           </div>
 
-          {openShop === "featured" && featuredShop.length > 0 && (
+          {!isFounderLook && openShop === "featured" && featuredShop.length > 0 && (
             <InlineShop
               id="shop-featured"
               heading={shopHeading}
