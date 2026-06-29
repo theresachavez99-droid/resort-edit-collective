@@ -921,7 +921,12 @@ Return ${data.count} candidates for the "${data.slot}" slot.`;
       const retailer = APPROVED_RETAILERS.includes(s.retailer as never)
         ? s.retailer
         : "net-a-porter.com";
-      const productUrl = `https://www.google.com/search?q=site%3A${retailer}+${q}#aiRun=${runId}-${i}`;
+      // AI suggestions are starting points, not real retailer URLs.
+      // Persist a placeholder marker (AFF- prefix → filtered by the public
+      // page) so this candidate cannot accidentally publish as a real link,
+      // and stash the search URL in notes for the founder's lookup workflow.
+      const productUrl = `AFF-AI-${runId}-${i}`;
+      const searchHelper = `https://www.google.com/search?q=site%3A${retailer}+${q}`;
 
       const editorial = Math.max(0, Math.min(10, (s.editorial_score ?? 0) / 10));
       const similarity = Math.max(0, Math.min(1, (s.founder_similarity ?? 0) / 100));
@@ -948,7 +953,7 @@ Return ${data.count} candidates for the "${data.slot}" slot.`;
           image_url: null,
           image_missing: true,
           description: null,
-          notes: `${s.why_works}\n\nWhy it fits: ${s.why_fits}`,
+          notes: `${s.why_works}\n\nWhy it fits: ${s.why_fits}\n\nLookup: ${searchHelper}`,
           editorial_score: editorial,
           benchmark_similarity: similarity,
           ranking_reasons: {
