@@ -19,6 +19,8 @@ import {
   publishFounderLookFromOutfit,
   regenerateSlotWithAI,
   rejectSlotCandidate,
+  addCustomComponent,
+  removeCustomComponent,
 } from "@/lib/hero-outfit.functions";
 import { slotsForMoment, profileForMoment } from "@/lib/hero-outfit-slots";
 
