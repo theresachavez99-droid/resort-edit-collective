@@ -227,10 +227,10 @@ function MomentPage() {
                 {editorPickLabel}
               </span>
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
-                {featuredLook?.title ?? resolved.title}
+                {isFounderLook ? resolved.title : (featuredLook?.title ?? resolved.title)}
               </h2>
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
-                {featuredLook?.caption ?? card.narrative}
+                {isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative)}
               </p>
               {featuredSlots.length > 0 && (
                 <div className="border-t border-border/60 pt-4">
