@@ -556,16 +556,19 @@ export const selectSlotCandidate = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const db = await admin();
-    // Clear sibling selections in the same slot.
+    // Mark any previously-selected sibling as `replaced` (memory-preserving)
+    // and clear its selection flag — the Founder will not see it again unless
+    // they toggle "Show rejected/archived".
     await db
       .from("buying_candidates")
-      .update({ selected_for_look: false })
+      .update({ selected_for_look: false, status: "replaced" })
       .eq("hero_outfit_id", data.outfitId)
-      .eq("stylist_slot", data.slot);
+      .eq("stylist_slot", data.slot)
+      .eq("selected_for_look", true);
     if (data.candidateId) {
       const r = await db
         .from("buying_candidates")
-        .update({ selected_for_look: true })
+        .update({ selected_for_look: true, status: "selected" })
         .eq("id", data.candidateId);
       if (r.error) throw new Error(r.error.message);
     }
