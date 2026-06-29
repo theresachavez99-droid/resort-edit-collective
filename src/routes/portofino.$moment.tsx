@@ -450,10 +450,28 @@ function resolveShopProducts(daySlug: LegacyDaySlug, lookSlug: LookSlug): ShopEn
 function shopEntryIsLive(entry: ShopEntry): boolean {
   if (entry.kind === "override") {
     const o = entry.product as OverrideItem;
-    return !!o.url && !o.url.startsWith("AFF-");
+    return isUsableShopUrl(o.url);
   }
   const p = entry.product as LookProduct;
   return !p.isPlaceholder;
+}
+
+/**
+ * A URL is shoppable only when it points at a retailer product page,
+ * not at a placeholder (`AFF-…`) or a search-engine redirect that an
+ * import fallback wrote into the database.
+ */
+function isUsableShopUrl(url: string | undefined | null): url is string {
+  if (!url) return false;
+  if (url.startsWith("AFF-")) return false;
+  try {
+    const u = new URL(url);
+    if (u.hostname.endsWith("google.com") && u.pathname.startsWith("/search")) return false;
+    if (u.hostname.endsWith("bing.com") && u.pathname.startsWith("/search")) return false;
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /**
