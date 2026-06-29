@@ -12,6 +12,22 @@ import {
 import { requireAdmin } from "./admin-auth.server";
 
 /**
+ * Strip junk image URLs that retailers return as og:image when their
+ * product page is locked behind client-side rendering (e.g. Revolve
+ * country-selector flag SVGs, generic 1x1 trackers). Returning null
+ * lets downstream code fall back to a real image.
+ */
+function sanitizeProductImage(url: string | null): string | null {
+  if (!url) return null;
+  const u = url.toLowerCase();
+  if (u.includes("/flags/")) return null;
+  if (u.includes("revolveassets.com") && u.endsWith(".svg")) return null;
+  if (u.endsWith("/be.svg") || u.endsWith("/us.svg") || u.endsWith("/gb.svg")) return null;
+  if (u.startsWith("data:")) return null;
+  return url;
+}
+
+/**
  * Public reads for the rebuilt /portofino editorial index and
  * /portofino/$moment pages. Sourcing is hybrid:
  *
