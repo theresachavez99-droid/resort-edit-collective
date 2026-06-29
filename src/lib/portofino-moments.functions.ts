@@ -34,7 +34,7 @@ type CandidateRow = {
 };
 
 export type ResolvedMomentLook = {
-  source: "tagged" | "fallback";
+  source: "founder_look" | "tagged" | "fallback";
   /** Display title for the look. */
   title: string;
   /** Hero image to render. */
@@ -47,6 +47,18 @@ export type ResolvedMomentLook = {
   candidate_slug?: string;
   /** Legacy-only: deep link to the day page that owns this look. */
   legacy_day_path?: string;
+  /** Founder-look only: id + product list for editorial render. */
+  founder_look_id?: string;
+  founder_look_slug?: string;
+  founder_published_at?: string | null;
+  founder_hero_products?: Array<{
+    brand: string;
+    product_name: string;
+    url: string;
+    image_url: string | null;
+    role: string;
+    category: string;
+  }>;
 };
 
 export type PortofinoMomentCard = PortofinoMomentDef & {
@@ -62,6 +74,54 @@ function publicClient() {
 }
 
 async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard> {
+  // 1. Founder Look (Hero Outfit Studio publish flow) wins.
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: fl } = await supabaseAdmin
+      .from("founder_looks")
+      .select("id, slug, title, hero_urls, published_at, status, founder_notes")
+      .eq("destination", "portofino")
+      .eq("moment", def.moment_slug)
+      .in("status", ["approved", "published"])
+      .not("published_at", "is", null)
+      .order("published_at", { ascending: false })
+      .limit(1);
+    const flRow = fl?.[0];
+    if (flRow) {
+      const heroes = Array.isArray(flRow.hero_urls)
+        ? (flRow.hero_urls as Array<Record<string, unknown>>)
+        : [];
+      const products = heroes
+        .map((h) => ({
+          brand: String(h.brand ?? ""),
+          product_name: String(h.product_name ?? ""),
+          url: String(h.url ?? ""),
+          image_url: (h.image_url as string | null) ?? null,
+          role: String(h.role ?? "Accessory"),
+          category: String(h.category ?? "other"),
+        }))
+        .filter((p) => p.url);
+      const heroImage =
+        products.find((p) => p.role === "Hero Garment" && p.image_url)?.image_url ??
+        products.find((p) => p.image_url)?.image_url ??
+        def.outfit_image;
+      return {
+        ...def,
+        resolved: {
+          source: "founder_look",
+          title: (flRow.title as string) || def.moment_name,
+          image: heroImage,
+          founder_look_id: flRow.id as string,
+          founder_look_slug: (flRow.slug as string) ?? undefined,
+          founder_published_at: (flRow.published_at as string | null) ?? null,
+          founder_hero_products: products,
+        },
+      };
+    }
+  } catch {
+    // fall through to tagged / fallback
+  }
+
   let row: CandidateRow | null = null;
   try {
     const supabase = publicClient();
