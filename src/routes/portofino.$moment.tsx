@@ -102,7 +102,7 @@ function MomentPage() {
       slotLabel: p.role === "Hero Garment" ? "Hero" : p.category.replace(/_/g, " ").toUpperCase(),
       brand: p.brand || "—",
       title: p.product_name || p.brand || "",
-      url: p.url,
+      url: isUsableShopUrl(p.url) ? p.url : "",
       image: p.image_url ?? "",
     },
   }));
@@ -450,10 +450,28 @@ function resolveShopProducts(daySlug: LegacyDaySlug, lookSlug: LookSlug): ShopEn
 function shopEntryIsLive(entry: ShopEntry): boolean {
   if (entry.kind === "override") {
     const o = entry.product as OverrideItem;
-    return !!o.url && !o.url.startsWith("AFF-");
+    return isUsableShopUrl(o.url);
   }
   const p = entry.product as LookProduct;
   return !p.isPlaceholder;
+}
+
+/**
+ * A URL is shoppable only when it points at a retailer product page,
+ * not at a placeholder (`AFF-…`) or a search-engine redirect that an
+ * import fallback wrote into the database.
+ */
+function isUsableShopUrl(url: string | undefined | null): url is string {
+  if (!url) return false;
+  if (url.startsWith("AFF-")) return false;
+  try {
+    const u = new URL(url);
+    if (u.hostname.endsWith("google.com") && u.pathname.startsWith("/search")) return false;
+    if (u.hostname.endsWith("bing.com") && u.pathname.startsWith("/search")) return false;
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -646,7 +664,7 @@ function ShopCard({
 
   // Override item (free-form curated grid)
   const o = product as OverrideItem;
-  const isPlaceholderUrl = !o.url || o.url.startsWith("AFF-");
+  const isPlaceholderUrl = !isUsableShopUrl(o.url);
   if (isPlaceholderUrl) {
     return (
       <div
