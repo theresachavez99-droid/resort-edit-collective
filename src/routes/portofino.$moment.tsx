@@ -91,6 +91,8 @@ function MomentPage() {
 
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
+  const isFounderLook = resolved.source === "founder_look";
+  const founderProducts = resolved.founder_hero_products ?? [];
 
   // Featured (canonical) look for this moment.
   const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
