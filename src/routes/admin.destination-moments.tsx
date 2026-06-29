@@ -275,7 +275,7 @@ function MomentCard({
   verdict,
 }: {
   m: DestinationMomentRow;
-  verdict?: { source: "tagged" | "fallback"; candidate_slug: string | null };
+  verdict?: { source: "tagged" | "fallback" | "founder_look"; candidate_slug: string | null };
 }) {
   const cues = (m.styling_cues ?? {}) as Record<string, unknown>;
   const palette = Array.isArray(cues.palette) ? (cues.palette as string[]) : [];
@@ -290,17 +290,25 @@ function MomentCard({
               <span
                 className={
                   "text-[0.55rem] tracking-[0.2em] uppercase px-1.5 py-0.5 border " +
-                  (verdict.source === "tagged"
-                    ? "border-emerald-700/60 text-emerald-800 bg-emerald-50"
-                    : "border-amber-700/60 text-amber-800 bg-amber-50")
+                  (verdict.source === "founder_look"
+                    ? "border-violet-700/60 text-violet-800 bg-violet-50"
+                    : verdict.source === "tagged"
+                      ? "border-emerald-700/60 text-emerald-800 bg-emerald-50"
+                      : "border-amber-700/60 text-amber-800 bg-amber-50")
                 }
                 title={
-                  verdict.source === "tagged"
-                    ? `Tagged: ${verdict.candidate_slug ?? "approved candidate"}`
-                    : "Fallback look — tag approved candidate for this moment."
+                  verdict.source === "founder_look"
+                    ? "Published Founder Look is overriding the fallback."
+                    : verdict.source === "tagged"
+                      ? `Tagged: ${verdict.candidate_slug ?? "approved candidate"}`
+                      : "Fallback look — tag approved candidate for this moment."
                 }
               >
-                {verdict.source === "tagged" ? "Tagged" : "Fallback look"}
+                {verdict.source === "founder_look"
+                  ? "Founder Look"
+                  : verdict.source === "tagged"
+                    ? "Tagged"
+                    : "Fallback look"}
               </span>
             )}
           </div>

@@ -32,6 +32,7 @@ import {
   isHeroGarmentCategory,
 } from "./hero-outfit-slots";
 import { APPROVED_RETAILERS } from "./yacht-day-pilot.functions";
+import { normalizeDestinationSlug, normalizeMomentSlug } from "./moment-slug";
 
 const pw = { password: z.string().min(1).max(200) };
 
@@ -686,7 +687,9 @@ export const publishFounderLookFromOutfit = createServerFn({ method: "POST" })
       role: c.is_hero_garment ? "Hero Garment" : "Accessory",
     }));
 
-    const slug = `${outfit.data.destination}-${outfit.data.moment}-look-${outfit.data.id.slice(0, 8)}`
+    const destSlug = normalizeDestinationSlug(outfit.data.destination);
+    const momentSlug = normalizeMomentSlug(outfit.data.moment);
+    const slug = `${destSlug}-${momentSlug}-look-${outfit.data.id.slice(0, 8)}`
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-");
 
@@ -695,8 +698,10 @@ export const publishFounderLookFromOutfit = createServerFn({ method: "POST" })
       .insert({
         slug,
         title: data.title ?? outfit.data.title ?? `${outfit.data.moment} — ${outfit.data.primary_brand ?? "Founder Look"}`,
-        destination: outfit.data.destination,
-        moment: outfit.data.moment,
+        // Canonical slugs — downstream `/portofino/$moment` resolver and
+        // founder_reference_products tag matching key off these exact values.
+        destination: destSlug,
+        moment: momentSlug,
         style_family: (outfit.data.color_palette ?? []) as never,
         hero_urls: hero_urls as never,
         color_palette: { include: outfit.data.color_palette ?? [] } as never,
