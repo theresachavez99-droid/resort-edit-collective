@@ -27,8 +27,6 @@ const DAY_SLOTS: SlotDefinition[] = [
   { slot: "necklace", label: "Necklace", required: true, category: "jewelry" },
   { slot: "bracelet", label: "Bracelet", required: true, category: "jewelry" },
   { slot: "ring", label: "Ring", required: true, category: "jewelry" },
-  { slot: "hat", label: "Hat", required: false, category: "headwear" },
-  { slot: "hair", label: "Hair accessory", required: false, category: "hair" },
 ];
 
 const NIGHT_SLOTS: SlotDefinition[] = [
@@ -52,8 +50,6 @@ const WATER_SLOTS: SlotDefinition[] = [
     category: "jewelry",
     note: "Either slot satisfies the requirement.",
   },
-  { slot: "hat", label: "Hat", required: false, category: "headwear" },
-  { slot: "hair", label: "Hair accessory", required: false, category: "hair" },
 ];
 
 /**
