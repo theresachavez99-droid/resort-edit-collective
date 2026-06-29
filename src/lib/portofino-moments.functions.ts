@@ -96,7 +96,7 @@ async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard>
           brand: String(h.brand ?? ""),
           product_name: String(h.product_name ?? ""),
           url: String(h.url ?? ""),
-          image_url: (h.image_url as string | null) ?? null,
+          image_url: sanitizeProductImage((h.image_url as string | null) ?? null),
           role: String(h.role ?? "Accessory"),
           category: String(h.category ?? "other"),
         }))
