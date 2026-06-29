@@ -678,14 +678,51 @@ export const publishFounderLookFromOutfit = createServerFn({ method: "POST" })
     const accessories = (cands.data ?? []).filter(
       (c) => !c.is_hero_garment && c.selected_for_look,
     );
-    const hero_urls = [...heroes, ...accessories].map((c) => ({
-      brand: c.brand ?? "",
-      url: c.affiliate_url ?? c.product_url,
-      image_url: c.image_url ?? null,
-      product_name: c.product_name ?? "",
-      category: c.stylist_slot ?? c.category ?? "hero",
-      role: c.is_hero_garment ? "Hero Garment" : "Accessory",
-    }));
+
+    // URL hygiene: refuse to publish a selected product that has no real
+    // shopping URL (search-engine fallback or AFF- placeholder). Founder
+    // must paste a real retailer URL before publishing.
+    const isUsable = (u: string | null | undefined): u is string => {
+      if (!u) return false;
+      if (u.startsWith("AFF-")) return false;
+      try {
+        const url = new URL(u);
+        if (url.hostname.endsWith("google.com") && url.pathname.startsWith("/search")) return false;
+        if (url.hostname.endsWith("bing.com") && url.pathname.startsWith("/search")) return false;
+        return url.protocol === "http:" || url.protocol === "https:";
+      } catch {
+        return false;
+      }
+    };
+    const offenders: string[] = [];
+    const hero_urls = [...heroes, ...accessories].map((c) => {
+      const url = c.affiliate_url ?? c.product_url ?? "";
+      if (!isUsable(url)) {
+        offenders.push(
+          `${c.stylist_slot ?? c.category ?? "slot"}: ${c.brand ?? ""} ${c.product_name ?? ""}`.trim(),
+        );
+      }
+      return {
+        brand: c.brand ?? "",
+        url,
+        product_url: c.product_url ?? null,
+        affiliate_url: c.affiliate_url ?? null,
+        retailer: c.retailer ?? null,
+        price: c.price ?? null,
+        currency: c.currency ?? null,
+        image_url: c.image_url ?? null,
+        product_name: c.product_name ?? "",
+        category: c.stylist_slot ?? c.category ?? "hero",
+        role: c.is_hero_garment ? "Hero Garment" : "Accessory",
+      };
+    });
+    if (offenders.length > 0) {
+      throw new Error(
+        "Cannot publish: the following selected products are missing a real retailer URL. " +
+          "Paste an exact product URL (Affiliate > Product > Retailer) before publishing.\n• " +
+          offenders.join("\n• "),
+      );
+    }
 
     const destSlug = normalizeDestinationSlug(outfit.data.destination);
     const momentSlug = normalizeMomentSlug(outfit.data.moment);
