@@ -96,7 +96,19 @@ function MomentPage() {
 
   // Featured (canonical) look for this moment.
   const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
-  const featuredShop = resolveShopProducts(card.legacy_day_slug, card.look_slug);
+  const founderShopEntries: ShopEntry[] = founderProducts.map((p) => ({
+    kind: "override" as const,
+    product: {
+      slotLabel: p.role === "Hero Garment" ? "Hero" : p.category.replace(/_/g, " ").toUpperCase(),
+      brand: p.brand || "—",
+      title: p.product_name || p.brand || "",
+      url: p.url,
+      image: p.image_url ?? "",
+    },
+  }));
+  const featuredShop = isFounderLook && founderShopEntries.length
+    ? founderShopEntries
+    : resolveShopProducts(card.legacy_day_slug, card.look_slug);
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
   const featuredSlots = summarizeSlots(featuredShop);
 
