@@ -429,21 +429,14 @@ function OutfitPanel({
           slotDefs={slotDefs}
           slotSelections={slotSelections}
           customComponents={customComponents}
-          onChangeSlot={(slot) =>
+          password={password}
+          onChangeSlot={(slot: string) =>
             setExpandedSlots((s) => {
               const n = new Set(s);
               n.add(slot);
               return n;
             })
           }
-          onClearSlot={async (slot) => {
-            const fn = (await import("@/lib/hero-outfit.functions")).selectSlotCandidate;
-            // Use the existing select fn with candidateId:null to unselect.
-            // We can't useServerFn at top level here — call directly via fetch wrapper.
-            // Simpler: import server fn handler at runtime is not safe; instead
-            // call selectSlotCandidate via the existing button below.
-          }}
-          password={password}
           onChange={onChange}
         />
       )}
