@@ -174,7 +174,10 @@ function ImportStage({
         .map((s) => s.trim())
         .filter((s) => /^https?:\/\//.test(s));
       if (list.length === 0) throw new Error("Paste at least one product URL.");
-      return importFn({ data: { password, sessionId, urls: list } });
+      const result = await importFn({ data: { password, sessionId, urls: list } });
+      // eslint-disable-next-line no-console
+      console.info("[hero-outfit] import result", result);
+      return result;
     },
     onSuccess: (r) => {
       toast.success(
@@ -183,8 +186,14 @@ function ImportStage({
       setUrls("");
       onDone();
     },
-    onError: (e) => toast.error((e as Error).message),
+    onError: (e) => {
+      // eslint-disable-next-line no-console
+      console.error("[hero-outfit] import failed", e);
+      toast.error((e as Error)?.message ?? "Hero garment import failed.");
+    },
   });
+
+  const errorMessage = mut.isError ? ((mut.error as Error)?.message ?? "Import failed.") : null;
 
   return (
     <section className="border border-stone-300 p-6 space-y-4">
@@ -212,13 +221,26 @@ function ImportStage({
         placeholder="https://www.revolve.com/faithfull-maya-vest-in-natural/dp/FAIB-WS275/&#10;https://www.revolve.com/faithfull-isotta-pant-in-natural/dp/FAIB-WP74/"
         className="w-full border border-stone-300 px-3 py-2 text-xs font-mono"
       />
-      <button
-        onClick={() => mut.mutate()}
-        disabled={mut.isPending}
-        className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase disabled:opacity-40"
-      >
-        {mut.isPending ? "Importing…" : "Import Hero Garments"}
-      </button>
+      <div className="flex items-center gap-4 flex-wrap">
+        <button
+          type="button"
+          onClick={() => mut.mutate()}
+          disabled={mut.isPending}
+          className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase disabled:opacity-40 cursor-pointer disabled:cursor-wait"
+        >
+          {mut.isPending ? "Importing hero garments…" : "Import Hero Garments"}
+        </button>
+        {mut.isPending && (
+          <span className="text-xs text-stone-500 italic">
+            Fetching product data from retailers — this can take 10–30s.
+          </span>
+        )}
+      </div>
+      {errorMessage && (
+        <div className="border border-red-300 bg-red-50 text-red-700 text-xs px-3 py-2">
+          {errorMessage}
+        </div>
+      )}
     </section>
   );
 }
