@@ -114,11 +114,14 @@ function MomentPage() {
         slotLabel:
           p.role === "Hero Garment"
             ? "The Look"
-            : prettifyCategory(p.category),
+            : p.role === "Optional"
+              ? prettifyCategory(p.category)
+              : prettifyCategory(p.category),
         brand: p.brand || p.product_name.split(" ")[0] || "—",
         title: p.product_name || p.brand || "",
         url: isUsableShopUrl(p.url) ? p.url : "",
         image: p.image_url ?? "",
+        isOptional: p.role === "Optional",
       },
     }));
   const featuredShop = isFounderLook && founderShopEntries.length
