@@ -698,6 +698,7 @@ export const publishFounderLookFromOutfit = createServerFn({ method: "POST" })
       }
     };
     const offenders: string[] = [];
+    const customs = ((outfit.data.custom_components ?? []) as CustomComponent[]) || [];
     const hero_urls = [...heroes, ...accessories].map((c) => {
       const url = c.affiliate_url ?? c.product_url ?? "";
       if (!isUsable(url)) {
@@ -719,6 +720,28 @@ export const publishFounderLookFromOutfit = createServerFn({ method: "POST" })
         role: c.is_hero_garment ? "Hero Garment" : "Accessory",
       };
     });
+    // Append Founder-defined Optional Components — these render under
+    // "Complete the Look" on the public moment page. Same URL hygiene.
+    for (const c of customs) {
+      const url = c.url;
+      if (!isUsable(url)) {
+        offenders.push(`optional: ${c.brand ?? ""} ${c.name}`.trim());
+        continue;
+      }
+      hero_urls.push({
+        brand: c.brand ?? "",
+        url,
+        product_url: url,
+        affiliate_url: null,
+        retailer: null,
+        price: c.price ?? null,
+        currency: c.currency ?? null,
+        image_url: c.image_url ?? null,
+        product_name: c.name,
+        category: c.name.toLowerCase(),
+        role: "Optional",
+      });
+    }
     if (offenders.length > 0) {
       throw new Error(
         "Cannot publish: the following selected products are missing a real retailer URL. " +
