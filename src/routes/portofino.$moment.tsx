@@ -103,6 +103,11 @@ function MomentPage() {
   const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
   const founderShopEntries: ShopEntry[] = founderProducts
     .filter((p) => (p.brand || p.product_name))
+    // Public Founder Look shop panel: only render rows with a usable
+    // retailer URL. Search-engine fallback or AFF- placeholder URLs are
+    // suppressed in production (visible only with ?debug=1) so the page
+    // never ships a dead "Shop →" card.
+    .filter((p) => isDebug || isUsableShopUrl(p.url))
     .map((p) => ({
       kind: "override" as const,
       product: {
