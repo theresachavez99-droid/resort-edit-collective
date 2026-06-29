@@ -132,6 +132,34 @@ function MomentPage() {
         </ol>
       </nav>
 
+      {/* SOURCE INDICATOR — Founder/admin visibility into which data source
+          is rendering this moment (Published Founder Look vs Legacy fallback). */}
+      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 pb-3">
+        <span
+          className={
+            "inline-flex items-center gap-2 text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 border " +
+            (resolved.source === "founder_look"
+              ? "border-violet-700/60 text-violet-800 bg-violet-50"
+              : resolved.source === "tagged"
+                ? "border-emerald-700/60 text-emerald-800 bg-emerald-50"
+                : "border-amber-700/60 text-amber-800 bg-amber-50")
+          }
+          title={
+            resolved.source === "founder_look"
+              ? `Founder Look · ${resolved.founder_look_slug ?? resolved.founder_look_id}`
+              : resolved.source === "tagged"
+                ? "Tagged approved candidate"
+                : "Legacy fallback look"
+          }
+        >
+          {resolved.source === "founder_look"
+            ? "Published Founder Look"
+            : resolved.source === "tagged"
+              ? "Tagged Look"
+              : "Legacy Fallback"}
+        </span>
+      </div>
+
       {/* HERO */}
       <section className="relative h-[36vh] md:h-[48vh] min-h-[280px] w-full overflow-hidden bg-ink">
         <img
