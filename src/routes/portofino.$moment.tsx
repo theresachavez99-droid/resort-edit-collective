@@ -374,6 +374,26 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
 };
 
 /**
+ * Editorial display titles for Founder Look hero sections. Founder Look rows
+ * can ship with blank or workflow-y titles; this map gives each moment a
+ * polished public name so the page never reads as internal data.
+ */
+const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
+  "arrival": "The Splendido Arrival",
+  "espresso-morning": "The Espresso Morning",
+  "yacht-day": "The Yacht Day",
+  "harbor-aperitivo": "The Harbor Aperitivo",
+  "sunset-views": "The Sunset Hour",
+  "riviera-dinner": "The Riviera Dinner",
+  "exploring-the-harbor": "Exploring the Harbor",
+  "beach-club": "The Beach Club",
+  "long-lunch": "The Long Lunch",
+  "shopping": "The Shopping Afternoon",
+  "nightcap": "The Nightcap",
+  "pool-lounging": "Poolside in Portofino",
+};
+
+/**
  * Experiential rewrites for sibling "More X Looks" cards — sells the moment,
  * not the garment. Keyed by `${daySlug}/${lookSlug}`.
  */
