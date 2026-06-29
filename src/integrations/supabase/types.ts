@@ -1211,6 +1211,7 @@ export type Database = {
           activity: string | null
           color_palette: string[]
           created_at: string
+          custom_components: Json
           destination: string
           editorial_dna: Json
           founder_look_id: string | null
@@ -1233,6 +1234,7 @@ export type Database = {
           activity?: string | null
           color_palette?: string[]
           created_at?: string
+          custom_components?: Json
           destination: string
           editorial_dna?: Json
           founder_look_id?: string | null
@@ -1255,6 +1257,7 @@ export type Database = {
           activity?: string | null
           color_palette?: string[]
           created_at?: string
+          custom_components?: Json
           destination?: string
           editorial_dna?: Json
           founder_look_id?: string | null
