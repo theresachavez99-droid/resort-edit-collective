@@ -275,7 +275,7 @@ function MomentCard({
   verdict,
 }: {
   m: DestinationMomentRow;
-  verdict?: { source: "tagged" | "fallback"; candidate_slug: string | null };
+  verdict?: { source: "tagged" | "fallback" | "founder_look"; candidate_slug: string | null };
 }) {
   const cues = (m.styling_cues ?? {}) as Record<string, unknown>;
   const palette = Array.isArray(cues.palette) ? (cues.palette as string[]) : [];
