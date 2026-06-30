@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -567,85 +567,4 @@ function Pill({ kind, value }: { kind: "status" | "tier"; value: string }) {
   );
 }
 
-function BrandPerformancePanel({ password }: { password: string }) {
-  const fn = useServerFn(getBrandPerformance);
-  const q = useQuery({
-    queryKey: ["brand-performance"],
-    queryFn: () => fn({ data: { password } }),
-  });
-  const rows = (q.data?.brands ?? []) as Array<{
-    id: string;
-    name: string;
-    tier: string | null;
-    commerceSource: string | null;
-    totals: {
-      appearances: number;
-      approvals: number;
-      rejections: number;
-      publications: number;
-      approvalRate: number | null;
-      avgEditorialScore: number | null;
-    };
-    topAffinity: Array<[string, number]>;
-  }>;
-  const sorted = useMemo(
-    () => [...rows].sort((a, b) => b.totals.publications - a.totals.publications),
-    [rows],
-  );
-  if (q.isLoading) return <p className="text-sm text-ink/55">Loading performance…</p>;
-  if (!sorted.length)
-    return <p className="text-sm text-ink/55 italic">No performance signals yet.</p>;
-  return (
-    <section>
-      <div className="mb-4">
-        <h2 className="font-display tracking-[0.14em] uppercase text-lg">Performance</h2>
-        <p className="font-serif italic text-ink/65 text-sm mt-1">
-          Founder approval signals, publication frequency, and editorial affinity per brand.
-        </p>
-      </div>
-      <div className="overflow-x-auto border border-ink/15">
-        <table className="w-full text-sm">
-          <thead className="bg-cream/40 text-[0.62rem] tracking-[0.22em] uppercase text-ink/55">
-            <tr>
-              <th className="text-left px-3 py-2">Brand</th>
-              <th className="text-left px-3 py-2">Tier</th>
-              <th className="text-right px-3 py-2">Appearances</th>
-              <th className="text-right px-3 py-2">Approved</th>
-              <th className="text-right px-3 py-2">Rejected</th>
-              <th className="text-right px-3 py-2">Published</th>
-              <th className="text-right px-3 py-2">Avg Score</th>
-              <th className="text-left px-3 py-2">Top Contexts</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sorted.map((b) => (
-              <tr key={b.id} className="border-t border-ink/10">
-                <td className="px-3 py-2 font-display tracking-[0.06em]">{b.name}</td>
-                <td className="px-3 py-2 text-ink/65">{b.tier ?? "—"}</td>
-                <td className="px-3 py-2 text-right tabular-nums">{b.totals.appearances}</td>
-                <td className="px-3 py-2 text-right tabular-nums text-emerald-800">
-                  {b.totals.approvals}
-                </td>
-                <td className="px-3 py-2 text-right tabular-nums text-red-700">
-                  {b.totals.rejections}
-                </td>
-                <td className="px-3 py-2 text-right tabular-nums">{b.totals.publications}</td>
-                <td className="px-3 py-2 text-right tabular-nums">
-                  {b.totals.avgEditorialScore != null
-                    ? b.totals.avgEditorialScore.toFixed(1)
-                    : "—"}
-                </td>
-                <td className="px-3 py-2 text-[0.7rem] text-ink/65">
-                  {b.topAffinity
-                    .slice(0, 3)
-                    .map(([ctx, v]) => `${ctx} ${v}`)
-                    .join(" · ") || "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  );
 }

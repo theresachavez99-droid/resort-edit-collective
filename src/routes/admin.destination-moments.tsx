@@ -13,7 +13,8 @@ import {
 } from "@/lib/destination-moments.functions";
 import { NamingWarningChip } from "@/components/admin/NamingWarningChip";
 import { getPortofinoMomentVerdicts } from "@/lib/portofino-moments.functions";
-import { listEditorialCollections } from "@/lib/editorial-review.functions";
+// Collections tab retired in Consolidation Order Track A — replaced by the
+// Moment Run workspace in Track B.
 
 export const Route = createFileRoute("/admin/destination-moments")({
   head: () => ({
@@ -21,9 +22,6 @@ export const Route = createFileRoute("/admin/destination-moments")({
       { title: "Destination Moments — Resort Edit Admin" },
       { name: "robots", content: "noindex, nofollow" },
     ],
-  }),
-  validateSearch: (search: Record<string, unknown>) => ({
-    tab: search.tab === "collections" ? ("collections" as const) : ("moments" as const),
   }),
   component: DestinationMomentsPage,
 });
