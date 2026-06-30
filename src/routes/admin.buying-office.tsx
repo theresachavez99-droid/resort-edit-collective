@@ -539,8 +539,10 @@ function BriefPanel({
   const [color, setColor] = useState<string>(diag.color_direction ?? "");
   const [benchmark, setBenchmark] = useState<string>(diag.benchmark ?? "");
   const [exclusions, setExclusions] = useState<string>(diag.exclusions ?? "");
-  const [strategy, setStrategy] = useState<string>(session.strategy ?? "manual_import");
-  const [depth, setDepth] = useState<string>(diag.depth ?? "standard (2-3 pages)");
+  // Strategy + depth retired from the UI (Track A) but the lock() payload
+  // still ships them so server-side wiring is undisturbed until B3.
+  const strategy = session.strategy ?? "manual_import";
+  const depth = diag.depth ?? "standard (2-3 pages)";
 
   const mut = useMutation({
     mutationFn: (patch: Record<string, unknown>) =>
@@ -606,25 +608,9 @@ function BriefPanel({
               className="border border-stone-300 px-3 py-2 text-sm w-full"
               placeholder="Logos, sporty silhouettes, scandi minimalism, etc." />
           </Labeled>
-          <div className="grid grid-cols-2 gap-3">
-            <Labeled label="Search Strategy">
-              <select value={strategy} onChange={(e) => setStrategy(e.target.value)}
-                className="border border-stone-300 px-3 py-2 text-sm w-full bg-white">
-                <option value="manual_import">manual_import</option>
-                <option value="category_scrape">category_scrape</option>
-                <option value="affiliate_feed">affiliate_feed</option>
-                <option value="hybrid">hybrid</option>
-              </select>
-            </Labeled>
-            <Labeled label="Search Depth">
-              <select value={depth} onChange={(e) => setDepth(e.target.value)}
-                className="border border-stone-300 px-3 py-2 text-sm w-full bg-white">
-                <option>shallow (1 page)</option>
-                <option>standard (2-3 pages)</option>
-                <option>deep (full set)</option>
-              </select>
-            </Labeled>
-          </div>
+          {/* Search Strategy / Depth controls retired in Consolidation Order Track A —
+              the brief now compiles into structured queries handed to the affiliate
+              feed adapter (dormant until DATAFEEDR_API_KEY is set). */}
         </div>
 
         {heroBrief && (

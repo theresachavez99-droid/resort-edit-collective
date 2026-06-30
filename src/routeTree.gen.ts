@@ -30,25 +30,14 @@ import { Route as LookSlugRouteImport } from './routes/look.$slug'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
-import { Route as AdminStylistEngineRouteImport } from './routes/admin.stylist-engine'
-import { Route as AdminReviewQueueRouteImport } from './routes/admin.review-queue'
-import { Route as AdminPublishingRouteImport } from './routes/admin.publishing'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
-import { Route as AdminProductLibraryRouteImport } from './routes/admin.product-library'
-import { Route as AdminLookStudioRouteImport } from './routes/admin.look-studio'
 import { Route as AdminInventoryHealthRouteImport } from './routes/admin.inventory-health'
-import { Route as AdminImageRepairQueueRouteImport } from './routes/admin.image-repair-queue'
 import { Route as AdminFounderLooksRouteImport } from './routes/admin.founder-looks'
-import { Route as AdminFounderLearningRouteImport } from './routes/admin.founder-learning'
-import { Route as AdminEditorialReviewQueueRouteImport } from './routes/admin.editorial-review-queue'
 import { Route as AdminEditorialMemoryRouteImport } from './routes/admin.editorial-memory'
-import { Route as AdminEditorialLibraryRouteImport } from './routes/admin.editorial-library'
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
 import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
-import { Route as AdminCollectionsRouteImport } from './routes/admin.collections'
 import { Route as AdminBuyingOfficeRouteImport } from './routes/admin.buying-office'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
-import { Route as AdminBrandPerformanceRouteImport } from './routes/admin.brand-performance'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
 import { Route as AdminCollectionsIdRouteImport } from './routes/admin.collections.$id'
@@ -158,34 +147,9 @@ const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
   path: '/admin/subscribers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminStylistEngineRoute = AdminStylistEngineRouteImport.update({
-  id: '/admin/stylist-engine',
-  path: '/admin/stylist-engine',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminReviewQueueRoute = AdminReviewQueueRouteImport.update({
-  id: '/admin/review-queue',
-  path: '/admin/review-queue',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminPublishingRoute = AdminPublishingRouteImport.update({
-  id: '/admin/publishing',
-  path: '/admin/publishing',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
   id: '/admin/product-vault',
   path: '/admin/product-vault',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminProductLibraryRoute = AdminProductLibraryRouteImport.update({
-  id: '/admin/product-library',
-  path: '/admin/product-library',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminLookStudioRoute = AdminLookStudioRouteImport.update({
-  id: '/admin/look-studio',
-  path: '/admin/look-studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
@@ -193,35 +157,14 @@ const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
   path: '/admin/inventory-health',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminImageRepairQueueRoute = AdminImageRepairQueueRouteImport.update({
-  id: '/admin/image-repair-queue',
-  path: '/admin/image-repair-queue',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminFounderLooksRoute = AdminFounderLooksRouteImport.update({
   id: '/admin/founder-looks',
   path: '/admin/founder-looks',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminFounderLearningRoute = AdminFounderLearningRouteImport.update({
-  id: '/admin/founder-learning',
-  path: '/admin/founder-learning',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminEditorialReviewQueueRoute =
-  AdminEditorialReviewQueueRouteImport.update({
-    id: '/admin/editorial-review-queue',
-    path: '/admin/editorial-review-queue',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AdminEditorialMemoryRoute = AdminEditorialMemoryRouteImport.update({
   id: '/admin/editorial-memory',
   path: '/admin/editorial-memory',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminEditorialLibraryRoute = AdminEditorialLibraryRouteImport.update({
-  id: '/admin/editorial-library',
-  path: '/admin/editorial-library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminDestinationMomentsRoute = AdminDestinationMomentsRouteImport.update({
@@ -234,11 +177,6 @@ const AdminDayImagesRoute = AdminDayImagesRouteImport.update({
   path: '/admin/day-images',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminCollectionsRoute = AdminCollectionsRouteImport.update({
-  id: '/admin/collections',
-  path: '/admin/collections',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminBuyingOfficeRoute = AdminBuyingOfficeRouteImport.update({
   id: '/admin/buying-office',
   path: '/admin/buying-office',
@@ -247,11 +185,6 @@ const AdminBuyingOfficeRoute = AdminBuyingOfficeRouteImport.update({
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
   id: '/admin/brands',
   path: '/admin/brands',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminBrandPerformanceRoute = AdminBrandPerformanceRouteImport.update({
-  id: '/admin/brand-performance',
-  path: '/admin/brand-performance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
@@ -265,9 +198,9 @@ const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminCollectionsIdRoute = AdminCollectionsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminCollectionsRoute,
+  id: '/admin/collections/$id',
+  path: '/admin/collections/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -281,25 +214,14 @@ export interface FileRoutesByFullPath {
   '/resort-edits': typeof ResortEditsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/buying-office': typeof AdminBuyingOfficeRoute
-  '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
-  '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
-  '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
-  '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
-  '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
-  '/admin/look-studio': typeof AdminLookStudioRoute
-  '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
-  '/admin/publishing': typeof AdminPublishingRoute
-  '/admin/review-queue': typeof AdminReviewQueueRoute
-  '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -326,25 +248,14 @@ export interface FileRoutesByTo {
   '/resort-edits': typeof ResortEditsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/buying-office': typeof AdminBuyingOfficeRoute
-  '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
-  '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
-  '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
-  '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
-  '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
-  '/admin/look-studio': typeof AdminLookStudioRoute
-  '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
-  '/admin/publishing': typeof AdminPublishingRoute
-  '/admin/review-queue': typeof AdminReviewQueueRoute
-  '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -372,25 +283,14 @@ export interface FileRoutesById {
   '/resort-edits': typeof ResortEditsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin/brand-performance': typeof AdminBrandPerformanceRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/buying-office': typeof AdminBuyingOfficeRoute
-  '/admin/collections': typeof AdminCollectionsRouteWithChildren
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
-  '/admin/editorial-library': typeof AdminEditorialLibraryRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
-  '/admin/editorial-review-queue': typeof AdminEditorialReviewQueueRoute
-  '/admin/founder-learning': typeof AdminFounderLearningRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
-  '/admin/image-repair-queue': typeof AdminImageRepairQueueRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
-  '/admin/look-studio': typeof AdminLookStudioRoute
-  '/admin/product-library': typeof AdminProductLibraryRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
-  '/admin/publishing': typeof AdminPublishingRoute
-  '/admin/review-queue': typeof AdminReviewQueueRoute
-  '/admin/stylist-engine': typeof AdminStylistEngineRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -419,25 +319,14 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/robots.txt'
     | '/sitemap.xml'
-    | '/admin/brand-performance'
     | '/admin/brands'
     | '/admin/buying-office'
-    | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
-    | '/admin/editorial-library'
     | '/admin/editorial-memory'
-    | '/admin/editorial-review-queue'
-    | '/admin/founder-learning'
     | '/admin/founder-looks'
-    | '/admin/image-repair-queue'
     | '/admin/inventory-health'
-    | '/admin/look-studio'
-    | '/admin/product-library'
     | '/admin/product-vault'
-    | '/admin/publishing'
-    | '/admin/review-queue'
-    | '/admin/stylist-engine'
     | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -464,25 +353,14 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/robots.txt'
     | '/sitemap.xml'
-    | '/admin/brand-performance'
     | '/admin/brands'
     | '/admin/buying-office'
-    | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
-    | '/admin/editorial-library'
     | '/admin/editorial-memory'
-    | '/admin/editorial-review-queue'
-    | '/admin/founder-learning'
     | '/admin/founder-looks'
-    | '/admin/image-repair-queue'
     | '/admin/inventory-health'
-    | '/admin/look-studio'
-    | '/admin/product-library'
     | '/admin/product-vault'
-    | '/admin/publishing'
-    | '/admin/review-queue'
-    | '/admin/stylist-engine'
     | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -509,25 +387,14 @@ export interface FileRouteTypes {
     | '/resort-edits'
     | '/robots.txt'
     | '/sitemap.xml'
-    | '/admin/brand-performance'
     | '/admin/brands'
     | '/admin/buying-office'
-    | '/admin/collections'
     | '/admin/day-images'
     | '/admin/destination-moments'
-    | '/admin/editorial-library'
     | '/admin/editorial-memory'
-    | '/admin/editorial-review-queue'
-    | '/admin/founder-learning'
     | '/admin/founder-looks'
-    | '/admin/image-repair-queue'
     | '/admin/inventory-health'
-    | '/admin/look-studio'
-    | '/admin/product-library'
     | '/admin/product-vault'
-    | '/admin/publishing'
-    | '/admin/review-queue'
-    | '/admin/stylist-engine'
     | '/admin/subscribers'
     | '/brands/$slug'
     | '/destinations/$slug'
@@ -555,28 +422,18 @@ export interface RootRouteChildren {
   ResortEditsRoute: typeof ResortEditsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  AdminBrandPerformanceRoute: typeof AdminBrandPerformanceRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
   AdminBuyingOfficeRoute: typeof AdminBuyingOfficeRoute
-  AdminCollectionsRoute: typeof AdminCollectionsRouteWithChildren
   AdminDayImagesRoute: typeof AdminDayImagesRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
-  AdminEditorialLibraryRoute: typeof AdminEditorialLibraryRoute
   AdminEditorialMemoryRoute: typeof AdminEditorialMemoryRoute
-  AdminEditorialReviewQueueRoute: typeof AdminEditorialReviewQueueRoute
-  AdminFounderLearningRoute: typeof AdminFounderLearningRoute
   AdminFounderLooksRoute: typeof AdminFounderLooksRoute
-  AdminImageRepairQueueRoute: typeof AdminImageRepairQueueRoute
   AdminInventoryHealthRoute: typeof AdminInventoryHealthRoute
-  AdminLookStudioRoute: typeof AdminLookStudioRoute
-  AdminProductLibraryRoute: typeof AdminProductLibraryRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
-  AdminPublishingRoute: typeof AdminPublishingRoute
-  AdminReviewQueueRoute: typeof AdminReviewQueueRoute
-  AdminStylistEngineRoute: typeof AdminStylistEngineRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   LookSlugRoute: typeof LookSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminCollectionsIdRoute: typeof AdminCollectionsIdRoute
   AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
 }
 
@@ -729,46 +586,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSubscribersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/stylist-engine': {
-      id: '/admin/stylist-engine'
-      path: '/admin/stylist-engine'
-      fullPath: '/admin/stylist-engine'
-      preLoaderRoute: typeof AdminStylistEngineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/review-queue': {
-      id: '/admin/review-queue'
-      path: '/admin/review-queue'
-      fullPath: '/admin/review-queue'
-      preLoaderRoute: typeof AdminReviewQueueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/publishing': {
-      id: '/admin/publishing'
-      path: '/admin/publishing'
-      fullPath: '/admin/publishing'
-      preLoaderRoute: typeof AdminPublishingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/product-vault': {
       id: '/admin/product-vault'
       path: '/admin/product-vault'
       fullPath: '/admin/product-vault'
       preLoaderRoute: typeof AdminProductVaultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/product-library': {
-      id: '/admin/product-library'
-      path: '/admin/product-library'
-      fullPath: '/admin/product-library'
-      preLoaderRoute: typeof AdminProductLibraryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/look-studio': {
-      id: '/admin/look-studio'
-      path: '/admin/look-studio'
-      fullPath: '/admin/look-studio'
-      preLoaderRoute: typeof AdminLookStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/inventory-health': {
@@ -778,13 +600,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInventoryHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/image-repair-queue': {
-      id: '/admin/image-repair-queue'
-      path: '/admin/image-repair-queue'
-      fullPath: '/admin/image-repair-queue'
-      preLoaderRoute: typeof AdminImageRepairQueueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/founder-looks': {
       id: '/admin/founder-looks'
       path: '/admin/founder-looks'
@@ -792,32 +607,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFounderLooksRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/founder-learning': {
-      id: '/admin/founder-learning'
-      path: '/admin/founder-learning'
-      fullPath: '/admin/founder-learning'
-      preLoaderRoute: typeof AdminFounderLearningRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/editorial-review-queue': {
-      id: '/admin/editorial-review-queue'
-      path: '/admin/editorial-review-queue'
-      fullPath: '/admin/editorial-review-queue'
-      preLoaderRoute: typeof AdminEditorialReviewQueueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/editorial-memory': {
       id: '/admin/editorial-memory'
       path: '/admin/editorial-memory'
       fullPath: '/admin/editorial-memory'
       preLoaderRoute: typeof AdminEditorialMemoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/editorial-library': {
-      id: '/admin/editorial-library'
-      path: '/admin/editorial-library'
-      fullPath: '/admin/editorial-library'
-      preLoaderRoute: typeof AdminEditorialLibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/destination-moments': {
@@ -834,13 +628,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDayImagesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/collections': {
-      id: '/admin/collections'
-      path: '/admin/collections'
-      fullPath: '/admin/collections'
-      preLoaderRoute: typeof AdminCollectionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/buying-office': {
       id: '/admin/buying-office'
       path: '/admin/buying-office'
@@ -853,13 +640,6 @@ declare module '@tanstack/react-router' {
       path: '/admin/brands'
       fullPath: '/admin/brands'
       preLoaderRoute: typeof AdminBrandsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/brand-performance': {
-      id: '/admin/brand-performance'
-      path: '/admin/brand-performance'
-      fullPath: '/admin/brand-performance'
-      preLoaderRoute: typeof AdminBrandPerformanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portofino/$day/$look': {
@@ -878,10 +658,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/collections/$id': {
       id: '/admin/collections/$id'
-      path: '/$id'
+      path: '/admin/collections/$id'
       fullPath: '/admin/collections/$id'
       preLoaderRoute: typeof AdminCollectionsIdRouteImport
-      parentRoute: typeof AdminCollectionsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -933,17 +713,6 @@ const PortofinoRouteWithChildren = PortofinoRoute._addFileChildren(
   PortofinoRouteChildren,
 )
 
-interface AdminCollectionsRouteChildren {
-  AdminCollectionsIdRoute: typeof AdminCollectionsIdRoute
-}
-
-const AdminCollectionsRouteChildren: AdminCollectionsRouteChildren = {
-  AdminCollectionsIdRoute: AdminCollectionsIdRoute,
-}
-
-const AdminCollectionsRouteWithChildren =
-  AdminCollectionsRoute._addFileChildren(AdminCollectionsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -955,28 +724,18 @@ const rootRouteChildren: RootRouteChildren = {
   ResortEditsRoute: ResortEditsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  AdminBrandPerformanceRoute: AdminBrandPerformanceRoute,
   AdminBrandsRoute: AdminBrandsRoute,
   AdminBuyingOfficeRoute: AdminBuyingOfficeRoute,
-  AdminCollectionsRoute: AdminCollectionsRouteWithChildren,
   AdminDayImagesRoute: AdminDayImagesRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
-  AdminEditorialLibraryRoute: AdminEditorialLibraryRoute,
   AdminEditorialMemoryRoute: AdminEditorialMemoryRoute,
-  AdminEditorialReviewQueueRoute: AdminEditorialReviewQueueRoute,
-  AdminFounderLearningRoute: AdminFounderLearningRoute,
   AdminFounderLooksRoute: AdminFounderLooksRoute,
-  AdminImageRepairQueueRoute: AdminImageRepairQueueRoute,
   AdminInventoryHealthRoute: AdminInventoryHealthRoute,
-  AdminLookStudioRoute: AdminLookStudioRoute,
-  AdminProductLibraryRoute: AdminProductLibraryRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
-  AdminPublishingRoute: AdminPublishingRoute,
-  AdminReviewQueueRoute: AdminReviewQueueRoute,
-  AdminStylistEngineRoute: AdminStylistEngineRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
   LookSlugRoute: LookSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminCollectionsIdRoute: AdminCollectionsIdRoute,
   AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
 }
 export const routeTree = rootRouteImport

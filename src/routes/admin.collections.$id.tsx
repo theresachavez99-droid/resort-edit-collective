@@ -674,8 +674,8 @@ function CollectionDetail() {
 
   return (
     <main className="mx-auto max-w-6xl p-8 space-y-8">
-      <Link to="/admin/collections" className="text-sm text-blue-600 underline">
-        ← All collections
+      <Link to="/admin/destination-moments" className="text-sm text-blue-600 underline">
+        ← All destination moments
       </Link>
 
       <header className="space-y-2">
