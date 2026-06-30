@@ -89,7 +89,42 @@ function publicClient() {
   );
 }
 
+/**
+ * Gate A — read the canonical moment row from `moments_public` and overlay
+ * its hero_image / name / narrative onto the static def. The static def
+ * remains the source of truth for legacy_day, look_slug, outfit_image
+ * (these power the shop panel and legacy redirects and are intentionally
+ * excluded from the public view). When the view row is missing or has a
+ * null hero_image, we fall back to the static def fields untouched.
+ */
+async function applyMomentViewOverlay(
+  def: PortofinoMomentDef,
+): Promise<PortofinoMomentDef> {
+  try {
+    const supabase = publicClient();
+    const { data } = await supabase
+      .from("moments_public")
+      .select("name, hero_image, copy, sequence")
+      .eq("destination", "portofino")
+      .eq("slug", def.moment_slug)
+      .maybeSingle();
+    if (!data) return def;
+    const copy = (data.copy ?? {}) as { narrative?: string };
+    return {
+      ...def,
+      moment_name: (data.name as string) || def.moment_name,
+      hero_banner_image: (data.hero_image as string) || def.hero_banner_image,
+      narrative: copy.narrative || def.narrative,
+    };
+  } catch {
+    return def;
+  }
+}
+
 async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard> {
+  // Overlay canonical view fields (name, hero banner, narrative) before
+  // resolving the look layer. Look resolution itself is unchanged.
+  const merged = await applyMomentViewOverlay(def);
   // 1. Founder Look (Hero Outfit Studio publish flow) wins.
   try {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -97,7 +132,7 @@ async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard>
       .from("founder_looks")
       .select("id, slug, title, hero_urls, published_at, status, founder_notes")
       .eq("destination", "portofino")
-      .eq("moment", def.moment_slug)
+      .eq("moment", merged.moment_slug)
       .in("status", ["approved", "published"])
       .not("published_at", "is", null)
       .order("published_at", { ascending: false })
@@ -120,12 +155,12 @@ async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard>
       const heroImage =
         products.find((p) => p.role === "Hero Garment" && p.image_url)?.image_url ??
         products.find((p) => p.image_url)?.image_url ??
-        def.outfit_image;
+        merged.outfit_image;
       return {
-        ...def,
+        ...merged,
         resolved: {
           source: "founder_look",
-          title: (flRow.title as string) || def.moment_name,
+          title: (flRow.title as string) || merged.moment_name,
           image: heroImage,
           founder_look_id: flRow.id as string,
           founder_look_slug: (flRow.slug as string) ?? undefined,
@@ -145,7 +180,7 @@ async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard>
       .from("look_candidates")
       .select("id,slug,moment_slug,lookboard_image_url,why_it_works,best_for,composite_score,brief,whats_in_her_bag")
       .eq("destination", "portofino")
-      .eq("moment_slug", def.moment_slug)
+      .eq("moment_slug", merged.moment_slug)
       .eq("status", "approved")
       .order("composite_score", { ascending: false, nullsFirst: false })
       .limit(1);
@@ -156,10 +191,10 @@ async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard>
 
   if (row && row.lookboard_image_url) {
     return {
-      ...def,
+      ...merged,
       resolved: {
         source: "tagged",
-        title: def.moment_name,
+        title: merged.moment_name,
         image: row.lookboard_image_url,
         why_it_works: row.why_it_works ?? undefined,
         best_for: row.best_for?.length ? row.best_for : undefined,
@@ -169,12 +204,12 @@ async function resolveOne(def: PortofinoMomentDef): Promise<PortofinoMomentCard>
   }
 
   return {
-    ...def,
+    ...merged,
     resolved: {
       source: "fallback",
-      title: def.legacy_look_title,
-      image: def.outfit_image,
-      legacy_day_path: def.legacy_day,
+      title: merged.legacy_look_title,
+      image: merged.outfit_image,
+      legacy_day_path: merged.legacy_day,
     },
   };
 }
