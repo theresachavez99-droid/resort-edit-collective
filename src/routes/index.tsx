@@ -126,10 +126,10 @@ function Index() {
                 RESORT EDIT™  ·  PORTOFINO, ITALY
               </p>
               <h1 className="mt-3 font-display text-ivory text-[2.6rem] sm:text-[3.6rem] lg:text-[4.4rem] leading-[1.02] tracking-[0.01em] max-w-[22ch]">
-                A day on the Italian Riviera.
+                One perfect day in Portofino.
               </h1>
               <p className="mt-3 font-serif italic text-ivory/85 text-[1.05rem] sm:text-[1.15rem] lg:text-[1.25rem] leading-snug max-w-[44ch]">
-                From the first walk through the village to one final cocktail on the piazzetta.
+                From the first walk along the harbor to one final cocktail on the piazzetta.
               </p>
             </div>
           </div>
