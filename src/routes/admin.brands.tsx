@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,7 +11,8 @@ import {
   PRIMARY_CATEGORIES,
   ACTIVITY_STRENGTHS,
 } from "@/lib/brands.functions";
-import { getBrandPerformance } from "@/lib/brand-performance.functions";
+// Performance tab retired in Consolidation Order Track A — restored in Track B
+// when brand signals consolidate into Editorial Memory.
 
 export const Route = createFileRoute("/admin/brands")({
   head: () => ({
@@ -19,9 +20,6 @@ export const Route = createFileRoute("/admin/brands")({
       { title: "Brands — Admin (Resort Edit)" },
       { name: "robots", content: "noindex, nofollow" },
     ],
-  }),
-  validateSearch: (search: Record<string, unknown>) => ({
-    tab: search.tab === "performance" ? ("performance" as const) : ("brands" as const),
   }),
   component: BrandsAdminPage,
 });
