@@ -12,7 +12,6 @@ import {
   recordValidationRun,
   refreshFounderLookHeroImages,
 } from "@/lib/founder-looks.functions";
-import { generateYachtDayCollection } from "@/lib/stylist-engine.functions";
 import {
   classifyProductSource,
   inferJewelrySubSlot,
@@ -735,179 +734,32 @@ type RunStatus = "idle" | "loading" | "done" | "error";
 
 function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
   const get = useServerFn(getFounderLook);
-  const generate = useServerFn(generateYachtDayCollection);
-  const record = useServerFn(recordValidationRun);
-  const sendFeedback = useServerFn(submitFounderProductFeedback);
   const detail = useQuery({
     queryKey: ["founder-look", id, "validate"],
     queryFn: () => (id ? get({ data: { password: pw, id } }) : Promise.resolve(null)),
     enabled: !!id,
   });
 
-  // sideOrder: which engine variant ("founder" | "baseline") sits in slot 1 vs slot 2.
-  // The slots are presented to the founder as anonymous "Outfit 1" / "Outfit 2".
-  const [sideOrder, setSideOrder] = useState<["founder" | "baseline", "founder" | "baseline"]>([
-    "founder",
-    "baseline",
-  ]);
-  const [slot1, setSlot1] = useState<{ status: RunStatus; run: RunPayload | null; err?: string }>({
-    status: "idle",
-    run: null,
-  });
-  const [slot2, setSlot2] = useState<{ status: RunStatus; run: RunPayload | null; err?: string }>({
-    status: "idle",
-    run: null,
-  });
-  const [revealed, setRevealed] = useState(false);
-
   const look = detail.data && "ok" in detail.data && detail.data.ok ? detail.data.look : null;
-
-  async function runAB() {
-    if (!look) return;
-    setRevealed(false);
-    // Randomize which slot gets Founder Learning.
-    const order: ["founder" | "baseline", "founder" | "baseline"] =
-      Math.random() < 0.5 ? ["founder", "baseline"] : ["baseline", "founder"];
-    setSideOrder(order);
-    setSlot1({ status: "loading", run: null });
-    setSlot2({ status: "loading", run: null });
-
-    const base = {
-      password: pw,
-      destination: look.destination,
-      moment: look.moment,
-      targetLooks: 4,
-      includeOptional: true,
-      discoveryMode: "fast" as const,
-      enableCache: true,
-    };
-    const buildPayload = (variant: "founder" | "baseline", label: "A" | "B") => ({
-      ...base,
-      activity: look.moment,
-      founderLearning: variant === "founder",
-      founderLookId: variant === "founder" ? look.id : null,
-      validationLabel: label,
-    });
-
-    const runOne = async (
-      variant: "founder" | "baseline",
-      label: "A" | "B",
-      setter: typeof setSlot1,
-    ) => {
-      try {
-        const r = (await generate({ data: buildPayload(variant, label) as never })) as RunPayload;
-        setter({ status: "done", run: r });
-        return r;
-      } catch (e) {
-        const msg = String((e as Error)?.message ?? e);
-        setter({ status: "error", run: null, err: msg });
-        return null;
-      }
-    };
-
-    const [a, b] = await Promise.all([
-      runOne(order[0], "A", setSlot1),
-      runOne(order[1], "B", setSlot2),
-    ]);
-
-    if (a && b) {
-      try {
-        await record({
-          data: {
-            password: pw,
-            founder_look_id: look.id,
-            destination: look.destination,
-            moment: look.moment,
-            run_a: a as unknown,
-            run_b: b as unknown,
-            founder_side: order[0] === "founder" ? "A" : "B",
-          },
-        });
-      } catch {
-        /* audit-only; ignore */
-      }
-    }
-  }
-
   if (!look) return <div className="text-sm text-neutral-500">Select a Founder Look first.</div>;
 
-  const bothDone = slot1.status === "done" && slot2.status === "done";
-  const anyRunning = slot1.status === "loading" || slot2.status === "loading";
-
   return (
-    <div>
+    <div className="max-w-2xl">
       <div className="mb-4 text-sm">
         Blind A/B for <span className="font-medium">{look.title}</span> · {look.destination} ·{" "}
         {look.moment}
       </div>
-      <button
-        onClick={runAB}
-        disabled={anyRunning}
-        className="bg-black text-white px-4 py-2 text-sm mb-6 disabled:opacity-50"
-      >
-        {anyRunning ? "Generating both outfits…" : "Run blind A/B"}
-      </button>
-
-      <div className="grid grid-cols-2 gap-6">
-        <OutfitPanel
-          slotLabel="Outfit 1"
-          status={slot1.status}
-          run={slot1.run}
-          err={slot1.err}
-          revealed={revealed}
-          variant={sideOrder[0]}
-          look={look}
-          password={pw}
-          sendFeedback={sendFeedback}
-        />
-        <OutfitPanel
-          slotLabel="Outfit 2"
-          status={slot2.status}
-          run={slot2.run}
-          err={slot2.err}
-          revealed={revealed}
-          variant={sideOrder[1]}
-          look={look}
-          password={pw}
-          sendFeedback={sendFeedback}
-        />
+      <div className="border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+        <div className="uppercase tracking-widest text-[10px] mb-2">A/B validation paused</div>
+        <p className="leading-relaxed">
+          The legacy yacht-day engine has been retired. There is now exactly one
+          engine path: the 5-stage Run workspace at{" "}
+          <a href="/admin/moments" className="underline">/admin/moments</a>.
+          A/B harness will be reinstated against <code>runMoment</code> once the
+          product feed is connected (Step 4). Until then, Gate B keeps the feed
+          dormant and the engine produces no candidates by design.
+        </p>
       </div>
-
-      {bothDone && !revealed && (
-        <div className="mt-8 border-t pt-6">
-          <div className="text-sm text-neutral-600 mb-3">
-            Choose the outfit that feels more <em>Resort Edit</em>, then reveal.
-          </div>
-          <button
-            onClick={() => setRevealed(true)}
-            className="bg-black text-white px-4 py-2 text-sm"
-          >
-            Reveal
-          </button>
-        </div>
-      )}
-
-      {bothDone && revealed && (
-        <>
-          <div className="mt-8 grid grid-cols-2 gap-6">
-            <DiagnosticsPanel
-              slotLabel="Outfit 1"
-              variant={sideOrder[0]}
-              run={slot1.run!}
-            />
-            <DiagnosticsPanel
-              slotLabel="Outfit 2"
-              variant={sideOrder[1]}
-              run={slot2.run!}
-            />
-          </div>
-          <ComparisonTable
-            sideOrder={sideOrder}
-            slot1={slot1.run!}
-            slot2={slot2.run!}
-          />
-        </>
-      )}
     </div>
   );
 }

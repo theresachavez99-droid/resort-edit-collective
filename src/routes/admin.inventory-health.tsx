@@ -160,8 +160,12 @@ function InventoryHealthPage() {
                       Featured
                     </span>
                   )}
-                  <a className="underline" href={`/admin/collections/${c.id}`}>
-                    {c.title ?? "Untitled"}
+                  <span className="text-stone-900">{c.title ?? "Untitled"}</span>
+                  <a
+                    className="ml-2 text-[11px] uppercase tracking-widest text-stone-500 underline hover:text-stone-900"
+                    href="/admin/moments"
+                  >
+                    Open Run workspace →
                   </a>
                 </td>
                 <td className="px-3 py-2 text-stone-600">
