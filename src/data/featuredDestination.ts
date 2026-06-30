@@ -1,4 +1,4 @@
-import heroMuseAsset from "@/assets/hero-lilla-portofino-waterfront-floral.png.asset.json";
+import heroPortofinoPlaceLed from "@/assets/hero-portofino-place-led.jpg";
 import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
 
 /**
@@ -50,9 +50,9 @@ const FEATURED_DESTINATIONS: Record<string, FeaturedDestination> = {
     slug: "portofino",
     name: "Portofino",
     country: "Italy",
-    heroImage: heroMuseAsset.url,
+    heroImage: heroPortofinoPlaceLed,
     heroImageAlt:
-      "Lilla walking along the Portofino waterfront in an elegant floral resort dress overlooking the Italian Riviera.",
+      "Portofino harbor at golden hour — pastel ochre and terracotta facades, classic wooden boats moored along the quay, and a single figure walking the promenade in a soft floral dress.",
     tagline: "Dressed for the destination.",
     totalLooks: 25,
     totalMoments: portofinoMomentLabels.length,
