@@ -175,7 +175,7 @@ function AdminDashboard() {
 
       {/* Quick actions */}
       <section className="flex flex-wrap gap-2">
-        <QuickAction to="/admin/buying-office" label="Open Buying Office" />
+        <QuickAction to="/admin/moments" label="Open Moment Runs" />
         <QuickAction to="/admin/founder-looks" label="Founder Looks" />
         <QuickAction to="/admin/destination-moments" label="Destination Moments" />
       </section>
