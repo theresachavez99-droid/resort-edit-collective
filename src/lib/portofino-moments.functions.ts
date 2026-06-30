@@ -101,8 +101,8 @@ async function applyMomentViewOverlay(
   def: PortofinoMomentDef,
 ): Promise<PortofinoMomentDef> {
   try {
-    const supabase = publicClient();
-    const { data } = await supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
       .from("moments_public")
       .select("name, hero_image, copy, sequence")
       .eq("destination", "portofino")
