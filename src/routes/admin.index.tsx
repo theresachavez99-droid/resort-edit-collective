@@ -38,27 +38,7 @@ const WORKFLOW: NavItem[] = [
     label: "Buying Office",
     to: "/admin/buying-office",
     description:
-      "Paste product URLs or import rows to build Founder Heroes. Tracks affiliate network readiness.",
-  },
-  {
-    label: "Stylist Engine",
-    to: "/admin/stylist-engine",
-    description: "Generate complete editorial looks for any destination moment.",
-  },
-  {
-    label: "Look Studio",
-    to: "/admin/look-studio",
-    description: "Refine styling, swap products, choose heroes.",
-  },
-  {
-    label: "Editorial Review",
-    to: "/admin/editorial-review-queue",
-    description: "Final founder approval before publication.",
-  },
-  {
-    label: "Publishing",
-    to: "/admin/publishing",
-    description: "Mission control — every destination and moment in one place.",
+      "Interim editorial workspace — paste product URLs, build Founder Heroes, and publish moments. Becomes the Moment Run workspace in Track B.",
   },
 ];
 
@@ -101,11 +81,6 @@ const OPERATIONS: NavItem[] = [
     label: "Subscribers",
     to: "/admin/subscribers",
     description: "Newsletter list management.",
-  },
-  {
-    label: "Founder Learning",
-    to: "/admin/founder-learning",
-    description: "Internal AI training signals — not part of the daily workflow.",
   },
 ];
 
@@ -184,7 +159,7 @@ function AdminDashboard() {
           <h1 className="font-serif text-3xl">Resort Edit</h1>
         </div>
       <p className="text-xs text-stone-500 italic max-w-xs text-right hidden sm:block">
-          Stylist Engine → Look Studio → Editorial Review → Publishing
+          Founder Looks → Buying Office → Publish
         </p>
       </header>
 
@@ -200,10 +175,9 @@ function AdminDashboard() {
 
       {/* Quick actions */}
       <section className="flex flex-wrap gap-2">
-        <QuickAction to="/admin/stylist-engine" label="Generate Looks" />
-        <QuickAction to="/admin/look-studio" label="Refine in Look Studio" />
-        <QuickAction to="/admin/editorial-review-queue" label="Open Editorial Review" />
-        <QuickAction to="/admin/publishing" label="Open Publishing" />
+        <QuickAction to="/admin/buying-office" label="Open Buying Office" />
+        <QuickAction to="/admin/founder-looks" label="Founder Looks" />
+        <QuickAction to="/admin/destination-moments" label="Destination Moments" />
       </section>
 
       {/* Workflow */}

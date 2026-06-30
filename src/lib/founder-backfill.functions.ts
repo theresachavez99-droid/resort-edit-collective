@@ -27,7 +27,12 @@ export const runAssetBackfill = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { slugifyBrand } = await import("./founder-learning.server");
+    const slugifyBrand = (name: string) =>
+      name
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w-]/g, "");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sb = supabaseAdmin as any;
 

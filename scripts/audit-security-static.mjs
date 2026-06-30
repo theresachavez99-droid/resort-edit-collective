@@ -59,17 +59,9 @@ function walk(dir, out = []) {
 const files = walk(SRC);
 const fnFiles = files.filter((f) => f.endsWith(".functions.ts"));
 
-/* 1. listFounderReferences must call requireAdmin */
-const fl = readFileSync(join(SRC, "lib/founder-learning.functions.ts"), "utf8");
-/* Match from the export keyword to the closing of the createServerFn chain. */
-const listBlock = fl.match(/export const listFounderReferences[\s\S]*?\}\s*\)\s*;/);
-if (!listBlock) fail("listFounderReferences export not found");
-else {
-  if (!/password:\s*pw\b/.test(listBlock[0]))
-    fail("listFounderReferences: password is not required (should be `password: pw`)");
-  if (!/requireAdmin\(data\.password\)/.test(listBlock[0]))
-    fail("listFounderReferences: handler does not call requireAdmin(data.password)");
-}
+/* 1. listFounderReferences was retired in Consolidation Order Track A
+ *    (founder-learning.functions.ts deleted). Its successor will land in
+ *    Track B's Moment Run workspace and re-introduce this gate. */
 
 /* 2. Every supabaseAdmin handler against an internal table must call
  *    requireAdmin, unless it is an allowlisted public projection. */
