@@ -84,8 +84,6 @@ function DestinationMomentsPage() {
 
 function MomentsBoard({ password }: { password: string }) {
   const qc = useQueryClient();
-  const { tab } = Route.useSearch();
-  const navigate = useNavigate();
   const archFn = useServerFn(listMomentArchetypes);
   const momFn = useServerFn(listAllDestinationMoments);
   const seedArchFn = useServerFn(seedMomentArchetypes);
@@ -153,32 +151,8 @@ function MomentsBoard({ password }: { password: string }) {
             </button>
           </div>
         </div>
-        <div className="max-w-[1400px] mx-auto mt-4 flex gap-1 border-b border-ink/10 -mb-6">
-          {([
-            { id: "moments", label: "Moments" },
-            { id: "collections", label: "Collections" },
-          ] as const).map((t) => {
-            const active = tab === t.id;
-            return (
-              <button
-                key={t.id}
-                onClick={() =>
-                  navigate({ to: "/admin/destination-moments", search: { tab: t.id } })
-                }
-                className={`px-4 py-2 text-[0.7rem] tracking-[0.24em] uppercase border-b-2 -mb-px ${
-                  active ? "border-ink text-ink" : "border-transparent text-ink/50 hover:text-ink"
-                }`}
-              >
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
       </header>
 
-      {tab === "collections" ? (
-        <CollectionsTab password={password} />
-      ) : (
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-8 space-y-12">
         {/* Archetype library */}
         <section>
@@ -225,7 +199,6 @@ function MomentsBoard({ password }: { password: string }) {
           </div>
         </section>
       </div>
-      )}
     </main>
   );
 }
