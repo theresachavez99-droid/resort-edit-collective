@@ -101,8 +101,13 @@ async function applyMomentViewOverlay(
   def: PortofinoMomentDef,
 ): Promise<PortofinoMomentDef> {
   try {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await supabaseAdmin
+    // Low-privilege public read: publishable key + GRANT SELECT to anon on
+    // the moments_public view. The raw `moments` table (which holds the
+    // internal `brief`, `legacy_*` slugs and `status`) is NOT granted to
+    // anon, so even a malicious query parameter cannot widen this path
+    // beyond the 8 safe columns the view projects.
+    const supabase = publicClient();
+    const { data } = await supabase
       .from("moments_public")
       .select("name, hero_image, copy, sequence")
       .eq("destination", "portofino")
