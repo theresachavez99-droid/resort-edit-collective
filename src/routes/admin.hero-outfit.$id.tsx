@@ -111,10 +111,10 @@ function Workspace({ sessionId, password }: { sessionId: string; password: strin
           </h1>
         </div>
         <a
-          href="/admin/buying-office"
+          href="/admin/moments"
           className="text-xs tracking-[0.3em] uppercase text-stone-500 hover:text-ink"
         >
-          ← All sessions
+          ← Moment Runs
         </a>
       </header>
 
