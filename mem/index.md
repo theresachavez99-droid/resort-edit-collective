@@ -5,6 +5,9 @@ All muses share ONE Master Face identity across the entire site — only hair, s
 Each muse has a single isolated identity-lock reference at `src/assets/muses/muse-<slug>.png.asset.json` (mediterranean/tropical/glam/adventure/cultural). When generating a muse image, pass ONLY that muse's reference — never the full 5-muse board.
 Portofino uses Muse 1 (Mediterranean): rich glossy brunette, sun-kissed skin, gold jewelry, golden-hour yacht energy.
 Any new table read by public pages must explicitly REVOKE default anon/authenticated grants and re-GRANT only safe columns + add narrow RLS, then be probe-tested with the publishable key (sensitive cols → 401/403, public view → 200). Never rely on Supabase defaults.
+Never press site-level Publish without explicit per-change founder approval. All refactor work stays in preview/draft. Any change that affects live public behavior (redirects, public read paths, moment.status flips, public-URL nav) must be staged, called out as "this changes live behavior", and held for sign-off before publishing.
+Resort Edit site is currently published with effective_publish_visibility=private (workspace-gated). resortedit.com 302→auth-bridge for the public. Treat all current "published" state as preview-only until visibility is flipped.
+One engine path only: runMoment (src/lib/moment-run.functions.ts). Never reintroduce a parallel/legacy generation pipeline. Gate C (anti-fabrication) is enforced at the data flow — feed-only ranker + assertNoProductNames in Stage 1.
 
 ## Memories
 - [Muse System](mem://design/muse-system) — Five destination muses (Mediterranean, Tropical, Glam, Adventure, Cultural/Asia) with hair, features, energy, beauty, photography rules + negative prompts
