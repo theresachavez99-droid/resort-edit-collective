@@ -154,8 +154,6 @@ function BrandsAdminPage() {
 
 function BrandsBoard({ password, onLogout }: { password: string; onLogout: () => void }) {
   const qc = useQueryClient();
-  const { tab } = Route.useSearch();
-  const navigate = useNavigate();
   const listFn = useServerFn(listBrands);
   const upsertFn = useServerFn(upsertBrand);
   const statusFn = useServerFn(setBrandStatus);
@@ -251,31 +249,6 @@ function BrandsBoard({ password, onLogout }: { password: string; onLogout: () =>
           </button>
         </div>
       </header>
-
-      <div className="flex gap-1 border-b border-ink/15 mb-8 -mt-4">
-        {([
-          { id: "brands", label: "Approved Brands" },
-          { id: "performance", label: "Performance" },
-        ] as const).map((t) => {
-          const active = tab === t.id;
-          return (
-            <button
-              key={t.id}
-              onClick={() => navigate({ to: "/admin/brands", search: { tab: t.id } })}
-              className={`px-4 py-2 text-[0.7rem] tracking-[0.24em] uppercase border-b-2 -mb-px ${
-                active ? "border-ink text-ink" : "border-transparent text-ink/50 hover:text-ink"
-              }`}
-            >
-              {t.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {tab === "performance" ? (
-        <BrandPerformancePanel password={password} />
-      ) : (
-        <>
 
       {/* Filters */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
@@ -566,8 +539,6 @@ function BrandsBoard({ password, onLogout }: { password: string; onLogout: () =>
           ))}
         </div>
       </section>
-        </>
-      )}
     </main>
   );
 }
