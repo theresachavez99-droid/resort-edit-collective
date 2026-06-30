@@ -36,10 +36,11 @@ import { Route as AdminFounderLooksRouteImport } from './routes/admin.founder-lo
 import { Route as AdminEditorialMemoryRouteImport } from './routes/admin.editorial-memory'
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
 import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
-import { Route as AdminBuyingOfficeRouteImport } from './routes/admin.buying-office'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
+import { Route as AdminMomentsIndexRouteImport } from './routes/admin.moments.index'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
+import { Route as AdminMomentsIdRunRouteImport } from './routes/admin.moments.$id.run'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -176,14 +177,14 @@ const AdminDayImagesRoute = AdminDayImagesRouteImport.update({
   path: '/admin/day-images',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminBuyingOfficeRoute = AdminBuyingOfficeRouteImport.update({
-  id: '/admin/buying-office',
-  path: '/admin/buying-office',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
   id: '/admin/brands',
   path: '/admin/brands',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminMomentsIndexRoute = AdminMomentsIndexRouteImport.update({
+  id: '/admin/moments/',
+  path: '/admin/moments/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
@@ -194,6 +195,11 @@ const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
 const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
   id: '/admin/hero-outfit/$id',
   path: '/admin/hero-outfit/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminMomentsIdRunRoute = AdminMomentsIdRunRouteImport.update({
+  id: '/admin/moments/$id/run',
+  path: '/admin/moments/$id/run',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -209,7 +215,6 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
-  '/admin/buying-office': typeof AdminBuyingOfficeRoute
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
@@ -229,6 +234,8 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
+  '/admin/moments/': typeof AdminMomentsIndexRoute
+  '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -242,7 +249,6 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
-  '/admin/buying-office': typeof AdminBuyingOfficeRoute
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
@@ -262,6 +268,8 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
+  '/admin/moments': typeof AdminMomentsIndexRoute
+  '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -276,7 +284,6 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
-  '/admin/buying-office': typeof AdminBuyingOfficeRoute
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
@@ -296,6 +303,8 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
+  '/admin/moments/': typeof AdminMomentsIndexRoute
+  '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -311,7 +320,6 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
-    | '/admin/buying-office'
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-memory'
@@ -331,6 +339,8 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/hero-outfit/$id'
     | '/portofino/$day/$look'
+    | '/admin/moments/'
+    | '/admin/moments/$id/run'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -344,7 +354,6 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
-    | '/admin/buying-office'
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-memory'
@@ -364,6 +373,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/hero-outfit/$id'
     | '/portofino/$day/$look'
+    | '/admin/moments'
+    | '/admin/moments/$id/run'
   id:
     | '__root__'
     | '/'
@@ -377,7 +388,6 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
-    | '/admin/buying-office'
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-memory'
@@ -397,6 +407,8 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/hero-outfit/$id'
     | '/portofino/$day/$look'
+    | '/admin/moments/'
+    | '/admin/moments/$id/run'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -411,7 +423,6 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
-  AdminBuyingOfficeRoute: typeof AdminBuyingOfficeRoute
   AdminDayImagesRoute: typeof AdminDayImagesRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
   AdminEditorialMemoryRoute: typeof AdminEditorialMemoryRoute
@@ -422,6 +433,8 @@ export interface RootRouteChildren {
   LookSlugRoute: typeof LookSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
+  AdminMomentsIndexRoute: typeof AdminMomentsIndexRoute
+  AdminMomentsIdRunRoute: typeof AdminMomentsIdRunRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -615,18 +628,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDayImagesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/buying-office': {
-      id: '/admin/buying-office'
-      path: '/admin/buying-office'
-      fullPath: '/admin/buying-office'
-      preLoaderRoute: typeof AdminBuyingOfficeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/brands': {
       id: '/admin/brands'
       path: '/admin/brands'
       fullPath: '/admin/brands'
       preLoaderRoute: typeof AdminBrandsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/moments/': {
+      id: '/admin/moments/'
+      path: '/admin/moments'
+      fullPath: '/admin/moments/'
+      preLoaderRoute: typeof AdminMomentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portofino/$day/$look': {
@@ -641,6 +654,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/hero-outfit/$id'
       fullPath: '/admin/hero-outfit/$id'
       preLoaderRoute: typeof AdminHeroOutfitIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/moments/$id/run': {
+      id: '/admin/moments/$id/run'
+      path: '/admin/moments/$id/run'
+      fullPath: '/admin/moments/$id/run'
+      preLoaderRoute: typeof AdminMomentsIdRunRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -705,7 +725,6 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminBrandsRoute: AdminBrandsRoute,
-  AdminBuyingOfficeRoute: AdminBuyingOfficeRoute,
   AdminDayImagesRoute: AdminDayImagesRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
   AdminEditorialMemoryRoute: AdminEditorialMemoryRoute,
@@ -716,6 +735,8 @@ const rootRouteChildren: RootRouteChildren = {
   LookSlugRoute: LookSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
+  AdminMomentsIndexRoute: AdminMomentsIndexRoute,
+  AdminMomentsIdRunRoute: AdminMomentsIdRunRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -31,3 +31,7 @@
 /portofino/arrival-day                                   /portofino/arrival                   301!
 /portofino/pool-lounging-shopping                        /portofino/pool-lounging             301!
 /portofino/market-morning                                /portofino/espresso-morning          301!
+
+# Step 3 — Buying Office consolidated into Moment Runs
+/admin/buying-office                                     /admin/moments                       301!
+/admin/buying-office/*                                   /admin/moments                       301!
