@@ -106,76 +106,52 @@ function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-14 mx-auto max-w-[1440px]";
   return (
     <div className="bg-ivory w-full">
-      {/* HERO — editorial cover: photography-led, destination-first hierarchy */}
+      {/* HERO — single cinematic scene, no commerce, no nav stack. */}
       <section
-        className={`${wrap} pt-6 lg:pt-10 pb-6 lg:pb-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
+        aria-label={`${featured.name} — editorial cover`}
+        className="relative w-full overflow-hidden bg-ink"
       >
-        <div className="relative aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-cream/40 lg:col-span-7">
+        <div className="relative w-full h-[78vh] min-h-[560px] max-h-[920px]">
           <img
             src={featured.heroImage}
             alt={featured.heroImageAlt}
             fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-contain object-center"
+            className="absolute inset-0 h-full w-full object-cover object-center"
           />
-        </div>
-        <div className="lg:pl-2 max-w-[680px] lg:col-span-5">
-          <p className="eyebrow text-gold text-[0.82rem] tracking-[0.38em]">
-            RESORT EDIT™
-          </p>
-          <h1 className="font-display mt-1.5 text-[4.2rem] sm:text-[5.6rem] lg:text-[7.4rem] xl:text-[8.6rem] leading-[0.86] tracking-[0.005em] text-ink uppercase">
-            {featured.name}
-          </h1>
-          <p
-            className="font-serif italic text-[1.4rem] sm:text-[1.6rem] lg:text-[1.85rem] leading-[1.05] tracking-[-0.01em] mt-1.5"
-            style={{ color: "oklch(0.62 0.12 66)" }}
-          >
-            Dressed for the Destination™
-          </p>
-          <p className="font-serif italic text-[1.2rem] sm:text-[1.32rem] lg:text-[1.45rem] leading-[1.15] mt-2.5 text-ink">
-            Every moment thoughtfully curated—from your first arrival to your final nightcap.
-          </p>
-          <div className="mt-3 mb-2.5 h-px w-24 bg-gold/80" />
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Link
-              to={featured.primaryCtaHref as "/"}
-              className="bg-gold text-ivory eyebrow text-[0.78rem] tracking-[0.28em] px-10 py-[18px] hover:bg-ink transition-colors"
-            >
-              Discover {featured.name}
-            </Link>
-            <Link
-              to="/destinations"
-              className="border border-ink text-ink eyebrow text-[0.78rem] tracking-[0.28em] px-10 py-[18px] hover:bg-ink hover:text-ivory transition-colors"
-            >
-              View All Destinations
-            </Link>
+          {/* Quiet gradient so the type stays readable without crushing the image. */}
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/10 to-ink/20" />
+          <div className="absolute inset-x-0 bottom-0 px-6 sm:px-10 lg:px-14 pb-12 md:pb-16 lg:pb-20">
+            <div className="max-w-[1440px] mx-auto">
+              <p className="eyebrow text-ivory/85 text-[0.7rem] sm:text-[0.78rem] tracking-[0.42em]">
+                RESORT EDIT™  ·  PORTOFINO, ITALY
+              </p>
+              <h1 className="mt-3 font-display text-ivory text-[2.6rem] sm:text-[3.6rem] lg:text-[4.4rem] leading-[1.02] tracking-[0.01em] max-w-[22ch]">
+                A day on the Italian Riviera.
+              </h1>
+              <p className="mt-3 font-serif italic text-ivory/85 text-[1.05rem] sm:text-[1.15rem] lg:text-[1.25rem] leading-snug max-w-[44ch]">
+                From the first walk through the village to one final cocktail on the piazzetta.
+              </p>
+            </div>
           </div>
-
-          <nav
-            aria-label={`${featured.name} chapters`}
-            className="mt-5"
-          >
-            <ul className="flex flex-wrap items-center gap-x-5 gap-y-3">
-              {featured.momentLabels.map((m, i) => (
-                <li key={m.slug} className="flex items-center gap-x-5">
-                  <Link
-                    to="/portofino/$moment"
-                    params={{ moment: m.slug }}
-                    className="eyebrow text-[0.72rem] sm:text-[0.7rem] tracking-[0.22em] text-ink/70 hover:text-gold transition-colors py-1"
-                  >
-                    {m.label}
-                  </Link>
-                  {i < featured.momentLabels.length - 1 && (
-                    <span aria-hidden className="text-gold/50">·</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
         </div>
       </section>
 
-      {/* THE PORTOFINO EDIT — editorial chapter collection */}
-      <section className={`${wrap} mt-8 md:mt-10`}>
+      {/* THESIS BAND — quiet centered statement, no commerce. */}
+      <section className={`${wrap} pt-12 md:pt-16 pb-8 md:pb-12 text-center`}>
+        <p
+          className="font-serif italic text-[1.5rem] sm:text-[1.8rem] lg:text-[2.05rem] leading-[1.15] tracking-[-0.005em] max-w-[34ch] mx-auto"
+          style={{ color: "oklch(0.42 0.06 60)" }}
+        >
+          Dressed for the Destination™
+        </p>
+        <p className="mt-4 font-serif italic text-ink/70 text-[1rem] sm:text-[1.08rem] max-w-[48ch] mx-auto leading-relaxed">
+          Every moment thoughtfully curated — from your first arrival to your final nightcap.
+        </p>
+        <div className="mt-6 mx-auto h-px w-16 bg-gold/60" />
+      </section>
+
+      {/* THE TWELVE MOMENTS — promoted to first beat after the thesis band. */}
+      <section className={`${wrap}`}>
         <div className="text-center max-w-3xl mx-auto">
           <p className="eyebrow text-gold text-[0.7rem] tracking-[0.34em]">
             THE PORTOFINO EDIT
