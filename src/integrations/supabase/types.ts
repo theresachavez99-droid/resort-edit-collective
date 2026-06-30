@@ -930,6 +930,7 @@ export type Database = {
           image_url: string | null
           last_used_at: string | null
           material: string | null
+          moment_id: string | null
           moments: string[]
           product_name: string | null
           product_url: string
@@ -952,6 +953,7 @@ export type Database = {
           image_url?: string | null
           last_used_at?: string | null
           material?: string | null
+          moment_id?: string | null
           moments?: string[]
           product_name?: string | null
           product_url: string
@@ -974,6 +976,7 @@ export type Database = {
           image_url?: string | null
           last_used_at?: string | null
           material?: string | null
+          moment_id?: string | null
           moments?: string[]
           product_name?: string | null
           product_url?: string
@@ -985,7 +988,22 @@ export type Database = {
           updated_at?: string
           usage_count?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "editorial_memory_products_moment_id_fkey"
+            columns: ["moment_id"]
+            isOneToOne: false
+            referencedRelation: "moments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "editorial_memory_products_moment_id_fkey"
+            columns: ["moment_id"]
+            isOneToOne: false
+            referencedRelation: "moments_public"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       editorial_memory_usages: {
         Row: {
@@ -1848,6 +1866,102 @@ export type Database = {
         }
         Relationships: []
       }
+      moment_runs: {
+        Row: {
+          created_at: string
+          id: string
+          last_error: string | null
+          moment_id: string
+          output: Json
+          params: Json
+          stage: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          moment_id: string
+          output?: Json
+          params?: Json
+          stage?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          moment_id?: string
+          output?: Json
+          params?: Json
+          stage?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moment_runs_moment_id_fkey"
+            columns: ["moment_id"]
+            isOneToOne: true
+            referencedRelation: "moments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moment_runs_moment_id_fkey"
+            columns: ["moment_id"]
+            isOneToOne: true
+            referencedRelation: "moments_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      moments: {
+        Row: {
+          brief: Json
+          copy: Json
+          created_at: string
+          destination: string
+          hero_image: string | null
+          id: string
+          name: string
+          published_at: string | null
+          sequence: number
+          slug: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          brief?: Json
+          copy?: Json
+          created_at?: string
+          destination: string
+          hero_image?: string | null
+          id?: string
+          name: string
+          published_at?: string | null
+          sequence: number
+          slug: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          brief?: Json
+          copy?: Json
+          created_at?: string
+          destination?: string
+          hero_image?: string | null
+          id?: string
+          name?: string
+          published_at?: string | null
+          sequence?: number
+          slug?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_cache: {
         Row: {
           activity_tags: string[]
@@ -2395,6 +2509,39 @@ export type Database = {
           last_seen_at: string | null
           rejections: number | null
           total_appearances: number | null
+        }
+        Relationships: []
+      }
+      moments_public: {
+        Row: {
+          copy: Json | null
+          destination: string | null
+          hero_image: string | null
+          id: string | null
+          name: string | null
+          published_at: string | null
+          sequence: number | null
+          slug: string | null
+        }
+        Insert: {
+          copy?: Json | null
+          destination?: string | null
+          hero_image?: string | null
+          id?: string | null
+          name?: string | null
+          published_at?: string | null
+          sequence?: number | null
+          slug?: string | null
+        }
+        Update: {
+          copy?: Json | null
+          destination?: string | null
+          hero_image?: string | null
+          id?: string | null
+          name?: string | null
+          published_at?: string | null
+          sequence?: number | null
+          slug?: string | null
         }
         Relationships: []
       }
