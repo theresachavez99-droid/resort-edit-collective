@@ -78,7 +78,7 @@ function activeProvider(): ProductSearchProvider & {
 // Stage 3 — Rank (feed candidates only)
 // ──────────────────────────────────────────────────────────────
 
-type RankedCandidate = NormalizedCandidate & {
+type RankedCandidate = Omit<NormalizedCandidate, "raw"> & {
   rank: number;
   brand_tier_boost: number;
   memory_reuse_penalty: number;
@@ -93,8 +93,9 @@ function rankCandidates(
       const tier = c.brand ? ctx.brandTier.get(c.brand.toLowerCase()) ?? 0 : 0;
       const reused = ctx.previouslyUsedUrls.has(c.source_url) ? -25 : 0;
       const tierBoost = tier; // -50..+50
+      const { raw: _raw, ...rest } = c;
       return {
-        ...c,
+        ...rest,
         rank: tierBoost + reused,
         brand_tier_boost: tierBoost,
         memory_reuse_penalty: reused,
@@ -151,23 +152,23 @@ export const runMoment = createServerFn({ method: "POST" })
     }
 
     // record run start (best-effort)
-    const { data: runRow } = await supabaseAdmin
+    const { data: runRow } = (await supabaseAdmin
       .from("moment_runs")
       .insert({
         moment_id: moment.id,
         stage: "compile",
         status: "running",
         params: { destination: moment.destination, momentSlug: moment.slug },
-      })
+      } as never)
       .select("id")
-      .maybeSingle();
+      .maybeSingle()) as { data: { id: string } | null };
     const runId = runRow?.id ?? null;
 
     const finish = async (stage: string, status: string, output: unknown, err?: string) => {
       if (!runId) return;
       await supabaseAdmin
         .from("moment_runs")
-        .update({ stage, status, output: output as never, last_error: err ?? null })
+        .update({ stage, status, output: output as never, last_error: err ?? null } as never)
         .eq("id", runId);
     };
 
