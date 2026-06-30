@@ -29,16 +29,16 @@ type NavItem = {
 
 const WORKFLOW: NavItem[] = [
   {
+    label: "Moment Runs",
+    to: "/admin/moments",
+    description:
+      "The consolidated editorial workspace — one engine per (destination, moment) with the 5-stage Run Contract (Compile · Feed · Rank · Curate · Publish). Replaces the legacy Buying Office surface.",
+  },
+  {
     label: "Founder Look Builder",
     to: "/admin/founder-looks",
     description:
       "Author the hero look per moment — editorial DNA, accessory rules, palette. Publishing fans out to references + brands automatically.",
-  },
-  {
-    label: "Buying Office",
-    to: "/admin/buying-office",
-    description:
-      "Interim editorial workspace — paste product URLs, build Founder Heroes, and publish moments. Becomes the Moment Run workspace in Track B.",
   },
 ];
 
