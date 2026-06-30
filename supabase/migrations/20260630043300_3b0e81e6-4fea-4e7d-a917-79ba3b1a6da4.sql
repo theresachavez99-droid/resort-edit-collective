@@ -1,0 +1,1 @@
+GRANT SELECT ON public.moments_public TO anon, authenticated;
