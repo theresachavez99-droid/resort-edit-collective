@@ -1925,6 +1925,8 @@ export type Database = {
           destination: string
           hero_image: string | null
           id: string
+          legacy_day_slug: string | null
+          legacy_look_slug: string | null
           name: string
           published_at: string | null
           sequence: number
@@ -1939,6 +1941,8 @@ export type Database = {
           destination: string
           hero_image?: string | null
           id?: string
+          legacy_day_slug?: string | null
+          legacy_look_slug?: string | null
           name: string
           published_at?: string | null
           sequence: number
@@ -1953,6 +1957,8 @@ export type Database = {
           destination?: string
           hero_image?: string | null
           id?: string
+          legacy_day_slug?: string | null
+          legacy_look_slug?: string | null
           name?: string
           published_at?: string | null
           sequence?: number
