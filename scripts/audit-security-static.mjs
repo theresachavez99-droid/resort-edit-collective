@@ -4,12 +4,14 @@
  *
  * Fails the build when any of the launch-blocking rules regress:
  *
- *  - `listFounderReferences` must require an admin password and call
- *    `requireAdmin(data.password)` before any DB read.
  *  - Every `createServerFn` handler that imports `supabaseAdmin` against
  *    an internal-only table must call `requireAdmin` first. A small,
  *    auditable allowlist exists for public projection functions
  *    (currently `getFounderProducts`) — anything else is rejected.
+ *    The internal table list explicitly includes `moments`, `moment_runs`,
+ *    `founder_reference_products`, and `editorial_reference_library` so
+ *    that Step 3's Moment Run workspace cannot regress the founder/
+ *    reference gate by silently swapping handlers.
  *  - Product / source URL Zod schemas must use the http(s)-only refinement
  *    (`httpUrl` / `isHttpUrl`) rather than bare `z.string().url()` (which
  *    accepts `javascript:` etc.).
@@ -40,6 +42,10 @@ const INTERNAL_TABLES = [
   "sourced_products",
   "look_candidates",
   "look_candidate_slots",
+  // Consolidation Order Step 2: Moment Definitions + Run artefacts.
+  // `moments.brief` aggregates founder/editorial references; never raw-public.
+  "moments",
+  "moment_runs",
 ];
 
 const issues = [];
@@ -59,9 +65,12 @@ function walk(dir, out = []) {
 const files = walk(SRC);
 const fnFiles = files.filter((f) => f.endsWith(".functions.ts"));
 
-/* 1. listFounderReferences was retired in Consolidation Order Track A
- *    (founder-learning.functions.ts deleted). Its successor will land in
- *    Track B's Moment Run workspace and re-introduce this gate. */
+/* 1. Founder/Reference gate (data-anchored, Step 2).
+ *    Any handler that reads or writes founder_reference_products,
+ *    editorial_reference_library, moments, or moment_runs via supabaseAdmin
+ *    must call requireAdmin() — enforced by rule #2 below via the
+ *    INTERNAL_TABLES list. Phrased against tables (not handler names) so
+ *    Step 3's Run-workspace handler cannot silently orphan the gate. */
 
 /* 2. Every supabaseAdmin handler against an internal table must call
  *    requireAdmin, unless it is an allowlisted public projection. */
