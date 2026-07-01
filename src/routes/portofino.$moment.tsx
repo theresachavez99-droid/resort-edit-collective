@@ -386,13 +386,25 @@ function MomentPage() {
  * "More {Short} Looks". Falls back to full moment name when missing.
  */
 const SHORT_MOMENT_NAME: Record<string, string> = {
+  "arrival": "Arrival",
+  "espresso-morning": "Espresso",
+  "yacht-day": "Yacht",
+  "harbor-aperitivo": "Harbor",
+  "sunset-views": "Sunset",
+  "riviera-dinner": "Riviera Dinner",
+  "exploring-the-harbor": "Harbor",
+  "beach-club": "Beach Club",
+  "long-lunch": "Long Lunch",
+  "shopping": "Shopping",
+  "nightcap": "Nightcap",
+  "pool-lounging": "Pool",
 };
 
 /**
  * Cinematic video hero used exclusively for /portofino/arrival. The video is
  * composed with Lilla in the left third, so overlay text is anchored right so
  * she is never obscured. Falls back to the poster still when the viewer has
- * prefers-reduced-motion or the video element cannot autoplay.
+ * prefers-reduced-motion.
  */
 function ArrivalCinematicHero({
   videoUrl,
@@ -426,8 +438,6 @@ function ArrivalCinematicHero({
         />
       ) : (
         <>
-          {/* Poster shows instantly; video fades in on top when it can play,
-              so there is no spinner / black flash and no CLS. */}
           <img
             src={posterUrl}
             alt=""
@@ -455,8 +465,6 @@ function ArrivalCinematicHero({
         </>
       )}
 
-      {/* Subtle right-side gradient — dark enough for legible type, transparent
-          over Lilla on the left so the destination reads cleanly. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -490,21 +498,6 @@ function ArrivalCinematicHero({
     </section>
   );
 }
-
-const _SHORT_MOMENT_NAME_KEEP: Record<string, string> = {
-  "arrival": "Arrival",
-  "espresso-morning": "Espresso",
-  "yacht-day": "Yacht",
-  "harbor-aperitivo": "Harbor",
-  "sunset-views": "Sunset",
-  "riviera-dinner": "Riviera Dinner",
-  "exploring-the-harbor": "Harbor",
-  "beach-club": "Beach Club",
-  "long-lunch": "Long Lunch",
-  "shopping": "Shopping",
-  "nightcap": "Nightcap",
-  "pool-lounging": "Pool",
-};
 
 /**
  * Editorial display titles for Founder Look hero sections. Founder Look rows
