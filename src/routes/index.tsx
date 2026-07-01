@@ -124,18 +124,22 @@ function Index() {
         aria-label={`${featured.name} — editorial cover`}
         className="relative w-full overflow-hidden bg-ink"
       >
-        <div className="relative w-full h-[78vh] min-h-[560px] max-h-[920px]">
+        <div
+          className="relative w-full h-[78vh] min-h-[560px] max-h-[920px] [--hero-focal:50%_28%] sm:[--hero-focal:50%_22%] md:[--hero-focal:50%_18%] lg:[--hero-focal:50%_16%]"
+        >
           {prefersReducedMotion ? (
             <img
               src={heroPosterUrl}
               alt={featured.heroImageAlt}
               fetchPriority="high"
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: "var(--hero-focal, 50% 22%)" }}
             />
           ) : (
             <video
               key="portofino-hero-video"
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: "var(--hero-focal, 50% 22%)" }}
               src={heroVideoUrl}
               poster={heroPosterUrl}
               autoPlay
