@@ -485,28 +485,46 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
     ? `${focal.lg.x}% ${focal.lg.y}%`
     : focalMd;
 
-  // Inline style seeds the base focal point; Tailwind arbitrary variants
-  // override at md/lg so each breakpoint uses its own crop.
-  const focalStyle = {
+  // Per-hero scope id so the media-query style block below only affects
+  // this instance's media elements. Focal points are seeded as CSS custom
+  // properties and swapped per breakpoint — Tailwind's JIT can't produce
+  // arbitrary `object-position` classes from runtime values, so we ship
+  // the breakpoints as a scoped <style> tag instead.
+  const scopeId = React.useId().replace(/:/g, "");
+  const scopeAttr = `data-hero-scope-${scopeId}`;
+
+  const mediaClasses = "absolute inset-0 h-full w-full object-cover";
+  const mediaStyle = {
+    objectPosition: "var(--hero-focal)",
+  } as React.CSSProperties;
+  const scopeStyle = {
     ["--hero-focal" as string]: focalBase,
   } as React.CSSProperties;
-
-  const mediaClasses =
-    "absolute inset-0 h-full w-full object-cover " +
-    `md:[object-position:${focalMd}] lg:[object-position:${focalLg}]`;
+  const responsiveCss = `
+    [${scopeAttr}] .hero-media { object-position: ${focalBase}; }
+    @media (min-width: 768px) {
+      [${scopeAttr}] .hero-media { object-position: ${focalMd}; }
+    }
+    @media (min-width: 1024px) {
+      [${scopeAttr}] .hero-media { object-position: ${focalLg}; }
+    }
+  `;
 
   return (
     <section
       aria-label={ariaLabel}
       className="relative w-full overflow-hidden bg-ink h-[62vh] md:h-[72vh] min-h-[440px] max-h-[820px]"
+      {...{ [scopeAttr]: "" }}
+      style={scopeStyle}
     >
+      <style dangerouslySetInnerHTML={{ __html: responsiveCss }} />
       {reduceMotion ? (
         <img
           src={poster}
           alt={ariaLabel}
           fetchPriority="high"
-          className={mediaClasses}
-          style={{ ...focalStyle, objectPosition: "var(--hero-focal)" }}
+          className={mediaClasses + " hero-media"}
+          style={mediaStyle}
         />
       ) : (
         <>
@@ -515,8 +533,8 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
             alt=""
             aria-hidden
             fetchPriority="high"
-            className={mediaClasses}
-            style={{ ...focalStyle, objectPosition: "var(--hero-focal)" }}
+            className={mediaClasses + " hero-media"}
+            style={mediaStyle}
           />
           <video
             key={`cinematic-${video}`}
@@ -531,11 +549,11 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
             controlsList="nodownload nofullscreen noremoteplayback"
             onCanPlay={() => setReady(true)}
             className={
-              mediaClasses +
+              mediaClasses + " hero-media" +
               " transition-opacity duration-700 ease-out " +
               (ready ? "opacity-100" : "opacity-0")
             }
-            style={{ ...focalStyle, objectPosition: "var(--hero-focal)" }}
+            style={mediaStyle}
           />
         </>
       )}
