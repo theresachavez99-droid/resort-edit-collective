@@ -5,6 +5,65 @@ import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.json";
 import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
+
+/**
+ * Focal point for a hero video / poster expressed as CSS `object-position`
+ * percentages per breakpoint. `y` is measured from the top: lower values keep
+ * more of the top of the frame (subject's head) visible when the container
+ * is shorter than the source aspect ratio.
+ *
+ * A smaller `y` at wider breakpoints protects the subject's face on desktop
+ * where the hero container is proportionally shorter than the 16:9 source.
+ */
+type HeroFocal = { x: number; y: number };
+type ResponsiveHeroFocal = {
+  base: HeroFocal;      // <640px (mobile portrait)
+  md?: HeroFocal;       // ≥768px (tablet)
+  lg?: HeroFocal;       // ≥1024px (desktop)
+};
+
+type MomentHeroVideo = {
+  video: string;
+  poster: string;
+  focal: ResponsiveHeroFocal;
+  overlay: {
+    eyebrow: string;
+    headline: string;
+    body: string;
+    ctaLabel: string;
+    ctaHref: string;
+  };
+  ariaLabel: string;
+};
+
+/**
+ * Registry of cinematic video heroes per moment slug. Each new destination or
+ * moment that ships a hero video adds an entry here; the shared
+ * `MomentCinematicHero` component reads focal points and overlay copy from
+ * this map so we never re-tune CSS on a per-page basis.
+ */
+const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
+  arrival: {
+    video: arrivalHeroVideo.url,
+    poster: arrivalHeroPoster.url,
+    // Lilla enters from the left third — desktop container is short so pull
+    // the crop upward to keep her head + shoulders fully visible.
+    focal: {
+      base: { x: 50, y: 30 },
+      md: { x: 50, y: 22 },
+      lg: { x: 50, y: 18 },
+    },
+    overlay: {
+      eyebrow: "PORTOFINO  ·  ARRIVAL DAY",
+      headline: "The Arrival in Portofino.",
+      body:
+        "She steps into the Riviera slowly — ivory tailoring, sunlit stone, and the first feeling that the trip has truly begun.",
+      ctaLabel: "Shop The Arrival Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Arrival in Portofino",
+  },
+};
 import {
   getPortofinoMomentDef,
   getJourneyNeighbors,
@@ -158,10 +217,9 @@ function MomentPage() {
   // `featured` opens the featured look; `look-a|b|c` opens that sibling.
   const [openShop, setOpenShop] = useState<string | null>(null);
 
-  // Arrival Day gets a cinematic video hero. All other moments keep the
-  // canonical image hero. Kept as a per-slug override so future moments can
-  // opt into the same treatment without changing shared layout.
-  const isArrivalCinematic = slug === "arrival";
+  // Moments registered in MOMENT_HERO_VIDEO get the shared cinematic video
+  // hero. All other moments keep the canonical image hero.
+  const cinematicHero = MOMENT_HERO_VIDEO[slug];
 
   return (
     <div className="pb-16 md:pb-20">
@@ -207,11 +265,8 @@ function MomentPage() {
       )}
 
       {/* HERO */}
-      {isArrivalCinematic ? (
-        <ArrivalCinematicHero
-          videoUrl={arrivalHeroVideo.url}
-          posterUrl={arrivalHeroPoster.url}
-        />
+      {cinematicHero ? (
+        <MomentCinematicHero config={cinematicHero} />
       ) : (
         <section className="relative h-[36vh] md:h-[48vh] min-h-[280px] w-full overflow-hidden bg-ink">
           <img
