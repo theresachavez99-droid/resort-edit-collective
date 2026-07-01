@@ -10,9 +10,14 @@ import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { portofinoMomentsQuery } from "@/components/HomeItinerary";
 import { HomeEditorialChapters } from "@/components/HomeEditorialChapters";
 import { getFeaturedDestination } from "@/data/featuredDestination";
+import heroVideoAsset from "@/assets/portofino-hero.mp4.asset.json";
+import heroPosterAsset from "@/assets/portofino-hero-poster.jpg.asset.json";
+import * as React from "react";
 
 const featured = getFeaturedDestination();
 const heroMuse = featured.heroImage;
+const heroVideoUrl = heroVideoAsset.url;
+const heroPosterUrl = heroPosterAsset.url;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,7 +32,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: SITE_URL },
-      { rel: "preload", as: "image", href: heroMuse, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: heroPosterUrl, fetchpriority: "high" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(portofinoMomentsQuery),
