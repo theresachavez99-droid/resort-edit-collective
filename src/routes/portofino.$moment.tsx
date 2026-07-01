@@ -492,7 +492,7 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
   // properties and swapped per breakpoint — Tailwind's JIT can't produce
   // arbitrary `object-position` classes from runtime values, so we ship
   // the breakpoints as a scoped <style> tag instead.
-  const scopeId = useId().replace(/:/g, "");
+  const scopeId = useId().replace(/:/g, "").toLowerCase();
   const scopeAttr = `data-hero-scope-${scopeId}`;
 
   const mediaClasses = "absolute inset-0 h-full w-full";
