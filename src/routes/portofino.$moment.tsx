@@ -456,18 +456,18 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
 };
 
 /**
- * Cinematic video hero used exclusively for /portofino/arrival. The video is
- * composed with Lilla in the left third, so overlay text is anchored right so
- * she is never obscured. Falls back to the poster still when the viewer has
- * prefers-reduced-motion.
+ * Shared cinematic video hero used across moment pages. Reads video, poster,
+ * per-breakpoint focal point, and overlay copy from a config so every moment
+ * uses the same DOM structure and only tunes its own focal point + copy.
+ *
+ * Focal points are pushed into CSS custom properties (`--hero-focal-*`) at
+ * the section level and consumed by the video/poster via `object-position`.
+ * Tailwind media queries switch which variable the media element reads at
+ * each breakpoint, so mobile / tablet / desktop can each keep the subject's
+ * face inside the visible frame without changing zoom.
  */
-function ArrivalCinematicHero({
-  videoUrl,
-  posterUrl,
-}: {
-  videoUrl: string;
-  posterUrl: string;
-}) {
+function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
+  const { video, poster, focal, overlay, ariaLabel } = config;
   const [reduceMotion, setReduceMotion] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -479,31 +479,49 @@ function ArrivalCinematicHero({
     return () => mq.removeEventListener?.("change", update);
   }, []);
 
+  const focalBase = `${focal.base.x}% ${focal.base.y}%`;
+  const focalMd = focal.md ? `${focal.md.x}% ${focal.md.y}%` : focalBase;
+  const focalLg = focal.lg
+    ? `${focal.lg.x}% ${focal.lg.y}%`
+    : focalMd;
+
+  // Inline style seeds the base focal point; Tailwind arbitrary variants
+  // override at md/lg so each breakpoint uses its own crop.
+  const focalStyle = {
+    ["--hero-focal" as string]: focalBase,
+  } as React.CSSProperties;
+
+  const mediaClasses =
+    "absolute inset-0 h-full w-full object-cover " +
+    `md:[object-position:${focalMd}] lg:[object-position:${focalLg}]`;
+
   return (
     <section
-      aria-label="Arrival Day — Portofino"
+      aria-label={ariaLabel}
       className="relative w-full overflow-hidden bg-ink h-[62vh] md:h-[72vh] min-h-[440px] max-h-[820px]"
     >
       {reduceMotion ? (
         <img
-          src={posterUrl}
-          alt="Arriving in Portofino"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          src={poster}
+          alt={ariaLabel}
           fetchPriority="high"
+          className={mediaClasses}
+          style={{ ...focalStyle, objectPosition: "var(--hero-focal)" }}
         />
       ) : (
         <>
           <img
-            src={posterUrl}
+            src={poster}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full object-cover object-center"
             fetchPriority="high"
+            className={mediaClasses}
+            style={{ ...focalStyle, objectPosition: "var(--hero-focal)" }}
           />
           <video
-            key="arrival-cinematic"
-            src={videoUrl}
-            poster={posterUrl}
+            key={`cinematic-${video}`}
+            src={video}
+            poster={poster}
             autoPlay
             muted
             loop
@@ -513,13 +531,17 @@ function ArrivalCinematicHero({
             controlsList="nodownload nofullscreen noremoteplayback"
             onCanPlay={() => setReady(true)}
             className={
-              "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out " +
+              mediaClasses +
+              " transition-opacity duration-700 ease-out " +
               (ready ? "opacity-100" : "opacity-0")
             }
+            style={{ ...focalStyle, objectPosition: "var(--hero-focal)" }}
           />
         </>
       )}
 
+      {/* Right-side readability gradient — transparent over the subject on the
+          left so the destination is never darkened. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -532,20 +554,19 @@ function ArrivalCinematicHero({
         <div className="h-full flex items-center justify-end">
           <div className="max-w-[520px] text-ivory text-left">
             <p className="eyebrow text-[0.7rem] sm:text-[0.75rem] tracking-[0.38em] text-ivory/90">
-              PORTOFINO  ·  ARRIVAL DAY
+              {overlay.eyebrow}
             </p>
             <h1 className="mt-3 font-display text-[2.2rem] sm:text-[2.8rem] lg:text-[3.4rem] leading-[1.05] tracking-[0.01em]">
-              Your Portofino Story Begins.
+              {overlay.headline}
             </h1>
             <p className="mt-4 font-serif italic text-[1rem] sm:text-[1.08rem] text-ivory/85 leading-relaxed">
-              The first moments set the tone for everything that follows.
-              Arrive beautifully, settle in, and let the Riviera slow your pace.
+              {overlay.body}
             </p>
             <a
-              href="#shop-the-look"
+              href={overlay.ctaHref}
               className="mt-7 inline-flex items-center gap-3 eyebrow text-[0.72rem] tracking-[0.32em] text-ivory bg-ink/70 hover:bg-gold border border-ivory/40 hover:border-gold backdrop-blur-sm px-6 py-3 transition-colors"
             >
-              Shop The Arrival Look →
+              {overlay.ctaLabel} →
             </a>
           </div>
         </div>
