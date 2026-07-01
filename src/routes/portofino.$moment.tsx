@@ -498,7 +498,6 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
   const mediaClasses = "absolute inset-0 h-full w-full";
   const mediaStyle: CSSProperties = {
     objectFit: fit,
-    objectPosition: "var(--hero-focal)",
   };
   const scopeStyle: CSSProperties = {
     ["--hero-focal" as string]: focalBase,
