@@ -490,16 +490,16 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
   // properties and swapped per breakpoint — Tailwind's JIT can't produce
   // arbitrary `object-position` classes from runtime values, so we ship
   // the breakpoints as a scoped <style> tag instead.
-  const scopeId = React.useId().replace(/:/g, "");
+  const scopeId = useId().replace(/:/g, "");
   const scopeAttr = `data-hero-scope-${scopeId}`;
 
   const mediaClasses = "absolute inset-0 h-full w-full object-cover";
-  const mediaStyle = {
+  const mediaStyle: CSSProperties = {
     objectPosition: "var(--hero-focal)",
-  } as React.CSSProperties;
-  const scopeStyle = {
+  };
+  const scopeStyle: CSSProperties = {
     ["--hero-focal" as string]: focalBase,
-  } as React.CSSProperties;
+  };
   const responsiveCss = `
     [${scopeAttr}] .hero-media { object-position: ${focalBase}; }
     @media (min-width: 768px) {
