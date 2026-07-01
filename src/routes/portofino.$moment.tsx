@@ -1,10 +1,69 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId, type CSSProperties } from "react";
 import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.json";
 import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
+
+/**
+ * Focal point for a hero video / poster expressed as CSS `object-position`
+ * percentages per breakpoint. `y` is measured from the top: lower values keep
+ * more of the top of the frame (subject's head) visible when the container
+ * is shorter than the source aspect ratio.
+ *
+ * A smaller `y` at wider breakpoints protects the subject's face on desktop
+ * where the hero container is proportionally shorter than the 16:9 source.
+ */
+type HeroFocal = { x: number; y: number };
+type ResponsiveHeroFocal = {
+  base: HeroFocal;      // <640px (mobile portrait)
+  md?: HeroFocal;       // ≥768px (tablet)
+  lg?: HeroFocal;       // ≥1024px (desktop)
+};
+
+type MomentHeroVideo = {
+  video: string;
+  poster: string;
+  focal: ResponsiveHeroFocal;
+  overlay: {
+    eyebrow: string;
+    headline: string;
+    body: string;
+    ctaLabel: string;
+    ctaHref: string;
+  };
+  ariaLabel: string;
+};
+
+/**
+ * Registry of cinematic video heroes per moment slug. Each new destination or
+ * moment that ships a hero video adds an entry here; the shared
+ * `MomentCinematicHero` component reads focal points and overlay copy from
+ * this map so we never re-tune CSS on a per-page basis.
+ */
+const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
+  arrival: {
+    video: arrivalHeroVideo.url,
+    poster: arrivalHeroPoster.url,
+    // Lilla enters from the left third — desktop container is short so pull
+    // the crop upward to keep her head + shoulders fully visible.
+    focal: {
+      base: { x: 50, y: 30 },
+      md: { x: 50, y: 22 },
+      lg: { x: 50, y: 18 },
+    },
+    overlay: {
+      eyebrow: "PORTOFINO  ·  ARRIVAL DAY",
+      headline: "The Arrival in Portofino.",
+      body:
+        "She steps into the Riviera slowly — ivory tailoring, sunlit stone, and the first feeling that the trip has truly begun.",
+      ctaLabel: "Shop The Arrival Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Arrival in Portofino",
+  },
+};
 import {
   getPortofinoMomentDef,
   getJourneyNeighbors,
@@ -158,10 +217,9 @@ function MomentPage() {
   // `featured` opens the featured look; `look-a|b|c` opens that sibling.
   const [openShop, setOpenShop] = useState<string | null>(null);
 
-  // Arrival Day gets a cinematic video hero. All other moments keep the
-  // canonical image hero. Kept as a per-slug override so future moments can
-  // opt into the same treatment without changing shared layout.
-  const isArrivalCinematic = slug === "arrival";
+  // Moments registered in MOMENT_HERO_VIDEO get the shared cinematic video
+  // hero. All other moments keep the canonical image hero.
+  const cinematicHero = MOMENT_HERO_VIDEO[slug];
 
   return (
     <div className="pb-16 md:pb-20">
@@ -207,11 +265,8 @@ function MomentPage() {
       )}
 
       {/* HERO */}
-      {isArrivalCinematic ? (
-        <ArrivalCinematicHero
-          videoUrl={arrivalHeroVideo.url}
-          posterUrl={arrivalHeroPoster.url}
-        />
+      {cinematicHero ? (
+        <MomentCinematicHero config={cinematicHero} />
       ) : (
         <section className="relative h-[36vh] md:h-[48vh] min-h-[280px] w-full overflow-hidden bg-ink">
           <img
@@ -401,18 +456,18 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
 };
 
 /**
- * Cinematic video hero used exclusively for /portofino/arrival. The video is
- * composed with Lilla in the left third, so overlay text is anchored right so
- * she is never obscured. Falls back to the poster still when the viewer has
- * prefers-reduced-motion.
+ * Shared cinematic video hero used across moment pages. Reads video, poster,
+ * per-breakpoint focal point, and overlay copy from a config so every moment
+ * uses the same DOM structure and only tunes its own focal point + copy.
+ *
+ * Focal points are pushed into CSS custom properties (`--hero-focal-*`) at
+ * the section level and consumed by the video/poster via `object-position`.
+ * Tailwind media queries switch which variable the media element reads at
+ * each breakpoint, so mobile / tablet / desktop can each keep the subject's
+ * face inside the visible frame without changing zoom.
  */
-function ArrivalCinematicHero({
-  videoUrl,
-  posterUrl,
-}: {
-  videoUrl: string;
-  posterUrl: string;
-}) {
+function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
+  const { video, poster, focal, overlay, ariaLabel } = config;
   const [reduceMotion, setReduceMotion] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -424,31 +479,67 @@ function ArrivalCinematicHero({
     return () => mq.removeEventListener?.("change", update);
   }, []);
 
+  const focalBase = `${focal.base.x}% ${focal.base.y}%`;
+  const focalMd = focal.md ? `${focal.md.x}% ${focal.md.y}%` : focalBase;
+  const focalLg = focal.lg
+    ? `${focal.lg.x}% ${focal.lg.y}%`
+    : focalMd;
+
+  // Per-hero scope id so the media-query style block below only affects
+  // this instance's media elements. Focal points are seeded as CSS custom
+  // properties and swapped per breakpoint — Tailwind's JIT can't produce
+  // arbitrary `object-position` classes from runtime values, so we ship
+  // the breakpoints as a scoped <style> tag instead.
+  const scopeId = useId().replace(/:/g, "");
+  const scopeAttr = `data-hero-scope-${scopeId}`;
+
+  const mediaClasses = "absolute inset-0 h-full w-full object-cover";
+  const mediaStyle: CSSProperties = {
+    objectPosition: "var(--hero-focal)",
+  };
+  const scopeStyle: CSSProperties = {
+    ["--hero-focal" as string]: focalBase,
+  };
+  const responsiveCss = `
+    [${scopeAttr}] .hero-media { object-position: ${focalBase}; }
+    @media (min-width: 768px) {
+      [${scopeAttr}] .hero-media { object-position: ${focalMd}; }
+    }
+    @media (min-width: 1024px) {
+      [${scopeAttr}] .hero-media { object-position: ${focalLg}; }
+    }
+  `;
+
   return (
     <section
-      aria-label="Arrival Day — Portofino"
+      aria-label={ariaLabel}
       className="relative w-full overflow-hidden bg-ink h-[62vh] md:h-[72vh] min-h-[440px] max-h-[820px]"
+      {...{ [scopeAttr]: "" }}
+      style={scopeStyle}
     >
+      <style dangerouslySetInnerHTML={{ __html: responsiveCss }} />
       {reduceMotion ? (
         <img
-          src={posterUrl}
-          alt="Arriving in Portofino"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          src={poster}
+          alt={ariaLabel}
           fetchPriority="high"
+          className={mediaClasses + " hero-media"}
+          style={mediaStyle}
         />
       ) : (
         <>
           <img
-            src={posterUrl}
+            src={poster}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full object-cover object-center"
             fetchPriority="high"
+            className={mediaClasses + " hero-media"}
+            style={mediaStyle}
           />
           <video
-            key="arrival-cinematic"
-            src={videoUrl}
-            poster={posterUrl}
+            key={`cinematic-${video}`}
+            src={video}
+            poster={poster}
             autoPlay
             muted
             loop
@@ -458,13 +549,17 @@ function ArrivalCinematicHero({
             controlsList="nodownload nofullscreen noremoteplayback"
             onCanPlay={() => setReady(true)}
             className={
-              "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out " +
+              mediaClasses + " hero-media" +
+              " transition-opacity duration-700 ease-out " +
               (ready ? "opacity-100" : "opacity-0")
             }
+            style={mediaStyle}
           />
         </>
       )}
 
+      {/* Right-side readability gradient — transparent over the subject on the
+          left so the destination is never darkened. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -477,20 +572,19 @@ function ArrivalCinematicHero({
         <div className="h-full flex items-center justify-end">
           <div className="max-w-[520px] text-ivory text-left">
             <p className="eyebrow text-[0.7rem] sm:text-[0.75rem] tracking-[0.38em] text-ivory/90">
-              PORTOFINO  ·  ARRIVAL DAY
+              {overlay.eyebrow}
             </p>
             <h1 className="mt-3 font-display text-[2.2rem] sm:text-[2.8rem] lg:text-[3.4rem] leading-[1.05] tracking-[0.01em]">
-              Your Portofino Story Begins.
+              {overlay.headline}
             </h1>
             <p className="mt-4 font-serif italic text-[1rem] sm:text-[1.08rem] text-ivory/85 leading-relaxed">
-              The first moments set the tone for everything that follows.
-              Arrive beautifully, settle in, and let the Riviera slow your pace.
+              {overlay.body}
             </p>
             <a
-              href="#shop-the-look"
+              href={overlay.ctaHref}
               className="mt-7 inline-flex items-center gap-3 eyebrow text-[0.72rem] tracking-[0.32em] text-ivory bg-ink/70 hover:bg-gold border border-ivory/40 hover:border-gold backdrop-blur-sm px-6 py-3 transition-colors"
             >
-              Shop The Arrival Look →
+              {overlay.ctaLabel} →
             </a>
           </div>
         </div>
