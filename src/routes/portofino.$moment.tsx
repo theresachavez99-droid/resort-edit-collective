@@ -26,6 +26,7 @@ type MomentHeroVideo = {
   video: string;
   poster: string;
   focal: ResponsiveHeroFocal;
+  fit?: CSSProperties["objectFit"];
   overlay: {
     eyebrow: string;
     headline: string;
@@ -46,13 +47,14 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   arrival: {
     video: arrivalHeroVideo.url,
     poster: arrivalHeroPoster.url,
-    // Lilla enters from the left third — desktop container is short so pull
-    // the crop upward to keep her head + shoulders fully visible.
+    // Lilla enters from the left third. Keep mobile centered, but pin tablet
+    // and desktop to the top of the frame so her head/hair are never cropped.
     focal: {
-      base: { x: 50, y: 30 },
-      md: { x: 50, y: 22 },
-      lg: { x: 50, y: 18 },
+      base: { x: 50, y: 50 },
+      md: { x: 50, y: 0 },
+      lg: { x: 50, y: 0 },
     },
+    fit: "cover",
     overlay: {
       eyebrow: "PORTOFINO  ·  ARRIVAL DAY",
       headline: "The Arrival in Portofino.",
@@ -467,7 +469,7 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
  * face inside the visible frame without changing zoom.
  */
 function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
-  const { video, poster, focal, overlay, ariaLabel } = config;
+  const { video, poster, focal, fit = "cover", overlay, ariaLabel } = config;
   const [reduceMotion, setReduceMotion] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -493,8 +495,9 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
   const scopeId = useId().replace(/:/g, "");
   const scopeAttr = `data-hero-scope-${scopeId}`;
 
-  const mediaClasses = "absolute inset-0 h-full w-full object-cover";
+  const mediaClasses = "absolute inset-0 h-full w-full";
   const mediaStyle: CSSProperties = {
+    objectFit: fit,
     objectPosition: "var(--hero-focal)",
   };
   const scopeStyle: CSSProperties = {
@@ -513,7 +516,7 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
   return (
     <section
       aria-label={ariaLabel}
-      className="relative w-full overflow-hidden bg-ink h-[62vh] md:h-[72vh] min-h-[440px] max-h-[820px]"
+      className="relative w-full overflow-hidden bg-ink min-h-[500px] h-[clamp(500px,70vh,760px)] lg:min-h-[520px] lg:h-[clamp(520px,52vw,720px)]"
       {...{ [scopeAttr]: "" }}
       style={scopeStyle}
     >
