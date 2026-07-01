@@ -124,7 +124,9 @@ function Index() {
         aria-label={`${featured.name} — editorial cover`}
         className="relative w-full overflow-hidden bg-ink"
       >
-        <div className="relative w-full h-[78vh] min-h-[560px] max-h-[920px]">
+        <div
+          className="relative w-full h-[78vh] min-h-[560px] max-h-[920px] [--hero-focal:50%_28%] sm:[--hero-focal:50%_22%] md:[--hero-focal:50%_18%] lg:[--hero-focal:50%_16%]"
+        >
           {prefersReducedMotion ? (
             <img
               src={heroPosterUrl}
