@@ -386,6 +386,112 @@ function MomentPage() {
  * "More {Short} Looks". Falls back to full moment name when missing.
  */
 const SHORT_MOMENT_NAME: Record<string, string> = {
+};
+
+/**
+ * Cinematic video hero used exclusively for /portofino/arrival. The video is
+ * composed with Lilla in the left third, so overlay text is anchored right so
+ * she is never obscured. Falls back to the poster still when the viewer has
+ * prefers-reduced-motion or the video element cannot autoplay.
+ */
+function ArrivalCinematicHero({
+  videoUrl,
+  posterUrl,
+}: {
+  videoUrl: string;
+  posterUrl: string;
+}) {
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduceMotion(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
+
+  return (
+    <section
+      aria-label="Arrival Day — Portofino"
+      className="relative w-full overflow-hidden bg-ink h-[62vh] md:h-[72vh] min-h-[440px] max-h-[820px]"
+    >
+      {reduceMotion ? (
+        <img
+          src={posterUrl}
+          alt="Arriving in Portofino"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          fetchPriority="high"
+        />
+      ) : (
+        <>
+          {/* Poster shows instantly; video fades in on top when it can play,
+              so there is no spinner / black flash and no CLS. */}
+          <img
+            src={posterUrl}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover object-center"
+            fetchPriority="high"
+          />
+          <video
+            key="arrival-cinematic"
+            src={videoUrl}
+            poster={posterUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
+            onCanPlay={() => setReady(true)}
+            className={
+              "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out " +
+              (ready ? "opacity-100" : "opacity-0")
+            }
+          />
+        </>
+      )}
+
+      {/* Subtle right-side gradient — dark enough for legible type, transparent
+          over Lilla on the left so the destination reads cleanly. */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(20,18,16,0) 0%, rgba(20,18,16,0) 42%, rgba(20,18,16,0.18) 62%, rgba(20,18,16,0.42) 100%)",
+        }}
+      />
+
+      <div className="relative z-10 h-full mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-14">
+        <div className="h-full flex items-center justify-end">
+          <div className="max-w-[520px] text-ivory text-left">
+            <p className="eyebrow text-[0.7rem] sm:text-[0.75rem] tracking-[0.38em] text-ivory/90">
+              PORTOFINO  ·  ARRIVAL DAY
+            </p>
+            <h1 className="mt-3 font-display text-[2.2rem] sm:text-[2.8rem] lg:text-[3.4rem] leading-[1.05] tracking-[0.01em]">
+              Your Portofino Story Begins.
+            </h1>
+            <p className="mt-4 font-serif italic text-[1rem] sm:text-[1.08rem] text-ivory/85 leading-relaxed">
+              The first moments set the tone for everything that follows.
+              Arrive beautifully, settle in, and let the Riviera slow your pace.
+            </p>
+            <a
+              href="#shop-the-look"
+              className="mt-7 inline-flex items-center gap-3 eyebrow text-[0.72rem] tracking-[0.32em] text-ivory bg-ink/70 hover:bg-gold border border-ivory/40 hover:border-gold backdrop-blur-sm px-6 py-3 transition-colors"
+            >
+              Shop The Arrival Look →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const _SHORT_MOMENT_NAME_KEEP: Record<string, string> = {
   "arrival": "Arrival",
   "espresso-morning": "Espresso",
   "yacht-day": "Yacht",
