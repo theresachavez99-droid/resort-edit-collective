@@ -109,6 +109,14 @@ const experiences = [
 
 function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-14 mx-auto max-w-[1440px]";
+  const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
+  React.useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setPrefersReducedMotion(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
   return (
     <div className="bg-ivory w-full">
       {/* HERO — single cinematic scene, no commerce, no nav stack. */}
@@ -117,14 +125,31 @@ function Index() {
         className="relative w-full overflow-hidden bg-ink"
       >
         <div className="relative w-full h-[78vh] min-h-[560px] max-h-[920px]">
-          <img
-            src={featured.heroImage}
-            alt={featured.heroImageAlt}
-            fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-cover object-center"
-          />
+          {prefersReducedMotion ? (
+            <img
+              src={heroPosterUrl}
+              alt={featured.heroImageAlt}
+              fetchPriority="high"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+          ) : (
+            <video
+              key="portofino-hero-video"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              src={heroVideoUrl}
+              poster={heroPosterUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              disablePictureInPicture
+              controlsList="nodownload nofullscreen noremoteplayback"
+              aria-label={featured.heroImageAlt}
+            />
+          )}
           {/* Quiet gradient so the type stays readable without crushing the image. */}
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/10 to-ink/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/15 to-ink/25" />
           <div className="absolute inset-x-0 bottom-0 px-6 sm:px-10 lg:px-14 pb-12 md:pb-16 lg:pb-20">
             <div className="max-w-[1440px] mx-auto">
               <p className="eyebrow text-ivory/85 text-[0.7rem] sm:text-[0.78rem] tracking-[0.42em]">
