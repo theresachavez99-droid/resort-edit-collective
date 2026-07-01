@@ -253,7 +253,7 @@ function MomentPage() {
       )}
 
       {/* FEATURED LOOK — editorial hero styling recommendation */}
-      <section className="bg-ivory">
+      <section id="shop-the-look" className="bg-ivory scroll-mt-16">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start">
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
