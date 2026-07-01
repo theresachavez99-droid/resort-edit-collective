@@ -130,12 +130,14 @@ function Index() {
               src={heroPosterUrl}
               alt={featured.heroImageAlt}
               fetchPriority="high"
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: "var(--hero-focal, 50% 22%)" }}
             />
           ) : (
             <video
               key="portofino-hero-video"
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: "var(--hero-focal, 50% 22%)" }}
               src={heroVideoUrl}
               poster={heroPosterUrl}
               autoPlay
