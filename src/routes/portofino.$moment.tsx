@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
+import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.json";
+import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
 import {
   getPortofinoMomentDef,
   getJourneyNeighbors,
@@ -156,6 +158,11 @@ function MomentPage() {
   // `featured` opens the featured look; `look-a|b|c` opens that sibling.
   const [openShop, setOpenShop] = useState<string | null>(null);
 
+  // Arrival Day gets a cinematic video hero. All other moments keep the
+  // canonical image hero. Kept as a per-slug override so future moments can
+  // opt into the same treatment without changing shared layout.
+  const isArrivalCinematic = slug === "arrival";
+
   return (
     <div className="pb-16 md:pb-20">
       {/* BREADCRUMB */}
@@ -200,46 +207,53 @@ function MomentPage() {
       )}
 
       {/* HERO */}
-      <section className="relative h-[36vh] md:h-[48vh] min-h-[280px] w-full overflow-hidden bg-ink">
-        <img
-          src={heroImage}
-          alt={`${card.moment_name} — Portofino`}
-          className="absolute inset-0 h-full w-full object-cover"
+      {isArrivalCinematic ? (
+        <ArrivalCinematicHero
+          videoUrl={arrivalHeroVideo.url}
+          posterUrl={arrivalHeroPoster.url}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/10 to-black/45" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
-          <Link
-            to="/portofino"
-            className="eyebrow text-[0.62rem] tracking-[0.34em] text-ivory/85 hover:text-gold border-b border-ivory/40 hover:border-gold pb-1"
-          >
-            PORTOFINO
-          </Link>
-          <h1 className="font-display text-4xl md:text-5xl mt-3 tracking-[0.05em] leading-[1.05]">
-            {card.moment_name}
-          </h1>
-          <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-3xl leading-snug line-clamp-2">
-            {card.narrative}
-          </p>
-          <div className="mt-4">
-            <SaveLookButton
-              tone="light"
-              source="portofino_moment_hero"
-              look={{
-                id: `portofino/${slug}`,
-                destination: "Portofino",
-                activity: card.moment_name,
-                title: card.moment_name,
-                description: card.narrative,
-                image: card.hero_banner_image ?? heroImage,
-                url: `/portofino/${slug}`,
-              }}
-            />
+      ) : (
+        <section className="relative h-[36vh] md:h-[48vh] min-h-[280px] w-full overflow-hidden bg-ink">
+          <img
+            src={heroImage}
+            alt={`${card.moment_name} — Portofino`}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/10 to-black/45" />
+          <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
+            <Link
+              to="/portofino"
+              className="eyebrow text-[0.62rem] tracking-[0.34em] text-ivory/85 hover:text-gold border-b border-ivory/40 hover:border-gold pb-1"
+            >
+              PORTOFINO
+            </Link>
+            <h1 className="font-display text-4xl md:text-5xl mt-3 tracking-[0.05em] leading-[1.05]">
+              {card.moment_name}
+            </h1>
+            <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-3xl leading-snug line-clamp-2">
+              {card.narrative}
+            </p>
+            <div className="mt-4">
+              <SaveLookButton
+                tone="light"
+                source="portofino_moment_hero"
+                look={{
+                  id: `portofino/${slug}`,
+                  destination: "Portofino",
+                  activity: card.moment_name,
+                  title: card.moment_name,
+                  description: card.narrative,
+                  image: card.hero_banner_image ?? heroImage,
+                  url: `/portofino/${slug}`,
+                }}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* FEATURED LOOK — editorial hero styling recommendation */}
-      <section className="bg-ivory">
+      <section id="shop-the-look" className="bg-ivory scroll-mt-16">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start">
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
@@ -385,6 +399,105 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
   "nightcap": "Nightcap",
   "pool-lounging": "Pool",
 };
+
+/**
+ * Cinematic video hero used exclusively for /portofino/arrival. The video is
+ * composed with Lilla in the left third, so overlay text is anchored right so
+ * she is never obscured. Falls back to the poster still when the viewer has
+ * prefers-reduced-motion.
+ */
+function ArrivalCinematicHero({
+  videoUrl,
+  posterUrl,
+}: {
+  videoUrl: string;
+  posterUrl: string;
+}) {
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduceMotion(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
+
+  return (
+    <section
+      aria-label="Arrival Day — Portofino"
+      className="relative w-full overflow-hidden bg-ink h-[62vh] md:h-[72vh] min-h-[440px] max-h-[820px]"
+    >
+      {reduceMotion ? (
+        <img
+          src={posterUrl}
+          alt="Arriving in Portofino"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          fetchPriority="high"
+        />
+      ) : (
+        <>
+          <img
+            src={posterUrl}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover object-center"
+            fetchPriority="high"
+          />
+          <video
+            key="arrival-cinematic"
+            src={videoUrl}
+            poster={posterUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
+            onCanPlay={() => setReady(true)}
+            className={
+              "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out " +
+              (ready ? "opacity-100" : "opacity-0")
+            }
+          />
+        </>
+      )}
+
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(20,18,16,0) 0%, rgba(20,18,16,0) 42%, rgba(20,18,16,0.18) 62%, rgba(20,18,16,0.42) 100%)",
+        }}
+      />
+
+      <div className="relative z-10 h-full mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-14">
+        <div className="h-full flex items-center justify-end">
+          <div className="max-w-[520px] text-ivory text-left">
+            <p className="eyebrow text-[0.7rem] sm:text-[0.75rem] tracking-[0.38em] text-ivory/90">
+              PORTOFINO  ·  ARRIVAL DAY
+            </p>
+            <h1 className="mt-3 font-display text-[2.2rem] sm:text-[2.8rem] lg:text-[3.4rem] leading-[1.05] tracking-[0.01em]">
+              Your Portofino Story Begins.
+            </h1>
+            <p className="mt-4 font-serif italic text-[1rem] sm:text-[1.08rem] text-ivory/85 leading-relaxed">
+              The first moments set the tone for everything that follows.
+              Arrive beautifully, settle in, and let the Riviera slow your pace.
+            </p>
+            <a
+              href="#shop-the-look"
+              className="mt-7 inline-flex items-center gap-3 eyebrow text-[0.72rem] tracking-[0.32em] text-ivory bg-ink/70 hover:bg-gold border border-ivory/40 hover:border-gold backdrop-blur-sm px-6 py-3 transition-colors"
+            >
+              Shop The Arrival Look →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 /**
  * Editorial display titles for Founder Look hero sections. Founder Look rows
