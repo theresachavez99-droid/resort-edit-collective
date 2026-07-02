@@ -7,6 +7,8 @@ import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.
 import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
 import espressoHeroVideo from "@/assets/uploads/portofino/espresso-morning-hero.mp4.asset.json";
 import espressoHeroPoster from "@/assets/uploads/portofino/espresso-morning-hero-poster.jpg.asset.json";
+import exploringHarborHeroVideo from "@/assets/uploads/portofino/exploring-the-harbor-hero.mp4.asset.json";
+import exploringHarborHeroPoster from "@/assets/uploads/portofino/exploring-the-harbor-hero-poster.jpg.asset.json";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
