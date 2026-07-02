@@ -90,6 +90,28 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     ariaLabel: "Espresso morning in Portofino",
   },
+  "exploring-the-harbor": {
+    video: exploringHarborHeroVideo.url,
+    poster: exploringHarborHeroPoster.url,
+    // Lilla occupies the left third of the frame; the harbor and colorful
+    // streets fill the rest. Keep her head, hair, coffee cup, and tote bag
+    // visible — never crop the top or left edge where she lives.
+    focal: {
+      base: { x: 25, y: 30 },
+      md: { x: 25, y: 20 },
+      lg: { x: 30, y: 15 },
+    },
+    fit: "cover",
+    overlay: {
+      eyebrow: "PORTOFINO  ·  EXPLORE THE HARBOR",
+      headline: "Exploring the Harbor.",
+      body:
+        "The climb to Castello Brown and the path to the lighthouse, through Portofino's hidden corners and colorful streets.",
+      ctaLabel: "Shop The Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Exploring the harbor in Portofino",
+  },
 };
 import {
   getPortofinoMomentDef,
