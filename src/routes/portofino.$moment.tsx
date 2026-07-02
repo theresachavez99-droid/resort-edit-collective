@@ -5,6 +5,8 @@ import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.json";
 import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
+import espressoHeroVideo from "@/assets/uploads/portofino/espresso-morning-hero.mp4.asset.json";
+import espressoHeroPoster from "@/assets/uploads/portofino/espresso-morning-hero-poster.jpg.asset.json";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
@@ -64,6 +66,27 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
       ctaHref: "#shop-the-look",
     },
     ariaLabel: "Arrival in Portofino",
+  },
+  "espresso-morning": {
+    video: espressoHeroVideo.url,
+    poster: espressoHeroPoster.url,
+    // Lilla sits in the left third with the harbor filling the frame.
+    // Keep her head/tote in-frame across breakpoints — never crop the top.
+    focal: {
+      base: { x: 30, y: 30 },
+      md: { x: 35, y: 15 },
+      lg: { x: 40, y: 10 },
+    },
+    fit: "cover",
+    overlay: {
+      eyebrow: "PORTOFINO  ·  ESPRESSO MORNING",
+      headline: "Espresso Morning.",
+      body:
+        "A slow espresso. The first stroll along the harbor. The Riviera waking around you.",
+      ctaLabel: "Shop The Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Espresso morning in Portofino",
   },
 };
 import {
