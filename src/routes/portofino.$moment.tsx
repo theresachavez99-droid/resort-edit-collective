@@ -11,6 +11,8 @@ import exploringHarborHeroVideo from "@/assets/uploads/portofino/exploring-the-h
 import exploringHarborHeroPoster from "@/assets/uploads/portofino/exploring-the-harbor-hero-poster.jpg.asset.json";
 import harborAperitivoHeroVideo from "@/assets/uploads/portofino/harbor-aperitivo-hero.mp4.asset.json";
 import harborAperitivoHeroPoster from "@/assets/uploads/portofino/harbor-aperitivo-hero-poster.jpg.asset.json";
+import beachClubHeroVideo from "@/assets/uploads/portofino/beach-club-hero.mp4.asset.json";
+import beachClubHeroPoster from "@/assets/uploads/portofino/beach-club-hero-poster.jpg.asset.json";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
@@ -135,6 +137,28 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
       ctaHref: "#shop-the-look",
     },
     ariaLabel: "Harbor aperitivo in Portofino",
+  },
+  "beach-club": {
+    video: beachClubHeroVideo.url,
+    poster: beachClubHeroPoster.url,
+    // Lilla stands at the left third of the emerald Paraggi cove.
+    // Keep her head, hair, tote bag, and full body visible — never crop
+    // from the top or left edge where she lives.
+    focal: {
+      base: { x: 25, y: 30 },
+      md: { x: 25, y: 20 },
+      lg: { x: 30, y: 15 },
+    },
+    fit: "cover",
+    overlay: {
+      eyebrow: "PORTOFINO  ·  BEACH CLUB",
+      headline: "Beach Club.",
+      body:
+        "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
+      ctaLabel: "Shop The Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Beach Club at Paraggi",
   },
 };
 import {
@@ -637,7 +661,7 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(90deg, rgba(20,18,16,0) 0%, rgba(20,18,16,0) 42%, rgba(20,18,16,0.18) 62%, rgba(20,18,16,0.42) 100%)",
+            "linear-gradient(90deg, rgba(20,18,16,0) 0%, rgba(20,18,16,0) 46%, rgba(20,18,16,0.14) 64%, rgba(20,18,16,0.28) 100%)",
         }}
       />
 
