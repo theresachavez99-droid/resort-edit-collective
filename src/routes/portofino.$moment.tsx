@@ -13,6 +13,8 @@ import harborAperitivoHeroVideo from "@/assets/uploads/portofino/harbor-aperitiv
 import harborAperitivoHeroPoster from "@/assets/uploads/portofino/harbor-aperitivo-hero-poster.jpg.asset.json";
 import beachClubHeroVideo from "@/assets/uploads/portofino/beach-club-hero.mp4.asset.json";
 import beachClubHeroPoster from "@/assets/uploads/portofino/beach-club-hero-poster.jpg.asset.json";
+import yachtDayHeroVideo from "@/assets/uploads/portofino/yacht-day-hero.mp4.asset.json";
+import yachtDayHeroPoster from "@/assets/uploads/portofino/yacht-day-hero-poster.jpg.asset.json";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
@@ -159,6 +161,28 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
       ctaHref: "#shop-the-look",
     },
     ariaLabel: "Beach Club at Paraggi",
+  },
+  "yacht-day": {
+    video: yachtDayHeroVideo.url,
+    poster: yachtDayHeroPoster.url,
+    // Lilla stands at the left third of the yacht scene with the harbor
+    // and coastline filling the frame. Keep her head, hair, and full body
+    // visible — never crop from the top or left edge where she lives.
+    focal: {
+      base: { x: 25, y: 30 },
+      md: { x: 25, y: 20 },
+      lg: { x: 30, y: 15 },
+    },
+    fit: "cover",
+    overlay: {
+      eyebrow: "PORTOFINO  ·  YACHT DAY",
+      headline: "Yacht Day.",
+      body:
+        "The crossing to San Fruttuoso — the abbey in a cove reachable only by boat or on foot — in effortless style.",
+      ctaLabel: "Shop The Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Yacht Day in Portofino",
   },
 };
 import {
