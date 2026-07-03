@@ -186,6 +186,28 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     ariaLabel: "Yacht Day in Portofino",
   },
+  "sunset-views": {
+    video: sunsetViewsHeroVideo.url,
+    poster: sunsetViewsHeroPoster.url,
+    // Lilla occupies the left third of the frame on a hill above the harbor.
+    // Keep her head, hair, outfit, and full body visible — never crop from
+    // the top or left edge where she lives.
+    focal: {
+      base: { x: 25, y: 30 },
+      md: { x: 25, y: 20 },
+      lg: { x: 30, y: 15 },
+    },
+    fit: "cover",
+    overlay: {
+      eyebrow: "PORTOFINO  ·  SUNSET VIEWS",
+      headline: "Sunset Views.",
+      body:
+        "From the hill above the harbor, the coast glows as the sun disappears into the sea.",
+      ctaLabel: "Shop The Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Sunset Views in Portofino",
+  },
 };
 import {
   getPortofinoMomentDef,
