@@ -661,7 +661,7 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(90deg, rgba(20,18,16,0) 0%, rgba(20,18,16,0) 42%, rgba(20,18,16,0.18) 62%, rgba(20,18,16,0.42) 100%)",
+            "linear-gradient(90deg, rgba(20,18,16,0) 0%, rgba(20,18,16,0) 46%, rgba(20,18,16,0.14) 64%, rgba(20,18,16,0.28) 100%)",
         }}
       />
 
