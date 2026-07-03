@@ -125,7 +125,7 @@ function Index() {
         className="relative w-full overflow-hidden bg-ink"
       >
         <div
-          className="relative w-full h-[78vh] min-h-[560px] max-h-[920px] [--hero-focal:50%_28%] sm:[--hero-focal:50%_22%] md:[--hero-focal:50%_18%] lg:[--hero-focal:50%_16%]"
+          className="relative w-full h-[78vh] min-h-[560px] max-h-[920px] [--hero-focal:50%_15%] sm:[--hero-focal:50%_15%] md:[--hero-focal:50%_12%] lg:[--hero-focal:50%_10%] xl:[--hero-focal:50%_8%]"
         >
           {prefersReducedMotion ? (
             <img
@@ -133,13 +133,13 @@ function Index() {
               alt={featured.heroImageAlt}
               fetchPriority="high"
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: "var(--hero-focal, 50% 22%)" }}
+              style={{ objectPosition: "var(--hero-focal, 50% 15%)" }}
             />
           ) : (
             <video
               key="portofino-hero-video"
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: "var(--hero-focal, 50% 22%)" }}
+              style={{ objectPosition: "var(--hero-focal, 50% 15%)" }}
               src={heroVideoUrl}
               poster={heroPosterUrl}
               autoPlay
