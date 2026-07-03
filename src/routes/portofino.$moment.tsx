@@ -13,6 +13,8 @@ import harborAperitivoHeroVideo from "@/assets/uploads/portofino/harbor-aperitiv
 import harborAperitivoHeroPoster from "@/assets/uploads/portofino/harbor-aperitivo-hero-poster.jpg.asset.json";
 import beachClubHeroVideo from "@/assets/uploads/portofino/beach-club-hero.mp4.asset.json";
 import beachClubHeroPoster from "@/assets/uploads/portofino/beach-club-hero-poster.jpg.asset.json";
+import yachtDayHeroVideo from "@/assets/uploads/portofino/yacht-day-hero.mp4.asset.json";
+import yachtDayHeroPoster from "@/assets/uploads/portofino/yacht-day-hero-poster.jpg.asset.json";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
