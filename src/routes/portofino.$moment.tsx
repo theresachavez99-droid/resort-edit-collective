@@ -15,6 +15,8 @@ import beachClubHeroVideo from "@/assets/uploads/portofino/beach-club-hero.mp4.a
 import beachClubHeroPoster from "@/assets/uploads/portofino/beach-club-hero-poster.jpg.asset.json";
 import yachtDayHeroVideo from "@/assets/uploads/portofino/yacht-day-hero.mp4.asset.json";
 import yachtDayHeroPoster from "@/assets/uploads/portofino/yacht-day-hero-poster.jpg.asset.json";
+import sunsetViewsHeroVideo from "@/assets/uploads/portofino/sunset-views-hero.mp4.asset.json";
+import sunsetViewsHeroPoster from "@/assets/uploads/portofino/sunset-views-hero-poster.jpg.asset.json";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
