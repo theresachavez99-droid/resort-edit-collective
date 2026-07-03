@@ -9,6 +9,8 @@ import espressoHeroVideo from "@/assets/uploads/portofino/espresso-morning-hero.
 import espressoHeroPoster from "@/assets/uploads/portofino/espresso-morning-hero-poster.jpg.asset.json";
 import exploringHarborHeroVideo from "@/assets/uploads/portofino/exploring-the-harbor-hero.mp4.asset.json";
 import exploringHarborHeroPoster from "@/assets/uploads/portofino/exploring-the-harbor-hero-poster.jpg.asset.json";
+import harborAperitivoHeroVideo from "@/assets/uploads/portofino/harbor-aperitivo-hero.mp4.asset.json";
+import harborAperitivoHeroPoster from "@/assets/uploads/portofino/harbor-aperitivo-hero-poster.jpg.asset.json";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
@@ -111,6 +113,28 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
       ctaHref: "#shop-the-look",
     },
     ariaLabel: "Exploring the harbor in Portofino",
+  },
+  "harbor-aperitivo": {
+    video: harborAperitivoHeroVideo.url,
+    poster: harborAperitivoHeroPoster.url,
+    // Lilla sits at the left third of the harborside table with cocktail
+    // glass and purse in-frame. Keep her head, hair, glass, and upper body
+    // visible across breakpoints — pin toward the top-left of the frame on
+    // wider viewports so nothing crops from above her.
+    focal: {
+      base: { x: 40, y: 40 },
+      md: { x: 35, y: 20 },
+      lg: { x: 30, y: 15 },
+    },
+    fit: "cover",
+    overlay: {
+      eyebrow: "PORTOFINO  ·  HARBOR APERITIVO",
+      headline: "Harbor Aperitivo.",
+      body: "Golden-hour cocktails overlooking the harbor.",
+      ctaLabel: "Shop The Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Harbor aperitivo in Portofino",
   },
 };
 import {
