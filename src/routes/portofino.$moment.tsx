@@ -497,9 +497,6 @@ function MomentPage() {
               />
             </div>
             <div className="space-y-4 lg:pl-2">
-              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                {MOMENT_FEATURED_COPY[slug]?.label ?? editorPickLabel}
-              </span>
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {featuredDisplayTitle}
               </h2>
