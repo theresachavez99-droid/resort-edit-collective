@@ -210,6 +210,29 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     ariaLabel: "Sunset Views in Portofino",
   },
+  nightcap: {
+    video: nightcapHeroVideo.url,
+    poster: nightcapHeroPoster.url,
+    // Lilla walks along the harbor at night in the left third of the frame.
+    // The video is a 4:3 cinematic composition; keep her head, hair, full
+    // body, and feet visible while preserving the destination harbor negative
+    // space on the right for the overlay.
+    focal: {
+      base: { x: 25, y: 45 },
+      md: { x: 25, y: 40 },
+      lg: { x: 30, y: 35 },
+    },
+    fit: "cover",
+    overlay: {
+      eyebrow: "PORTOFINO  ·  NIGHTCAP",
+      headline: "Nightcap.",
+      body:
+        "One final cocktail on the piazzetta before the perfect day comes to a close.",
+      ctaLabel: "Shop The Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Nightcap in Portofino",
+  },
 };
 import {
   getPortofinoMomentDef,
