@@ -234,7 +234,6 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
 };
 import {
   getPortofinoMomentDef,
-  getJourneyNeighbors,
   PORTOFINO_MOMENT_SLUG_ALIASES,
 } from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
@@ -565,7 +564,6 @@ function MomentPage() {
         </section>
       )}
 
-      <JourneyPrevNext slug={slug} />
       <OtherPortofinoMoments excludeSlugs={[slug]} />
     </div>
   );
@@ -864,58 +862,6 @@ const SIBLING_CAPTION_OVERRIDES: Record<string, string> = {
   "day-4/look-b":
     "An elegant draped evening silhouette that feels effortlessly romantic beneath the lights of Portofino.",
 };
-
-function JourneyPrevNext({ slug }: { slug: string }) {
-  const { prev, next } = getJourneyNeighbors(slug);
-  return (
-    <section className="bg-ivory border-t border-border/40">
-      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 py-10 md:py-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="text-left">
-          {prev ? (
-            <Link
-              to="/portofino/$moment"
-              params={{ moment: prev.moment_slug }}
-              className="group inline-flex flex-col"
-            >
-              <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">← Previous Chapter</span>
-              <span className="font-display text-lg md:text-xl text-ink mt-1.5 group-hover:text-gold transition-colors">
-                {prev.moment_name}
-              </span>
-            </Link>
-          ) : (
-            <Link to="/portofino" className="group inline-flex flex-col">
-              <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">← Back</span>
-              <span className="font-display text-lg md:text-xl text-ink mt-1.5 group-hover:text-gold transition-colors">
-                Portofino Overview
-              </span>
-            </Link>
-          )}
-        </div>
-        <div className="text-right sm:text-right">
-          {next ? (
-            <Link
-              to="/portofino/$moment"
-              params={{ moment: next.moment_slug }}
-              className="group inline-flex flex-col items-end"
-            >
-              <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-gold">Next Chapter →</span>
-              <span className="font-display text-lg md:text-xl text-ink mt-1.5 group-hover:text-gold transition-colors">
-                {next.moment_name}
-              </span>
-            </Link>
-          ) : (
-            <Link to="/portofino" className="group inline-flex flex-col items-end">
-              <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-gold">Return to Portofino →</span>
-              <span className="font-display text-lg md:text-xl text-ink mt-1.5 group-hover:text-gold transition-colors">
-                The Full Itinerary
-              </span>
-            </Link>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ──────────────────────────────────────────────────────────────
 // Helpers — shop product resolution + inline editorial cards
