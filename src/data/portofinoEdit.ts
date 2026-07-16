@@ -8,8 +8,6 @@ import cira6Asset from "@/assets/uploads/cira/cira-6.png.asset.json";
 import cira7Asset from "@/assets/uploads/cira/cira-7.png.asset.json";
 import cira8Asset from "@/assets/uploads/cira/cira-8.png.asset.json";
 import cira9Asset from "@/assets/uploads/cira/cira-9.png.asset.json";
-import cira10Asset from "@/assets/uploads/cira/cira-10.png.asset.json";
-
 import cira12Asset from "@/assets/uploads/cira/cira-12.png.asset.json";
 import cira13Asset from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14Asset from "@/assets/uploads/cira/cira-14.png.asset.json";
