@@ -19,7 +19,7 @@ import arrivalDayImage from "@/assets/uploads/portofino/arrival-day-lilla-splend
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import espressoMorningCanonical from "@/assets/uploads/portofino/espresso-morning-lilla-green-eyelet.png.asset.json";
 import espressoMorningBanner from "@/assets/uploads/portofino/espresso-morning-banner-cafe-portofino.png.asset.json";
-import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-harbor-golden.png.asset.json";
+import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-pink-dress.png.asset.json";
 import sunsetViewsHero from "@/assets/uploads/portofino/sunset-views-harbor-golden-hour.png.asset.json";
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
 import harborAperitivoBanner from "@/assets/uploads/portofino/harbor-aperitivo-banner-golden-hour.png.asset.json";
