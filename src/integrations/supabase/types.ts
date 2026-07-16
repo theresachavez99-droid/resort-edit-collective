@@ -1436,6 +1436,13 @@ export type Database = {
             referencedRelation: "founder_looks"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "founder_product_feedback_founder_look_id_fkey"
+            columns: ["founder_look_id"]
+            isOneToOne: false
+            referencedRelation: "founder_looks_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       founder_reference_products: {
@@ -1520,6 +1527,13 @@ export type Database = {
             columns: ["founder_look_id"]
             isOneToOne: false
             referencedRelation: "founder_looks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "founder_reference_products_founder_look_id_fkey"
+            columns: ["founder_look_id"]
+            isOneToOne: false
+            referencedRelation: "founder_looks_public"
             referencedColumns: ["id"]
           },
         ]
@@ -1618,6 +1632,13 @@ export type Database = {
             columns: ["founder_look_id"]
             isOneToOne: false
             referencedRelation: "founder_looks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "founder_validation_runs_founder_look_id_fkey"
+            columns: ["founder_look_id"]
+            isOneToOne: false
+            referencedRelation: "founder_looks_public"
             referencedColumns: ["id"]
           },
         ]
@@ -2515,6 +2536,75 @@ export type Database = {
           last_seen_at: string | null
           rejections: number | null
           total_appearances: number | null
+        }
+        Relationships: []
+      }
+      brands_public: {
+        Row: {
+          brand: string | null
+          channel_type: string | null
+          slug: string | null
+          status: string | null
+          suggested_activities: string[] | null
+          suggested_destinations: string[] | null
+          suggested_tier: string | null
+        }
+        Insert: {
+          brand?: string | null
+          channel_type?: string | null
+          slug?: string | null
+          status?: string | null
+          suggested_activities?: string[] | null
+          suggested_destinations?: string[] | null
+          suggested_tier?: string | null
+        }
+        Update: {
+          brand?: string | null
+          channel_type?: string | null
+          slug?: string | null
+          status?: string | null
+          suggested_activities?: string[] | null
+          suggested_destinations?: string[] | null
+          suggested_tier?: string | null
+        }
+        Relationships: []
+      }
+      founder_looks_public: {
+        Row: {
+          color_palette: Json | null
+          destination: string | null
+          editorial_dna: string | null
+          hero_urls: Json | null
+          id: string | null
+          moment: string | null
+          published_at: string | null
+          slug: string | null
+          style_family: string[] | null
+          title: string | null
+        }
+        Insert: {
+          color_palette?: Json | null
+          destination?: string | null
+          editorial_dna?: string | null
+          hero_urls?: Json | null
+          id?: string | null
+          moment?: string | null
+          published_at?: string | null
+          slug?: string | null
+          style_family?: string[] | null
+          title?: string | null
+        }
+        Update: {
+          color_palette?: Json | null
+          destination?: string | null
+          editorial_dna?: string | null
+          hero_urls?: Json | null
+          id?: string | null
+          moment?: string | null
+          published_at?: string | null
+          slug?: string | null
+          style_family?: string[] | null
+          title?: string | null
         }
         Relationships: []
       }

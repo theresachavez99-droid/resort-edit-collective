@@ -39,8 +39,12 @@ import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminMomentsIndexRouteImport } from './routes/admin.moments.index'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
+import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
+import { Route as ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/api/public/[.well-known]/oauth-protected-resource'
+import { Route as ApiPublicChar91DotmcpChar93ListToolsRouteImport } from './routes/api/public/[.mcp]/list-tools'
 import { Route as AdminMomentsIdRunRouteImport } from './routes/admin.moments.$id.run'
+import { Route as ApiPublicChar91DotmcpChar93InvokeToolToolRouteImport } from './routes/api/public/[.mcp]/invoke-tool/$tool'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -192,16 +196,39 @@ const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
   path: '/$day/$look',
   getParentRoute: () => PortofinoRoute,
 } as any)
+const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
+  id: '/api/public/mcp',
+  path: '/api/public/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
   id: '/admin/hero-outfit/$id',
   path: '/admin/hero-outfit/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute =
+  ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/api/public/.well-known/oauth-protected-resource',
+    path: '/api/public/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicChar91DotmcpChar93ListToolsRoute =
+  ApiPublicChar91DotmcpChar93ListToolsRouteImport.update({
+    id: '/api/public/.mcp/list-tools',
+    path: '/api/public/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminMomentsIdRunRoute = AdminMomentsIdRunRouteImport.update({
   id: '/admin/moments/$id/run',
   path: '/admin/moments/$id/run',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicChar91DotmcpChar93InvokeToolToolRoute =
+  ApiPublicChar91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/api/public/.mcp/invoke-tool/$tool',
+    path: '/api/public/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -233,9 +260,13 @@ export interface FileRoutesByFullPath {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments/': typeof AdminMomentsIndexRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
+  '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
+  '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
+  '/api/public/.mcp/invoke-tool/$tool': typeof ApiPublicChar91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -267,9 +298,13 @@ export interface FileRoutesByTo {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin': typeof AdminIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments': typeof AdminMomentsIndexRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
+  '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
+  '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
+  '/api/public/.mcp/invoke-tool/$tool': typeof ApiPublicChar91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -302,9 +337,13 @@ export interface FileRoutesById {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments/': typeof AdminMomentsIndexRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
+  '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
+  '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
+  '/api/public/.mcp/invoke-tool/$tool': typeof ApiPublicChar91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -338,9 +377,13 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin/'
     | '/admin/hero-outfit/$id'
+    | '/api/public/mcp'
     | '/portofino/$day/$look'
     | '/admin/moments/'
     | '/admin/moments/$id/run'
+    | '/api/public/.mcp/list-tools'
+    | '/api/public/.well-known/oauth-protected-resource'
+    | '/api/public/.mcp/invoke-tool/$tool'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -372,9 +415,13 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin'
     | '/admin/hero-outfit/$id'
+    | '/api/public/mcp'
     | '/portofino/$day/$look'
     | '/admin/moments'
     | '/admin/moments/$id/run'
+    | '/api/public/.mcp/list-tools'
+    | '/api/public/.well-known/oauth-protected-resource'
+    | '/api/public/.mcp/invoke-tool/$tool'
   id:
     | '__root__'
     | '/'
@@ -406,9 +453,13 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin/'
     | '/admin/hero-outfit/$id'
+    | '/api/public/mcp'
     | '/portofino/$day/$look'
     | '/admin/moments/'
     | '/admin/moments/$id/run'
+    | '/api/public/.mcp/list-tools'
+    | '/api/public/.well-known/oauth-protected-resource'
+    | '/api/public/.mcp/invoke-tool/$tool'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -433,8 +484,12 @@ export interface RootRouteChildren {
   LookSlugRoute: typeof LookSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
+  ApiPublicMcpRoute: typeof ApiPublicMcpRoute
   AdminMomentsIndexRoute: typeof AdminMomentsIndexRoute
   AdminMomentsIdRunRoute: typeof AdminMomentsIdRunRoute
+  ApiPublicChar91DotmcpChar93ListToolsRoute: typeof ApiPublicChar91DotmcpChar93ListToolsRoute
+  ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute: typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
+  ApiPublicChar91DotmcpChar93InvokeToolToolRoute: typeof ApiPublicChar91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -649,6 +704,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortofinoDayLookRouteImport
       parentRoute: typeof PortofinoRoute
     }
+    '/api/public/mcp': {
+      id: '/api/public/mcp'
+      path: '/api/public/mcp'
+      fullPath: '/api/public/mcp'
+      preLoaderRoute: typeof ApiPublicMcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/hero-outfit/$id': {
       id: '/admin/hero-outfit/$id'
       path: '/admin/hero-outfit/$id'
@@ -656,11 +718,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminHeroOutfitIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/.well-known/oauth-protected-resource': {
+      id: '/api/public/.well-known/oauth-protected-resource'
+      path: '/api/public/.well-known/oauth-protected-resource'
+      fullPath: '/api/public/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/.mcp/list-tools': {
+      id: '/api/public/.mcp/list-tools'
+      path: '/api/public/.mcp/list-tools'
+      fullPath: '/api/public/.mcp/list-tools'
+      preLoaderRoute: typeof ApiPublicChar91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/moments/$id/run': {
       id: '/admin/moments/$id/run'
       path: '/admin/moments/$id/run'
       fullPath: '/admin/moments/$id/run'
       preLoaderRoute: typeof AdminMomentsIdRunRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/.mcp/invoke-tool/$tool': {
+      id: '/api/public/.mcp/invoke-tool/$tool'
+      path: '/api/public/.mcp/invoke-tool/$tool'
+      fullPath: '/api/public/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof ApiPublicChar91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -735,8 +818,15 @@ const rootRouteChildren: RootRouteChildren = {
   LookSlugRoute: LookSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
+  ApiPublicMcpRoute: ApiPublicMcpRoute,
   AdminMomentsIndexRoute: AdminMomentsIndexRoute,
   AdminMomentsIdRunRoute: AdminMomentsIdRunRoute,
+  ApiPublicChar91DotmcpChar93ListToolsRoute:
+    ApiPublicChar91DotmcpChar93ListToolsRoute,
+  ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute:
+    ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute,
+  ApiPublicChar91DotmcpChar93InvokeToolToolRoute:
+    ApiPublicChar91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
