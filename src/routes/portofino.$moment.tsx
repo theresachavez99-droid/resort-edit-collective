@@ -488,13 +488,14 @@ function MomentPage() {
             </div>
             <div className="space-y-4 lg:pl-2">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                {editorPickLabel}
+                {MOMENT_FEATURED_COPY[slug]?.label ?? editorPickLabel}
               </span>
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {featuredDisplayTitle}
               </h2>
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
-                {isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative)}
+                {MOMENT_FEATURED_COPY[slug]?.body ??
+                  (isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative))}
               </p>
               {!isFounderLook && featuredSlots.length > 0 && (
                 <div className="border-t border-border/60 pt-4">
@@ -783,6 +784,20 @@ const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
   "shopping": "The Shopping Afternoon",
   "nightcap": "The Nightcap",
   "pool-lounging": "Poolside in Portofino",
+};
+
+/**
+ * Moment-specific editorial copy for the featured-look section beneath the
+ * hero. Keeps the same eyebrow / serif styling as every other moment while
+ * allowing a polished rewrite for a single page without touching the database
+ * narrative (used for meta descriptions and saved-look metadata).
+ */
+const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
+  nightcap: {
+    label: "Inspired by",
+    body:
+      "A sculpted satin corset and fluid tailoring create an effortlessly elegant silhouette for evenings along the Portofino harbor. Refined accessories complete a timeless Riviera night look. Shop our curated interpretation below.",
+  },
 };
 
 /**
