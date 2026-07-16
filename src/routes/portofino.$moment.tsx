@@ -786,6 +786,20 @@ const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
 };
 
 /**
+ * Moment-specific editorial copy for the featured-look section beneath the
+ * hero. Keeps the same eyebrow / serif styling as every other moment while
+ * allowing a polished rewrite for a single page without touching the database
+ * narrative (used for meta descriptions and saved-look metadata).
+ */
+const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
+  nightcap: {
+    label: "Inspired by",
+    body:
+      "A sculpted satin corset and fluid tailoring create an effortlessly elegant silhouette for evenings along the Portofino harbor. Refined accessories complete a timeless Riviera night look. Shop our curated interpretation below.",
+  },
+};
+
+/**
  * Experiential rewrites for sibling "More X Looks" cards — sells the moment,
  * not the garment. Keyed by `${daySlug}/${lookSlug}`.
  */
