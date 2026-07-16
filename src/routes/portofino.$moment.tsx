@@ -801,6 +801,88 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
 };
 
 /**
+ * Moment-level curated Complete Edit. When present for a moment slug, this
+ * replaces the founder / fallback shop entries with an editor-approved,
+ * ordered list of pieces (Corset → Pant → Shoe → Bag → Earrings → Necklace →
+ * Bracelet → Ring for eveningwear moments). Every entry must resolve to a
+ * usable http(s) retailer URL — `isUsableShopUrl` still gates rendering.
+ */
+const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
+  nightcap: [
+    {
+      slotLabel: "The Look",
+      category: "Corset",
+      brand: "Citizens of Humanity",
+      title: "Darya Corset Top in Black",
+      price: "$228",
+      url: "https://www.citizensofhumanity.com/products/darya-corset-top-in-black",
+      image: "",
+    },
+    {
+      category: "Pant",
+      slotLabel: "Pant",
+      brand: "Enza Costa",
+      title: "Satin Wide Leg Pant in Black",
+      price: "$225",
+      url: "https://www.enzacosta.com/collections/pants",
+      image: "",
+    },
+    {
+      category: "Shoe",
+      slotLabel: "Shoe",
+      brand: "Aquazzura",
+      title: "Minimalist Gold Sandal",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=aquazzura+gold+sandal",
+      image: "",
+    },
+    {
+      category: "Bag",
+      slotLabel: "Bag",
+      brand: "Cult Gaia",
+      title: "Sculptural Metallic Gold Clutch",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=gold+metallic+evening+clutch",
+      image: "",
+    },
+    {
+      category: "Earrings",
+      slotLabel: "Earrings",
+      brand: "Jennifer Behr",
+      title: "Sculptural Gold Drop Earrings",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=jennifer+behr+gold+drop+earrings",
+      image: "",
+      isOptional: true,
+    },
+    {
+      category: "Necklace",
+      slotLabel: "Necklace",
+      brand: "Jennifer Meyer",
+      title: "Delicate Gold Pendant Necklace",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=jennifer+meyer+gold+pendant+necklace",
+      image: "",
+      isOptional: true,
+    },
+    {
+      category: "Bracelet",
+      slotLabel: "Bracelet",
+      brand: "Jennifer Meyer",
+      title: "Slim Polished Gold Bracelet",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=jennifer+meyer+gold+bracelet",
+      image: "",
+      isOptional: true,
+    },
+    {
+      category: "Ring",
+      slotLabel: "Ring",
+      brand: "Sophie Buhai",
+      title: "Sculptural Gold Ring",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=sophie+buhai+gold+ring",
+      image: "",
+      isOptional: true,
+    },
+  ],
+};
+
+/**
  * Experiential rewrites for sibling "More X Looks" cards — sells the moment,
  * not the garment. Keyed by `${daySlug}/${lookSlug}`.
  */
