@@ -1351,62 +1351,19 @@ function ShopLookPanel({
   const rows = entries
     .filter((e) => e.kind === "override")
     .map((e) => e.product as OverrideItem);
-  const requiredRows = rows.filter((r) => !r.isOptional);
-  const optionalRows = rows.filter((r) => r.isOptional);
+  const { foundation, accessories } = groupShopRows(rows);
   const renderRow = (o: OverrideItem, i: number) => {
     const href = isUsableShopUrl(o.url) ? o.url : "";
-    const hasImg = !!o.image;
-    const category = o.category ?? o.slotLabel;
     const Inner = (
-      <div className="flex items-start gap-4 py-4">
-        <div className="shrink-0 w-20 h-20 bg-cream border border-border/50 overflow-hidden flex items-center justify-center relative">
-          {hasImg ? (
-            <img
-              src={o.image}
-              alt={`${o.brand} ${o.title}`}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-[1.04]"
-            />
-          ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-cream via-ivory to-cream transition-opacity duration-300 group-hover:opacity-90">
-              <span
-                aria-hidden
-                className="w-9 h-9 rounded-full border border-gold/40 flex items-center justify-center font-serif text-gold text-[0.85rem]"
-              >
-                {(o.brand || "•").charAt(0)}
-              </span>
-            </div>
-          )}
+      <div className="py-5">
+        <div className="font-display text-[1.15rem] md:text-[1.2rem] leading-snug text-ink group-hover:text-gold group-hover:underline underline-offset-4 decoration-gold/60 transition-colors duration-300">
+          {o.title || o.brand}
         </div>
-        <div className="min-w-0 flex-1 pt-0.5">
-          {category && (
-            <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold/85">
-              {category}
-            </div>
-          )}
-          <div className="font-serif text-[0.78rem] tracking-[0.14em] uppercase text-ink/90 mt-1.5 leading-tight">
-            {o.brand}
+        {o.brand && o.title && (
+          <div className="font-serif italic text-[0.9rem] text-ink/55 mt-1 leading-snug">
+            by {o.brand}
           </div>
-          {o.title && (
-            <div className="font-serif italic text-[0.92rem] text-ink/70 leading-snug mt-0.5">
-              {o.title}
-            </div>
-          )}
-          <div className="mt-2 flex items-baseline gap-3">
-            {o.price && (
-              <span className="font-serif text-[0.88rem] text-gold">{o.price}</span>
-            )}
-            {href ? (
-              <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/70 group-hover:text-gold transition-colors">
-                Shop →
-              </span>
-            ) : (
-              <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/40">
-                Link unavailable
-              </span>
-            )}
-          </div>
-        </div>
+        )}
       </div>
     );
     return (
@@ -1417,44 +1374,62 @@ function ShopLookPanel({
             target="_blank"
             rel="noopener noreferrer sponsored"
             onClick={() => trackOutbound({ brand: o.brand, item: o.title, href })}
-            className="group block hover:bg-cream/50 -mx-2 px-2 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
+            className="group block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
           >
             {Inner}
           </a>
         ) : (
-          <div className="-mx-2 px-2">{Inner}</div>
+          <div className="opacity-70">{Inner}</div>
         )}
       </li>
     );
   };
+  const sectionLabel = "eyebrow text-[0.6rem] tracking-[0.4em] text-ink/50";
   return (
-    <div className="border-t border-border/60 pt-5 mt-2">
-      <div className="flex items-baseline justify-between gap-4">
-        <h3 className="font-display text-lg md:text-xl tracking-[0.04em] text-ink">
-          {heading}
-        </h3>
-        <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/55">
-          {requiredRows.length} Pieces
-        </span>
-      </div>
-      <ul className="mt-4 divide-y divide-border/50">
-        {requiredRows.map(renderRow)}
-      </ul>
-      {optionalRows.length > 0 && (
-        <div className="mt-6">
-          <div className="flex items-baseline justify-between gap-4">
-            <h4 className="font-display text-[0.95rem] md:text-base tracking-[0.04em] text-ink/85">
-              Complete the Look
-            </h4>
-            <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/55">
-              {optionalRows.length} {optionalRows.length === 1 ? "Item" : "Items"}
-            </span>
-          </div>
-          <ul className="mt-3 divide-y divide-border/50">
-            {optionalRows.map(renderRow)}
-          </ul>
+    <div className="border-t border-border/60 pt-6 mt-2">
+      <h3 className="font-display text-xl md:text-2xl tracking-[0.06em] text-ink uppercase">
+        The Complete Edit
+      </h3>
+      {foundation.length > 0 && (
+        <div className="mt-8">
+          <div className={sectionLabel}>Foundation</div>
+          <ul className="mt-3">{foundation.map(renderRow)}</ul>
+        </div>
+      )}
+      {accessories.length > 0 && (
+        <div className="mt-8 pt-8 border-t border-border/40">
+          <div className={sectionLabel}>Accessories</div>
+          <ul className="mt-3">{accessories.map(renderRow)}</ul>
         </div>
       )}
     </div>
   );
+}
+
+const FOUNDATION_CATEGORIES = new Set([
+  "corset", "top", "blouse", "shirt", "tee", "t-shirt",
+  "pant", "pants", "trouser", "trousers", "skirt",
+  "dress", "gown", "jumpsuit", "romper",
+  "swimsuit", "bikini", "one-piece",
+  "jacket", "blazer", "coat", "cardigan", "sweater", "knit",
+]);
+const ACCESSORY_ORDER = ["shoe", "bag", "earrings", "necklace", "bracelet", "ring"];
+
+function groupShopRows(rows: OverrideItem[]) {
+  const norm = (s?: string) => (s ?? "").trim().toLowerCase();
+  const catOf = (r: OverrideItem) => norm(r.category ?? r.slotLabel);
+  const foundation: OverrideItem[] = [];
+  const accessories: OverrideItem[] = [];
+  for (const r of rows) {
+    const c = catOf(r);
+    if (FOUNDATION_CATEGORIES.has(c)) foundation.push(r);
+    else accessories.push(r);
+  }
+  const rank = (r: OverrideItem) => {
+    const c = catOf(r);
+    const i = ACCESSORY_ORDER.indexOf(c);
+    return i === -1 ? ACCESSORY_ORDER.length : i;
+  };
+  accessories.sort((a, b) => rank(a) - rank(b));
+  return { foundation, accessories };
 }
