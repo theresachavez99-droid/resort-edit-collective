@@ -488,13 +488,14 @@ function MomentPage() {
             </div>
             <div className="space-y-4 lg:pl-2">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                {editorPickLabel}
+                {MOMENT_FEATURED_COPY[slug]?.label ?? editorPickLabel}
               </span>
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {featuredDisplayTitle}
               </h2>
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
-                {isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative)}
+                {MOMENT_FEATURED_COPY[slug]?.body ??
+                  (isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative))}
               </p>
               {!isFounderLook && featuredSlots.length > 0 && (
                 <div className="border-t border-border/60 pt-4">
