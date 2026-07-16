@@ -353,9 +353,19 @@ function MomentPage() {
         isOptional: p.role === "Optional",
       },
     }));
-  const featuredShop = isFounderLook && founderShopEntries.length
-    ? founderShopEntries
-    : resolveShopProducts(card.legacy_day_slug, card.look_slug);
+  // Moment-level curated Complete Edit takes priority over founder / fallback
+  // data. This lets an editor lock a specific ordered set of pieces without
+  // depending on the publish pipeline.
+  const curatedForMoment = MOMENT_SHOP_CURATED[slug];
+  const curatedShopEntries: ShopEntry[] = (curatedForMoment ?? [])
+    .filter((o) => isUsableShopUrl(o.url))
+    .map((product) => ({ kind: "override" as const, product }));
+  const featuredShop = curatedShopEntries.length
+    ? curatedShopEntries
+    : isFounderLook && founderShopEntries.length
+      ? founderShopEntries
+      : resolveShopProducts(card.legacy_day_slug, card.look_slug);
+  const hasCuratedOverride = curatedShopEntries.length > 0;
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
   const featuredSlots = summarizeSlots(featuredShop);
 
