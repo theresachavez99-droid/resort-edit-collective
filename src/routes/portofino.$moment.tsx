@@ -1010,7 +1010,7 @@ function EditorialLookCard({
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-          THE EDIT
+          INSPIRED BY
         </span>
       </div>
       <div className="p-6 md:p-8 flex flex-col gap-3">
