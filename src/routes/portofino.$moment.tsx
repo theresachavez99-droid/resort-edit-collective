@@ -234,7 +234,6 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
 };
 import {
   getPortofinoMomentDef,
-  getJourneyNeighbors,
   PORTOFINO_MOMENT_SLUG_ALIASES,
 } from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
