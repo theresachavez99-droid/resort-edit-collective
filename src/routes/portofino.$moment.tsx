@@ -771,7 +771,7 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
   nightcap: {
     label: "Inspired by",
     body:
-      "A sculpted satin corset and fluid tailoring create an effortlessly elegant silhouette for evenings along the Portofino harbor. Refined accessories complete a timeless Riviera night look. Shop our curated interpretation below.",
+      "A sculpted satin corset paired with fluid tailoring creates an effortlessly elegant Riviera silhouette for evenings along the Portofino harbor.",
   },
 };
 
@@ -788,7 +788,7 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       slotLabel: "The Look",
       category: "Corset",
       brand: "Citizens of Humanity",
-      title: "Darya Corset Top in Black",
+      title: "Darya Corset Top",
       price: "$228",
       url: "https://www.citizensofhumanity.com/products/darya-corset-top-in-black",
       image: "",
@@ -797,7 +797,7 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       category: "Pant",
       slotLabel: "Pant",
       brand: "Enza Costa",
-      title: "Satin Wide Leg Pant in Black",
+      title: "Satin Wide Leg Pant",
       price: "$225",
       url: "https://www.enzacosta.com/collections/pants",
       image: "",
