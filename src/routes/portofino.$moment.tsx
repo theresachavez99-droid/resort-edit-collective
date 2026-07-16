@@ -524,19 +524,6 @@ function MomentPage() {
               {(isFounderLook || hasCuratedOverride) && featuredShop.length > 0 && (
                 <ShopLookPanel heading={shopHeading} entries={featuredShop} />
               )}
-              {/* CTA: links to the deeper editorial experience — more ways to
-                  dress this moment — rather than duplicating the shop list. */}
-              {featuredShop.length > 0 && siblings.length > 0 && (
-                <div className="pt-4">
-                  <a
-                    href="#more-looks"
-                    className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
-                  >
-                    View Complete Look
-                    <ChevronDown className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -868,6 +855,10 @@ const SIBLING_CAPTION_OVERRIDES: Record<string, string> = {
     "For the long walk home through quiet streets after dinner by the water.",
   "day-2/look-a":
     "For stretching the afternoon beneath striped umbrellas before lunch overlooking the sea.",
+  "day-4/look-a":
+    "A bold, feminine silhouette designed for golden-hour cocktails overlooking the harbor.",
+  "day-4/look-b":
+    "An elegant draped evening silhouette that feels effortlessly romantic beneath the lights of Portofino.",
 };
 
 function JourneyPrevNext({ slug }: { slug: string }) {
