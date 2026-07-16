@@ -507,28 +507,7 @@ function MomentPage() {
                 {MOMENT_FEATURED_COPY[slug]?.body ??
                   (isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative))}
               </p>
-              {!isFounderLook && featuredSlots.length > 0 && (
-                <div className="border-t border-border/60 pt-4">
-                  <div className="flex items-baseline justify-between gap-4 flex-wrap">
-                    <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">
-                      The Complete Edit
-                    </span>
-                    {featuredPieceCount > 0 && (
-                      <span className="font-serif italic text-[0.85rem] text-gold">
-                        {featuredPieceCount} Curated Pieces
-                      </span>
-                    )}
-                  </div>
-                  <ul className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 font-serif italic text-[0.92rem] text-ink/80">
-                    {featuredSlots.map((s) => (
-                      <li key={s} className="flex items-baseline gap-2">
-                        <span className="text-gold/70 text-[0.6rem]">●</span>
-                        <span>{s}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              {/* Legacy slot summary removed for editorial restraint. */}
               {resolved.best_for && resolved.best_for.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
                   {resolved.best_for.map((b) => (
