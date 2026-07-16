@@ -522,61 +522,29 @@ function MomentPage() {
               )}
               {/* Founder Look / curated moment: always-visible shop panel on the right. */}
               {(isFounderLook || hasCuratedOverride) && featuredShop.length > 0 && (
-                <>
-                  <ShopLookPanel heading={shopHeading} entries={featuredShop} />
-                  <div className="pt-4">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setOpenShop((cur) => (cur === "featured" ? null : "featured"))
-                      }
-                      aria-expanded={openShop === "featured"}
-                      aria-controls="shop-featured"
-                      className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
-                    >
-                      {openShop === "featured" ? "Hide Complete Look" : "View Complete Look"}
-                      <ChevronDown
-                        className={`w-3.5 h-3.5 transition-transform ${openShop === "featured" ? "rotate-180" : ""}`}
-                      />
-                    </button>
-                  </div>
-                </>
+                <ShopLookPanel heading={shopHeading} entries={featuredShop} />
               )}
-              {/* Legacy/tagged look: keep collapsible "View Complete Look". */}
-              {!isFounderLook && !hasCuratedOverride && featuredShop.length > 0 && (
-                <div className="pt-2 flex flex-wrap items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setOpenShop((cur) => (cur === "featured" ? null : "featured"))
-                    }
-                    aria-expanded={openShop === "featured"}
-                    aria-controls="shop-featured"
+              {/* CTA: links to the deeper editorial experience — more ways to
+                  dress this moment — rather than duplicating the shop list. */}
+              {featuredShop.length > 0 && siblings.length > 0 && (
+                <div className="pt-4">
+                  <a
+                    href="#more-looks"
                     className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
                   >
-                    {openShop === "featured" ? "Hide Complete Look" : "View Complete Look"}
-                    <ChevronDown
-                      className={`w-3.5 h-3.5 transition-transform ${openShop === "featured" ? "rotate-180" : ""}`}
-                    />
-                  </button>
+                    View Complete Look
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               )}
             </div>
           </div>
-
-          {openShop === "featured" && featuredShop.length > 0 && (
-            <InlineShop
-              id="shop-featured"
-              heading={shopHeading}
-              entries={featuredShop}
-            />
-          )}
         </div>
       </section>
 
       {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid */}
       {siblings.length > 0 && (
-        <section className="bg-cream/40 border-t border-border/40">
+        <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
             <div className="mb-6 md:mb-8 max-w-2xl">
               <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
@@ -803,7 +771,7 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
   nightcap: {
     label: "Inspired by",
     body:
-      "A sculpted satin corset and fluid tailoring create an effortlessly elegant silhouette for evenings along the Portofino harbor. Refined accessories complete a timeless Riviera night look. Shop our curated interpretation below.",
+      "A sculpted satin corset paired with fluid tailoring creates an effortlessly elegant Riviera silhouette for evenings along the Portofino harbor.",
   },
 };
 
@@ -820,7 +788,7 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       slotLabel: "The Look",
       category: "Corset",
       brand: "Citizens of Humanity",
-      title: "Darya Corset Top in Black",
+      title: "Darya Corset Top",
       price: "$228",
       url: "https://www.citizensofhumanity.com/products/darya-corset-top-in-black",
       image: "",
@@ -829,7 +797,7 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       category: "Pant",
       slotLabel: "Pant",
       brand: "Enza Costa",
-      title: "Satin Wide Leg Pant in Black",
+      title: "Satin Wide Leg Pant",
       price: "$225",
       url: "https://www.enzacosta.com/collections/pants",
       image: "",
