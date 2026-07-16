@@ -507,28 +507,7 @@ function MomentPage() {
                 {MOMENT_FEATURED_COPY[slug]?.body ??
                   (isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative))}
               </p>
-              {!isFounderLook && featuredSlots.length > 0 && (
-                <div className="border-t border-border/60 pt-4">
-                  <div className="flex items-baseline justify-between gap-4 flex-wrap">
-                    <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/55">
-                      The Complete Edit
-                    </span>
-                    {featuredPieceCount > 0 && (
-                      <span className="font-serif italic text-[0.85rem] text-gold">
-                        {featuredPieceCount} Curated Pieces
-                      </span>
-                    )}
-                  </div>
-                  <ul className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 font-serif italic text-[0.92rem] text-ink/80">
-                    {featuredSlots.map((s) => (
-                      <li key={s} className="flex items-baseline gap-2">
-                        <span className="text-gold/70 text-[0.6rem]">●</span>
-                        <span>{s}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              {/* Legacy slot summary removed for editorial restraint. */}
               {resolved.best_for && resolved.best_for.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
                   {resolved.best_for.map((b) => (
@@ -1351,7 +1330,7 @@ function ShopLookPanel({
   const rows = entries
     .filter((e) => e.kind === "override")
     .map((e) => e.product as OverrideItem);
-  const { foundation, accessories } = groupShopRows(rows);
+  const ordered = groupShopRows(rows);
   const renderRow = (o: OverrideItem, i: number) => {
     const href = isUsableShopUrl(o.url) ? o.url : "";
     const Inner = (
@@ -1384,25 +1363,8 @@ function ShopLookPanel({
       </li>
     );
   };
-  const sectionLabel = "eyebrow text-[0.6rem] tracking-[0.4em] text-ink/50";
   return (
-    <div className="border-t border-border/60 pt-6 mt-2">
-      <h3 className="font-display text-xl md:text-2xl tracking-[0.06em] text-ink uppercase">
-        The Complete Edit
-      </h3>
-      {foundation.length > 0 && (
-        <div className="mt-8">
-          <div className={sectionLabel}>Foundation</div>
-          <ul className="mt-3">{foundation.map(renderRow)}</ul>
-        </div>
-      )}
-      {accessories.length > 0 && (
-        <div className="mt-8 pt-8 border-t border-border/40">
-          <div className={sectionLabel}>Accessories</div>
-          <ul className="mt-3">{accessories.map(renderRow)}</ul>
-        </div>
-      )}
-    </div>
+    <ul className="mt-2">{ordered.map(renderRow)}</ul>
   );
 }
 
@@ -1415,7 +1377,7 @@ const FOUNDATION_CATEGORIES = new Set([
 ]);
 const ACCESSORY_ORDER = ["shoe", "bag", "earrings", "necklace", "bracelet", "ring"];
 
-function groupShopRows(rows: OverrideItem[]) {
+function groupShopRows(rows: OverrideItem[]): OverrideItem[] {
   const norm = (s?: string) => (s ?? "").trim().toLowerCase();
   const catOf = (r: OverrideItem) => norm(r.category ?? r.slotLabel);
   const foundation: OverrideItem[] = [];
@@ -1431,5 +1393,5 @@ function groupShopRows(rows: OverrideItem[]) {
     return i === -1 ? ACCESSORY_ORDER.length : i;
   };
   accessories.sort((a, b) => rank(a) - rank(b));
-  return { foundation, accessories };
+  return [...foundation, ...accessories];
 }
