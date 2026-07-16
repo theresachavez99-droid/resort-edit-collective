@@ -495,6 +495,9 @@ function MomentPage() {
                 alt={`${resolved.title} — Portofino featured look`}
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
+              <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+                INSPIRED BY
+              </span>
             </div>
             <div className="space-y-4 lg:pl-2">
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
