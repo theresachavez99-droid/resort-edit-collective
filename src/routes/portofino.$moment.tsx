@@ -648,7 +648,7 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
  * face inside the visible frame without changing zoom.
  */
 function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
-  const { video, poster, focal, fit = "cover", overlay, ariaLabel } = config;
+  const { video, poster, focal, fit = "cover", overlay, ariaLabel, containerHeightClasses } = config;
   const [reduceMotion, setReduceMotion] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -694,7 +694,11 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
   return (
     <section
       aria-label={ariaLabel}
-      className="relative w-full overflow-hidden bg-ink min-h-[500px] h-[clamp(500px,70vh,760px)] lg:min-h-[520px] lg:h-[clamp(520px,52vw,720px)]"
+      className={
+        "relative w-full overflow-hidden bg-ink " +
+        (containerHeightClasses ??
+          "min-h-[500px] h-[clamp(500px,70vh,760px)] lg:min-h-[520px] lg:h-[clamp(520px,52vw,720px)]")
+      }
       {...{ [scopeAttr]: "" }}
       style={scopeStyle}
     >
