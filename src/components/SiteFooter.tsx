@@ -5,7 +5,7 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 
 export function SiteFooter() {
   return (
-    <footer id="newsletter" className="bg-ink text-ivory mt-32">
+    <footer id="newsletter" className="bg-ink text-ivory mt-14 md:mt-16">
       <div className="mx-auto max-w-5xl px-6 pt-9 md:pt-12 pb-9 md:pb-11 text-center flex flex-col items-center">
         <div className="relative inline-block mb-2">
           <img
