@@ -67,12 +67,12 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   arrival: {
     video: arrivalHeroVideo.url,
     poster: arrivalHeroPoster.url,
-    // Lilla enters from the left third. Keep mobile centered, but pin tablet
-    // and desktop to the top of the frame so her head/hair are never cropped.
+    // Global hero rule: pin the crop to top-center on the model's eyeline
+    // (50% 15%) so her head, hair, and shoulders are never cropped.
     focal: {
-      base: { x: 50, y: 50 },
-      md: { x: 50, y: 0 },
-      lg: { x: 50, y: 0 },
+      base: { x: 50, y: 15 },
+      md: { x: 50, y: 15 },
+      lg: { x: 50, y: 15 },
     },
     fit: "cover",
     overlay: {
@@ -88,12 +88,12 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   "espresso-morning": {
     video: espressoHeroVideo.url,
     poster: espressoHeroPoster.url,
-    // Lilla sits in the left third with the harbor filling the frame.
-    // Keep her head/tote in-frame across breakpoints — never crop the top.
+    // Global hero rule: top-center on the eyeline (50% 15%). Head, hair,
+    // and shoulders are always preserved; lower body may crop first.
     focal: {
-      base: { x: 30, y: 30 },
-      md: { x: 35, y: 15 },
-      lg: { x: 40, y: 10 },
+      base: { x: 50, y: 15 },
+      md: { x: 50, y: 15 },
+      lg: { x: 50, y: 15 },
     },
     fit: "cover",
     overlay: {
@@ -109,13 +109,11 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   "exploring-the-harbor": {
     video: exploringHarborHeroVideo.url,
     poster: exploringHarborHeroPoster.url,
-    // Lilla occupies the left third of the frame; the harbor and colorful
-    // streets fill the rest. Keep her head, hair, coffee cup, and tote bag
-    // visible — never crop the top or left edge where she lives.
+    // Global hero rule: top-center on the eyeline (50% 15%).
     focal: {
-      base: { x: 25, y: 30 },
-      md: { x: 25, y: 20 },
-      lg: { x: 30, y: 15 },
+      base: { x: 50, y: 15 },
+      md: { x: 50, y: 15 },
+      lg: { x: 50, y: 15 },
     },
     fit: "cover",
     overlay: {
@@ -131,14 +129,11 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   "harbor-aperitivo": {
     video: harborAperitivoHeroVideo.url,
     poster: harborAperitivoHeroPoster.url,
-    // Lilla sits at the left third of the harborside table with cocktail
-    // glass and purse in-frame. Keep her head, hair, glass, and upper body
-    // visible across breakpoints — pin toward the top-left of the frame on
-    // wider viewports so nothing crops from above her.
+    // Global hero rule: top-center on the eyeline (50% 15%).
     focal: {
-      base: { x: 40, y: 40 },
-      md: { x: 35, y: 20 },
-      lg: { x: 30, y: 15 },
+      base: { x: 50, y: 15 },
+      md: { x: 50, y: 15 },
+      lg: { x: 50, y: 15 },
     },
     fit: "cover",
     overlay: {
@@ -153,13 +148,11 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   "beach-club": {
     video: beachClubHeroVideo.url,
     poster: beachClubHeroPoster.url,
-    // Lilla stands at the left third of the emerald Paraggi cove.
-    // Keep her head, hair, tote bag, and full body visible — never crop
-    // from the top or left edge where she lives.
+    // Global hero rule: top-center on the eyeline (50% 15%).
     focal: {
-      base: { x: 25, y: 30 },
-      md: { x: 25, y: 20 },
-      lg: { x: 30, y: 15 },
+      base: { x: 50, y: 15 },
+      md: { x: 50, y: 15 },
+      lg: { x: 50, y: 15 },
     },
     fit: "cover",
     overlay: {
@@ -175,13 +168,11 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   "yacht-day": {
     video: yachtDayHeroVideo.url,
     poster: yachtDayHeroPoster.url,
-    // Lilla stands at the left third of the yacht scene with the harbor
-    // and coastline filling the frame. Keep her head, hair, and full body
-    // visible — never crop from the top or left edge where she lives.
+    // Global hero rule: top-center on the eyeline (50% 15%).
     focal: {
-      base: { x: 25, y: 30 },
-      md: { x: 25, y: 20 },
-      lg: { x: 30, y: 15 },
+      base: { x: 50, y: 15 },
+      md: { x: 50, y: 15 },
+      lg: { x: 50, y: 15 },
     },
     fit: "cover",
     overlay: {
@@ -197,13 +188,11 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   "sunset-views": {
     video: sunsetViewsHeroVideo.url,
     poster: sunsetViewsHeroPoster.url,
-    // Lilla occupies the left third of the frame on a hill above the harbor.
-    // Keep her head, hair, outfit, and full body visible — never crop from
-    // the top or left edge where she lives.
+    // Global hero rule: top-center on the eyeline (50% 15%).
     focal: {
-      base: { x: 25, y: 30 },
-      md: { x: 25, y: 20 },
-      lg: { x: 30, y: 15 },
+      base: { x: 50, y: 15 },
+      md: { x: 50, y: 15 },
+      lg: { x: 50, y: 15 },
     },
     fit: "cover",
     overlay: {
@@ -219,15 +208,13 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
   nightcap: {
     video: nightcapHeroVideo.url,
     poster: nightcapHeroPoster.url,
-    // Lilla walks along the harbor at night in the left third of the frame.
-    // The 4:3 source is much taller than the hero band, so pin `object-cover`
-    // to the top of the frame across breakpoints — otherwise the default
-    // center crop clips her head. The taller container below (see
-    // `containerHeightClasses`) gives her hair breathing room above.
+    // Global hero rule: top-center pinned tighter (50% 0%) for this taller
+    // 4:3 source so Lilla's head clears the top edge. The taller container
+    // below preserves head, hair, and shoulders across breakpoints.
     focal: {
-      base: { x: 25, y: 0 },
-      md: { x: 25, y: 0 },
-      lg: { x: 30, y: 0 },
+      base: { x: 50, y: 0 },
+      md: { x: 50, y: 0 },
+      lg: { x: 50, y: 0 },
     },
     fit: "cover",
     // ~30% taller than the shared default so the portrait video isn't crushed
