@@ -1354,3 +1354,29 @@ function groupShopRows(rows: OverrideItem[]): OverrideItem[] {
   accessories.sort((a, b) => rank(a) - rank(b));
   return [...foundation, ...accessories];
 }
+
+/**
+ * Coming Soon state for the featured shop area. Preserves the exact layout
+ * used by ShopLookPanel so pages don't shift when we swap in a live edit —
+ * only the interactive affordance changes.
+ */
+function ComingSoonPanel({ heading }: { heading: string }) {
+  return (
+    <div className="mt-2">
+      <div className="py-5">
+        <div className="font-display text-[1.15rem] md:text-[1.2rem] leading-snug text-ink/70">
+          {heading}
+        </div>
+        <p className="font-serif italic text-[0.9rem] text-ink/55 mt-2 leading-relaxed max-w-prose">
+          Our editors are finalizing the affiliate edit for this moment. Check back soon to shop the complete look.
+        </p>
+      </div>
+      <span
+        aria-disabled="true"
+        className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ink/60 bg-cream border border-border/60 px-5 py-2.5 cursor-not-allowed select-none"
+      >
+        COMING SOON
+      </span>
+    </div>
+  );
+}
