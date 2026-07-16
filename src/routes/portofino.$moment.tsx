@@ -1356,35 +1356,52 @@ function ShopLookPanel({
   const renderRow = (o: OverrideItem, i: number) => {
     const href = isUsableShopUrl(o.url) ? o.url : "";
     const hasImg = !!o.image;
+    const category = o.category ?? o.slotLabel;
     const Inner = (
-      <div className="flex items-start gap-3 py-3">
-        {hasImg ? (
-          <div className="shrink-0 w-14 h-14 bg-cream border border-border/50 overflow-hidden flex items-center justify-center">
+      <div className="flex items-start gap-4 py-4">
+        <div className="shrink-0 w-20 h-20 bg-cream border border-border/50 overflow-hidden flex items-center justify-center relative">
+          {hasImg ? (
             <img
               src={o.image}
               alt={`${o.brand} ${o.title}`}
               loading="lazy"
-              className="w-full h-full object-contain p-1"
+              className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-[1.04]"
             />
-          </div>
-        ) : null}
-        <div className="min-w-0 flex-1">
-          {o.slotLabel && (
-            <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80">
-              {o.slotLabel}
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-cream via-ivory to-cream transition-opacity duration-300 group-hover:opacity-90">
+              <span
+                aria-hidden
+                className="w-9 h-9 rounded-full border border-gold/40 flex items-center justify-center font-serif text-gold text-[0.85rem]"
+              >
+                {(o.brand || "•").charAt(0)}
+              </span>
             </div>
           )}
-          <div className="font-serif text-[0.95rem] text-ink leading-snug mt-0.5">
-            <span className="font-medium">{o.brand}</span>
-            {o.title ? <span className="text-ink/70"> — {o.title}</span> : null}
+        </div>
+        <div className="min-w-0 flex-1 pt-0.5">
+          {category && (
+            <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold/85">
+              {category}
+            </div>
+          )}
+          <div className="font-serif text-[0.78rem] tracking-[0.14em] uppercase text-ink/90 mt-1.5 leading-tight">
+            {o.brand}
           </div>
-          <div className="mt-1">
+          {o.title && (
+            <div className="font-serif italic text-[0.92rem] text-ink/70 leading-snug mt-0.5">
+              {o.title}
+            </div>
+          )}
+          <div className="mt-2 flex items-baseline gap-3">
+            {o.price && (
+              <span className="font-serif text-[0.88rem] text-gold">{o.price}</span>
+            )}
             {href ? (
-              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink group-hover:text-gold transition-colors">
+              <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/70 group-hover:text-gold transition-colors">
                 Shop →
               </span>
             ) : (
-              <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/45">
+              <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/40">
                 Link unavailable
               </span>
             )}
@@ -1400,7 +1417,7 @@ function ShopLookPanel({
             target="_blank"
             rel="noopener noreferrer sponsored"
             onClick={() => trackOutbound({ brand: o.brand, item: o.title, href })}
-            className="group block hover:bg-cream/40 -mx-2 px-2 transition-colors"
+            className="group block hover:bg-cream/50 -mx-2 px-2 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
           >
             {Inner}
           </a>
