@@ -1000,7 +1000,6 @@ function EditorialLookCard({
   onToggle: () => void;
 }) {
   const entries = resolveShopProducts(look.daySlug, look.lookSlug);
-  const liveCount = entries.filter(shopEntryIsLive).length;
   return (
     <article className="flex flex-col bg-ivory border border-border/40">
       <div className="relative aspect-[4/5] overflow-hidden bg-cream">
@@ -1020,9 +1019,6 @@ function EditorialLookCard({
         </h4>
         <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed line-clamp-3">
           {SIBLING_CAPTION_OVERRIDES[`${look.daySlug}/${look.lookSlug}`] ?? look.caption}
-        </p>
-        <p className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/60">
-          The Complete Edit{liveCount > 0 ? ` · ${liveCount} Curated Pieces` : ""}
         </p>
         <div className="flex items-center justify-between pt-2">
           <button
