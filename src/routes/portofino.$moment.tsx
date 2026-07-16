@@ -41,6 +41,12 @@ type MomentHeroVideo = {
   poster: string;
   focal: ResponsiveHeroFocal;
   fit?: CSSProperties["objectFit"];
+  /**
+   * Optional Tailwind classes to override the hero container height. Portrait-
+   * oriented source videos (e.g. Nightcap) need a taller frame so `object-cover`
+   * doesn't crop the model's head. Omit to inherit the shared default.
+   */
+  containerHeightClasses?: string;
   overlay: {
     eyebrow: string;
     headline: string;
