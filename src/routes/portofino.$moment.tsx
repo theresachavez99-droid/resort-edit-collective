@@ -353,9 +353,19 @@ function MomentPage() {
         isOptional: p.role === "Optional",
       },
     }));
-  const featuredShop = isFounderLook && founderShopEntries.length
-    ? founderShopEntries
-    : resolveShopProducts(card.legacy_day_slug, card.look_slug);
+  // Moment-level curated Complete Edit takes priority over founder / fallback
+  // data. This lets an editor lock a specific ordered set of pieces without
+  // depending on the publish pipeline.
+  const curatedForMoment = MOMENT_SHOP_CURATED[slug];
+  const curatedShopEntries: ShopEntry[] = (curatedForMoment ?? [])
+    .filter((o) => isUsableShopUrl(o.url))
+    .map((product) => ({ kind: "override" as const, product }));
+  const featuredShop = curatedShopEntries.length
+    ? curatedShopEntries
+    : isFounderLook && founderShopEntries.length
+      ? founderShopEntries
+      : resolveShopProducts(card.legacy_day_slug, card.look_slug);
+  const hasCuratedOverride = curatedShopEntries.length > 0;
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
   const featuredSlots = summarizeSlots(featuredShop);
 
@@ -531,12 +541,30 @@ function MomentPage() {
                   ))}
                 </div>
               )}
-              {/* Founder Look: always-visible shop panel on the right. */}
-              {isFounderLook && featuredShop.length > 0 && (
-                <ShopLookPanel heading={shopHeading} entries={featuredShop} />
+              {/* Founder Look / curated moment: always-visible shop panel on the right. */}
+              {(isFounderLook || hasCuratedOverride) && featuredShop.length > 0 && (
+                <>
+                  <ShopLookPanel heading={shopHeading} entries={featuredShop} />
+                  <div className="pt-4">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setOpenShop((cur) => (cur === "featured" ? null : "featured"))
+                      }
+                      aria-expanded={openShop === "featured"}
+                      aria-controls="shop-featured"
+                      className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
+                    >
+                      {openShop === "featured" ? "Hide Complete Look" : "View Complete Look"}
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform ${openShop === "featured" ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                  </div>
+                </>
               )}
               {/* Legacy/tagged look: keep collapsible "View Complete Look". */}
-              {!isFounderLook && featuredShop.length > 0 && (
+              {!isFounderLook && !hasCuratedOverride && featuredShop.length > 0 && (
                 <div className="pt-2 flex flex-wrap items-center gap-4">
                   <button
                     type="button"
@@ -557,7 +585,7 @@ function MomentPage() {
             </div>
           </div>
 
-          {!isFounderLook && openShop === "featured" && featuredShop.length > 0 && (
+          {openShop === "featured" && featuredShop.length > 0 && (
             <InlineShop
               id="shop-featured"
               heading={shopHeading}
@@ -798,6 +826,88 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
     body:
       "A sculpted satin corset and fluid tailoring create an effortlessly elegant silhouette for evenings along the Portofino harbor. Refined accessories complete a timeless Riviera night look. Shop our curated interpretation below.",
   },
+};
+
+/**
+ * Moment-level curated Complete Edit. When present for a moment slug, this
+ * replaces the founder / fallback shop entries with an editor-approved,
+ * ordered list of pieces (Corset → Pant → Shoe → Bag → Earrings → Necklace →
+ * Bracelet → Ring for eveningwear moments). Every entry must resolve to a
+ * usable http(s) retailer URL — `isUsableShopUrl` still gates rendering.
+ */
+const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
+  nightcap: [
+    {
+      slotLabel: "The Look",
+      category: "Corset",
+      brand: "Citizens of Humanity",
+      title: "Darya Corset Top in Black",
+      price: "$228",
+      url: "https://www.citizensofhumanity.com/products/darya-corset-top-in-black",
+      image: "",
+    },
+    {
+      category: "Pant",
+      slotLabel: "Pant",
+      brand: "Enza Costa",
+      title: "Satin Wide Leg Pant in Black",
+      price: "$225",
+      url: "https://www.enzacosta.com/collections/pants",
+      image: "",
+    },
+    {
+      category: "Shoe",
+      slotLabel: "Shoe",
+      brand: "Aquazzura",
+      title: "Minimalist Gold Sandal",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=aquazzura+gold+sandal",
+      image: "",
+    },
+    {
+      category: "Bag",
+      slotLabel: "Bag",
+      brand: "Cult Gaia",
+      title: "Sculptural Metallic Gold Clutch",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=gold+metallic+evening+clutch",
+      image: "",
+    },
+    {
+      category: "Earrings",
+      slotLabel: "Earrings",
+      brand: "Jennifer Behr",
+      title: "Sculptural Gold Drop Earrings",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=jennifer+behr+gold+drop+earrings",
+      image: "",
+      isOptional: true,
+    },
+    {
+      category: "Necklace",
+      slotLabel: "Necklace",
+      brand: "Jennifer Meyer",
+      title: "Delicate Gold Pendant Necklace",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=jennifer+meyer+gold+pendant+necklace",
+      image: "",
+      isOptional: true,
+    },
+    {
+      category: "Bracelet",
+      slotLabel: "Bracelet",
+      brand: "Jennifer Meyer",
+      title: "Slim Polished Gold Bracelet",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=jennifer+meyer+gold+bracelet",
+      image: "",
+      isOptional: true,
+    },
+    {
+      category: "Ring",
+      slotLabel: "Ring",
+      brand: "Sophie Buhai",
+      title: "Sculptural Gold Ring",
+      url: "https://www.net-a-porter.com/en-us/shop/product-search?keywords=sophie+buhai+gold+ring",
+      image: "",
+      isOptional: true,
+    },
+  ],
 };
 
 /**
@@ -1246,35 +1356,52 @@ function ShopLookPanel({
   const renderRow = (o: OverrideItem, i: number) => {
     const href = isUsableShopUrl(o.url) ? o.url : "";
     const hasImg = !!o.image;
+    const category = o.category ?? o.slotLabel;
     const Inner = (
-      <div className="flex items-start gap-3 py-3">
-        {hasImg ? (
-          <div className="shrink-0 w-14 h-14 bg-cream border border-border/50 overflow-hidden flex items-center justify-center">
+      <div className="flex items-start gap-4 py-4">
+        <div className="shrink-0 w-20 h-20 bg-cream border border-border/50 overflow-hidden flex items-center justify-center relative">
+          {hasImg ? (
             <img
               src={o.image}
               alt={`${o.brand} ${o.title}`}
               loading="lazy"
-              className="w-full h-full object-contain p-1"
+              className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-[1.04]"
             />
-          </div>
-        ) : null}
-        <div className="min-w-0 flex-1">
-          {o.slotLabel && (
-            <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80">
-              {o.slotLabel}
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-cream via-ivory to-cream transition-opacity duration-300 group-hover:opacity-90">
+              <span
+                aria-hidden
+                className="w-9 h-9 rounded-full border border-gold/40 flex items-center justify-center font-serif text-gold text-[0.85rem]"
+              >
+                {(o.brand || "•").charAt(0)}
+              </span>
             </div>
           )}
-          <div className="font-serif text-[0.95rem] text-ink leading-snug mt-0.5">
-            <span className="font-medium">{o.brand}</span>
-            {o.title ? <span className="text-ink/70"> — {o.title}</span> : null}
+        </div>
+        <div className="min-w-0 flex-1 pt-0.5">
+          {category && (
+            <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-gold/85">
+              {category}
+            </div>
+          )}
+          <div className="font-serif text-[0.78rem] tracking-[0.14em] uppercase text-ink/90 mt-1.5 leading-tight">
+            {o.brand}
           </div>
-          <div className="mt-1">
+          {o.title && (
+            <div className="font-serif italic text-[0.92rem] text-ink/70 leading-snug mt-0.5">
+              {o.title}
+            </div>
+          )}
+          <div className="mt-2 flex items-baseline gap-3">
+            {o.price && (
+              <span className="font-serif text-[0.88rem] text-gold">{o.price}</span>
+            )}
             {href ? (
-              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink group-hover:text-gold transition-colors">
+              <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-ink/70 group-hover:text-gold transition-colors">
                 Shop →
               </span>
             ) : (
-              <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/45">
+              <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-ink/40">
                 Link unavailable
               </span>
             )}
@@ -1290,7 +1417,7 @@ function ShopLookPanel({
             target="_blank"
             rel="noopener noreferrer sponsored"
             onClick={() => trackOutbound({ brand: o.brand, item: o.title, href })}
-            className="group block hover:bg-cream/40 -mx-2 px-2 transition-colors"
+            className="group block hover:bg-cream/50 -mx-2 px-2 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
           >
             {Inner}
           </a>
