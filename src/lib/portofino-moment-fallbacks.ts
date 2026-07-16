@@ -36,7 +36,7 @@ import beachClubLemon from "@/assets/uploads/lilla/lilla-lemon-beach-club.png.as
 import longLunchCard from "@/assets/uploads/portofino/exploring-the-harbor-butter-yellow.png.asset.json";
 import shoppingCard from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v3.png.asset.json";
 import shoppingBanner from "@/assets/uploads/portofino/market-morning-espresso.png.asset.json";
-import nightcapCard from "@/assets/uploads/portofino/riviera-dinner-lilla-floral-terrace.png.asset.json";
+import nightcapCard from "@/assets/uploads/portofino/nightcap-lilla-harbor.png.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
