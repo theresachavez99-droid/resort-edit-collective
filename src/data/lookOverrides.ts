@@ -41,6 +41,10 @@ export type OverrideItem = {
   image: string;
   /** When true, this row is grouped under "Complete the Look" on the public moment page. */
   isOptional?: boolean;
+  /** Editorial price string (e.g. "$228"). Omit if unknown — the card renders gracefully without it. */
+  price?: string;
+  /** Optional category label shown as the eyebrow above brand. Falls back to `slotLabel` when omitted. */
+  category?: string;
 };
 
 export type LookOverride = {
