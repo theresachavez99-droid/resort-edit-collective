@@ -76,7 +76,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     fit: "cover",
     overlay: {
-      eyebrow: "PORTOFINO  ·  ARRIVAL DAY",
+      eyebrow: "PORTOFINO",
       headline: "The Arrival in Portofino.",
       body:
         "She steps into the Riviera slowly — ivory tailoring, sunlit stone, and the first feeling that the trip has truly begun.",
@@ -97,7 +97,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     fit: "cover",
     overlay: {
-      eyebrow: "PORTOFINO  ·  ESPRESSO MORNING",
+      eyebrow: "PORTOFINO",
       headline: "Espresso Morning.",
       body:
         "A slow espresso. The first stroll along the harbor. The Riviera waking around you.",
@@ -117,7 +117,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     fit: "cover",
     overlay: {
-      eyebrow: "PORTOFINO  ·  EXPLORE THE HARBOR",
+      eyebrow: "PORTOFINO",
       headline: "Exploring the Harbor.",
       body:
         "The climb to Castello Brown and the path to the lighthouse, through Portofino's hidden corners and colorful streets.",
@@ -137,7 +137,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     fit: "cover",
     overlay: {
-      eyebrow: "PORTOFINO  ·  HARBOR APERITIVO",
+      eyebrow: "PORTOFINO",
       headline: "Harbor Aperitivo.",
       body: "Golden-hour cocktails overlooking the harbor.",
       ctaLabel: "Shop The Look",
@@ -156,7 +156,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     fit: "cover",
     overlay: {
-      eyebrow: "PORTOFINO  ·  BEACH CLUB",
+      eyebrow: "PORTOFINO",
       headline: "Beach Club.",
       body:
         "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
@@ -176,7 +176,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     fit: "cover",
     overlay: {
-      eyebrow: "PORTOFINO  ·  YACHT DAY",
+      eyebrow: "PORTOFINO",
       headline: "Yacht Day.",
       body:
         "The crossing to San Fruttuoso — the abbey in a cove reachable only by boat or on foot — in effortless style.",
@@ -196,7 +196,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     fit: "cover",
     overlay: {
-      eyebrow: "PORTOFINO  ·  SUNSET VIEWS",
+      eyebrow: "PORTOFINO",
       headline: "Sunset Views.",
       body:
         "From the hill above the harbor, the coast glows as the sun disappears into the sea.",
@@ -222,7 +222,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     containerHeightClasses:
       "min-h-[650px] h-[clamp(650px,88vh,980px)] lg:min-h-[680px] lg:h-[clamp(680px,68vw,940px)]",
     overlay: {
-      eyebrow: "PORTOFINO  ·  NIGHTCAP",
+      eyebrow: "PORTOFINO",
       headline: "Nightcap.",
       body:
         "One final cocktail on the piazzetta before the perfect day comes to a close.",
@@ -523,19 +523,6 @@ function MomentPage() {
               {/* Founder Look / curated moment: always-visible shop panel on the right. */}
               {(isFounderLook || hasCuratedOverride) && featuredShop.length > 0 && (
                 <ShopLookPanel heading={shopHeading} entries={featuredShop} />
-              )}
-              {/* CTA: links to the deeper editorial experience — more ways to
-                  dress this moment — rather than duplicating the shop list. */}
-              {featuredShop.length > 0 && siblings.length > 0 && (
-                <div className="pt-4">
-                  <a
-                    href="#more-looks"
-                    className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
-                  >
-                    View Complete Look
-                    <ChevronDown className="w-3.5 h-3.5" />
-                  </a>
-                </div>
               )}
             </div>
           </div>
@@ -868,6 +855,10 @@ const SIBLING_CAPTION_OVERRIDES: Record<string, string> = {
     "For the long walk home through quiet streets after dinner by the water.",
   "day-2/look-a":
     "For stretching the afternoon beneath striped umbrellas before lunch overlooking the sea.",
+  "day-4/look-a":
+    "A bold, feminine silhouette designed for golden-hour cocktails overlooking the harbor.",
+  "day-4/look-b":
+    "An elegant draped evening silhouette that feels effortlessly romantic beneath the lights of Portofino.",
 };
 
 function JourneyPrevNext({ slug }: { slug: string }) {
