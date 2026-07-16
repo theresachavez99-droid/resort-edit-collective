@@ -220,15 +220,20 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     video: nightcapHeroVideo.url,
     poster: nightcapHeroPoster.url,
     // Lilla walks along the harbor at night in the left third of the frame.
-    // The video is a 4:3 cinematic composition; keep her head, hair, full
-    // body, and feet visible while preserving the destination harbor negative
-    // space on the right for the overlay.
+    // The 4:3 source is much taller than the hero band, so pin `object-cover`
+    // to the top of the frame across breakpoints — otherwise the default
+    // center crop clips her head. The taller container below (see
+    // `containerHeightClasses`) gives her hair breathing room above.
     focal: {
-      base: { x: 25, y: 45 },
-      md: { x: 25, y: 40 },
-      lg: { x: 30, y: 35 },
+      base: { x: 25, y: 0 },
+      md: { x: 25, y: 0 },
+      lg: { x: 30, y: 0 },
     },
     fit: "cover",
+    // ~30% taller than the shared default so the portrait video isn't crushed
+    // into a wide letterbox and Lilla's head clears the top edge.
+    containerHeightClasses:
+      "min-h-[650px] h-[clamp(650px,88vh,980px)] lg:min-h-[680px] lg:h-[clamp(680px,68vw,940px)]",
     overlay: {
       eyebrow: "PORTOFINO  ·  NIGHTCAP",
       headline: "Nightcap.",
