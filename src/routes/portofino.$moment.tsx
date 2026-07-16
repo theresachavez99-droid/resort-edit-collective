@@ -541,12 +541,30 @@ function MomentPage() {
                   ))}
                 </div>
               )}
-              {/* Founder Look: always-visible shop panel on the right. */}
-              {isFounderLook && featuredShop.length > 0 && (
-                <ShopLookPanel heading={shopHeading} entries={featuredShop} />
+              {/* Founder Look / curated moment: always-visible shop panel on the right. */}
+              {(isFounderLook || hasCuratedOverride) && featuredShop.length > 0 && (
+                <>
+                  <ShopLookPanel heading={shopHeading} entries={featuredShop} />
+                  <div className="pt-4">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setOpenShop((cur) => (cur === "featured" ? null : "featured"))
+                      }
+                      aria-expanded={openShop === "featured"}
+                      aria-controls="shop-featured"
+                      className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-6 py-3"
+                    >
+                      {openShop === "featured" ? "Hide Complete Look" : "View Complete Look"}
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform ${openShop === "featured" ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                  </div>
+                </>
               )}
               {/* Legacy/tagged look: keep collapsible "View Complete Look". */}
-              {!isFounderLook && featuredShop.length > 0 && (
+              {!isFounderLook && !hasCuratedOverride && featuredShop.length > 0 && (
                 <div className="pt-2 flex flex-wrap items-center gap-4">
                   <button
                     type="button"
@@ -567,7 +585,7 @@ function MomentPage() {
             </div>
           </div>
 
-          {!isFounderLook && openShop === "featured" && featuredShop.length > 0 && (
+          {openShop === "featured" && featuredShop.length > 0 && (
             <InlineShop
               id="shop-featured"
               heading={shopHeading}
