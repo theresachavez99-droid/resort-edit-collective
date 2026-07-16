@@ -565,7 +565,6 @@ function MomentPage() {
         </section>
       )}
 
-      <JourneyPrevNext slug={slug} />
       <OtherPortofinoMoments excludeSlugs={[slug]} />
     </div>
   );
