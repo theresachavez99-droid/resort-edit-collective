@@ -1,0 +1,184 @@
+{
+  "version": 1,
+  "sdk_version": "0.22.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "resort-edit-mcp",
+      "version": "0.1.0",
+      "title": "Resort Edit — Editorial"
+    },
+    "tools": [
+      {
+        "name": "list_destinations",
+        "title": "List destinations",
+        "description": "List every destination that has at least one published moment on Resort Edit.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_moments",
+        "title": "List published moments",
+        "description": "List published editorial moments for a destination on Resort Edit. Returns slug, name, sequence, and hero image only.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "destination": {
+              "description": "Destination slug (e.g. 'portofino'). Omit to list moments across all destinations.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_moment",
+        "title": "Get published moment",
+        "description": "Return the published editorial narrative, hero media, and (if published) the featured look for one moment on a destination.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "destination": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "description": "Destination slug, e.g. 'portofino'."
+            },
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "description": "Moment slug, e.g. 'arrival-day'."
+            }
+          },
+          "required": [
+            "destination",
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_published_looks",
+        "title": "List published looks",
+        "description": "List published founder looks, optionally filtered by destination or moment slug.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "destination": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "moment": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "limit": {
+              "description": "Max results (default 25, max 100).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_published_look",
+        "title": "Get published look",
+        "description": "Return one published founder look by id or slug (editorial fields only).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Look UUID.",
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "slug": {
+              "description": "Look slug.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_brands",
+        "title": "List approved brands",
+        "description": "List brands in the Resort Edit approved brand registry, optionally filtered by suggested destination or activity.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "destination": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "activity": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "limit": {
+              "description": "Max results (default 200).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
