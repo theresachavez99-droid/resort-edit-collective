@@ -400,7 +400,7 @@ function MomentPage() {
   const cinematicHero = MOMENT_HERO_VIDEO[slug];
 
   return (
-    <div className="pb-16 md:pb-20">
+    <div className="pb-4 md:pb-6">
       {/* BREADCRUMB */}
       <nav
         aria-label="Breadcrumb"
