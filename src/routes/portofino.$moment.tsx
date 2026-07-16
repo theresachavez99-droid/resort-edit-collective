@@ -41,6 +41,12 @@ type MomentHeroVideo = {
   poster: string;
   focal: ResponsiveHeroFocal;
   fit?: CSSProperties["objectFit"];
+  /**
+   * Optional Tailwind classes to override the hero container height. Portrait-
+   * oriented source videos (e.g. Nightcap) need a taller frame so `object-cover`
+   * doesn't crop the model's head. Omit to inherit the shared default.
+   */
+  containerHeightClasses?: string;
   overlay: {
     eyebrow: string;
     headline: string;
@@ -214,15 +220,20 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     video: nightcapHeroVideo.url,
     poster: nightcapHeroPoster.url,
     // Lilla walks along the harbor at night in the left third of the frame.
-    // The video is a 4:3 cinematic composition; keep her head, hair, full
-    // body, and feet visible while preserving the destination harbor negative
-    // space on the right for the overlay.
+    // The 4:3 source is much taller than the hero band, so pin `object-cover`
+    // to the top of the frame across breakpoints — otherwise the default
+    // center crop clips her head. The taller container below (see
+    // `containerHeightClasses`) gives her hair breathing room above.
     focal: {
-      base: { x: 25, y: 45 },
-      md: { x: 25, y: 40 },
-      lg: { x: 30, y: 35 },
+      base: { x: 25, y: 0 },
+      md: { x: 25, y: 0 },
+      lg: { x: 30, y: 0 },
     },
     fit: "cover",
+    // ~30% taller than the shared default so the portrait video isn't crushed
+    // into a wide letterbox and Lilla's head clears the top edge.
+    containerHeightClasses:
+      "min-h-[650px] h-[clamp(650px,88vh,980px)] lg:min-h-[680px] lg:h-[clamp(680px,68vw,940px)]",
     overlay: {
       eyebrow: "PORTOFINO  ·  NIGHTCAP",
       headline: "Nightcap.",
@@ -637,7 +648,7 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
  * face inside the visible frame without changing zoom.
  */
 function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
-  const { video, poster, focal, fit = "cover", overlay, ariaLabel } = config;
+  const { video, poster, focal, fit = "cover", overlay, ariaLabel, containerHeightClasses } = config;
   const [reduceMotion, setReduceMotion] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -683,7 +694,11 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
   return (
     <section
       aria-label={ariaLabel}
-      className="relative w-full overflow-hidden bg-ink min-h-[500px] h-[clamp(500px,70vh,760px)] lg:min-h-[520px] lg:h-[clamp(520px,52vw,720px)]"
+      className={
+        "relative w-full overflow-hidden bg-ink " +
+        (containerHeightClasses ??
+          "min-h-[500px] h-[clamp(500px,70vh,760px)] lg:min-h-[520px] lg:h-[clamp(520px,52vw,720px)]")
+      }
       {...{ [scopeAttr]: "" }}
       style={scopeStyle}
     >
