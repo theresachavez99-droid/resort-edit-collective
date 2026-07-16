@@ -2544,7 +2544,6 @@ export type Database = {
           brand: string | null
           channel_type: string | null
           slug: string | null
-          status: string | null
           suggested_activities: string[] | null
           suggested_destinations: string[] | null
           suggested_tier: string | null
@@ -2553,7 +2552,6 @@ export type Database = {
           brand?: string | null
           channel_type?: string | null
           slug?: string | null
-          status?: string | null
           suggested_activities?: string[] | null
           suggested_destinations?: string[] | null
           suggested_tier?: string | null
@@ -2562,7 +2560,6 @@ export type Database = {
           brand?: string | null
           channel_type?: string | null
           slug?: string | null
-          status?: string | null
           suggested_activities?: string[] | null
           suggested_destinations?: string[] | null
           suggested_tier?: string | null
