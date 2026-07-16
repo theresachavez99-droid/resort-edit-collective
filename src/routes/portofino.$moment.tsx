@@ -520,9 +520,13 @@ function MomentPage() {
                   ))}
                 </div>
               )}
-              {/* Founder Look / curated moment: always-visible shop panel on the right. */}
-              {(isFounderLook || hasCuratedOverride) && featuredShop.length > 0 && (
+              {/* Standardized shop area — every moment shows either the Live
+                  Shopping Edit (curated affiliate pieces) or a Coming Soon
+                  state so the layout is identical across moments. */}
+              {featuredPieceCount > 0 && (isFounderLook || hasCuratedOverride) ? (
                 <ShopLookPanel heading={shopHeading} entries={featuredShop} />
+              ) : (
+                <ComingSoonPanel heading={shopHeading} />
               )}
             </div>
           </div>
