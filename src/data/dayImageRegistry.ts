@@ -22,7 +22,7 @@ import lillaLemonBeachClub from "@/assets/uploads/lilla/lilla-lemon-beach-club.p
 import cira9 from "@/assets/uploads/cira/cira-9.png.asset.json";
 import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
-import poolLoungingShopping from "@/assets/uploads/portofino/pool-lounging-shopping-lilla-red-floral-splendido.png.asset.json";
+import poolLoungingShopping from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
 import { createContext, createElement, useContext, type ReactNode } from "react";
 
 export type DaySlug = "day-1" | "day-2" | "day-3" | "day-4" | "day-5";
