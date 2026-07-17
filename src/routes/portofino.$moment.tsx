@@ -19,6 +19,8 @@ import sunsetViewsHeroVideo from "@/assets/uploads/portofino/sunset-views-hero.m
 import sunsetViewsHeroPoster from "@/assets/uploads/portofino/sunset-views-hero-poster.jpg.asset.json";
 import nightcapHeroVideo from "@/assets/uploads/portofino/nightcap-hero.mp4.asset.json";
 import nightcapHeroPoster from "@/assets/uploads/portofino/nightcap-hero-poster.jpg.asset.json";
+import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero.mp4.asset.json";
+import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
