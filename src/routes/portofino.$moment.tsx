@@ -233,9 +233,29 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     },
     ariaLabel: "Nightcap in Portofino",
   },
+  "pool-lounging": {
+    video: poolLoungingHeroVideo.url,
+    poster: poolLoungingHeroPoster.url,
+    // 16:9 landscape source. Lilla is composed in the left third, so bias
+    // `object-position` to the left on narrower breakpoints where the frame
+    // crops horizontally, preserving her fully; desktop keeps center-x.
+    focal: {
+      base: { x: 30, y: 30 },
+      md: { x: 35, y: 30 },
+      lg: { x: 50, y: 30 },
+    },
+    fit: "cover",
+    overlay: {
+      eyebrow: "PORTOFINO • POOL LOUNGING",
+      headline: "Pool Lounging.",
+      body:
+        "An elegant afternoon by the pool, above the bay, beneath striped umbrellas.",
+      ctaLabel: "Shop The Look",
+      ctaHref: "#shop-the-look",
+    },
+    ariaLabel: "Pool Lounging in Portofino",
+  },
 };
-
-// Insert pool-lounging entry
 import {
   getPortofinoMomentDef,
   PORTOFINO_MOMENT_SLUG_ALIASES,
