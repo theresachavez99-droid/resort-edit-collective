@@ -234,6 +234,8 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     ariaLabel: "Nightcap in Portofino",
   },
 };
+
+// Insert pool-lounging entry
 import {
   getPortofinoMomentDef,
   PORTOFINO_MOMENT_SLUG_ALIASES,
