@@ -424,6 +424,15 @@ function MomentPage() {
   // hero. All other moments keep the canonical image hero.
   const cinematicHero = MOMENT_HERO_VIDEO[slug];
 
+  // Resort Edit Look override — when the moment has a founder-approved
+  // Resort Edit Look (currently only Pool Lounging → Poolside Glam), we
+  // render the canonical "The Resort Edit" featured block and hide the
+  // legacy sibling grid until additional approved looks exist.
+  const resortEditLook =
+    slug === "pool-lounging"
+      ? findResortEditLook("portofino", "pool-lounging", "poolside-glam")
+      : undefined;
+
   return (
     <div className="pb-4 md:pb-6">
       {/* BREADCRUMB */}
