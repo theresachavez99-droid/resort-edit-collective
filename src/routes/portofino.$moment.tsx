@@ -269,7 +269,11 @@ import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
 import { findResortEditLook } from "@/data/resortEditLooks";
-import poolLoungingEditorial from "@/assets/uploads/lilla/lilla-lemon-beach-club.png.asset.json";
+// Locked Pool Lounging editorial reference — the seated poolside portrait
+// (Aperol Spritz, white lounge chair, Splendido pool). This asset is the
+// permanent visual for the Pool Lounging moment and must not be replaced
+// when product links, styling, or layout change.
+import poolLoungingEditorial from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
 
 const momentQuery = (slug: string) =>
   queryOptions({
