@@ -269,7 +269,7 @@ import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
 import { findResortEditLook } from "@/data/resortEditLooks";
-import { ResortEditFeaturedLook } from "@/components/resort-edit/ResortEditFeaturedLook";
+import poolLoungingEditorial from "@/assets/uploads/lilla/lilla-lemon-beach-club.png.asset.json";
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -424,14 +424,20 @@ function MomentPage() {
   // hero. All other moments keep the canonical image hero.
   const cinematicHero = MOMENT_HERO_VIDEO[slug];
 
-  // Resort Edit Look override — when the moment has a founder-approved
-  // Resort Edit Look (currently only Pool Lounging → Poolside Glam), we
-  // render the canonical "The Resort Edit" featured block and hide the
-  // legacy sibling grid until additional approved looks exist.
-  const resortEditLook =
-    slug === "pool-lounging"
-      ? findResortEditLook("portofino", "pool-lounging", "poolside-glam")
-      : undefined;
+  // Optional editorial-image override — some moments (e.g. Pool Lounging)
+  // publish an approved Resort Edit editorial image separate from the DB
+  // `resolved.image`. When present, this becomes the left-column image.
+  const editorialImage = MOMENT_EDITORIAL_IMAGE[slug] ?? resolved.image;
+  // Optional "View Complete Look" destination for moments that publish
+  // a dedicated Complete Look page. Rendered as a centered CTA under the
+  // Resort Edit shopping list.
+  const completeLookHref = MOMENT_COMPLETE_LOOK[slug];
+  // Optional editorial title override (defaults to featuredDisplayTitle).
+  const editorialTitle = MOMENT_EDITORIAL_TITLE[slug] ?? featuredDisplayTitle;
+  // Reference the founder-approved Resort Edit Look purely for typechecks /
+  // future related-look wiring; the page renders through the standard
+  // Nightcap-canonical template so every moment stays visually identical.
+  void findResortEditLook;
 
   return (
     <div className="pb-4 md:pb-6">
@@ -520,20 +526,13 @@ function MomentPage() {
       )}
 
       {/* FEATURED LOOK — editorial hero styling recommendation */}
-      {resortEditLook ? (
-        <ResortEditFeaturedLook
-          look={resortEditLook}
-          detailTo="/portofino/pool-lounging/poolside-glam"
-          supportingCopy="Inspired by this editorial moment, discover our curated interpretation of polished Riviera poolside style."
-        />
-      ) : (
       <section id="shop-the-look" className="bg-ivory scroll-mt-16">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start">
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
               <img
-                src={resolved.image}
-                alt={`${resolved.title} — Portofino featured look`}
+                src={editorialImage}
+                alt={`${editorialTitle} — Portofino featured look`}
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
               <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
@@ -542,7 +541,7 @@ function MomentPage() {
             </div>
             <div className="space-y-4 lg:pl-2">
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
-                {featuredDisplayTitle}
+                {editorialTitle}
               </h2>
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
                 {MOMENT_FEATURED_COPY[slug]?.body ??
@@ -565,7 +564,30 @@ function MomentPage() {
                   Shopping Edit (curated affiliate pieces) or a Coming Soon
                   state so the layout is identical across moments. */}
               {featuredPieceCount > 0 && (isFounderLook || hasCuratedOverride) ? (
-                <ShopLookPanel heading={shopHeading} entries={featuredShop} />
+                <div className="pt-2">
+                  <div className="pt-4 border-t border-border/40">
+                    <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
+                      THE EDIT
+                    </span>
+                    <h3 className="font-display text-2xl md:text-[1.75rem] tracking-[0.04em] text-ink mt-2 leading-[1.1]">
+                      The Resort Edit
+                    </h3>
+                    <p className="font-serif italic text-[0.95rem] text-ink/70 mt-2 leading-relaxed max-w-prose">
+                      Inspired by this editorial moment, discover Resort Edit's curated interpretation using luxury pieces selected to recreate the same destination mood and effortless Riviera style.
+                    </p>
+                  </div>
+                  <ShopLookPanel heading={shopHeading} entries={featuredShop} />
+                  {completeLookHref && (
+                    <div className="pt-6 flex justify-center lg:justify-start">
+                      <Link
+                        to={completeLookHref}
+                        className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.36em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-8 py-4"
+                      >
+                        VIEW COMPLETE LOOK →
+                      </Link>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <ComingSoonPanel heading={shopHeading} />
               )}
@@ -573,10 +595,9 @@ function MomentPage() {
           </div>
         </div>
       </section>
-      )}
 
       {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid */}
-      {!resortEditLook && siblings.length > 0 && (
+      {siblings.length > 0 && (
         <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
             <div className="mb-6 md:mb-8 max-w-2xl">
@@ -584,10 +605,10 @@ function MomentPage() {
                 THE EDIT
               </span>
               <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
-                More {shortMomentName} Looks
+                More Resort Edit Looks
               </h3>
               <p className="font-serif italic text-[0.95rem] text-ink/70 mt-3 leading-relaxed">
-                Other ways to dress the moment — each one a complete edit, ready when you are.
+                Other interpretations of this editorial moment.
               </p>
             </div>
 
@@ -805,6 +826,37 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
     body:
       "A sculpted satin corset paired with fluid tailoring creates an effortlessly elegant Riviera silhouette for evenings along the Portofino harbor.",
   },
+  "pool-lounging": {
+    label: "Inspired by",
+    body:
+      "A polished Riviera poolside look designed for long afternoons overlooking Portofino — vibrant Capri print, natural raffia, and sculptural gold.",
+  },
+};
+
+/**
+ * Optional editorial title override, keyed by moment slug. When present,
+ * replaces the default featured-look title in the right column.
+ */
+const MOMENT_EDITORIAL_TITLE: Record<string, string> = {
+  "pool-lounging": "Poolside Glam",
+};
+
+/**
+ * Optional approved editorial image override for the left column. Uses the
+ * founder-approved Resort Edit image rather than the database `resolved.image`
+ * when a moment publishes its own editorial photograph.
+ */
+const MOMENT_EDITORIAL_IMAGE: Record<string, string> = {
+  "pool-lounging": poolLoungingEditorial.url,
+};
+
+/**
+ * Optional destination for the centered "VIEW COMPLETE LOOK →" CTA that
+ * appears beneath the Resort Edit shopping list. Only moments with a
+ * published Complete Look page appear here.
+ */
+const MOMENT_COMPLETE_LOOK: Record<string, string> = {
+  "pool-lounging": "/portofino/pool-lounging/poolside-glam",
 };
 
 /**
@@ -815,6 +867,72 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
  * usable http(s) retailer URL — `isUsableShopUrl` still gates rendering.
  */
 const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
+  "pool-lounging": [
+    {
+      slotLabel: "The Look",
+      category: "Skirt",
+      brand: "Alexandra Miro",
+      title: "Jaimee Skirt — Red Capri",
+      url: "https://alexandramiro.com/collections/ready-to-wear/products/jaimee-skirt-red-capri",
+      image: "",
+    },
+    {
+      slotLabel: "The Look",
+      category: "Swim",
+      brand: "Alexandra Miro",
+      title: "Zella Bikini Top — Red Capri",
+      url: "https://alexandramiro.com/products/zella-bikini-top-red-capri",
+      image: "",
+    },
+    {
+      slotLabel: "The Look",
+      category: "Swim",
+      brand: "Alexandra Miro",
+      title: "Elise Frill Bikini Bottom — Red Capri",
+      url: "https://alexandramiro.com/products/elise-frill-bikini-bottom-red-capri",
+      image: "",
+    },
+    {
+      slotLabel: "Shoes",
+      category: "Shoe",
+      brand: "Aquazzura",
+      title: "Almost Bare Metallic Leather Thong Sandals — Gold",
+      url: "https://www.mytheresa.com/us/en/women/aquazzura-almost-bare-metallic-leather-thong-sandals-gold-p00964816",
+      image: "",
+    },
+    {
+      slotLabel: "Bag",
+      category: "Bag",
+      brand: "LOEWE",
+      title: "Paula's Ibiza Raffia Tote",
+      url: "https://www.net-a-porter.com/en-us/shop/product/loewe/bags/tote-bags/plus-paula-s-ibiza-puzzle-fold-medium-leather-trimmed-raffia-tote/1647597333838602",
+      image: "",
+    },
+    {
+      slotLabel: "Earrings",
+      category: "Earrings",
+      brand: "Jennifer Fisher",
+      title: "Madison Baby Hoops",
+      url: "https://jenniferfisher.com/products/the-madison-baby-hoops",
+      image: "",
+    },
+    {
+      slotLabel: "Bracelet",
+      category: "Bracelet",
+      brand: "Jennifer Fisher",
+      title: "Madison Cuff",
+      url: "https://jenniferfisher.com/products/the-madison-cuff",
+      image: "",
+    },
+    {
+      slotLabel: "Sunglasses",
+      category: "Sunglasses",
+      brand: "CELINE",
+      title: "Triomphe 01 Sunglasses — Black Acetate",
+      url: "https://www.celine.com/en-us/celine-shop-women/accessories/sunglasses/triomphe-01-sunglasses-in-acetate-4S194CPLB.38NO.html",
+      image: "",
+    },
+  ],
   nightcap: [
     {
       slotLabel: "The Look",
