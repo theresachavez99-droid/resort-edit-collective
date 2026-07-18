@@ -867,6 +867,72 @@ const MOMENT_COMPLETE_LOOK: Record<string, string> = {
  * usable http(s) retailer URL — `isUsableShopUrl` still gates rendering.
  */
 const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
+  "pool-lounging": [
+    {
+      slotLabel: "The Look",
+      category: "Skirt",
+      brand: "Alexandra Miro",
+      title: "Jaimee Skirt — Red Capri",
+      url: "https://alexandramiro.com/collections/ready-to-wear/products/jaimee-skirt-red-capri",
+      image: "",
+    },
+    {
+      slotLabel: "The Look",
+      category: "Swim",
+      brand: "Alexandra Miro",
+      title: "Zella Bikini Top — Red Capri",
+      url: "https://alexandramiro.com/products/zella-bikini-top-red-capri",
+      image: "",
+    },
+    {
+      slotLabel: "The Look",
+      category: "Swim",
+      brand: "Alexandra Miro",
+      title: "Elise Frill Bikini Bottom — Red Capri",
+      url: "https://alexandramiro.com/products/elise-frill-bikini-bottom-red-capri",
+      image: "",
+    },
+    {
+      slotLabel: "Shoes",
+      category: "Shoe",
+      brand: "Aquazzura",
+      title: "Almost Bare Metallic Leather Thong Sandals — Gold",
+      url: "https://www.mytheresa.com/us/en/women/aquazzura-almost-bare-metallic-leather-thong-sandals-gold-p00964816",
+      image: "",
+    },
+    {
+      slotLabel: "Bag",
+      category: "Bag",
+      brand: "LOEWE",
+      title: "Paula's Ibiza Raffia Tote",
+      url: "https://www.net-a-porter.com/en-us/shop/product/loewe/bags/tote-bags/plus-paula-s-ibiza-puzzle-fold-medium-leather-trimmed-raffia-tote/1647597333838602",
+      image: "",
+    },
+    {
+      slotLabel: "Earrings",
+      category: "Earrings",
+      brand: "Jennifer Fisher",
+      title: "Madison Baby Hoops",
+      url: "https://jenniferfisher.com/products/the-madison-baby-hoops",
+      image: "",
+    },
+    {
+      slotLabel: "Bracelet",
+      category: "Bracelet",
+      brand: "Jennifer Fisher",
+      title: "Madison Cuff",
+      url: "https://jenniferfisher.com/products/the-madison-cuff",
+      image: "",
+    },
+    {
+      slotLabel: "Sunglasses",
+      category: "Sunglasses",
+      brand: "CELINE",
+      title: "Triomphe 01 Sunglasses — Black Acetate",
+      url: "https://www.celine.com/en-us/celine-shop-women/accessories/sunglasses/triomphe-01-sunglasses-in-acetate-4S194CPLB.38NO.html",
+      image: "",
+    },
+  ],
   nightcap: [
     {
       slotLabel: "The Look",
