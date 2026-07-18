@@ -116,11 +116,11 @@ const POOLSIDE_GLAM: ResortEditLook = {
       },
     ],
     shoes: {
-      brand: "Aquazzura",
-      name: "Almost Bare Metallic Leather Thong Sandals — Gold",
+      brand: "Gianvito Rossi",
+      name: "Luana 85 metallic leather sandals in gold",
       retailer: "Mytheresa",
       price: undefined,
-      url: "https://www.mytheresa.com/us/en/women/aquazzura-almost-bare-metallic-leather-thong-sandals-gold-p00964816",
+      url: "https://www.mytheresa.com/us/en/women/gianvito-rossi-luana-85-metallic-leather-sandals-gold-p01106014",
       image: null,
     },
     bag: {
