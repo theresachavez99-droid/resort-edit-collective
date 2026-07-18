@@ -133,7 +133,7 @@ const POOLSIDE_GLAM: ResortEditLook = {
     },
     necklace: {
       brand: "EF Collection",
-      name: "14K Yellow Gold Diamond Mini Disc Pendant Necklace (16–18")",
+      name: "14K Yellow Gold Diamond Mini Disc Pendant Necklace (16-18in)",
       retailer: "Bloomingdale's",
       price: undefined,
       url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-diamond-mini-disc-pendant-necklace-16-18?ID=4992549",
