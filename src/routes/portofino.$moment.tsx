@@ -268,6 +268,8 @@ import { trackOutbound } from "@/lib/utils";
 import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
+import { findResortEditLook } from "@/data/resortEditLooks";
+import { ResortEditFeaturedLook } from "@/components/resort-edit/ResortEditFeaturedLook";
 
 const momentQuery = (slug: string) =>
   queryOptions({
