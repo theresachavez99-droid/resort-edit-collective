@@ -885,7 +885,7 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       category: "Swim",
       brand: "Alexandra Miro",
       title: "Zella Bikini Top — Red Capri",
-      url: "https://alexandramiro.com/products/zella-bikini-top-red-capri",
+      url: "https://www.mytheresa.com/us/en/women/alexandra-miro-zella-floral-bikini-top-red-p01203896",
       image: "",
     },
     {
@@ -893,7 +893,7 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       category: "Swim",
       brand: "Alexandra Miro",
       title: "Elise Frill Bikini Bottom — Red Capri",
-      url: "https://alexandramiro.com/products/elise-frill-bikini-bottom-red-capri",
+      url: "https://www.mytheresa.com/us/en/women/alexandra-miro-zella-floral-bikini-bottoms-red-p01203898",
       image: "",
     },
     {
