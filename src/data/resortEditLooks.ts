@@ -140,11 +140,11 @@ const POOLSIDE_GLAM: ResortEditLook = {
       image: null,
     },
     earrings: {
-      brand: "EF Collection",
-      name: "14K Yellow Gold Diamond Mini Disc Stud Earrings",
+      brand: "Moon Meadow",
+      name: "14K Yellow Gold Diamond Circle Stud Earrings",
       retailer: "Bloomingdale's",
       price: undefined,
-      url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-diamond-mini-disc-stud-earrings?ID=4992551",
+      url: "https://www.bloomingdales.com/shop/product/moon-meadow-14k-yellow-gold-diamond-circle-stud-earrings-exclusive?ID=3822029&tdp=cm_app~zBCOM-NAVAPP~xcm_zone~zPDP_ZONE_I~xcm_choiceId~zcidB9CSHX-6f4df622-5823-4ce8-9fbf-c1aa7c7f52a0@HG1@SIMILAR%2BSTYLES$3376$3822111~xcm_pos~zPos4~xcm_srcCatID~z3376",
       image: null,
     },
     bracelet: {
