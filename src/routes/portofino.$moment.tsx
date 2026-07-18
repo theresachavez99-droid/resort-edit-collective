@@ -787,7 +787,7 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
             </p>
             <a
               href={overlay.ctaHref}
-              className="mt-7 inline-flex items-center gap-3 eyebrow text-[0.72rem] tracking-[0.32em] text-ivory bg-ink/70 hover:bg-gold border border-ivory/40 hover:border-gold backdrop-blur-sm px-6 py-3 transition-colors"
+              className="mt-8 inline-flex items-center gap-3 eyebrow font-medium text-[0.82rem] tracking-[0.34em] text-ivory bg-ink/80 hover:bg-gold border border-ivory/50 hover:border-gold backdrop-blur-sm px-9 py-[0.95rem] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)] transition-colors"
             >
               {overlay.ctaLabel} →
             </a>
