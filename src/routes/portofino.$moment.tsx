@@ -899,9 +899,9 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
     {
       slotLabel: "Shoes",
       category: "Shoe",
-      brand: "Aquazzura",
-      title: "Heatwave Sandal 35 — Soft Gold",
-      url: "https://www.aquazzura.com/us_en/shoes/sandals",
+      brand: "Gianvito Rossi",
+      title: "Luana 85 metallic leather sandals in gold",
+      url: "https://www.mytheresa.com/us/en/women/gianvito-rossi-luana-85-metallic-leather-sandals-gold-p01106014",
       image: "",
     },
     {
