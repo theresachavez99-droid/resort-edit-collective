@@ -826,6 +826,37 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
     body:
       "A sculpted satin corset paired with fluid tailoring creates an effortlessly elegant Riviera silhouette for evenings along the Portofino harbor.",
   },
+  "pool-lounging": {
+    label: "Inspired by",
+    body:
+      "A polished Riviera poolside look designed for long afternoons overlooking Portofino — vibrant Capri print, natural raffia, and sculptural gold.",
+  },
+};
+
+/**
+ * Optional editorial title override, keyed by moment slug. When present,
+ * replaces the default featured-look title in the right column.
+ */
+const MOMENT_EDITORIAL_TITLE: Record<string, string> = {
+  "pool-lounging": "Poolside Glam",
+};
+
+/**
+ * Optional approved editorial image override for the left column. Uses the
+ * founder-approved Resort Edit image rather than the database `resolved.image`
+ * when a moment publishes its own editorial photograph.
+ */
+const MOMENT_EDITORIAL_IMAGE: Record<string, string> = {
+  "pool-lounging": poolLoungingEditorial.url,
+};
+
+/**
+ * Optional destination for the centered "VIEW COMPLETE LOOK →" CTA that
+ * appears beneath the Resort Edit shopping list. Only moments with a
+ * published Complete Look page appear here.
+ */
+const MOMENT_COMPLETE_LOOK: Record<string, string> = {
+  "pool-lounging": "/portofino/pool-lounging/poolside-glam",
 };
 
 /**
