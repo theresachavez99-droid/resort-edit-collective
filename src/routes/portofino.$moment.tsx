@@ -520,6 +520,13 @@ function MomentPage() {
       )}
 
       {/* FEATURED LOOK — editorial hero styling recommendation */}
+      {resortEditLook ? (
+        <ResortEditFeaturedLook
+          look={resortEditLook}
+          detailTo="/portofino/pool-lounging/poolside-glam"
+          supportingCopy="Inspired by this editorial moment, discover our curated interpretation of polished Riviera poolside style."
+        />
+      ) : (
       <section id="shop-the-look" className="bg-ivory scroll-mt-16">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start">
@@ -566,9 +573,10 @@ function MomentPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid */}
-      {siblings.length > 0 && (
+      {!resortEditLook && siblings.length > 0 && (
         <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
             <div className="mb-6 md:mb-8 max-w-2xl">
