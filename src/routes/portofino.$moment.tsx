@@ -1427,23 +1427,28 @@ function ShopLookPanel({
   const rows = entries
     .filter((e) => e.kind === "override")
     .map((e) => e.product as OverrideItem);
-  const ordered = groupShopRows(rows);
+  const chapters = groupShopChapters(rows);
   const renderRow = (o: OverrideItem, i: number) => {
     const href = isUsableShopUrl(o.url) ? o.url : "";
     const Inner = (
-      <div className="py-5">
-        <div className="font-display text-[1.15rem] md:text-[1.2rem] leading-snug text-ink group-hover:text-gold group-hover:underline underline-offset-4 decoration-gold/60 transition-colors duration-300">
+      <div>
+        {o.brand && (
+          <div className="font-serif italic text-[0.88rem] text-ink/55 leading-snug">
+            {o.brand}
+          </div>
+        )}
+        <div className="font-display text-[1.1rem] md:text-[1.15rem] leading-snug text-ink group-hover:text-gold transition-colors duration-300 mt-1">
           {o.title || o.brand}
         </div>
-        {o.brand && o.title && (
-          <div className="font-serif italic text-[0.9rem] text-ink/55 mt-1 leading-snug">
-            by {o.brand}
+        {href && (
+          <div className="eyebrow text-[0.62rem] tracking-[0.32em] text-gold/80 mt-2 group-hover:text-gold transition-colors duration-300">
+            VIEW PRODUCT →
           </div>
         )}
       </div>
     );
     return (
-      <li key={i}>
+      <li key={i} className="[&:not(:first-child)]:mt-3.5">
         {href ? (
           <a
             href={href}
@@ -1461,36 +1466,74 @@ function ShopLookPanel({
     );
   };
   return (
-    <ul className="mt-2">{ordered.map(renderRow)}</ul>
+    <div className="mt-2">
+      {chapters.map((chapter, ci) => (
+        <section
+          key={chapter.key}
+          className={ci === 0 ? "mt-6" : "mt-11 md:mt-12"}
+        >
+          <h4 className="eyebrow text-[0.64rem] tracking-[0.38em] text-ink/45 mb-5">
+            {chapter.label}
+          </h4>
+          <ul>{chapter.items.map(renderRow)}</ul>
+        </section>
+      ))}
+    </div>
   );
 }
 
-const FOUNDATION_CATEGORIES = new Set([
+/**
+ * Chapter grouping — mirrors how a luxury stylist walks a client through
+ * dressing: the outfit first, then the finishing touches (shoes, bag,
+ * sunglasses, hat, scarf, belt, cover-up), then fine jewelry. Chapters
+ * with no items are skipped so the layout adapts to any moment.
+ */
+const THE_LOOK_CATEGORIES = new Set([
   "corset", "top", "blouse", "shirt", "tee", "t-shirt",
   "pant", "pants", "trouser", "trousers", "skirt",
   "dress", "gown", "jumpsuit", "romper",
-  "swimsuit", "bikini", "one-piece",
+  "swimsuit", "bikini", "bikini top", "bikini bottom", "one-piece", "swim",
   "jacket", "blazer", "coat", "cardigan", "sweater", "knit",
 ]);
-const ACCESSORY_ORDER = ["shoe", "bag", "earrings", "necklace", "bracelet", "ring"];
+const FINISHING_CATEGORIES = new Set([
+  "shoe", "shoes", "sandal", "sandals",
+  "bag", "clutch", "tote", "pouch",
+  "sunglasses", "hat", "scarf", "belt",
+  "coverup", "cover-up", "cover up",
+]);
+const JEWELRY_CATEGORIES = new Set([
+  "earrings", "necklace", "bracelet", "ring", "jewelry", "cuff",
+]);
+const FINISHING_ORDER = ["shoe", "shoes", "sandal", "sandals", "bag", "clutch", "tote", "pouch", "sunglasses", "hat", "scarf", "belt", "coverup", "cover-up", "cover up"];
+const JEWELRY_ORDER = ["necklace", "earrings", "bracelet", "cuff", "ring", "jewelry"];
 
-function groupShopRows(rows: OverrideItem[]): OverrideItem[] {
+type ShopChapter = { key: string; label: string; items: OverrideItem[] };
+
+function groupShopChapters(rows: OverrideItem[]): ShopChapter[] {
   const norm = (s?: string) => (s ?? "").trim().toLowerCase();
   const catOf = (r: OverrideItem) => norm(r.category ?? r.slotLabel);
-  const foundation: OverrideItem[] = [];
-  const accessories: OverrideItem[] = [];
+  const look: OverrideItem[] = [];
+  const finishing: OverrideItem[] = [];
+  const jewelry: OverrideItem[] = [];
   for (const r of rows) {
     const c = catOf(r);
-    if (FOUNDATION_CATEGORIES.has(c)) foundation.push(r);
-    else accessories.push(r);
+    if (JEWELRY_CATEGORIES.has(c)) jewelry.push(r);
+    else if (FINISHING_CATEGORIES.has(c)) finishing.push(r);
+    else if (THE_LOOK_CATEGORIES.has(c)) look.push(r);
+    else finishing.push(r);
   }
-  const rank = (r: OverrideItem) => {
-    const c = catOf(r);
-    const i = ACCESSORY_ORDER.indexOf(c);
-    return i === -1 ? ACCESSORY_ORDER.length : i;
+  const rankBy = (order: string[]) => (r: OverrideItem) => {
+    const i = order.indexOf(catOf(r));
+    return i === -1 ? order.length : i;
   };
-  accessories.sort((a, b) => rank(a) - rank(b));
-  return [...foundation, ...accessories];
+  finishing.sort((a, b) => rankBy(FINISHING_ORDER)(a) - rankBy(FINISHING_ORDER)(b));
+  jewelry.sort((a, b) => rankBy(JEWELRY_ORDER)(a) - rankBy(JEWELRY_ORDER)(b));
+  const chapters: ShopChapter[] = [
+    { key: "look", label: "THE LOOK", items: look },
+    { key: "finishing", label: "FINISHING TOUCHES", items: finishing },
+    { key: "jewelry", label: "JEWELRY", items: jewelry },
+  ];
+  return chapters.filter((c) => c.items.length > 0);
 }
 
 /**
