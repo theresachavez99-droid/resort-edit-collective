@@ -909,7 +909,7 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       category: "Bag",
       brand: "Saint Laurent",
       title: "Cassandre Large Raffia Pouch",
-      url: "https://www.ysl.com/en-us/handbags/pouches",
+      url: "https://www.mytheresa.com/us/en/women/saint-laurent-cassandre-large-raffia-pouch-beige-p00918232",
       image: "",
     },
     {
@@ -917,7 +917,7 @@ const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       category: "Sunglasses",
       brand: "CELINE",
       title: "Triomphe Havana Sunglasses",
-      url: "https://www.celine.com/en-us/celine-shop-women/accessories/sunglasses/",
+      url: "https://www.neimanmarcus.com/p/celine-triomphe-cat-eye-sunglasses-prod284390071",
       image: "",
     },
     {
