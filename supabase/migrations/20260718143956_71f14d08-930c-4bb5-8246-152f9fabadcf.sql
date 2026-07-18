@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Anon read approved brand_intelligence" ON public.brand_intelligence; REVOKE SELECT ON public.brand_intelligence FROM anon;
