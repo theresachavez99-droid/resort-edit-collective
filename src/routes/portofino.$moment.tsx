@@ -836,6 +836,11 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
     body:
       "A polished Riviera poolside look designed for long afternoons overlooking Portofino — vibrant Capri print, natural raffia, and sculptural gold.",
   },
+  "long-lunch": {
+    label: "Inspired by",
+    body:
+      "A pale mist blue midi with a structured bodice and long front zipper — walked slowly along the Portofino quay after a lingering waterfront lunch. Warm tan leather, woven cognac, and floating 18k gold.",
+  },
 };
 
 /**
@@ -844,6 +849,7 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
  */
 const MOMENT_EDITORIAL_TITLE: Record<string, string> = {
   "pool-lounging": "Poolside Glam",
+  "long-lunch": "The Long Lunch",
 };
 
 /**
@@ -853,6 +859,7 @@ const MOMENT_EDITORIAL_TITLE: Record<string, string> = {
  */
 const MOMENT_EDITORIAL_IMAGE: Record<string, string> = {
   "pool-lounging": poolLoungingEditorial.url,
+  "long-lunch": longLunchEditorial.url,
 };
 
 /**
