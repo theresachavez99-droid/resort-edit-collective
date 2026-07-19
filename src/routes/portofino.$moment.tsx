@@ -274,6 +274,7 @@ import { findResortEditLook } from "@/data/resortEditLooks";
 // permanent visual for the Pool Lounging moment and must not be replaced
 // when product links, styling, or layout change.
 import poolLoungingEditorial from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
+import longLunchEditorial from "@/assets/uploads/portofino/long-lunch-pale-blue-harbor.jpg.asset.json";
 
 const momentQuery = (slug: string) =>
   queryOptions({
