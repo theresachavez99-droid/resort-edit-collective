@@ -879,6 +879,65 @@ const MOMENT_COMPLETE_LOOK: Record<string, string> = {
  * usable http(s) retailer URL — `isUsableShopUrl` still gates rendering.
  */
 const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
+  "long-lunch": [
+    {
+      slotLabel: "The Look",
+      category: "Dress",
+      brand: "L'AGENCE",
+      title: "Rima Belted Front Zip Midi Dress",
+      price: "$525",
+      url: "https://www.nordstrom.com/s/lagence-rima-belted-front-zip-midi-dress/8005286",
+      image: "",
+    },
+    {
+      slotLabel: "Shoes",
+      category: "Shoe",
+      brand: "Aquazzura",
+      title: "So Nude 50 Leather Sandals — Tan",
+      url: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/mid-heel/so-nude-50-leather-sandals/1647597331686929",
+      image: "",
+    },
+    {
+      slotLabel: "Bag",
+      category: "Bag",
+      brand: "Dragon Diffusion",
+      title: "Santa Croce Woven Leather Tote — Tan",
+      url: "https://www.dragondiffusion.com/collections/all/products/santa-croce-tan",
+      image: "",
+    },
+    {
+      slotLabel: "Sunglasses",
+      category: "Sunglasses",
+      brand: "CELINE",
+      title: "Triomphe Cat-Eye Sunglasses — Champagne Crystal",
+      url: "https://www.neimanmarcus.com/p/celine-triomphe-cat-eye-sunglasses-prod284390071",
+      image: "",
+    },
+    {
+      slotLabel: "Earrings",
+      category: "Earrings",
+      brand: "Persée",
+      title: "18-karat Gold Diamond Hoop Earrings",
+      url: "https://www.net-a-porter.com/en-us/shop/product/persee/jewelry-and-watches/hoop-earrings/18-karat-gold-diamond-hoop-earrings/46376663163019982",
+      image: "",
+    },
+    {
+      slotLabel: "Bracelet",
+      category: "Bracelet",
+      brand: "Persée",
+      title: "Floating 18-karat Gold Diamond Bracelet",
+      url: "https://www.net-a-porter.com/en-us/shop/product/persee/jewelry-and-watches/fine-bracelets/floating-18-karat-gold-diamond-bracelet/46376663163019984",
+      image: "",
+    },
+    {
+      slotLabel: "Ring",
+      category: "Ring",
+      brand: "Persée",
+      title: "Floating 18-karat Gold Diamond Ring",
+      url: "https://www.net-a-porter.com/en-us/shop/product/persee/jewelry-and-watches/stone-rings/floating-18-karat-gold-diamond-ring/46376663163019978",
+      image: "",
+    },
+  ],
   "pool-lounging": [
     {
       slotLabel: "The Look",
