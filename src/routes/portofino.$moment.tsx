@@ -27,7 +27,7 @@ import rivieraDinnerLeafLaceImage from "@/assets/uploads/lilla/lilla-riviera-din
 import poolLoungingWaveKnitImage from "@/assets/uploads/lilla/lilla-pool-lounging-white-wave-knit.jpg.asset.json";
 import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch-starfruit-silk.jpg.asset.json";
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
-import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon.jpg.asset.json";
+import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 
 /**
  * Additional page-local editorial-reference cards appended to the "More
@@ -603,7 +603,7 @@ import { findResortEditLook } from "@/data/resortEditLooks";
 // permanent visual for the Pool Lounging moment and must not be replaced
 // when product links, styling, or layout change.
 import poolLoungingEditorial from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
-import longLunchEditorial from "@/assets/uploads/portofino/long-lunch-yellow-dress-harbor-v2.png.asset.json";
+import longLunchEditorial from "@/assets/uploads/portofino/long-lunch-yellow-dress-harbor-v3.png.asset.json";
 
 const momentQuery = (slug: string) =>
   queryOptions({
