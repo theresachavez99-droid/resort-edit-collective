@@ -28,8 +28,8 @@ import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
-import arrivalPiazzaIvoryImage from "@/assets/uploads/lilla/lilla-arrival-piazza-in-ivory.jpg.asset.json";
-import arrivalCobaltCobblestonesImage from "@/assets/uploads/lilla/lilla-arrival-cobalt-on-the-cobblestones.jpg.asset.json";
+import arrivalPiazzaIvoryImage from "@/assets/uploads/lilla/lilla-arrival-piazza-in-ivory-v2.jpg.asset.json";
+import arrivalWellsAtHarborImage from "@/assets/uploads/lilla/lilla-arrival-wells-at-the-harbor.jpg.asset.json";
 
 /**
  * Additional page-local editorial-reference cards appended to the "More
@@ -72,42 +72,42 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
       key: "piazza-in-ivory",
       title: "Piazza in Ivory",
       caption:
-        "Polished ivory silk separates for the first walk to the piazzetta — a fluid shell, wide-leg trousers and one small tan leather tote.",
+        "An ivory silk blouse tucked into fluid ivory wide-leg trousers — tan structured leather and one small travel case for the first walk to the piazzetta.",
       image: arrivalPiazzaIvoryImage.url,
-      alt: "Lilla arriving on the Portofino harbor cobblestones in an ivory silk sleeveless shell and fluid ivory wide-leg trousers, carrying a small tan leather structured tote with a tan leather weekender at her feet, in ivory low block-heel slingbacks with dark rectangular sunglasses.",
+      alt: "Lilla arriving on the Portofino harbor cobblestones in a soft round-neck ivory silk blouse with short cap sleeves, tucked into fluid ivory stretch-suiting wide-leg trousers, carrying a small tan-leather structured top-handle bag with a compact tan travel case at her feet, wearing ivory low block-heel ankle-strap sandals and dark rectangular acetate sunglasses perched on her head.",
       reference: {
-        slot: "Reference Top",
+        slot: "Hero Piece · Top",
         brand: "L'AGENCE",
-        name: "Bianca Silk Blouse",
+        name: "Ellah Silk Blouse",
         color: "Ivory",
-        price: "$395",
-        retailer: "Bloomingdale's",
-        url: "https://www.bloomingdales.com/shop/product/lagence-bianca-silk-blouse?ID=3707554",
+        price: "$335",
+        retailer: "L'AGENCE",
+        url: "https://lagence.com/products/ellah-silk-blouse-ivory",
       },
       shop: {
         stylingNote:
-          "Tonal ivory silk head-to-toe with warm tan leather and quiet gold — a chic check-in, not airport basics.",
+          "Tonal ivory head-to-toe with warm tan leather and quiet gold — a polished check-in, not airport basics.",
         products: [
           {
             slot: "Hero Piece · Trousers",
             brand: "L'AGENCE",
-            name: "Pilar Wide-Leg Pants — Ivory",
+            name: "Pilar Pants — Ivory (fluid stretch-suiting wide-leg)",
             price: "$475",
             url: "https://www.bloomingdales.com/shop/product/lagence-pilar-pants?ID=5207763&swatchColor=Ivory",
           },
           {
             slot: "Shoes",
             brand: "Aquazzura",
-            name: "Love Link 50 Leather Slingback — Cream",
-            price: "$795",
-            url: "https://www.aquazzura.com/us/love-link-slingback-50-cream-leather-lovmidp0-nap-crm.html",
+            name: "So Divine Sandal 85 — White",
+            price: "$775",
+            url: "https://www.aquazzura.com/gb_en/so-divine-sandal-85-white-dvemidbr-sat-fff",
           },
           {
             slot: "Bag",
             brand: "DeMellier",
-            name: "The Midi Venice — Deep Toffee Smooth",
-            price: "$495",
-            url: "https://www.demellierlondon.com/products/the-midi-venice-deep-toffee-smooth",
+            name: "The Midi New York — Tan Small Grain, Ecru Stitching",
+            price: "$595",
+            url: "https://demellierlondon.com/products/the-midi-new-york-tan-small-grain-ecru-stitching",
           },
           {
             slot: "Sunglasses",
@@ -119,53 +119,53 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
           {
             slot: "Earrings",
             brand: "Jenny Bird",
-            name: "Mini Tome Hoop Earrings — High Polish Gold",
-            price: "$128",
-            url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
+            name: "Nouveaux Puff Earrings — High Polish Gold",
+            price: "$138",
+            url: "https://jenny-bird.com/pages/nouveaux-puffs",
           },
           {
             slot: "Bracelet",
             brand: "EF Collection",
-            name: "14K Yellow Gold Lola Open Mini Chain Link Bracelet",
-            price: "$625",
-            url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-lola-open-mini-chain-link-bracelet?ID=4992610",
+            name: "14K Yellow Gold Mini Lola Chain Bracelet",
+            price: "$795",
+            url: "https://www.efcollection.com/products/mini-lola-chain-bracelet",
           },
         ],
       },
     },
     {
-      key: "cobalt-on-the-cobblestones",
-      title: "Cobalt on the Cobblestones",
+      key: "wells-at-the-harbor",
+      title: "Wells at the Harbor",
       caption:
-        "A fluid cobalt silk-crepe midi with a defined waist, tan leather slingbacks and a small crossbody for the first turn along the harbor.",
-      image: arrivalCobaltCobblestonesImage.url,
-      alt: "Lilla walking the Portofino harbor promenade in a fluid cobalt-blue silk-crepe midi dress with a defined waist and cap sleeves, tan leather slingback block heels, a small tan leather crossbody and dark rectangular sunglasses.",
+        "STAUD's Wells midi in polished navy cotton poplin — a fitted-waist scoop-neck dress worn with tan suede block heels and a small camel crossbody for the first turn along the harbor.",
+      image: arrivalWellsAtHarborImage.url,
+      alt: "Lilla walking the Portofino harbor promenade in the STAUD Wells navy stretch cotton poplin midi dress — sleeveless with a scoop neckline, corset-style seaming through a fitted waist and a fluted a-line skirt — with tan suede block-heel open-toe sandals, a small camel-textured leather crossbody and dark rectangular acetate sunglasses.",
       reference: {
-        slot: "Reference Dress",
+        slot: "Hero Piece · Dress",
         brand: "STAUD",
-        name: "Wells Dress",
-        color: "Cobalt",
-        price: "$395",
-        retailer: "Shopbop",
-        url: "https://www.shopbop.com/wells-dress-staud/vp/v=1/1550316872.htm",
+        name: "Wells Dress (stretch cotton poplin)",
+        color: "Navy",
+        price: "$285",
+        retailer: "STAUD",
+        url: "https://staud.clothing/products/wells-dress-navy-1",
       },
       shop: {
         stylingNote:
-          "One confident Mediterranean color, one clean tan leather line and quiet gold — no necklace competing with the neckline.",
+          "One confident navy silhouette in crisp cotton poplin, one clean tan-leather line and quiet gold — no necklace competing with the scoop neckline.",
         products: [
           {
             slot: "Shoes",
-            brand: "Aquazzura",
-            name: "Divine 50 Leather Slingback — Tan",
-            price: "$850",
-            url: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/mid-heel/divine-50-leather-slingback-pumps/1647597326961147",
+            brand: "STAUD",
+            name: "Sloane Heel — Tan Suede",
+            price: "$350",
+            url: "https://staud.clothing/products/sloane-heel-tan-suede",
           },
           {
             slot: "Bag",
             brand: "Polène",
             name: "Numéro Neuf Mini — Camel Textured",
-            price: "$530",
-            url: "https://en.polene-paris.com/products/numero-neuf-mini-camel-textured",
+            price: "$540",
+            url: "https://eng.polene-paris.com/products/numero-neuf-mini-textured-camel",
           },
           {
             slot: "Sunglasses",
@@ -176,17 +176,17 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
           },
           {
             slot: "Earrings",
-            brand: "Missoma",
-            name: "Small Chubby Hoop Earrings — 18ct Gold Plated",
-            price: "$99",
-            url: "https://www.missoma.com/products/small-chubby-hoop-earrings-18ct-gold-plated-vermeil",
+            brand: "Jenny Bird",
+            name: "Nouveaux Puff Earrings — High Polish Gold",
+            price: "$138",
+            url: "https://jenny-bird.com/pages/nouveaux-puffs",
           },
           {
             slot: "Bracelet",
-            brand: "Jenny Bird",
-            name: "Ola Arm Cuff — High Polish Gold",
-            price: "$138",
-            url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
+            brand: "EF Collection",
+            name: "14K Yellow Gold Mini Lola Chain Bracelet",
+            price: "$795",
+            url: "https://www.efcollection.com/products/mini-lola-chain-bracelet",
           },
         ],
       },
