@@ -225,6 +225,66 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
       },
     },
   ],
+  "exploring-the-harbor": [
+    {
+      key: "eloise-at-noon",
+      title: "Eloise at Noon",
+      caption:
+        "An ivory cotton-lace maxi, natural jute espadrilles and a small raffia crossbody for a slow walk along the pastel harbor.",
+      image: exploringHarborEloiseImage.url,
+      alt: "Lilla wearing an ivory cotton-lace maxi dress along the pastel harbor of Portofino at midday, styled with natural jute espadrille wedges, a tan raffia crossbody and delicate gold jewelry.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "SIMKHAI",
+        name: "Eloise Lace Maxi Dress",
+        color: "Ivory",
+        price: "$595",
+        retailer: "Shopbop",
+        url: "https://www.shopbop.com/eloise-lace-maxi-dress-simkhai/vp/v=1/1566292527.htm",
+      },
+      shop: {
+        stylingNote:
+          "A polished daytime harbor look — jute espadrille wedges, a small tan raffia crossbody and delicate gold jewelry echoing the photograph. No necklace layering — one fine pendant only.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "Castañer",
+            name: "Carina 80 Canvas & Jute Espadrille Wedges — Ivory",
+            price: "$225",
+            url: "https://www.net-a-porter.com/en-us/shop/product/castaner/shoes/wedge/carina-80-canvas-and-jute-wedge-espadrilles/1647597326963298",
+          },
+          {
+            slot: "Bag",
+            brand: "LOEWE",
+            name: "Paula's Ibiza Puzzle Fold Raffia Crossbody",
+            price: "$1,850",
+            url: "https://www.net-a-porter.com/en-us/shop/product/loewe/bags/tote-bags/plus-paula-s-ibiza-puzzle-fold-medium-leather-trimmed-raffia-tote/1647597333838602",
+          },
+          {
+            slot: "Necklace",
+            brand: "EF Collection",
+            name: "14K Yellow Gold Diamond Mini Disc Pendant Necklace",
+            price: "$450",
+            url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-diamond-mini-disc-pendant-necklace-16-18?ID=4992549",
+          },
+          {
+            slot: "Earrings",
+            brand: "Jenny Bird",
+            name: "Mini Tome Hoop Earrings — High Polish Gold",
+            price: "$128",
+            url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
+          },
+          {
+            slot: "Bracelet",
+            brand: "EF Collection",
+            name: "14K Yellow Gold Lola Open Mini Chain Link Bracelet",
+            price: "$625",
+            url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-lola-open-mini-chain-link-bracelet?ID=4992610",
+          },
+        ],
+      },
+    },
+  ],
 };
 
 /**
