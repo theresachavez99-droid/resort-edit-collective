@@ -23,11 +23,11 @@ import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero
 import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
 import nightcapIvorySatinImage from "@/assets/uploads/lilla/nightcap-lilla-ivory-after-dark-cami-v3-oat-trousers.jpg.asset.json";
 import nightcapBlackCapeImage from "@/assets/uploads/lilla/nightcap-lilla-black-cape.jpg.asset.json";
-import rivieraDinnerLeafLaceImage from "@/assets/uploads/lilla/lilla-riviera-dinner-ivory-leaf-lace.jpg.asset.json";
 import poolLoungingWaveKnitImage from "@/assets/uploads/lilla/lilla-pool-lounging-white-wave-knit.jpg.asset.json";
 import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch-starfruit-silk.jpg.asset.json";
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
+import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
 
 /**
  * Additional page-local editorial-reference cards appended to the "More
@@ -66,23 +66,6 @@ type ExtraEditorialCard = {
 };
 const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
   "riviera-dinner": [
-    {
-      key: "ivory-leaf-lace",
-      title: "Ivory Leaf Lace",
-      caption:
-        "Sculpted ivory lace, a clean waist and metallic evening accents above the harbor at blue hour.",
-      image: rivieraDinnerLeafLaceImage.url,
-      alt: "Lilla wearing an original fitted ivory leaf-lace evening dress on a candlelit terrace above Portofino harbor.",
-      reference: {
-        slot: "Reference Dress",
-        brand: "SIMKHAI",
-        name: "Eloise Lace Maxi Dress",
-        color: "Ivory",
-        price: "$595",
-        retailer: "Shopbop",
-        url: "https://www.shopbop.com/eloise-lace-maxi-dress-simkhai/vp/v=1/1566292527.htm",
-      },
-    },
     {
       key: "tide-at-blue-hour",
       title: "Tide at Blue Hour",
@@ -237,6 +220,66 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
             name: "Ola Arm Cuff — High Polish Gold",
             price: "$138",
             url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
+          },
+        ],
+      },
+    },
+  ],
+  "exploring-the-harbor": [
+    {
+      key: "eloise-at-noon",
+      title: "Eloise at Noon",
+      caption:
+        "An ivory cotton-lace maxi, natural jute espadrilles and a small raffia crossbody for a slow walk along the pastel harbor.",
+      image: exploringHarborEloiseImage.url,
+      alt: "Lilla wearing an ivory cotton-lace maxi dress along the pastel harbor of Portofino at midday, styled with natural jute espadrille wedges, a tan raffia crossbody and delicate gold jewelry.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "SIMKHAI",
+        name: "Eloise Lace Maxi Dress",
+        color: "Ivory",
+        price: "$595",
+        retailer: "Shopbop",
+        url: "https://www.shopbop.com/eloise-lace-maxi-dress-simkhai/vp/v=1/1566292527.htm",
+      },
+      shop: {
+        stylingNote:
+          "A polished daytime harbor look — jute espadrille wedges, a small tan raffia crossbody and delicate gold jewelry echoing the photograph. No necklace layering — one fine pendant only.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "Castañer",
+            name: "Carina 80 Canvas & Jute Espadrille Wedges — Ivory",
+            price: "$225",
+            url: "https://www.net-a-porter.com/en-us/shop/product/castaner/shoes/wedge/carina-80-canvas-and-jute-wedge-espadrilles/1647597326963298",
+          },
+          {
+            slot: "Bag",
+            brand: "LOEWE",
+            name: "Paula's Ibiza Puzzle Fold Raffia Crossbody",
+            price: "$1,850",
+            url: "https://www.net-a-porter.com/en-us/shop/product/loewe/bags/tote-bags/plus-paula-s-ibiza-puzzle-fold-medium-leather-trimmed-raffia-tote/1647597333838602",
+          },
+          {
+            slot: "Necklace",
+            brand: "EF Collection",
+            name: "14K Yellow Gold Diamond Mini Disc Pendant Necklace",
+            price: "$450",
+            url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-diamond-mini-disc-pendant-necklace-16-18?ID=4992549",
+          },
+          {
+            slot: "Earrings",
+            brand: "Jenny Bird",
+            name: "Mini Tome Hoop Earrings — High Polish Gold",
+            price: "$128",
+            url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
+          },
+          {
+            slot: "Bracelet",
+            brand: "EF Collection",
+            name: "14K Yellow Gold Lola Open Mini Chain Link Bracelet",
+            price: "$625",
+            url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-lola-open-mini-chain-link-bracelet?ID=4992610",
           },
         ],
       },
