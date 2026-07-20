@@ -28,6 +28,8 @@ import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
+import arrivalPiazzaIvoryImage from "@/assets/uploads/lilla/lilla-arrival-piazza-in-ivory.jpg.asset.json";
+import arrivalCobaltCobblestonesImage from "@/assets/uploads/lilla/lilla-arrival-cobalt-on-the-cobblestones.jpg.asset.json";
 
 /**
  * Additional page-local editorial-reference cards appended to the "More
@@ -65,6 +67,131 @@ type ExtraEditorialCard = {
   };
 };
 const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
+  "arrival": [
+    {
+      key: "piazza-in-ivory",
+      title: "Piazza in Ivory",
+      caption:
+        "Polished ivory silk separates for the first walk to the piazzetta — a fluid shell, wide-leg trousers and one small tan leather tote.",
+      image: arrivalPiazzaIvoryImage.url,
+      alt: "Lilla arriving on the Portofino harbor cobblestones in an ivory silk sleeveless shell and fluid ivory wide-leg trousers, carrying a small tan leather structured tote with a tan leather weekender at her feet, in ivory low block-heel slingbacks with dark rectangular sunglasses.",
+      reference: {
+        slot: "Reference Top",
+        brand: "L'AGENCE",
+        name: "Bianca Silk Blouse",
+        color: "Ivory",
+        price: "$395",
+        retailer: "Bloomingdale's",
+        url: "https://www.bloomingdales.com/shop/product/lagence-bianca-silk-blouse?ID=3707554",
+      },
+      shop: {
+        stylingNote:
+          "Tonal ivory silk head-to-toe with warm tan leather and quiet gold — a chic check-in, not airport basics.",
+        products: [
+          {
+            slot: "Hero Piece · Trousers",
+            brand: "L'AGENCE",
+            name: "Pilar Wide-Leg Pants — Ivory",
+            price: "$475",
+            url: "https://www.bloomingdales.com/shop/product/lagence-pilar-pants?ID=5207763&swatchColor=Ivory",
+          },
+          {
+            slot: "Shoes",
+            brand: "Aquazzura",
+            name: "Love Link 50 Leather Slingback — Cream",
+            price: "$795",
+            url: "https://www.aquazzura.com/us/love-link-slingback-50-cream-leather-lovmidp0-nap-crm.html",
+          },
+          {
+            slot: "Bag",
+            brand: "DeMellier",
+            name: "The Midi Venice — Deep Toffee Smooth",
+            price: "$495",
+            url: "https://www.demellierlondon.com/products/the-midi-venice-deep-toffee-smooth",
+          },
+          {
+            slot: "Sunglasses",
+            brand: "CELINE",
+            name: "Triomphe 01 Sunglasses — Black Acetate",
+            price: "$490",
+            url: "https://www.celine.com/en-us/celine-shop-women/accessories/sunglasses/triomphe-01-sunglasses-in-acetate-4S194CPLB.38NO.html",
+          },
+          {
+            slot: "Earrings",
+            brand: "Jenny Bird",
+            name: "Mini Tome Hoop Earrings — High Polish Gold",
+            price: "$128",
+            url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
+          },
+          {
+            slot: "Bracelet",
+            brand: "EF Collection",
+            name: "14K Yellow Gold Lola Open Mini Chain Link Bracelet",
+            price: "$625",
+            url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-lola-open-mini-chain-link-bracelet?ID=4992610",
+          },
+        ],
+      },
+    },
+    {
+      key: "cobalt-on-the-cobblestones",
+      title: "Cobalt on the Cobblestones",
+      caption:
+        "A fluid cobalt silk-crepe midi with a defined waist, tan leather slingbacks and a small crossbody for the first turn along the harbor.",
+      image: arrivalCobaltCobblestonesImage.url,
+      alt: "Lilla walking the Portofino harbor promenade in a fluid cobalt-blue silk-crepe midi dress with a defined waist and cap sleeves, tan leather slingback block heels, a small tan leather crossbody and dark rectangular sunglasses.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "STAUD",
+        name: "Wells Dress",
+        color: "Cobalt",
+        price: "$395",
+        retailer: "Shopbop",
+        url: "https://www.shopbop.com/wells-dress-staud/vp/v=1/1550316872.htm",
+      },
+      shop: {
+        stylingNote:
+          "One confident Mediterranean color, one clean tan leather line and quiet gold — no necklace competing with the neckline.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "Aquazzura",
+            name: "Divine 50 Leather Slingback — Tan",
+            price: "$850",
+            url: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/mid-heel/divine-50-leather-slingback-pumps/1647597326961147",
+          },
+          {
+            slot: "Bag",
+            brand: "Polène",
+            name: "Numéro Neuf Mini — Camel Textured",
+            price: "$530",
+            url: "https://en.polene-paris.com/products/numero-neuf-mini-camel-textured",
+          },
+          {
+            slot: "Sunglasses",
+            brand: "CELINE",
+            name: "Triomphe 01 Sunglasses — Black Acetate",
+            price: "$490",
+            url: "https://www.celine.com/en-us/celine-shop-women/accessories/sunglasses/triomphe-01-sunglasses-in-acetate-4S194CPLB.38NO.html",
+          },
+          {
+            slot: "Earrings",
+            brand: "Missoma",
+            name: "Small Chubby Hoop Earrings — 18ct Gold Plated",
+            price: "$99",
+            url: "https://www.missoma.com/products/small-chubby-hoop-earrings-18ct-gold-plated-vermeil",
+          },
+          {
+            slot: "Bracelet",
+            brand: "Jenny Bird",
+            name: "Ola Arm Cuff — High Polish Gold",
+            price: "$138",
+            url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
+          },
+        ],
+      },
+    },
+  ],
   "riviera-dinner": [
     {
       key: "tide-at-blue-hour",
