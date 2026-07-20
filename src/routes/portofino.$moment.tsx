@@ -26,6 +26,8 @@ import nightcapBlackCapeImage from "@/assets/uploads/lilla/nightcap-lilla-black-
 import rivieraDinnerLeafLaceImage from "@/assets/uploads/lilla/lilla-riviera-dinner-ivory-leaf-lace.jpg.asset.json";
 import poolLoungingWaveKnitImage from "@/assets/uploads/lilla/lilla-pool-lounging-white-wave-knit.jpg.asset.json";
 import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch-starfruit-silk.jpg.asset.json";
+import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
+import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon.jpg.asset.json";
 
 /**
  * Additional page-local editorial-reference cards appended to the "More
@@ -49,6 +51,18 @@ type ExtraEditorialCard = {
     url: string;
     slot?: string;
   };
+  /** Optional expanded complete-look shop rows rendered beneath the
+   *  reference product via an inline "SHOP COMPLETE LOOK" expander. */
+  shop?: {
+    stylingNote?: string;
+    products: Array<{
+      slot: string;
+      brand: string;
+      name: string;
+      price?: string;
+      url: string;
+    }>;
+  };
 };
 const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
   "riviera-dinner": [
@@ -67,6 +81,57 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
         price: "$595",
         retailer: "Shopbop",
         url: "https://www.shopbop.com/eloise-lace-maxi-dress-simkhai/vp/v=1/1566292527.htm",
+      },
+    },
+    {
+      key: "tide-at-blue-hour",
+      title: "Tide at Blue Hour",
+      caption:
+        "A deep tide-blue off-the-shoulder silhouette, sculpted at the waist and paired with sleek evening heels and brushed gold above the harbor at twilight.",
+      image: rivieraDinnerTideBlueHourImage.url,
+      alt: "Lilla in an original off-the-shoulder deep-blue silk maxi on a candlelit stone terrace over Portofino harbor at blue hour, with gold cuff, gold drop earrings and sleek black evening sandals.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "Cult Gaia",
+        name: "Rivoli Dress",
+        color: "Tide",
+        price: "$798",
+        retailer: "Bloomingdale's",
+        url: "https://www.bloomingdales.com/shop/product/cult-gaia-rivoli-dress?ID=6135592",
+      },
+      shop: {
+        stylingNote:
+          "Nighttime heels, a sculptural gold cuff and drop earrings — no ring competing with the neckline.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "Aquazzura",
+            name: "So Nude 105 Leather Sandals — Black",
+            price: "$795",
+            url: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/high-heel/so-nude-105-leather-sandals/1647597331686937",
+          },
+          {
+            slot: "Bag",
+            brand: "Cult Gaia",
+            name: "Hera Nano Acrylic Clutch — Gold",
+            price: "$298",
+            url: "https://www.cultgaia.com/products/hera-nano-acrylic-clutch-gold",
+          },
+          {
+            slot: "Cuff",
+            brand: "Jenny Bird",
+            name: "Ola Arm Cuff — High Polish Gold",
+            price: "$138",
+            url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
+          },
+          {
+            slot: "Earrings",
+            brand: "Jennifer Behr",
+            name: "Mireille Gold Drop Earrings",
+            price: "$395",
+            url: "https://jenniferbehr.com/products/mireille-earrings-gold",
+          },
+        ],
       },
     },
   ],
@@ -105,6 +170,75 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
         price: "$267 (was $445)",
         retailer: "Bloomingdale's",
         url: "https://www.bloomingdales.com/shop/product/cinq-a-sept-jerome-dress?ID=5926128&swatchColor=Starfruit",
+      },
+      shop: {
+        products: [
+          {
+            slot: "Bag",
+            brand: "Veronica Beard",
+            name: "Anchor Raffia Effect Clutch",
+            price: "$298",
+            url: "https://www.bloomingdales.com/shop/product/veronica-beard-anchor-raffia-effect-clutch?ID=6002151",
+          },
+        ],
+      },
+    },
+    {
+      key: "white-eyelet-at-noon",
+      title: "White Eyelet at Noon",
+      caption:
+        "A fitted white eyelet midi, warm raffia and tan leather for a slow, sunlit lunch along the Portofino quay.",
+      image: longLunchWhiteEyeletImage.url,
+      alt: "Lilla in an original fitted white cotton-eyelet midi at a sunlit Portofino harbor lunch, styled with a natural raffia tote, tan leather slide sandals and gold hoops.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "Cara Cara",
+        name: "Calypso Dress",
+        color: "White",
+        price: "$595",
+        retailer: "Revolve",
+        url: "https://www.revolve.com/calypso-dress/dp/CCAR-WD61/",
+      },
+      shop: {
+        stylingNote:
+          "Daytime resort accents — a natural raffia tote, tan leather slides and a slim gold cuff.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "Ancient Greek Sandals",
+            name: "Eleftheria Leather Slides — Natural Tan",
+            price: "$275",
+            url: "https://www.net-a-porter.com/en-us/shop/product/ancient-greek-sandals/shoes/flat-sandals/eleftheria-leather-slides/1647597326961148",
+          },
+          {
+            slot: "Bag",
+            brand: "Dragon Diffusion",
+            name: "Santa Croce Woven Leather Tote — Tan",
+            price: "$620",
+            url: "https://www.dragondiffusion.com/collections/all/products/santa-croce-tan",
+          },
+          {
+            slot: "Sunglasses",
+            brand: "CELINE",
+            name: "Triomphe Cat-Eye Sunglasses — Champagne Crystal",
+            price: "$490",
+            url: "https://www.neimanmarcus.com/p/celine-triomphe-cat-eye-sunglasses-prod284390071",
+          },
+          {
+            slot: "Earrings",
+            brand: "Jenny Bird",
+            name: "Mini Tome Hoop Earrings — High Polish Gold",
+            price: "$128",
+            url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
+          },
+          {
+            slot: "Cuff",
+            brand: "Jenny Bird",
+            name: "Ola Arm Cuff — High Polish Gold",
+            price: "$138",
+            url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
+          },
+        ],
       },
     },
   ],
@@ -1123,6 +1257,16 @@ const MOMENT_COMPLETE_LOOK: Record<string, string> = {
  * usable http(s) retailer URL — `isUsableShopUrl` still gates rendering.
  */
 const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
+  "beach-club": [
+    {
+      slotLabel: "The Look",
+      category: "Dress",
+      brand: "Poupette St Barth",
+      title: "Estelle Printed Satin Minidress",
+      url: "https://www.mytheresa.com/us/en/women/poupette-st-barth-estelle-printed-satin-minidress-multicoloured-p01042379",
+      image: "",
+    },
+  ],
   "long-lunch": [
     {
       slotLabel: "The Look",
@@ -2076,7 +2220,91 @@ function ExtraEditorialReferenceCard({ card }: { card: ExtraEditorialCard }) {
             </div>
           </a>
         </div>
+        {card.shop && card.shop.products.length > 0 && (
+          <ExtraCompleteLookExpander title={card.title} shop={card.shop} />
+        )}
       </div>
     </article>
+  );
+}
+
+/**
+ * Inline expander that reveals a complete-look shopping list beneath an
+ * editorial reference card. Text-only rows — no fabricated thumbnails —
+ * matching the Nightcap expander pattern.
+ */
+function ExtraCompleteLookExpander({
+  title,
+  shop,
+}: {
+  title: string;
+  shop: NonNullable<ExtraEditorialCard["shop"]>;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-5 py-2.5"
+      >
+        {open ? "HIDE COMPLETE LOOK" : "SHOP COMPLETE LOOK"}
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+      {open && (
+        <div className="mt-6 border-t border-border/50 pt-6">
+          <ul className="divide-y divide-border/40">
+            {shop.products.map((p) => (
+              <li key={p.url} className="py-4">
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  onClick={() =>
+                    trackOutbound({
+                      brand: p.brand,
+                      item: p.name,
+                      href: p.url,
+                      category: p.slot,
+                    })
+                  }
+                  className="group flex items-baseline justify-between gap-4"
+                >
+                  <div className="min-w-0">
+                    <div className="eyebrow text-[0.55rem] tracking-[0.34em] text-gold">
+                      {p.slot}
+                    </div>
+                    <div className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink mt-1.5">
+                      {p.brand}
+                    </div>
+                    <div className="font-serif italic text-[0.95rem] text-ink/85 leading-snug mt-1">
+                      {p.name}
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    {p.price && (
+                      <div className="font-serif text-gold text-[0.95rem]">{p.price}</div>
+                    )}
+                    <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
+                      SHOP →
+                    </div>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {shop.stylingNote && (
+            <p className="font-serif italic text-[0.85rem] text-ink/60 mt-6 leading-relaxed">
+              {shop.stylingNote}
+            </p>
+          )}
+          <p className="sr-only">Complete look for {title}</p>
+        </div>
+      )}
+    </div>
   );
 }
