@@ -17,16 +17,16 @@ export type BrandCategory = {
 const b = (
   name: string,
   blurb?: string,
-  extras?: { bestFor?: string[]; resortEditLoves?: string[] },
+  extras?: { bestFor?: string[]; resortEditLoves?: string[]; slug?: string },
 ): Brand => ({
   name,
-  slug: name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, ""),
+  slug:
+    extras?.slug ??
+    name
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, ""),
   blurb,
   ...(extras?.bestFor ? { bestFor: extras.bestFor } : {}),
   ...(extras?.resortEditLoves ? { resortEditLoves: extras.resortEditLoves } : {}),
@@ -156,7 +156,7 @@ export const brandCategories: BrandCategory[] = [
       b("Mestiza", "Manila-rooted, hand-finished occasion."),
       b("Kivari", "Vintage-inspired Australian romance."),
       b("Rhode", "Linen-forward New York for hot-weather travel.", { resortEditLoves: ["Linen separates"] }),
-      b("Cinq à Sept", "Feminine cocktail silhouettes and saturated color for the dressier side of resort.", { bestFor: ["Long Lunch", "Riviera Dinner"] }),
+      b("Cinq à Sept", "Feminine cocktail silhouettes and saturated color for the dressier side of resort.", { bestFor: ["Long Lunch", "Riviera Dinner"], slug: "cinq-a-sept" }),
       b("Veronica Beard", "Polished tailoring and versatile separates for travel days, town lunches and cooler evenings.", { bestFor: ["Arrival", "Long Lunch"], resortEditLoves: ["Tailored jackets", "Silk blouses"] }),
     ],
   },
