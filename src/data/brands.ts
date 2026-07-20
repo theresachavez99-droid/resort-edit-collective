@@ -91,7 +91,7 @@ export const brandCategories: BrandCategory[] = [
       b("Cala de la Cruz", "Sun-bleached linen, Ibiza to Capri.", { resortEditLoves: ["Linen dresses"] }),
       b("Hannah Artwear", "Collectible silk caftans, artist prints.", { resortEditLoves: ["Silk caftans", "Artist prints"] }),
       b("Charo Ruiz Ibiza", "Ibiza-made guipure lace, the white-dress authority.", { resortEditLoves: ["Guipure lace", "White dresses"] }),
-      b("L'AGENCE", "Elevated tailoring and sophisticated separates that travel from arrival to harbor lunches to evenings in town.", { bestFor: ["Arrival", "Harbor Aperitivo", "Long Lunch"], resortEditLoves: ["Linen trousers", "White tailoring", "Silk blouses"] }),
+      b("L'AGENCE", "Polished silk separates, fitted evening dresses and sharp tailoring for dinner-to-nightcap dressing.", { bestFor: ["Riviera Dinner", "Nightcap", "Long Lunch"], resortEditLoves: ["Silk separates", "Fitted evening dresses", "Sharp tailoring"] }),
     ],
   },
   {
