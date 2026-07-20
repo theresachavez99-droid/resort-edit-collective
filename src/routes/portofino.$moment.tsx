@@ -28,6 +28,7 @@ import poolLoungingWaveKnitImage from "@/assets/uploads/lilla/lilla-pool-loungin
 import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch-starfruit-silk.jpg.asset.json";
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
+import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
 
 /**
  * Additional page-local editorial-reference cards appended to the "More
@@ -66,23 +67,6 @@ type ExtraEditorialCard = {
 };
 const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
   "riviera-dinner": [
-    {
-      key: "ivory-leaf-lace",
-      title: "Ivory Leaf Lace",
-      caption:
-        "Sculpted ivory lace, a clean waist and metallic evening accents above the harbor at blue hour.",
-      image: rivieraDinnerLeafLaceImage.url,
-      alt: "Lilla wearing an original fitted ivory leaf-lace evening dress on a candlelit terrace above Portofino harbor.",
-      reference: {
-        slot: "Reference Dress",
-        brand: "SIMKHAI",
-        name: "Eloise Lace Maxi Dress",
-        color: "Ivory",
-        price: "$595",
-        retailer: "Shopbop",
-        url: "https://www.shopbop.com/eloise-lace-maxi-dress-simkhai/vp/v=1/1566292527.htm",
-      },
-    },
     {
       key: "tide-at-blue-hour",
       title: "Tide at Blue Hour",
