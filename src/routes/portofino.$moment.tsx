@@ -738,6 +738,9 @@ function MomentPage() {
                     <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed">
                       {c.caption}
                     </p>
+                    {c.shop && (
+                      <NightcapShopExpander card={c} shop={c.shop} />
+                    )}
                   </div>
                 </article>
               ))}
