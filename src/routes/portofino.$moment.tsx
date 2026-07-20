@@ -733,7 +733,7 @@ function MomentPage() {
                   <div className="relative aspect-[4/5] overflow-hidden bg-cream">
                     <img
                       src={c.image}
-                      alt={`${c.title} — additional Portofino nightcap look`}
+                      alt={c.alt}
                       loading="lazy"
                       className={`absolute inset-0 h-full w-full ${c.imageClassName ?? "object-cover object-center"}`}
                     />
