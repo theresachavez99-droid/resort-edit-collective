@@ -28,7 +28,7 @@ import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
-import arrivalPiazzaIvoryImage from "@/assets/uploads/lilla/lilla-arrival-piazza-in-ivory-v2.jpg.asset.json";
+import arrivalPiazzaIvoryImage from "@/assets/uploads/lilla/lilla-arrival-piazza-in-ivory-v3.jpg.asset.json";
 import arrivalWellsAtHarborImage from "@/assets/uploads/lilla/lilla-arrival-wells-at-the-harbor.jpg.asset.json";
 
 /**
@@ -74,7 +74,7 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
       caption:
         "An ivory silk blouse tucked into fluid ivory wide-leg trousers — tan structured leather and one small travel case for the first walk to the piazzetta.",
       image: arrivalPiazzaIvoryImage.url,
-      alt: "Lilla arriving on the Portofino harbor cobblestones in a soft round-neck ivory silk blouse with short cap sleeves, tucked into fluid ivory stretch-suiting wide-leg trousers, carrying a small tan-leather structured top-handle bag with a compact tan travel case at her feet, wearing ivory low block-heel ankle-strap sandals and dark rectangular acetate sunglasses perched on her head.",
+      alt: "Lilla arriving on the Portofino harbor cobblestones in a soft round-neck ivory silk blouse with short cap sleeves, tucked into fluid ivory stretch-suiting wide-leg trousers, carrying a small tan-leather structured top-handle bag with a compact tan travel case at her feet, wearing cream leather pointed-toe slingback pumps on a low block heel with dark rectangular acetate sunglasses perched on her head.",
       reference: {
         slot: "Hero Piece · Top",
         brand: "L'AGENCE",
@@ -98,9 +98,9 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
           {
             slot: "Shoes",
             brand: "Aquazzura",
-            name: "So Divine Sandal 85 — White",
-            price: "$775",
-            url: "https://www.aquazzura.com/gb_en/so-divine-sandal-85-white-dvemidbr-sat-fff",
+            name: "Love Link 50 Leather Slingback — Cream",
+            price: "$795",
+            url: "https://www.aquazzura.com/us/love-link-slingback-50-cream-leather-lovmidp0-nap-crm.html",
           },
           {
             slot: "Bag",
