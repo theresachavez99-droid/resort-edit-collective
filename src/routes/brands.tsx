@@ -42,65 +42,51 @@ const CATEGORY_INTROS: Record<string, string> = {
   "Beyond the Riviera": "The labels that take Resort Edit beyond the Mediterranean.",
 };
 
-// Editorial tagline overrides for Founder Favorites
+// Editor's Picks — tight 8-brand founder edit (order matters).
 const FOUNDER_FAVORITE_SLUGS = [
-  "johanna-ortiz",
   "alexandra-miro",
+  "vix-paula-hermanny",
   "zimmermann",
-  "agua-by-agua-bendita",
   "la-doublej",
-  "eres",
-  "missoni",
   "loewe",
-  "hereu",
+  "melissa-odabash",
+  "sir",
   "aquazzura",
 ];
 
 const FAVORITE_TAGLINES: Record<string, string> = {
-  "johanna-ortiz": "Master of destination dressing.",
-  "alexandra-miro": "Capri-print cottons, embroidered ease.",
-  "zimmermann": "Romantic resort, unmistakably Australian.",
-  "agua-by-agua-bendita": "Embroidered Colombian craft, slow resort.",
-  "la-doublej": "Vintage Italian prints, modern cut.",
-  "eres": "The definitive luxury swim collection.",
-  "missoni": "Varese chevrons, eternal Riviera.",
-  "loewe": "Spanish raffia and sculptural leather.",
-  "hereu": "Modern Spanish artisan.",
-  "aquazzura": "Florentine heels with cinematic poise.",
+  "alexandra-miro":
+    "Glamorous swim-to-lunch dressing — flattering silhouettes and refined Mediterranean femininity.",
+  "vix-paula-hermanny":
+    "Polished Brazilian swim and beach-to-lunch separates with a grown-up ease.",
+  "zimmermann": "Romantic Australian resort that photographs beautifully by the sea.",
+  "la-doublej": "Vintage Italian prints, modern cut — Milan via Sicily.",
+  "loewe": "For Paula's Ibiza — raffia and leather bags and accessories, not the clothing.",
+  "melissa-odabash": "The Riviera swim authority — cabana-ready one-pieces and bikinis.",
+  "sir": "Australian softness, perfectly cut — dinner dresses that travel.",
+  "aquazzura": "Florentine sandals and heels with cinematic poise.",
 };
 
-// Founder hierarchy badges
+// Page-local hierarchy badges (public /brands only).
 const BRAND_BADGE: Record<string, string> = {
-  "johanna-ortiz": "Editor's Pick",
   "alexandra-miro": "Editor's Pick",
+  "vix-paula-hermanny": "Editor's Pick",
   "zimmermann": "Resort Edit Essential",
-  "agua-by-agua-bendita": "Editor's Pick",
   "la-doublej": "Mediterranean Icon",
-  "eres": "Resort Edit Essential",
-  "missoni": "Mediterranean Icon",
-  "loewe": "Mediterranean Icon",
-  "hereu": "Editor's Pick",
+  "loewe": "Paula's Ibiza — Accessories",
+  "melissa-odabash": "Resort Edit Essential",
+  "sir": "Editor's Pick",
   "aquazzura": "Resort Edit Essential",
-  "pucci": "Mediterranean Icon",
+  // Ambient category badges (no Editor's Pick treatment)
   "etro": "Mediterranean Icon",
+  "missoni": "Mediterranean Icon",
   "missoni-mare": "Mediterranean Icon",
   "emporio-sirenuse": "Mediterranean Icon",
-  "callas-milano": "Mediterranean Icon",
   "loretta-caponi": "Mediterranean Icon",
   "dolce-and-gabbana": "Mediterranean Icon",
-  "melissa-odabash": "Resort Edit Essential",
   "karla-colletto": "Resort Edit Essential",
   "oseree": "Editor's Pick",
   "matteau": "Editor's Pick",
-  "maygel-coronel": "Emerging Designer",
-  "marysia": "Emerging Designer",
-  "vix-paula-hermanny": "Emerging Designer",
-  "posse": "Emerging Designer",
-  "sir": "Editor's Pick",
-  "alemais": "Emerging Designer",
-  "borgo-de-nor": "Emerging Designer",
-  "silvia-tcherassi": "Emerging Designer",
-  "patbo": "Emerging Designer",
   "charo-ruiz-ibiza": "Mediterranean Icon",
   "l-agence": "Resort Edit Essential",
   "ancient-greek-sandals": "Resort Edit Essential",
@@ -110,21 +96,62 @@ const BRAND_BADGE: Record<string, string> = {
   "castaner": "Mediterranean Icon",
   "dragon-diffusion": "Editor's Pick",
   "cult-gaia": "Editor's Pick",
-  "heimat-atlantica": "Emerging Designer",
+  "hereu": "Editor's Pick",
   "farm-rio": "Editor's Pick",
 };
 
-// Optional founder insider notes shown beneath selected brands
+// Public founder notes — only for brands the founder truly champions.
 const FOUNDER_NOTES: Record<string, string> = {
-  "alexandra-miro": "One of our favorite destinations for Mediterranean embroidery.",
-  "callas-milano": "The first place we look for elevated linen tailoring.",
+  "alexandra-miro":
+    "One of our favorite houses for swim-to-lunch dressing — the cuts are effortlessly flattering.",
+  "vix-paula-hermanny":
+    "Brazilian swim done to a European standard — the beach-to-lunch pieces travel beautifully.",
   "zimmermann": "Consistently photographs beautifully in coastal destinations.",
-  "eres": "Quiet, sculptural, and the most discreet luxury swim on the boat.",
-  "loewe": "Worth the investment — the raffia bags we carry for years.",
+  "loewe": "For Paula's Ibiza only — the raffia and leather accessories we carry for years.",
   "ancient-greek-sandals": "We pack a pair on every Mediterranean trip.",
 };
 
-const allBrands: Array<Brand & { category: string }> = brandCategories.flatMap((c) =>
+// Page-local restrained copy overrides (leaves shared data untouched).
+const BRAND_BLURB_OVERRIDES: Record<string, string> = {
+  "pucci": "Florentine heritage — an occasional splurge, not a staple.",
+  "loewe":
+    "Paula's Ibiza accessories — raffia baskets, woven leather, and the resort bags we return to.",
+};
+
+// Slugs hidden from the public /brands page (page-local only; approvals unchanged).
+const HIDDEN_SLUGS = new Set<string>(["callas-milano"]);
+
+// Page-local re-homing: brands whose visible category on /brands differs from shared data.
+const CATEGORY_RELOCATIONS: Record<string, string> = {
+  loewe: "Accessories & Raffia",
+};
+
+function applyOverrides(brand: Brand): Brand {
+  const blurb = BRAND_BLURB_OVERRIDES[brand.slug] ?? brand.blurb;
+  return { ...brand, blurb };
+}
+
+// Build a page-local view of the brand directory: hide + relocate + override copy.
+const viewCategories: Array<{ title: string; description: string; brands: Brand[] }> =
+  brandCategories.map((cat) => {
+    const kept = cat.brands
+      .filter((b) => !HIDDEN_SLUGS.has(b.slug))
+      .filter((b) => (CATEGORY_RELOCATIONS[b.slug] ?? cat.title) === cat.title)
+      .map(applyOverrides);
+    // Add relocated arrivals
+    const relocated = brandCategories
+      .flatMap((c) => c.brands)
+      .filter(
+        (b) =>
+          CATEGORY_RELOCATIONS[b.slug] === cat.title &&
+          !HIDDEN_SLUGS.has(b.slug) &&
+          !kept.some((k) => k.slug === b.slug),
+      )
+      .map(applyOverrides);
+    return { ...cat, brands: [...kept, ...relocated] };
+  });
+
+const allBrands: Array<Brand & { category: string }> = viewCategories.flatMap((c) =>
   c.brands.map((b) => ({ ...b, category: c.title })),
 );
 
@@ -392,7 +419,7 @@ function BrandsPage() {
 
       {/* CATEGORY SECTIONS */}
       <div className="mt-8 md:mt-10 space-y-8 md:space-y-10">
-        {brandCategories.map((cat) => (
+        {viewCategories.map((cat) => (
           <CategorySection key={cat.title} category={cat} />
         ))}
       </div>
