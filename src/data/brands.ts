@@ -21,6 +21,8 @@ const b = (
 ): Brand => ({
   name,
   slug: name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/&/g, "and")
     .replace(/[^a-z0-9]+/g, "-")
@@ -91,7 +93,7 @@ export const brandCategories: BrandCategory[] = [
       b("Cala de la Cruz", "Sun-bleached linen, Ibiza to Capri.", { resortEditLoves: ["Linen dresses"] }),
       b("Hannah Artwear", "Collectible silk caftans, artist prints.", { resortEditLoves: ["Silk caftans", "Artist prints"] }),
       b("Charo Ruiz Ibiza", "Ibiza-made guipure lace, the white-dress authority.", { resortEditLoves: ["Guipure lace", "White dresses"] }),
-      b("L'AGENCE", "Elevated tailoring and sophisticated separates that travel from arrival to harbor lunches to evenings in town.", { bestFor: ["Arrival", "Harbor Aperitivo", "Long Lunch"], resortEditLoves: ["Linen trousers", "White tailoring", "Silk blouses"] }),
+      b("L'AGENCE", "Polished silk separates, fitted evening dresses and sharp tailoring for dinner-to-nightcap dressing.", { bestFor: ["Riviera Dinner", "Nightcap", "Long Lunch"], resortEditLoves: ["Silk separates", "Fitted evening dresses", "Sharp tailoring"] }),
     ],
   },
   {
@@ -154,6 +156,8 @@ export const brandCategories: BrandCategory[] = [
       b("Mestiza", "Manila-rooted, hand-finished occasion."),
       b("Kivari", "Vintage-inspired Australian romance."),
       b("Rhode", "Linen-forward New York for hot-weather travel.", { resortEditLoves: ["Linen separates"] }),
+      b("Cinq à Sept", "Feminine cocktail silhouettes and saturated color for the dressier side of resort.", { bestFor: ["Long Lunch", "Riviera Dinner"] }),
+      b("Veronica Beard", "Polished tailoring and versatile separates for travel days, town lunches and cooler evenings.", { bestFor: ["Arrival", "Long Lunch"], resortEditLoves: ["Tailored jackets", "Silk blouses"] }),
     ],
   },
 ];

@@ -23,6 +23,92 @@ import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero
 import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
 import nightcapIvorySatinImage from "@/assets/uploads/lilla/nightcap-lilla-ivory-after-dark-cami-v2.jpg.asset.json";
 import nightcapBlackCapeImage from "@/assets/uploads/lilla/nightcap-lilla-black-cape.jpg.asset.json";
+import rivieraDinnerLeafLaceImage from "@/assets/uploads/lilla/lilla-riviera-dinner-ivory-leaf-lace.jpg.asset.json";
+import poolLoungingWaveKnitImage from "@/assets/uploads/lilla/lilla-pool-lounging-white-wave-knit.jpg.asset.json";
+import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch-starfruit-silk.jpg.asset.json";
+
+/**
+ * Additional page-local editorial-reference cards appended to the "More
+ * Resort Edit Looks" grid on select moment pages. Each card carries one
+ * real reference product with a direct outbound "SHOP THE REFERENCE" link.
+ * Preserves any existing siblings and Nightcap-specific overrides.
+ */
+type ExtraEditorialCard = {
+  key: string;
+  title: string;
+  caption: string;
+  image: string;
+  alt: string;
+  imageClassName?: string;
+  reference: {
+    brand: string;
+    name: string;
+    color?: string;
+    price: string;
+    retailer: string;
+    url: string;
+    slot?: string;
+  };
+};
+const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
+  "riviera-dinner": [
+    {
+      key: "ivory-leaf-lace",
+      title: "Ivory Leaf Lace",
+      caption:
+        "Sculpted ivory lace, a clean waist and metallic evening accents above the harbor at blue hour.",
+      image: rivieraDinnerLeafLaceImage.url,
+      alt: "Lilla wearing an original fitted ivory leaf-lace evening dress on a candlelit terrace above Portofino harbor.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "SIMKHAI",
+        name: "Eloise Lace Maxi Dress",
+        color: "Ivory",
+        price: "$595",
+        retailer: "Shopbop",
+        url: "https://www.shopbop.com/eloise-lace-maxi-dress-simkhai/vp/v=1/1566292527.htm",
+      },
+    },
+  ],
+  "pool-lounging": [
+    {
+      key: "white-wave-knit",
+      title: "White Wave Knit",
+      caption:
+        "A body-skimming white open knit, a woven mini bag and bare feet between the pool and the Ligurian Sea.",
+      image: poolLoungingWaveKnitImage.url,
+      alt: "Lilla wearing an original white open-knit midi pool dress beside a cliffside Portofino pool.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "STAUD",
+        name: "Jessica Knit Dress",
+        color: "White",
+        price: "$295",
+        retailer: "Shopbop",
+        url: "https://www.shopbop.com/jessica-knit-dress-staud/vp/v=1/1530716894.htm",
+      },
+    },
+  ],
+  "long-lunch": [
+    {
+      key: "starfruit-at-lunch",
+      title: "Starfruit at Lunch",
+      caption:
+        "A vivid starfruit waist, a softly fluted midi hem and cream accessories for a long table by the harbor.",
+      image: longLunchStarfruitSilkImage.url,
+      alt: "Lilla wearing an original fitted starfruit silk-faille midi dress at a sunlit long lunch in Portofino.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "Cinq à Sept",
+        name: "Jerome Dress",
+        color: "Starfruit",
+        price: "$267 (was $445)",
+        retailer: "Bloomingdale's",
+        url: "https://www.bloomingdales.com/shop/product/cinq-a-sept-jerome-dress?ID=5926128&swatchColor=Starfruit",
+      },
+    },
+  ],
+};
 
 /**
  * Nightcap-only editorial-reference cards for the "More Resort Edit Looks"
@@ -757,7 +843,7 @@ function MomentPage() {
             </div>
           </div>
         </section>
-      ) : siblings.length > 0 && (
+      ) : (siblings.length > 0 || (MOMENT_EXTRA_EDITORIAL_CARDS[slug]?.length ?? 0) > 0) && (
         <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
             <div className="mb-6 md:mb-8 max-w-2xl">
@@ -782,6 +868,9 @@ function MomentPage() {
                     setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
                   }
                 />
+              ))}
+              {MOMENT_EXTRA_EDITORIAL_CARDS[slug]?.map((c) => (
+                <ExtraEditorialReferenceCard key={c.key} card={c} />
               ))}
             </div>
           </div>
@@ -1918,5 +2007,76 @@ function NightcapShopExpander({
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Single-reference editorial card appended to the "More Resort Edit Looks"
+ * grid on select moments. Renders the Lilla editorial image with the shared
+ * INSPIRED BY badge, the caption, and a restrained outbound "SHOP THE
+ * REFERENCE" link to the real designer product.
+ */
+function ExtraEditorialReferenceCard({ card }: { card: ExtraEditorialCard }) {
+  const r = card.reference;
+  return (
+    <article className="flex flex-col bg-ivory border border-border/40">
+      <div className="relative aspect-[4/5] overflow-hidden bg-cream">
+        <img
+          src={card.image}
+          alt={card.alt}
+          loading="lazy"
+          className={`absolute inset-0 h-full w-full ${card.imageClassName ?? "object-cover object-center"}`}
+        />
+        <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+          INSPIRED BY
+        </span>
+      </div>
+      <div className="p-6 md:p-8 flex flex-col gap-3">
+        <h4 className="font-display text-2xl md:text-[1.75rem] tracking-[0.04em] text-ink leading-[1.15]">
+          {card.title}
+        </h4>
+        <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed">
+          {card.caption}
+        </p>
+        <div className="mt-4 border-t border-border/50 pt-5">
+          <a
+            href={r.url}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            onClick={() =>
+              trackOutbound({
+                brand: r.brand,
+                item: r.name,
+                href: r.url,
+                category: r.slot ?? "Reference",
+              })
+            }
+            className="group flex items-baseline justify-between gap-4"
+          >
+            <div className="min-w-0">
+              <div className="eyebrow text-[0.55rem] tracking-[0.34em] text-gold">
+                {r.slot ?? "Reference"}
+              </div>
+              <div className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink mt-1.5">
+                {r.brand}
+              </div>
+              <div className="font-serif italic text-[0.95rem] text-ink/85 leading-snug mt-1">
+                {r.name}
+                {r.color ? ` — ${r.color}` : ""}
+              </div>
+              <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 mt-1.5">
+                {r.retailer}
+              </div>
+            </div>
+            <div className="text-right shrink-0">
+              <div className="font-serif text-gold text-[0.95rem]">{r.price}</div>
+              <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
+                SHOP THE REFERENCE →
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </article>
   );
 }
