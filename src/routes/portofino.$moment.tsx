@@ -21,7 +21,7 @@ import nightcapHeroVideo from "@/assets/uploads/portofino/nightcap-hero.mp4.asse
 import nightcapHeroPoster from "@/assets/uploads/portofino/nightcap-hero-poster.jpg.asset.json";
 import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero.mp4.asset.json";
 import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
-import nightcapIvorySatinImage from "@/assets/uploads/lilla/nightcap-lilla-ivory-after-dark-cami-v2.jpg.asset.json";
+import nightcapIvorySatinImage from "@/assets/uploads/lilla/nightcap-lilla-ivory-after-dark-cami-v3-oat-trousers.jpg.asset.json";
 import nightcapBlackCapeImage from "@/assets/uploads/lilla/nightcap-lilla-black-cape.jpg.asset.json";
 import rivieraDinnerLeafLaceImage from "@/assets/uploads/lilla/lilla-riviera-dinner-ivory-leaf-lace.jpg.asset.json";
 import poolLoungingWaveKnitImage from "@/assets/uploads/lilla/lilla-pool-lounging-white-wave-knit.jpg.asset.json";
@@ -278,9 +278,9 @@ const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
     key: "ivory-after-dark",
     title: "Ivory After Dark",
     caption:
-      "An oat silk strapless top and fluid black satin trousers, finished with sculptural gold and pointed pumps for one final cocktail by the harbor.",
+      "A sculpted strapless top and fluid oat satin trousers, finished with sculptural gold and pointed pumps for one final cocktail by the harbor.",
     image: nightcapIvorySatinImage.url,
-    alt: "Lilla in an oat strapless silk top and black satin trousers at night in Portofino, styled with pointed pumps, a black clutch, gold hoops, a wide gold cuff, and a sculptural gold ring.",
+    alt: "Lilla in a strapless top and oat satin trousers with a soft satin sheen, at night in Portofino, styled with pointed pumps, a clutch, gold hoops, a wide gold cuff, and a sculptural gold ring.",
     imageClassName: "object-cover object-[center_30%]",
     shop: {
       stylingNote:
@@ -296,7 +296,7 @@ const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
         {
           slot: "Hero Piece · Pants",
           brand: "L'AGENCE",
-          name: "Pilar Pants — Black",
+          name: "Pilar Satin Pants",
           price: "$475",
           url: "https://www.bloomingdales.com/shop/product/lagence-pilar-pants?ID=5207763&swatchColor=Black",
         },
