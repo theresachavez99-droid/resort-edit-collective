@@ -21,7 +21,7 @@ import nightcapHeroVideo from "@/assets/uploads/portofino/nightcap-hero.mp4.asse
 import nightcapHeroPoster from "@/assets/uploads/portofino/nightcap-hero-poster.jpg.asset.json";
 import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero.mp4.asset.json";
 import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
-import nightcapIvorySatinImage from "@/assets/uploads/lilla/nightcap-lilla-ivory-satin.jpg.asset.json";
+import nightcapIvorySatinImage from "@/assets/uploads/lilla/nightcap-lilla-ivory-after-dark-cami-v2.jpg.asset.json";
 import nightcapBlackCapeImage from "@/assets/uploads/lilla/nightcap-lilla-black-cape.jpg.asset.json";
 
 /**
