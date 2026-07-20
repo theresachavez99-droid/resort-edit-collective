@@ -39,6 +39,18 @@ type NightcapEditorialCard = {
   /** Optional Tailwind object-position override for taller source images
    *  so Lilla's head and shoes are both preserved inside the 4:5 frame. */
   imageClassName?: string;
+  /** Optional complete-look shop rows for an inline expand. Text-based
+   *  linked product rows — no fabricated thumbnails. */
+  shop?: {
+    stylingNote?: string;
+    products: Array<{
+      slot: string;
+      brand: string;
+      name: string;
+      price: string;
+      url: string;
+    }>;
+  };
 };
 const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
   {
@@ -48,6 +60,54 @@ const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
       "An ivory silk-satin slip, black evening accessories, and sculptural gold for one final cocktail by the harbor.",
     image: nightcapIvorySatinImage.url,
     imageClassName: "object-cover object-[center_30%]",
+    shop: {
+      stylingNote:
+        "No necklace — the satin cowl neckline is intentionally left clean.",
+      products: [
+        {
+          slot: "Hero Piece",
+          brand: "L'AGENCE",
+          name: "Seridie Silk Satin Midi Slip Dress — Champagne",
+          price: "$625",
+          url: "https://www.revolve.com/lagence-seridie-slip-midi-dress-in-champagne/dp/LAGR-WD248/",
+        },
+        {
+          slot: "Shoes",
+          brand: "Aquazzura",
+          name: "So Nude Suede Slingback Sandals — Black",
+          price: "$675",
+          url: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/flat/so-nude-suede-slingback-sandals/1647597337360029",
+        },
+        {
+          slot: "Bag",
+          brand: "Jimmy Choo",
+          name: "Bonny Clutch — Black Satin",
+          price: "$895",
+          url: "https://us.jimmychoo.com/en/women/bags/bonny-clutch/black-satin-clutch-bag-BONNYCLUTCHSAT010003.html",
+        },
+        {
+          slot: "Earrings",
+          brand: "Jenny Bird",
+          name: "Mini Tome Hoop Earrings — High Polish Gold",
+          price: "$128",
+          url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
+        },
+        {
+          slot: "Bracelet",
+          brand: "Jenny Bird",
+          name: "Ola Bangle — High Polish Gold",
+          price: "$228",
+          url: "https://www.shopbop.com/ola-bangle-jenny-bird/vp/v=1/1597419075.htm",
+        },
+        {
+          slot: "Ring",
+          brand: "Jenny Bird",
+          name: "Woven Square Signet Ring — High Polish Gold",
+          price: "$108",
+          url: "https://www.shopbop.com/woven-square-signet-ring-jenny/vp/v=1/1599388920.htm",
+        },
+      ],
+    },
   },
   {
     key: "the-midnight-drape",
@@ -678,6 +738,9 @@ function MomentPage() {
                     <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed">
                       {c.caption}
                     </p>
+                    {c.shop && (
+                      <NightcapShopExpander card={c} shop={c.shop} />
+                    )}
                   </div>
                 </article>
               ))}
@@ -1765,6 +1828,85 @@ function ComingSoonPanel({ heading }: { heading: string }) {
       >
         COMING SOON
       </span>
+    </div>
+  );
+}
+
+/**
+ * Inline "Shop Complete Look" expander for the Nightcap "Ivory After Dark"
+ * editorial card. Text-based linked rows (no fabricated thumbnails), using
+ * the site's outbound tracking convention.
+ */
+function NightcapShopExpander({
+  card,
+  shop,
+}: {
+  card: NightcapEditorialCard;
+  shop: NonNullable<NightcapEditorialCard["shop"]>;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-5 py-2.5"
+      >
+        {open ? "HIDE COMPLETE LOOK" : "SHOP COMPLETE LOOK"}
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+      {open && (
+        <div className="mt-6 border-t border-border/50 pt-6">
+          <ul className="divide-y divide-border/40">
+            {shop.products.map((p) => (
+              <li key={p.url} className="py-4">
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  onClick={() =>
+                    trackOutbound({
+                      brand: p.brand,
+                      item: p.name,
+                      href: p.url,
+                      category: p.slot,
+                    })
+                  }
+                  className="group flex items-baseline justify-between gap-4"
+                >
+                  <div className="min-w-0">
+                    <div className="eyebrow text-[0.55rem] tracking-[0.34em] text-gold">
+                      {p.slot}
+                    </div>
+                    <div className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink mt-1.5">
+                      {p.brand}
+                    </div>
+                    <div className="font-serif italic text-[0.95rem] text-ink/85 leading-snug mt-1">
+                      {p.name}
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <div className="font-serif text-gold text-[0.95rem]">{p.price}</div>
+                    <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
+                      SHOP →
+                    </div>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {shop.stylingNote && (
+            <p className="font-serif italic text-[0.85rem] text-ink/60 mt-6 leading-relaxed">
+              {shop.stylingNote}
+            </p>
+          )}
+          <p className="sr-only">Complete look for {card.title}</p>
+        </div>
+      )}
     </div>
   );
 }
