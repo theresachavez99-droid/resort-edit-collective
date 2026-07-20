@@ -124,6 +124,7 @@ const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
     caption:
       "Liquid black satin, an asymmetric cape line, and brushed gold against the lights of the piazzetta.",
     image: nightcapBlackCapeImage.url,
+    alt: "Lilla in a black satin asymmetric cape dress at night in Portofino, styled with brushed gold evening accessories.",
     // Taller portrait source — contain against ink so the full cape line,
     // head, and shoes all stay inside the 4:5 card frame.
     imageClassName: "object-contain bg-ink",
