@@ -68,17 +68,17 @@ const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
       products: [
         {
           slot: "Hero Piece · Top",
-          brand: "CAMI NYC",
-          name: "Bonita Strapless Silk Top — Oat",
-          price: "$245–$255",
-          url: "https://www.nordstrom.com/s/cami-nyc-bonita-strapless-silk-top/8455177",
+          brand: "L'AGENCE",
+          name: "Asuka Shirred Mesh Top — Black",
+          price: "$206.50 (was $295)",
+          url: "https://www.bloomingdales.com/shop/product/lagence-asuka-shirred-mesh-top?ID=5887256",
         },
         {
           slot: "Hero Piece · Pants",
-          brand: "CAMI NYC",
-          name: "Bristol Satin Pants — Black",
-          price: "$295",
-          url: "https://www.nordstrom.com/s/bristol-satin-pants/7957375",
+          brand: "L'AGENCE",
+          name: "Pilar Pants — Black",
+          price: "$475",
+          url: "https://www.bloomingdales.com/shop/product/lagence-pilar-pants?ID=5207763&swatchColor=Black",
         },
         {
           slot: "Shoes",
