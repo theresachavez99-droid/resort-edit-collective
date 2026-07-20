@@ -640,8 +640,51 @@ function MomentPage() {
         </div>
       </section>
 
-      {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid */}
-      {siblings.length > 0 && (
+      {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid.
+          Nightcap uses an editorial-only override (two approved Lilla
+          references) until affiliate product sets for those looks land. */}
+      {slug === "nightcap" ? (
+        <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
+            <div className="mb-6 md:mb-8 max-w-2xl">
+              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
+                THE EDIT
+              </span>
+              <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
+                More Resort Edit Looks
+              </h3>
+              <p className="font-serif italic text-[0.95rem] text-ink/70 mt-3 leading-relaxed">
+                Other interpretations of this editorial moment.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+              {NIGHTCAP_EDITORIAL_CARDS.map((c) => (
+                <article key={c.key} className="flex flex-col bg-ivory border border-border/40">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-cream">
+                    <img
+                      src={c.image}
+                      alt={`${c.title} — additional Portofino nightcap look`}
+                      loading="lazy"
+                      className={`absolute inset-0 h-full w-full ${c.imageClassName ?? "object-cover object-center"}`}
+                    />
+                    <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+                      INSPIRED BY
+                    </span>
+                  </div>
+                  <div className="p-6 md:p-8 flex flex-col gap-3">
+                    <h4 className="font-display text-2xl md:text-[1.75rem] tracking-[0.04em] text-ink leading-[1.15]">
+                      {c.title}
+                    </h4>
+                    <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed">
+                      {c.caption}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : siblings.length > 0 && (
         <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
             <div className="mb-6 md:mb-8 max-w-2xl">
