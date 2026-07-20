@@ -83,6 +83,57 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
         url: "https://www.shopbop.com/eloise-lace-maxi-dress-simkhai/vp/v=1/1566292527.htm",
       },
     },
+    {
+      key: "tide-at-blue-hour",
+      title: "Tide at Blue Hour",
+      caption:
+        "A deep tide-blue off-the-shoulder silhouette, sculpted at the waist and paired with sleek evening heels and brushed gold above the harbor at twilight.",
+      image: rivieraDinnerTideBlueHourImage.url,
+      alt: "Lilla in an original off-the-shoulder deep-blue silk maxi on a candlelit stone terrace over Portofino harbor at blue hour, with gold cuff, gold drop earrings and sleek black evening sandals.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "Cult Gaia",
+        name: "Rivoli Dress",
+        color: "Tide",
+        price: "$798",
+        retailer: "Bloomingdale's",
+        url: "https://www.bloomingdales.com/shop/product/cult-gaia-rivoli-dress?ID=6135592",
+      },
+      shop: {
+        stylingNote:
+          "Nighttime heels, a sculptural gold cuff and drop earrings — no ring competing with the neckline.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "Aquazzura",
+            name: "So Nude 105 Leather Sandals — Black",
+            price: "$795",
+            url: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/high-heel/so-nude-105-leather-sandals/1647597331686937",
+          },
+          {
+            slot: "Bag",
+            brand: "Cult Gaia",
+            name: "Hera Nano Acrylic Clutch — Gold",
+            price: "$298",
+            url: "https://www.cultgaia.com/products/hera-nano-acrylic-clutch-gold",
+          },
+          {
+            slot: "Cuff",
+            brand: "Jenny Bird",
+            name: "Ola Arm Cuff — High Polish Gold",
+            price: "$138",
+            url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
+          },
+          {
+            slot: "Earrings",
+            brand: "Jennifer Behr",
+            name: "Mireille Gold Drop Earrings",
+            price: "$395",
+            url: "https://jenniferbehr.com/products/mireille-earrings-gold",
+          },
+        ],
+      },
+    },
   ],
   "pool-lounging": [
     {
@@ -119,6 +170,75 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
         price: "$267 (was $445)",
         retailer: "Bloomingdale's",
         url: "https://www.bloomingdales.com/shop/product/cinq-a-sept-jerome-dress?ID=5926128&swatchColor=Starfruit",
+      },
+      shop: {
+        products: [
+          {
+            slot: "Bag",
+            brand: "Veronica Beard",
+            name: "Anchor Raffia Effect Clutch",
+            price: "$298",
+            url: "https://www.bloomingdales.com/shop/product/veronica-beard-anchor-raffia-effect-clutch?ID=6002151",
+          },
+        ],
+      },
+    },
+    {
+      key: "white-eyelet-at-noon",
+      title: "White Eyelet at Noon",
+      caption:
+        "A fitted white eyelet midi, warm raffia and tan leather for a slow, sunlit lunch along the Portofino quay.",
+      image: longLunchWhiteEyeletImage.url,
+      alt: "Lilla in an original fitted white cotton-eyelet midi at a sunlit Portofino harbor lunch, styled with a natural raffia tote, tan leather slide sandals and gold hoops.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "Cara Cara",
+        name: "Calypso Dress",
+        color: "White",
+        price: "$595",
+        retailer: "Revolve",
+        url: "https://www.revolve.com/calypso-dress/dp/CCAR-WD61/",
+      },
+      shop: {
+        stylingNote:
+          "Daytime resort accents — a natural raffia tote, tan leather slides and a slim gold cuff.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "Ancient Greek Sandals",
+            name: "Eleftheria Leather Slides — Natural Tan",
+            price: "$275",
+            url: "https://www.net-a-porter.com/en-us/shop/product/ancient-greek-sandals/shoes/flat-sandals/eleftheria-leather-slides/1647597326961148",
+          },
+          {
+            slot: "Bag",
+            brand: "Dragon Diffusion",
+            name: "Santa Croce Woven Leather Tote — Tan",
+            price: "$620",
+            url: "https://www.dragondiffusion.com/collections/all/products/santa-croce-tan",
+          },
+          {
+            slot: "Sunglasses",
+            brand: "CELINE",
+            name: "Triomphe Cat-Eye Sunglasses — Champagne Crystal",
+            price: "$490",
+            url: "https://www.neimanmarcus.com/p/celine-triomphe-cat-eye-sunglasses-prod284390071",
+          },
+          {
+            slot: "Earrings",
+            brand: "Jenny Bird",
+            name: "Mini Tome Hoop Earrings — High Polish Gold",
+            price: "$128",
+            url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
+          },
+          {
+            slot: "Cuff",
+            brand: "Jenny Bird",
+            name: "Ola Arm Cuff — High Polish Gold",
+            price: "$138",
+            url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
+          },
+        ],
       },
     },
   ],
