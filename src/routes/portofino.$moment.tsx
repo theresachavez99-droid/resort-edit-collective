@@ -36,6 +36,7 @@ type NightcapEditorialCard = {
   title: string;
   caption: string;
   image: string;
+  alt: string;
   /** Optional Tailwind object-position override for taller source images
    *  so Lilla's head and shoes are both preserved inside the 4:5 frame. */
   imageClassName?: string;
@@ -57,26 +58,34 @@ const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
     key: "ivory-after-dark",
     title: "Ivory After Dark",
     caption:
-      "An ivory silk-satin slip, black evening accessories, and sculptural gold for one final cocktail by the harbor.",
+      "An oat silk strapless top and fluid black satin trousers, finished with sculptural gold and pointed pumps for one final cocktail by the harbor.",
     image: nightcapIvorySatinImage.url,
+    alt: "Lilla in an oat strapless silk top and black satin trousers at night in Portofino, styled with pointed pumps, a black clutch, gold hoops, a wide gold cuff, and a sculptural gold ring.",
     imageClassName: "object-cover object-[center_30%]",
     shop: {
       stylingNote:
-        "No necklace — the satin cowl neckline is intentionally left clean.",
+        "No necklace — the sculpted strapless neckline is intentionally left clean.",
       products: [
         {
-          slot: "Hero Piece",
-          brand: "L'AGENCE",
-          name: "Seridie Silk Satin Midi Slip Dress — Champagne",
-          price: "$625",
-          url: "https://www.revolve.com/lagence-seridie-slip-midi-dress-in-champagne/dp/LAGR-WD248/",
+          slot: "Hero Piece · Top",
+          brand: "CAMI NYC",
+          name: "Bonita Strapless Silk Top — Oat",
+          price: "$245–$255",
+          url: "https://www.nordstrom.com/s/cami-nyc-bonita-strapless-silk-top/8455177",
+        },
+        {
+          slot: "Hero Piece · Pants",
+          brand: "CAMI NYC",
+          name: "Bristol Satin Pants — Black",
+          price: "$295",
+          url: "https://www.nordstrom.com/s/bristol-satin-pants/7957375",
         },
         {
           slot: "Shoes",
-          brand: "Aquazzura",
-          name: "So Nude Suede Slingback Sandals — Black",
-          price: "$675",
-          url: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/flat/so-nude-suede-slingback-sandals/1647597337360029",
+          brand: "Gianvito Rossi",
+          name: "Gianvito 85 Pump — Black Leather",
+          price: "$875",
+          url: "https://www.nordstrom.com/s/gianvito-85-pump/8105626?color=Black+Leather",
         },
         {
           slot: "Bag",
@@ -93,18 +102,18 @@ const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
           url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
         },
         {
-          slot: "Bracelet",
+          slot: "Cuff",
           brand: "Jenny Bird",
-          name: "Ola Bangle — High Polish Gold",
-          price: "$228",
-          url: "https://www.shopbop.com/ola-bangle-jenny-bird/vp/v=1/1597419075.htm",
+          name: "Ola Arm Cuff — High Polish Gold",
+          price: "$138",
+          url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
         },
         {
           slot: "Ring",
           brand: "Jenny Bird",
-          name: "Woven Square Signet Ring — High Polish Gold",
-          price: "$108",
-          url: "https://www.shopbop.com/woven-square-signet-ring-jenny/vp/v=1/1599388920.htm",
+          name: "Solene Ring — Gold",
+          price: "$128",
+          url: "https://www.shopbop.com/solene-ring-jenny-bird/vp/v=1/1572934765.htm",
         },
       ],
     },
