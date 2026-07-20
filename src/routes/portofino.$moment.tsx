@@ -39,6 +39,18 @@ type NightcapEditorialCard = {
   /** Optional Tailwind object-position override for taller source images
    *  so Lilla's head and shoes are both preserved inside the 4:5 frame. */
   imageClassName?: string;
+  /** Optional complete-look shop rows for an inline expand. Text-based
+   *  linked product rows — no fabricated thumbnails. */
+  shop?: {
+    stylingNote?: string;
+    products: Array<{
+      slot: string;
+      brand: string;
+      name: string;
+      price: string;
+      url: string;
+    }>;
+  };
 };
 const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
   {
@@ -48,6 +60,54 @@ const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
       "An ivory silk-satin slip, black evening accessories, and sculptural gold for one final cocktail by the harbor.",
     image: nightcapIvorySatinImage.url,
     imageClassName: "object-cover object-[center_30%]",
+    shop: {
+      stylingNote:
+        "No necklace — the satin cowl neckline is intentionally left clean.",
+      products: [
+        {
+          slot: "Hero Piece",
+          brand: "L'AGENCE",
+          name: "Seridie Silk Satin Midi Slip Dress — Champagne",
+          price: "$625",
+          url: "https://www.revolve.com/lagence-seridie-slip-midi-dress-in-champagne/dp/LAGR-WD248/",
+        },
+        {
+          slot: "Shoes",
+          brand: "Aquazzura",
+          name: "So Nude Suede Slingback Sandals — Black",
+          price: "$675",
+          url: "https://www.net-a-porter.com/en-us/shop/product/aquazzura/shoes/flat/so-nude-suede-slingback-sandals/1647597337360029",
+        },
+        {
+          slot: "Bag",
+          brand: "Jimmy Choo",
+          name: "Bonny Clutch — Black Satin",
+          price: "$895",
+          url: "https://us.jimmychoo.com/en/women/bags/bonny-clutch/black-satin-clutch-bag-BONNYCLUTCHSAT010003.html",
+        },
+        {
+          slot: "Earrings",
+          brand: "Jenny Bird",
+          name: "Mini Tome Hoop Earrings — High Polish Gold",
+          price: "$128",
+          url: "https://www.shopbop.com/mini-tome-hoop-earrings-jenny/vp/v=1/1535586561.htm",
+        },
+        {
+          slot: "Bracelet",
+          brand: "Jenny Bird",
+          name: "Ola Bangle — High Polish Gold",
+          price: "$228",
+          url: "https://www.shopbop.com/ola-bangle-jenny-bird/vp/v=1/1597419075.htm",
+        },
+        {
+          slot: "Ring",
+          brand: "Jenny Bird",
+          name: "Woven Square Signet Ring — High Polish Gold",
+          price: "$108",
+          url: "https://www.shopbop.com/woven-square-signet-ring-jenny/vp/v=1/1599388920.htm",
+        },
+      ],
+    },
   },
   {
     key: "the-midnight-drape",
