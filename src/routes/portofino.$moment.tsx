@@ -21,6 +21,45 @@ import nightcapHeroVideo from "@/assets/uploads/portofino/nightcap-hero.mp4.asse
 import nightcapHeroPoster from "@/assets/uploads/portofino/nightcap-hero-poster.jpg.asset.json";
 import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero.mp4.asset.json";
 import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
+import nightcapIvorySatinImage from "@/assets/uploads/lilla/nightcap-lilla-ivory-satin.jpg.asset.json";
+import nightcapBlackCapeImage from "@/assets/uploads/lilla/nightcap-lilla-black-cape.jpg.asset.json";
+
+/**
+ * Nightcap-only editorial-reference cards for the "More Resort Edit Looks"
+ * grid. These are editorial-only (no product grid, no COMING SOON CTA)
+ * because the exact affiliate product sets for these two looks are not yet
+ * approved. When the shopping edits are approved, wire them through the
+ * normal sibling-look pipeline and remove this override.
+ */
+type NightcapEditorialCard = {
+  key: string;
+  title: string;
+  caption: string;
+  image: string;
+  /** Optional Tailwind object-position override for taller source images
+   *  so Lilla's head and shoes are both preserved inside the 4:5 frame. */
+  imageClassName?: string;
+};
+const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
+  {
+    key: "ivory-after-dark",
+    title: "Ivory After Dark",
+    caption:
+      "An ivory silk-satin slip, black evening accessories, and sculptural gold for one final cocktail by the harbor.",
+    image: nightcapIvorySatinImage.url,
+    imageClassName: "object-cover object-[center_30%]",
+  },
+  {
+    key: "the-midnight-drape",
+    title: "The Midnight Drape",
+    caption:
+      "Liquid black satin, an asymmetric cape line, and brushed gold against the lights of the piazzetta.",
+    image: nightcapBlackCapeImage.url,
+    // Taller portrait source — contain against ink so the full cape line,
+    // head, and shoes all stay inside the 4:5 card frame.
+    imageClassName: "object-contain bg-ink",
+  },
+];
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
