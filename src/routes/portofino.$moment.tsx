@@ -2210,7 +2210,91 @@ function ExtraEditorialReferenceCard({ card }: { card: ExtraEditorialCard }) {
             </div>
           </a>
         </div>
+        {card.shop && card.shop.products.length > 0 && (
+          <ExtraCompleteLookExpander title={card.title} shop={card.shop} />
+        )}
       </div>
     </article>
+  );
+}
+
+/**
+ * Inline expander that reveals a complete-look shopping list beneath an
+ * editorial reference card. Text-only rows — no fabricated thumbnails —
+ * matching the Nightcap expander pattern.
+ */
+function ExtraCompleteLookExpander({
+  title,
+  shop,
+}: {
+  title: string;
+  shop: NonNullable<ExtraEditorialCard["shop"]>;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-5 py-2.5"
+      >
+        {open ? "HIDE COMPLETE LOOK" : "SHOP COMPLETE LOOK"}
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+      {open && (
+        <div className="mt-6 border-t border-border/50 pt-6">
+          <ul className="divide-y divide-border/40">
+            {shop.products.map((p) => (
+              <li key={p.url} className="py-4">
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  onClick={() =>
+                    trackOutbound({
+                      brand: p.brand,
+                      item: p.name,
+                      href: p.url,
+                      category: p.slot,
+                    })
+                  }
+                  className="group flex items-baseline justify-between gap-4"
+                >
+                  <div className="min-w-0">
+                    <div className="eyebrow text-[0.55rem] tracking-[0.34em] text-gold">
+                      {p.slot}
+                    </div>
+                    <div className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink mt-1.5">
+                      {p.brand}
+                    </div>
+                    <div className="font-serif italic text-[0.95rem] text-ink/85 leading-snug mt-1">
+                      {p.name}
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    {p.price && (
+                      <div className="font-serif text-gold text-[0.95rem]">{p.price}</div>
+                    )}
+                    <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
+                      SHOP →
+                    </div>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {shop.stylingNote && (
+            <p className="font-serif italic text-[0.85rem] text-ink/60 mt-6 leading-relaxed">
+              {shop.stylingNote}
+            </p>
+          )}
+          <p className="sr-only">Complete look for {title}</p>
+        </div>
+      )}
+    </div>
   );
 }
