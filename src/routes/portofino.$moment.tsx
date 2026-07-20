@@ -916,9 +916,15 @@ function MomentPage() {
     : `Shop ${featuredLook?.title ?? card.moment_name}`;
 
   // Sibling looks within the same day — "More Ways to Dress for {moment}".
-  const siblings: Look[] = lookbook.filter(
-    (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
-  );
+  // Moments that publish only curated MOMENT_EXTRA_EDITORIAL_CARDS
+  // (no legacy day-siblings) — keeps the "More Resort Edit Looks" grid
+  // to exactly the approved editorial cards.
+  const suppressLegacySiblings = slug === "arrival";
+  const siblings: Look[] = suppressLegacySiblings
+    ? []
+    : lookbook.filter(
+        (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
+      );
 
   // Inline expansion state: which look's shop grid is currently open.
   // `featured` opens the featured look; `look-a|b|c` opens that sibling.
