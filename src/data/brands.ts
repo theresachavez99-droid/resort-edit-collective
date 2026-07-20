@@ -154,6 +154,8 @@ export const brandCategories: BrandCategory[] = [
       b("Mestiza", "Manila-rooted, hand-finished occasion."),
       b("Kivari", "Vintage-inspired Australian romance."),
       b("Rhode", "Linen-forward New York for hot-weather travel.", { resortEditLoves: ["Linen separates"] }),
+      b("Cinq à Sept", "Feminine cocktail silhouettes and saturated color for the dressier side of resort.", { bestFor: ["Long Lunch", "Riviera Dinner"] }),
+      b("Veronica Beard", "Polished tailoring and versatile separates for travel days, town lunches and cooler evenings.", { bestFor: ["Arrival", "Long Lunch"], resortEditLoves: ["Tailored jackets", "Silk blouses"] }),
     ],
   },
 ];
