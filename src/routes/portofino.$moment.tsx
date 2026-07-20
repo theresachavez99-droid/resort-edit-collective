@@ -172,7 +172,7 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
             brand: "Chloé",
             name: "Gayia Sunglasses — Havana",
             price: "$425",
-            url: "https://www.chloe.com/us/gayia-sunglasses_cod46852921ic.html",
+            url: "https://www.mytheresa.com/us/en/women/chloe-gayia-round-frame-acetate-sunglasses-havana-p00888273",
           },
           {
             slot: "Earrings",
@@ -184,9 +184,9 @@ const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
           {
             slot: "Bracelet",
             brand: "Monica Vinader",
-            name: "Deia Cuff Bracelet — 18ct Gold Vermeil",
+            name: "Deia Cuff — 18kt Gold Vermeil",
             price: "$325",
-            url: "https://www.monicavinader.com/us/deia-cuff-bracelet/18ct-gold-vermeil-on-sterling-silver",
+            url: "https://www.mytheresa.com/us/en/women/monica-vinader-deia-18kt-gold-vermeil-cuff-p00808811",
           },
         ],
       },
