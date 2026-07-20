@@ -1257,6 +1257,16 @@ const MOMENT_COMPLETE_LOOK: Record<string, string> = {
  * usable http(s) retailer URL — `isUsableShopUrl` still gates rendering.
  */
 const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
+  "beach-club": [
+    {
+      slotLabel: "The Look",
+      category: "Dress",
+      brand: "Poupette St Barth",
+      title: "Estelle Printed Satin Minidress",
+      url: "https://www.mytheresa.com/us/en/women/poupette-st-barth-estelle-printed-satin-minidress-multicoloured-p01042379",
+      image: "",
+    },
+  ],
   "long-lunch": [
     {
       slotLabel: "The Look",
