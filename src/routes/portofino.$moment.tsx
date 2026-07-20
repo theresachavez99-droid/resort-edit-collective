@@ -26,6 +26,8 @@ import nightcapBlackCapeImage from "@/assets/uploads/lilla/nightcap-lilla-black-
 import rivieraDinnerLeafLaceImage from "@/assets/uploads/lilla/lilla-riviera-dinner-ivory-leaf-lace.jpg.asset.json";
 import poolLoungingWaveKnitImage from "@/assets/uploads/lilla/lilla-pool-lounging-white-wave-knit.jpg.asset.json";
 import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch-starfruit-silk.jpg.asset.json";
+import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
+import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon.jpg.asset.json";
 
 /**
  * Additional page-local editorial-reference cards appended to the "More
@@ -48,6 +50,18 @@ type ExtraEditorialCard = {
     retailer: string;
     url: string;
     slot?: string;
+  };
+  /** Optional expanded complete-look shop rows rendered beneath the
+   *  reference product via an inline "SHOP COMPLETE LOOK" expander. */
+  shop?: {
+    stylingNote?: string;
+    products: Array<{
+      slot: string;
+      brand: string;
+      name: string;
+      price?: string;
+      url: string;
+    }>;
   };
 };
 const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
