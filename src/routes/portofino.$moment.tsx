@@ -843,7 +843,7 @@ function MomentPage() {
             </div>
           </div>
         </section>
-      ) : siblings.length > 0 && (
+      ) : (siblings.length > 0 || (MOMENT_EXTRA_EDITORIAL_CARDS[slug]?.length ?? 0) > 0) && (
         <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
             <div className="mb-6 md:mb-8 max-w-2xl">
@@ -868,6 +868,9 @@ function MomentPage() {
                     setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
                   }
                 />
+              ))}
+              {MOMENT_EXTRA_EDITORIAL_CARDS[slug]?.map((c) => (
+                <ExtraEditorialReferenceCard key={c.key} card={c} />
               ))}
             </div>
           </div>
