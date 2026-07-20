@@ -23,6 +23,92 @@ import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero
 import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
 import nightcapIvorySatinImage from "@/assets/uploads/lilla/nightcap-lilla-ivory-after-dark-cami-v2.jpg.asset.json";
 import nightcapBlackCapeImage from "@/assets/uploads/lilla/nightcap-lilla-black-cape.jpg.asset.json";
+import rivieraDinnerLeafLaceImage from "@/assets/uploads/lilla/lilla-riviera-dinner-ivory-leaf-lace.jpg.asset.json";
+import poolLoungingWaveKnitImage from "@/assets/uploads/lilla/lilla-pool-lounging-white-wave-knit.jpg.asset.json";
+import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch-starfruit-silk.jpg.asset.json";
+
+/**
+ * Additional page-local editorial-reference cards appended to the "More
+ * Resort Edit Looks" grid on select moment pages. Each card carries one
+ * real reference product with a direct outbound "SHOP THE REFERENCE" link.
+ * Preserves any existing siblings and Nightcap-specific overrides.
+ */
+type ExtraEditorialCard = {
+  key: string;
+  title: string;
+  caption: string;
+  image: string;
+  alt: string;
+  imageClassName?: string;
+  reference: {
+    brand: string;
+    name: string;
+    color?: string;
+    price: string;
+    retailer: string;
+    url: string;
+    slot?: string;
+  };
+};
+const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
+  "riviera-dinner": [
+    {
+      key: "ivory-leaf-lace",
+      title: "Ivory Leaf Lace",
+      caption:
+        "Sculpted ivory lace, a clean waist and metallic evening accents above the harbor at blue hour.",
+      image: rivieraDinnerLeafLaceImage.url,
+      alt: "Lilla wearing an original fitted ivory leaf-lace evening dress on a candlelit terrace above Portofino harbor.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "SIMKHAI",
+        name: "Eloise Lace Maxi Dress",
+        color: "Ivory",
+        price: "$595",
+        retailer: "Shopbop",
+        url: "https://www.shopbop.com/eloise-lace-maxi-dress-simkhai/vp/v=1/1566292527.htm",
+      },
+    },
+  ],
+  "pool-lounging": [
+    {
+      key: "white-wave-knit",
+      title: "White Wave Knit",
+      caption:
+        "A body-skimming white open knit, a woven mini bag and bare feet between the pool and the Ligurian Sea.",
+      image: poolLoungingWaveKnitImage.url,
+      alt: "Lilla wearing an original white open-knit midi pool dress beside a cliffside Portofino pool.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "STAUD",
+        name: "Jessica Knit Dress",
+        color: "White",
+        price: "$295",
+        retailer: "Shopbop",
+        url: "https://www.shopbop.com/jessica-knit-dress-staud/vp/v=1/1530716894.htm",
+      },
+    },
+  ],
+  "long-lunch": [
+    {
+      key: "starfruit-at-lunch",
+      title: "Starfruit at Lunch",
+      caption:
+        "A vivid starfruit waist, a softly fluted midi hem and cream accessories for a long table by the harbor.",
+      image: longLunchStarfruitSilkImage.url,
+      alt: "Lilla wearing an original fitted starfruit silk-faille midi dress at a sunlit long lunch in Portofino.",
+      reference: {
+        slot: "Reference Dress",
+        brand: "Cinq à Sept",
+        name: "Jerome Dress",
+        color: "Starfruit",
+        price: "$267 (was $445)",
+        retailer: "Bloomingdale's",
+        url: "https://www.bloomingdales.com/shop/product/cinq-a-sept-jerome-dress?ID=5926128&swatchColor=Starfruit",
+      },
+    },
+  ],
+};
 
 /**
  * Nightcap-only editorial-reference cards for the "More Resort Edit Looks"
