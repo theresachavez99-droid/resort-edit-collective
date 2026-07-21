@@ -37,7 +37,10 @@ const CATEGORY_INTROS: Record<string, string> = {
   "Swim & Beach Club": "Sculptural swim for yachts, cabanas, and long afternoons by the sea.",
   "Resortwear & Kaftans": "Linen, embroidery, and breezy separates built for heat and light.",
   "Accessories & Raffia": "The hand-woven and Italian-leather pieces that finish every look.",
-  Jewelry: "Saltwater-proof gold and the heirlooms we layer from morning to night.",
+  Jewelry:
+    "Delicate by conviction — fine gold and small stones, with one sculptural cuff when the evening calls for it.",
+  "Evening & Occasion":
+    "When golden hour turns to evening — color, shine, and a heel that means it.",
   "Resort Footwear": "Greek sandals, Spanish espadrilles, Florentine evening heels.",
   "Beyond the Riviera": "The labels that take Resort Edit beyond the Mediterranean.",
 };
@@ -98,6 +101,10 @@ const BRAND_BADGE: Record<string, string> = {
   "cult-gaia": "Editor's Pick",
   "hereu": "Editor's Pick",
   "farm-rio": "Editor's Pick",
+  "marco-bicego": "Resort Edit Essential",
+  "bottega-veneta": "Mediterranean Icon",
+  "christopher-john-rogers": "Editor's Pick",
+  "gianvito-rossi": "Resort Edit Essential",
 };
 
 // Public founder notes — only for brands the founder truly champions.
@@ -167,6 +174,7 @@ const FILTERS = [
   "Resortwear & Kaftans",
   "Accessories & Raffia",
   "Jewelry",
+  "Evening & Occasion",
   "Resort Footwear",
   "Beyond the Riviera",
 ] as const;
