@@ -1204,11 +1204,11 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
   "sunset-views": "Sunset",
   "riviera-dinner": "Riviera Dinner",
   "exploring-the-harbor": "Harbor",
-  "beach-club": "Beach Club",
+  "beach-club": "Pool Lounging",
   "long-lunch": "Long Lunch",
   "shopping": "Shopping",
   "nightcap": "Nightcap",
-  "pool-lounging": "Pool",
+  "pool-lounging": "Beach Club",
 };
 
 /**
@@ -1366,11 +1366,11 @@ const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
   "sunset-views": "The Sunset Hour",
   "riviera-dinner": "The Riviera Dinner",
   "exploring-the-harbor": "Exploring the Harbor",
-  "beach-club": "The Beach Club",
+  "beach-club": "Poolside in Portofino",
   "long-lunch": "The Long Lunch",
   "shopping": "The Shopping Afternoon",
   "nightcap": "The Nightcap",
-  "pool-lounging": "Poolside in Portofino",
+  "pool-lounging": "The Beach Club",
 };
 
 /**
