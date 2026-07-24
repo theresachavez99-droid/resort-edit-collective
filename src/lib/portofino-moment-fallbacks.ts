@@ -23,7 +23,7 @@ import sunsetViewsCard from "@/assets/uploads/portofino/sunset-views-lilla-pink-
 import sunsetViewsHero from "@/assets/uploads/portofino/sunset-views-harbor-golden-hour.png.asset.json";
 import harborAperitivoCard from "@/assets/uploads/portofino/harbor-aperitivo-lilla-crochet-harbor.png.asset.json";
 import harborAperitivoBanner from "@/assets/uploads/portofino/harbor-aperitivo-banner-golden-hour.png.asset.json";
-import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-harbor-terrace-v2.png.asset.json";
+import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-blue-floral-harbor.png.asset.json";
 import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
 import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
 import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-white-eyelet.png.asset.json";
