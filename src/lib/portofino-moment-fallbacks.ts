@@ -130,7 +130,9 @@ export const PORTOFINO_MOMENT_DEFS: PortofinoMomentDef[] = [
     archetype_slug: "harbor-aperitivo",
     moment_name: "Harbor Aperitivo",
     narrative: "Golden-hour cocktails overlooking the harbor.",
-    editorial_order: 7,
+    // Reordered to sit after Shopping + Long Lunch so the day flows:
+    // yacht → pool → beach club → shopping → long lunch → aperitivo.
+    editorial_order: 9,
     moment_card_image: harborAperitivoCard.url,
     hero_banner_image: harborAperitivoBanner.url,
     outfit_image: harborAperitivoCard.url,
@@ -235,8 +237,11 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
   {
     moment_slug: "beach-club",
     archetype_slug: "beach-club",
-    moment_name: "Beach Club",
-    narrative: "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
+    // Display renamed to "Pool Lounging" — the imagery on this URL
+    // (bikini, chaise lounges, luxury resort pool) reads as pool lounging.
+    // URL slug intentionally preserved to avoid SEO churn / redirects.
+    moment_name: "Pool Lounging",
+    narrative: "An elegant afternoon by the pool, above the bay, beneath striped umbrellas.",
     editorial_order: 5,
     moment_card_image: beachClubLemon.url,
     // Moment-specific banner override — applies ONLY to
@@ -244,22 +249,25 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     hero_banner_image: beachClubLongLunchBanner.url,
     outfit_image: beachClubLemon.url,
     legacy_day: "/portofino/day-2",
-    legacy_look_title: "Beach Club Morning",
+    legacy_look_title: "Pool Lounging Morning",
     legacy_day_slug: "day-2",
     look_slug: "look-a",
   },
   {
     moment_slug: "pool-lounging",
     archetype_slug: "pool-lounging",
-    moment_name: "Pool Lounging",
+    // Display renamed to "Beach Club" — the elevated resort separates,
+    // dresses, and polished transition looks on this URL read as arriving
+    // at and spending time at an upscale beach club. URL slug preserved.
+    moment_name: "Beach Club",
     narrative:
-      "An elegant afternoon by the Splendido's pool, above the bay, beneath striped umbrellas.",
+      "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
     editorial_order: 6,
     moment_card_image: poolLoungingShoppingImage.url,
     hero_banner_image: poolLoungingShoppingImage.url,
     outfit_image: poolLoungingShoppingImage.url,
     legacy_day: "/portofino/day-3",
-    legacy_look_title: "Poolside",
+    legacy_look_title: "Beach Club",
     legacy_day_slug: "day-3",
     look_slug: "look-a",
   },
