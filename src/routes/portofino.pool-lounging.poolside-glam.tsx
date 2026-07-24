@@ -66,7 +66,7 @@ function PoolsideGlamPage() {
               params={{ moment: "pool-lounging" }}
               className="hover:text-gold transition-colors"
             >
-              Pool Lounging
+              Beach Club
             </Link>
           </li>
           <li aria-hidden className="text-gold/50">/</li>
