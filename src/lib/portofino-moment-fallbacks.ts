@@ -15,7 +15,7 @@ import cira10 from "@/assets/uploads/cira/cira-10.png.asset.json";
 import cira11 from "@/assets/uploads/cira/cira-11.png.asset.json";
 import cira13 from "@/assets/uploads/cira/cira-13.png.asset.json";
 import cira14 from "@/assets/uploads/cira/cira-14.png.asset.json";
-import arrivalDayImage from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v4.png.asset.json";
+import arrivalDayImage from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v5.png.asset.json";
 import yachtDayHero from "@/assets/uploads/portofino/yacht-day-harbor.png.asset.json";
 import espressoMorningCanonical from "@/assets/uploads/portofino/espresso-morning-lilla-green-eyelet.png.asset.json";
 import espressoMorningBanner from "@/assets/uploads/portofino/espresso-morning-banner-cafe-portofino.png.asset.json";
