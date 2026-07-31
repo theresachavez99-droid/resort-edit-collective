@@ -2,7 +2,14 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 /**
- * Published Collection Service — Phase 5.5
+ * Published Collection Service — DEPRECATED (Step 2 admin audit, July 2026).
+ *
+ * The `editorial_collections` / `editorial_collection_looks` /
+ * `editorial_collection_look_slots` trio is on the deprecation path: it holds
+ * 0 approved looks, has no writer left in the codebase, and no public route
+ * reads it. The public site is served by `founder_looks` + `look_candidates`
+ * instead. Do NOT add new readers or writers here; the tables remain only so
+ * existing rows can be migrated or exported before an explicit drop.
  *
  * Read-only contract that sits between editorial_collections (DB) and the
  * public Resort Edit experience. Public routes MUST consume editorial
