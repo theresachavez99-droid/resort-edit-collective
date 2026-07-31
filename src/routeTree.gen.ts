@@ -31,6 +31,7 @@ import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as LookSlugRouteImport } from './routes/look.$slug'
+import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
 import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
 import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
 import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
@@ -157,6 +158,11 @@ const LookSlugRoute = LookSlugRouteImport.update({
   path: '/look/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortofinoIndexRoute = PortofinoIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortofinoRoute,
+} as any)
 const PortofinoMomentRoute = PortofinoMomentRouteImport.update({
   id: '/$moment',
   path: '/$moment',
@@ -266,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
+  '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
@@ -282,7 +289,6 @@ export interface FileRoutesByTo {
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
-  '/portofino': typeof PortofinoRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -305,6 +311,7 @@ export interface FileRoutesByTo {
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin': typeof AdminIndexRoute
+  '/portofino': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
@@ -345,6 +352,7 @@ export interface FileRoutesById {
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
+  '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
@@ -386,6 +394,7 @@ export interface FileRouteTypes {
     | '/portofino/day-4'
     | '/portofino/day-5'
     | '/admin/'
+    | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
     | '/portofino/$day/$look'
@@ -402,7 +411,6 @@ export interface FileRouteTypes {
     | '/brands'
     | '/destinations'
     | '/my-edit'
-    | '/portofino'
     | '/privacy-policy'
     | '/resort-edits'
     | '/robots.txt'
@@ -425,6 +433,7 @@ export interface FileRouteTypes {
     | '/portofino/day-4'
     | '/portofino/day-5'
     | '/admin'
+    | '/portofino'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
     | '/portofino/$day/$look'
@@ -464,6 +473,7 @@ export interface FileRouteTypes {
     | '/portofino/day-4'
     | '/portofino/day-5'
     | '/admin/'
+    | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
     | '/portofino/$day/$look'
@@ -661,6 +671,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LookSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portofino/': {
+      id: '/portofino/'
+      path: '/'
+      fullPath: '/portofino/'
+      preLoaderRoute: typeof PortofinoIndexRouteImport
+      parentRoute: typeof PortofinoRoute
+    }
     '/portofino/$moment': {
       id: '/portofino/$moment'
       path: '/$moment'
@@ -799,6 +816,7 @@ interface PortofinoRouteChildren {
   PortofinoDay3Route: typeof PortofinoDay3Route
   PortofinoDay4Route: typeof PortofinoDay4Route
   PortofinoDay5Route: typeof PortofinoDay5Route
+  PortofinoIndexRoute: typeof PortofinoIndexRoute
   PortofinoDayLookRoute: typeof PortofinoDayLookRoute
   PortofinoPoolLoungingPoolsideGlamRoute: typeof PortofinoPoolLoungingPoolsideGlamRoute
 }
@@ -810,6 +828,7 @@ const PortofinoRouteChildren: PortofinoRouteChildren = {
   PortofinoDay3Route: PortofinoDay3Route,
   PortofinoDay4Route: PortofinoDay4Route,
   PortofinoDay5Route: PortofinoDay5Route,
+  PortofinoIndexRoute: PortofinoIndexRoute,
   PortofinoDayLookRoute: PortofinoDayLookRoute,
   PortofinoPoolLoungingPoolsideGlamRoute:
     PortofinoPoolLoungingPoolsideGlamRoute,

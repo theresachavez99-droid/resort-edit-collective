@@ -67,7 +67,7 @@ export function SiteFooter() {
           <div>
             <p className="eyebrow text-gold-soft mb-4">Legal</p>
             <ul className="space-y-2 font-serif">
-              <li><Link to="/about" className="hover:text-gold">Affiliate Disclosure</Link></li>
+              <li><Link to="/about" hash="affiliate-disclosure" className="hover:text-gold">Affiliate Disclosure</Link></li>
               <li><Link to="/privacy-policy" className="hover:text-gold">Privacy Policy</Link></li>
             </ul>
           </div>

@@ -100,7 +100,7 @@ function EditorialMemoryPage() {
       <main className="mx-auto max-w-md px-6 py-16">
         <h1 className="font-serif text-2xl mb-3">Editorial Memory</h1>
         <p className="text-xs text-stone-500 mb-4">
-          Enter the admin password (or sign in via Founder Dashboard first).
+          Enter the admin password (or sign in via the Studio first).
         </p>
         <input
           type="password"

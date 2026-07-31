@@ -71,6 +71,43 @@ function AboutPage() {
           </div>
         </div>
       </section>
+
+      <section
+        id="our-muse"
+        className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
+      >
+        <span className="eyebrow text-gold">Our Muse</span>
+        <div className="mx-auto max-w-xl text-left mt-8">
+          <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
+            <p>
+              The looks you see across Resort Edit are AI-styled on Lilla, our house muse. Lilla is not a real person — she is how we show you a complete look, in the destination, before you pack it.
+            </p>
+            <p>
+              Every piece she wears is real and shoppable. Each garment, shoe, and accessory is a genuine product we have sourced, verified, and linked from the retailer that carries it.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="affiliate-disclosure"
+        className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
+      >
+        <span className="eyebrow text-gold">Affiliate Disclosure</span>
+        <div className="mx-auto max-w-xl text-left mt-8">
+          <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
+            <p>
+              Resort Edit is reader-supported. When you purchase through links on our site, we may earn a commission from the retailer — at no additional cost to you.
+            </p>
+            <p>
+              Commissions never decide what we feature. Every look is curated editorially first; affiliate relationships only determine which retailer we link to, never which pieces we love.
+            </p>
+            <p>
+              Hotel, experience, and charter recommendations may likewise include partner links. We only recommend places and pieces we would choose for our own travels.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

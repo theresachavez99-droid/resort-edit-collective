@@ -8,6 +8,7 @@ export const Route = createFileRoute("/portofino/day-2")({
       to: "/portofino/$moment",
       params: { moment: momentSlugForLookKey("day-2") },
       replace: true,
+      statusCode: 301,
     });
   },
   component: () => null,

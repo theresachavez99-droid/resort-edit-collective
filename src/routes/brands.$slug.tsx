@@ -1,9 +1,23 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { brandCategories } from "@/data/brands";
 import { absoluteUrl } from "@/lib/site";
 
+/** Legacy slugs produced before diacritic normalisation landed. */
+const LEGACY_BRAND_SLUG_ALIASES: Record<string, string> = {
+  "casta-er": "castaner",
+};
+
 export const Route = createFileRoute("/brands/$slug")({
   loader: ({ params }) => {
+    const aliased = LEGACY_BRAND_SLUG_ALIASES[params.slug];
+    if (aliased) {
+      throw redirect({
+        to: "/brands/$slug",
+        params: { slug: aliased },
+        replace: true,
+        statusCode: 301,
+      });
+    }
     for (const cat of brandCategories) {
       const brand = cat.brands.find((b) => b.slug === params.slug);
       if (brand) return { brand, category: cat.title };
