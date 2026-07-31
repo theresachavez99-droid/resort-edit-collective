@@ -399,7 +399,7 @@ function BuilderTab({ pw, id }: { pw: string; id: string | null }) {
     mutationFn: () => publish({ data: { password: pw, id: savedId! } }),
   });
 
-  // ── Phase 3 — Duplicate Analysis (pre-publish).
+  // ── Duplicate analysis (pre-publish).
   const dupFn = useServerFn(analyzeFounderLookDuplicates);
   const dupM = useMutation({
     mutationFn: () => dupFn({ data: { password: pw, id: savedId! } }),
@@ -455,7 +455,7 @@ function BuilderTab({ pw, id }: { pw: string; id: string | null }) {
         {field("Editorial DNA", "editorial_dna", true)}
         {field("Hero Philosophy", "hero_philosophy", true)}
         {field("Accessory Philosophy", "accessory_philosophy", true)}
-        {field("Founder Notes", "founder_notes", true)}
+        {field("Editorial Notes", "founder_notes", true)}
         <div className="grid grid-cols-3 gap-3">
           <label className="block">
             <div className="text-xs uppercase">Visual Weight</div>
@@ -723,7 +723,7 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
   });
 
   const look = detail.data && "ok" in detail.data && detail.data.ok ? detail.data.look : null;
-  if (!look) return <div className="text-sm text-neutral-500">Select a Founder Look first.</div>;
+  if (!look) return <div className="text-sm text-neutral-500">Select a Look first.</div>;
 
   return (
     <div className="max-w-2xl">
