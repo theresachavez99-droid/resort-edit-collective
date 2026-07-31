@@ -2,12 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { destinations } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
 import { absoluteUrl } from "@/lib/site";
+import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
 
 export const Route = createFileRoute("/resort-edits")({
   head: () => ({
     meta: [
-      { title: "Resort Edits — Curated Vacation Style | Resort Edit | Dressed for the destination" },
-      { name: "description", content: "Curated vacation style guides, packing edits, and shoppable looks — browse by destination, occasion, or collection." },
+      { title: "Resort Edits — Shoppable Looks by Moment | Resort Edit | Dressed for the destination" },
+      {
+        name: "description",
+        content:
+          "Every shoppable Resort Edit look, moment by moment — from arrival afternoons to a final nightcap. The wardrobe layer of every destination.",
+      },
       { property: "og:title", content: "Resort Edits | Resort Edit | Dressed for the destination" },
       { property: "og:description", content: "Curated vacation style guides, packing edits, and shoppable looks." },
       { property: "og:url", content: absoluteUrl("/resort-edits") },
@@ -17,17 +22,7 @@ export const Route = createFileRoute("/resort-edits")({
   component: ResortEditsPage,
 });
 
-const occasions = [
-  { label: "Beach Day", note: "Sun, salt, and one perfect caftan." },
-  { label: "Day Club", note: "Rosé hours and crochet under cabanas." },
-  { label: "Dinner Glam", note: "Silk slips and gold at golden hour." },
-  { label: "Airport Style", note: "Linen sets that survive long-hauls." },
-  { label: "Poolside", note: "The one-piece, the wrap, the hat." },
-  { label: "Excursions", note: "Cliff walks, market days, boat hops." },
-] as const;
-
 const LIVE_SLUGS = ["portofino", "mallorca"] as const;
-const COMING_SOON = ["Capri", "St. Tropez", "Ibiza", "Tulum"] as const;
 
 function ResortEditsPage() {
   const featured = LIVE_SLUGS
@@ -76,43 +71,27 @@ function ResortEditsPage() {
             </DestinationLink>
           ))}
         </div>
-        <div className="mt-16 text-center">
-          <div className="flex items-center gap-4 justify-center mb-5">
-            <div className="h-px w-12 bg-gold/50" />
-            <h3 className="eyebrow text-gold tracking-[0.3em]">Coming Soon</h3>
-            <div className="h-px w-12 bg-gold/50" />
-          </div>
-          <ul className="flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
-            {COMING_SOON.map((name) => (
-              <li
-                key={name}
-                className="font-serif text-sm md:text-base text-ink/75 border border-ink/15 rounded-full px-5 py-2 bg-ivory/60"
-              >
-                {name}
-              </li>
-            ))}
-          </ul>
-        </div>
       </section>
 
       {/* By Occasion */}
       <section className="bg-cream/60 border-y border-border/60 py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="eyebrow text-gold">Shop by Occasion</span>
+            <span className="eyebrow text-gold">Shop by Moment</span>
             <h2 className="font-display text-3xl md:text-5xl tracking-wide mt-4">For Every Moment</h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border/60">
-            {occasions.map((o) => (
+            {PORTOFINO_JOURNEY.map((m) => (
               <Link
-                key={o.label}
-                to="/portofino"
+                key={m.moment_slug}
+                to="/portofino/$moment"
+                params={{ moment: m.moment_slug }}
                 className="group bg-ivory p-8 md:p-10 text-center hover:bg-cream transition-colors"
               >
                 <h3 className="font-display text-xl md:text-2xl tracking-wide text-ink group-hover:text-gold transition-colors">
-                  {o.label}
+                  {m.moment_name}
                 </h3>
-                <p className="mt-3 font-serif italic text-sm text-ink/65">{o.note}</p>
+                <p className="mt-3 font-serif italic text-sm text-ink/65">{m.narrative}</p>
               </Link>
             ))}
           </div>
