@@ -35,8 +35,8 @@ const WORKFLOW: NavItem[] = [
       "The consolidated editorial workspace — one engine per (destination, moment) with the 5-stage Run Contract (Compile · Feed · Rank · Curate · Publish). Replaces the legacy Buying Office surface.",
   },
   {
-    label: "Founder Look Builder",
-    to: "/admin/founder-looks",
+    label: "Looks",
+    to: "/admin/looks",
     description:
       "Author the hero look per moment — editorial DNA, accessory rules, palette. Publishing fans out to references + brands automatically.",
   },
@@ -78,9 +78,10 @@ const OPERATIONS: NavItem[] = [
     description: "Sold-out items, broken links, missing thumbnails.",
   },
   {
-    label: "Subscribers",
-    to: "/admin/subscribers",
-    description: "Newsletter list management.",
+    label: "System",
+    to: "/admin/system",
+    description:
+      "Seeds, migration utilities, and list management — including Subscribers.",
   },
 ];
 
