@@ -2,12 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { destinations } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
 import { absoluteUrl } from "@/lib/site";
+import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
 
 export const Route = createFileRoute("/resort-edits")({
   head: () => ({
     meta: [
-      { title: "Resort Edits — Curated Vacation Style | Resort Edit | Dressed for the destination" },
-      { name: "description", content: "Curated vacation style guides, packing edits, and shoppable looks — browse by destination, occasion, or collection." },
+      { title: "Resort Edits — Shoppable Looks by Moment | Resort Edit | Dressed for the destination" },
+      {
+        name: "description",
+        content:
+          "Every shoppable Resort Edit look, moment by moment — from arrival afternoons to a final nightcap. The wardrobe layer of every destination.",
+      },
       { property: "og:title", content: "Resort Edits | Resort Edit | Dressed for the destination" },
       { property: "og:description", content: "Curated vacation style guides, packing edits, and shoppable looks." },
       { property: "og:url", content: absoluteUrl("/resort-edits") },
@@ -17,17 +22,7 @@ export const Route = createFileRoute("/resort-edits")({
   component: ResortEditsPage,
 });
 
-const occasions = [
-  { label: "Beach Day", note: "Sun, salt, and one perfect caftan." },
-  { label: "Day Club", note: "Rosé hours and crochet under cabanas." },
-  { label: "Dinner Glam", note: "Silk slips and gold at golden hour." },
-  { label: "Airport Style", note: "Linen sets that survive long-hauls." },
-  { label: "Poolside", note: "The one-piece, the wrap, the hat." },
-  { label: "Excursions", note: "Cliff walks, market days, boat hops." },
-] as const;
-
 const LIVE_SLUGS = ["portofino", "mallorca"] as const;
-const COMING_SOON = ["Capri", "St. Tropez", "Ibiza", "Tulum"] as const;
 
 function ResortEditsPage() {
   const featured = LIVE_SLUGS
