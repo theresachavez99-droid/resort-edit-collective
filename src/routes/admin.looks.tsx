@@ -25,17 +25,17 @@ import { analyzeFounderLookDuplicates } from "@/lib/editorial-memory.functions";
 export const Route = createFileRoute("/admin/looks")({
   head: () => ({
     meta: [
-      { title: "Founder Look Builder — Admin (Resort Edit)" },
+      { title: "Looks — Admin (Resort Edit)" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  component: FounderLooksPage,
+  component: LooksPage,
 });
 
 const STORAGE_KEY = "admin_founder_pw";
 type Tab = "list" | "builder" | "validate";
 
-function FounderLooksPage() {
+function LooksPage() {
   const [pw, setPw] = useState<string>(() =>
     typeof window === "undefined" ? "" : window.localStorage.getItem(STORAGE_KEY) ?? "",
   );
@@ -56,7 +56,7 @@ function FounderLooksPage() {
   if (!authed) {
     return (
       <div className="mx-auto max-w-md py-24 px-6">
-        <h1 className="text-2xl font-light mb-4">Founder Look Builder</h1>
+        <h1 className="text-2xl font-light mb-4">Looks</h1>
         <input
           type="password"
           value={pw}
@@ -74,7 +74,7 @@ function FounderLooksPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
       <div className="flex items-baseline justify-between mb-6">
-        <h1 className="text-3xl font-light tracking-wide">Founder Look Builder</h1>
+        <h1 className="text-3xl font-light tracking-wide">Looks</h1>
         <a href="/admin" className="text-sm text-neutral-500 underline">
           ← Admin
         </a>
@@ -127,15 +127,10 @@ function ListTab({
   onNew: () => void;
 }) {
   const list = useServerFn(listFounderLooks);
-  const seed = useServerFn(seedPoolLoungingValidationLook);
   const refresh = useServerFn(refreshFounderLookHeroImages);
   const q = useQuery({
     queryKey: ["founder-looks", pw],
     queryFn: () => list({ data: { password: pw } }),
-  });
-  const seedM = useMutation({
-    mutationFn: () => seed({ data: { password: pw } }),
-    onSuccess: () => q.refetch(),
   });
   const refreshM = useMutation({
     mutationFn: (vars: { id: string; force: boolean }) =>
@@ -151,21 +146,9 @@ function ListTab({
     <div>
       <div className="flex gap-3 mb-6">
         <button onClick={onNew} className="bg-black text-white px-4 py-2 text-sm">
-          + New Founder Look
-        </button>
-        <button
-          onClick={() => seedM.mutate()}
-          disabled={seedM.isPending}
-          className="border border-black px-4 py-2 text-sm"
-        >
-          {seedM.isPending ? "Seeding…" : "Seed: Pool Lounging Pietra Rosa"}
+          + New Look
         </button>
       </div>
-      {seedM.data && "ok" in seedM.data && seedM.data.ok && (
-        <div className="text-xs text-green-700 mb-4">
-          Seeded look. {seedM.data.refsWritten} references + {seedM.data.brandsWritten} brand records.
-        </div>
-      )}
       <div className="space-y-2">
         {(q.data && "ok" in q.data && q.data.ok ? q.data.looks : []).map((l) => (
           <div key={l.id} className="border p-4">
