@@ -119,7 +119,7 @@ function EditorialMemoryPage() {
     <main className="mx-auto max-w-7xl px-6 py-10 space-y-8">
       <header>
         <p className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500">
-          Resort Edit · Phase 3
+          Resort Edit · Editorial
         </p>
         <h1 className="font-serif text-3xl">Editorial Memory</h1>
         <p className="text-sm text-stone-600 mt-1 max-w-2xl">

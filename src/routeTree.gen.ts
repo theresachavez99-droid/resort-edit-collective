@@ -26,11 +26,12 @@ import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.dest
 import { Route as AdminEditorialMemoryRouteImport } from './routes/admin.editorial-memory'
 import { Route as AdminFounderLooksRouteImport } from './routes/admin.founder-looks'
 import { Route as AdminInventoryHealthRouteImport } from './routes/admin.inventory-health'
+import { Route as AdminLooksRouteImport } from './routes/admin.looks'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
+import { Route as AdminSystemRouteImport } from './routes/admin.system'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
-import { Route as LookSlugRouteImport } from './routes/look.$slug'
 import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
 import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
 import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
@@ -133,6 +134,11 @@ const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
   path: '/admin/inventory-health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLooksRoute = AdminLooksRouteImport.update({
+  id: '/admin/looks',
+  path: '/admin/looks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
   id: '/admin/product-vault',
   path: '/admin/product-vault',
@@ -141,6 +147,11 @@ const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
 const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
   id: '/admin/subscribers',
   path: '/admin/subscribers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSystemRoute = AdminSystemRouteImport.update({
+  id: '/admin/system',
+  path: '/admin/system',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrandsSlugRoute = BrandsSlugRouteImport.update({
@@ -152,11 +163,6 @@ const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => DestinationsRoute,
-} as any)
-const LookSlugRoute = LookSlugRouteImport.update({
-  id: '/look/$slug',
-  path: '/look/$slug',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const PortofinoIndexRoute = PortofinoIndexRouteImport.update({
   id: '/',
@@ -260,11 +266,12 @@ export interface FileRoutesByFullPath {
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
+  '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/look/$slug': typeof LookSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
@@ -299,11 +306,12 @@ export interface FileRoutesByTo {
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
+  '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/look/$slug': typeof LookSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
@@ -340,11 +348,12 @@ export interface FileRoutesById {
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
   '/admin/founder-looks': typeof AdminFounderLooksRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
+  '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/look/$slug': typeof LookSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
   '/portofino/day-1': typeof PortofinoDay1Route
   '/portofino/day-2': typeof PortofinoDay2Route
@@ -382,11 +391,12 @@ export interface FileRouteTypes {
     | '/admin/editorial-memory'
     | '/admin/founder-looks'
     | '/admin/inventory-health'
+    | '/admin/looks'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/look/$slug'
     | '/portofino/$moment'
     | '/portofino/day-1'
     | '/portofino/day-2'
@@ -421,11 +431,12 @@ export interface FileRouteTypes {
     | '/admin/editorial-memory'
     | '/admin/founder-looks'
     | '/admin/inventory-health'
+    | '/admin/looks'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/look/$slug'
     | '/portofino/$moment'
     | '/portofino/day-1'
     | '/portofino/day-2'
@@ -461,11 +472,12 @@ export interface FileRouteTypes {
     | '/admin/editorial-memory'
     | '/admin/founder-looks'
     | '/admin/inventory-health'
+    | '/admin/looks'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
-    | '/look/$slug'
     | '/portofino/$moment'
     | '/portofino/day-1'
     | '/portofino/day-2'
@@ -502,9 +514,10 @@ export interface RootRouteChildren {
   AdminEditorialMemoryRoute: typeof AdminEditorialMemoryRoute
   AdminFounderLooksRoute: typeof AdminFounderLooksRoute
   AdminInventoryHealthRoute: typeof AdminInventoryHealthRoute
+  AdminLooksRoute: typeof AdminLooksRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
-  LookSlugRoute: typeof LookSlugRoute
+  AdminSystemRoute: typeof AdminSystemRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
@@ -636,6 +649,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInventoryHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/looks': {
+      id: '/admin/looks'
+      path: '/admin/looks'
+      fullPath: '/admin/looks'
+      preLoaderRoute: typeof AdminLooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/product-vault': {
       id: '/admin/product-vault'
       path: '/admin/product-vault'
@@ -648,6 +668,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/subscribers'
       fullPath: '/admin/subscribers'
       preLoaderRoute: typeof AdminSubscribersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/system': {
+      id: '/admin/system'
+      path: '/admin/system'
+      fullPath: '/admin/system'
+      preLoaderRoute: typeof AdminSystemRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brands/$slug': {
@@ -663,13 +690,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/destinations/$slug'
       preLoaderRoute: typeof DestinationsSlugRouteImport
       parentRoute: typeof DestinationsRoute
-    }
-    '/look/$slug': {
-      id: '/look/$slug'
-      path: '/look/$slug'
-      fullPath: '/look/$slug'
-      preLoaderRoute: typeof LookSlugRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/portofino/': {
       id: '/portofino/'
@@ -855,9 +875,10 @@ const rootRouteChildren: RootRouteChildren = {
   AdminEditorialMemoryRoute: AdminEditorialMemoryRoute,
   AdminFounderLooksRoute: AdminFounderLooksRoute,
   AdminInventoryHealthRoute: AdminInventoryHealthRoute,
+  AdminLooksRoute: AdminLooksRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
-  LookSlugRoute: LookSlugRoute,
+  AdminSystemRoute: AdminSystemRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
   ApiPublicMcpRoute: ApiPublicMcpRoute,
