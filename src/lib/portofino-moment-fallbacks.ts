@@ -189,6 +189,8 @@ export const PORTOFINO_MOMENT_SLUG_ALIASES: Record<string, string> = {
   "pool-lounging-shopping": "pool-lounging",
   "beach-club-long-lunch": "beach-club",
   "market-morning": "espresso-morning",
+  "via-roma-boutiques": "exploring-the-harbor",
+  "market-strolls": "espresso-morning",
 };
 
 /**
