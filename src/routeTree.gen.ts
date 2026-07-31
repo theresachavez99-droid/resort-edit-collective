@@ -9,82 +9,47 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as ResortEditsRouteImport } from './routes/resort-edits'
-import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
-import { Route as PortofinoRouteImport } from './routes/portofino'
-import { Route as MyEditRouteImport } from './routes/my-edit'
-import { Route as DestinationsRouteImport } from './routes/destinations'
-import { Route as BrandsRouteImport } from './routes/brands'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as BrandsRouteImport } from './routes/brands'
+import { Route as DestinationsRouteImport } from './routes/destinations'
+import { Route as MyEditRouteImport } from './routes/my-edit'
+import { Route as PortofinoRouteImport } from './routes/portofino'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as ResortEditsRouteImport } from './routes/resort-edits'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as PortofinoDay5RouteImport } from './routes/portofino.day-5'
-import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
-import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
-import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
-import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
-import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
-import { Route as LookSlugRouteImport } from './routes/look.$slug'
-import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
-import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
-import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
-import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
-import { Route as AdminInventoryHealthRouteImport } from './routes/admin.inventory-health'
-import { Route as AdminFounderLooksRouteImport } from './routes/admin.founder-looks'
-import { Route as AdminEditorialMemoryRouteImport } from './routes/admin.editorial-memory'
-import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
-import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
-import { Route as AdminMomentsIndexRouteImport } from './routes/admin.moments.index'
-import { Route as PortofinoPoolLoungingPoolsideGlamRouteImport } from './routes/portofino.pool-lounging.poolside-glam'
-import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
-import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
+import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
+import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
+import { Route as AdminEditorialMemoryRouteImport } from './routes/admin.editorial-memory'
+import { Route as AdminFounderLooksRouteImport } from './routes/admin.founder-looks'
+import { Route as AdminInventoryHealthRouteImport } from './routes/admin.inventory-health'
+import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
+import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
+import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
+import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
+import { Route as LookSlugRouteImport } from './routes/look.$slug'
+import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
+import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
+import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
+import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
+import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
+import { Route as PortofinoDay5RouteImport } from './routes/portofino.day-5'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
-import { Route as ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/api/public/[.well-known]/oauth-protected-resource'
-import { Route as ApiPublicChar91DotmcpChar93ListToolsRouteImport } from './routes/api/public/[.mcp]/list-tools'
+import { Route as AdminMomentsIndexRouteImport } from './routes/admin.moments.index'
+import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
+import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
+import { Route as PortofinoPoolLoungingPoolsideGlamRouteImport } from './routes/portofino.pool-lounging.poolside-glam'
 import { Route as AdminMomentsIdRunRouteImport } from './routes/admin.moments.$id.run'
+import { Route as ApiPublicChar91DotmcpChar93ListToolsRouteImport } from './routes/api/public/[.mcp]/list-tools'
+import { Route as ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/api/public/[.well-known]/oauth-protected-resource'
 import { Route as ApiPublicChar91DotmcpChar93InvokeToolToolRouteImport } from './routes/api/public/[.mcp]/invoke-tool/$tool'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
-  id: '/robots.txt',
-  path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResortEditsRoute = ResortEditsRouteImport.update({
-  id: '/resort-edits',
-  path: '/resort-edits',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortofinoRoute = PortofinoRouteImport.update({
-  id: '/portofino',
-  path: '/portofino',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyEditRoute = MyEditRouteImport.update({
-  id: '/my-edit',
-  path: '/my-edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DestinationsRoute = DestinationsRouteImport.update({
-  id: '/destinations',
-  path: '/destinations',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandsRoute = BrandsRouteImport.update({
-  id: '/brands',
-  path: '/brands',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -92,9 +57,44 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BrandsRoute = BrandsRouteImport.update({
+  id: '/brands',
+  path: '/brands',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DestinationsRoute = DestinationsRouteImport.update({
+  id: '/destinations',
+  path: '/destinations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyEditRoute = MyEditRouteImport.update({
+  id: '/my-edit',
+  path: '/my-edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortofinoRoute = PortofinoRouteImport.update({
+  id: '/portofino',
+  path: '/portofino',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResortEditsRoute = ResortEditsRouteImport.update({
+  id: '/resort-edits',
+  path: '/resort-edits',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -102,79 +102,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PortofinoDay5Route = PortofinoDay5RouteImport.update({
-  id: '/day-5',
-  path: '/day-5',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoDay4Route = PortofinoDay4RouteImport.update({
-  id: '/day-4',
-  path: '/day-4',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoDay3Route = PortofinoDay3RouteImport.update({
-  id: '/day-3',
-  path: '/day-3',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoDay2Route = PortofinoDay2RouteImport.update({
-  id: '/day-2',
-  path: '/day-2',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoDay1Route = PortofinoDay1RouteImport.update({
-  id: '/day-1',
-  path: '/day-1',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoMomentRoute = PortofinoMomentRouteImport.update({
-  id: '/$moment',
-  path: '/$moment',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const LookSlugRoute = LookSlugRouteImport.update({
-  id: '/look/$slug',
-  path: '/look/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => DestinationsRoute,
-} as any)
-const BrandsSlugRoute = BrandsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BrandsRoute,
-} as any)
-const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
-  id: '/admin/subscribers',
-  path: '/admin/subscribers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
-  id: '/admin/product-vault',
-  path: '/admin/product-vault',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
-  id: '/admin/inventory-health',
-  path: '/admin/inventory-health',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminFounderLooksRoute = AdminFounderLooksRouteImport.update({
-  id: '/admin/founder-looks',
-  path: '/admin/founder-looks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminEditorialMemoryRoute = AdminEditorialMemoryRouteImport.update({
-  id: '/admin/editorial-memory',
-  path: '/admin/editorial-memory',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminDestinationMomentsRoute = AdminDestinationMomentsRouteImport.update({
-  id: '/admin/destination-moments',
-  path: '/admin/destination-moments',
+const AdminBrandsRoute = AdminBrandsRouteImport.update({
+  id: '/admin/brands',
+  path: '/admin/brands',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminDayImagesRoute = AdminDayImagesRouteImport.update({
@@ -182,9 +112,84 @@ const AdminDayImagesRoute = AdminDayImagesRouteImport.update({
   path: '/admin/day-images',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminBrandsRoute = AdminBrandsRouteImport.update({
-  id: '/admin/brands',
-  path: '/admin/brands',
+const AdminDestinationMomentsRoute = AdminDestinationMomentsRouteImport.update({
+  id: '/admin/destination-moments',
+  path: '/admin/destination-moments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminEditorialMemoryRoute = AdminEditorialMemoryRouteImport.update({
+  id: '/admin/editorial-memory',
+  path: '/admin/editorial-memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminFounderLooksRoute = AdminFounderLooksRouteImport.update({
+  id: '/admin/founder-looks',
+  path: '/admin/founder-looks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
+  id: '/admin/inventory-health',
+  path: '/admin/inventory-health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
+  id: '/admin/product-vault',
+  path: '/admin/product-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
+  id: '/admin/subscribers',
+  path: '/admin/subscribers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandsSlugRoute = BrandsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BrandsRoute,
+} as any)
+const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => DestinationsRoute,
+} as any)
+const LookSlugRoute = LookSlugRouteImport.update({
+  id: '/look/$slug',
+  path: '/look/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortofinoMomentRoute = PortofinoMomentRouteImport.update({
+  id: '/$moment',
+  path: '/$moment',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay1Route = PortofinoDay1RouteImport.update({
+  id: '/day-1',
+  path: '/day-1',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay2Route = PortofinoDay2RouteImport.update({
+  id: '/day-2',
+  path: '/day-2',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay3Route = PortofinoDay3RouteImport.update({
+  id: '/day-3',
+  path: '/day-3',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay4Route = PortofinoDay4RouteImport.update({
+  id: '/day-4',
+  path: '/day-4',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const PortofinoDay5Route = PortofinoDay5RouteImport.update({
+  id: '/day-5',
+  path: '/day-5',
+  getParentRoute: () => PortofinoRoute,
+} as any)
+const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
+  id: '/admin/hero-outfit/$id',
+  path: '/admin/hero-outfit/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminMomentsIndexRoute = AdminMomentsIndexRouteImport.update({
@@ -192,44 +197,39 @@ const AdminMomentsIndexRoute = AdminMomentsIndexRouteImport.update({
   path: '/admin/moments/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
+  id: '/api/public/mcp',
+  path: '/api/public/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
+  id: '/$day/$look',
+  path: '/$day/$look',
+  getParentRoute: () => PortofinoRoute,
+} as any)
 const PortofinoPoolLoungingPoolsideGlamRoute =
   PortofinoPoolLoungingPoolsideGlamRouteImport.update({
     id: '/pool-lounging/poolside-glam',
     path: '/pool-lounging/poolside-glam',
     getParentRoute: () => PortofinoRoute,
   } as any)
-const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
-  id: '/$day/$look',
-  path: '/$day/$look',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
-  id: '/api/public/mcp',
-  path: '/api/public/mcp',
+const AdminMomentsIdRunRoute = AdminMomentsIdRunRouteImport.update({
+  id: '/admin/moments/$id/run',
+  path: '/admin/moments/$id/run',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
-  id: '/admin/hero-outfit/$id',
-  path: '/admin/hero-outfit/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute =
-  ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/api/public/.well-known/oauth-protected-resource',
-    path: '/api/public/.well-known/oauth-protected-resource',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiPublicChar91DotmcpChar93ListToolsRoute =
   ApiPublicChar91DotmcpChar93ListToolsRouteImport.update({
     id: '/api/public/.mcp/list-tools',
     path: '/api/public/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AdminMomentsIdRunRoute = AdminMomentsIdRunRouteImport.update({
-  id: '/admin/moments/$id/run',
-  path: '/admin/moments/$id/run',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute =
+  ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/api/public/.well-known/oauth-protected-resource',
+    path: '/api/public/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicChar91DotmcpChar93InvokeToolToolRoute =
   ApiPublicChar91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/api/public/.mcp/invoke-tool/$tool',
@@ -507,60 +507,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/resort-edits': {
-      id: '/resort-edits'
-      path: '/resort-edits'
-      fullPath: '/resort-edits'
-      preLoaderRoute: typeof ResortEditsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy-policy': {
-      id: '/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof PrivacyPolicyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portofino': {
-      id: '/portofino'
-      path: '/portofino'
-      fullPath: '/portofino'
-      preLoaderRoute: typeof PortofinoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/my-edit': {
-      id: '/my-edit'
-      path: '/my-edit'
-      fullPath: '/my-edit'
-      preLoaderRoute: typeof MyEditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/destinations': {
-      id: '/destinations'
-      path: '/destinations'
-      fullPath: '/destinations'
-      preLoaderRoute: typeof DestinationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/brands': {
-      id: '/brands'
-      path: '/brands'
-      fullPath: '/brands'
-      preLoaderRoute: typeof BrandsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -570,11 +521,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/brands': {
+      id: '/brands'
+      path: '/brands'
+      fullPath: '/brands'
+      preLoaderRoute: typeof BrandsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/destinations': {
+      id: '/destinations'
+      path: '/destinations'
+      fullPath: '/destinations'
+      preLoaderRoute: typeof DestinationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-edit': {
+      id: '/my-edit'
+      path: '/my-edit'
+      fullPath: '/my-edit'
+      preLoaderRoute: typeof MyEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portofino': {
+      id: '/portofino'
+      path: '/portofino'
+      fullPath: '/portofino'
+      preLoaderRoute: typeof PortofinoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resort-edits': {
+      id: '/resort-edits'
+      path: '/resort-edits'
+      fullPath: '/resort-edits'
+      preLoaderRoute: typeof ResortEditsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -584,109 +584,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/portofino/day-5': {
-      id: '/portofino/day-5'
-      path: '/day-5'
-      fullPath: '/portofino/day-5'
-      preLoaderRoute: typeof PortofinoDay5RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/day-4': {
-      id: '/portofino/day-4'
-      path: '/day-4'
-      fullPath: '/portofino/day-4'
-      preLoaderRoute: typeof PortofinoDay4RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/day-3': {
-      id: '/portofino/day-3'
-      path: '/day-3'
-      fullPath: '/portofino/day-3'
-      preLoaderRoute: typeof PortofinoDay3RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/day-2': {
-      id: '/portofino/day-2'
-      path: '/day-2'
-      fullPath: '/portofino/day-2'
-      preLoaderRoute: typeof PortofinoDay2RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/day-1': {
-      id: '/portofino/day-1'
-      path: '/day-1'
-      fullPath: '/portofino/day-1'
-      preLoaderRoute: typeof PortofinoDay1RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/$moment': {
-      id: '/portofino/$moment'
-      path: '/$moment'
-      fullPath: '/portofino/$moment'
-      preLoaderRoute: typeof PortofinoMomentRouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/look/$slug': {
-      id: '/look/$slug'
-      path: '/look/$slug'
-      fullPath: '/look/$slug'
-      preLoaderRoute: typeof LookSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/destinations/$slug': {
-      id: '/destinations/$slug'
-      path: '/$slug'
-      fullPath: '/destinations/$slug'
-      preLoaderRoute: typeof DestinationsSlugRouteImport
-      parentRoute: typeof DestinationsRoute
-    }
-    '/brands/$slug': {
-      id: '/brands/$slug'
-      path: '/$slug'
-      fullPath: '/brands/$slug'
-      preLoaderRoute: typeof BrandsSlugRouteImport
-      parentRoute: typeof BrandsRoute
-    }
-    '/admin/subscribers': {
-      id: '/admin/subscribers'
-      path: '/admin/subscribers'
-      fullPath: '/admin/subscribers'
-      preLoaderRoute: typeof AdminSubscribersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/product-vault': {
-      id: '/admin/product-vault'
-      path: '/admin/product-vault'
-      fullPath: '/admin/product-vault'
-      preLoaderRoute: typeof AdminProductVaultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/inventory-health': {
-      id: '/admin/inventory-health'
-      path: '/admin/inventory-health'
-      fullPath: '/admin/inventory-health'
-      preLoaderRoute: typeof AdminInventoryHealthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/founder-looks': {
-      id: '/admin/founder-looks'
-      path: '/admin/founder-looks'
-      fullPath: '/admin/founder-looks'
-      preLoaderRoute: typeof AdminFounderLooksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/editorial-memory': {
-      id: '/admin/editorial-memory'
-      path: '/admin/editorial-memory'
-      fullPath: '/admin/editorial-memory'
-      preLoaderRoute: typeof AdminEditorialMemoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/destination-moments': {
-      id: '/admin/destination-moments'
-      path: '/admin/destination-moments'
-      fullPath: '/admin/destination-moments'
-      preLoaderRoute: typeof AdminDestinationMomentsRouteImport
+    '/admin/brands': {
+      id: '/admin/brands'
+      path: '/admin/brands'
+      fullPath: '/admin/brands'
+      preLoaderRoute: typeof AdminBrandsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/day-images': {
@@ -696,11 +598,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDayImagesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/brands': {
-      id: '/admin/brands'
-      path: '/admin/brands'
-      fullPath: '/admin/brands'
-      preLoaderRoute: typeof AdminBrandsRouteImport
+    '/admin/destination-moments': {
+      id: '/admin/destination-moments'
+      path: '/admin/destination-moments'
+      fullPath: '/admin/destination-moments'
+      preLoaderRoute: typeof AdminDestinationMomentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/editorial-memory': {
+      id: '/admin/editorial-memory'
+      path: '/admin/editorial-memory'
+      fullPath: '/admin/editorial-memory'
+      preLoaderRoute: typeof AdminEditorialMemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/founder-looks': {
+      id: '/admin/founder-looks'
+      path: '/admin/founder-looks'
+      fullPath: '/admin/founder-looks'
+      preLoaderRoute: typeof AdminFounderLooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/inventory-health': {
+      id: '/admin/inventory-health'
+      path: '/admin/inventory-health'
+      fullPath: '/admin/inventory-health'
+      preLoaderRoute: typeof AdminInventoryHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/product-vault': {
+      id: '/admin/product-vault'
+      path: '/admin/product-vault'
+      fullPath: '/admin/product-vault'
+      preLoaderRoute: typeof AdminProductVaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/subscribers': {
+      id: '/admin/subscribers'
+      path: '/admin/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AdminSubscribersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brands/$slug': {
+      id: '/brands/$slug'
+      path: '/$slug'
+      fullPath: '/brands/$slug'
+      preLoaderRoute: typeof BrandsSlugRouteImport
+      parentRoute: typeof BrandsRoute
+    }
+    '/destinations/$slug': {
+      id: '/destinations/$slug'
+      path: '/$slug'
+      fullPath: '/destinations/$slug'
+      preLoaderRoute: typeof DestinationsSlugRouteImport
+      parentRoute: typeof DestinationsRoute
+    }
+    '/look/$slug': {
+      id: '/look/$slug'
+      path: '/look/$slug'
+      fullPath: '/look/$slug'
+      preLoaderRoute: typeof LookSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portofino/$moment': {
+      id: '/portofino/$moment'
+      path: '/$moment'
+      fullPath: '/portofino/$moment'
+      preLoaderRoute: typeof PortofinoMomentRouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-1': {
+      id: '/portofino/day-1'
+      path: '/day-1'
+      fullPath: '/portofino/day-1'
+      preLoaderRoute: typeof PortofinoDay1RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-2': {
+      id: '/portofino/day-2'
+      path: '/day-2'
+      fullPath: '/portofino/day-2'
+      preLoaderRoute: typeof PortofinoDay2RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-3': {
+      id: '/portofino/day-3'
+      path: '/day-3'
+      fullPath: '/portofino/day-3'
+      preLoaderRoute: typeof PortofinoDay3RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-4': {
+      id: '/portofino/day-4'
+      path: '/day-4'
+      fullPath: '/portofino/day-4'
+      preLoaderRoute: typeof PortofinoDay4RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/portofino/day-5': {
+      id: '/portofino/day-5'
+      path: '/day-5'
+      fullPath: '/portofino/day-5'
+      preLoaderRoute: typeof PortofinoDay5RouteImport
+      parentRoute: typeof PortofinoRoute
+    }
+    '/admin/hero-outfit/$id': {
+      id: '/admin/hero-outfit/$id'
+      path: '/admin/hero-outfit/$id'
+      fullPath: '/admin/hero-outfit/$id'
+      preLoaderRoute: typeof AdminHeroOutfitIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/moments/': {
@@ -710,12 +717,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminMomentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/portofino/pool-lounging/poolside-glam': {
-      id: '/portofino/pool-lounging/poolside-glam'
-      path: '/pool-lounging/poolside-glam'
-      fullPath: '/portofino/pool-lounging/poolside-glam'
-      preLoaderRoute: typeof PortofinoPoolLoungingPoolsideGlamRouteImport
-      parentRoute: typeof PortofinoRoute
+    '/api/public/mcp': {
+      id: '/api/public/mcp'
+      path: '/api/public/mcp'
+      fullPath: '/api/public/mcp'
+      preLoaderRoute: typeof ApiPublicMcpRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/portofino/$day/$look': {
       id: '/portofino/$day/$look'
@@ -724,25 +731,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortofinoDayLookRouteImport
       parentRoute: typeof PortofinoRoute
     }
-    '/api/public/mcp': {
-      id: '/api/public/mcp'
-      path: '/api/public/mcp'
-      fullPath: '/api/public/mcp'
-      preLoaderRoute: typeof ApiPublicMcpRouteImport
-      parentRoute: typeof rootRouteImport
+    '/portofino/pool-lounging/poolside-glam': {
+      id: '/portofino/pool-lounging/poolside-glam'
+      path: '/pool-lounging/poolside-glam'
+      fullPath: '/portofino/pool-lounging/poolside-glam'
+      preLoaderRoute: typeof PortofinoPoolLoungingPoolsideGlamRouteImport
+      parentRoute: typeof PortofinoRoute
     }
-    '/admin/hero-outfit/$id': {
-      id: '/admin/hero-outfit/$id'
-      path: '/admin/hero-outfit/$id'
-      fullPath: '/admin/hero-outfit/$id'
-      preLoaderRoute: typeof AdminHeroOutfitIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/.well-known/oauth-protected-resource': {
-      id: '/api/public/.well-known/oauth-protected-resource'
-      path: '/api/public/.well-known/oauth-protected-resource'
-      fullPath: '/api/public/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/admin/moments/$id/run': {
+      id: '/admin/moments/$id/run'
+      path: '/admin/moments/$id/run'
+      fullPath: '/admin/moments/$id/run'
+      preLoaderRoute: typeof AdminMomentsIdRunRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/.mcp/list-tools': {
@@ -752,11 +752,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicChar91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/moments/$id/run': {
-      id: '/admin/moments/$id/run'
-      path: '/admin/moments/$id/run'
-      fullPath: '/admin/moments/$id/run'
-      preLoaderRoute: typeof AdminMomentsIdRunRouteImport
+    '/api/public/.well-known/oauth-protected-resource': {
+      id: '/api/public/.well-known/oauth-protected-resource'
+      path: '/api/public/.well-known/oauth-protected-resource'
+      fullPath: '/api/public/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/.mcp/invoke-tool/$tool': {

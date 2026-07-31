@@ -355,10 +355,13 @@ export const invalidatePublishedCollectionCache = createServerFn({ method: "POST
       .object({
         destination: z.string().min(1).max(120).optional(),
         activity: z.string().min(1).max(120).optional(),
+        password: z.string().min(1).max(200),
       })
       .parse(input),
   )
   .handler(async ({ data }) => {
+    const { requireAdmin } = await import("./admin-auth.server");
+    requireAdmin(data.password);
     invalidatePublishedCollection(data.destination, data.activity);
     return { ok: true as const };
   });
