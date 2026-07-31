@@ -160,7 +160,7 @@ function AdminDashboard() {
           <h1 className="font-serif text-3xl">Resort Edit</h1>
         </div>
       <p className="text-xs text-stone-500 italic max-w-xs text-right hidden sm:block">
-          Founder Looks → Buying Office → Publish
+          Moment Runs → Looks → Publish
         </p>
       </header>
 
@@ -170,6 +170,7 @@ function AdminDashboard() {
         <Metric label="Awaiting Review" value={m?.looksAwaiting} />
         <Metric label="Approved" value={m?.looksApproved} />
         <Metric label="Published" value={m?.looksPublished} accent="emerald" />
+        <Metric label="Studio Looks" value={m?.candidatesTotal} />
         <Metric label="Products" value={m?.productsLibrary} />
         <Metric label="Inventory Issues" value={m?.inventoryIssues} accent="amber" />
       </section>
@@ -177,7 +178,7 @@ function AdminDashboard() {
       {/* Quick actions */}
       <section className="flex flex-wrap gap-2">
         <QuickAction to="/admin/moments" label="Open Moment Runs" />
-        <QuickAction to="/admin/founder-looks" label="Founder Looks" />
+        <QuickAction to="/admin/looks" label="Looks" />
         <QuickAction to="/admin/destination-moments" label="Destination Moments" />
       </section>
 
