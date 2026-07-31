@@ -23,7 +23,7 @@ import {
 } from "@/lib/founder-feedback.functions";
 import { analyzeFounderLookDuplicates } from "@/lib/editorial-memory.functions";
 
-export const Route = createFileRoute("/admin/founder-looks")({
+export const Route = createFileRoute("/admin/looks")({
   head: () => ({
     meta: [
       { title: "Founder Look Builder — Admin (Resort Edit)" },
