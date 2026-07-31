@@ -13,7 +13,7 @@ export const Route = createFileRoute("/robots.txt")({
       GET: ({ request }) => {
         const host = (request.headers.get("host") ?? "").toLowerCase();
         const body = isProdHost(host)
-          ? `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`
+          ? `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${SITE_URL}/sitemap.xml\n`
           : `User-agent: *\nDisallow: /\n`;
         return new Response(body, {
           headers: {
