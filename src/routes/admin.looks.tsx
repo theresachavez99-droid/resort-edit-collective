@@ -8,7 +8,6 @@ import {
   getFounderLook,
   saveFounderLook,
   publishFounderLook,
-  seedPoolLoungingValidationLook,
   recordValidationRun,
   refreshFounderLookHeroImages,
 } from "@/lib/founder-looks.functions";
