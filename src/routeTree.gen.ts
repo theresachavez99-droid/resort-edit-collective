@@ -24,6 +24,7 @@ import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
 import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
 import { Route as AdminEditorialMemoryRouteImport } from './routes/admin.editorial-memory'
+import { Route as AdminFounderLooksRouteImport } from './routes/admin.founder-looks'
 import { Route as AdminInventoryHealthRouteImport } from './routes/admin.inventory-health'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
@@ -120,6 +121,11 @@ const AdminDestinationMomentsRoute = AdminDestinationMomentsRouteImport.update({
 const AdminEditorialMemoryRoute = AdminEditorialMemoryRouteImport.update({
   id: '/admin/editorial-memory',
   path: '/admin/editorial-memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminFounderLooksRoute = AdminFounderLooksRouteImport.update({
+  id: '/admin/founder-looks',
+  path: '/admin/founder-looks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
@@ -252,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
+  '/admin/founder-looks': typeof AdminFounderLooksRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
+  '/admin/founder-looks': typeof AdminFounderLooksRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -330,6 +338,7 @@ export interface FileRoutesById {
   '/admin/day-images': typeof AdminDayImagesRoute
   '/admin/destination-moments': typeof AdminDestinationMomentsRoute
   '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
+  '/admin/founder-looks': typeof AdminFounderLooksRoute
   '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
@@ -371,6 +380,7 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-memory'
+    | '/admin/founder-looks'
     | '/admin/inventory-health'
     | '/admin/looks'
     | '/admin/product-vault'
@@ -409,6 +419,7 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-memory'
+    | '/admin/founder-looks'
     | '/admin/inventory-health'
     | '/admin/looks'
     | '/admin/product-vault'
@@ -448,6 +459,7 @@ export interface FileRouteTypes {
     | '/admin/day-images'
     | '/admin/destination-moments'
     | '/admin/editorial-memory'
+    | '/admin/founder-looks'
     | '/admin/inventory-health'
     | '/admin/looks'
     | '/admin/product-vault'
@@ -488,6 +500,7 @@ export interface RootRouteChildren {
   AdminDayImagesRoute: typeof AdminDayImagesRoute
   AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
   AdminEditorialMemoryRoute: typeof AdminEditorialMemoryRoute
+  AdminFounderLooksRoute: typeof AdminFounderLooksRoute
   AdminInventoryHealthRoute: typeof AdminInventoryHealthRoute
   AdminLooksRoute: typeof AdminLooksRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
@@ -607,6 +620,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/editorial-memory'
       fullPath: '/admin/editorial-memory'
       preLoaderRoute: typeof AdminEditorialMemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/founder-looks': {
+      id: '/admin/founder-looks'
+      path: '/admin/founder-looks'
+      fullPath: '/admin/founder-looks'
+      preLoaderRoute: typeof AdminFounderLooksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/inventory-health': {
@@ -833,6 +853,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminDayImagesRoute: AdminDayImagesRoute,
   AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
   AdminEditorialMemoryRoute: AdminEditorialMemoryRoute,
+  AdminFounderLooksRoute: AdminFounderLooksRoute,
   AdminInventoryHealthRoute: AdminInventoryHealthRoute,
   AdminLooksRoute: AdminLooksRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
