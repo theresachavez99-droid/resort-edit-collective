@@ -790,6 +790,7 @@ export const Route = createFileRoute("/portofino/$moment")({
         to: "/portofino/$moment",
         params: { moment: aliased },
         replace: true,
+        statusCode: 301,
       });
     }
     const def = getPortofinoMomentDef(params.moment);
@@ -1047,6 +1048,9 @@ function MomentPage() {
               />
               <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
                 INSPIRED BY
+              </span>
+              <span className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink/55 to-transparent px-3 pb-2 pt-6 text-[0.62rem] font-serif italic text-ivory/90 text-center">
+                AI-styled on Lilla, our house muse — every piece is real and shoppable.
               </span>
             </div>
             <div className="space-y-4 lg:pl-2">
@@ -1782,6 +1786,10 @@ function isUsableShopUrl(url: string | undefined | null): url is string {
     const u = new URL(url);
     if (u.hostname.endsWith("google.com") && u.pathname.startsWith("/search")) return false;
     if (u.hostname.endsWith("bing.com") && u.pathname.startsWith("/search")) return false;
+    if (u.pathname.includes("/product-search")) return false;
+    if (u.searchParams.has("keywords") && !u.pathname.includes("/product/")) return false;
+    if (u.pathname.includes("/collections/") && !u.pathname.includes("/products/")) return false;
+    if (u.hostname.endsWith("revolve.com") && u.pathname.includes("/br/")) return false;
     return true;
   } catch {
     return false;
