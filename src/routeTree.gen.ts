@@ -29,6 +29,7 @@ import { Route as AdminInventoryHealthRouteImport } from './routes/admin.invento
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
+import { Route as AdminSystemRouteImport } from './routes/admin.system'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
@@ -148,6 +149,11 @@ const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
   path: '/admin/subscribers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSystemRoute = AdminSystemRouteImport.update({
+  id: '/admin/system',
+  path: '/admin/system',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandsSlugRoute = BrandsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByTo {
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
@@ -343,6 +351,7 @@ export interface FileRoutesById {
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-vault': typeof AdminProductVaultRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
+  '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
@@ -385,6 +394,7 @@ export interface FileRouteTypes {
     | '/admin/looks'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/$moment'
@@ -424,6 +434,7 @@ export interface FileRouteTypes {
     | '/admin/looks'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/$moment'
@@ -464,6 +475,7 @@ export interface FileRouteTypes {
     | '/admin/looks'
     | '/admin/product-vault'
     | '/admin/subscribers'
+    | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/$moment'
@@ -505,6 +517,7 @@ export interface RootRouteChildren {
   AdminLooksRoute: typeof AdminLooksRoute
   AdminProductVaultRoute: typeof AdminProductVaultRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
+  AdminSystemRoute: typeof AdminSystemRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
@@ -655,6 +668,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/subscribers'
       fullPath: '/admin/subscribers'
       preLoaderRoute: typeof AdminSubscribersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/system': {
+      id: '/admin/system'
+      path: '/admin/system'
+      fullPath: '/admin/system'
+      preLoaderRoute: typeof AdminSystemRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brands/$slug': {
@@ -858,6 +878,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLooksRoute: AdminLooksRoute,
   AdminProductVaultRoute: AdminProductVaultRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
+  AdminSystemRoute: AdminSystemRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
   ApiPublicMcpRoute: ApiPublicMcpRoute,
