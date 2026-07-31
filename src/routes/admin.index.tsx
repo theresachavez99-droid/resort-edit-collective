@@ -14,7 +14,7 @@ import { getAdminMetrics } from "@/lib/admin-metrics.functions";
 export const Route = createFileRoute("/admin/")({
   head: () => ({
     meta: [
-      { title: "Founder Dashboard — Resort Edit" },
+      { title: "Studio — Resort Edit" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
@@ -154,7 +154,7 @@ function AdminDashboard() {
       <header className="flex items-end justify-between">
         <div>
           <p className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500">
-            Founder Dashboard
+            Studio
           </p>
           <h1 className="font-serif text-3xl">Resort Edit</h1>
         </div>
