@@ -86,8 +86,6 @@ function MomentsBoard({ password }: { password: string }) {
   const qc = useQueryClient();
   const archFn = useServerFn(listMomentArchetypes);
   const momFn = useServerFn(listAllDestinationMoments);
-  const seedArchFn = useServerFn(seedMomentArchetypes);
-  const seedPortFn = useServerFn(seedPortofinoMoments);
   const verdictsFn = useServerFn(getPortofinoMomentVerdicts);
 
   const archetypes = useQuery({
@@ -101,15 +99,6 @@ function MomentsBoard({ password }: { password: string }) {
   const verdicts = useQuery({
     queryKey: ["portofino-moment-verdicts"],
     queryFn: () => verdictsFn({ data: { password } }),
-  });
-
-  const seedArch = useMutation({
-    mutationFn: () => seedArchFn({ data: { password } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["dest-moment-archetypes"] }),
-  });
-  const seedPort = useMutation({
-    mutationFn: () => seedPortFn({ data: { password } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["dest-moments-all"] }),
   });
 
   const momentRows = moments.data?.ok ? moments.data.moments : [];
@@ -134,22 +123,12 @@ function MomentsBoard({ password }: { password: string }) {
               The vocabulary every Resort Edit destination is built from. DRESSED FOR THE DESTINATION™.
             </p>
           </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => seedArch.mutate()}
-              disabled={seedArch.isPending}
-              className="border border-ink/30 px-3 py-2 text-[0.65rem] tracking-[0.22em] uppercase disabled:opacity-50"
-            >
-              {seedArch.isPending ? "Seeding…" : "Seed archetype library"}
-            </button>
-            <button
-              onClick={() => seedPort.mutate()}
-              disabled={seedPort.isPending}
-              className="bg-ink text-ivory px-3 py-2 text-[0.65rem] tracking-[0.22em] uppercase disabled:opacity-50"
-            >
-              {seedPort.isPending ? "Seeding…" : "Seed Portofino moments"}
-            </button>
-          </div>
+          <Link
+            to="/admin/system"
+            className="border border-ink/30 px-3 py-2 text-[0.65rem] tracking-[0.22em] uppercase"
+          >
+            Seeds → System
+          </Link>
         </div>
       </header>
 
@@ -165,7 +144,9 @@ function MomentsBoard({ password }: { password: string }) {
               <ArchetypeCard key={a.id} a={a} />
             ))}
             {!archRows.length && !archetypes.isLoading && (
-              <p className="text-sm text-ink/55 italic">No archetypes yet — click "Seed archetype library".</p>
+              <p className="text-sm text-ink/55 italic">
+                No archetypes yet — run "Seed: Moment Archetypes" in System.
+              </p>
             )}
           </div>
         </section>
@@ -177,7 +158,9 @@ function MomentsBoard({ password }: { password: string }) {
             <p className="text-[0.7rem] text-ink/55">{momentRows.length} moments across {Object.keys(byDestination).length} destinations</p>
           </header>
           {Object.entries(byDestination).length === 0 && (
-            <p className="text-sm text-ink/55 italic">No destination moments yet — click "Seed Portofino moments".</p>
+            <p className="text-sm text-ink/55 italic">
+              No destination moments yet — run "Seed: Portofino Moments" in System.
+            </p>
           )}
           <div className="space-y-10">
             {Object.entries(byDestination).map(([destSlug, list]) => (
