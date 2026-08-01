@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { orderedProducts, type ResortEditLook } from "@/data/resortEditLooks";
+import { SaveLookButton } from "@/components/SaveLookButton";
 
 /**
  * Browse card for a Resort Edit Look. Used on moment pages inside the
@@ -10,9 +11,16 @@ import { orderedProducts, type ResortEditLook } from "@/data/resortEditLooks";
  * look. Kept in the design system so future sibling looks can render
  * without additional component work.
  */
-export function ResortEditLookCard({ look }: { look: ResortEditLook }) {
+export function ResortEditLookCard({
+  look,
+  momentName,
+}: {
+  look: ResortEditLook;
+  momentName?: string;
+}) {
   const preview = orderedProducts(look).slice(0, 5);
   return (
+    <div className="relative">
     <Link
       to="/portofino/$day/$look"
       params={{ day: look.moment, look: look.slug }}
@@ -55,5 +63,22 @@ export function ResortEditLookCard({ look }: { look: ResortEditLook }) {
         </div>
       </div>
     </Link>
+      <div className="absolute top-3 right-3">
+        <SaveLookButton
+          variant="icon"
+          tone="light"
+          source="resort_edit_look_card"
+          look={{
+            id: `portofino/${look.moment}/${look.slug}`,
+            destination: "Portofino",
+            activity: momentName ?? look.moment,
+            title: look.title,
+            description: look.oneLiner,
+            image: look.heroImage,
+            url: `/portofino/${look.moment}/${look.slug}`,
+          }}
+        />
+      </div>
+    </div>
   );
 }
