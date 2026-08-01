@@ -7,6 +7,9 @@
  * Hero garments themselves never appear in this list — they're locked
  * in by the Founder during Stage 3 import and never replaced by the
  * Stylist Engine.
+ *
+ * Rings are permanently excluded from Resort Edit merchandising, so no
+ * profile defines a ring slot (see `merchandising-exclusions.ts`).
  */
 
 export type AccessoryProfile = "day" | "night" | "water";
@@ -26,7 +29,6 @@ const DAY_SLOTS: SlotDefinition[] = [
   { slot: "earrings", label: "Earrings", required: true, category: "jewelry" },
   { slot: "necklace", label: "Necklace", required: true, category: "jewelry" },
   { slot: "bracelet", label: "Bracelet", required: true, category: "jewelry" },
-  { slot: "ring", label: "Ring", required: true, category: "jewelry" },
 ];
 
 const NIGHT_SLOTS: SlotDefinition[] = [
@@ -35,7 +37,6 @@ const NIGHT_SLOTS: SlotDefinition[] = [
   { slot: "earrings", label: "Earrings", required: true, category: "jewelry" },
   { slot: "necklace", label: "Necklace", required: true, category: "jewelry" },
   { slot: "bracelet", label: "Bracelet", required: true, category: "jewelry" },
-  { slot: "ring", label: "Ring", required: true, category: "jewelry" },
 ];
 
 const WATER_SLOTS: SlotDefinition[] = [
