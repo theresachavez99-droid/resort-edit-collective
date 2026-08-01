@@ -24,7 +24,6 @@ export const Route = createFileRoute("/brands")({
       },
       { property: "og:url", content: absoluteUrl("/brands") },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/brands") }],
   }),
   component: BrandsPage,
 });
