@@ -7,6 +7,7 @@ import {
 import { findResortEditLook, orderedProducts } from "@/data/resortEditLooks";
 import { ResortEditProductCard } from "@/components/resort-edit/ResortEditProductCard";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
+import { SaveLookButton } from "@/components/SaveLookButton";
 import { absoluteUrl } from "@/lib/site";
 
 const DAY_SLUGS = new Set<LegacyDaySlug>([
@@ -123,6 +124,18 @@ function CompleteLookPage() {
               <p className="font-serif italic text-[1.05rem] md:text-[1.1rem] text-ink/80 leading-relaxed max-w-prose">
                 {look.description}
               </p>
+              <SaveLookButton
+                source="complete_look_detail"
+                look={{
+                  id: `portofino/${day}/${look.slug}`,
+                  destination: "Portofino",
+                  activity: momentName,
+                  title: look.title,
+                  description: look.description,
+                  image: look.heroImage,
+                  url: `/portofino/${day}/${look.slug}`,
+                }}
+              />
               <div className="pt-3 border-t border-border/40" />
               <div>
                 <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
