@@ -75,6 +75,15 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       url: "https://us.missoma.com/products/classic-thin-snake-chain-necklace-18k-gold-plated",
       image: "",
     },
+    {
+      slotLabel: "Bracelet",
+      category: "Bracelet",
+      brand: "Laura Lombardi",
+      title: "Cresca Bracelet — 14k Gold Plated",
+      price: "$111",
+      url: "https://www.lauralombardi.com/products/cresca-bracelet",
+      image: "",
+    },
   ],
   "long-lunch": [
     {
