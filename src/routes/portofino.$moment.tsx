@@ -268,6 +268,7 @@ import {
   PORTOFINO_MOMENT_SLUG_ALIASES,
 } from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
+import { ShopOmissionRows, SHOP_ACCURACY_NOTE } from "@/components/ShopOmissionRows";
 import { absoluteUrl } from "@/lib/site";
 import { findLook, lookbook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type Look, type LookProduct } from "@/data/lookbook";
 import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
@@ -596,7 +597,7 @@ function MomentPage() {
                       The Resort Edit
                     </h3>
                     <p className="font-serif italic text-[0.95rem] text-ink/70 mt-2 leading-relaxed max-w-prose">
-                      Inspired by this editorial moment, discover Resort Edit's curated interpretation using luxury pieces selected to recreate the same destination mood and effortless Riviera style.
+                      The pieces we would choose to wear this moment — matched to the photograph, from the designers we return to season after season.
                     </p>
                   </div>
                   <ShopLookPanel heading={shopHeading} entries={featuredShop} />
@@ -606,7 +607,7 @@ function MomentPage() {
                         to={completeLookHref}
                         className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.36em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-8 py-4"
                       >
-                        VIEW COMPLETE LOOK →
+                        VIEW THE FULL EDIT →
                       </Link>
                     </div>
                   )}
@@ -1064,7 +1065,7 @@ function EditorialLookCard({
               aria-controls={`shop-${look.daySlug}-${look.lookSlug}`}
               className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
             >
-              {isOpen ? "HIDE COMPLETE LOOK" : "VIEW COMPLETE LOOK"}
+              {isOpen ? "HIDE THE EDIT" : "VIEW THE EDIT"}
               <ChevronDown
                 className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
               />
@@ -1478,6 +1479,9 @@ function NightcapShopExpander({
 }) {
   const [open, setOpen] = useState(false);
   const rows = shop.products.filter((p) => !p.unsourced && isUsableShopUrl(p.url));
+  const omitted = shop.products
+    .filter((p) => p.unsourced || !isUsableShopUrl(p.url))
+    .map((p) => ({ slot: p.slot, brand: p.brand, name: p.name, price: p.price }));
   if (rows.length === 0) return null;
   return (
     <div className="mt-3">
@@ -1487,7 +1491,7 @@ function NightcapShopExpander({
         aria-expanded={open}
         className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-5 py-2.5"
       >
-        {open ? "HIDE COMPLETE LOOK" : "SHOP COMPLETE LOOK"}
+        {open ? "HIDE THE EDIT" : "SHOP THE EDIT"}
         <ChevronDown
           className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden="true"
@@ -1533,11 +1537,15 @@ function NightcapShopExpander({
               </li>
             ))}
           </ul>
+          <ShopOmissionRows rows={omitted} />
           {shop.stylingNote && (
             <p className="font-serif italic text-[0.85rem] text-ink/60 mt-6 leading-relaxed">
               {shop.stylingNote}
             </p>
           )}
+          <p className="font-serif text-[0.78rem] text-ink/45 mt-3 leading-relaxed">
+            {SHOP_ACCURACY_NOTE}
+          </p>
           <p className="sr-only">Complete look for {card.title}</p>
         </div>
       )}
@@ -1633,6 +1641,9 @@ function ExtraCompleteLookExpander({
 }) {
   const [open, setOpen] = useState(false);
   const rows = shop.products.filter((p) => !p.unsourced && isUsableShopUrl(p.url));
+  const omitted = shop.products
+    .filter((p) => p.unsourced || !isUsableShopUrl(p.url))
+    .map((p) => ({ slot: p.slot, brand: p.brand, name: p.name, price: p.price }));
   if (rows.length === 0) return null;
   return (
     <div className="mt-3">
@@ -1642,7 +1653,7 @@ function ExtraCompleteLookExpander({
         aria-expanded={open}
         className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-5 py-2.5"
       >
-        {open ? "HIDE COMPLETE LOOK" : "SHOP COMPLETE LOOK"}
+        {open ? "HIDE THE EDIT" : "SHOP THE EDIT"}
         <ChevronDown
           className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden="true"
@@ -1690,11 +1701,15 @@ function ExtraCompleteLookExpander({
               </li>
             ))}
           </ul>
+          <ShopOmissionRows rows={omitted} />
           {shop.stylingNote && (
             <p className="font-serif italic text-[0.85rem] text-ink/60 mt-6 leading-relaxed">
               {shop.stylingNote}
             </p>
           )}
+          <p className="font-serif text-[0.78rem] text-ink/45 mt-3 leading-relaxed">
+            {SHOP_ACCURACY_NOTE}
+          </p>
           <p className="sr-only">Complete look for {title}</p>
         </div>
       )}
