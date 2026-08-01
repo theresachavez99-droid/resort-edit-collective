@@ -73,23 +73,6 @@ function AboutPage() {
       </section>
 
       <section
-        id="our-muse"
-        className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
-      >
-        <span className="eyebrow text-gold">Our Muse</span>
-        <div className="mx-auto max-w-xl text-left mt-8">
-          <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
-            <p>
-              The looks you see across Resort Edit are AI-styled on Lilla, our house muse. Lilla is not a real person — she is how we show you a complete look, in the destination, before you pack it.
-            </p>
-            <p>
-              Every piece she wears is chosen from real, shoppable collections. Where we have verified the exact product, we link straight to the retailer that carries it; where a piece is still being sourced, we name it and leave the link off rather than send you somewhere approximate.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section
         id="affiliate-disclosure"
         className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
       >
