@@ -36,10 +36,27 @@ export const Route = createFileRoute("/brands/$slug")({
           },
           { property: "og:title", content: `${loaderData.brand.name} | Resort Edit | Dressed for the destination` },
           { property: "og:url", content: absoluteUrl(`/brands/${loaderData.brand.slug}`) },
+          { property: "og:description", content: loaderData.brand.blurb ?? `Shop ${loaderData.brand.name} on Resort Edit.` },
         ]
       : [],
     links: loaderData
       ? [{ rel: "canonical", href: absoluteUrl(`/brands/${loaderData.brand.slug}`) }]
+      : [],
+    scripts: loaderData
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Resort Edit", item: absoluteUrl("/") },
+                { "@type": "ListItem", position: 2, name: "Brands We Love", item: absoluteUrl("/brands") },
+                { "@type": "ListItem", position: 3, name: loaderData.brand.name, item: absoluteUrl(`/brands/${loaderData.brand.slug}`) },
+              ],
+            }),
+          },
+        ]
       : [],
   }),
   component: BrandPage,
