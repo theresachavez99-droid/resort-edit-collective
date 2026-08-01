@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as MyEditRouteImport } from './routes/my-edit'
@@ -59,6 +60,11 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandsRoute = BrandsRouteImport.update({
   id: '/brands',
   path: '/brands',
@@ -100,59 +106,59 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
-  id: '/admin/brands',
-  path: '/admin/brands',
-  getParentRoute: () => rootRouteImport,
+  id: '/brands',
+  path: '/brands',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminDayImagesRoute = AdminDayImagesRouteImport.update({
-  id: '/admin/day-images',
-  path: '/admin/day-images',
-  getParentRoute: () => rootRouteImport,
+  id: '/day-images',
+  path: '/day-images',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminDestinationMomentsRoute = AdminDestinationMomentsRouteImport.update({
-  id: '/admin/destination-moments',
-  path: '/admin/destination-moments',
-  getParentRoute: () => rootRouteImport,
+  id: '/destination-moments',
+  path: '/destination-moments',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminEditorialMemoryRoute = AdminEditorialMemoryRouteImport.update({
-  id: '/admin/editorial-memory',
-  path: '/admin/editorial-memory',
-  getParentRoute: () => rootRouteImport,
+  id: '/editorial-memory',
+  path: '/editorial-memory',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminFounderLooksRoute = AdminFounderLooksRouteImport.update({
-  id: '/admin/founder-looks',
-  path: '/admin/founder-looks',
-  getParentRoute: () => rootRouteImport,
+  id: '/founder-looks',
+  path: '/founder-looks',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
-  id: '/admin/inventory-health',
-  path: '/admin/inventory-health',
-  getParentRoute: () => rootRouteImport,
+  id: '/inventory-health',
+  path: '/inventory-health',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminLooksRoute = AdminLooksRouteImport.update({
-  id: '/admin/looks',
-  path: '/admin/looks',
-  getParentRoute: () => rootRouteImport,
+  id: '/looks',
+  path: '/looks',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
-  id: '/admin/product-vault',
-  path: '/admin/product-vault',
-  getParentRoute: () => rootRouteImport,
+  id: '/product-vault',
+  path: '/product-vault',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
-  id: '/admin/subscribers',
-  path: '/admin/subscribers',
-  getParentRoute: () => rootRouteImport,
+  id: '/subscribers',
+  path: '/subscribers',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminSystemRoute = AdminSystemRouteImport.update({
-  id: '/admin/system',
-  path: '/admin/system',
-  getParentRoute: () => rootRouteImport,
+  id: '/system',
+  path: '/system',
+  getParentRoute: () => AdminRoute,
 } as any)
 const BrandsSlugRoute = BrandsSlugRouteImport.update({
   id: '/$slug',
@@ -200,14 +206,14 @@ const PortofinoDay5Route = PortofinoDay5RouteImport.update({
   getParentRoute: () => PortofinoRoute,
 } as any)
 const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
-  id: '/admin/hero-outfit/$id',
-  path: '/admin/hero-outfit/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/hero-outfit/$id',
+  path: '/hero-outfit/$id',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminMomentsIndexRoute = AdminMomentsIndexRouteImport.update({
-  id: '/admin/moments/',
-  path: '/admin/moments/',
-  getParentRoute: () => rootRouteImport,
+  id: '/moments/',
+  path: '/moments/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   id: '/api/public/mcp',
@@ -226,9 +232,9 @@ const PortofinoPoolLoungingPoolsideGlamRoute =
     getParentRoute: () => PortofinoRoute,
   } as any)
 const AdminMomentsIdRunRoute = AdminMomentsIdRunRouteImport.update({
-  id: '/admin/moments/$id/run',
-  path: '/admin/moments/$id/run',
-  getParentRoute: () => rootRouteImport,
+  id: '/moments/$id/run',
+  path: '/moments/$id/run',
+  getParentRoute: () => AdminRoute,
 } as any)
 const ApiPublicChar91DotmcpChar93ListToolsRoute =
   ApiPublicChar91DotmcpChar93ListToolsRouteImport.update({
@@ -252,6 +258,7 @@ const ApiPublicChar91DotmcpChar93InvokeToolToolRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
@@ -334,6 +341,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
@@ -377,6 +385,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/brands'
     | '/destinations'
     | '/my-edit'
@@ -458,6 +467,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/brands'
     | '/destinations'
     | '/my-edit'
@@ -500,6 +510,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BrandsRoute: typeof BrandsRouteWithChildren
   DestinationsRoute: typeof DestinationsRouteWithChildren
   MyEditRoute: typeof MyEditRoute
@@ -508,21 +519,7 @@ export interface RootRouteChildren {
   ResortEditsRoute: typeof ResortEditsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  AdminBrandsRoute: typeof AdminBrandsRoute
-  AdminDayImagesRoute: typeof AdminDayImagesRoute
-  AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
-  AdminEditorialMemoryRoute: typeof AdminEditorialMemoryRoute
-  AdminFounderLooksRoute: typeof AdminFounderLooksRoute
-  AdminInventoryHealthRoute: typeof AdminInventoryHealthRoute
-  AdminLooksRoute: typeof AdminLooksRoute
-  AdminProductVaultRoute: typeof AdminProductVaultRoute
-  AdminSubscribersRoute: typeof AdminSubscribersRoute
-  AdminSystemRoute: typeof AdminSystemRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-  AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
-  AdminMomentsIndexRoute: typeof AdminMomentsIndexRoute
-  AdminMomentsIdRunRoute: typeof AdminMomentsIdRunRoute
   ApiPublicChar91DotmcpChar93ListToolsRoute: typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute: typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
   ApiPublicChar91DotmcpChar93InvokeToolToolRoute: typeof ApiPublicChar91DotmcpChar93InvokeToolToolRoute
@@ -542,6 +539,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brands': {
@@ -602,80 +606,80 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
+      path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/brands': {
       id: '/admin/brands'
-      path: '/admin/brands'
+      path: '/brands'
       fullPath: '/admin/brands'
       preLoaderRoute: typeof AdminBrandsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/day-images': {
       id: '/admin/day-images'
-      path: '/admin/day-images'
+      path: '/day-images'
       fullPath: '/admin/day-images'
       preLoaderRoute: typeof AdminDayImagesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/destination-moments': {
       id: '/admin/destination-moments'
-      path: '/admin/destination-moments'
+      path: '/destination-moments'
       fullPath: '/admin/destination-moments'
       preLoaderRoute: typeof AdminDestinationMomentsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/editorial-memory': {
       id: '/admin/editorial-memory'
-      path: '/admin/editorial-memory'
+      path: '/editorial-memory'
       fullPath: '/admin/editorial-memory'
       preLoaderRoute: typeof AdminEditorialMemoryRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/founder-looks': {
       id: '/admin/founder-looks'
-      path: '/admin/founder-looks'
+      path: '/founder-looks'
       fullPath: '/admin/founder-looks'
       preLoaderRoute: typeof AdminFounderLooksRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/inventory-health': {
       id: '/admin/inventory-health'
-      path: '/admin/inventory-health'
+      path: '/inventory-health'
       fullPath: '/admin/inventory-health'
       preLoaderRoute: typeof AdminInventoryHealthRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/looks': {
       id: '/admin/looks'
-      path: '/admin/looks'
+      path: '/looks'
       fullPath: '/admin/looks'
       preLoaderRoute: typeof AdminLooksRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/product-vault': {
       id: '/admin/product-vault'
-      path: '/admin/product-vault'
+      path: '/product-vault'
       fullPath: '/admin/product-vault'
       preLoaderRoute: typeof AdminProductVaultRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/subscribers': {
       id: '/admin/subscribers'
-      path: '/admin/subscribers'
+      path: '/subscribers'
       fullPath: '/admin/subscribers'
       preLoaderRoute: typeof AdminSubscribersRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/system': {
       id: '/admin/system'
-      path: '/admin/system'
+      path: '/system'
       fullPath: '/admin/system'
       preLoaderRoute: typeof AdminSystemRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/brands/$slug': {
       id: '/brands/$slug'
@@ -742,17 +746,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/hero-outfit/$id': {
       id: '/admin/hero-outfit/$id'
-      path: '/admin/hero-outfit/$id'
+      path: '/hero-outfit/$id'
       fullPath: '/admin/hero-outfit/$id'
       preLoaderRoute: typeof AdminHeroOutfitIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/moments/': {
       id: '/admin/moments/'
-      path: '/admin/moments'
+      path: '/moments'
       fullPath: '/admin/moments/'
       preLoaderRoute: typeof AdminMomentsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/api/public/mcp': {
       id: '/api/public/mcp'
@@ -777,10 +781,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/moments/$id/run': {
       id: '/admin/moments/$id/run'
-      path: '/admin/moments/$id/run'
+      path: '/moments/$id/run'
       fullPath: '/admin/moments/$id/run'
       preLoaderRoute: typeof AdminMomentsIdRunRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/api/public/.mcp/list-tools': {
       id: '/api/public/.mcp/list-tools'
@@ -805,6 +809,42 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AdminRouteChildren {
+  AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminDayImagesRoute: typeof AdminDayImagesRoute
+  AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
+  AdminEditorialMemoryRoute: typeof AdminEditorialMemoryRoute
+  AdminFounderLooksRoute: typeof AdminFounderLooksRoute
+  AdminInventoryHealthRoute: typeof AdminInventoryHealthRoute
+  AdminLooksRoute: typeof AdminLooksRoute
+  AdminProductVaultRoute: typeof AdminProductVaultRoute
+  AdminSubscribersRoute: typeof AdminSubscribersRoute
+  AdminSystemRoute: typeof AdminSystemRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
+  AdminMomentsIndexRoute: typeof AdminMomentsIndexRoute
+  AdminMomentsIdRunRoute: typeof AdminMomentsIdRunRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminBrandsRoute: AdminBrandsRoute,
+  AdminDayImagesRoute: AdminDayImagesRoute,
+  AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
+  AdminEditorialMemoryRoute: AdminEditorialMemoryRoute,
+  AdminFounderLooksRoute: AdminFounderLooksRoute,
+  AdminInventoryHealthRoute: AdminInventoryHealthRoute,
+  AdminLooksRoute: AdminLooksRoute,
+  AdminProductVaultRoute: AdminProductVaultRoute,
+  AdminSubscribersRoute: AdminSubscribersRoute,
+  AdminSystemRoute: AdminSystemRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
+  AdminMomentsIndexRoute: AdminMomentsIndexRoute,
+  AdminMomentsIdRunRoute: AdminMomentsIdRunRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface BrandsRouteChildren {
   BrandsSlugRoute: typeof BrandsSlugRoute
@@ -861,6 +901,7 @@ const PortofinoRouteWithChildren = PortofinoRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   BrandsRoute: BrandsRouteWithChildren,
   DestinationsRoute: DestinationsRouteWithChildren,
   MyEditRoute: MyEditRoute,
@@ -869,21 +910,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResortEditsRoute: ResortEditsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  AdminBrandsRoute: AdminBrandsRoute,
-  AdminDayImagesRoute: AdminDayImagesRoute,
-  AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
-  AdminEditorialMemoryRoute: AdminEditorialMemoryRoute,
-  AdminFounderLooksRoute: AdminFounderLooksRoute,
-  AdminInventoryHealthRoute: AdminInventoryHealthRoute,
-  AdminLooksRoute: AdminLooksRoute,
-  AdminProductVaultRoute: AdminProductVaultRoute,
-  AdminSubscribersRoute: AdminSubscribersRoute,
-  AdminSystemRoute: AdminSystemRoute,
-  AdminIndexRoute: AdminIndexRoute,
-  AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
   ApiPublicMcpRoute: ApiPublicMcpRoute,
-  AdminMomentsIndexRoute: AdminMomentsIndexRoute,
-  AdminMomentsIdRunRoute: AdminMomentsIdRunRoute,
   ApiPublicChar91DotmcpChar93ListToolsRoute:
     ApiPublicChar91DotmcpChar93ListToolsRoute,
   ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute:
