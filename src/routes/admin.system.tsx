@@ -42,7 +42,7 @@ function SystemPage() {
   const verify = useServerFn(verifyAdmin);
   const [pw, setPw] = useState("");
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<Tab>("seeds");
+  const [tab, setTab] = useState<Tab>(SEEDS_ENABLED ? "seeds" : "lists");
 
   useEffect(() => {
     const saved = sessionStorage.getItem(STORAGE_KEY);
@@ -108,7 +108,9 @@ function SystemPage() {
       <nav className="flex gap-6 border-b border-stone-200">
         {(
           [
-            ["seeds", "Seeds & Migration"],
+            ...(SEEDS_ENABLED
+              ? ([["seeds", "Seeds & Migration"]] as Array<[Tab, string]>)
+              : []),
             ["lists", "Lists"],
           ] as Array<[Tab, string]>
         ).map(([key, label]) => (
@@ -124,7 +126,7 @@ function SystemPage() {
         ))}
       </nav>
 
-      {tab === "seeds" ? <SeedsTab pw={pw} /> : <ListsTab />}
+      {tab === "seeds" && SEEDS_ENABLED ? <SeedsTab pw={pw} /> : <ListsTab />}
     </main>
   );
 }
