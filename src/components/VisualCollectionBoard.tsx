@@ -12,7 +12,7 @@ import { useMemo, useState } from "react";
  *   1. Quick editorial flags (visual repetition)
  *   2. Collection summary metrics
  *   3. Six look collages (Hero look highlighted)
- *   4. Per-product hover info + Founder actions
+ *   4. Per-product hover info + editorial actions
  */
 
 export type BoardSlot = {
