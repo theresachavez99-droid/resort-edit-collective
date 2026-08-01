@@ -1478,6 +1478,9 @@ function NightcapShopExpander({
 }) {
   const [open, setOpen] = useState(false);
   const rows = shop.products.filter((p) => !p.unsourced && isUsableShopUrl(p.url));
+  const omitted = shop.products
+    .filter((p) => p.unsourced || !isUsableShopUrl(p.url))
+    .map((p) => ({ slot: p.slot, brand: p.brand, name: p.name, price: p.price }));
   if (rows.length === 0) return null;
   return (
     <div className="mt-3">
@@ -1487,7 +1490,7 @@ function NightcapShopExpander({
         aria-expanded={open}
         className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-5 py-2.5"
       >
-        {open ? "HIDE COMPLETE LOOK" : "SHOP COMPLETE LOOK"}
+        {open ? "HIDE THE EDIT" : "SHOP THE EDIT"}
         <ChevronDown
           className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden="true"
@@ -1533,11 +1536,15 @@ function NightcapShopExpander({
               </li>
             ))}
           </ul>
+          <ShopOmissionRows rows={omitted} />
           {shop.stylingNote && (
             <p className="font-serif italic text-[0.85rem] text-ink/60 mt-6 leading-relaxed">
               {shop.stylingNote}
             </p>
           )}
+          <p className="font-serif text-[0.78rem] text-ink/45 mt-3 leading-relaxed">
+            {SHOP_ACCURACY_NOTE}
+          </p>
           <p className="sr-only">Complete look for {card.title}</p>
         </div>
       )}
