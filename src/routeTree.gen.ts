@@ -31,6 +31,7 @@ import { Route as AdminLooksRouteImport } from './routes/admin.looks'
 import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminSystemRouteImport } from './routes/admin.system'
+import { Route as BrandsIndexRouteImport } from './routes/brands.index'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
@@ -160,6 +161,11 @@ const AdminSystemRoute = AdminSystemRouteImport.update({
   path: '/system',
   getParentRoute: () => AdminRoute,
 } as any)
+const BrandsIndexRoute = BrandsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BrandsRoute,
+} as any)
 const BrandsSlugRoute = BrandsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -286,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
+  '/brands/': typeof BrandsIndexRoute
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
@@ -300,7 +307,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -326,6 +332,7 @@ export interface FileRoutesByTo {
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin': typeof AdminIndexRoute
+  '/brands': typeof BrandsIndexRoute
   '/portofino': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
@@ -369,6 +376,7 @@ export interface FileRoutesById {
   '/portofino/day-4': typeof PortofinoDay4Route
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
+  '/brands/': typeof BrandsIndexRoute
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
@@ -413,6 +421,7 @@ export interface FileRouteTypes {
     | '/portofino/day-4'
     | '/portofino/day-5'
     | '/admin/'
+    | '/brands/'
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
@@ -427,7 +436,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/brands'
     | '/destinations'
     | '/my-edit'
     | '/privacy-policy'
@@ -453,6 +461,7 @@ export interface FileRouteTypes {
     | '/portofino/day-4'
     | '/portofino/day-5'
     | '/admin'
+    | '/brands'
     | '/portofino'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
@@ -495,6 +504,7 @@ export interface FileRouteTypes {
     | '/portofino/day-4'
     | '/portofino/day-5'
     | '/admin/'
+    | '/brands/'
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
@@ -681,6 +691,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSystemRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/brands/': {
+      id: '/brands/'
+      path: '/'
+      fullPath: '/brands/'
+      preLoaderRoute: typeof BrandsIndexRouteImport
+      parentRoute: typeof BrandsRoute
+    }
     '/brands/$slug': {
       id: '/brands/$slug'
       path: '/$slug'
@@ -848,10 +865,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface BrandsRouteChildren {
   BrandsSlugRoute: typeof BrandsSlugRoute
+  BrandsIndexRoute: typeof BrandsIndexRoute
 }
 
 const BrandsRouteChildren: BrandsRouteChildren = {
   BrandsSlugRoute: BrandsSlugRoute,
+  BrandsIndexRoute: BrandsIndexRoute,
 }
 
 const BrandsRouteWithChildren =
