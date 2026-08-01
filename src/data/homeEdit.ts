@@ -23,7 +23,6 @@ export type HomeCategory =
   | "Bag"
   | "Earrings"
   | "Bracelet"
-  | "Ring"
   | "Sunglasses"
   | "Hat/Headscarf";
 

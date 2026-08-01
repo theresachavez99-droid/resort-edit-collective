@@ -1261,7 +1261,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   necklace: "Necklace",
   earrings: "Earrings",
   bracelet: "Bracelet",
-  ring: "Ring",
   scarf: "Scarf",
   belt: "Belt",
   swim: "Swim",
@@ -1362,10 +1361,10 @@ const FINISHING_CATEGORIES = new Set([
   "coverup", "cover-up", "cover up",
 ]);
 const JEWELRY_CATEGORIES = new Set([
-  "earrings", "necklace", "bracelet", "ring", "jewelry", "cuff",
+  "earrings", "necklace", "bracelet", "jewelry", "cuff",
 ]);
 const FINISHING_ORDER = ["shoe", "shoes", "sandal", "sandals", "bag", "clutch", "tote", "pouch", "sunglasses", "hat", "scarf", "belt", "coverup", "cover-up", "cover up"];
-const JEWELRY_ORDER = ["necklace", "earrings", "bracelet", "cuff", "ring", "jewelry"];
+const JEWELRY_ORDER = ["necklace", "earrings", "bracelet", "cuff", "jewelry"];
 
 type ShopChapter = { key: string; label: string; items: OverrideItem[] };
 

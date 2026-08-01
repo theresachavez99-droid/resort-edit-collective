@@ -15,7 +15,6 @@ function slotLabelFor(look: ResortEditLook, product: ResortEditProduct, index: n
   if (product === p.earrings) return "Earrings";
   if (product === p.bracelet) return "Bracelet";
   if (product === p.necklace) return "Necklace";
-  if (product === p.ring) return "Ring";
   if (product === p.sunglasses) return "Sunglasses";
   if (product === p.hairDetail) return "Hair Detail";
   if (product === p.layer) return "Layer";

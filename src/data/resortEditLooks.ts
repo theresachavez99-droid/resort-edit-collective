@@ -40,7 +40,6 @@ export type ResortEditLookProducts = {
   earrings?: ResortEditProduct;
   bracelet?: ResortEditProduct;
   necklace?: ResortEditProduct;
-  ring?: ResortEditProduct;
   sunglasses?: ResortEditProduct;
   hairDetail?: ResortEditProduct;
   layer?: ResortEditProduct;
@@ -155,14 +154,6 @@ const POOLSIDE_GLAM: ResortEditLook = {
       url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-lola-open-mini-chain-link-bracelet?ID=4992610",
       image: null,
     },
-    ring: {
-      brand: "EF Collection",
-      name: "14K Yellow Gold Diamond Bezel Stack Ring",
-      retailer: "Bloomingdale's",
-      price: undefined,
-      url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-diamond-bezel-stack-ring?ID=4992556",
-      image: null,
-    },
     sunglasses: {
       brand: "CELINE",
       name: "Triomphe 01 Sunglasses — Black Acetate",
@@ -207,7 +198,6 @@ export function orderedProducts(look: ResortEditLook): ResortEditProduct[] {
   if (p.earrings) out.push(p.earrings);
   if (p.bracelet) out.push(p.bracelet);
   if (p.necklace) out.push(p.necklace);
-  if (p.ring) out.push(p.ring);
   if (look.daytime && p.sunglasses) out.push(p.sunglasses);
   if (p.hairDetail) out.push(p.hairDetail);
   if (p.layer) out.push(p.layer);
