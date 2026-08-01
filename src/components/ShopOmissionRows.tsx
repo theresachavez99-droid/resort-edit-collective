@@ -1,3 +1,5 @@
+import { excludeUnmerchandisable } from "@/lib/merchandising-exclusions";
+
 /**
  * Explicit-omission rendering for curated shopping lists (Batch 2 —
  * required-slot doctrine).
@@ -15,10 +17,13 @@ export type OmittedRow = {
 };
 
 export function ShopOmissionRows({ rows }: { rows: OmittedRow[] }) {
-  if (rows.length === 0) return null;
+  // Rings are permanently excluded from Resort Edit merchandising, so they are
+  // never shown even as a "still sourcing" omission row.
+  const visible = excludeUnmerchandisable(rows);
+  if (visible.length === 0) return null;
   return (
     <ul className="mt-5 border-t border-border/40 divide-y divide-border/30">
-      {rows.map((p) => (
+      {visible.map((p) => (
         <li
           key={`${p.slot}-${p.brand}-${p.name}`}
           className="py-4 flex items-baseline justify-between gap-4"

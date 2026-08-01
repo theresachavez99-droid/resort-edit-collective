@@ -14,6 +14,7 @@ import {
 import { filterAndDedupImages } from "@/lib/product-image-integrity";
 import { safeHref } from "@/lib/safe-url";
 import { canRenderProductImage } from "@/lib/product-image-policy";
+import { isExcludedProduct } from "@/lib/merchandising-exclusions";
 
 /**
  * "More From The Edit" — dynamic, founder-library-driven discovery rail
