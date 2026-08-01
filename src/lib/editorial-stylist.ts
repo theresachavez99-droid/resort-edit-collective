@@ -49,17 +49,16 @@ export type EditorialSlot =
   | "hat"
   | "earrings"
   | "necklace"
-  | "bracelet"
-  | "ring";
+  | "bracelet";
 
 /** Heritage slot keys used in the engine today ("jewelry"). The engine
- *  keeps a single "jewelry" slot; earrings/bracelet/ring are scored by
- *  jewelry role in v2 rather than separate searches. */
+ *  keeps a single "jewelry" slot; earrings/bracelet/necklace are scored by
+ *  jewelry role in v2 rather than separate searches.
+ *  Rings are permanently excluded from Resort Edit merchandising. */
 export const LEGACY_JEWELRY_SLOTS: ReadonlySet<EditorialSlot> = new Set([
   "earrings",
   "necklace",
   "bracelet",
-  "ring",
 ]);
 
 export const MOMENT_SLOT_TEMPLATES: MomentSlotTemplate[] = [
@@ -76,7 +75,6 @@ export const MOMENT_SLOT_TEMPLATES: MomentSlotTemplate[] = [
       hat: "strongly_preferred",
       earrings: "contextual",
       bracelet: "contextual",
-      ring: "conditional",
       necklace: "conditional",
     },
   },
@@ -94,7 +92,6 @@ export const MOMENT_SLOT_TEMPLATES: MomentSlotTemplate[] = [
       hat: "strongly_preferred",
       earrings: "contextual",
       bracelet: "contextual",
-      ring: "conditional",
       necklace: "conditional",
     },
   },
@@ -112,7 +109,6 @@ export const MOMENT_SLOT_TEMPLATES: MomentSlotTemplate[] = [
       sunglasses: "strongly_preferred",
       earrings: "contextual",
       bracelet: "contextual",
-      ring: "conditional",
       necklace: "conditional",
       hat: "omit",
     },
@@ -129,7 +125,6 @@ export const MOMENT_SLOT_TEMPLATES: MomentSlotTemplate[] = [
       bag: "required",
       earrings: "strongly_preferred",
       bracelet: "contextual",
-      ring: "conditional",
       necklace: "conditional",
       sunglasses: "omit",
       hat: "omit",
@@ -147,7 +142,6 @@ export const MOMENT_SLOT_TEMPLATES: MomentSlotTemplate[] = [
       bag: "required",
       earrings: "strongly_preferred",
       bracelet: "contextual",
-      ring: "conditional",
       necklace: "conditional",
       sunglasses: "omit",
       hat: "omit",
@@ -165,7 +159,6 @@ export const MOMENT_SLOT_TEMPLATES: MomentSlotTemplate[] = [
       bag: "required",
       earrings: "strongly_preferred",
       bracelet: "contextual",
-      ring: "conditional",
       necklace: "conditional",
       sunglasses: "omit",
       hat: "omit",
@@ -192,7 +185,7 @@ export function resolveMomentTemplate(
 }
 
 /** Engine-internal jewelry slot is "jewelry"; the template's
- *  earrings/bracelet/necklace/ring tiers collapse via this mapping. */
+ *  earrings/bracelet/necklace tiers collapse via this mapping. */
 export function tierForEngineSlot(
   template: MomentSlotTemplate,
   engineSlot: string,
