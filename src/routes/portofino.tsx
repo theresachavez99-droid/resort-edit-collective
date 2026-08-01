@@ -62,6 +62,7 @@ export const Route = createFileRoute("/portofino")({
       { property: "og:url", content: absoluteUrl("/portofino") },
       { name: "twitter:image", content: absoluteUrl(portofinoImg) },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/portofino") }],
   }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData(

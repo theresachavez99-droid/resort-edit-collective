@@ -36,6 +36,13 @@ const CATEGORY_SEGMENTS = [
   "/all-products",
 ];
 
+/**
+ * Locale / region landing paths. Some brand sites 301 a dead PDP to their
+ * regional home (e.g. aquazzura.com/us/<sku>.html → aquazzura.com/eu_en),
+ * which is a generic redirect, not a product page.
+ */
+const LOCALE_LANDING = /^\/(?:[a-z]{2}(?:[-_][a-z]{2})?|[a-z]{2}\/[a-z]{2})$/;
+
 function verdict(kind: ShopUrlKind, reason?: string): ShopUrlVerdict {
   return { kind, publishable: kind === "product", ...(reason ? { reason } : {}) };
 }
@@ -70,10 +77,16 @@ export function classifyShopUrl(url: string | undefined | null): ShopUrlVerdict 
   // Homepage / bare host
   if (path === "" || lowerPath === "/en-us" || lowerPath === "/us/en" || lowerPath === "/en")
     return verdict("homepage", "retailer homepage");
+  if (LOCALE_LANDING.test(lowerPath))
+    return verdict("homepage", "locale/region landing page");
 
   // Shopify-style collection listing without a product segment
   if (lowerPath.includes("/collections/") && !lowerPath.includes("/products/"))
     return verdict("category", "collection listing page");
+  // Shopify content/landing pages (`/pages/...`) are editorial or collection
+  // landings, never a product detail page.
+  if (lowerPath.includes("/pages/") && !lowerPath.includes("/products/"))
+    return verdict("category", "Shopify content/landing page");
   for (const seg of CATEGORY_SEGMENTS) {
     if (lowerPath.includes(seg)) return verdict("category", `listing path segment "${seg}"`);
   }
