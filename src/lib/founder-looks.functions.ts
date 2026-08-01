@@ -14,7 +14,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireAdmin } from "./admin-auth.server";
+import { requireAdmin, requireSeedEnvironment } from "./admin-auth.server";
 import { isHttpUrl } from "./safe-url";
 
 const pw = z.string().min(1).max(200);
@@ -320,6 +320,8 @@ export const seedPoolLoungingValidationLook = createServerFn({ method: "POST" })
   .inputValidator((input) => z.object({ password: pw }).parse(input))
   .handler(async ({ data }) => {
     requireAdmin(data.password);
+    // Destructive setup utility: blocked on production unless explicitly enabled.
+    requireSeedEnvironment();
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // Clean up the prior manual Alexandra Miro seed so this Founder Look
