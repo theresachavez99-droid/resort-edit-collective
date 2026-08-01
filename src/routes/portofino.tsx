@@ -58,11 +58,7 @@ export const Route = createFileRoute("/portofino")({
       { name: "description", content: "Twelve curated moments in Portofino — from arrival afternoons and espresso mornings to yacht days, long lunches, harbor aperitivos, and a final nightcap on the piazzetta." },
       { property: "og:title", content: "Portofino — Twelve Curated Moments | Resort Edit" },
       { property: "og:description", content: "Discover Portofino through twelve curated destination moments. Dressed for the Destination." },
-      { property: "og:image", content: absoluteUrl(portofinoImg) },
-      { property: "og:url", content: absoluteUrl("/portofino") },
-      { name: "twitter:image", content: absoluteUrl(portofinoImg) },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/portofino") }],
   }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData(
