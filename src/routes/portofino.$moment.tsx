@@ -325,6 +325,37 @@ export const Route = createFileRoute("/portofino/$moment")({
         { name: "twitter:image", content: absoluteUrl(def.hero_banner_image) },
       ],
       links: [{ rel: "canonical", href: absoluteUrl(path) }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: title,
+            description,
+            image: absoluteUrl(def.hero_banner_image),
+            mainEntityOfPage: absoluteUrl(path),
+            about: { "@type": "Place", name: "Portofino, Italy" },
+            publisher: {
+              "@type": "Organization",
+              name: "Resort Edit",
+              url: absoluteUrl("/"),
+            },
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Resort Edit", item: absoluteUrl("/") },
+              { "@type": "ListItem", position: 2, name: "Portofino", item: absoluteUrl("/portofino") },
+              { "@type": "ListItem", position: 3, name: def.moment_name, item: absoluteUrl(path) },
+            ],
+          }),
+        },
+      ],
     };
   },
   errorComponent: () => (
