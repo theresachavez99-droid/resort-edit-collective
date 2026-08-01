@@ -415,6 +415,8 @@ function MomentPage() {
   const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
   const founderShopEntries: ShopEntry[] = founderProducts
     .filter((p) => (p.brand || p.product_name))
+    // Resort Edit never merchandises rings.
+    .filter((p) => !isExcludedProduct({ category: p.category, role: p.role }))
     // Public Founder Look shop panel: only render rows with a usable
     // retailer URL. Search-engine fallback or AFF- placeholder URLs are
     // suppressed in production (visible only with ?debug=1) so the page
@@ -440,7 +442,7 @@ function MomentPage() {
   // data. This lets an editor lock a specific ordered set of pieces without
   // depending on the publish pipeline.
   const curatedForMoment = MOMENT_SHOP_CURATED[slug];
-  const curatedShopEntries: ShopEntry[] = (curatedForMoment ?? [])
+  const curatedShopEntries: ShopEntry[] = excludeUnmerchandisable(curatedForMoment)
     .filter((o) => isUsableShopUrl(o.url))
     .map((product) => ({ kind: "override" as const, product }));
   const featuredShop = curatedShopEntries.length
