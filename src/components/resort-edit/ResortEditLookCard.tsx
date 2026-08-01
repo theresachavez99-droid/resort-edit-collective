@@ -48,10 +48,12 @@ export function ResortEditLookCard({
               className="relative w-10 h-10 bg-cream border border-border/40 flex items-center justify-center"
               aria-hidden="true"
             >
-              {p.image ? (
+              {canRenderProductImage(p.image) ? (
                 <img src={p.image} alt="" className="absolute inset-0 h-full w-full object-contain p-1" />
               ) : (
-                <span className="text-[0.5rem] tracking-[0.2em] uppercase text-ink/40">—</span>
+                <span className="text-[0.5rem] tracking-[0.24em] uppercase text-ink/40">
+                  {p.brand.charAt(0)}
+                </span>
               )}
             </div>
           ))}
