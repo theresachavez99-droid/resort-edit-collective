@@ -1,7 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
-import { absoluteUrl } from "@/lib/site";
 import { listPortofinoMomentsForLanding, type PortofinoMomentCard } from "@/lib/portofino-moments.functions";
 import { PortofinoMomentCard as PortofinoMomentCardView } from "@/components/PortofinoMomentCard";
 import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
