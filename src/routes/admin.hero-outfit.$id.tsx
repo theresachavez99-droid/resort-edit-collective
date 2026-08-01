@@ -421,7 +421,7 @@ function OutfitPanel({
         )}
       </div>
 
-      {/* PRIMARY — Current Founder Look summary */}
+      {/* PRIMARY — Current Editorial Look summary */}
       {isPromoted && (
         <CurrentLookSummary
           outfit={outfit}
@@ -851,7 +851,7 @@ function SlotRow({
                 {(editorial != null || similarity != null) && (
                   <div className="flex gap-3 text-[0.6rem] text-stone-500">
                     {editorial != null && <span>Editorial {editorial}</span>}
-                    {similarity != null && <span>Founder sim {similarity}%</span>}
+                    {similarity != null && <span>Editorial sim {similarity}%</span>}
                   </div>
                 )}
                 {(rr.why_works || rr.why_fits) && (
@@ -1018,7 +1018,7 @@ function PublishCard({
   return (
     <div className="border-t border-stone-200 pt-4 space-y-3">
       <div className="text-[0.6rem] tracking-[0.32em] uppercase text-stone-500">
-        Stage 8 — Publish Founder Look
+        Stage 8 — Publish Editorial Look
       </div>
       <input
         value={title}
@@ -1066,7 +1066,7 @@ function PublishCard({
               const r = (await publishFn({
                 data: { password, outfitId: outfit.id, title, notes },
               })) as { ok: boolean; founderLookId: string };
-              toast.success("Founder Look published ✓");
+              toast.success("Editorial Look published ✓");
               // Surface a deep link to the live moment page so the founder
               // can immediately verify the published look overrides the
               // legacy fallback. Mapped via normalizeMomentSlug on the
@@ -1103,7 +1103,7 @@ function PublishCard({
           }}
           className="bg-ink text-ivory px-5 py-2 text-[0.7rem] tracking-[0.3em] uppercase disabled:opacity-40"
         >
-          Publish Founder Look
+          Publish Editorial Look
         </button>
       </div>
     </div>
@@ -1111,7 +1111,7 @@ function PublishCard({
 }
 
 // ============================================================
-// V3 — Current Founder Look summary
+// V3 — Current Editorial Look summary
 // ============================================================
 function CurrentLookSummary({
   outfit,
@@ -1140,7 +1140,7 @@ function CurrentLookSummary({
     <div className="border border-emerald-300 bg-emerald-50/30 p-4 space-y-4">
       <div className="flex items-center justify-between">
         <div className="text-[0.6rem] tracking-[0.32em] uppercase text-emerald-800">
-          Current Founder Look
+          Current Editorial Look
         </div>
         <div className="text-[0.6rem] tracking-[0.25em] uppercase text-stone-500">
           {filled.length}/{slotDefs.filter((d) => d.required).length} required filled
