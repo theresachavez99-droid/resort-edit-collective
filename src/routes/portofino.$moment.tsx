@@ -746,6 +746,7 @@ function MomentPage() {
                   key={sib.id}
                   look={sib}
                   momentName={card.moment_name}
+                  editorialOnly={slug === "shopping"}
                   isOpen={openShop === sib.lookSlug}
                   onToggle={() =>
                     setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
@@ -758,6 +759,7 @@ function MomentPage() {
                   card={c}
                   momentSlug={slug}
                   momentName={card.moment_name}
+                  editorialOnly={slug === "shopping"}
                 />
               ))}
             </div>
@@ -1093,15 +1095,22 @@ function EditorialLookCard({
   momentName,
   isOpen,
   onToggle,
+  editorialOnly = false,
 }: {
   look: Look;
   momentName: string;
   isOpen: boolean;
   onToggle: () => void;
+  /** Editorial-only mode: no product grid, no outbound links — internal CTA only. */
+  editorialOnly?: boolean;
 }) {
-  const entries = resolveShopProducts(look.daySlug, look.lookSlug);
+  const entries = editorialOnly ? [] : resolveShopProducts(look.daySlug, look.lookSlug);
   const liveCount = entries.filter(shopEntryIsLive).length;
   const hasLive = liveCount > 0;
+  const internalMomentSlug = momentSlugForLookKey(
+    look.daySlug as LegacyDaySlug,
+    look.lookSlug,
+  );
   return (
     <article className="flex flex-col bg-ivory border border-border/40">
       <div className="relative aspect-[4/5] overflow-hidden bg-cream">
@@ -1123,7 +1132,15 @@ function EditorialLookCard({
           {SIBLING_CAPTION_OVERRIDES[`${look.daySlug}/${look.lookSlug}`] ?? look.caption}
         </p>
         <div className="flex items-center justify-between pt-2">
-          {hasLive ? (
+          {editorialOnly ? (
+            <Link
+              to="/portofino/$moment"
+              params={{ moment: internalMomentSlug }}
+              className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
+            >
+              VIEW THE EDIT →
+            </Link>
+          ) : hasLive ? (
             <button
               type="button"
               onClick={onToggle}
@@ -1160,7 +1177,7 @@ function EditorialLookCard({
           />
         </div>
       </div>
-      {isOpen && hasLive && (
+      {!editorialOnly && isOpen && hasLive && (
         <div className="border-t border-border/40 px-5 md:px-7 py-7">
           <InlineShop
             id={`shop-${look.daySlug}-${look.lookSlug}`}
@@ -1522,10 +1539,13 @@ function ExtraEditorialReferenceCard({
   card,
   momentSlug,
   momentName,
+  editorialOnly = false,
 }: {
   card: ExtraEditorialCard;
   momentSlug: string;
   momentName: string;
+  /** Editorial-only mode: no reference product row, no expander, no outbound links. */
+  editorialOnly?: boolean;
 }) {
   const r = card.reference;
   return (
@@ -1560,6 +1580,15 @@ function ExtraEditorialReferenceCard({
             url: `/portofino/${momentSlug}#more-looks`,
           }}
         />
+        {editorialOnly ? (
+          <Link
+            to="/portofino/$moment"
+            params={{ moment: momentSlug }}
+            className="mt-2 inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
+          >
+            VIEW THE EDIT →
+          </Link>
+        ) : (
         <div className="mt-4 border-t border-border/50 pt-5">
           <a
             href={r.url}
@@ -1598,7 +1627,8 @@ function ExtraEditorialReferenceCard({
             </div>
           </a>
         </div>
-        {card.shop && card.shop.products.length > 0 && (
+        )}
+        {!editorialOnly && card.shop && card.shop.products.length > 0 && (
           <ExtraCompleteLookExpander title={card.title} shop={card.shop} />
         )}
       </div>
