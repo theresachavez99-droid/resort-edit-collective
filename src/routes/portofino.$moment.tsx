@@ -1635,7 +1635,15 @@ function NightcapShopExpander({
  * INSPIRED BY badge, the caption, and a restrained outbound "SHOP THE
  * REFERENCE" link to the real designer product.
  */
-function ExtraEditorialReferenceCard({ card }: { card: ExtraEditorialCard }) {
+function ExtraEditorialReferenceCard({
+  card,
+  momentSlug,
+  momentName,
+}: {
+  card: ExtraEditorialCard;
+  momentSlug: string;
+  momentName: string;
+}) {
   const r = card.reference;
   return (
     <article className="flex flex-col bg-ivory border border-border/40">
@@ -1657,6 +1665,18 @@ function ExtraEditorialReferenceCard({ card }: { card: ExtraEditorialCard }) {
         <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed">
           {card.caption}
         </p>
+        <SaveLookButton
+          source="portofino_more_looks_reference"
+          look={{
+            id: `portofino/${momentSlug}#${card.key}`,
+            destination: "Portofino",
+            activity: momentName,
+            title: card.title,
+            description: card.caption,
+            image: card.image,
+            url: `/portofino/${momentSlug}#more-looks`,
+          }}
+        />
         <div className="mt-4 border-t border-border/50 pt-5">
           <a
             href={r.url}
