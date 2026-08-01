@@ -194,6 +194,36 @@ function DestinationsPage() {
         </div>
       </section>
 
+      {/* SHOP BY MOMENT — merged from the retired /resort-edits page */}
+      <section id="moments" className="border-t border-border/40 bg-ivory">
+        <div className="mx-auto max-w-[1400px] px-6 py-12 md:py-16">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="eyebrow text-gold">Shop by Moment</span>
+            <h2 className="font-display text-3xl md:text-5xl tracking-wide mt-4 text-ink">
+              For Every Moment
+            </h2>
+            <p className="mt-4 font-serif italic text-ink/65">
+              Inside Portofino — shoppable looks, moment by moment.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border/60">
+            {PORTOFINO_JOURNEY.map((m) => (
+              <Link
+                key={m.moment_slug}
+                to="/portofino/$moment"
+                params={{ moment: m.moment_slug }}
+                className="group bg-ivory p-8 md:p-10 text-center hover:bg-cream transition-colors"
+              >
+                <h3 className="font-display text-xl md:text-2xl tracking-wide text-ink group-hover:text-gold transition-colors">
+                  {m.moment_name}
+                </h3>
+                <p className="mt-3 font-serif italic text-sm text-ink/65">{m.narrative}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* COMING SOON — editorial chips */}
       <section id="coming-soon" className="border-t border-border/40 bg-cream/30">
         <div className="mx-auto max-w-[1100px] px-6 py-14 md:py-20 text-center">
