@@ -65,7 +65,6 @@ const BASE = process.env.AUDIT_BASE_URL ?? "http://localhost:8080";
 const ROUTES = [
   "/",
   "/my-edit",
-  "/resort-edits",
   "/brands",
   "/destinations",
   "/destinations/portofino",
