@@ -227,8 +227,11 @@ function ProductsGrid({ products }: { products: SavedProduct[] }) {
   if (products.length === 0) return <ProductsEmpty />;
   return (
     <div className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-10">
-      {products.map((p) => (
+      {products.map((p) => {
+        const showImage = !!p.image && canRenderProductImage(p.image);
+        return (
         <article key={p.id} className="group flex flex-col">
+          {showImage ? (
           <a
             href={p.url ?? "#"}
             target={p.url ? "_blank" : undefined}
@@ -241,19 +244,14 @@ function ProductsGrid({ products }: { products: SavedProduct[] }) {
             }
             className="relative aspect-[3/4] bg-cream/40 overflow-hidden"
           >
-            {p.image && canRenderProductImage(p.image) ? (
-              <img
-                src={p.image}
-                alt={`${p.brand} ${p.name}`}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center font-serif italic text-ink/40 text-xs px-3 text-center">
-                {p.brand}
-              </div>
-            )}
+            <img
+              src={p.image!}
+              alt={`${p.brand} ${p.name}`}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
           </a>
+          ) : null}
           <p className="eyebrow tracking-[0.26em] text-[0.58rem] text-gold mt-3">
             {p.brand.toUpperCase()}
           </p>
@@ -292,7 +290,8 @@ function ProductsGrid({ products }: { products: SavedProduct[] }) {
             </button>
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 }
