@@ -944,11 +944,11 @@ const MOMENT_COMPLETE_LOOK: Record<string, string> = {
  */
 const SIBLING_CAPTION_OVERRIDES: Record<string, string> = {
   "day-5/look-a":
-    "For your first espresso, flower markets, and a slow morning discovering Portofino.",
+    "For your first espresso and a slow morning discovering Portofino.",
   "day-5/look-b":
     "For the long walk home through quiet streets after dinner by the water.",
   "day-2/look-a":
-    "For stretching the afternoon beneath striped umbrellas before lunch overlooking the sea.",
+    "For stretching the afternoon beneath a cream parasol before lunch overlooking the sea.",
   "day-4/look-a":
     "A bold, feminine silhouette designed for golden-hour cocktails overlooking the harbor.",
   "day-4/look-b":

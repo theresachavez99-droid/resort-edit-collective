@@ -353,9 +353,9 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       key: "eloise-at-noon",
       title: "Eloise at Noon",
       caption:
-        "An ivory cotton-lace maxi, natural jute espadrilles and a small raffia crossbody for a slow walk along the pastel harbor.",
+      "An ivory cotton-lace maxi, natural jute espadrille wedges and a woven raffia bag for a slow walk along the pastel harbor.",
       image: exploringHarborEloiseImage.url,
-      alt: "Lilla wearing an ivory cotton-lace maxi dress along the pastel harbor of Portofino at midday, styled with natural jute espadrille wedges, a tan raffia crossbody and delicate gold jewelry.",
+    alt: "Lilla wearing an ivory cotton-lace maxi dress along the pastel harbor of Portofino at midday, styled with ankle-tie jute espadrille wedges, a woven raffia bag and a fine gold pendant.",
       reference: {
         slot: "Reference Dress",
         brand: "SIMKHAI",
@@ -367,7 +367,7 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       },
       shop: {
         stylingNote:
-          "A polished daytime harbor look — jute espadrille wedges, a small tan raffia crossbody and delicate gold jewelry echoing the photograph. No necklace layering — one fine pendant only.",
+        "A polished daytime harbor look — jute espadrille wedges, a woven raffia bag and delicate gold jewelry echoing the photograph. No necklace layering — one fine pendant only.",
         products: [
           {
             slot: "Shoes",
