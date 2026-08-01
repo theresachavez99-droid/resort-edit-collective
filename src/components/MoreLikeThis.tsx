@@ -4,6 +4,7 @@ import { Heart } from "lucide-react";
 import { trackOutbound } from "@/lib/utils";
 import { mergeLibraries, moreLikeThisFor } from "@/lib/moreLikeThis";
 import { savedKey, useSaved } from "@/lib/saved";
+import { canRenderProductImage } from "@/lib/product-image-policy";
 import { PRODUCT_LIBRARY, resolvePurchaseUrl, type ProductDNA } from "@/data/productLibrary";
 import { getFounderProducts } from "@/lib/founder-products.functions";
 import { safeHref } from "@/lib/safe-url";
@@ -77,16 +78,23 @@ function ProductTile({ product }: { product: ProductDNA }) {
   // become a live affiliate href.
   const href = safeHref(resolvePurchaseUrl(product));
   if (!href) return null;
+  const showImage = canRenderProductImage(product.image);
 
   return (
     <article className="group flex flex-col bg-ivory border border-ink/10 hover:border-gold/60 transition-colors">
-      <div className="relative aspect-[3/4] bg-cream/40 overflow-hidden">
-        <img
-          src={product.image}
-          alt={`${product.brand} ${product.name}`}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-        />
+      <div
+        className={`relative overflow-hidden ${
+          showImage ? "aspect-[3/4] bg-cream/40" : "min-h-[52px] bg-cream/30"
+        }`}
+      >
+        {showImage && (
+          <img
+            src={product.image}
+            alt={`${product.brand} ${product.name}`}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+        )}
         {product.editorialLabel && (
           <span className="absolute left-2.5 top-2.5 bg-ivory/90 text-ink eyebrow tracking-[0.22em] text-[0.55rem] px-2 py-1 backdrop-blur-sm border border-ink/10">
             {product.editorialLabel}

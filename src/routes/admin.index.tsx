@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
 import { getAdminMetrics } from "@/lib/admin-metrics.functions";
 import { LaunchAuditPanel } from "@/components/LaunchAuditPanel";
+import { ProductImageAuditPanel } from "@/components/ProductImageAuditPanel";
 
 /**
  * Studio dashboard at /admin — the permanent editorial home.
@@ -163,6 +164,7 @@ function AdminDashboard() {
       </section>
 
       <LaunchAuditPanel />
+      <ProductImageAuditPanel />
 
       {/* Quick actions */}
       <section className="flex flex-wrap gap-2">

@@ -28,6 +28,7 @@ import {
   type NightcapEditorialCard,
 } from "@/data/momentEditorialCards";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
+import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
@@ -1215,150 +1216,30 @@ function ShopCard({
 
   if (kind === "category") {
     const p = product as LookProduct;
-    if (p.isPlaceholder || !p.url || !p.image) {
-      return (
-        <div className="flex flex-col bg-ivory border border-border/60 h-full" aria-disabled="true">
-          <div className="relative aspect-square bg-cream flex items-center justify-center px-3 text-center">
-            {category && (
-              <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold/80">
-                {category}
-              </span>
-            )}
-            <span className="font-serif italic text-ink/60 text-[0.72rem] leading-snug">
-              {p.brand} — {p.title}
-            </span>
-          </div>
-          <div className="p-3">
-            <span className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55">
-              Not available through approved affiliate partners
-            </span>
-          </div>
-        </div>
-      );
-    }
     return (
-      <a
-        href={p.url}
-        target="_blank"
-        rel="noopener noreferrer sponsored"
-        onClick={() => trackOutbound({ brand: p.brand, item: p.title, href: p.url! })}
-        className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors h-full"
-      >
-        <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
-          <img
-            src={p.image}
-            alt={`${p.brand} ${p.title}`}
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
-          />
-          {category && (
-            <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold bg-ivory/85 px-1.5 py-0.5">
-              {category}
-            </span>
-          )}
-        </div>
-        <div className="flex flex-col flex-1 p-4">
-          <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">{p.brand}</div>
-          <div className="font-serif italic text-ink/90 text-[0.92rem] leading-snug mt-1.5 line-clamp-2">
-            {p.title}
-          </div>
-          <div className="font-serif text-gold text-[0.9rem] mt-1.5">{p.price}</div>
-          <div className="mt-auto pt-3">
-            <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
-              SHOP →
-            </span>
-          </div>
-        </div>
-      </a>
+      <ProductCommerceCard
+        brand={p.brand}
+        name={p.title}
+        {...(category ? { category } : {})}
+        {...(p.price ? { price: p.price } : {})}
+        url={p.isPlaceholder ? null : p.url}
+        image={p.image ?? null}
+        unavailableLabel="NOT AVAILABLE THROUGH APPROVED PARTNERS"
+      />
     );
   }
 
   // Override item (free-form curated grid)
   const o = product as OverrideItem;
-  const isPlaceholderUrl = !isUsableShopUrl(o.url);
-  const hasImage = !!o.image;
-
-  // No usable URL → quiet "coming soon" tile (with or without image).
-  if (isPlaceholderUrl) {
-    return (
-      <div
-        className="flex flex-col bg-ivory border border-border/60 h-full"
-        aria-disabled="true"
-      >
-        {hasImage && (
-          <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
-            <img
-              src={o.image}
-              alt={`${o.brand} ${o.title}`}
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-contain p-4"
-            />
-            {o.slotLabel && (
-              <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold bg-ivory/85 px-1.5 py-0.5">
-                {o.slotLabel}
-              </span>
-            )}
-          </div>
-        )}
-        <div className="flex flex-col flex-1 p-4">
-          {!hasImage && o.slotLabel && (
-            <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80 mb-1.5">
-              {o.slotLabel}
-            </div>
-          )}
-          <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">{o.brand}</div>
-          <div className="font-serif italic text-ink/90 text-[0.92rem] leading-snug mt-1.5 line-clamp-2">
-            {o.title}
-          </div>
-          <div className="mt-auto pt-3">
-            <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink/55">
-              COMING SOON
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  }
   return (
-    <a
-      href={o.url}
-      target="_blank"
-      rel="noopener noreferrer sponsored"
-      onClick={() => trackOutbound({ brand: o.brand, item: o.title, href: o.url })}
-      className="group flex flex-col bg-ivory border border-border/60 hover:border-gold transition-colors h-full"
-    >
-      {hasImage && (
-        <div className="relative aspect-square overflow-hidden bg-cream flex items-center justify-center">
-          <img
-            src={o.image}
-            alt={`${o.brand} ${o.title}`}
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
-          />
-          {o.slotLabel && (
-            <span className="absolute top-2 left-2 eyebrow text-[0.5rem] tracking-[0.3em] text-gold bg-ivory/85 px-1.5 py-0.5">
-              {o.slotLabel}
-            </span>
-          )}
-        </div>
-      )}
-      <div className="flex flex-col flex-1 p-4">
-        {!hasImage && o.slotLabel && (
-          <div className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold/80 mb-1.5">
-            {o.slotLabel}
-          </div>
-        )}
-        <div className="eyebrow text-ink text-[0.6rem] tracking-[0.32em]">{o.brand}</div>
-        <div className="font-serif italic text-ink/90 text-[0.92rem] leading-snug mt-1.5 line-clamp-2">
-          {o.title}
-        </div>
-        <div className="mt-auto pt-3">
-          <span className="eyebrow text-[0.6rem] tracking-[0.35em] text-ink group-hover:text-gold transition-colors">
-            SHOP →
-          </span>
-        </div>
-      </div>
-    </a>
+    <ProductCommerceCard
+      brand={o.brand}
+      name={o.title}
+      {...(o.slotLabel ? { category: o.slotLabel } : {})}
+      url={isUsableShopUrl(o.url) ? o.url : null}
+      image={o.image ?? null}
+      unavailableLabel="COMING SOON"
+    />
   );
 }
 
