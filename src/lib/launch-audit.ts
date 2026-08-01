@@ -6,9 +6,9 @@
  * commerce URL classifies (exact product vs search / category / homepage /
  * placeholder). Pure functions over static curated data — no writes, no
  * network, no database. Safe to import from admin UI and from CI scripts.
-import { excludeUnmerchandisable } from "@/lib/merchandising-exclusions";
  */
 import { PORTOFINO_JOURNEY } from "./portofino-moment-fallbacks";
+import { excludeUnmerchandisable } from "@/lib/merchandising-exclusions";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
 import {
   MOMENT_EXTRA_EDITORIAL_CARDS,
