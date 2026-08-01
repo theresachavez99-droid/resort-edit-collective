@@ -224,7 +224,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
   {
     moment_slug: "exploring-the-harbor",
     archetype_slug: "exploring-the-harbor",
-    moment_name: "Explore the Harbor",
+    moment_name: "Exploring the Harbor",
     narrative:
       "The climb to Castello Brown and the path to the lighthouse, through Portofino's hidden corners and colorful streets.",
     editorial_order: 3,
@@ -232,7 +232,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     hero_banner_image: exploringHarborBanner,
     outfit_image: exploringHarborImage,
     legacy_day: "/portofino/day-3",
-    legacy_look_title: "Explore the Harbor",
+    legacy_look_title: "Exploring the Harbor",
     legacy_day_slug: "day-3",
     look_slug: "look-b",
   },
@@ -358,7 +358,7 @@ export const PORTOFINO_ADDITIONAL_LOOKS: PortofinoAdditionalLook[] = [
   { canonical_name: "Long Lunch", legacy_day_slug: "day-2", look_slug: "look-b" },
   { canonical_name: "Pool Lounging", legacy_day_slug: "day-3", look_slug: "look-a" },
   { canonical_name: "Shopping", legacy_day_slug: "day-3", look_slug: "look-c" },
-  { canonical_name: "Explore the Harbor", legacy_day_slug: "day-3", look_slug: "look-b" },
+  { canonical_name: "Exploring the Harbor", legacy_day_slug: "day-3", look_slug: "look-b" },
   { canonical_name: "Nightcap", legacy_day_slug: "day-4", look_slug: "look-c" },
 ];
 
