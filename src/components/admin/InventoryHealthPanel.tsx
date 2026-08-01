@@ -153,7 +153,7 @@ export function InventoryHealthPanel() {
                   <span className="text-stone-900">{c.title ?? "Untitled"}</span>
                   <a
                     className="ml-2 text-[11px] uppercase tracking-widest text-stone-500 underline hover:text-stone-900"
-                    href="/admin/moments"
+                    href="/admin/editorial-intelligence"
                   >
                     Open Run workspace →
                   </a>

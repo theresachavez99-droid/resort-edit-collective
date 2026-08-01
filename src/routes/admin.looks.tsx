@@ -736,7 +736,7 @@ function ValidateTab({ pw, id }: { pw: string; id: string | null }) {
         <p className="leading-relaxed">
           The legacy yacht-day engine has been retired. There is now exactly one
           engine path: the 5-stage Run workspace at{" "}
-          <a href="/admin/moments" className="underline">/admin/moments</a>.
+          <a href="/admin/editorial-intelligence" className="underline">/admin/editorial-intelligence</a>.
           A/B harness will be reinstated against <code>runMoment</code> once the
           product feed is connected (Step 4). Until then, Gate B keeps the feed
           dormant and the engine produces no candidates by design.

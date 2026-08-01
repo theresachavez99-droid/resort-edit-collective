@@ -111,7 +111,7 @@ function Workspace({ sessionId, password }: { sessionId: string; password: strin
           </h1>
         </div>
         <a
-          href="/admin/moments"
+          href="/admin/editorial-intelligence"
           className="text-xs tracking-[0.3em] uppercase text-stone-500 hover:text-ink"
         >
           ← Moment Runs
@@ -1096,7 +1096,7 @@ function PublishCard({
                 { duration: 10000 },
               );
               onChange();
-              window.location.href = `/admin/founder-looks?focus=${r.founderLookId}`;
+              window.location.href = `/admin/looks?focus=${r.founderLookId}`;
             } catch (e) {
               toast.error((e as Error).message);
             }
