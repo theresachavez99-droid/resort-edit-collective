@@ -45,6 +45,13 @@ export type ExtraEditorialCard = {
       name: string;
       price?: string;
       url: string;
+      /**
+       * True when this slot is an editor-approved piece with no verified exact
+       * product URL yet. The row is withheld from the public page instead of
+       * shipping a homepage/category/dead link, and the launch audit reports it
+       * as an explicit omission rather than a silent gap.
+       */
+      unsourced?: boolean;
     }>;
   };
 };
@@ -82,7 +89,11 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
             brand: "Aquazzura",
             name: "Love Link 50 Leather Slingback — Cream",
             price: "$795",
-            url: "https://www.aquazzura.com/us/love-link-slingback-50-cream-leather-lovmidp0-nap-crm.html",
+            // Verified 2026-08-01: this PDP 301-redirects to aquazzura.com/eu_en
+            // (region landing). Held as an explicit omission until an exact
+            // product URL is approved — no substitute chosen automatically.
+            url: "",
+            unsourced: true,
           },
           {
             slot: "Bag",
@@ -103,7 +114,10 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
             brand: "Jenny Bird",
             name: "Nouveaux Puff Earrings — High Polish Gold",
             price: "$138",
-            url: "https://jenny-bird.com/pages/nouveaux-puffs",
+            // Verified 2026-08-01: /pages/ is a Shopify collection landing, not
+            // a PDP. Held as an explicit omission until an exact URL is approved.
+            url: "",
+            unsourced: true,
           },
           {
             slot: "Bracelet",
@@ -422,6 +436,8 @@ export type NightcapEditorialCard = {
       name: string;
       price: string;
       url: string;
+      /** See `ExtraEditorialCard` — explicit, audited omission marker. */
+      unsourced?: boolean;
     }>;
   };
 };

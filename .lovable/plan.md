@@ -1,150 +1,75 @@
-# Buying Office V3 — Founder-Centric Editorial Workspace
+# Resort Edit — Launch-Readiness Audit (inspection complete, no edits made)
 
-Refactor Hero Outfit Studio into a quiet editorial workspace that remembers every decision, collapses completed work, and supports any moment via flexible custom components.
+Verified against: repo (34 route files), live production `resortedit.com`, backend records, and 56 live product-URL probes.
 
-## Guiding principle
+## A. Executive summary
 
-Discover → Curate → Refine → Publish. Each Founder decision permanently reduces visible complexity. Reopening a review never starts over.
+| Priority | Count | Headline |
+|---|---|---|
+| Critical | 4 | Half the site is not shoppable; product URLs unverifiable/broken; slug↔label contradiction on 2 moments |
+| High | 6 | No complete-look model; stale backend moment table; naming drift; www 302; admin IA sprawl |
+| Medium | 7 | Missing canonicals, sitemap gaps, URL-policy false negatives, `?debug=1` leak, editorial-card omission model, brand tiering, subpage discoverability |
+| Low | 5 | Copy/title polish, orphan legacy routes, MCP surface, image weight, minor a11y |
 
-## 1. Persist all decision states
+**Critical**
+1. **Shop coverage: 6 of 12 moments ship zero product links.** Live SSR link counts: `pool-lounging` 9, `long-lunch` 7, `riviera-dinner` 6, `arrival` 2, `exploring-the-harbor` 1, `beach-club` 1, `nightcap` 1, and **0** for `espresso-morning`, `yacht-day`, `shopping`, `harbor-aperitivo`, `sunset-views`. (Counts exclude fonts/Instagram; client-only expanders may add a few.)
+2. **Product links cannot be certified.** 1 confirmed broken: Aquazzura "Love Link Slingback 50" redirects to `aquazzura.com/eu_en` (region landing) — a generic redirect, must not ship. All 9 Net-a-Porter URLs returned connection failures (0/ERR) and their ID pattern (`16475973…`) repeats suspiciously — unverified, possibly invalid. 12 Bloomingdale's/Neiman/Jimmy Choo returned 403 and 11 brand-direct returned 429 (bot blocks) — **status unknown, not "working"**. Verified 200 + exact PDP: 8 Mytheresa, 5 Shopbop, 3 Nordstrom, 1 Revolve, 1 L'AGENCE, 1 Celine.
+3. **`jenny-bird.com/pages/nouveaux-puffs` is a collection page, not a PDP** and passes `shop-url-policy.ts` because no `/pages/` rule exists — the publish guard has a hole.
+4. **URL/label contradiction:** `/portofino/pool-lounging` renders and titles as **"Beach Club"**, `/portofino/beach-club` as **"Pool Lounging"** (verified in live `<title>`). Intentional to protect SEO, but currently self-contradicting in URL, breadcrumb, and share links.
 
-Extend `buying_candidates.status` semantics and add a `slot_assignment` linking a candidate to a Hero Outfit slot. Statuses respected globally:
+**High**
+5. No "complete look" data model: no `hair`, `hat`, or `optional layer` slot anywhere in curated data; `unsourced: true` (the only explicit-omission flag) exists in `lookOverrides.ts` and is used in exactly one look (Nightcap, 7 slots), and is **absent entirely** from `momentEditorialCards.ts` — a gap there is indistinguishable from an oversight.
+6. `destination_moments` table is stale: 6 rows with obsolete slugs (`arrival-day`, `market-morning`) while `moments` correctly holds all 12 canonical rows + a `__unassigned__` draft.
+7. Naming drift confirmed live: `/portofino/exploring-the-harbor` titles as **"Explore the Harbor"**.
+8. `www.resortedit.com` → apex is a **302**, not 301 (dilutes canonical consolidation).
+9. Admin sprawl: 15 admin routes; `product-vault`/`inventory-health` and `looks`/`hero-outfit` are duplicate surfaces over one entity; `subscribers` and `day-images` fit no proposed module.
+10. `vault_products` is empty (0 rows) while `founder_reference_products` holds 160 approved rows — the "catalog" module has no data behind it.
 
-- `review` (default after import)
-- `favorite` / `later`
-- `finalist`
-- `selected` (locked into a slot — new)
-- `replaced` (superseded by a later selection — new)
-- `rejected`
-- `founder_hero` (Hero garment)
+**Medium/Low**: `brands`, `destinations`, `index`, `my-edit` lack `rel=canonical`; sitemap omits `/portofino/pool-lounging/poolside-glam`; `?debug=1` renders a "Founder Look" badge publicly (`portofino.$moment.tsx:497`); brand tiering in `/brands` not aligned to signature/frequent/discovery/product-only/excluded; 5 legacy day routes + `$day/$look` correctly 301 (verified) but remain orphaned; MCP endpoint returns 406 on GET (correct, but publicly enumerable).
 
-New table `hero_outfit_slot_history` records every AI generation / manual pick per slot so nothing is lost:
+**Not broken (verified good):** admin is genuinely gated (`/admin` returns the password shell only); seeds gated by `ADMIN_ALLOW_SEEDS`; `robots.txt` disallows `/admin` and blanket-blocks non-prod hosts; sitemap is data-driven from `PORTOFINO_JOURNEY` so it cannot drift; all 12 homepage moment cards link correctly; affiliate disclosure links from footer to `/about#affiliate-disclosure`; every moment has card + editorial imagery; 404 handling works.
 
-```text
-hero_outfit_slot_history
-  id, outfit_id, slot, candidate_id (nullable),
-  generation_payload jsonb, action (generated|selected|rejected|replaced|cleared),
-  created_at
-```
+## B–E. Audit tables
 
-Server fns: `selectCandidateForSlot`, `clearSlot`, `replaceSlotSelection`, `rejectCandidate`, `restoreCandidate`. All write to history.
+Delivered as four read-only artifacts generated in Batch 0, so they stay reproducible rather than becoming a stale document:
+- **B. Route audit** — `docs/audit/routes.md`: route, type, purpose, data source, overlap, status, recommendation, target module, migration risk for all 34 route files.
+- **C. Product-link audit** — `docs/audit/product-links.csv`: page, look, slot, brand, product, retailer, source URL, final URL, HTTP status, redirect count, exact-match verdict, colorway, stock, affiliate status, action. Bot-blocked rows are marked `UNVERIFIED — manual check required`, never "OK".
+- **D. Complete-look audit** — `docs/audit/looks.md`: per look, required slots vs filled vs explicitly omitted vs silently missing, broken links, editorial-match class (exact / strong inspired-by / acceptable / weak / misleading), launch verdict.
+- **E. Duplicate/legacy audit** — `docs/audit/legacy.md`: canonical route, current behaviour, redirect status, dependencies, removal recommendation.
 
-## 2. Default workspace = Current Founder Look
+## F. Backend streamlining plan (proposal, no code yet)
 
-`/admin/hero-outfit/$id` opens directly on a **Current Founder Look** card:
+Final IA — six modules:
 
-- Large look image (first hero garment image)
-- Hero garments list (locked)
-- Selected accessory rows (one per filled slot)
-- Optional components list
-- Publication + validation status
-- Per-row actions: **Change · Replace · Remove**
+| Module | Absorbs | Action |
+|---|---|---|
+| Dashboard | `admin/` + `LaunchAuditPanel` | keep, add launch-readiness scoreboard |
+| Looks | `admin/looks`, `admin/hero-outfit/$id` | merge as build → review → publish tabs |
+| Editorial Intelligence | `admin/editorial-memory`, `admin/destination-moments`, `admin/moments`, `admin/moments/$id/run` | merge; `destination-moments` becomes read-only after table reconciliation |
+| Brands | `admin/brands` | keep |
+| Catalog & Inventory | `admin/product-vault`, `admin/inventory-health` | merge into one surface with a Health tab |
+| System | `admin/system`, `admin/day-images`, `admin/subscribers` | merge; keep seeds env-gated |
 
-Recommendation panels render *below*, only for incomplete required slots, expanded by default. Filled slots render as one-line collapsed rows with a `Change` affordance.
+Kept data models: `moments`, `moment_runs`, `brands`, `founder_reference_products`/editorial memory, `look_candidates`, product vault. Archived (no deletes this pass): `destination_moments` + `destination_moment_archetypes` (after migrating anything still read from them), `editorial_collections*`. Redirects retained: `admin/founder-looks` → `admin/looks`. Nothing dropped until the route audit proves zero readers.
 
-## 3. Collapse / expand behavior
+## G. Editorial Decisions Required (needs you, cannot be fixed safely)
 
-- Filled required slot → collapsed summary row.
-- Empty required slot → expanded with current AI generation only.
-- "Change" / "Regenerate" / "Clear" re-expands a filled slot.
-- "Regenerate" archives the prior generation into history; only the latest generation is shown.
+1. **Pool Lounging / Beach Club:** keep swapped labels on existing URLs (status quo, contradictory), or migrate slugs with 301s so URL matches label?
+2. **Aquazzura Love Link Slingback** (Long Lunch) — dead link. Mark unsourced, or approve a replacement heel?
+3. **Nightcap** — 7 of 8 slots unsourced. Publish as a single-product editorial, or hold the moment until sourced?
+4. **6 zero-shop moments** — publish as inspiration-only with softened CTA language, or hold from the launch set?
+5. **9 Net-a-Porter links** unverifiable — re-source via a verified retailer, or accept and monitor?
+6. **Complete-look doctrine** — is `hair` / `hat` / `optional layer` genuinely required, or is the required set outfit + shoes + bag + earrings + one neck piece + hand/wrist + sunglasses (day only)?
+7. **Brand tiering** — confirm the signature / frequent / discovery / product-only / accessories / excluded assignment before `/brands` is restructured.
 
-## 4. Hide rejected + superseded by default
+## H. Remediation order (small reversible batches)
 
-- Rejected candidates filtered out of every slot panel.
-- Toggle `Show rejected` (per slot + global) reveals a collapsible section.
-- Superseded AI generations hidden; `View history` opens a drawer reading `hero_outfit_slot_history`.
+- **Batch 0 — Evidence (no behaviour change):** generate the B–E artifacts and a repeatable link-prober script. Zero risk.
+- **Batch 1 — Truth in labelling:** fix "Explore the Harbor" → "Exploring the Harbor"; add missing canonicals; add `/poolside-glam` to sitemap; remove the `?debug=1` "Founder Look" badge; request 301 for www→apex. Copy/meta only.
+- **Batch 2 — Link safety:** add `/pages/` and region-landing rules to `shop-url-policy.ts`; mark the Aquazzura link and any confirmed-dead link `unsourced`; extend the build-time audit to fail on non-PDP and on redirect-to-landing. No editorial substitutions.
+- **Batch 3 — Completeness model:** add the explicit-omission field to `momentEditorialCards.ts`, formalise the required-slot doctrine (per your G6 answer), and surface per-look completeness in the Dashboard. Data-model only.
+- **Batch 4 — Backend reconciliation:** verify readers of `destination_moments`, migrate/retire it, and seed or retire the empty product vault.
+- **Batch 5 — Admin IA consolidation:** implement the six modules with redirects from every old admin path; no CRUD deleted until the new surface is proven.
+- **Batch 6 — CTA + launch gating:** align CTA language to the editorial-match class per look, and apply your G1/G3/G4 decisions.
 
-## 5. Custom Optional Components
-
-Remove hardcoded Hair Accessory. Replace the optional slots concept with an open list of `custom_components` stored on `founder_hero_outfits.custom_components jsonb`:
-
-```text
-{ id, name, url, image_url?, price?, notes?, order }
-```
-
-UI: **+ Add Custom Item** opens a small form (name, retail URL, optional image, optional notes). Components render in the Current Founder Look summary and publish alongside required slots — no destination-specific code paths.
-
-Required slot defaults (engine-level):
-
-- Day: Shoes, Bag, Sunglasses, Earrings, Necklace, Bracelet, Ring
-- Night: drop Sunglasses
-- Water: same as Day; sandals label for Shoes
-
-Hat removed from required; Founders add via Optional if wanted.
-
-## 6. Publishing changes
-
-`publishFounderLookFromOutfit` now emits two grouped sections in the published payload:
-
-- **Shop the Look** — hero garments + required accessories (in canonical order)
-- **Complete the Look** — custom optional components
-
-`portofino.$moment.tsx` `ShopLookPanel` renders both groups with a subtle "Complete the Look" subheading; both use identical card styling.
-
-## 7. UI restructure (`src/routes/admin.hero-outfit.$id.tsx`)
-
-New component tree:
-
-```text
-<HeroOutfitStudio>
-  <CurrentFounderLookCard />        // primary
-  <IncompleteSlotsPanel />          // secondary — auto-expanded
-  <CompletedSlotsList />            // collapsed rows
-  <OptionalComponentsEditor />      // add/edit custom items
-  <ArchiveDrawer />                 // tertiary — rejected + history (opt-in)
-</HeroOutfitStudio>
-```
-
-Goal: ≥50% reduction in scroll height for a partially-filled outfit.
-
-## Technical details
-
-**Migration**
-
-```sql
-alter table public.founder_hero_outfits
-  add column if not exists custom_components jsonb not null default '[]'::jsonb,
-  add column if not exists slot_selections jsonb not null default '{}'::jsonb;
-
-create table if not exists public.hero_outfit_slot_history (
-  id uuid primary key default gen_random_uuid(),
-  outfit_id uuid not null references public.founder_hero_outfits(id) on delete cascade,
-  slot text not null,
-  candidate_id uuid references public.buying_candidates(id) on delete set null,
-  action text not null check (action in ('generated','selected','rejected','replaced','cleared','restored')),
-  payload jsonb not null default '{}'::jsonb,
-  created_at timestamptz not null default now()
-);
-grant all on public.hero_outfit_slot_history to service_role;
-alter table public.hero_outfit_slot_history enable row level security;
-create policy "deny all" on public.hero_outfit_slot_history for all using (false);
-
--- extend candidate status vocabulary (already free-text; add index)
-create index if not exists buying_candidates_status_idx on public.buying_candidates(session_id, status);
-```
-
-**Server fns** (`src/lib/hero-outfit.functions.ts`):
-- `selectCandidateForSlot({ outfitId, slot, candidateId })` — sets candidate.status=`selected`, marks any prior `selected` candidate in that slot as `replaced`, writes history.
-- `clearSlot({ outfitId, slot })` — unsets selection, writes history.
-- `rejectCandidate` / `restoreCandidate` — toggle rejection, write history.
-- `addCustomComponent` / `updateCustomComponent` / `removeCustomComponent` — mutate `custom_components` jsonb.
-- `getOutfitWorkspace({ outfitId })` — returns hero garments, current selections, incomplete slots, optional components, latest generation per empty slot, and counts (rejected, history) without their payloads.
-- `regenerateSlotWithAI` updated to archive the prior generation via history and replace current AI suggestions in-place rather than append.
-
-**Slot config** (`src/lib/hero-outfit-slots.ts`):
-- Remove `hair` from defaults; keep `hat` optional-only via custom components.
-- Add `kind: "required" | "optional"` to `SlotDefinition`; UI only auto-renders required slots.
-
-**Publish payload** (`hero-outfit.functions.ts` → `publishFounderLookFromOutfit`):
-- Group resolved products into `look_products` (required) and `optional_products` (custom components). `founder_looks` gains a `optional_components jsonb` column; `founder_reference_products` already supports the flat list — we additionally attach `is_optional` in the product metadata used by the moment page.
-
-**Public render** (`src/routes/portofino.$moment.tsx`):
-- `ShopLookPanel` reads `optional_products`, renders them under a "Complete the Look" subheading using the same `ShopCard`.
-
-## Out of scope
-
-- No destination-specific component presets.
-- No changes to import/wizard stages 1–3.
-- No new analytics surfaces.
-- Brand/scoring engine untouched.
+Public visual design is untouched throughout; no product availability or affiliate status will be invented; no hero product replaced automatically.
