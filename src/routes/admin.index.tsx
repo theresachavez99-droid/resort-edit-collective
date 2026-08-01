@@ -31,7 +31,7 @@ type NavItem = {
 const WORKFLOW: NavItem[] = [
   {
     label: "Moment Runs",
-    to: "/admin/moments",
+    to: "/admin/editorial-intelligence",
     description:
       "The consolidated editorial workspace — one engine per (destination, moment) with the 5-stage Run Contract (Compile · Feed · Rank · Curate · Publish). Replaces the legacy Buying Office surface.",
   },
