@@ -569,21 +569,6 @@ function MomentPage() {
             <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-3xl leading-snug line-clamp-2">
               {card.narrative}
             </p>
-            <div className="mt-4">
-              <SaveLookButton
-                tone="light"
-                source="portofino_moment_hero"
-                look={{
-                  id: `portofino/${slug}`,
-                  destination: "Portofino",
-                  activity: card.moment_name,
-                  title: card.moment_name,
-                  description: card.narrative,
-                  image: card.hero_banner_image ?? heroImage,
-                  url: `/portofino/${slug}`,
-                }}
-              />
-            </div>
           </div>
         </section>
       )}
