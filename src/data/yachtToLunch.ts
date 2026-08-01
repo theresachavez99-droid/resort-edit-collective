@@ -127,7 +127,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     subtitle: "Johanna Ortiz coral bikini, Cult Gaia clutch, Gianvito Rossi heels.",
     chapter: "Aperitivo",
     story:
-      "Golden hour on the piazzetta. A coral Johanna Ortiz bikini under a matching draped sarong, Cult Gaia woven clutch, Gianvito Rossi heeled sandals, sculptural Anita Ko gold, Spinelli Kilcollin linked rings. Aperol in hand, swim-led.",
+      "Golden hour on the piazzetta. A coral Johanna Ortiz bikini under a matching draped sarong, Cult Gaia woven clutch, Gianvito Rossi heeled sandals, sculptural Anita Ko gold. Aperol in hand, swim-led.",
     refPos: "75% 100%",
     museImage: look9Muse,
     products: [

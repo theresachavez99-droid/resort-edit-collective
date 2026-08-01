@@ -87,7 +87,7 @@ export type ShopItem = {
   not_available?: boolean;
   /**
    * Optional category label (e.g. "Outfit", "Shoes", "Bag", "Earrings",
-   * "Necklace", "Bracelet", "Ring", "Sunglasses", "Hair Detail",
+   * "Necklace", "Bracelet", "Sunglasses", "Hair Detail",
    * "Optional Layer"). Rendered as the card eyebrow when set.
    */
   category?: string;
@@ -439,7 +439,7 @@ export const portofinoLooks: Look[] = [
       // DAY 2 · LOOK 2 — "Long-Lunch Linen"
       // Completes the accessory stack started above (dress = outfit,
       // tote = bag, Krewe = sunglasses): adds shoes, earrings, necklace,
-      // bracelet, ring, hair detail, optional layer.
+      // bracelet, hair detail, optional layer.
       // Built on cobblestone-friendly luxury shoes, sculptural jewelry
       // (single statement pieces, no necklace-stacking), and a relaxed
       // linen shirt as the optional layer (never cropped over a maxi).
@@ -490,17 +490,6 @@ export const portofinoLooks: Look[] = [
         backup_link_2:
           "https://www.saksfifthavenue.com/product/david-yurman-cable-classics-bracelet-0400099999999.html",
         image: productDavidYurmanCableClassics,
-        inventory_status: "in_stock",
-        last_verified_date: "2026-05-29",
-        lookIndex: 2,
-      },
-      {
-        brand: "Missoma",
-        item: "Molten Heavy Stacking Ring — Gold",
-        price: "$258",
-        href: "https://www.shopbop.com/molten-heavy-stacking-ring-missoma/vp/v=1/1576781299.htm",
-        backup_link_1: "https://www.revolve.com/missoma-molten-stacking-ring/dp/MISR-WL56/",
-        backup_link_2: "https://www.nordstrom.com/s/missoma-molten-stacking-ring/6512893",
         inventory_status: "in_stock",
         last_verified_date: "2026-05-29",
         lookIndex: 2,

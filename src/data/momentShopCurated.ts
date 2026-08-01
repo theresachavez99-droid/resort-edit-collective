@@ -5,7 +5,8 @@ import type { OverrideItem } from "@/data/lookOverrides";
  * Moment-level curated Complete Edit. When present for a moment slug, this
  * replaces the founder / fallback shop entries with an editor-approved,
  * ordered list of pieces (Corset → Pant → Shoe → Bag → Earrings → Necklace →
- * Bracelet → Ring for eveningwear moments). Every entry must resolve to a
+ * Bracelet for eveningwear moments). Rings are never merchandised.
+ * Every entry must resolve to a
  * usable http(s) retailer URL — `isUsableShopUrl` still gates rendering.
  */
 export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
