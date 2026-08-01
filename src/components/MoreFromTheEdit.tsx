@@ -13,6 +13,7 @@ import {
 } from "@/lib/portofino-visual-dna";
 import { filterAndDedupImages } from "@/lib/product-image-integrity";
 import { safeHref } from "@/lib/safe-url";
+import { canRenderProductImage } from "@/lib/product-image-policy";
 
 /**
  * "More From The Edit" — dynamic, founder-library-driven discovery rail
