@@ -22,6 +22,8 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
+import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
+import { Route as AdminEditorialIntelligenceRouteImport } from './routes/admin.editorial-intelligence'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
 import { Route as AdminSystemRouteImport } from './routes/admin.system'
 import { Route as BrandsIndexRouteImport } from './routes/brands.index'
@@ -103,6 +105,17 @@ const AdminBrandsRoute = AdminBrandsRouteImport.update({
   path: '/brands',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCatalogRoute = AdminCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEditorialIntelligenceRoute =
+  AdminEditorialIntelligenceRouteImport.update({
+    id: '/editorial-intelligence',
+    path: '/editorial-intelligence',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminLooksRoute = AdminLooksRouteImport.update({
   id: '/looks',
   path: '/looks',
@@ -195,6 +208,8 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -221,6 +236,8 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -252,6 +269,8 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -284,6 +303,8 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/catalog'
+    | '/admin/editorial-intelligence'
     | '/admin/looks'
     | '/admin/system'
     | '/brands/$slug'
@@ -310,6 +331,8 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/catalog'
+    | '/admin/editorial-intelligence'
     | '/admin/looks'
     | '/admin/system'
     | '/brands/$slug'
@@ -340,6 +363,8 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
+    | '/admin/catalog'
+    | '/admin/editorial-intelligence'
     | '/admin/looks'
     | '/admin/system'
     | '/brands/$slug'
@@ -469,6 +494,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBrandsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/catalog': {
+      id: '/admin/catalog'
+      path: '/catalog'
+      fullPath: '/admin/catalog'
+      preLoaderRoute: typeof AdminCatalogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/editorial-intelligence': {
+      id: '/admin/editorial-intelligence'
+      path: '/editorial-intelligence'
+      fullPath: '/admin/editorial-intelligence'
+      preLoaderRoute: typeof AdminEditorialIntelligenceRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/looks': {
       id: '/admin/looks'
       path: '/looks'
@@ -579,6 +618,8 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminCatalogRoute: typeof AdminCatalogRoute
+  AdminEditorialIntelligenceRoute: typeof AdminEditorialIntelligenceRoute
   AdminLooksRoute: typeof AdminLooksRoute
   AdminSystemRoute: typeof AdminSystemRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -588,6 +629,8 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBrandsRoute: AdminBrandsRoute,
+  AdminCatalogRoute: AdminCatalogRoute,
+  AdminEditorialIntelligenceRoute: AdminEditorialIntelligenceRoute,
   AdminLooksRoute: AdminLooksRoute,
   AdminSystemRoute: AdminSystemRoute,
   AdminIndexRoute: AdminIndexRoute,
