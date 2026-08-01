@@ -609,6 +609,21 @@ function MomentPage() {
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {editorialTitle}
               </h2>
+              {/* Save control lives in the featured column so every moment —
+                  including those rendering the cinematic hero, which has no
+                  overlay controls — exposes an identical Save action. */}
+              <SaveLookButton
+                source="portofino_moment_featured"
+                look={{
+                  id: `portofino/${slug}`,
+                  destination: "Portofino",
+                  activity: card.moment_name,
+                  title: editorialTitle,
+                  description: card.narrative,
+                  image: editorialImage,
+                  url: `/portofino/${slug}`,
+                }}
+              />
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
                 {MOMENT_FEATURED_COPY[slug]?.body ??
                   (isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative))}
