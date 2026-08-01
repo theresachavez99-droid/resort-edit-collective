@@ -1065,7 +1065,7 @@ function EditorialLookCard({
               aria-controls={`shop-${look.daySlug}-${look.lookSlug}`}
               className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
             >
-              {isOpen ? "HIDE COMPLETE LOOK" : "VIEW COMPLETE LOOK"}
+              {isOpen ? "HIDE THE EDIT" : "VIEW THE EDIT"}
               <ChevronDown
                 className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
               />
