@@ -436,7 +436,7 @@ export const promoteHeroOutfit = createServerFn({ method: "POST" })
 
 const VALID_SLOTS = [
   "shoes", "bag", "sunglasses", "earrings", "necklace", "bracelet",
-  "ring", "hat", "hair", "necklace_or_bracelet",
+  "hat", "hair", "necklace_or_bracelet",
 ] as const;
 
 /**

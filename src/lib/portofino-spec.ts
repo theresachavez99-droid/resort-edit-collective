@@ -92,7 +92,6 @@ export function inferSpecCategory(item: EditItem): string {
         return "Necklace";
       if (n.includes("bracelet") || n.includes("cuff") || n.includes("bangle"))
         return "Bracelet";
-      if (n.includes("ring")) return "Ring";
       return "Jewelry";
   }
 }

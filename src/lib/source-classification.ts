@@ -119,13 +119,12 @@ export function classifyProductSource(
 export function inferJewelrySubSlot(
   slot: string | null | undefined,
   title: string | null | undefined,
-): "earrings" | "necklace" | "bracelet" | "ring" | null {
+): "earrings" | "necklace" | "bracelet" | null {
   if ((slot ?? "").toLowerCase() !== "jewelry") return null;
   const t = (title ?? "").toLowerCase();
   if (!t) return null;
   if (/\b(earring|hoop|stud|drop)\b/.test(t)) return "earrings";
   if (/\b(necklace|pendant|chain|choker|lariat)\b/.test(t)) return "necklace";
   if (/\b(bracelet|cuff|bangle)\b/.test(t)) return "bracelet";
-  if (/\b(ring|signet)\b/.test(t)) return "ring";
   return null;
 }
