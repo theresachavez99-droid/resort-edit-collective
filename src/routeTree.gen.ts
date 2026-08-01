@@ -33,6 +33,7 @@ import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers
 import { Route as AdminSystemRouteImport } from './routes/admin.system'
 import { Route as BrandsIndexRouteImport } from './routes/brands.index'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
+import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
 import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
@@ -171,6 +172,11 @@ const BrandsSlugRoute = BrandsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BrandsRoute,
 } as any)
+const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DestinationsRoute,
+} as any)
 const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -293,6 +299,7 @@ export interface FileRoutesByFullPath {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/brands/': typeof BrandsIndexRoute
+  '/destinations/': typeof DestinationsIndexRoute
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
@@ -307,7 +314,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/resort-edits': typeof ResortEditsRoute
@@ -333,6 +339,7 @@ export interface FileRoutesByTo {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin': typeof AdminIndexRoute
   '/brands': typeof BrandsIndexRoute
+  '/destinations': typeof DestinationsIndexRoute
   '/portofino': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
@@ -377,6 +384,7 @@ export interface FileRoutesById {
   '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/brands/': typeof BrandsIndexRoute
+  '/destinations/': typeof DestinationsIndexRoute
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
@@ -422,6 +430,7 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin/'
     | '/brands/'
+    | '/destinations/'
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
@@ -436,7 +445,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/destinations'
     | '/my-edit'
     | '/privacy-policy'
     | '/resort-edits'
@@ -462,6 +470,7 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin'
     | '/brands'
+    | '/destinations'
     | '/portofino'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
@@ -505,6 +514,7 @@ export interface FileRouteTypes {
     | '/portofino/day-5'
     | '/admin/'
     | '/brands/'
+    | '/destinations/'
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
@@ -705,6 +715,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandsSlugRouteImport
       parentRoute: typeof BrandsRoute
     }
+    '/destinations/': {
+      id: '/destinations/'
+      path: '/'
+      fullPath: '/destinations/'
+      preLoaderRoute: typeof DestinationsIndexRouteImport
+      parentRoute: typeof DestinationsRoute
+    }
     '/destinations/$slug': {
       id: '/destinations/$slug'
       path: '/$slug'
@@ -878,10 +895,12 @@ const BrandsRouteWithChildren =
 
 interface DestinationsRouteChildren {
   DestinationsSlugRoute: typeof DestinationsSlugRoute
+  DestinationsIndexRoute: typeof DestinationsIndexRoute
 }
 
 const DestinationsRouteChildren: DestinationsRouteChildren = {
   DestinationsSlugRoute: DestinationsSlugRoute,
+  DestinationsIndexRoute: DestinationsIndexRoute,
 }
 
 const DestinationsRouteWithChildren = DestinationsRoute._addFileChildren(
