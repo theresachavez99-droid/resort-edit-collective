@@ -6,7 +6,6 @@ import { SavedCounter } from "@/components/SavedCounter";
 
 const nav = [
   { to: "/destinations", label: "Destinations" },
-  { to: "/resort-edits", label: "Resort Edits" },
   { to: "/brands", label: "Brands We Love" },
   { to: "/about", label: "About" },
 ] as const;
