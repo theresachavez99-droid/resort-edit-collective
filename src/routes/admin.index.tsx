@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
 import { getAdminMetrics } from "@/lib/admin-metrics.functions";
+import { LaunchAuditPanel } from "@/components/LaunchAuditPanel";
 
 /**
  * Studio dashboard at /admin — the permanent editorial home.
@@ -174,6 +175,8 @@ function AdminDashboard() {
         <Metric label="Products" value={m?.productsLibrary} />
         <Metric label="Inventory Issues" value={m?.inventoryIssues} accent="amber" />
       </section>
+
+      <LaunchAuditPanel />
 
       {/* Quick actions */}
       <section className="flex flex-wrap gap-2">
