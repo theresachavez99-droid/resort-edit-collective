@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
 import { brandCategories } from "@/data/brands";
+import { destinations } from "@/data/destinations";
 
 const BASE_URL = "https://resortedit.com";
 
@@ -25,6 +26,11 @@ function buildEntries(): SitemapEntry[] {
       path: `/portofino/${m.moment_slug}`,
       changefreq: "weekly",
       priority: "0.8",
+    })),
+    ...destinations.map((d) => ({
+      path: `/destinations/${d.slug}`,
+      changefreq: "monthly",
+      priority: "0.6",
     })),
     ...brandCategories.flatMap((cat) =>
       cat.brands.map((b) => ({
