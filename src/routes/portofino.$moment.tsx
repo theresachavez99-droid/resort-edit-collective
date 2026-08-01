@@ -28,6 +28,10 @@ import {
   type NightcapEditorialCard,
 } from "@/data/momentEditorialCards";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
+import {
+  excludeUnmerchandisable,
+  isExcludedProduct,
+} from "@/lib/merchandising-exclusions";
 import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
 
 /**
