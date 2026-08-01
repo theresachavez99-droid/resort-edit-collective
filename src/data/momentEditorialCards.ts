@@ -61,7 +61,7 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       key: "piazza-in-ivory",
       title: "Piazza in Ivory",
       caption:
-        "An ivory silk blouse tucked into fluid ivory wide-leg trousers — tan structured leather and one small travel case for the first walk to the piazzetta.",
+        "An ivory silk blouse tucked into fluid ivory wide-leg trousers — tan structured leather and one small travel case for the first walk along the harbor.",
       image: arrivalPiazzaIvoryImage.url,
       alt: "Lilla arriving on the Portofino harbor cobblestones in a soft round-neck ivory silk blouse with short cap sleeves, tucked into fluid ivory stretch-suiting wide-leg trousers, carrying a small tan-leather structured top-handle bag with a compact tan travel case at her feet, wearing cream leather pointed-toe slingback pumps on a low block heel with dark rectangular acetate sunglasses perched on her head.",
       reference: {
@@ -207,7 +207,7 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       },
       shop: {
         stylingNote:
-          "Nighttime heels, a sculptural gold cuff and drop earrings — no ring competing with the neckline.",
+          "Nighttime heels, a sculptural gold cuff and drop earrings — nothing competing with the off-the-shoulder line.",
         products: [
           {
             slot: "Shoes",
@@ -353,9 +353,9 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       key: "eloise-at-noon",
       title: "Eloise at Noon",
       caption:
-        "An ivory cotton-lace maxi, natural jute espadrilles and a small raffia crossbody for a slow walk along the pastel harbor.",
+      "An ivory cotton-lace maxi, natural jute espadrille wedges and a woven raffia bag for a slow walk along the pastel harbor.",
       image: exploringHarborEloiseImage.url,
-      alt: "Lilla wearing an ivory cotton-lace maxi dress along the pastel harbor of Portofino at midday, styled with natural jute espadrille wedges, a tan raffia crossbody and delicate gold jewelry.",
+    alt: "Lilla wearing an ivory cotton-lace maxi dress along the pastel harbor of Portofino at midday, styled with ankle-tie jute espadrille wedges, a woven raffia bag and a fine gold pendant.",
       reference: {
         slot: "Reference Dress",
         brand: "SIMKHAI",
@@ -367,7 +367,7 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       },
       shop: {
         stylingNote:
-          "A polished daytime harbor look — jute espadrille wedges, a small tan raffia crossbody and delicate gold jewelry echoing the photograph. No necklace layering — one fine pendant only.",
+        "A polished daytime harbor look — jute espadrille wedges, a woven raffia bag and delicate gold jewelry echoing the photograph. No necklace layering — one fine pendant only.",
         products: [
           {
             slot: "Shoes",
@@ -448,11 +448,11 @@ export const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
     caption:
       "A sculpted strapless top and fluid oat satin trousers, finished with sculptural gold and pointed pumps for one final cocktail by the harbor.",
     image: nightcapIvorySatinImage.url,
-    alt: "Lilla in a strapless top and oat satin trousers with a soft satin sheen, at night in Portofino, styled with pointed pumps, a clutch, gold hoops, a wide gold cuff, and a sculptural gold ring.",
+    alt: "Lilla in an ivory strapless satin top and matching oat satin trousers at night in Portofino, styled with black pointed pumps, a small black clutch and a wide gold cuff.",
     imageClassName: "object-cover object-[center_30%]",
     shop: {
       stylingNote:
-        "No necklace — the sculpted strapless neckline is intentionally left clean.",
+        "Photographed in ivory; the pieces below are linked in the black colorway currently stocked. No necklace — the sculpted strapless neckline is intentionally left clean.",
       products: [
         {
           slot: "Hero Piece · Top",
