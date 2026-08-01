@@ -569,21 +569,6 @@ function MomentPage() {
             <p className="font-serif italic text-base md:text-lg text-ivory/90 mt-2.5 max-w-3xl leading-snug line-clamp-2">
               {card.narrative}
             </p>
-            <div className="mt-4">
-              <SaveLookButton
-                tone="light"
-                source="portofino_moment_hero"
-                look={{
-                  id: `portofino/${slug}`,
-                  destination: "Portofino",
-                  activity: card.moment_name,
-                  title: card.moment_name,
-                  description: card.narrative,
-                  image: card.hero_banner_image ?? heroImage,
-                  url: `/portofino/${slug}`,
-                }}
-              />
-            </div>
           </div>
         </section>
       )}
@@ -609,6 +594,21 @@ function MomentPage() {
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {editorialTitle}
               </h2>
+              {/* Save control lives in the featured column so every moment —
+                  including those rendering the cinematic hero, which has no
+                  overlay controls — exposes an identical Save action. */}
+              <SaveLookButton
+                source="portofino_moment_featured"
+                look={{
+                  id: `portofino/${slug}`,
+                  destination: "Portofino",
+                  activity: card.moment_name,
+                  title: editorialTitle,
+                  description: card.narrative,
+                  image: editorialImage,
+                  url: `/portofino/${slug}`,
+                }}
+              />
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
                 {MOMENT_FEATURED_COPY[slug]?.body ??
                   (isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative))}
@@ -700,6 +700,18 @@ function MomentPage() {
                     <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed">
                       {c.caption}
                     </p>
+                    <SaveLookButton
+                      source="portofino_more_looks_nightcap"
+                      look={{
+                        id: `portofino/${slug}#${c.key}`,
+                        destination: "Portofino",
+                        activity: card.moment_name,
+                        title: c.title,
+                        description: c.caption,
+                        image: c.image,
+                        url: `/portofino/${slug}#more-looks`,
+                      }}
+                    />
                     {c.shop && (
                       <NightcapShopExpander card={c} shop={c.shop} />
                     )}
@@ -729,6 +741,7 @@ function MomentPage() {
                 <EditorialLookCard
                   key={sib.id}
                   look={sib}
+                  momentName={card.moment_name}
                   isOpen={openShop === sib.lookSlug}
                   onToggle={() =>
                     setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
@@ -736,7 +749,12 @@ function MomentPage() {
                 />
               ))}
               {MOMENT_EXTRA_EDITORIAL_CARDS[slug]?.map((c) => (
-                <ExtraEditorialReferenceCard key={c.key} card={c} />
+                <ExtraEditorialReferenceCard
+                  key={c.key}
+                  card={c}
+                  momentSlug={slug}
+                  momentName={card.moment_name}
+                />
               ))}
             </div>
           </div>
@@ -1068,10 +1086,12 @@ function summarizeSlots(entries: ShopEntry[]): string[] {
 
 function EditorialLookCard({
   look,
+  momentName,
   isOpen,
   onToggle,
 }: {
   look: Look;
+  momentName: string;
   isOpen: boolean;
   onToggle: () => void;
 }) {
@@ -1120,6 +1140,20 @@ function EditorialLookCard({
               COMING SOON
             </span>
           )}
+          <SaveLookButton
+            variant="icon"
+            source="portofino_more_looks_sibling"
+            look={{
+              id: `portofino/${look.daySlug}/${look.lookSlug}`,
+              destination: "Portofino",
+              activity: momentName,
+              title: look.title,
+              description:
+                SIBLING_CAPTION_OVERRIDES[`${look.daySlug}/${look.lookSlug}`] ?? look.caption,
+              image: look.heroImage,
+              url: `/portofino/${look.daySlug}#more-looks`,
+            }}
+          />
         </div>
       </div>
       {isOpen && hasLive && (
@@ -1601,7 +1635,15 @@ function NightcapShopExpander({
  * INSPIRED BY badge, the caption, and a restrained outbound "SHOP THE
  * REFERENCE" link to the real designer product.
  */
-function ExtraEditorialReferenceCard({ card }: { card: ExtraEditorialCard }) {
+function ExtraEditorialReferenceCard({
+  card,
+  momentSlug,
+  momentName,
+}: {
+  card: ExtraEditorialCard;
+  momentSlug: string;
+  momentName: string;
+}) {
   const r = card.reference;
   return (
     <article className="flex flex-col bg-ivory border border-border/40">
@@ -1623,6 +1665,18 @@ function ExtraEditorialReferenceCard({ card }: { card: ExtraEditorialCard }) {
         <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed">
           {card.caption}
         </p>
+        <SaveLookButton
+          source="portofino_more_looks_reference"
+          look={{
+            id: `portofino/${momentSlug}#${card.key}`,
+            destination: "Portofino",
+            activity: momentName,
+            title: card.title,
+            description: card.caption,
+            image: card.image,
+            url: `/portofino/${momentSlug}#more-looks`,
+          }}
+        />
         <div className="mt-4 border-t border-border/50 pt-5">
           <a
             href={r.url}

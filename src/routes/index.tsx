@@ -305,18 +305,19 @@ function Index() {
         </p>
         <ul className="mx-auto max-w-4xl flex flex-wrap items-center justify-center gap-x-7 gap-y-3 lg:gap-x-10">
           {[
-            "ERES",
-            "Johanna Ortiz",
-            "Zimmermann",
-            "ViX Paula Hermanny",
-            "Callas Milano",
-            "Pucci",
-            "Missoni",
-            "Alexandra Miro",
-          ].map((name, i, arr) => (
+            { name: "Eres", slug: "eres" },
+            { name: "Callas Milano", slug: "callas-milano" },
+            { name: "Pucci", slug: "pucci" },
+            { name: "Missoni", slug: "missoni" },
+            { name: "Zimmermann", slug: "zimmermann" },
+            { name: "Johanna Ortiz", slug: "johanna-ortiz" },
+            { name: "Alexandra Miro", slug: "alexandra-miro" },
+            { name: "Vix Paula Hermanny", slug: "vix-paula-hermanny" },
+          ].map(({ name, slug }, i, arr) => (
             <li key={name} className="flex items-center gap-x-7 lg:gap-x-10">
               <Link
-                to="/brands"
+                to="/brands/$slug"
+                params={{ slug }}
                 className="font-display text-[1rem] sm:text-[1.1rem] tracking-[0.22em] uppercase text-ink/75 hover:text-gold transition-colors"
               >
                 {name}
