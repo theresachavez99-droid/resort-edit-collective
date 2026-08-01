@@ -597,7 +597,7 @@ function MomentPage() {
                       The Resort Edit
                     </h3>
                     <p className="font-serif italic text-[0.95rem] text-ink/70 mt-2 leading-relaxed max-w-prose">
-                      Inspired by this editorial moment, discover Resort Edit's curated interpretation using luxury pieces selected to recreate the same destination mood and effortless Riviera style.
+                      The pieces we would choose to wear this moment — matched to the photograph, from the designers we return to season after season.
                     </p>
                   </div>
                   <ShopLookPanel heading={shopHeading} entries={featuredShop} />
@@ -607,7 +607,7 @@ function MomentPage() {
                         to={completeLookHref}
                         className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.36em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-8 py-4"
                       >
-                        VIEW COMPLETE LOOK →
+                        VIEW THE FULL EDIT →
                       </Link>
                     </div>
                   )}
