@@ -700,6 +700,18 @@ function MomentPage() {
                     <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed">
                       {c.caption}
                     </p>
+                    <SaveLookButton
+                      source="portofino_more_looks_nightcap"
+                      look={{
+                        id: `portofino/${slug}#${c.key}`,
+                        destination: "Portofino",
+                        activity: card.moment_name,
+                        title: c.title,
+                        description: c.caption,
+                        image: c.image,
+                        url: `/portofino/${slug}#more-looks`,
+                      }}
+                    />
                     {c.shop && (
                       <NightcapShopExpander card={c} shop={c.shop} />
                     )}
@@ -729,6 +741,7 @@ function MomentPage() {
                 <EditorialLookCard
                   key={sib.id}
                   look={sib}
+                  momentName={card.moment_name}
                   isOpen={openShop === sib.lookSlug}
                   onToggle={() =>
                     setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
@@ -736,7 +749,12 @@ function MomentPage() {
                 />
               ))}
               {MOMENT_EXTRA_EDITORIAL_CARDS[slug]?.map((c) => (
-                <ExtraEditorialReferenceCard key={c.key} card={c} />
+                <ExtraEditorialReferenceCard
+                  key={c.key}
+                  card={c}
+                  momentSlug={slug}
+                  momentName={card.moment_name}
+                />
               ))}
             </div>
           </div>
@@ -1068,10 +1086,12 @@ function summarizeSlots(entries: ShopEntry[]): string[] {
 
 function EditorialLookCard({
   look,
+  momentName,
   isOpen,
   onToggle,
 }: {
   look: Look;
+  momentName: string;
   isOpen: boolean;
   onToggle: () => void;
 }) {
@@ -1120,6 +1140,20 @@ function EditorialLookCard({
               COMING SOON
             </span>
           )}
+          <SaveLookButton
+            variant="icon"
+            source="portofino_more_looks_sibling"
+            look={{
+              id: `portofino/${look.daySlug}/${look.lookSlug}`,
+              destination: "Portofino",
+              activity: momentName,
+              title: look.title,
+              description:
+                SIBLING_CAPTION_OVERRIDES[`${look.daySlug}/${look.lookSlug}`] ?? look.caption,
+              image: look.heroImage,
+              url: `/portofino/${look.daySlug}#more-looks`,
+            }}
+          />
         </div>
       </div>
       {isOpen && hasLive && (
