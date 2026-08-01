@@ -113,6 +113,7 @@ function findingsForMoment(slug: string): SlotFinding[] {
     for (const p of card.shop?.products ?? []) {
       const { slot, displayLabel } = resolveSlot({ slot: p.slot, title: p.name });
       const v = classifyShopUrl(p.url);
+      const meta = p as { unsourced?: boolean; isOptional?: boolean; url?: string };
       out.push({
         slot,
         displayLabel,
@@ -121,7 +122,7 @@ function findingsForMoment(slug: string): SlotFinding[] {
         url: p.url,
         urlKind: v.kind,
         ...(v.reason ? { urlReason: v.reason } : {}),
-        intentional: false,
+        intentional: Boolean(meta.unsourced) || Boolean(meta.isOptional && !meta.url),
         source: "editorial-card",
       });
     }
