@@ -204,20 +204,12 @@ function SeedButton({
 
 function ListsTab() {
   return (
-    <section className="space-y-3">
+    <section className="space-y-4">
       <p className="text-xs text-stone-500 max-w-xl leading-relaxed">
         Audience and list management. Not an editorial workflow — kept out of the
         Looks pipeline on purpose.
       </p>
-      <Link
-        to="/admin/subscribers"
-        className="block border border-stone-200 p-4 hover:border-stone-400 transition"
-      >
-        <div className="text-sm font-medium">Subscribers</div>
-        <div className="text-xs text-stone-500 mt-1 leading-relaxed">
-          Newsletter list — status, tags, and notes.
-        </div>
-      </Link>
+      <SubscribersPanel />
     </section>
   );
 }
