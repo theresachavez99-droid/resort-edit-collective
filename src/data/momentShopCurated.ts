@@ -20,17 +20,6 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       image: "",
     },
   ],
-  "long-lunch": [
-    {
-      slotLabel: "The Look",
-      category: "Dress",
-      brand: "L'AGENCE",
-      title: "Rima Belted Front Zip Midi Dress",
-      price: "$525",
-      url: "https://www.nordstrom.com/s/lagence-rima-belted-front-zip-midi-dress/8005286",
-      image: "",
-    },
-  ],
   shopping: [
     {
       slotLabel: "The Look",
@@ -87,7 +76,7 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       image: "",
     },
   ],
-  "long-lunch-legacy-placeholder-removed": [
+  "long-lunch": [
     {
       slotLabel: "The Look",
       category: "Dress",
