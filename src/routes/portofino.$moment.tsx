@@ -28,6 +28,7 @@ import {
   type NightcapEditorialCard,
 } from "@/data/momentEditorialCards";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
+import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
