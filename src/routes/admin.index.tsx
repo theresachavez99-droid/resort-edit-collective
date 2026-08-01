@@ -31,7 +31,7 @@ type NavItem = {
 const WORKFLOW: NavItem[] = [
   {
     label: "Moment Runs",
-    to: "/admin/moments",
+    to: "/admin/editorial-intelligence",
     description:
       "The consolidated editorial workspace — one engine per (destination, moment) with the 5-stage Run Contract (Compile · Feed · Rank · Curate · Publish). Replaces the legacy Buying Office surface.",
   },
@@ -45,44 +45,30 @@ const WORKFLOW: NavItem[] = [
 
 const EDITORIAL_LIBRARY: NavItem[] = [
   {
-    label: "Destination Moments",
-    to: "/admin/destination-moments",
-    description: "Moments, archetypes, and every editorial Collection in one place.",
+    label: "Editorial Intelligence",
+    to: "/admin/editorial-intelligence",
+    description:
+      "Moment Runs, Editorial Memory, Destination Moments, and canonical Day Images — one workspace, four tabs.",
   },
   {
-    label: "Day Images",
-    to: "/admin/day-images",
-    description: "Canonical hero imagery for every moment.",
-  },
-  {
-    label: "Product Vault",
-    to: "/admin/product-vault",
-    description: "The single inventory surface — every product, sourced and approved.",
+    label: "Catalog",
+    to: "/admin/catalog",
+    description:
+      "The single inventory surface — product library plus the Inventory Health view over the same rows.",
   },
   {
     label: "Brands",
     to: "/admin/brands",
     description: "Approved brands plus the Performance tab — affinity, approvals, publications.",
   },
-  {
-    label: "Editorial Memory",
-    to: "/admin/editorial-memory",
-    description:
-      "Every product ever published. Track brand concentration, mark Signature Pieces, and keep destinations feeling curated.",
-  },
 ];
 
 const OPERATIONS: NavItem[] = [
   {
-    label: "Inventory Health",
-    to: "/admin/inventory-health",
-    description: "Sold-out items, broken links, missing thumbnails.",
-  },
-  {
     label: "System",
     to: "/admin/system",
     description:
-      "Seeds, migration utilities, and list management — including Subscribers.",
+      "Subscribers plus environment-gated seed and migration utilities.",
   },
 ];
 
@@ -180,9 +166,9 @@ function AdminDashboard() {
 
       {/* Quick actions */}
       <section className="flex flex-wrap gap-2">
-        <QuickAction to="/admin/moments" label="Open Moment Runs" />
+        <QuickAction to="/admin/editorial-intelligence" label="Open Moment Runs" />
         <QuickAction to="/admin/looks" label="Looks" />
-        <QuickAction to="/admin/destination-moments" label="Destination Moments" />
+        <QuickAction to="/admin/editorial-intelligence" label="Destination Moments" />
       </section>
 
       {/* Workflow */}

@@ -34,7 +34,7 @@ function MomentRunWorkspace() {
       <header className="mb-8 flex items-end justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-stone-500">
-            <Link to="/admin/moments" className="hover:underline">Moment Runs</Link>
+            <Link to="/admin/editorial-intelligence" className="hover:underline">Moment Runs</Link>
             <span className="mx-2">/</span>
             Run workspace
           </p>
@@ -131,7 +131,7 @@ function MomentRunWorkspace() {
         <h2 className="text-xs uppercase tracking-[0.18em] text-stone-500">Reference Library</h2>
         <p className="mt-2 text-sm text-stone-600 max-w-2xl">
           Editorial references feed into <code className="text-xs">Moment.brief.references</code>.
-          Open the <Link to="/admin/editorial-memory" className="underline">Editorial Memory</Link> panel to
+          Open the <Link to="/admin/editorial-intelligence" className="underline">Editorial Memory</Link> panel to
           attach or revise references for this moment.
         </p>
       </section>

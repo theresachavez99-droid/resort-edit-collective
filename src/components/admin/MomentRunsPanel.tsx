@@ -1,20 +1,11 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { listMomentsForRun } from "@/lib/moment-run.functions";
 
-export const Route = createFileRoute("/admin/moments/")({
-  head: () => ({
-    meta: [
-      { title: "Moment Runs — Resort Edit" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
-  }),
-  component: MomentsIndex,
-});
 
-function MomentsIndex() {
+export function MomentRunsPanel() {
   const list = useServerFn(listMomentsForRun);
   const [pw, setPw] = useState("");
   useEffect(() => {

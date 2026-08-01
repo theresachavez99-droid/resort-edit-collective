@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
+import { SubscribersPanel } from "@/components/admin/SubscribersPanel";
 import { seedPoolLoungingValidationLook } from "@/lib/founder-looks.functions";
 import {
   seedMomentArchetypes,
@@ -31,11 +32,17 @@ export const Route = createFileRoute("/admin/system")({
 const STORAGE_KEY = "admin_dashboard_pw";
 type Tab = "seeds" | "lists";
 
+/**
+ * Seed / migration utilities write directly to editorial tables, so they are
+ * only rendered outside production. Production keeps the read-only surfaces.
+ */
+const SEEDS_ENABLED = import.meta.env.DEV;
+
 function SystemPage() {
   const verify = useServerFn(verifyAdmin);
   const [pw, setPw] = useState("");
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<Tab>("seeds");
+  const [tab, setTab] = useState<Tab>(SEEDS_ENABLED ? "seeds" : "lists");
 
   useEffect(() => {
     const saved = sessionStorage.getItem(STORAGE_KEY);
@@ -101,7 +108,9 @@ function SystemPage() {
       <nav className="flex gap-6 border-b border-stone-200">
         {(
           [
-            ["seeds", "Seeds & Migration"],
+            ...(SEEDS_ENABLED
+              ? ([["seeds", "Seeds & Migration"]] as Array<[Tab, string]>)
+              : []),
             ["lists", "Lists"],
           ] as Array<[Tab, string]>
         ).map(([key, label]) => (
@@ -117,7 +126,7 @@ function SystemPage() {
         ))}
       </nav>
 
-      {tab === "seeds" ? <SeedsTab pw={pw} /> : <ListsTab />}
+      {tab === "seeds" && SEEDS_ENABLED ? <SeedsTab pw={pw} /> : <ListsTab />}
     </main>
   );
 }
@@ -195,20 +204,12 @@ function SeedButton({
 
 function ListsTab() {
   return (
-    <section className="space-y-3">
+    <section className="space-y-4">
       <p className="text-xs text-stone-500 max-w-xl leading-relaxed">
         Audience and list management. Not an editorial workflow — kept out of the
         Looks pipeline on purpose.
       </p>
-      <Link
-        to="/admin/subscribers"
-        className="block border border-stone-200 p-4 hover:border-stone-400 transition"
-      >
-        <div className="text-sm font-medium">Subscribers</div>
-        <div className="text-xs text-stone-500 mt-1 leading-relaxed">
-          Newsletter list — status, tags, and notes.
-        </div>
-      </Link>
+      <SubscribersPanel />
     </section>
   );
 }

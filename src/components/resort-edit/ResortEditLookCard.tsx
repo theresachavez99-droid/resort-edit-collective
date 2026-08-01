@@ -14,7 +14,8 @@ export function ResortEditLookCard({ look }: { look: ResortEditLook }) {
   const preview = orderedProducts(look).slice(0, 5);
   return (
     <Link
-      to="/portofino/pool-lounging/poolside-glam"
+      to="/portofino/$day/$look"
+      params={{ day: look.moment, look: look.slug }}
       className="group block bg-ivory border border-border/60 hover:border-gold transition-colors duration-300"
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-cream/40">

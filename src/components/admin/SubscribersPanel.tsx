@@ -1,19 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listSubscribers, updateSubscriber } from "@/lib/subscribers.functions";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
 
-export const Route = createFileRoute("/admin/subscribers")({
-  head: () => ({
-    meta: [
-      { title: "Subscribers — Admin (Resort Edit)" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
-  }),
-  component: SubscribersPage,
-});
 
 const STORAGE_KEY = "admin_subscribers_pw";
 
@@ -31,7 +21,7 @@ type Subscriber = {
   updated_at: string;
 };
 
-function SubscribersPage() {
+export function SubscribersPanel() {
   const [unlocked, setUnlocked] = useState(false);
   const [pw, setPw] = useState("");
   const [error, setError] = useState("");

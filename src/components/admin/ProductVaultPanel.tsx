@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -13,15 +12,6 @@ import {
 } from "@/lib/vault.functions";
 import { listSourcedProducts } from "@/lib/firecrawl.functions";
 
-export const Route = createFileRoute("/admin/product-vault")({
-  head: () => ({
-    meta: [
-      { title: "Product Vault — Admin (Resort Edit)" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
-  }),
-  component: ProductVaultPage,
-});
 
 const STORAGE_KEY = "admin_product_vault_pw";
 
@@ -176,7 +166,7 @@ function rowToForm(r: VaultRow): VaultFormState {
   };
 }
 
-function ProductVaultPage() {
+export function ProductVaultPanel() {
   const [password, setPassword] = useState<string | null>(null);
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState<string | null>(null);
