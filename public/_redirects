@@ -35,3 +35,7 @@
 # Step 3 — Buying Office consolidated into Moment Runs
 /admin/buying-office                                     /admin/moments                       301!
 /admin/buying-office/*                                   /admin/moments                       301!
+
+# Consolidation (Aug 2026): /resort-edits retired into /destinations
+/resort-edits                                            /destinations                        301!
+/resort-edits/*                                          /destinations                        301!
