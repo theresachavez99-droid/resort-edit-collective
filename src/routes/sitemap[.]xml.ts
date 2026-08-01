@@ -13,7 +13,6 @@ const staticEntries: SitemapEntry[] = [
   { path: "/destinations", changefreq: "weekly", priority: "0.9" },
   { path: "/portofino", changefreq: "monthly", priority: "0.9" },
   { path: "/portofino/pool-lounging/poolside-glam", changefreq: "monthly", priority: "0.7" },
-  { path: "/resort-edits", changefreq: "weekly", priority: "0.8" },
   { path: "/brands", changefreq: "monthly", priority: "0.7" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
   { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
