@@ -1632,6 +1632,8 @@ function ExtraCompleteLookExpander({
   shop: NonNullable<ExtraEditorialCard["shop"]>;
 }) {
   const [open, setOpen] = useState(false);
+  const rows = shop.products.filter((p) => !p.unsourced && isUsableShopUrl(p.url));
+  if (rows.length === 0) return null;
   return (
     <div className="mt-3">
       <button
@@ -1649,7 +1651,7 @@ function ExtraCompleteLookExpander({
       {open && (
         <div className="mt-6 border-t border-border/50 pt-6">
           <ul className="divide-y divide-border/40">
-            {shop.products.map((p) => (
+            {rows.map((p) => (
               <li key={p.url} className="py-4">
                 <a
                   href={p.url}
