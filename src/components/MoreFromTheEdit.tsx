@@ -64,6 +64,8 @@ export function MoreFromTheEdit({
 
     const candidates = founder
       .filter((p) => p.channel === "affiliate")
+      // Resort Edit does not merchandise rings.
+      .filter((p) => !isExcludedProduct(p as { category?: string | null }))
       .filter((p) => p.activityTags.some((a) => momentSet.has(a)))
       .filter((p) => {
         const h = hostPath(p.href);
