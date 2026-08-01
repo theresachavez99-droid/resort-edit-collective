@@ -448,11 +448,11 @@ export const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
     caption:
       "A sculpted strapless top and fluid oat satin trousers, finished with sculptural gold and pointed pumps for one final cocktail by the harbor.",
     image: nightcapIvorySatinImage.url,
-    alt: "Lilla in a strapless top and oat satin trousers with a soft satin sheen, at night in Portofino, styled with pointed pumps, a clutch, gold hoops, a wide gold cuff, and a sculptural gold ring.",
+    alt: "Lilla in an ivory strapless satin top and matching oat satin trousers at night in Portofino, styled with black pointed pumps, a small black clutch and a wide gold cuff.",
     imageClassName: "object-cover object-[center_30%]",
     shop: {
       stylingNote:
-        "No necklace — the sculpted strapless neckline is intentionally left clean.",
+        "Photographed in ivory; the pieces below are linked in the black colorway currently stocked. No necklace — the sculpted strapless neckline is intentionally left clean.",
       products: [
         {
           slot: "Hero Piece · Top",

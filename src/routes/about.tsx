@@ -83,7 +83,7 @@ function AboutPage() {
               The looks you see across Resort Edit are AI-styled on Lilla, our house muse. Lilla is not a real person — she is how we show you a complete look, in the destination, before you pack it.
             </p>
             <p>
-              Every piece she wears is real and shoppable. Each garment, shoe, and accessory is a genuine product we have sourced, verified, and linked from the retailer that carries it.
+              Every piece she wears is chosen from real, shoppable collections. Where we have verified the exact product, we link straight to the retailer that carries it; where a piece is still being sourced, we name it and leave the link off rather than send you somewhere approximate.
             </p>
           </div>
         </div>
