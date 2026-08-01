@@ -593,9 +593,6 @@ function MomentPage() {
               <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
                 INSPIRED BY
               </span>
-              <span className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink/55 to-transparent px-3 pb-2 pt-6 text-[0.62rem] font-serif italic text-ivory/90 text-center">
-                AI-styled on Lilla, our house muse — every piece is real and shoppable.
-              </span>
             </div>
             <div className="space-y-4 lg:pl-2">
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
