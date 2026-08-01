@@ -121,8 +121,10 @@ const pool = async (items, limit, fn) => {
 const spec = JSON.parse(await readFile(process.argv[2], "utf8"));
 
 const results = await pool(spec, 8, async (entry) => {
-  const candidates = await search(entry.query);
-  for (const candidate of candidates.slice(0, 3)) {
+  const queries = entry.queries ?? [entry.query];
+  const candidates = (await Promise.all(queries.map((q) => search(q).catch(() => [])))).flat();
+  const seen = new Set();
+  for (const candidate of candidates.filter((c) => !seen.has(c.url) && seen.add(c.url)).slice(0, 6)) {
     const v = await verify(candidate.url, candidate.text ?? "");
     const brandOk = !entry.brand || v.title?.toLowerCase().includes(entry.brand.toLowerCase().split(" ")[0]);
     if (v.ok && brandOk) return { ...entry, status: "verified", url: candidate.url, ...v };
@@ -130,7 +132,7 @@ const results = await pool(spec, 8, async (entry) => {
   return {
     ...entry,
     status: "unsourced",
-    tried: candidates.slice(0, 3).map((c) => c.url),
+    tried: candidates.slice(0, 6).map((c) => c.url),
   };
 });
 
