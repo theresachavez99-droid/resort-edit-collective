@@ -148,7 +148,7 @@ function SavedLookCard({ look }: { look: SavedLook }) {
         }
         className="block relative aspect-[4/5] overflow-hidden bg-cream/40"
       >
-        {look.image ? (
+        {look.image && canRenderProductImage(look.image) ? (
           <img
             src={look.image}
             alt={look.title}
@@ -241,7 +241,7 @@ function ProductsGrid({ products }: { products: SavedProduct[] }) {
             }
             className="relative aspect-[3/4] bg-cream/40 overflow-hidden"
           >
-            {p.image ? (
+            {p.image && canRenderProductImage(p.image) ? (
               <img
                 src={p.image}
                 alt={`${p.brand} ${p.name}`}
