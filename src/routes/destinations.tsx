@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { destinations, destinationHref } from "@/data/destinations";
 import { DestinationLink } from "@/components/DestinationLink";
 import { absoluteUrl } from "@/lib/site";
+import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
 import heroCannes from "@/assets/hero-muse-cannes.jpg";
 
 export const Route = createFileRoute("/destinations")({
@@ -88,12 +89,12 @@ function DestinationsPage() {
               Style guides for women who dress for the destination.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <a
-                href="/resort-edits"
+              <Link
+                to="/portofino"
                 className="eyebrow bg-ink text-ivory px-6 py-3.5 rounded-md hover:bg-gold hover:text-ink transition-colors"
               >
-                Explore Resort Edits →
-              </a>
+                Explore The Portofino Edit →
+              </Link>
             </div>
           </div>
           <div className="relative min-h-[320px] md:min-h-[420px] lg:min-h-[560px] bg-ink overflow-hidden">
