@@ -746,6 +746,7 @@ function MomentPage() {
                   key={sib.id}
                   look={sib}
                   momentName={card.moment_name}
+                  editorialOnly={slug === "shopping"}
                   isOpen={openShop === sib.lookSlug}
                   onToggle={() =>
                     setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
@@ -758,6 +759,7 @@ function MomentPage() {
                   card={c}
                   momentSlug={slug}
                   momentName={card.moment_name}
+                  editorialOnly={slug === "shopping"}
                 />
               ))}
             </div>
