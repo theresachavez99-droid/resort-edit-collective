@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { orderedProducts, type ResortEditLook } from "@/data/resortEditLooks";
 import { SaveLookButton } from "@/components/SaveLookButton";
+import { canRenderProductImage } from "@/lib/product-image-policy";
 
 /**
  * Browse card for a Resort Edit Look. Used on moment pages inside the
