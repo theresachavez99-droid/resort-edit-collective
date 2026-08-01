@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -11,19 +10,10 @@ import {
   type ShareRow,
 } from "@/lib/editorial-memory.functions";
 
-export const Route = createFileRoute("/admin/editorial-memory")({
-  head: () => ({
-    meta: [
-      { title: "Editorial Memory — Resort Edit" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
-  }),
-  component: EditorialMemoryPage,
-});
 
 const STORAGE_KEY = "admin_dashboard_pw";
 
-function EditorialMemoryPage() {
+export function EditorialMemoryPanel() {
   const [pw, setPw] = useState("");
   useEffect(() => {
     const c = sessionStorage.getItem(STORAGE_KEY);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -14,19 +14,10 @@ import { getPortofinoMomentVerdicts } from "@/lib/portofino-moments.functions";
 // Collections tab retired in Consolidation Order Track A — replaced by the
 // Moment Run workspace in Track B.
 
-export const Route = createFileRoute("/admin/destination-moments")({
-  head: () => ({
-    meta: [
-      { title: "Destination Moments — Resort Edit Admin" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
-  }),
-  component: DestinationMomentsPage,
-});
 
 const STORAGE_KEY = "admin_dest_moments_pw";
 
-function DestinationMomentsPage() {
+export function DestinationMomentsPanel() {
   const verify = useServerFn(verifyAdmin);
   const [pw, setPw] = useState("");
   const [authed, setAuthed] = useState(false);

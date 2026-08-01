@@ -22,14 +22,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
-import { Route as AdminDayImagesRouteImport } from './routes/admin.day-images'
-import { Route as AdminDestinationMomentsRouteImport } from './routes/admin.destination-moments'
-import { Route as AdminEditorialMemoryRouteImport } from './routes/admin.editorial-memory'
-import { Route as AdminFounderLooksRouteImport } from './routes/admin.founder-looks'
-import { Route as AdminInventoryHealthRouteImport } from './routes/admin.inventory-health'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
-import { Route as AdminProductVaultRouteImport } from './routes/admin.product-vault'
-import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminSystemRouteImport } from './routes/admin.system'
 import { Route as BrandsIndexRouteImport } from './routes/brands.index'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
@@ -37,13 +30,7 @@ import { Route as DestinationsIndexRouteImport } from './routes/destinations.ind
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
 import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
-import { Route as PortofinoDay1RouteImport } from './routes/portofino.day-1'
-import { Route as PortofinoDay2RouteImport } from './routes/portofino.day-2'
-import { Route as PortofinoDay3RouteImport } from './routes/portofino.day-3'
-import { Route as PortofinoDay4RouteImport } from './routes/portofino.day-4'
-import { Route as PortofinoDay5RouteImport } from './routes/portofino.day-5'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
-import { Route as AdminMomentsIndexRouteImport } from './routes/admin.moments.index'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as PortofinoPoolLoungingPoolsideGlamRouteImport } from './routes/portofino.pool-lounging.poolside-glam'
@@ -117,44 +104,9 @@ const AdminBrandsRoute = AdminBrandsRouteImport.update({
   path: '/brands',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminDayImagesRoute = AdminDayImagesRouteImport.update({
-  id: '/day-images',
-  path: '/day-images',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminDestinationMomentsRoute = AdminDestinationMomentsRouteImport.update({
-  id: '/destination-moments',
-  path: '/destination-moments',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminEditorialMemoryRoute = AdminEditorialMemoryRouteImport.update({
-  id: '/editorial-memory',
-  path: '/editorial-memory',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminFounderLooksRoute = AdminFounderLooksRouteImport.update({
-  id: '/founder-looks',
-  path: '/founder-looks',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminInventoryHealthRoute = AdminInventoryHealthRouteImport.update({
-  id: '/inventory-health',
-  path: '/inventory-health',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminLooksRoute = AdminLooksRouteImport.update({
   id: '/looks',
   path: '/looks',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminProductVaultRoute = AdminProductVaultRouteImport.update({
-  id: '/product-vault',
-  path: '/product-vault',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
-  id: '/subscribers',
-  path: '/subscribers',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSystemRoute = AdminSystemRouteImport.update({
@@ -192,39 +144,9 @@ const PortofinoMomentRoute = PortofinoMomentRouteImport.update({
   path: '/$moment',
   getParentRoute: () => PortofinoRoute,
 } as any)
-const PortofinoDay1Route = PortofinoDay1RouteImport.update({
-  id: '/day-1',
-  path: '/day-1',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoDay2Route = PortofinoDay2RouteImport.update({
-  id: '/day-2',
-  path: '/day-2',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoDay3Route = PortofinoDay3RouteImport.update({
-  id: '/day-3',
-  path: '/day-3',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoDay4Route = PortofinoDay4RouteImport.update({
-  id: '/day-4',
-  path: '/day-4',
-  getParentRoute: () => PortofinoRoute,
-} as any)
-const PortofinoDay5Route = PortofinoDay5RouteImport.update({
-  id: '/day-5',
-  path: '/day-5',
-  getParentRoute: () => PortofinoRoute,
-} as any)
 const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
   id: '/hero-outfit/$id',
   path: '/hero-outfit/$id',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminMomentsIndexRoute = AdminMomentsIndexRouteImport.update({
-  id: '/moments/',
-  path: '/moments/',
   getParentRoute: () => AdminRoute,
 } as any)
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
@@ -280,23 +202,11 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
-  '/admin/day-images': typeof AdminDayImagesRoute
-  '/admin/destination-moments': typeof AdminDestinationMomentsRoute
-  '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
-  '/admin/founder-looks': typeof AdminFounderLooksRoute
-  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/looks': typeof AdminLooksRoute
-  '/admin/product-vault': typeof AdminProductVaultRoute
-  '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
-  '/portofino/day-1': typeof PortofinoDay1Route
-  '/portofino/day-2': typeof PortofinoDay2Route
-  '/portofino/day-3': typeof PortofinoDay3Route
-  '/portofino/day-4': typeof PortofinoDay4Route
-  '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/brands/': typeof BrandsIndexRoute
   '/destinations/': typeof DestinationsIndexRoute
@@ -305,7 +215,6 @@ export interface FileRoutesByFullPath {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/portofino/pool-lounging/poolside-glam': typeof PortofinoPoolLoungingPoolsideGlamRoute
-  '/admin/moments/': typeof AdminMomentsIndexRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
@@ -320,23 +229,11 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
-  '/admin/day-images': typeof AdminDayImagesRoute
-  '/admin/destination-moments': typeof AdminDestinationMomentsRoute
-  '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
-  '/admin/founder-looks': typeof AdminFounderLooksRoute
-  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/looks': typeof AdminLooksRoute
-  '/admin/product-vault': typeof AdminProductVaultRoute
-  '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
-  '/portofino/day-1': typeof PortofinoDay1Route
-  '/portofino/day-2': typeof PortofinoDay2Route
-  '/portofino/day-3': typeof PortofinoDay3Route
-  '/portofino/day-4': typeof PortofinoDay4Route
-  '/portofino/day-5': typeof PortofinoDay5Route
   '/admin': typeof AdminIndexRoute
   '/brands': typeof BrandsIndexRoute
   '/destinations': typeof DestinationsIndexRoute
@@ -345,7 +242,6 @@ export interface FileRoutesByTo {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/portofino/pool-lounging/poolside-glam': typeof PortofinoPoolLoungingPoolsideGlamRoute
-  '/admin/moments': typeof AdminMomentsIndexRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
@@ -365,23 +261,11 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
-  '/admin/day-images': typeof AdminDayImagesRoute
-  '/admin/destination-moments': typeof AdminDestinationMomentsRoute
-  '/admin/editorial-memory': typeof AdminEditorialMemoryRoute
-  '/admin/founder-looks': typeof AdminFounderLooksRoute
-  '/admin/inventory-health': typeof AdminInventoryHealthRoute
   '/admin/looks': typeof AdminLooksRoute
-  '/admin/product-vault': typeof AdminProductVaultRoute
-  '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/portofino/$moment': typeof PortofinoMomentRoute
-  '/portofino/day-1': typeof PortofinoDay1Route
-  '/portofino/day-2': typeof PortofinoDay2Route
-  '/portofino/day-3': typeof PortofinoDay3Route
-  '/portofino/day-4': typeof PortofinoDay4Route
-  '/portofino/day-5': typeof PortofinoDay5Route
   '/admin/': typeof AdminIndexRoute
   '/brands/': typeof BrandsIndexRoute
   '/destinations/': typeof DestinationsIndexRoute
@@ -390,7 +274,6 @@ export interface FileRoutesById {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/portofino/pool-lounging/poolside-glam': typeof PortofinoPoolLoungingPoolsideGlamRoute
-  '/admin/moments/': typeof AdminMomentsIndexRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
@@ -411,23 +294,11 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
-    | '/admin/day-images'
-    | '/admin/destination-moments'
-    | '/admin/editorial-memory'
-    | '/admin/founder-looks'
-    | '/admin/inventory-health'
     | '/admin/looks'
-    | '/admin/product-vault'
-    | '/admin/subscribers'
     | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/$moment'
-    | '/portofino/day-1'
-    | '/portofino/day-2'
-    | '/portofino/day-3'
-    | '/portofino/day-4'
-    | '/portofino/day-5'
     | '/admin/'
     | '/brands/'
     | '/destinations/'
@@ -436,7 +307,6 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/portofino/$day/$look'
     | '/portofino/pool-lounging/poolside-glam'
-    | '/admin/moments/'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
     | '/api/public/.well-known/oauth-protected-resource'
@@ -451,23 +321,11 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
-    | '/admin/day-images'
-    | '/admin/destination-moments'
-    | '/admin/editorial-memory'
-    | '/admin/founder-looks'
-    | '/admin/inventory-health'
     | '/admin/looks'
-    | '/admin/product-vault'
-    | '/admin/subscribers'
     | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/$moment'
-    | '/portofino/day-1'
-    | '/portofino/day-2'
-    | '/portofino/day-3'
-    | '/portofino/day-4'
-    | '/portofino/day-5'
     | '/admin'
     | '/brands'
     | '/destinations'
@@ -476,7 +334,6 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/portofino/$day/$look'
     | '/portofino/pool-lounging/poolside-glam'
-    | '/admin/moments'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
     | '/api/public/.well-known/oauth-protected-resource'
@@ -495,23 +352,11 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
-    | '/admin/day-images'
-    | '/admin/destination-moments'
-    | '/admin/editorial-memory'
-    | '/admin/founder-looks'
-    | '/admin/inventory-health'
     | '/admin/looks'
-    | '/admin/product-vault'
-    | '/admin/subscribers'
     | '/admin/system'
     | '/brands/$slug'
     | '/destinations/$slug'
     | '/portofino/$moment'
-    | '/portofino/day-1'
-    | '/portofino/day-2'
-    | '/portofino/day-3'
-    | '/portofino/day-4'
-    | '/portofino/day-5'
     | '/admin/'
     | '/brands/'
     | '/destinations/'
@@ -520,7 +365,6 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/portofino/$day/$look'
     | '/portofino/pool-lounging/poolside-glam'
-    | '/admin/moments/'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
     | '/api/public/.well-known/oauth-protected-resource'
@@ -638,60 +482,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBrandsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/day-images': {
-      id: '/admin/day-images'
-      path: '/day-images'
-      fullPath: '/admin/day-images'
-      preLoaderRoute: typeof AdminDayImagesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/destination-moments': {
-      id: '/admin/destination-moments'
-      path: '/destination-moments'
-      fullPath: '/admin/destination-moments'
-      preLoaderRoute: typeof AdminDestinationMomentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/editorial-memory': {
-      id: '/admin/editorial-memory'
-      path: '/editorial-memory'
-      fullPath: '/admin/editorial-memory'
-      preLoaderRoute: typeof AdminEditorialMemoryRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/founder-looks': {
-      id: '/admin/founder-looks'
-      path: '/founder-looks'
-      fullPath: '/admin/founder-looks'
-      preLoaderRoute: typeof AdminFounderLooksRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/inventory-health': {
-      id: '/admin/inventory-health'
-      path: '/inventory-health'
-      fullPath: '/admin/inventory-health'
-      preLoaderRoute: typeof AdminInventoryHealthRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/looks': {
       id: '/admin/looks'
       path: '/looks'
       fullPath: '/admin/looks'
       preLoaderRoute: typeof AdminLooksRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/product-vault': {
-      id: '/admin/product-vault'
-      path: '/product-vault'
-      fullPath: '/admin/product-vault'
-      preLoaderRoute: typeof AdminProductVaultRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/subscribers': {
-      id: '/admin/subscribers'
-      path: '/subscribers'
-      fullPath: '/admin/subscribers'
-      preLoaderRoute: typeof AdminSubscribersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/system': {
@@ -743,53 +538,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortofinoMomentRouteImport
       parentRoute: typeof PortofinoRoute
     }
-    '/portofino/day-1': {
-      id: '/portofino/day-1'
-      path: '/day-1'
-      fullPath: '/portofino/day-1'
-      preLoaderRoute: typeof PortofinoDay1RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/day-2': {
-      id: '/portofino/day-2'
-      path: '/day-2'
-      fullPath: '/portofino/day-2'
-      preLoaderRoute: typeof PortofinoDay2RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/day-3': {
-      id: '/portofino/day-3'
-      path: '/day-3'
-      fullPath: '/portofino/day-3'
-      preLoaderRoute: typeof PortofinoDay3RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/day-4': {
-      id: '/portofino/day-4'
-      path: '/day-4'
-      fullPath: '/portofino/day-4'
-      preLoaderRoute: typeof PortofinoDay4RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
-    '/portofino/day-5': {
-      id: '/portofino/day-5'
-      path: '/day-5'
-      fullPath: '/portofino/day-5'
-      preLoaderRoute: typeof PortofinoDay5RouteImport
-      parentRoute: typeof PortofinoRoute
-    }
     '/admin/hero-outfit/$id': {
       id: '/admin/hero-outfit/$id'
       path: '/hero-outfit/$id'
       fullPath: '/admin/hero-outfit/$id'
       preLoaderRoute: typeof AdminHeroOutfitIdRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/moments/': {
-      id: '/admin/moments/'
-      path: '/moments'
-      fullPath: '/admin/moments/'
-      preLoaderRoute: typeof AdminMomentsIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/api/public/mcp': {
@@ -846,35 +599,19 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminBrandsRoute: typeof AdminBrandsRoute
-  AdminDayImagesRoute: typeof AdminDayImagesRoute
-  AdminDestinationMomentsRoute: typeof AdminDestinationMomentsRoute
-  AdminEditorialMemoryRoute: typeof AdminEditorialMemoryRoute
-  AdminFounderLooksRoute: typeof AdminFounderLooksRoute
-  AdminInventoryHealthRoute: typeof AdminInventoryHealthRoute
   AdminLooksRoute: typeof AdminLooksRoute
-  AdminProductVaultRoute: typeof AdminProductVaultRoute
-  AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminSystemRoute: typeof AdminSystemRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
-  AdminMomentsIndexRoute: typeof AdminMomentsIndexRoute
   AdminMomentsIdRunRoute: typeof AdminMomentsIdRunRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBrandsRoute: AdminBrandsRoute,
-  AdminDayImagesRoute: AdminDayImagesRoute,
-  AdminDestinationMomentsRoute: AdminDestinationMomentsRoute,
-  AdminEditorialMemoryRoute: AdminEditorialMemoryRoute,
-  AdminFounderLooksRoute: AdminFounderLooksRoute,
-  AdminInventoryHealthRoute: AdminInventoryHealthRoute,
   AdminLooksRoute: AdminLooksRoute,
-  AdminProductVaultRoute: AdminProductVaultRoute,
-  AdminSubscribersRoute: AdminSubscribersRoute,
   AdminSystemRoute: AdminSystemRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
-  AdminMomentsIndexRoute: AdminMomentsIndexRoute,
   AdminMomentsIdRunRoute: AdminMomentsIdRunRoute,
 }
 
@@ -909,11 +646,6 @@ const DestinationsRouteWithChildren = DestinationsRoute._addFileChildren(
 
 interface PortofinoRouteChildren {
   PortofinoMomentRoute: typeof PortofinoMomentRoute
-  PortofinoDay1Route: typeof PortofinoDay1Route
-  PortofinoDay2Route: typeof PortofinoDay2Route
-  PortofinoDay3Route: typeof PortofinoDay3Route
-  PortofinoDay4Route: typeof PortofinoDay4Route
-  PortofinoDay5Route: typeof PortofinoDay5Route
   PortofinoIndexRoute: typeof PortofinoIndexRoute
   PortofinoDayLookRoute: typeof PortofinoDayLookRoute
   PortofinoPoolLoungingPoolsideGlamRoute: typeof PortofinoPoolLoungingPoolsideGlamRoute
@@ -921,11 +653,6 @@ interface PortofinoRouteChildren {
 
 const PortofinoRouteChildren: PortofinoRouteChildren = {
   PortofinoMomentRoute: PortofinoMomentRoute,
-  PortofinoDay1Route: PortofinoDay1Route,
-  PortofinoDay2Route: PortofinoDay2Route,
-  PortofinoDay3Route: PortofinoDay3Route,
-  PortofinoDay4Route: PortofinoDay4Route,
-  PortofinoDay5Route: PortofinoDay5Route,
   PortofinoIndexRoute: PortofinoIndexRoute,
   PortofinoDayLookRoute: PortofinoDayLookRoute,
   PortofinoPoolLoungingPoolsideGlamRoute:

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -8,19 +7,10 @@ import {
   runScheduledHealthSweep,
 } from "@/lib/inventory-health.functions";
 
-export const Route = createFileRoute("/admin/inventory-health")({
-  head: () => ({
-    meta: [
-      { title: "Inventory Health — Admin (Resort Edit)" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
-  }),
-  component: InventoryHealthPage,
-});
 
 const STORAGE_KEY = "admin_inventory_health_pw";
 
-function InventoryHealthPage() {
+export function InventoryHealthPanel() {
   const verify = useServerFn(verifyAdmin);
   const getDash = useServerFn(getInventoryHealthDashboard);
   const sweep = useServerFn(runScheduledHealthSweep);

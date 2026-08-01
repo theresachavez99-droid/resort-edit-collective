@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
@@ -18,15 +17,6 @@ import {
   type DaySlug,
 } from "@/data/dayImageRegistry";
 
-export const Route = createFileRoute("/admin/day-images")({
-  head: () => ({
-    meta: [
-      { title: "Day Image Registry — Admin (Resort Edit)" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
-  }),
-  component: DayImagesPage,
-});
 
 const STORAGE_KEY = "admin_day_images_pw";
 const DAYS: DaySlug[] = ["day-1", "day-2", "day-3", "day-4", "day-5"];
@@ -47,7 +37,7 @@ async function fileToBase64(file: File): Promise<string> {
   });
 }
 
-function DayImagesPage() {
+export function DayImagesPanel() {
   const [password, setPassword] = useState<string | null>(null);
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState<string | null>(null);
