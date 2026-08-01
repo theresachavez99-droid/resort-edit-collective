@@ -14,7 +14,6 @@ export const Route = createFileRoute("/destinations")({
       { property: "og:description", content: "An interactive atlas of editorial travel guides from the Mediterranean to the tropics." },
       { property: "og:url", content: absoluteUrl("/destinations") },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/destinations") }],
   }),
   component: DestinationsPage,
 });
