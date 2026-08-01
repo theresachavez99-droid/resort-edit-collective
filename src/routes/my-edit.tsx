@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Bookmark, Trash2 } from "lucide-react";
+import { canRenderProductImage } from "@/lib/product-image-policy";
 import {
   useMyEdit,
   removeLook,
