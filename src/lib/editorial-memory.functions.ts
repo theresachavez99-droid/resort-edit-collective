@@ -1,7 +1,7 @@
 /**
  * Editorial Memory — admin server functions.
  *
- * Surfaces the registry to the founder via `/admin/editorial-memory`,
+ * Surfaces the registry to the founder via `/admin/editorial-intelligence`,
  * exposes Signature Piece overrides, and analyzes duplicates before
  * publishing a Founder Look.
  */
