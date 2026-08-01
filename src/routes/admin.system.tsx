@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
+import { SubscribersPanel } from "@/components/admin/SubscribersPanel";
 import { seedPoolLoungingValidationLook } from "@/lib/founder-looks.functions";
 import {
   seedMomentArchetypes,
@@ -30,6 +31,12 @@ export const Route = createFileRoute("/admin/system")({
 
 const STORAGE_KEY = "admin_dashboard_pw";
 type Tab = "seeds" | "lists";
+
+/**
+ * Seed / migration utilities write directly to editorial tables, so they are
+ * only rendered outside production. Production keeps the read-only surfaces.
+ */
+const SEEDS_ENABLED = import.meta.env.DEV;
 
 function SystemPage() {
   const verify = useServerFn(verifyAdmin);
