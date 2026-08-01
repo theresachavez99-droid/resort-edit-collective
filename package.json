@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "bun run audit:launch && bun run audit:slots && vite build",
+    "build": "bun run audit:launch && bun run audit:slots && bun run audit:product-images && vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
@@ -17,7 +17,8 @@
     "audit:day-images": "node scripts/audit-day-images.mjs",
     "audit:launch": "node scripts/launch-readiness-audit.mjs",
     "test:day1-route": "node scripts/test-day1-route.mjs",
-    "audit:slots": "bun scripts/audit-launch-slots.ts"
+    "audit:slots": "bun scripts/audit-launch-slots.ts",
+    "audit:product-images": "node scripts/audit-product-images.mjs"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
