@@ -104,6 +104,47 @@ async function verify(url, snippet = "") {
   };
 }
 
+/** Slot-appropriate keywords a candidate product title must satisfy. */
+const SLOT_KEYWORDS = {
+  Dress: /dress|kaftan|caftan|gown/i,
+  Kaftan: /kaftan|caftan|dress|robe/i,
+  "Cover-Up": /caftan|kaftan|cover ?-?up|robe|tunic/i,
+  Sarong: /sarong|pareo|wrap/i,
+  Swim: /swim|bikini|one[- ]piece|maillot/i,
+  Skirt: /skirt/i,
+  Shorts: /short/i,
+  Trousers: /pant|trouser/i,
+  Shirt: /shirt|blouse|top/i,
+  Top: /top|blouse|cami|shirt/i,
+  Shoes: /sandal|pump|espadrille|flat|mule|slide|slingback|heel|wedge|loafer|ballet/i,
+  Bag: /bag|tote|clutch|pouch|basket|hobo|satchel/i,
+  Earrings: /earring|hoop|huggie/i,
+  Necklace: /necklace|pendant|lariat|collar|chain/i,
+  Bracelet: /bracelet|bangle|cuff/i,
+  Ring: /\bring\b|\brings\b/i,
+  Sunglasses: /sunglass/i,
+  Hat: /hat|visor/i,
+};
+
+/** True when the candidate title is a real, correctly-slotted women's product. */
+function titleMatchesSlot(title, slot, brand) {
+  if (!title) return false;
+  if (/category index|designers|shop all|collection|new arrivals|search/i.test(title)) return false;
+  if (/\(men\)|\bmen's\b/i.test(title)) return false;
+  const slotKey = Object.keys(SLOT_KEYWORDS).find((k) => slot.includes(k));
+  const slotRe = slotKey ? SLOT_KEYWORDS[slotKey] : null;
+  if (slotRe && !slotRe.test(title)) return false;
+  // Rings must not be satisfied by "earring"/"wrap ring detail" style titles.
+  if (slotKey === "Ring" && /earring/i.test(title)) return false;
+  if (slotKey === "Necklace" && /bracelet|earring/i.test(title)) return false;
+  if (slotKey === "Bracelet" && /necklace|earring/i.test(title)) return false;
+  if (brand) {
+    const token = brand.toLowerCase().replace(/[^a-z ]/g, " ").trim().split(" ")[0];
+    if (token.length > 2 && !title.toLowerCase().includes(token)) return false;
+  }
+  return true;
+}
+
 const pool = async (items, limit, fn) => {
   const out = [];
   let i = 0;
@@ -126,8 +167,9 @@ const results = await pool(spec, 8, async (entry) => {
   const seen = new Set();
   for (const candidate of candidates.filter((c) => !seen.has(c.url) && seen.add(c.url)).slice(0, 6)) {
     const v = await verify(candidate.url, candidate.text ?? "");
-    const brandOk = !entry.brand || v.title?.toLowerCase().includes(entry.brand.toLowerCase().split(" ")[0]);
-    if (v.ok && brandOk) return { ...entry, status: "verified", url: candidate.url, ...v };
+    if (v.ok && titleMatchesSlot(v.title, entry.slot ?? "", entry.brand)) {
+      return { ...entry, status: "verified", url: candidate.url, ...v };
+    }
   }
   return {
     ...entry,
