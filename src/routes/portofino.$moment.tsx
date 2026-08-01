@@ -494,7 +494,7 @@ function MomentPage() {
           >
             Rendering:{" "}
             {resolved.source === "founder_look"
-              ? "Founder Look"
+              ? "Curated Look"
               : resolved.source === "tagged"
                 ? "Tagged Look"
                 : "Legacy Fallback"}
