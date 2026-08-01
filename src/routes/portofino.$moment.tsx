@@ -293,6 +293,16 @@ const momentQuery = (slug: string) =>
 
 export const Route = createFileRoute("/portofino/$moment")({
   loader: async ({ params, context }) => {
+    // Legacy /portofino/day-N URLs are handled here rather than as their own
+    // registered route files (route-tree cleanup, Aug 2026).
+    if (/^day-[1-5]$/.test(params.moment)) {
+      throw redirect({
+        to: "/portofino/$moment",
+        params: { moment: momentSlugForLookKey(params.moment as LegacyDaySlug) },
+        replace: true,
+        statusCode: 301,
+      });
+    }
     // Redirect legacy/alias slugs to the canonical moment slug.
     const aliased = PORTOFINO_MOMENT_SLUG_ALIASES[params.moment];
     if (aliased) {
