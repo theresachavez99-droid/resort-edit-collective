@@ -93,6 +93,20 @@ export const Route = createFileRoute("/destinations/$slug")({
         { name: "twitter:image", content: absoluteUrl(d.image) },
       ],
       links: [{ rel: "canonical", href: absoluteUrl(`/destinations/${d.slug}`) }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Resort Edit", item: absoluteUrl("/") },
+              { "@type": "ListItem", position: 2, name: "Destinations", item: absoluteUrl("/destinations") },
+              { "@type": "ListItem", position: 3, name: d.name, item: absoluteUrl(`/destinations/${d.slug}`) },
+            ],
+          }),
+        },
+      ],
     };
   },
   notFoundComponent: () => (

@@ -117,6 +117,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Resort Edit",
+          url: "https://resortedit.com",
+          description:
+            "Resort Edit | Dressed for the destination. Destination guides, resort edits, and brands we love.",
+          publisher: {
+            "@type": "Organization",
+            name: "Resort Edit",
+            url: "https://resortedit.com",
+            logo: SHARE_IMAGE,
+          },
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,

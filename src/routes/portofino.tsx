@@ -1,7 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
-import { absoluteUrl } from "@/lib/site";
 import { listPortofinoMomentsForLanding, type PortofinoMomentCard } from "@/lib/portofino-moments.functions";
 import { PortofinoMomentCard as PortofinoMomentCardView } from "@/components/PortofinoMomentCard";
 import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
@@ -58,11 +57,7 @@ export const Route = createFileRoute("/portofino")({
       { name: "description", content: "Twelve curated moments in Portofino — from arrival afternoons and espresso mornings to yacht days, long lunches, harbor aperitivos, and a final nightcap on the piazzetta." },
       { property: "og:title", content: "Portofino — Twelve Curated Moments | Resort Edit" },
       { property: "og:description", content: "Discover Portofino through twelve curated destination moments. Dressed for the Destination." },
-      { property: "og:image", content: absoluteUrl(portofinoImg) },
-      { property: "og:url", content: absoluteUrl("/portofino") },
-      { name: "twitter:image", content: absoluteUrl(portofinoImg) },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/portofino") }],
   }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData(
