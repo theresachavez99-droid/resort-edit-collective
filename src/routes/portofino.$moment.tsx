@@ -268,6 +268,7 @@ import {
   PORTOFINO_MOMENT_SLUG_ALIASES,
 } from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
+import { ShopOmissionRows, SHOP_ACCURACY_NOTE } from "@/components/ShopOmissionRows";
 import { absoluteUrl } from "@/lib/site";
 import { findLook, lookbook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type Look, type LookProduct } from "@/data/lookbook";
 import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
