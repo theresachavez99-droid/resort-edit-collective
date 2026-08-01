@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { requireAdmin } from "./admin-auth.server";
+import { requireAdmin, requireSeedEnvironment } from "./admin-auth.server";
 import type { Json } from "@/integrations/supabase/types";
 
 /**
@@ -213,6 +213,8 @@ export const seedMomentArchetypes = createServerFn({ method: "POST" })
   .inputValidator((input) => z.object({ password: pw }).parse(input))
   .handler(async ({ data }) => {
     requireAdmin(data.password);
+    // Destructive setup utility: blocked on production unless explicitly enabled.
+    requireSeedEnvironment();
     const { data: existing, error: selErr } = await supabaseAdmin
       .from("destination_moment_archetypes")
       .select("archetype_slug,moment_type,destination_required");
@@ -245,6 +247,8 @@ export const seedPortofinoMoments = createServerFn({ method: "POST" })
   .inputValidator((input) => z.object({ password: pw }).parse(input))
   .handler(async ({ data }) => {
     requireAdmin(data.password);
+    // Destructive setup utility: blocked on production unless explicitly enabled.
+    requireSeedEnvironment();
     const { data: existing, error: selErr } = await supabaseAdmin
       .from("destination_moments")
       .select("moment_slug")

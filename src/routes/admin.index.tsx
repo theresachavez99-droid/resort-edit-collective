@@ -4,9 +4,10 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
 import { getAdminMetrics } from "@/lib/admin-metrics.functions";
+import { LaunchAuditPanel } from "@/components/LaunchAuditPanel";
 
 /**
- * Founder dashboard at /admin — the permanent editorial home.
+ * Studio dashboard at /admin — the permanent editorial home.
  *
  * Workflow:  Look Studio → Review Queue → Publish.
  * Backend routes/functions are unchanged; this page just curates IA.
@@ -121,7 +122,7 @@ function AdminDashboard() {
     return (
       <main className="mx-auto max-w-md px-6 py-16">
         <p className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 mb-2">
-          Founder · Internal Only
+          Studio · Internal Only
         </p>
         <h1 className="font-serif text-3xl mb-6">Resort Edit</h1>
         <input
@@ -174,6 +175,8 @@ function AdminDashboard() {
         <Metric label="Products" value={m?.productsLibrary} />
         <Metric label="Inventory Issues" value={m?.inventoryIssues} accent="amber" />
       </section>
+
+      <LaunchAuditPanel />
 
       {/* Quick actions */}
       <section className="flex flex-wrap gap-2">

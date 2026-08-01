@@ -781,7 +781,7 @@ function ComparisonTable({
           <tr>
             <th className="text-left py-1 w-24">Slot</th>
             <th className="text-left py-1">Baseline</th>
-            <th className="text-left py-1">Founder</th>
+            <th className="text-left py-1">Learning</th>
             <th className="text-left py-1 w-24">Winner</th>
           </tr>
         </thead>
@@ -793,19 +793,19 @@ function ComparisonTable({
             const winner =
               b.state === "selected" && f.state === "selected"
                 ? f.score > b.score
-                  ? "Founder"
+                  ? "Learning"
                   : f.score < b.score
                     ? "Baseline"
                     : "Tie"
                 : f.state === "selected"
-                  ? "Founder"
+                  ? "Learning"
                   : "Baseline";
             return (
               <tr key={slot} className="border-t border-neutral-100">
                 <td className="py-1 uppercase tracking-wider text-neutral-500">{slot}</td>
                 <td className="py-1 text-neutral-700">{b.brand}{b.state === "selected" && ` · ${b.score.toFixed(1)}`}</td>
                 <td className="py-1 text-neutral-700">{f.brand}{f.state === "selected" && ` · ${f.score.toFixed(1)}`}</td>
-                <td className={`py-1 font-medium ${winner === "Founder" ? "text-green-700" : winner === "Baseline" ? "text-neutral-700" : "text-neutral-400"}`}>{winner}</td>
+                <td className={`py-1 font-medium ${winner === "Learning" ? "text-green-700" : winner === "Baseline" ? "text-neutral-700" : "text-neutral-400"}`}>{winner}</td>
               </tr>
             );
           })}
@@ -814,7 +814,7 @@ function ComparisonTable({
             <td className="py-2">Quality {bQ.toFixed(0)}</td>
             <td className="py-2">Quality {fQ.toFixed(0)}</td>
             <td className={`py-2 font-medium ${fQ > bQ ? "text-green-700" : fQ < bQ ? "text-neutral-700" : "text-neutral-400"}`}>
-              {fQ > bQ ? "Founder" : fQ < bQ ? "Baseline" : "Tie"}
+              {fQ > bQ ? "Learning" : fQ < bQ ? "Baseline" : "Tie"}
             </td>
           </tr>
         </tbody>
@@ -873,7 +873,7 @@ function OutfitPanel({
   const isFounder = variant === "founder";
   const headerSuffix = revealed ? (
     <span className={`ml-2 text-[11px] ${isFounder ? "text-green-700" : "text-neutral-400"}`}>
-      {isFounder ? "★ Founder Learning ON" : "baseline"}
+      {isFounder ? "★ Editorial Learning ON" : "baseline"}
     </span>
   ) : null;
 
@@ -1091,7 +1091,7 @@ function OutfitBody({
       <div className="space-y-3">
         <div className="text-xs text-amber-700">
           {lockedCount > 0
-            ? `Founder Look locked ${lockedCount} hero piece${lockedCount === 1 ? "" : "s"} but assembly produced no rendered outfit.`
+            ? `Editorial Look locked ${lockedCount} hero piece${lockedCount === 1 ? "" : "s"} but assembly produced no rendered outfit.`
             : "Engine returned no assembled outfit."}
           {run.assemblyError ? <span className="block text-red-600 mt-1">↳ {run.assemblyError}</span> : null}
         </div>
@@ -1109,7 +1109,7 @@ function OutfitBody({
       {hero.title && <div className="mb-3 text-xs italic text-neutral-500">{hero.title}</div>}
       <div className="mb-3 text-[11px] text-neutral-500 space-y-0.5">
         {lockedCount > 0 && (
-          <div>✓ {lockedCount} Founder Hero piece{lockedCount === 1 ? "" : "s"} locked</div>
+          <div>✓ {lockedCount} Editorial Hero piece{lockedCount === 1 ? "" : "s"} locked</div>
         )}
         {refinement.length > 0 && (
           <div className="text-amber-700">
@@ -1451,7 +1451,7 @@ function QualityBreakdown({
   return (
     <div className="mb-3 border border-neutral-200 p-2 text-[11px]">
       <div className="flex items-baseline justify-between mb-2">
-        <div className="uppercase tracking-wider text-neutral-500">Founder Quality</div>
+        <div className="uppercase tracking-wider text-neutral-500">Editorial Quality</div>
         <div className="text-xl font-light">{Math.round(score)}</div>
       </div>
       {entries.length > 0 && (
@@ -1506,7 +1506,7 @@ function DiagnosticsPanel({
   return (
     <div className="border border-neutral-200 p-4 text-xs">
       <div className="uppercase tracking-wider mb-3">
-        {slotLabel} · {variant === "founder" ? "Founder Learning ON" : "Baseline"}
+        {slotLabel} · {variant === "founder" ? "Editorial Learning ON" : "Baseline"}
       </div>
       {variant === "founder" ? (
         <ul className="space-y-1 text-neutral-700">
@@ -1518,7 +1518,7 @@ function DiagnosticsPanel({
         </ul>
       ) : (
         <div className="text-neutral-500">
-          Editorial baseline — no Founder Learning signal applied.
+          Editorial baseline — no Editorial Learning signal applied.
         </div>
       )}
       {variant === "founder" && rankShifts.length > 0 && (

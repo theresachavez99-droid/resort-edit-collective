@@ -45,6 +45,12 @@ export type OverrideItem = {
   price?: string;
   /** Optional category label shown as the eyebrow above brand. Falls back to `slotLabel` when omitted. */
   category?: string;
+  /**
+   * True when this slot has no exact product URL yet. Set instead of shipping
+   * a search / category / homepage link. Renders as nothing on the public page
+   * and is reported as a missing slot by the launch audit.
+   */
+  unsourced?: boolean;
 };
 
 export type LookOverride = {

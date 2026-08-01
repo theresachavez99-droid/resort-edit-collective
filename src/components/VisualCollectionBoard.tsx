@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 /**
  * v4.6 — Visual Collection Board
  *
- * Editorial merchandising board used in Founder Review surfaces.
+ * Editorial merchandising board used in Editorial Review surfaces.
  * Renders the entire collection as a 3x2 grid of editorial collages
  * built from the retailer product photography already discovered by
  * the Stylist Engine — no AI/Firecrawl/Gemini calls are made here.
@@ -12,7 +12,7 @@ import { useMemo, useState } from "react";
  *   1. Quick editorial flags (visual repetition)
  *   2. Collection summary metrics
  *   3. Six look collages (Hero look highlighted)
- *   4. Per-product hover info + Founder actions
+ *   4. Per-product hover info + editorial actions
  */
 
 export type BoardSlot = {

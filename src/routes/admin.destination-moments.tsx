@@ -250,14 +250,14 @@ function MomentCard({
                 }
                 title={
                   verdict.source === "founder_look"
-                    ? "Published Founder Look is overriding the fallback."
+                    ? "Published Editorial Look is overriding the fallback."
                     : verdict.source === "tagged"
                       ? `Tagged: ${verdict.candidate_slug ?? "approved candidate"}`
                       : "Fallback look — tag approved candidate for this moment."
                 }
               >
                 {verdict.source === "founder_look"
-                  ? "Founder Look"
+                  ? "Editorial Look"
                   : verdict.source === "tagged"
                     ? "Tagged"
                     : "Fallback look"}

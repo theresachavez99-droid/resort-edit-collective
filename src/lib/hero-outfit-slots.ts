@@ -59,7 +59,7 @@ const WATER_SLOTS: SlotDefinition[] = [
 const MOMENT_PROFILE: Record<string, AccessoryProfile> = {
   "Arrival Day": "day",
   "Espresso Morning": "day",
-  "Explore the Harbor": "day",
+  "Exploring the Harbor": "day",
   "Yacht Day": "water",
   "Beach Club": "water",
   "Pool Lounging": "water",

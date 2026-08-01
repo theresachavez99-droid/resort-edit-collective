@@ -228,7 +228,7 @@ function EditorialMemoryPage() {
           ))}
           {products.length === 0 && !list.isFetching && (
             <p className="text-sm text-stone-500 col-span-full">
-              Nothing in memory yet. Publish a Founder Look to seed the archive.
+              Nothing in memory yet. Publish a Editorial Look to seed the archive.
             </p>
           )}
         </div>
@@ -395,7 +395,7 @@ function DetailPanel({
       {feedback.length > 0 && (
         <div className="mt-5 border-t border-stone-200 pt-4">
           <div className="text-[10px] tracking-[0.24em] uppercase text-stone-500 mb-2">
-            Founder Feedback · {feedback.length}
+            Editorial Feedback · {feedback.length}
           </div>
           <ul className="space-y-1 text-xs">
             {feedback.map((f) => (
