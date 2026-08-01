@@ -33,7 +33,6 @@ import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
-import { Route as PortofinoPoolLoungingPoolsideGlamRouteImport } from './routes/portofino.pool-lounging.poolside-glam'
 import { Route as AdminMomentsIdRunRouteImport } from './routes/admin.moments.$id.run'
 import { Route as ApiPublicChar91DotmcpChar93ListToolsRouteImport } from './routes/api/public/[.mcp]/list-tools'
 import { Route as ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/api/public/[.well-known]/oauth-protected-resource'
@@ -159,12 +158,6 @@ const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
   path: '/$day/$look',
   getParentRoute: () => PortofinoRoute,
 } as any)
-const PortofinoPoolLoungingPoolsideGlamRoute =
-  PortofinoPoolLoungingPoolsideGlamRouteImport.update({
-    id: '/pool-lounging/poolside-glam',
-    path: '/pool-lounging/poolside-glam',
-    getParentRoute: () => PortofinoRoute,
-  } as any)
 const AdminMomentsIdRunRoute = AdminMomentsIdRunRouteImport.update({
   id: '/moments/$id/run',
   path: '/moments/$id/run',
@@ -214,7 +207,6 @@ export interface FileRoutesByFullPath {
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
-  '/portofino/pool-lounging/poolside-glam': typeof PortofinoPoolLoungingPoolsideGlamRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
@@ -241,7 +233,6 @@ export interface FileRoutesByTo {
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
-  '/portofino/pool-lounging/poolside-glam': typeof PortofinoPoolLoungingPoolsideGlamRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
@@ -273,7 +264,6 @@ export interface FileRoutesById {
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
-  '/portofino/pool-lounging/poolside-glam': typeof PortofinoPoolLoungingPoolsideGlamRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   '/api/public/.well-known/oauth-protected-resource': typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
@@ -306,7 +296,6 @@ export interface FileRouteTypes {
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
     | '/portofino/$day/$look'
-    | '/portofino/pool-lounging/poolside-glam'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
     | '/api/public/.well-known/oauth-protected-resource'
@@ -333,7 +322,6 @@ export interface FileRouteTypes {
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
     | '/portofino/$day/$look'
-    | '/portofino/pool-lounging/poolside-glam'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
     | '/api/public/.well-known/oauth-protected-resource'
@@ -364,7 +352,6 @@ export interface FileRouteTypes {
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
     | '/portofino/$day/$look'
-    | '/portofino/pool-lounging/poolside-glam'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
     | '/api/public/.well-known/oauth-protected-resource'
@@ -559,13 +546,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortofinoDayLookRouteImport
       parentRoute: typeof PortofinoRoute
     }
-    '/portofino/pool-lounging/poolside-glam': {
-      id: '/portofino/pool-lounging/poolside-glam'
-      path: '/pool-lounging/poolside-glam'
-      fullPath: '/portofino/pool-lounging/poolside-glam'
-      preLoaderRoute: typeof PortofinoPoolLoungingPoolsideGlamRouteImport
-      parentRoute: typeof PortofinoRoute
-    }
     '/admin/moments/$id/run': {
       id: '/admin/moments/$id/run'
       path: '/moments/$id/run'
@@ -648,15 +628,12 @@ interface PortofinoRouteChildren {
   PortofinoMomentRoute: typeof PortofinoMomentRoute
   PortofinoIndexRoute: typeof PortofinoIndexRoute
   PortofinoDayLookRoute: typeof PortofinoDayLookRoute
-  PortofinoPoolLoungingPoolsideGlamRoute: typeof PortofinoPoolLoungingPoolsideGlamRoute
 }
 
 const PortofinoRouteChildren: PortofinoRouteChildren = {
   PortofinoMomentRoute: PortofinoMomentRoute,
   PortofinoIndexRoute: PortofinoIndexRoute,
   PortofinoDayLookRoute: PortofinoDayLookRoute,
-  PortofinoPoolLoungingPoolsideGlamRoute:
-    PortofinoPoolLoungingPoolsideGlamRoute,
 }
 
 const PortofinoRouteWithChildren = PortofinoRoute._addFileChildren(
