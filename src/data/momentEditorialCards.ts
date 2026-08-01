@@ -496,13 +496,6 @@ export const NIGHTCAP_EDITORIAL_CARDS: NightcapEditorialCard[] = [
           price: "$138",
           url: "https://www.shopbop.com/ola-arm-cuff-jenny-bird/vp/v=1/1581195563.htm",
         },
-        {
-          slot: "Ring",
-          brand: "Jenny Bird",
-          name: "Solene Ring — Gold",
-          price: "$128",
-          url: "https://www.shopbop.com/solene-ring-jenny-bird/vp/v=1/1572934765.htm",
-        },
       ],
     },
   },

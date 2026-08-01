@@ -73,13 +73,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "unsourced": false
       },
       {
-        "slot": "Ring",
-        "name": "Stephanie Gottlieb 14k Gold and Diamond Stripe Ring",
-        "url": "https://www.shopbop.com/gold-diamond-stripe-ring-stephanie/vp/v=1/1520628947.htm",
-        "retailer": "shopbop.com",
-        "unsourced": false
-      },
-      {
         "slot": "Sunglasses",
         "name": "Le Specs Impossible Sunglasses",
         "url": "https://www.shopbop.com/impossible-2452375-le-specs/vp/v=1/1545368265.htm",
@@ -139,13 +132,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "slot": "Bracelet",
         "name": "SHASHI Ross Cuff Bracelet",
         "url": "https://www.shopbop.com/ross-cuff-bracelet-shashi/vp/v=1/1532399292.htm",
-        "retailer": "shopbop.com",
-        "unsourced": true
-      },
-      {
-        "slot": "Ring",
-        "name": "Stephanie Gottlieb 14k Gold and Diamond Stripe Ring",
-        "url": "https://www.shopbop.com/gold-diamond-stripe-ring-stephanie/vp/v=1/1520628947.htm",
         "retailer": "shopbop.com",
         "unsourced": true
       },
@@ -213,13 +199,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "unsourced": false
       },
       {
-        "slot": "Ring",
-        "name": "By Pariah 14k Gold Slim Classic Diamond Ring Stack Set",
-        "url": "https://www.shopbop.com/slim-classic-ring-stack-by/vp/v=1/1548943874.htm",
-        "retailer": "shopbop.com",
-        "unsourced": false
-      },
-      {
         "slot": "Sunglasses",
         "name": "CELINE Bold 3 Dots 52mm Geometric Sunglasses (Women)",
         "url": "https://www.nordstrom.com/s/bold-3-dots-52mm-geometric-sunglasses/8286484",
@@ -279,13 +258,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "slot": "Bracelet",
         "name": "SHASHI Ross Cuff Bracelet",
         "url": "https://www.shopbop.com/ross-cuff-bracelet-shashi/vp/v=1/1532399292.htm",
-        "retailer": "shopbop.com",
-        "unsourced": true
-      },
-      {
-        "slot": "Ring",
-        "name": "Stephanie Gottlieb 14k Gold and Diamond Stripe Ring",
-        "url": "https://www.shopbop.com/gold-diamond-stripe-ring-stephanie/vp/v=1/1520628947.htm",
         "retailer": "shopbop.com",
         "unsourced": true
       },
@@ -409,13 +381,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "unsourced": true
       },
       {
-        "slot": "Ring",
-        "name": "Stephanie Gottlieb 14k Gold and Diamond Stripe Ring",
-        "url": "https://www.shopbop.com/gold-diamond-stripe-ring-stephanie/vp/v=1/1520628947.htm",
-        "retailer": "shopbop.com",
-        "unsourced": true
-      },
-      {
         "slot": "Sunglasses",
         "name": "Gucci 57mm Gradient Square Sunglasses (Women)",
         "url": "https://www.nordstrom.com/s/gucci-57mm-gradient-square-sunglasses/4541180",
@@ -468,13 +433,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "slot": "Bracelet",
         "name": "Sophie Blake Tyla Bracelet",
         "url": "https://www.shopbop.com/tyla-bracelet-sophie-blake-designs/vp/v=1/1508002414.htm",
-        "retailer": "shopbop.com",
-        "unsourced": false
-      },
-      {
-        "slot": "Ring",
-        "name": "Sophie Blake Adriana Ring",
-        "url": "https://www.shopbop.com/adriana-ring-sophie-blake-designs/vp/v=1/1557040102.htm",
         "retailer": "shopbop.com",
         "unsourced": false
       },
@@ -535,13 +493,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "unsourced": false
       },
       {
-        "slot": "Ring",
-        "name": "David Yurman Sculpted Cable Ring In 18K Yellow Gold",
-        "url": "https://www.saksfifthavenue.com/product/david-yurman-sculpted-cable-ring-in-18k-yellow-gold-0400020365676.html",
-        "retailer": "saksfifthavenue.com",
-        "unsourced": false
-      },
-      {
         "slot": "Sunglasses",
         "name": "Chloé Oversized Metal Sunglasses",
         "url": "https://www.shopbop.com/oversized-metal-sunglasses-chlo/vp/v=1/1592741070.htm",
@@ -597,13 +548,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "retailer": "shopbop.com",
         "unsourced": false
       },
-      {
-        "slot": "Ring",
-        "name": "Stephanie Gottlieb 14k Gold and Diamond Stripe Ring",
-        "url": "https://www.shopbop.com/gold-diamond-stripe-ring-stephanie/vp/v=1/1520628947.htm",
-        "retailer": "shopbop.com",
-        "unsourced": true
-      }
     ]
   },
   {
@@ -660,13 +604,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "retailer": "shopbop.com",
         "unsourced": false
       },
-      {
-        "slot": "Ring",
-        "name": "Stephanie Gottlieb 14k Gold and Diamond Stripe Ring",
-        "url": "https://www.shopbop.com/gold-diamond-stripe-ring-stephanie/vp/v=1/1520628947.htm",
-        "retailer": "shopbop.com",
-        "unsourced": true
-      }
     ]
   },
   {
@@ -709,13 +646,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "retailer": "shopbop.com",
         "unsourced": true
       },
-      {
-        "slot": "Ring",
-        "name": "Stephanie Gottlieb 14k Gold and Diamond Stripe Ring",
-        "url": "https://www.shopbop.com/gold-diamond-stripe-ring-stephanie/vp/v=1/1520628947.htm",
-        "retailer": "shopbop.com",
-        "unsourced": true
-      }
     ]
   },
   {
@@ -765,13 +695,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "retailer": "shopbop.com",
         "unsourced": true
       },
-      {
-        "slot": "Ring",
-        "name": "Stephanie Gottlieb 14k Gold and Diamond Stripe Ring",
-        "url": "https://www.shopbop.com/gold-diamond-stripe-ring-stephanie/vp/v=1/1520628947.htm",
-        "retailer": "shopbop.com",
-        "unsourced": true
-      }
     ]
   },
   {
@@ -892,13 +815,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "unsourced": true
       },
       {
-        "slot": "Ring",
-        "name": null,
-        "url": null,
-        "retailer": null,
-        "unsourced": true
-      },
-      {
         "slot": "Sunglasses",
         "name": "Miu Miu 61mm Pilot Sunglasses (Women)",
         "url": "https://www.nordstrom.com/s/miu-miu-61mm-pilot-sunglasses/8662723",
@@ -954,13 +870,6 @@ export const SOURCED_SUPPORTING_LOOKS: SourcedSupportingLook[] = [
         "retailer": "shopbop.com",
         "unsourced": true
       },
-      {
-        "slot": "Ring",
-        "name": "770 Fine Jewelry Multishape 14K Yellow Gold & 0.48 TCW Diamond Cuff Ring",
-        "url": "https://www.saksfifthavenue.com/product/770-fine-jewelry-multishape-14k-yellow-gold--amp--0.48-tcw-diamond-cuff-ring-0400020218725.html",
-        "retailer": "saksfifthavenue.com",
-        "unsourced": false
-      }
     ]
   }
 ];

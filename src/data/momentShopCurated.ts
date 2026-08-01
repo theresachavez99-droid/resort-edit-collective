@@ -69,14 +69,6 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       url: "https://www.net-a-porter.com/en-us/shop/product/persee/jewelry-and-watches/fine-bracelets/floating-18-karat-gold-diamond-bracelet/46376663163019984",
       image: "",
     },
-    {
-      slotLabel: "Ring",
-      category: "Ring",
-      brand: "Persée",
-      title: "Floating 18-karat Gold Diamond Ring",
-      url: "https://www.net-a-porter.com/en-us/shop/product/persee/jewelry-and-watches/stone-rings/floating-18-karat-gold-diamond-ring/46376663163019978",
-      image: "",
-    },
   ],
   "riviera-dinner": [
     {
@@ -125,14 +117,6 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       brand: "Persée",
       title: "Floating 18-karat Gold Diamond Bracelet",
       url: "https://www.net-a-porter.com/en-us/shop/product/persee/jewelry-and-watches/fine-bracelets/floating-18-karat-gold-diamond-bracelet/46376663163019984",
-      image: "",
-    },
-    {
-      slotLabel: "Ring",
-      category: "Ring",
-      brand: "Persée",
-      title: "Floating 18-karat Gold Diamond Ring",
-      url: "https://www.net-a-porter.com/en-us/shop/product/persee/jewelry-and-watches/stone-rings/floating-18-karat-gold-diamond-ring/46376663163019978",
       image: "",
     },
   ],
@@ -209,14 +193,6 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-lola-open-mini-chain-link-bracelet?ID=4992610",
       image: "",
     },
-    {
-      slotLabel: "Ring",
-      category: "Ring",
-      brand: "EF Collection",
-      title: "14K Yellow Gold Diamond Bezel Stack Ring",
-      url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-diamond-bezel-stack-ring?ID=4992556",
-      image: "",
-    },
   ],
   nightcap: [
     {
@@ -291,18 +267,6 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       slotLabel: "Bracelet",
       brand: "Jennifer Meyer",
       title: "Slim Polished Gold Bracelet",
-      // Non-PDP link removed (was a retailer search/category page).
-      // Slot is intentionally left unsourced until an exact product URL exists.
-      url: "",
-      unsourced: true,
-      image: "",
-      isOptional: true,
-    },
-    {
-      category: "Ring",
-      slotLabel: "Ring",
-      brand: "Sophie Buhai",
-      title: "Sculptural Gold Ring",
       // Non-PDP link removed (was a retailer search/category page).
       // Slot is intentionally left unsourced until an exact product URL exists.
       url: "",

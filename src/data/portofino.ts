@@ -319,18 +319,6 @@ export const portofinoLooks: Look[] = [
         lookIndex: 2,
       },
       {
-        brand: "Mejuri",
-        item: "Dôme Ring — Sterling Silver",
-        price: "$118",
-        category: "Ring",
-        href: "https://mejuri.com/products/dome-ring",
-        image:
-          "https://cdn.shopify.com/s/files/1/0631/8568/2616/files/0-Reshoot_DomeRing_SS_OffFigureAngledView_PDP.png?v=1776124810",
-        inventory_status: "in_stock",
-        last_verified_date: "2026-05-30",
-        lookIndex: 2,
-      },
-      {
         brand: "Saint Laurent",
         item: "SL 613 Havana Rectangle Sunglasses",
         price: "$495",
