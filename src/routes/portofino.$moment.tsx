@@ -266,6 +266,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
 import {
   getPortofinoMomentDef,
   PORTOFINO_MOMENT_SLUG_ALIASES,
+  momentSlugForLookKey,
 } from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
 import { ShopOmissionRows, SHOP_ACCURACY_NOTE } from "@/components/ShopOmissionRows";
