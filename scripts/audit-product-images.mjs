@@ -69,6 +69,7 @@ const ROUTES = [
   "/brands",
   "/destinations",
   "/destinations/portofino",
+  "/portofino/pool-lounging/poolside-glam",
   ...[
     "arrival","espresso-morning","yacht-day","beach-club","pool-lounging",
     "long-lunch","harbor-aperitivo","exploring-the-harbor","shopping",
