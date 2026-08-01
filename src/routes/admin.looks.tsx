@@ -940,7 +940,6 @@ const SLOT_ORDER = [
   "earrings",
   "necklace",
   "bracelet",
-  "ring",
   "hat",
 ];
 

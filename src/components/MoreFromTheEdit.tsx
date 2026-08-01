@@ -14,6 +14,7 @@ import {
 import { filterAndDedupImages } from "@/lib/product-image-integrity";
 import { safeHref } from "@/lib/safe-url";
 import { canRenderProductImage } from "@/lib/product-image-policy";
+import { isExcludedProduct } from "@/lib/merchandising-exclusions";
 
 /**
  * "More From The Edit" — dynamic, founder-library-driven discovery rail
@@ -63,6 +64,8 @@ export function MoreFromTheEdit({
 
     const candidates = founder
       .filter((p) => p.channel === "affiliate")
+      // Resort Edit does not merchandise rings.
+      .filter((p) => !isExcludedProduct(p as { category?: string | null }))
       .filter((p) => p.activityTags.some((a) => momentSet.has(a)))
       .filter((p) => {
         const h = hostPath(p.href);

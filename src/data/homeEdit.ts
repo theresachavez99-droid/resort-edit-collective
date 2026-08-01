@@ -23,7 +23,6 @@ export type HomeCategory =
   | "Bag"
   | "Earrings"
   | "Bracelet"
-  | "Ring"
   | "Sunglasses"
   | "Hat/Headscarf";
 
@@ -178,13 +177,6 @@ export const homeDays: HomeDay[] = [
         href: "https://www.revolve.com/jenny-bird-tome-cuff/dp/JBER-WL98/",
       },
       {
-        category: "Ring",
-        brand: "Mejuri",
-        item: "Dôme Ring — 14k Gold Vermeil",
-        price: "$118",
-        href: "https://mejuri.com/products/dome-ring",
-      },
-      {
         category: "Sunglasses",
         brand: "Krewe",
         item: "St. Louis Matte Oyster 24K",
@@ -247,13 +239,6 @@ export const homeDays: HomeDay[] = [
         item: "Cable Classics Bracelet — 5mm",
         price: "$550",
         href: "https://www.davidyurman.com/products/cable-classics-bracelet-5mm",
-      },
-      {
-        category: "Ring",
-        brand: "Missoma",
-        item: "Molten Heavy Stacking Ring — Gold",
-        price: "$258",
-        href: "https://www.shopbop.com/molten-heavy-stacking-ring-missoma/vp/v=1/1576781299.htm",
       },
       {
         category: "Sunglasses",
@@ -320,13 +305,6 @@ export const homeDays: HomeDay[] = [
         href: "https://www.monicavinader.com/us/alta-capture-charm-bracelet/gold-vermeil-alta-charm-bracelet",
       },
       {
-        category: "Ring",
-        brand: "Mejuri",
-        item: "Dôme Ring — 14k Gold Vermeil",
-        price: "$118",
-        href: "https://mejuri.com/products/dome-ring",
-      },
-      {
         category: "Sunglasses",
         brand: "Krewe",
         item: "Sahara 24K",
@@ -390,13 +368,6 @@ export const homeDays: HomeDay[] = [
         price: "$595",
         href: "https://www.nordstrom.com/s/david-yurman-cable-classics-sterling-silver-18k-yellow-gold-bracelet-4mm/3625630",
       },
-      {
-        category: "Ring",
-        brand: "Mejuri",
-        item: "Dôme Ring — Sterling Silver",
-        price: "$118",
-        href: "https://mejuri.com/products/dome-ring",
-      },
     ],
     bag: eveningBag,
   },
@@ -445,13 +416,6 @@ export const homeDays: HomeDay[] = [
         item: "Alta Capture Charm Bracelet",
         price: "$295",
         href: "https://www.monicavinader.com/us/alta-capture-charm-bracelet/gold-vermeil-alta-charm-bracelet",
-      },
-      {
-        category: "Ring",
-        brand: "Mejuri",
-        item: "Dôme Ring — 14k Gold Vermeil",
-        price: "$118",
-        href: "https://mejuri.com/products/dome-ring",
       },
       {
         category: "Sunglasses",

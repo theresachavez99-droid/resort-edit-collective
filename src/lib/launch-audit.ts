@@ -8,6 +8,7 @@
  * network, no database. Safe to import from admin UI and from CI scripts.
  */
 import { PORTOFINO_JOURNEY } from "./portofino-moment-fallbacks";
+import { excludeUnmerchandisable } from "@/lib/merchandising-exclusions";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
 import {
   MOMENT_EXTRA_EDITORIAL_CARDS,
@@ -69,7 +70,9 @@ export type LaunchAudit = {
 function findingsForMoment(slug: string): SlotFinding[] {
   const out: SlotFinding[] = [];
 
-  for (const row of MOMENT_SHOP_CURATED[slug] ?? []) {
+  // Rings are permanently excluded from merchandising, so they never count
+  // toward completeness and never surface as audit findings.
+  for (const row of excludeUnmerchandisable(MOMENT_SHOP_CURATED[slug])) {
     const { slot, displayLabel } = resolveSlot({
       slotLabel: row.slotLabel,
       category: row.category,
@@ -110,7 +113,7 @@ function findingsForMoment(slug: string): SlotFinding[] {
         source: "editorial-card",
       });
     }
-    for (const p of card.shop?.products ?? []) {
+    for (const p of excludeUnmerchandisable(card.shop?.products)) {
       const { slot, displayLabel } = resolveSlot({ slot: p.slot, title: p.name });
       const v = classifyShopUrl(p.url);
       const meta = p as { unsourced?: boolean; isOptional?: boolean; url?: string };

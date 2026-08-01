@@ -127,7 +127,7 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
     subtitle: "Johanna Ortiz coral bikini, Cult Gaia clutch, Gianvito Rossi heels.",
     chapter: "Aperitivo",
     story:
-      "Golden hour on the piazzetta. A coral Johanna Ortiz bikini under a matching draped sarong, Cult Gaia woven clutch, Gianvito Rossi heeled sandals, sculptural Anita Ko gold, Spinelli Kilcollin linked rings. Aperol in hand, swim-led.",
+      "Golden hour on the piazzetta. A coral Johanna Ortiz bikini under a matching draped sarong, Cult Gaia woven clutch, Gianvito Rossi heeled sandals, sculptural Anita Ko gold. Aperol in hand, swim-led.",
     refPos: "75% 100%",
     museImage: look9Muse,
     products: [
@@ -138,7 +138,6 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
       { category: "Earrings", brand: "Anita Ko", item: "Gold Drop Earrings", price: "$2,450", href: NAP("anita ko earrings"), needs_validation: true },
       { category: "Necklace", brand: "Anita Ko", item: "Sculptural Gold Choker", price: "$3,800", href: NAP("anita ko necklace"), needs_validation: true },
       { category: "Bracelet", brand: "Anita Ko", item: "Diamond Cuff", price: "$5,500", href: NAP("anita ko bracelet"), needs_validation: true },
-      { category: "Ring", brand: "Spinelli Kilcollin", item: "Sirius Linked Ring", price: "$1,150", href: NAP("spinelli kilcollin ring"), needs_validation: true },
       { category: "Sunglasses", brand: "Spinelli Kilcollin", item: "Cat-Eye Sunglasses", price: "$580", href: NAP("spinelli kilcollin sunglasses"), needs_validation: true },
     ],
   },
@@ -161,7 +160,6 @@ export const YACHT_TO_LUNCH_LOOKS: YachtLook[] = [
       { category: "Earrings", brand: "Mateo", item: "Diamond Drop Earrings", price: "$2,250", href: NAP("mateo earrings"), needs_validation: true },
       { category: "Necklace", brand: "Mateo", item: "Diamond Pendant Necklace", price: "$3,500", href: NAP("mateo necklace"), needs_validation: true },
       { category: "Bracelet", brand: "Persée", item: "Gold Diamond Cuff", price: "$4,200", href: NAP("persee bracelet"), needs_validation: true },
-      { category: "Ring", brand: "Persée", item: "Gold Diamond Ring", price: "$2,800", href: NAP("persee ring"), needs_validation: true },
     ],
   },
 ];

@@ -32,7 +32,6 @@ const CATEGORIES = [
   "earrings",
   "necklace",
   "bracelet",
-  "ring",
   "hair",
 ] as const;
 

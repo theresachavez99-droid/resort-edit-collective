@@ -5,7 +5,12 @@
  * "Shoe", "Hero Piece · Trousers", "THE LOOK", "Cuff", …). This module maps
  * every observed label onto a small canonical enum so completeness can be
  * validated, without ever discarding the original editorial display label.
+ *
+ * NOTE: `ring` is intentionally NOT a slot — Resort Edit does not merchandise
+ * rings (see `merchandising-exclusions.ts`). Ring labels resolve to `null` so
+ * they are never required, filled, or reported as a missing slot.
  */
+import { isExcludedSlotLabel } from "./merchandising-exclusions";
 
 export const PRODUCT_SLOTS = [
   "outfit",
@@ -14,7 +19,6 @@ export const PRODUCT_SLOTS = [
   "earrings",
   "necklace",
   "bracelet",
-  "ring",
   "sunglasses",
   "hat",
   "layer",
@@ -31,7 +35,6 @@ export const SLOT_DISPLAY: Record<ProductSlot, string> = {
   earrings: "Earrings",
   necklace: "Necklace",
   bracelet: "Bracelet",
-  ring: "Ring",
   sunglasses: "Sunglasses",
   hat: "Hat",
   layer: "Layer",
@@ -52,11 +55,10 @@ export const REQUIRED_SLOTS: Record<"day" | "evening", ProductSlot[]> = {
     "bag",
     "earrings",
     "bracelet",
-    "ring",
     "sunglasses",
     "necklace",
   ],
-  evening: ["outfit", "shoes", "bag", "earrings", "bracelet", "ring", "necklace"],
+  evening: ["outfit", "shoes", "bag", "earrings", "bracelet", "necklace"],
 };
 
 export const ADVISORY_SLOTS: ProductSlot[] = ["hat", "layer", "hair"];
@@ -81,7 +83,6 @@ const KEYWORD_SLOTS: Array<[string, ProductSlot]> = [
   ["bracelet", "bracelet"],
   ["cuff", "bracelet"],
   ["bangle", "bracelet"],
-  ["ring", "ring"],
   // accessories
   ["sunglass", "sunglasses"],
   ["eyewear", "sunglasses"],
@@ -158,6 +159,8 @@ const KEYWORD_SLOTS: Array<[string, ProductSlot]> = [
  */
 export function normalizeSlot(label: string | undefined | null): ProductSlot | null {
   if (!label) return null;
+  // Permanently excluded merchandise (rings) never maps to a slot.
+  if (isExcludedSlotLabel(label)) return null;
   const l = label.toLowerCase();
   for (const [needle, slot] of KEYWORD_SLOTS) {
     if (l.includes(needle)) return slot;

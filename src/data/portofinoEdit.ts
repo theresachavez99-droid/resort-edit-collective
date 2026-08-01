@@ -564,7 +564,6 @@ const day5Looks: LookEdit[] = [
         { brand: "Hermès", item: "Oran Sandals", price: "$760", href: "#", category: "shoes" },
         { brand: "The Row", item: "Tan Leather Tote", price: "$1,890", href: "#", category: "bag" },
         { brand: "Celine", item: "Sunglasses", price: "$490", href: "#", category: "sunglasses" },
-        { brand: "Cartier", item: "Trinity Ring", price: "$1,310", href: "#", category: "jewelry" },
       ],
       mid: [
         { brand: "Anine Bing", item: "Camel Linen Shirt", price: "$200", href: "#", category: "clothing" },

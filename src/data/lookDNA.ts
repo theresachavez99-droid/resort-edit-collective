@@ -127,7 +127,7 @@ export const LOOK_DNA: Record<string, LookDNA> = {
     resortEnergy: "Old-money Riviera — Aman, Splendido, the back deck of a Riva — restrained, expensive, considered, photographed in late-afternoon sun",
     ageAlignment: "Sophisticated women 35–50",
     stylingNotes: [
-      "polished gold cuff and one architectural ring",
+      "polished gold cuff",
       "fine layered gold chains, not stacked beach jewelry",
       "luxury suede or python slide / flat — never platform, never plastic",
       "structured raffia or leather tote with leather handles",
@@ -139,7 +139,7 @@ export const LOOK_DNA: Record<string, LookDNA> = {
     tier: "luxury",
     heroPiece: "Sculpted emerald one-piece OR matte ribbed bikini under a silk kaftan",
     colorStory: ["emerald green"],
-    accessories: ["fine layered gold", "polished gold cuff", "architectural ring", "suede slide", "structured raffia tote", "oversized tortoise sunglasses"],
+    accessories: ["fine layered gold", "polished gold cuff", "suede slide", "structured raffia tote", "oversized tortoise sunglasses"],
     targetBrands: ["Eres", "Hunza G", "Melissa Odabash", "Johanna Ortiz", "Loro Piana", "The Row", "Khaite", "Cult Gaia"],
     avoidCues: [
       "generic resort wear",
@@ -270,7 +270,7 @@ export type WardrobeSlot =
   | "bag"
   | "earrings"
   | "necklace"
-  | "bracelet-or-ring"
+  | "bracelet"
   | "sunglasses"
   | "hair-detail"
   | "optional-layer";
@@ -287,7 +287,7 @@ const COMMON_REQUIRED: WardrobeSlot[] = [
   "bag",
   "earrings",
   "necklace",
-  "bracelet-or-ring",
+  "bracelet",
   "hair-detail",
 ];
 

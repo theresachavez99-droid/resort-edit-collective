@@ -28,6 +28,10 @@ import {
   type NightcapEditorialCard,
 } from "@/data/momentEditorialCards";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
+import {
+  excludeUnmerchandisable,
+  isExcludedProduct,
+} from "@/lib/merchandising-exclusions";
 import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
 
 /**
@@ -415,6 +419,8 @@ function MomentPage() {
   const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
   const founderShopEntries: ShopEntry[] = founderProducts
     .filter((p) => (p.brand || p.product_name))
+    // Resort Edit never merchandises rings.
+    .filter((p) => !isExcludedProduct({ category: p.category, role: p.role }))
     // Public Founder Look shop panel: only render rows with a usable
     // retailer URL. Search-engine fallback or AFF- placeholder URLs are
     // suppressed in production (visible only with ?debug=1) so the page
@@ -440,7 +446,7 @@ function MomentPage() {
   // data. This lets an editor lock a specific ordered set of pieces without
   // depending on the publish pipeline.
   const curatedForMoment = MOMENT_SHOP_CURATED[slug];
-  const curatedShopEntries: ShopEntry[] = (curatedForMoment ?? [])
+  const curatedShopEntries: ShopEntry[] = excludeUnmerchandisable(curatedForMoment)
     .filter((o) => isUsableShopUrl(o.url))
     .map((product) => ({ kind: "override" as const, product }));
   const featuredShop = curatedShopEntries.length
@@ -1261,7 +1267,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   necklace: "Necklace",
   earrings: "Earrings",
   bracelet: "Bracelet",
-  ring: "Ring",
   scarf: "Scarf",
   belt: "Belt",
   swim: "Swim",
@@ -1362,10 +1367,10 @@ const FINISHING_CATEGORIES = new Set([
   "coverup", "cover-up", "cover up",
 ]);
 const JEWELRY_CATEGORIES = new Set([
-  "earrings", "necklace", "bracelet", "ring", "jewelry", "cuff",
+  "earrings", "necklace", "bracelet", "jewelry", "cuff",
 ]);
 const FINISHING_ORDER = ["shoe", "shoes", "sandal", "sandals", "bag", "clutch", "tote", "pouch", "sunglasses", "hat", "scarf", "belt", "coverup", "cover-up", "cover up"];
-const JEWELRY_ORDER = ["necklace", "earrings", "bracelet", "cuff", "ring", "jewelry"];
+const JEWELRY_ORDER = ["necklace", "earrings", "bracelet", "cuff", "jewelry"];
 
 type ShopChapter = { key: string; label: string; items: OverrideItem[] };
 

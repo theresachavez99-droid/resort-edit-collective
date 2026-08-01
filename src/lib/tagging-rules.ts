@@ -52,7 +52,6 @@ const SUBCATEGORY_KEYWORDS: Array<[string, string[]]> = [
   ["earrings", ["earring"]],
   ["necklace", ["necklace", "pendant", "choker"]],
   ["bracelet", ["bracelet", "cuff", "anklet"]],
-  ["ring", ["ring"]],
 ];
 
 const FABRIC_KEYWORDS: Array<[string, string[]]> = [

@@ -261,3 +261,19 @@ Every look + slot evaluated through a feminine, polished destination-dressing le
 
 ### Styling formula
 Statement hero piece + feminine silhouette + neutral balance + refined accessories + destination context.
+
+## Permanent exclusion: rings (added 2026-08)
+
+Resort Edit does not merchandise rings. Rings are never sourced, recommended,
+auto-filled, scored, required, or displayed — in complete looks, More Resort
+Edit Looks, supporting looks, product grids, My Edit, admin sourcing, or AI
+look generation. A look is never incomplete for having no ring.
+
+All other jewelry (earrings, necklaces, bracelets/cuffs, watches) is unchanged.
+Garment hardware descriptions such as "ring-wrap sandal" or "ring detail" are
+allowed — the exclusion is slot/category driven, never title driven.
+
+Enforcement: `src/lib/merchandising-exclusions.ts` (`isExcludedProduct`,
+`excludeUnmerchandisable`); `ring` is absent from `src/lib/product-slots.ts`,
+`hero-outfit-slots.ts`, `editorial-stylist.ts`, `lookScoring.ts`, and admin
+slot filters. Historical DB rows are retained but excluded from merchandising.

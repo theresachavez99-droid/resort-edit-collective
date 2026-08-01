@@ -47,7 +47,8 @@ const CONSTRUCTION = ["sculptural", "draped", "ruched", "cut-out", "cut out", "c
 const COVERUP_SHAPES = ["kaftan", "pareo", "shirt", "linen pant", "tunic", "robe", "dress"];
 const SHOE_SHAPES = ["espadrille", "raffia sandal", "slide", "flat sandal", "wedge", "thong", "mule"];
 const BAG_SHAPES = ["raffia tote", "straw bag", "basket", "shoulder bag", "clutch", "structured tote"];
-const JEWELRY_KINDS = ["hoop", "cuff", "pendant", "shell", "stud", "stacking ring", "chain necklace"];
+// Rings are excluded from Resort Edit merchandising, so no ring kinds here.
+const JEWELRY_KINDS = ["hoop", "cuff", "pendant", "shell", "stud", "chain necklace"];
 const SUNGLASSES_SHAPES = ["cat eye", "cat-eye", "oversized", "aviator", "rectangular", "oval", "round", "wrap"];
 const COLORS = [
   "ivory",
