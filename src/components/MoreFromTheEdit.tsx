@@ -13,6 +13,7 @@ import {
 } from "@/lib/portofino-visual-dna";
 import { filterAndDedupImages } from "@/lib/product-image-integrity";
 import { safeHref } from "@/lib/safe-url";
+import { canRenderProductImage } from "@/lib/product-image-policy";
 
 /**
  * "More From The Edit" — dynamic, founder-library-driven discovery rail
@@ -188,6 +189,9 @@ function EditTile({ product }: { product: ProductDNA }) {
   // a malicious product URL can never become a live affiliate href.
   const href = safeHref(product.href);
   if (!href) return null;
+  // Fail-closed product imagery: retailer photography is withheld in
+  // pending-affiliate mode (see product-image-policy).
+  const showImage = canRenderProductImage(product.image);
   return (
     <a
       href={href}
@@ -198,19 +202,25 @@ function EditTile({ product }: { product: ProductDNA }) {
       }
       className="group flex flex-col bg-ivory border border-ink/10 hover:border-gold/60 transition-colors"
     >
-      <div className="relative aspect-[3/4] bg-cream/60 overflow-hidden">
-        <img
-          src={product.image}
-          alt={`${product.brand} ${product.name}`}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-        />
-        {product.editorialLabel ? (
-          <span className="absolute left-2.5 top-2.5 bg-ivory/90 text-ink eyebrow tracking-[0.22em] text-[0.55rem] px-2 py-1 backdrop-blur-sm border border-ink/10">
-            {product.editorialLabel}
-          </span>
-        ) : null}
-      </div>
+      {showImage ? (
+        <div className="relative aspect-[3/4] bg-cream/60 overflow-hidden">
+          <img
+            src={product.image}
+            alt={`${product.brand} ${product.name}`}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+          {product.editorialLabel ? (
+            <span className="absolute left-2.5 top-2.5 bg-ivory/90 text-ink eyebrow tracking-[0.22em] text-[0.55rem] px-2 py-1 backdrop-blur-sm border border-ink/10">
+              {product.editorialLabel}
+            </span>
+          ) : null}
+        </div>
+      ) : product.editorialLabel ? (
+        <p className="px-4 pt-4 eyebrow tracking-[0.28em] text-[0.55rem] text-gold/85">
+          {product.editorialLabel}
+        </p>
+      ) : null}
       <div className="p-4 flex flex-col flex-1">
         <p className="eyebrow tracking-[0.28em] text-[0.6rem] text-gold">
           {product.brand.toUpperCase()}
