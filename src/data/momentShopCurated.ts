@@ -25,9 +25,9 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
       slotLabel: "The Look",
       category: "Dress",
       brand: "Mister Zimi",
-      title: "Clara Maxi Dress in Cabana",
+      title: "Clara Maxi Dress in Mello",
       price: "$219",
-      url: "https://misterzimi.com/en-us/products/clara-maxi-dress-in-cabana",
+      url: "https://us.misterzimi.com/products/clara-maxi-dress-in-mello?variant=52204031246699",
       image: "",
     },
     {
