@@ -484,6 +484,10 @@ function MomentPage() {
     ? []
     : lookbook.filter(
         (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
+      ).filter(
+        // Shopping: the legacy "Via Roma Boutiques" sibling is replaced by the
+        // curated "Green Eyelet on Via Roma" editorial card below.
+        (l) => !(slug === "shopping" && l.title === "Via Roma Boutiques"),
       );
 
   // Inline expansion state: which look's shop grid is currently open.
@@ -759,7 +763,6 @@ function MomentPage() {
                   card={c}
                   momentSlug={slug}
                   momentName={card.moment_name}
-                  editorialOnly={slug === "shopping"}
                 />
               ))}
             </div>
@@ -1620,7 +1623,9 @@ function ExtraEditorialReferenceCard({
               </div>
             </div>
             <div className="text-right shrink-0">
-              <div className="font-serif text-gold text-[0.95rem]">{r.price}</div>
+              {r.price && (
+                <div className="font-serif text-gold text-[0.95rem]">{r.price}</div>
+              )}
               <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
                 SHOP THE REFERENCE →
               </div>
