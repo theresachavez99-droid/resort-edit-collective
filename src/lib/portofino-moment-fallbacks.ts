@@ -35,6 +35,7 @@ import arrivalBanner from "@/assets/uploads/portofino/arrival-banner-peach-facad
 import beachClubLemon from "@/assets/uploads/lilla/lilla-lemon-beach-club.png.asset.json";
 import longLunchCard from "@/assets/uploads/portofino/long-lunch-yellow-dress-harbor-v2.png.asset.json";
 import shoppingCanonical from "@/assets/uploads/portofino/shopping-lilla-ombre-via-roma-v2.png.asset.json";
+import shoppingBanner from "@/assets/uploads/portofino/shopping-banner-via-roma-boutiques.png.asset.json";
 import nightcapCard from "@/assets/uploads/portofino/nightcap-lilla-harbor.png.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
@@ -279,9 +280,12 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     narrative: "Browsing the boutiques around the piazzetta and along the harbor.",
     editorial_order: 7.5,
     // Canonical Shopping editorial image — single source of truth for the
-    // hero banner, homepage card, Other Moments grid, and social preview.
+    // homepage card, Other Moments grid, and social preview.
     moment_card_image: shoppingCanonical.url,
-    hero_banner_image: shoppingCanonical.url,
+    // Destination banner for the top of the Shopping moment page.
+    // This is the storefront / Via Roma scene; the editorial reference image
+    // (Lilla in the ombré dress) is intentionally kept as the card + outfit image.
+    hero_banner_image: shoppingBanner.url,
     outfit_image: shoppingCanonical.url,
     legacy_day: "/portofino/day-3",
     legacy_look_title: "Shopping in Portofino",
