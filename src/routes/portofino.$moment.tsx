@@ -1623,7 +1623,9 @@ function ExtraEditorialReferenceCard({
               </div>
             </div>
             <div className="text-right shrink-0">
-              <div className="font-serif text-gold text-[0.95rem]">{r.price}</div>
+              {r.price && (
+                <div className="font-serif text-gold text-[0.95rem]">{r.price}</div>
+              )}
               <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
                 SHOP THE REFERENCE →
               </div>
