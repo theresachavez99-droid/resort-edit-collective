@@ -388,7 +388,7 @@ const day3Looks: LookEdit[] = [
     name: "Capri Aperitivo",
     category: "Texture Forward",
     fabric: "Open crochet • Woven leather • Raffia weave",
-    description: "Crochet midi, woven slides, raffia mini. Tonal cream layered with handworked texture.",
+    description: "Sunlit ombré, woven textures, effortless elegance. A flowing silhouette made for wandering Portofino's boutiques.",
     tiers: {
       designer: [
         { brand: "Chloé", item: "Crochet Midi Dress", price: "$2,295", href: "#", category: "clothing" },
