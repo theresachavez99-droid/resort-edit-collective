@@ -12,6 +12,7 @@ import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-w
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
 import arrivalPiazzaIvoryImage from "@/assets/uploads/lilla/lilla-arrival-piazza-in-ivory-v3.jpg.asset.json";
 import arrivalWellsAtHarborImage from "@/assets/uploads/lilla/lilla-arrival-wells-at-the-harbor.jpg.asset.json";
+import shoppingGreenEyeletImage from "@/assets/uploads/lilla/shopping-lilla-green-eyelet-via-roma.png.asset.json";
 
 /**
  * Additional page-local editorial-reference cards appended to the "More
@@ -30,7 +31,8 @@ export type ExtraEditorialCard = {
     brand: string;
     name: string;
     color?: string;
-    price: string;
+    /** Omitted when no verified retail price is on record. */
+    price?: string;
     retailer: string;
     url: string;
     slot?: string;
@@ -403,6 +405,63 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
             name: "14K Yellow Gold Lola Open Mini Chain Link Bracelet",
             price: "$625",
             url: "https://www.bloomingdales.com/shop/product/ef-collection-14k-yellow-gold-lola-open-mini-chain-link-bracelet?ID=4992610",
+          },
+        ],
+      },
+    },
+  ],
+  "shopping": [
+    {
+      key: "green-eyelet-on-via-roma",
+      title: "Green Eyelet on Via Roma",
+      caption:
+        "A strapless sprout-green eyelet midi with a gathered skirt, worn with a woven raffia top-handle bag, alabaster sunglasses and the finest diamonds for a slow morning through the boutiques.",
+      image: shoppingGreenEyeletImage.url,
+      alt: "Lilla walking the boutique-lined Via Roma in Portofino in a strapless sprout-green eyelet midi dress with a fitted bodice and gathered skirt, carrying a woven raffia top-handle bag, wearing tan thong heels and delicate gold and diamond jewelry.",
+      reference: {
+        slot: "Hero Piece · Dress",
+        brand: "STAUD",
+        name: "Nia Dress",
+        color: "Sprout",
+        retailer: "STAUD",
+        url: "https://staud.clothing/products/nia-dress-sprout?variant=45410497069229",
+      },
+      shop: {
+        stylingNote:
+          "One green note, everything else warm and quiet — alabaster acetate with 18K hardware and fine diamonds at the throat, ears and wrist. No ring.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "STAUD",
+            name: "Tan Leather Thong Heel",
+            // The supplied link resolves to the Nia dress PDP, not a shoe.
+            // Held as an explicit omission until an exact shoe URL is approved.
+            url: "",
+            unsourced: true,
+          },
+          {
+            slot: "Sunglasses",
+            brand: "KREWE",
+            name: "St. Louis Sunglasses — Alabaster 18K",
+            url: "https://www.krewe.com/collections/st-louis-classics/products/st-louis-alabaster-18k-sunglasses",
+          },
+          {
+            slot: "Necklace",
+            brand: "STONE AND STRAND",
+            name: "Tiny Diamond Choker",
+            url: "https://www.stoneandstrand.com/products/tiny-diamond-choker",
+          },
+          {
+            slot: "Earrings",
+            brand: "STONE AND STRAND",
+            name: "Bezel Diamond Huggies",
+            url: "https://www.stoneandstrand.com/products/bezel-diamond-huggies",
+          },
+          {
+            slot: "Bracelet",
+            brand: "STONE AND STRAND",
+            name: "Noble Diamond Tennis Bracelet",
+            url: "https://www.stoneandstrand.com/products/noble-diamond-tennis-bracelet",
           },
         ],
       },
