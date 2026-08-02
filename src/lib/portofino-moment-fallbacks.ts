@@ -280,9 +280,12 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     narrative: "Browsing the boutiques around the piazzetta and along the harbor.",
     editorial_order: 7.5,
     // Canonical Shopping editorial image — single source of truth for the
-    // hero banner, homepage card, Other Moments grid, and social preview.
+    // homepage card, Other Moments grid, and social preview.
     moment_card_image: shoppingCanonical.url,
-    hero_banner_image: shoppingCanonical.url,
+    // Destination banner for the top of the Shopping moment page.
+    // This is the storefront / Via Roma scene; the editorial reference image
+    // (Lilla in the ombré dress) is intentionally kept as the card + outfit image.
+    hero_banner_image: shoppingBanner.url,
     outfit_image: shoppingCanonical.url,
     legacy_day: "/portofino/day-3",
     legacy_look_title: "Shopping in Portofino",
