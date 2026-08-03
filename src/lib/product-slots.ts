@@ -141,6 +141,8 @@ const KEYWORD_SLOTS: Array<[string, ProductSlot]> = [
   ["shirt", "outfit"],
   ["cami", "outfit"],
   ["corset", "outfit"],
+  ["vest", "outfit"],
+  ["waistcoat", "outfit"],
   ["bodysuit", "outfit"],
   ["jumpsuit", "outfit"],
   ["swim", "outfit"],
