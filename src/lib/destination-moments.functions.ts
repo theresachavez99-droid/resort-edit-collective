@@ -168,14 +168,18 @@ const PORTOFINO_MOMENT_SEEDS: Array<Omit<DestinationMomentRow, "id">> = [
 
 // ---------- Server functions ----------
 
-/** Public read — lists all moments for a destination (sorted). */
+/** Public read — lists ACTIVE moments for a destination (sorted). */
 export const listDestinationMoments = createServerFn({ method: "GET" })
   .inputValidator((input) => z.object({ destination_slug: z.string().min(1) }).parse(input))
   .handler(async ({ data }) => {
-    const { data: rows, error } = await supabaseAdmin
+    // Public endpoint: use the anon-scoped client so RLS applies, and never
+    // expose inactive/draft moments.
+    const { anonSupabase } = await import("./mcp/anon-client");
+    const { data: rows, error } = await anonSupabase()
       .from("destination_moments")
       .select("id,destination_slug,moment_slug,moment_name,archetype_slug,time_of_day,narrative,styling_cues,sort_order,active")
       .eq("destination_slug", data.destination_slug)
+      .eq("active", true)
       .order("sort_order", { ascending: true });
     if (error) return { ok: false as const, error: error.message };
     return { ok: true as const, moments: (rows ?? []) as DestinationMomentRow[] };
