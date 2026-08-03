@@ -248,7 +248,7 @@ async function storeCandidates(args: {
       color: c.color,
       silhouette: c.silhouette,
       material: c.material,
-    } as Record<string, never>,
+    } as unknown as Record<string, never>,
     verification_status: c.verification.status,
     verification_detail: c.verification as unknown as Record<string, never>,
     availability_verdict: c.verification.verdict,
