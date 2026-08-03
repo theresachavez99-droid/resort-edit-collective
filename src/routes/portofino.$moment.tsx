@@ -424,6 +424,7 @@ export const Route = createFileRoute("/portofino/$moment")({
 function MomentPage() {
   const { moment: slug } = Route.useParams();
   const { data } = useSuspenseQuery(momentQuery(slug));
+  const { data: slotHealth } = useSuspenseQuery(slotHealthQuery(slug));
   const card = data.ok ? data.moment : null;
   if (!card) throw notFound();
 
@@ -469,7 +470,8 @@ function MomentPage() {
   // depending on the publish pipeline.
   const curatedForMoment = MOMENT_SHOP_CURATED[slug];
   const curatedShopEntries: ShopEntry[] = excludeUnmerchandisable(curatedForMoment)
-    .filter((o) => isUsableShopUrl(o.url))
+    .map((o) => applySlotHealth(o, slotHealth.slots))
+    .filter((o) => isUsableShopUrl(o.url) || o.inReview)
     .map((product) => ({ kind: "override" as const, product }));
   const featuredShop = curatedShopEntries.length
     ? curatedShopEntries
