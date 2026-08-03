@@ -697,9 +697,9 @@ function MomentPage() {
                   ))}
                 </div>
               )}
-              {/* Standardized shop area — every moment shows either the Live
-                  Shopping Edit (curated affiliate pieces) or a Coming Soon
-                  state so the layout is identical across moments. */}
+              {/* Standardized shop area — a moment either publishes its live
+                  Resort Edit shopping list or shows nothing at all. No
+                  placeholder or "coming soon" states are ever rendered. */}
               {featuredPieceCount + featuredInReviewCount > 0 &&
               (isFounderLook || hasCuratedOverride) ? (
                 <div className="pt-2">
@@ -726,9 +726,7 @@ function MomentPage() {
                     </div>
                   )}
                 </div>
-              ) : (
-                <ComingSoonPanel heading={shopHeading} />
-              )}
+              ) : null}
             </div>
           </div>
         </div>
