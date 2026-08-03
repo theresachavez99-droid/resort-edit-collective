@@ -67,6 +67,12 @@ const EDITORIAL_LIBRARY: NavItem[] = [
 
 const AVAILABILITY: NavItem[] = [
   {
+    label: "Editorial Closet",
+    to: "/admin/editorial-closet",
+    description:
+      "Dynamic alternatives for each moment's hero product. ChatGPT proposes, you verify and approve — approved options appear only in the secondary shopping module, never as a published look.",
+  },
+  {
     label: "Product Health",
     to: "/admin/product-health",
     description:
