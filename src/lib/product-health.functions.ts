@@ -490,7 +490,27 @@ export const importLooksToRegistry = createServerFn({ method: "POST" })
       (existingRows ?? []).filter((r) => r.is_primary).map((r) => `${r.look_key}::${slotKey(r.slot)}`),
     );
 
-    const inserts: Array<Record<string, never>> = [];
+    type SlotInsert = {
+      destination: string;
+      moment: string;
+      look_key: string;
+      look_kind: string;
+      look_title: string;
+      slot: string;
+      slot_label: string | null;
+      slot_order: number;
+      brand: string;
+      product_name: string;
+      retailer: string | null;
+      url: string | null;
+      price: string | null;
+      status: string;
+      is_primary: boolean;
+      replacement_priority: number;
+      registry_source: string;
+      notes: string;
+    };
+    const inserts: SlotInsert[] = [];
     for (const look of looks) {
       for (const s of look.slots) {
         const key = `${look.lookKey}::${slotKey(s.slot)}`;
@@ -517,7 +537,7 @@ export const importLooksToRegistry = createServerFn({ method: "POST" })
           notes: s.publishable
             ? `Imported from ${look.source}.`
             : `Imported from ${look.source} without an exact PDP — awaiting replacement.`,
-        } as unknown as Record<string, never>);
+        });
       }
     }
     if (inserts.length) {
