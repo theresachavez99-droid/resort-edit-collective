@@ -15,6 +15,9 @@ import {
   getAiStylistStatus,
   generateAiReplacements,
   restyleCompleteLookAction,
+  getStylingPolicy,
+  saveStylingPolicy,
+  saveStylingFeedback,
 } from "@/lib/product-health.functions";
 import {
   PRODUCT_STATUSES,
@@ -113,10 +116,15 @@ function ProductHealthPage() {
   const aiStatusFn = useServerFn(getAiStylistStatus);
   const generateFn = useServerFn(generateAiReplacements);
   const restyleFn = useServerFn(restyleCompleteLookAction);
+  const policyFn = useServerFn(getStylingPolicy);
+  const savePolicyFn = useServerFn(saveStylingPolicy);
+  const feedbackFn = useServerFn(saveStylingFeedback);
   const qc = useQueryClient();
 
   const [pw, setPw] = useState("");
   const [editing, setEditing] = useState<CandidateRow | null>(null);
+  const [feedbackDraft, setFeedbackDraft] = useState<Record<string, string>>({});
+  const [policyDraft, setPolicyDraft] = useState<string>("");
   useEffect(() => {
     const c = sessionStorage.getItem(STORAGE_KEY);
     if (c) setPw(c);
@@ -136,6 +144,11 @@ function ProductHealthPage() {
     queryKey: ["admin-ai-stylist-status"],
     enabled: Boolean(pw),
     queryFn: () => aiStatusFn({ data: { password: pw } }),
+  });
+  const policy = useQuery({
+    queryKey: ["admin-styling-policy"],
+    enabled: Boolean(pw),
+    queryFn: () => policyFn({ data: { password: pw } }),
   });
 
   const invalidate = () => {
@@ -180,6 +193,15 @@ function ProductHealthPage() {
   const restyle = useMutation({
     mutationFn: (lookKey: string) => restyleFn({ data: { password: pw, lookKey } }),
     onSuccess: invalidate,
+  });
+  const savePolicy = useMutation({
+    mutationFn: (extraRules: string[]) =>
+      savePolicyFn({ data: { password: pw, extraRules } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-styling-policy"] }),
+  });
+  const sendFeedback = useMutation({
+    mutationFn: (vars: { productId: string; candidateId?: string; feedback: string }) =>
+      feedbackFn({ data: { password: pw, ...vars } }),
   });
 
   if (!pw) {
