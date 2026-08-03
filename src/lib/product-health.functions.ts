@@ -709,19 +709,27 @@ export const saveStylingPolicy = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, never> = {} as Record<string, never>;
-    if (data.retailerPriority) patch["retailer_priority"] = data.retailerPriority;
-    if (data.approvedBrands) patch["approved_brands"] = data.approvedBrands;
-    if (data.restrictedBrands) patch["restricted_brands"] = data.restrictedBrands;
-    if (data.extraRules) patch["extra_rules"] = data.extraRules;
-    if (data.heroThresholdNote !== undefined) patch["hero_threshold_note"] = data.heroThresholdNote;
-    if (data.notes !== undefined) patch["notes"] = data.notes;
-    if (data.noRings !== undefined) patch["no_rings"] = data.noRings;
+    const patch: {
+      retailer_priority?: string[];
+      approved_brands?: string[];
+      restricted_brands?: string[];
+      extra_rules?: string[];
+      hero_threshold_note?: string;
+      notes?: string;
+      no_rings?: boolean;
+      single_jewelry_family?: boolean;
+    } = {};
+    if (data.retailerPriority) patch.retailer_priority = data.retailerPriority;
+    if (data.approvedBrands) patch.approved_brands = data.approvedBrands;
+    if (data.restrictedBrands) patch.restricted_brands = data.restrictedBrands;
+    if (data.extraRules) patch.extra_rules = data.extraRules;
+    if (data.heroThresholdNote !== undefined) patch.hero_threshold_note = data.heroThresholdNote;
+    if (data.notes !== undefined) patch.notes = data.notes;
     if (data.singleJewelryFamily !== undefined) {
-      patch["single_jewelry_family"] = data.singleJewelryFamily;
+      patch.single_jewelry_family = data.singleJewelryFamily;
     }
     // No rings is permanent Resort Edit policy — it can never be switched off.
-    patch["no_rings"] = true;
+    patch.no_rings = true;
 
     const { data: existing } = await supabaseAdmin
       .from("resort_edit_styling_policy")
