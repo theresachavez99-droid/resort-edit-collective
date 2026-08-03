@@ -1320,7 +1320,9 @@ function ShopCard({
       {...(o.slotLabel ? { category: o.slotLabel } : {})}
       url={isUsableShopUrl(o.url) ? o.url : null}
       image={o.image ?? null}
-      unavailableLabel="COMING SOON"
+      unavailableLabel={
+        o.inReview ? REPLACEMENT_IN_REVIEW_LABEL.toUpperCase() : "COMING SOON"
+      }
     />
   );
 }
