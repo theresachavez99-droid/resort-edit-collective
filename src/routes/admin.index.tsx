@@ -71,6 +71,12 @@ const AVAILABILITY: NavItem[] = [
     description:
       "Live link status per slot, approved backups, and the replacement queue. Looks stay published; only the commerce item is swapped — and only by approval.",
   },
+  {
+    label: "Product Audit",
+    to: "/admin/product-audit",
+    description:
+      "Sitewide link integrity — every outbound product URL, where it is used, its live verdict, automated backup promotions and the styling queue.",
+  },
 ];
 
 const OPERATIONS: NavItem[] = [
