@@ -184,6 +184,36 @@ export async function verifyPdp(input: {
   const priceFound = detectPrice(html);
   if (availability === "out_of_stock") checks.push("page reports the product as sold out");
 
+  // Some retailers answer 200 with a "we couldn't find that product" body.
+  if (
+    /page not found|product not found|we can'?t find|no longer available|this item is no longer|sorry, this product/i.test(
+      html.slice(0, 120_000),
+    ) &&
+    !brandMatch
+  ) {
+    return {
+      ...base,
+      verdict: "rejected_404",
+      httpStatus,
+      finalUrl,
+      pageTitle,
+      checks: ["page body reports the product as not found / removed"],
+    };
+  }
+
+  // Anti-bot interstitials must never be read as a product failure.
+  if (/just a moment|enable javascript and cookies|access denied|are you a human/i.test(html.slice(0, 40_000))) {
+    return {
+      ...base,
+      status: "unverified",
+      verdict: "unverified_bot_challenge",
+      httpStatus,
+      finalUrl,
+      pageTitle,
+      checks: ["retailer served an automated-request challenge — manual review required"],
+    };
+  }
+
   const httpHealth = statusFromHttp(httpStatus);
   const passed =
     brandMatch && titleMatch !== false && colorMatch !== false && availability !== "out_of_stock";

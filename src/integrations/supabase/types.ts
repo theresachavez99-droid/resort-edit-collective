@@ -1989,6 +1989,142 @@ export type Database = {
         }
         Relationships: []
       }
+      product_audit_events: {
+        Row: {
+          actor: string
+          candidate_id: string | null
+          created_at: string
+          destination: string | null
+          detail: Json
+          event_type: string
+          from_status: string | null
+          from_url: string | null
+          id: string
+          look_key: string
+          moment: string | null
+          run_id: string | null
+          slot: string
+          slot_product_id: string | null
+          to_status: string | null
+          to_url: string | null
+        }
+        Insert: {
+          actor?: string
+          candidate_id?: string | null
+          created_at?: string
+          destination?: string | null
+          detail?: Json
+          event_type: string
+          from_status?: string | null
+          from_url?: string | null
+          id?: string
+          look_key: string
+          moment?: string | null
+          run_id?: string | null
+          slot: string
+          slot_product_id?: string | null
+          to_status?: string | null
+          to_url?: string | null
+        }
+        Update: {
+          actor?: string
+          candidate_id?: string | null
+          created_at?: string
+          destination?: string | null
+          detail?: Json
+          event_type?: string
+          from_status?: string | null
+          from_url?: string | null
+          id?: string
+          look_key?: string
+          moment?: string | null
+          run_id?: string | null
+          slot?: string
+          slot_product_id?: string | null
+          to_status?: string | null
+          to_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_audit_events_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "product_replacement_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_audit_events_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "product_audit_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_audit_events_slot_product_id_fkey"
+            columns: ["slot_product_id"]
+            isOneToOne: false
+            referencedRelation: "shop_slot_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_audit_runs: {
+        Row: {
+          auto_promoted: number
+          awaiting_styling: number
+          counts: Json
+          created_at: string
+          destination: string | null
+          finished_at: string | null
+          id: string
+          look_key: string | null
+          moment: string | null
+          report: Json
+          scope: string
+          started_at: string
+          triggered_by: string
+          unique_urls: number
+          updated_at: string
+          urls_audited: number
+        }
+        Insert: {
+          auto_promoted?: number
+          awaiting_styling?: number
+          counts?: Json
+          created_at?: string
+          destination?: string | null
+          finished_at?: string | null
+          id?: string
+          look_key?: string | null
+          moment?: string | null
+          report?: Json
+          scope?: string
+          started_at?: string
+          triggered_by?: string
+          unique_urls?: number
+          updated_at?: string
+          urls_audited?: number
+        }
+        Update: {
+          auto_promoted?: number
+          awaiting_styling?: number
+          counts?: Json
+          created_at?: string
+          destination?: string | null
+          finished_at?: string | null
+          id?: string
+          look_key?: string | null
+          moment?: string | null
+          report?: Json
+          scope?: string
+          started_at?: string
+          triggered_by?: string
+          unique_urls?: number
+          updated_at?: string
+          urls_audited?: number
+        }
+        Relationships: []
+      }
       product_cache: {
         Row: {
           activity_tags: string[]
@@ -2467,7 +2603,10 @@ export type Database = {
           destination: string
           id: string
           is_primary: boolean
+          last_audit_detail: Json
+          last_audit_verdict: string | null
           last_checked_at: string | null
+          last_final_url: string | null
           last_http_status: number | null
           last_seen_available_at: string | null
           look_key: string
@@ -2494,7 +2633,10 @@ export type Database = {
           destination: string
           id?: string
           is_primary?: boolean
+          last_audit_detail?: Json
+          last_audit_verdict?: string | null
           last_checked_at?: string | null
+          last_final_url?: string | null
           last_http_status?: number | null
           last_seen_available_at?: string | null
           look_key: string
@@ -2521,7 +2663,10 @@ export type Database = {
           destination?: string
           id?: string
           is_primary?: boolean
+          last_audit_detail?: Json
+          last_audit_verdict?: string | null
           last_checked_at?: string | null
+          last_final_url?: string | null
           last_http_status?: number | null
           last_seen_available_at?: string | null
           look_key?: string

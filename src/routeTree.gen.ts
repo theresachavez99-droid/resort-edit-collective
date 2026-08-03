@@ -24,6 +24,7 @@ import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
 import { Route as AdminEditorialIntelligenceRouteImport } from './routes/admin.editorial-intelligence'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
+import { Route as AdminProductAuditRouteImport } from './routes/admin.product-audit'
 import { Route as AdminProductHealthRouteImport } from './routes/admin.product-health'
 import { Route as AdminSystemRouteImport } from './routes/admin.system'
 import { Route as BrandsIndexRouteImport } from './routes/brands.index'
@@ -34,6 +35,7 @@ import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
 import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
+import { Route as ApiPublicProductAuditRouteImport } from './routes/api/public/product-audit'
 import { Route as ApiPublicProductHealthSweepRouteImport } from './routes/api/public/product-health-sweep'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as AdminMomentsIdRunRouteImport } from './routes/admin.moments.$id.run'
@@ -117,6 +119,11 @@ const AdminLooksRoute = AdminLooksRouteImport.update({
   path: '/looks',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminProductAuditRoute = AdminProductAuditRouteImport.update({
+  id: '/product-audit',
+  path: '/product-audit',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProductHealthRoute = AdminProductHealthRouteImport.update({
   id: '/product-health',
   path: '/product-health',
@@ -165,6 +172,11 @@ const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   id: '/api/public/mcp',
   path: '/api/public/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicProductAuditRoute = ApiPublicProductAuditRouteImport.update({
+  id: '/api/public/product-audit',
+  path: '/api/public/product-audit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicProductHealthSweepRoute =
@@ -217,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/admin/catalog': typeof AdminCatalogRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
+  '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -228,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
+  '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
@@ -246,6 +260,7 @@ export interface FileRoutesByTo {
   '/admin/catalog': typeof AdminCatalogRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
+  '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -257,6 +272,7 @@ export interface FileRoutesByTo {
   '/portofino': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
+  '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
@@ -280,6 +296,7 @@ export interface FileRoutesById {
   '/admin/catalog': typeof AdminCatalogRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
+  '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -291,6 +308,7 @@ export interface FileRoutesById {
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
+  '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
@@ -315,6 +333,7 @@ export interface FileRouteTypes {
     | '/admin/catalog'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
+    | '/admin/product-audit'
     | '/admin/product-health'
     | '/admin/system'
     | '/brands/$slug'
@@ -326,6 +345,7 @@ export interface FileRouteTypes {
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
+    | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
     | '/portofino/$day/$look'
     | '/admin/moments/$id/run'
@@ -344,6 +364,7 @@ export interface FileRouteTypes {
     | '/admin/catalog'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
+    | '/admin/product-audit'
     | '/admin/product-health'
     | '/admin/system'
     | '/brands/$slug'
@@ -355,6 +376,7 @@ export interface FileRouteTypes {
     | '/portofino'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
+    | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
     | '/portofino/$day/$look'
     | '/admin/moments/$id/run'
@@ -377,6 +399,7 @@ export interface FileRouteTypes {
     | '/admin/catalog'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
+    | '/admin/product-audit'
     | '/admin/product-health'
     | '/admin/system'
     | '/brands/$slug'
@@ -388,6 +411,7 @@ export interface FileRouteTypes {
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/api/public/mcp'
+    | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
     | '/portofino/$day/$look'
     | '/admin/moments/$id/run'
@@ -408,6 +432,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
+  ApiPublicProductAuditRoute: typeof ApiPublicProductAuditRoute
   ApiPublicProductHealthSweepRoute: typeof ApiPublicProductHealthSweepRoute
   ApiPublicChar91DotmcpChar93ListToolsRoute: typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute: typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
@@ -521,6 +546,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLooksRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/product-audit': {
+      id: '/admin/product-audit'
+      path: '/product-audit'
+      fullPath: '/admin/product-audit'
+      preLoaderRoute: typeof AdminProductAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/product-health': {
       id: '/admin/product-health'
       path: '/product-health'
@@ -591,6 +623,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicMcpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/product-audit': {
+      id: '/api/public/product-audit'
+      path: '/api/public/product-audit'
+      fullPath: '/api/public/product-audit'
+      preLoaderRoute: typeof ApiPublicProductAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/product-health-sweep': {
       id: '/api/public/product-health-sweep'
       path: '/api/public/product-health-sweep'
@@ -641,6 +680,7 @@ interface AdminRouteChildren {
   AdminCatalogRoute: typeof AdminCatalogRoute
   AdminEditorialIntelligenceRoute: typeof AdminEditorialIntelligenceRoute
   AdminLooksRoute: typeof AdminLooksRoute
+  AdminProductAuditRoute: typeof AdminProductAuditRoute
   AdminProductHealthRoute: typeof AdminProductHealthRoute
   AdminSystemRoute: typeof AdminSystemRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -653,6 +693,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCatalogRoute: AdminCatalogRoute,
   AdminEditorialIntelligenceRoute: AdminEditorialIntelligenceRoute,
   AdminLooksRoute: AdminLooksRoute,
+  AdminProductAuditRoute: AdminProductAuditRoute,
   AdminProductHealthRoute: AdminProductHealthRoute,
   AdminSystemRoute: AdminSystemRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -717,6 +758,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicMcpRoute: ApiPublicMcpRoute,
+  ApiPublicProductAuditRoute: ApiPublicProductAuditRoute,
   ApiPublicProductHealthSweepRoute: ApiPublicProductHealthSweepRoute,
   ApiPublicChar91DotmcpChar93ListToolsRoute:
     ApiPublicChar91DotmcpChar93ListToolsRoute,
