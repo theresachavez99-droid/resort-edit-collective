@@ -147,7 +147,7 @@ function QueuePage() {
           <button
             type="button"
             className="underline"
-            onClick={() => navigate({ search: (p) => ({ ...p, runId: undefined }) })}
+            onClick={() => navigate({ search: (p: typeof search) => ({ ...p, runId: undefined }) })}
           >
             show whole queue
           </button>
@@ -176,7 +176,7 @@ function QueuePage() {
       <section className="mt-6 flex flex-wrap gap-2 text-xs">
         <button
           type="button"
-          onClick={() => navigate({ search: (p) => ({ ...p, state: undefined }) })}
+          onClick={() => navigate({ search: (p: typeof search) => ({ ...p, state: undefined }) })}
           className={`border px-3 py-1 ${!search.state ? "border-stone-900" : "border-stone-300"}`}
         >
           All
@@ -185,7 +185,7 @@ function QueuePage() {
           <button
             key={s}
             type="button"
-            onClick={() => navigate({ search: (p) => ({ ...p, state: s }) })}
+            onClick={() => navigate({ search: (p: typeof search) => ({ ...p, state: s }) })}
             className={`border px-3 py-1 ${search.state === s ? "border-stone-900" : "border-stone-300"}`}
           >
             {QUEUE_STATE_LABELS[s]}
