@@ -41,15 +41,6 @@ const editsBySlug: Record<string, number> = {
 
 const FEATURED_SLUGS = ["portofino", "mallorca"] as const;
 
-const COMING_SOON = [
-  "Cannes",
-  "Phuket",
-  "St. Barths",
-  "Nantucket",
-  "Capri",
-  "Ibiza",
-] as const;
-
 type FilterKey = "All" | "Italian Riviera" | "Mediterranean";
 
 const FILTERS: FilterKey[] = ["All", "Italian Riviera", "Mediterranean"];
