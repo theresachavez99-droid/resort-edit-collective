@@ -9,6 +9,12 @@ import {
   promoteBackup,
   upsertReplacementCandidate,
   approveReplacementCandidate,
+  getRegistryCoverage,
+  importLooksToRegistry,
+  runSitewideHealthSweep,
+  getAiStylistStatus,
+  generateAiReplacements,
+  restyleCompleteLookAction,
 } from "@/lib/product-health.functions";
 import {
   PRODUCT_STATUSES,
@@ -69,11 +75,19 @@ type CandidateRow = {
   retailer: string | null;
   pdp_url: string;
   price: string | null;
+  color?: string | null;
   matching_score: number | null;
   rationale: string | null;
+  look_impact?: string | null;
+  availability_verdict?: string | null;
+  availability_http_status?: number | null;
   verified_at: string | null;
   approval_status: string;
   source: string;
+  provider?: string | null;
+  model?: string | null;
+  prompt_version?: string | null;
+  generated_at?: string | null;
 };
 
 function fmt(ts: string | null): string {
@@ -93,9 +107,16 @@ function ProductHealthPage() {
   const statusFn = useServerFn(setProductStatus);
   const promoteFn = useServerFn(promoteBackup);
   const approveFn = useServerFn(approveReplacementCandidate);
+  const coverageFn = useServerFn(getRegistryCoverage);
+  const importFn = useServerFn(importLooksToRegistry);
+  const sweepFn = useServerFn(runSitewideHealthSweep);
+  const aiStatusFn = useServerFn(getAiStylistStatus);
+  const generateFn = useServerFn(generateAiReplacements);
+  const restyleFn = useServerFn(restyleCompleteLookAction);
   const qc = useQueryClient();
 
   const [pw, setPw] = useState("");
+  const [editing, setEditing] = useState<CandidateRow | null>(null);
   useEffect(() => {
     const c = sessionStorage.getItem(STORAGE_KEY);
     if (c) setPw(c);
@@ -106,8 +127,21 @@ function ProductHealthPage() {
     enabled: Boolean(pw),
     queryFn: () => listFn({ data: { password: pw } }),
   });
+  const coverage = useQuery({
+    queryKey: ["admin-registry-coverage"],
+    enabled: Boolean(pw),
+    queryFn: () => coverageFn({ data: { password: pw } }),
+  });
+  const aiStatus = useQuery({
+    queryKey: ["admin-ai-stylist-status"],
+    enabled: Boolean(pw),
+    queryFn: () => aiStatusFn({ data: { password: pw } }),
+  });
 
-  const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-product-health"] });
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: ["admin-product-health"] });
+    qc.invalidateQueries({ queryKey: ["admin-registry-coverage"] });
+  };
 
   const check = useMutation({
     mutationFn: (vars: { productId?: string }) =>
@@ -126,6 +160,25 @@ function ProductHealthPage() {
   const decide = useMutation({
     mutationFn: (vars: { candidateId: string; decision: "approved" | "rejected" }) =>
       approveFn({ data: { password: pw, ...vars } }),
+    onSuccess: invalidate,
+  });
+  const importLooks = useMutation({
+    mutationFn: (vars: { destination?: string; lookKey?: string }) =>
+      importFn({ data: { password: pw, ...vars } }),
+    onSuccess: invalidate,
+  });
+  const sweep = useMutation({
+    mutationFn: (vars: { autoGenerate: boolean }) =>
+      sweepFn({ data: { password: pw, ...vars } }),
+    onSuccess: invalidate,
+  });
+  const generate = useMutation({
+    mutationFn: (vars: { productId: string; regenerate: boolean }) =>
+      generateFn({ data: { password: pw, ...vars } }),
+    onSuccess: invalidate,
+  });
+  const restyle = useMutation({
+    mutationFn: (lookKey: string) => restyleFn({ data: { password: pw, lookKey } }),
     onSuccess: invalidate,
   });
 
