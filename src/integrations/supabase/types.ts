@@ -2071,18 +2071,28 @@ export type Database = {
       }
       product_replacement_candidates: {
         Row: {
+          approval_history: Json
           approval_status: string
+          availability_http_status: number | null
+          availability_verdict: string | null
           brand: string
+          color: string | null
           created_at: string
           destination: string
+          generated_at: string | null
+          generation_batch: string | null
           id: string
+          look_impact: string | null
           look_key: string
           matching_score: number | null
+          model: string | null
           moment: string
           pdp_url: string
           price: string | null
           product_name: string
           promoted_product_id: string | null
+          prompt_version: string | null
+          provider: string | null
           rationale: string | null
           retailer: string | null
           slot: string
@@ -2093,18 +2103,28 @@ export type Database = {
           verified_at: string | null
         }
         Insert: {
+          approval_history?: Json
           approval_status?: string
+          availability_http_status?: number | null
+          availability_verdict?: string | null
           brand: string
+          color?: string | null
           created_at?: string
           destination: string
+          generated_at?: string | null
+          generation_batch?: string | null
           id?: string
+          look_impact?: string | null
           look_key: string
           matching_score?: number | null
+          model?: string | null
           moment: string
           pdp_url: string
           price?: string | null
           product_name: string
           promoted_product_id?: string | null
+          prompt_version?: string | null
+          provider?: string | null
           rationale?: string | null
           retailer?: string | null
           slot: string
@@ -2115,18 +2135,28 @@ export type Database = {
           verified_at?: string | null
         }
         Update: {
+          approval_history?: Json
           approval_status?: string
+          availability_http_status?: number | null
+          availability_verdict?: string | null
           brand?: string
+          color?: string | null
           created_at?: string
           destination?: string
+          generated_at?: string | null
+          generation_batch?: string | null
           id?: string
+          look_impact?: string | null
           look_key?: string
           matching_score?: number | null
+          model?: string | null
           moment?: string
           pdp_url?: string
           price?: string | null
           product_name?: string
           promoted_product_id?: string | null
+          prompt_version?: string | null
+          provider?: string | null
           rationale?: string | null
           retailer?: string | null
           slot?: string
@@ -2303,14 +2333,18 @@ export type Database = {
           last_http_status: number | null
           last_seen_available_at: string | null
           look_key: string
+          look_kind: string
+          look_title: string | null
           moment: string
           notes: string | null
           price: string | null
           product_name: string
+          registry_source: string
           replacement_priority: number
           retailer: string | null
           slot: string
           slot_label: string | null
+          slot_order: number
           status: string
           style_dna: Json
           updated_at: string
@@ -2326,14 +2360,18 @@ export type Database = {
           last_http_status?: number | null
           last_seen_available_at?: string | null
           look_key: string
+          look_kind?: string
+          look_title?: string | null
           moment: string
           notes?: string | null
           price?: string | null
           product_name: string
+          registry_source?: string
           replacement_priority?: number
           retailer?: string | null
           slot: string
           slot_label?: string | null
+          slot_order?: number
           status?: string
           style_dna?: Json
           updated_at?: string
@@ -2349,14 +2387,18 @@ export type Database = {
           last_http_status?: number | null
           last_seen_available_at?: string | null
           look_key?: string
+          look_kind?: string
+          look_title?: string | null
           moment?: string
           notes?: string | null
           price?: string | null
           product_name?: string
+          registry_source?: string
           replacement_priority?: number
           retailer?: string | null
           slot?: string
           slot_label?: string | null
+          slot_order?: number
           status?: string
           style_dna?: Json
           updated_at?: string

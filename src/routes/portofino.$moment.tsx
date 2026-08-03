@@ -752,7 +752,12 @@ function MomentPage() {
                       }}
                     />
                     {c.shop && (
-                      <NightcapShopExpander card={c} shop={c.shop} />
+                      <NightcapShopExpander
+                        card={c}
+                        shop={c.shop}
+                        lookKey={`portofino/${slug}/${c.key}`}
+                        lookHealth={slotHealth.looks}
+                      />
                     )}
                   </div>
                 </article>
@@ -794,6 +799,7 @@ function MomentPage() {
                   card={c}
                   momentSlug={slug}
                   momentName={card.moment_name}
+                  lookHealth={slotHealth.looks}
                 />
               ))}
             </div>
@@ -1135,6 +1141,60 @@ function applySlotHealth(
     };
   }
   return { ...item, url: "", unsourced: false, inReview: true };
+}
+
+/**
+ * Look-scoped version of the overlay, used for every supporting/editorial look
+ * on the page. Keyed by `lookKey::slot`, so each look's slots resolve
+ * independently of the hero look and of each other — the same maintenance
+ * behaviour applies sitewide, not only to the hero shop panel.
+ */
+type HealthedShopRow = {
+  slot: string;
+  brand: string;
+  name: string;
+  price?: string;
+  url: string;
+  unsourced?: boolean;
+  inReview: boolean;
+};
+
+function applyLookRowHealth(
+  row: { slot: string; brand: string; name: string; price?: string; url: string; unsourced?: boolean },
+  lookKey: string | undefined,
+  looks: Record<string, SlotResolution> | undefined,
+): HealthedShopRow {
+  const resolution =
+    lookKey && looks ? looks[`${lookKey}::${slotKey(row.slot)}`] : undefined;
+  if (!resolution) return { ...row, inReview: false };
+  if (resolution.state === "live") {
+    const p = resolution.product;
+    return {
+      ...row,
+      brand: p.brand,
+      name: p.product_name,
+      url: p.url ?? "",
+      ...(p.price ? { price: p.price } : {}),
+      unsourced: false,
+      inReview: false,
+    };
+  }
+  return { ...row, url: "", unsourced: false, inReview: true };
+}
+
+/** Split healthed rows into shoppable rows and non-clickable status rows. */
+function splitHealthedRows(rows: HealthedShopRow[]) {
+  const live = rows.filter((p) => !p.unsourced && !p.inReview && isUsableShopUrl(p.url));
+  const omitted = rows
+    .filter((p) => p.unsourced || p.inReview || !isUsableShopUrl(p.url))
+    .map((p) => ({
+      slot: p.slot,
+      brand: p.brand,
+      name: p.name,
+      ...(p.price ? { price: p.price } : {}),
+      ...(p.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
+    }));
+  return { live, omitted };
 }
 
 /**
@@ -1526,15 +1586,19 @@ function ComingSoonPanel({ heading }: { heading: string }) {
 function NightcapShopExpander({
   card,
   shop,
+  lookKey,
+  lookHealth,
 }: {
   card: NightcapEditorialCard;
   shop: NonNullable<NightcapEditorialCard["shop"]>;
+  /** Registry look key (`portofino/<moment>/<cardKey>`) for slot health lookup. */
+  lookKey?: string;
+  lookHealth?: Record<string, SlotResolution>;
 }) {
   const [open, setOpen] = useState(false);
-  const rows = shop.products.filter((p) => !p.unsourced && isUsableShopUrl(p.url));
-  const omitted = shop.products
-    .filter((p) => p.unsourced || !isUsableShopUrl(p.url))
-    .map((p) => ({ slot: p.slot, brand: p.brand, name: p.name, price: p.price }));
+  const { live: rows, omitted } = splitHealthedRows(
+    shop.products.map((p) => applyLookRowHealth(p, lookKey, lookHealth)),
+  );
   if (rows.length === 0) return null;
   return (
     <div className="mt-3">
@@ -1617,14 +1681,32 @@ function ExtraEditorialReferenceCard({
   momentSlug,
   momentName,
   editorialOnly = false,
+  lookHealth,
 }: {
   card: ExtraEditorialCard;
   momentSlug: string;
   momentName: string;
   /** Editorial-only mode: no reference product row, no expander, no outbound links. */
   editorialOnly?: boolean;
+  /** Look-scoped slot health, keyed `lookKey::slot`. */
+  lookHealth?: Record<string, SlotResolution>;
 }) {
   const r = card.reference;
+  const lookKey = `portofino/${momentSlug}/${card.key}`;
+  // The reference product is maintained like any other slot: an approved backup
+  // swaps in silently, and a failed link renders as a non-clickable status line.
+  const reference = applyLookRowHealth(
+    {
+      slot: r.slot ?? "Reference",
+      brand: r.brand,
+      name: r.name,
+      ...(r.price ? { price: r.price } : {}),
+      url: r.url,
+    },
+    lookKey,
+    lookHealth,
+  );
+  const referenceShoppable = !reference.inReview && isUsableShopUrl(reference.url);
   return (
     <article className="flex flex-col bg-ivory border border-border/40">
       <div className="relative aspect-[4/5] overflow-hidden bg-cream">
@@ -1667,15 +1749,16 @@ function ExtraEditorialReferenceCard({
           </Link>
         ) : (
         <div className="mt-4 border-t border-border/50 pt-5">
+          {referenceShoppable ? (
           <a
-            href={r.url}
+            href={reference.url}
             target="_blank"
             rel="noopener noreferrer sponsored"
             onClick={() =>
               trackOutbound({
-                brand: r.brand,
-                item: r.name,
-                href: r.url,
+                brand: reference.brand,
+                item: reference.name,
+                href: reference.url,
                 category: r.slot ?? "Reference",
               })
             }
@@ -1686,10 +1769,10 @@ function ExtraEditorialReferenceCard({
                 {r.slot ?? "Reference"}
               </div>
               <div className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink mt-1.5">
-                {r.brand}
+                {reference.brand}
               </div>
               <div className="font-serif italic text-[0.95rem] text-ink/85 leading-snug mt-1">
-                {r.name}
+                {reference.name}
                 {r.color ? ` — ${r.color}` : ""}
               </div>
               <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 mt-1.5">
@@ -1697,18 +1780,36 @@ function ExtraEditorialReferenceCard({
               </div>
             </div>
             <div className="text-right shrink-0">
-              {r.price && (
-                <div className="font-serif text-gold text-[0.95rem]">{r.price}</div>
+              {reference.price && (
+                <div className="font-serif text-gold text-[0.95rem]">{reference.price}</div>
               )}
               <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
                 SHOP THE REFERENCE →
               </div>
             </div>
           </a>
+          ) : (
+            <ShopOmissionRows
+              rows={[
+                {
+                  slot: r.slot ?? "Reference",
+                  brand: reference.brand,
+                  name: reference.name,
+                  ...(reference.price ? { price: reference.price } : {}),
+                  ...(reference.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
+                },
+              ]}
+            />
+          )}
         </div>
         )}
         {!editorialOnly && card.shop && card.shop.products.length > 0 && (
-          <ExtraCompleteLookExpander title={card.title} shop={card.shop} />
+          <ExtraCompleteLookExpander
+            title={card.title}
+            shop={card.shop}
+            lookKey={lookKey}
+            {...(lookHealth ? { lookHealth } : {})}
+          />
         )}
       </div>
     </article>
@@ -1723,15 +1824,18 @@ function ExtraEditorialReferenceCard({
 function ExtraCompleteLookExpander({
   title,
   shop,
+  lookKey,
+  lookHealth,
 }: {
   title: string;
   shop: NonNullable<ExtraEditorialCard["shop"]>;
+  lookKey?: string;
+  lookHealth?: Record<string, SlotResolution>;
 }) {
   const [open, setOpen] = useState(false);
-  const rows = shop.products.filter((p) => !p.unsourced && isUsableShopUrl(p.url));
-  const omitted = shop.products
-    .filter((p) => p.unsourced || !isUsableShopUrl(p.url))
-    .map((p) => ({ slot: p.slot, brand: p.brand, name: p.name, price: p.price }));
+  const { live: rows, omitted } = splitHealthedRows(
+    shop.products.map((p) => applyLookRowHealth(p, lookKey, lookHealth)),
+  );
   if (rows.length === 0) return null;
   return (
     <div className="mt-3">

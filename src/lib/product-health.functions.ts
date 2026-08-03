@@ -13,6 +13,7 @@ import {
   PRODUCT_STATUSES,
   MAX_BACKUPS_PER_SLOT,
   resolveMomentSlots,
+  resolveLookSlots,
   slotKey,
   type SlotProductDisplay,
   type SlotResolution,
@@ -44,10 +45,16 @@ export const getMomentSlotHealth = createServerFn({ method: "GET" })
   .inputValidator((i: unknown) =>
     z.object({ moment: z.string().min(1).max(80) }).parse(i),
   )
-  .handler(async ({ data }): Promise<{ slots: Record<string, SlotResolution> }> => {
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      slots: Record<string, SlotResolution>;
+      looks: Record<string, SlotResolution>;
+    }> => {
     const url = process.env["SUPABASE_URL"];
     const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
-    if (!url || !key) return { slots: {} };
+    if (!url || !key) return { slots: {}, looks: {} };
     const { createClient } = await import("@supabase/supabase-js");
     const client = createClient(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
@@ -68,9 +75,13 @@ export const getMomentSlotHealth = createServerFn({ method: "GET" })
         "destination,moment,look_key,slot,slot_label,brand,product_name,retailer,url,price,status,is_primary,replacement_priority",
       )
       .eq("moment", data.moment);
-    if (error || !rows) return { slots: {} };
-    return { slots: resolveMomentSlots(rows as SlotProductDisplay[]) };
-  });
+    if (error || !rows) return { slots: {}, looks: {} };
+    const typed = rows as SlotProductDisplay[];
+    // `slots` = hero look (back-compat); `looks` = every look on the page,
+    // keyed `lookKey::slot`, so supporting/editorial looks are covered too.
+    return { slots: resolveMomentSlots(typed), looks: resolveLookSlots(typed) };
+  },
+  );
 
 // ── Admin: read ───────────────────────────────────────────────────
 
@@ -404,3 +415,241 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
   });
 
 export { slotKey };
+
+// ── Admin: sitewide registry migration/import ─────────────────────
+
+/**
+ * Coverage report: every shoppable look on the site (hero + editorial, all
+ * destinations) versus what is already in the registry. Drives the admin's
+ * "import" workflow so the system is sitewide immediately, not Nightcap-only.
+ */
+export const getRegistryCoverage = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) => pw.parse(i))
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { enumerateRegistryLooks } = await import("./look-registry");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("shop_slot_products")
+      .select("look_key,slot,is_primary");
+    if (error) throw new Error(error.message);
+    const imported = new Set(
+      (rows ?? []).filter((r) => r.is_primary).map((r) => `${r.look_key}::${slotKey(r.slot)}`),
+    );
+    const looks = enumerateRegistryLooks().map((l) => ({
+      destination: l.destination,
+      moment: l.moment,
+      lookKey: l.lookKey,
+      lookKind: l.lookKind,
+      lookTitle: l.lookTitle,
+      source: l.source,
+      slotCount: l.slots.length,
+      importedCount: l.slots.filter((s) => imported.has(`${l.lookKey}::${slotKey(s.slot)}`)).length,
+      unsourcedCount: l.slots.filter((s) => !s.publishable).length,
+    }));
+    return {
+      looks,
+      totals: {
+        looks: looks.length,
+        slots: looks.reduce((n, l) => n + l.slotCount, 0),
+        imported: looks.reduce((n, l) => n + l.importedCount, 0),
+      },
+    };
+  });
+
+/**
+ * Import editorial look data into the registry. Idempotent: existing slots are
+ * left exactly as they are (status, backups and approvals are never clobbered);
+ * only missing primaries are inserted. Slots without an exact PDP are imported
+ * as `needs_review` rather than shipping a non-PDP link.
+ */
+export const importLooksToRegistry = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) =>
+    pw
+      .extend({
+        destination: z.string().max(80).optional(),
+        moment: z.string().max(80).optional(),
+        lookKey: z.string().max(200).optional(),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { enumerateRegistryLooks } = await import("./look-registry");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const looks = enumerateRegistryLooks({
+      ...(data.destination ? { destination: data.destination } : {}),
+      ...(data.moment ? { moment: data.moment } : {}),
+      ...(data.lookKey ? { lookKey: data.lookKey } : {}),
+    });
+    const { data: existingRows, error } = await supabaseAdmin
+      .from("shop_slot_products")
+      .select("look_key,slot,is_primary");
+    if (error) throw new Error(error.message);
+    const existing = new Set(
+      (existingRows ?? []).filter((r) => r.is_primary).map((r) => `${r.look_key}::${slotKey(r.slot)}`),
+    );
+
+    type SlotInsert = {
+      destination: string;
+      moment: string;
+      look_key: string;
+      look_kind: string;
+      look_title: string;
+      slot: string;
+      slot_label: string | null;
+      slot_order: number;
+      brand: string;
+      product_name: string;
+      retailer: string | null;
+      url: string | null;
+      price: string | null;
+      status: string;
+      is_primary: boolean;
+      replacement_priority: number;
+      registry_source: string;
+      notes: string;
+    };
+    const inserts: SlotInsert[] = [];
+    for (const look of looks) {
+      for (const s of look.slots) {
+        const key = `${look.lookKey}::${slotKey(s.slot)}`;
+        if (existing.has(key)) continue;
+        existing.add(key);
+        inserts.push({
+          destination: look.destination,
+          moment: look.moment,
+          look_key: look.lookKey,
+          look_kind: look.lookKind,
+          look_title: look.lookTitle,
+          slot: slotKey(s.slot),
+          slot_label: s.slotLabel,
+          slot_order: s.order,
+          brand: s.brand,
+          product_name: s.productName,
+          retailer: s.retailer,
+          url: s.publishable ? s.url : null,
+          price: s.price,
+          status: s.publishable ? "active" : "needs_review",
+          is_primary: true,
+          replacement_priority: 0,
+          registry_source: look.source,
+          notes: s.publishable
+            ? `Imported from ${look.source}.`
+            : `Imported from ${look.source} without an exact PDP — awaiting replacement.`,
+        });
+      }
+    }
+    if (inserts.length) {
+      const { error: iErr } = await supabaseAdmin.from("shop_slot_products").insert(inserts);
+      if (iErr) throw new Error(iErr.message);
+    }
+    return { imported: inserts.length, looksScanned: looks.length };
+  });
+
+// ── Admin: sitewide sweep (automation-ready) ──────────────────────
+
+/**
+ * Manual trigger of the same sweep the scheduled job will call. Optional
+ * `autoGenerate` enqueues AI candidate generation for slots that just failed —
+ * off by default so AI spend stays admin-triggered.
+ */
+export const runSitewideHealthSweep = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) =>
+    pw
+      .extend({
+        destination: z.string().max(80).optional(),
+        moment: z.string().max(80).optional(),
+        limit: z.number().int().min(1).max(500).default(200),
+        autoGenerate: z.boolean().default(false),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { sweepProductHealth } = await import("./product-health-sweep.server");
+    return sweepProductHealth({
+      ...(data.destination ? { destination: data.destination } : {}),
+      ...(data.moment ? { moment: data.moment } : {}),
+      limit: data.limit,
+      autoGenerate: data.autoGenerate,
+    });
+  });
+
+// ── Admin: AI stylist workflow ────────────────────────────────────
+
+/** Whether an AI provider credential is configured (drives the setup-needed UI state). */
+export const getAiStylistStatus = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) => pw.parse(i))
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { isAiStylistConfigured, AI_STYLIST_MODEL, AI_STYLIST_PROVIDER } = await import(
+      "./ai-stylist.server"
+    );
+    const { AI_STYLIST_PROMPT_VERSION, AUTO_PROMOTION_RULE } = await import(
+      "./resort-edit-styling-rules"
+    );
+    return {
+      configured: isAiStylistConfigured(),
+      provider: AI_STYLIST_PROVIDER,
+      model: AI_STYLIST_MODEL,
+      promptVersion: AI_STYLIST_PROMPT_VERSION,
+      autoPromotion: AUTO_PROMOTION_RULE,
+      sweepEndpointReady: Boolean(process.env["PRODUCT_HEALTH_SWEEP_SECRET"]),
+    };
+  });
+
+/**
+ * Generate 3 AI replacement candidates for ONE failed slot, styled inside the
+ * full existing outfit. Admin-triggered, stored once, never auto-published.
+ */
+export const generateAiReplacements = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) =>
+    pw
+      .extend({
+        productId: z.string().uuid(),
+        regenerate: z.boolean().default(false),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { generateCandidatesForSlotProduct, isAiStylistConfigured } = await import(
+      "./ai-replacement.server"
+    );
+    if (!isAiStylistConfigured()) {
+      return {
+        ok: false as const,
+        setupNeeded: true as const,
+        message:
+          "AI stylist provider not configured — add an AI provider credential to enable generation.",
+        generated: 0,
+      };
+    }
+    const out = await generateCandidatesForSlotProduct(data.productId, {
+      regenerate: data.regenerate,
+    });
+    return {
+      ok: true as const,
+      setupNeeded: false as const,
+      generated: out.candidates.length,
+      verifiedLive: out.candidates.filter((c) => c.availabilityVerdict === "verified_live").length,
+      batch: out.batch,
+    };
+  });
+
+/**
+ * Explicit full-look restyle. Preserves the editorial image, title and copy —
+ * only the commerce items are re-proposed, one candidate per slot, for review.
+ */
+export const restyleCompleteLookAction = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) => pw.extend({ lookKey: z.string().min(1).max(200) }).parse(i))
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { restyleCompleteLook, isAiStylistConfigured } = await import("./ai-replacement.server");
+    if (!isAiStylistConfigured()) {
+      return { ok: false as const, setupNeeded: true as const, stored: 0, skipped: [] as string[] };
+    }
+    const out = await restyleCompleteLook(data.lookKey);
+    return { ok: true as const, setupNeeded: false as const, ...out };
+  });

@@ -9,6 +9,12 @@ import {
   promoteBackup,
   upsertReplacementCandidate,
   approveReplacementCandidate,
+  getRegistryCoverage,
+  importLooksToRegistry,
+  runSitewideHealthSweep,
+  getAiStylistStatus,
+  generateAiReplacements,
+  restyleCompleteLookAction,
 } from "@/lib/product-health.functions";
 import {
   PRODUCT_STATUSES,
@@ -69,11 +75,19 @@ type CandidateRow = {
   retailer: string | null;
   pdp_url: string;
   price: string | null;
+  color?: string | null;
   matching_score: number | null;
   rationale: string | null;
+  look_impact?: string | null;
+  availability_verdict?: string | null;
+  availability_http_status?: number | null;
   verified_at: string | null;
   approval_status: string;
   source: string;
+  provider?: string | null;
+  model?: string | null;
+  prompt_version?: string | null;
+  generated_at?: string | null;
 };
 
 function fmt(ts: string | null): string {
@@ -93,9 +107,16 @@ function ProductHealthPage() {
   const statusFn = useServerFn(setProductStatus);
   const promoteFn = useServerFn(promoteBackup);
   const approveFn = useServerFn(approveReplacementCandidate);
+  const coverageFn = useServerFn(getRegistryCoverage);
+  const importFn = useServerFn(importLooksToRegistry);
+  const sweepFn = useServerFn(runSitewideHealthSweep);
+  const aiStatusFn = useServerFn(getAiStylistStatus);
+  const generateFn = useServerFn(generateAiReplacements);
+  const restyleFn = useServerFn(restyleCompleteLookAction);
   const qc = useQueryClient();
 
   const [pw, setPw] = useState("");
+  const [editing, setEditing] = useState<CandidateRow | null>(null);
   useEffect(() => {
     const c = sessionStorage.getItem(STORAGE_KEY);
     if (c) setPw(c);
@@ -106,8 +127,21 @@ function ProductHealthPage() {
     enabled: Boolean(pw),
     queryFn: () => listFn({ data: { password: pw } }),
   });
+  const coverage = useQuery({
+    queryKey: ["admin-registry-coverage"],
+    enabled: Boolean(pw),
+    queryFn: () => coverageFn({ data: { password: pw } }),
+  });
+  const aiStatus = useQuery({
+    queryKey: ["admin-ai-stylist-status"],
+    enabled: Boolean(pw),
+    queryFn: () => aiStatusFn({ data: { password: pw } }),
+  });
 
-  const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-product-health"] });
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: ["admin-product-health"] });
+    qc.invalidateQueries({ queryKey: ["admin-registry-coverage"] });
+  };
 
   const check = useMutation({
     mutationFn: (vars: { productId?: string }) =>
@@ -126,6 +160,25 @@ function ProductHealthPage() {
   const decide = useMutation({
     mutationFn: (vars: { candidateId: string; decision: "approved" | "rejected" }) =>
       approveFn({ data: { password: pw, ...vars } }),
+    onSuccess: invalidate,
+  });
+  const importLooks = useMutation({
+    mutationFn: (vars: { destination?: string; lookKey?: string }) =>
+      importFn({ data: { password: pw, ...vars } }),
+    onSuccess: invalidate,
+  });
+  const sweep = useMutation({
+    mutationFn: (vars: { autoGenerate: boolean }) =>
+      sweepFn({ data: { password: pw, ...vars } }),
+    onSuccess: invalidate,
+  });
+  const generate = useMutation({
+    mutationFn: (vars: { productId: string; regenerate: boolean }) =>
+      generateFn({ data: { password: pw, ...vars } }),
+    onSuccess: invalidate,
+  });
+  const restyle = useMutation({
+    mutationFn: (lookKey: string) => restyleFn({ data: { password: pw, lookKey } }),
     onSuccess: invalidate,
   });
 
@@ -178,6 +231,13 @@ function ProductHealthPage() {
             ← Studio
           </Link>
           <button
+            onClick={() => sweep.mutate({ autoGenerate: false })}
+            disabled={sweep.isPending}
+            className="border border-stone-300 px-4 py-2 text-[0.7rem] tracking-[0.2em] uppercase disabled:opacity-40"
+          >
+            {sweep.isPending ? "Sweeping…" : "Sitewide sweep"}
+          </button>
+          <button
             onClick={() => check.mutate({})}
             disabled={check.isPending}
             className="bg-stone-900 text-white px-4 py-2 text-[0.7rem] tracking-[0.2em] uppercase disabled:opacity-40"
@@ -187,10 +247,123 @@ function ProductHealthPage() {
         </div>
       </div>
 
+      {/* AI stylist availability. Generation is always admin-triggered; when no
+          provider credential is present the workflow shows a setup-needed state
+          rather than pretending AI sourcing is live. */}
+      <div className="mt-6 border border-stone-200 bg-stone-50 px-4 py-3 text-xs">
+        {aiStatus.data ? (
+          aiStatus.data.configured ? (
+            <p className="text-stone-700">
+              AI stylist ready — {aiStatus.data.provider} · {aiStatus.data.model} · prompt{" "}
+              {aiStatus.data.promptVersion}. Auto-promotion:{" "}
+              {aiStatus.data.autoPromotion.enabled ? "on" : "off (approval required)"}. Scheduled
+              sweep endpoint: {aiStatus.data.sweepEndpointReady ? "ready" : "secret missing"}.
+            </p>
+          ) : (
+            <p className="text-amber-700">
+              Setup needed — no AI provider credential is configured, so replacement generation is
+              disabled. Candidate schema, prompt construction, verification and this review UI are
+              in place and will work as soon as a provider key is added.
+            </p>
+          )
+        ) : (
+          <p className="text-stone-500">Checking AI stylist configuration…</p>
+        )}
+      </div>
+
+      {/* Sitewide registry coverage — every shoppable look across every
+          destination and moment, hero and editorial. */}
+      {coverage.data && (
+        <section className="mt-6 border border-stone-200">
+          <header className="bg-stone-50 px-4 py-3 flex flex-wrap items-baseline justify-between gap-3">
+            <div className="text-[0.62rem] tracking-[0.3em] uppercase text-stone-500">
+              Sitewide registry · {coverage.data.totals.imported}/{coverage.data.totals.slots} slots
+              across {coverage.data.totals.looks} looks
+            </div>
+            <button
+              onClick={() => importLooks.mutate({})}
+              disabled={importLooks.isPending}
+              className="bg-stone-900 text-white px-3 py-1.5 text-[0.65rem] tracking-[0.2em] uppercase disabled:opacity-40"
+            >
+              {importLooks.isPending ? "Importing…" : "Import all looks"}
+            </button>
+          </header>
+          <table className="w-full text-xs">
+            <thead className="text-left text-stone-500">
+              <tr className="border-b border-stone-200">
+                <th className="px-4 py-2 font-normal">Look</th>
+                <th className="px-4 py-2 font-normal">Kind</th>
+                <th className="px-4 py-2 font-normal">Slots</th>
+                <th className="px-4 py-2 font-normal">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {coverage.data.looks.map((l) => (
+                <tr key={l.lookKey} className="border-b border-stone-100">
+                  <td className="px-4 py-2">
+                    <div className="font-medium">{l.lookTitle}</div>
+                    <div className="text-stone-500 break-all">{l.lookKey}</div>
+                  </td>
+                  <td className="px-4 py-2">{l.lookKind}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    {l.importedCount}/{l.slotCount}
+                    {l.unsourcedCount > 0 && (
+                      <span className="text-amber-700"> · {l.unsourcedCount} unsourced</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-2">
+                    <div className="flex flex-wrap gap-1.5">
+                      <button
+                        onClick={() => importLooks.mutate({ lookKey: l.lookKey })}
+                        className="border border-stone-300 px-2 py-1"
+                      >
+                        Import
+                      </button>
+                      <button
+                        onClick={() => restyle.mutate(l.lookKey)}
+                        disabled={restyle.isPending || !aiStatus.data?.configured}
+                        className="border border-stone-300 px-2 py-1 disabled:opacity-40"
+                      >
+                        Restyle complete look
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
       {check.data && (
         <p className="mt-3 text-xs text-stone-600">
           Checked {check.data.count} link(s).{" "}
           {check.data.checked.filter((c) => c.changed).length} status change(s).
+        </p>
+      )}
+      {sweep.data && (
+        <p className="mt-3 text-xs text-stone-600">
+          Sweep: {sweep.data.checked} checked · {sweep.data.failed.length} failing ·{" "}
+          {sweep.data.recovered} recovered.
+        </p>
+      )}
+      {importLooks.data && (
+        <p className="mt-3 text-xs text-stone-600">
+          Imported {importLooks.data.imported} slot(s) from {importLooks.data.looksScanned} look(s).
+        </p>
+      )}
+      {generate.data && (
+        <p className="mt-3 text-xs text-stone-600">
+          {generate.data.setupNeeded
+            ? "AI provider not configured — generation skipped."
+            : `Generated ${generate.data.generated} candidate(s).`}
+        </p>
+      )}
+      {restyle.data && (
+        <p className="mt-3 text-xs text-stone-600">
+          {restyle.data.setupNeeded
+            ? "AI provider not configured — restyle skipped."
+            : `Restyle stored ${restyle.data.stored} candidate(s)${restyle.data.skipped.length ? ` · skipped ${restyle.data.skipped.join(", ")}` : ""}.`}
         </p>
       )}
       {(check.error || mark.error || promote.error || decide.error) && (
@@ -198,6 +371,11 @@ function ProductHealthPage() {
           {String(
             (check.error || mark.error || promote.error || decide.error) as Error,
           )}
+        </p>
+      )}
+      {(sweep.error || importLooks.error || generate.error || restyle.error) && (
+        <p className="mt-3 text-xs text-red-600">
+          {String((sweep.error || importLooks.error || generate.error || restyle.error) as Error)}
         </p>
       )}
 
@@ -341,37 +519,99 @@ function ProductHealthPage() {
               </table>
 
               <div className="px-4 py-4 border-t border-stone-200 bg-white">
-                <div className="text-[0.62rem] tracking-[0.3em] uppercase text-stone-500 mb-2">
-                  Replacement candidates ({backups.length}/{MAX_BACKUPS_PER_SLOT} backups
-                  approved)
+                <div className="flex flex-wrap items-baseline justify-between gap-3 mb-3">
+                  <div className="text-[0.62rem] tracking-[0.3em] uppercase text-stone-500">
+                    Replacement candidates ({backups.length}/{MAX_BACKUPS_PER_SLOT} backups
+                    approved)
+                  </div>
+                  {primary && (
+                    <div className="flex flex-wrap gap-1.5 text-xs">
+                      <button
+                        onClick={() =>
+                          generate.mutate({ productId: primary.id, regenerate: false })
+                        }
+                        disabled={generate.isPending || !aiStatus.data?.configured}
+                        className="bg-stone-900 text-white px-2 py-1 disabled:opacity-40"
+                      >
+                        {generate.isPending ? "Styling…" : "Generate AI replacements"}
+                      </button>
+                      <button
+                        onClick={() =>
+                          generate.mutate({ productId: primary.id, regenerate: true })
+                        }
+                        disabled={generate.isPending || !aiStatus.data?.configured}
+                        className="border border-stone-300 px-2 py-1 disabled:opacity-40"
+                      >
+                        Regenerate
+                      </button>
+                      <button
+                        onClick={() => restyle.mutate(rows[0]!.look_key)}
+                        disabled={restyle.isPending || !aiStatus.data?.configured}
+                        className="border border-stone-300 px-2 py-1 disabled:opacity-40"
+                      >
+                        Restyle complete look
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {slotCandidates.length === 0 && (
-                  <p className="text-xs text-stone-500 mb-3">
-                    None yet — add one below. AI sourcing will write into this same queue.
+                {!aiStatus.data?.configured && (
+                  <p className="text-[0.68rem] text-amber-700 mb-3">
+                    AI generation disabled until a provider credential is configured — manual
+                    candidates below still work.
                   </p>
                 )}
-                <ul className="space-y-2 mb-4">
+                {slotCandidates.length === 0 && (
+                  <p className="text-xs text-stone-500 mb-3">
+                    None yet — generate AI candidates above or add one manually below. Both write
+                    into this same review queue.
+                  </p>
+                )}
+                {/* Side-by-side candidate comparison: verification result, matching
+                    rationale, look impact, and AI provenance. */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                   {slotCandidates.map((c) => (
-                    <li key={c.id} className="text-xs flex flex-wrap gap-3 items-baseline">
-                      <span className="font-medium">{c.brand}</span>
-                      <span className="text-stone-600">{c.product_name}</span>
-                      <span className="text-stone-500">{c.price ?? "—"}</span>
-                      <span className="text-stone-500">
-                        match {c.matching_score ?? "—"}
-                      </span>
+                    <div key={c.id} className="border border-stone-200 p-3 text-xs">
+                      <div className="font-medium">{c.brand}</div>
+                      <div className="text-stone-600">{c.product_name}</div>
+                      <div className="text-stone-500 mt-1">
+                        {c.retailer ?? "—"} · {c.price ?? "—"}
+                        {c.color ? ` · ${c.color}` : ""}
+                      </div>
+                      <div className="text-stone-500">match {c.matching_score ?? "—"}</div>
                       <a
                         href={c.pdp_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="underline text-stone-500 break-all"
+                        className="underline text-stone-500 break-all block mt-1"
                       >
-                        PDP
+                        {c.pdp_url}
                       </a>
-                      <span className="uppercase tracking-[0.15em] text-stone-500">
+                      <div
+                        className={`mt-1 ${
+                          c.availability_verdict === "verified_live"
+                            ? "text-emerald-700"
+                            : "text-amber-700"
+                        }`}
+                      >
+                        {c.availability_verdict ?? "unverified"}
+                        {c.availability_http_status ? ` (${c.availability_http_status})` : ""}
+                        {c.verified_at ? ` · ${fmt(c.verified_at)}` : ""}
+                      </div>
+                      {c.rationale && <p className="text-stone-600 mt-2">{c.rationale}</p>}
+                      {c.look_impact && (
+                        <p className="text-stone-500 mt-1 italic">{c.look_impact}</p>
+                      )}
+                      <div className="text-[0.62rem] text-stone-400 mt-2">
+                        {c.source}
+                        {c.model ? ` · ${c.model}` : ""}
+                        {c.prompt_version ? ` · prompt ${c.prompt_version}` : ""}
+                        {c.generated_at ? ` · ${fmt(c.generated_at)}` : ""}
+                      </div>
+                      <div className="uppercase tracking-[0.15em] text-stone-500 mt-2">
                         {c.approval_status}
-                      </span>
+                      </div>
                       {c.approval_status === "pending" && (
-                        <>
+                        <div className="flex flex-wrap gap-1.5 mt-2">
                           <button
                             onClick={() =>
                               decide.mutate({ candidateId: c.id, decision: "approved" })
@@ -388,16 +628,29 @@ function ProductHealthPage() {
                           >
                             Reject
                           </button>
-                        </>
+                          <button
+                            onClick={() => setEditing(c)}
+                            className="border border-stone-300 px-2 py-1"
+                          >
+                            Edit
+                          </button>
+                        </div>
                       )}
-                      {c.rationale && (
-                        <span className="text-stone-500 basis-full">{c.rationale}</span>
-                      )}
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
                 {primary && (
-                  <CandidateForm pw={pw} slotProductId={primary.id} onSaved={invalidate} />
+                  <CandidateForm
+                    pw={pw}
+                    slotProductId={primary.id}
+                    onSaved={() => {
+                      setEditing(null);
+                      invalidate();
+                    }}
+                    {...(editing && editing.slot_product_id === primary.id
+                      ? { initial: editing }
+                      : {})}
+                  />
                 )}
               </div>
             </section>
@@ -408,30 +661,50 @@ function ProductHealthPage() {
   );
 }
 
-/** Manual entry of a replacement candidate — same shape AI sourcing will emit. */
+/**
+ * Manual entry — and editing — of a replacement candidate. Manual and AI
+ * candidates share one shape and one review queue.
+ */
 function CandidateForm({
   pw,
   slotProductId,
   onSaved,
+  initial,
 }: {
   pw: string;
   slotProductId: string;
   onSaved: () => void;
+  /** When set, the form edits this existing candidate instead of adding one. */
+  initial?: CandidateRow;
 }) {
   const upsertFn = useServerFn(upsertReplacementCandidate);
-  const [brand, setBrand] = useState("");
-  const [productName, setProductName] = useState("");
-  const [retailer, setRetailer] = useState("");
-  const [pdpUrl, setPdpUrl] = useState("");
-  const [price, setPrice] = useState("");
-  const [score, setScore] = useState("");
-  const [rationale, setRationale] = useState("");
+  const [brand, setBrand] = useState(initial?.brand ?? "");
+  const [productName, setProductName] = useState(initial?.product_name ?? "");
+  const [retailer, setRetailer] = useState(initial?.retailer ?? "");
+  const [pdpUrl, setPdpUrl] = useState(initial?.pdp_url ?? "");
+  const [price, setPrice] = useState(initial?.price ?? "");
+  const [score, setScore] = useState(
+    initial?.matching_score != null ? String(initial.matching_score) : "",
+  );
+  const [rationale, setRationale] = useState(initial?.rationale ?? "");
+
+  // Re-prime the fields when the admin picks a different candidate to edit.
+  useEffect(() => {
+    setBrand(initial?.brand ?? "");
+    setProductName(initial?.product_name ?? "");
+    setRetailer(initial?.retailer ?? "");
+    setPdpUrl(initial?.pdp_url ?? "");
+    setPrice(initial?.price ?? "");
+    setScore(initial?.matching_score != null ? String(initial.matching_score) : "");
+    setRationale(initial?.rationale ?? "");
+  }, [initial]);
 
   const save = useMutation({
     mutationFn: () =>
       upsertFn({
         data: {
           password: pw,
+          ...(initial ? { id: initial.id } : {}),
           slotProductId,
           brand,
           productName,
@@ -440,7 +713,7 @@ function CandidateForm({
           ...(price ? { price } : {}),
           ...(score ? { matchingScore: Number(score) } : {}),
           ...(rationale ? { rationale } : {}),
-          source: "manual",
+          source: initial?.source ?? "manual",
         },
       }),
     onSuccess: () => {
@@ -472,7 +745,7 @@ function CandidateForm({
         disabled={!brand || !productName || !pdpUrl || save.isPending}
         className="mt-2 bg-stone-900 text-white px-3 py-1.5 text-[0.68rem] tracking-[0.2em] uppercase disabled:opacity-40"
       >
-        {save.isPending ? "Saving…" : "Add candidate"}
+        {save.isPending ? "Saving…" : initial ? "Save candidate" : "Add candidate"}
       </button>
       {save.error && (
         <p className="text-xs text-red-600 mt-2">{(save.error as Error).message}</p>
