@@ -1388,6 +1388,11 @@ function ShopLookPanel({
             VIEW PRODUCT →
           </div>
         )}
+        {!href && o.inReview && (
+          <div className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/45 mt-2">
+            {REPLACEMENT_IN_REVIEW_LABEL.toUpperCase()}
+          </div>
+        )}
       </div>
     );
     return (
