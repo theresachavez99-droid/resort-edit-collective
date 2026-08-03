@@ -34,6 +34,7 @@ import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slu
 import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
 import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
+import { Route as AdminProductHealthQueueRouteImport } from './routes/admin.product-health_.queue'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as ApiPublicProductAuditRouteImport } from './routes/api/public/product-audit'
 import { Route as ApiPublicProductHealthSweepRouteImport } from './routes/api/public/product-health-sweep'
@@ -169,6 +170,11 @@ const AdminHeroOutfitIdRoute = AdminHeroOutfitIdRouteImport.update({
   path: '/hero-outfit/$id',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminProductHealthQueueRoute = AdminProductHealthQueueRouteImport.update({
+  id: '/product-health_/queue',
+  path: '/product-health/queue',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   id: '/api/public/mcp',
   path: '/api/public/mcp',
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/destinations/': typeof DestinationsIndexRoute
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
+  '/admin/product-health/queue': typeof AdminProductHealthQueueRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -271,6 +278,7 @@ export interface FileRoutesByTo {
   '/destinations': typeof DestinationsIndexRoute
   '/portofino': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
+  '/admin/product-health/queue': typeof AdminProductHealthQueueRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -307,6 +315,7 @@ export interface FileRoutesById {
   '/destinations/': typeof DestinationsIndexRoute
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
+  '/admin/product-health_/queue': typeof AdminProductHealthQueueRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -344,6 +353,7 @@ export interface FileRouteTypes {
     | '/destinations/'
     | '/portofino/'
     | '/admin/hero-outfit/$id'
+    | '/admin/product-health/queue'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -375,6 +385,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/portofino'
     | '/admin/hero-outfit/$id'
+    | '/admin/product-health/queue'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -410,6 +421,7 @@ export interface FileRouteTypes {
     | '/destinations/'
     | '/portofino/'
     | '/admin/hero-outfit/$id'
+    | '/admin/product-health_/queue'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -616,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminHeroOutfitIdRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/product-health_/queue': {
+      id: '/admin/product-health_/queue'
+      path: '/product-health/queue'
+      fullPath: '/admin/product-health/queue'
+      preLoaderRoute: typeof AdminProductHealthQueueRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/public/mcp': {
       id: '/api/public/mcp'
       path: '/api/public/mcp'
@@ -685,6 +704,7 @@ interface AdminRouteChildren {
   AdminSystemRoute: typeof AdminSystemRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminHeroOutfitIdRoute: typeof AdminHeroOutfitIdRoute
+  AdminProductHealthQueueRoute: typeof AdminProductHealthQueueRoute
   AdminMomentsIdRunRoute: typeof AdminMomentsIdRunRoute
 }
 
@@ -698,6 +718,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSystemRoute: AdminSystemRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminHeroOutfitIdRoute: AdminHeroOutfitIdRoute,
+  AdminProductHealthQueueRoute: AdminProductHealthQueueRoute,
   AdminMomentsIdRunRoute: AdminMomentsIdRunRoute,
 }
 

@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   runSiteAudit,
   getProductIndex,
   listAuditRuns,
   listAuditEvents,
 } from "@/lib/product-audit.functions";
+import { auditSummaryLine } from "@/components/QueueStatusPanel";
 import { PRODUCT_STATUS_LABELS, isFailedStatus, type ProductStatus } from "@/lib/product-health";
 
 /**
@@ -53,6 +55,7 @@ function tone(status: string): string {
 }
 
 function ProductAuditPage() {
+  const navigate = Route.useNavigate();
   const auditFn = useServerFn(runSiteAudit);
   const indexFn = useServerFn(getProductIndex);
   const runsFn = useServerFn(listAuditRuns);
@@ -90,11 +93,31 @@ function ProductAuditPage() {
   const audit = useMutation({
     mutationFn: (scope: { destination?: string; moment?: string; lookKey?: string }) =>
       auditFn({ data: { password: pw, ...scope } }),
-    onSuccess: () => {
+    onSuccess: (report) => {
+      const line = auditSummaryLine({
+        failed: report.failures.length,
+        promoted: report.autoPromoted.length,
+        needsReview: report.queuedForStyling.length + report.inReview.length,
+      });
+      toast.success(line, {
+        duration: 12_000,
+        action: {
+          label: "Review replacements",
+          onClick: () =>
+            navigate({
+              to: "/admin/product-health/queue",
+              search: report.runId ? { runId: report.runId } : {},
+            }),
+        },
+      });
       qc.invalidateQueries({ queryKey: ["product-index"] });
       qc.invalidateQueries({ queryKey: ["audit-runs"] });
       qc.invalidateQueries({ queryKey: ["audit-events"] });
+      qc.invalidateQueries({ queryKey: ["queue-badge"] });
+      qc.invalidateQueries({ queryKey: ["latest-audit-summary"] });
     },
+    onError: (e) =>
+      toast.error(e instanceof Error ? e.message : "Audit failed"),
   });
 
   const products = index.data?.products ?? [];
