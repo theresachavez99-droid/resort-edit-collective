@@ -22,6 +22,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
+import { Route as AdminEditorialClosetRouteImport } from './routes/admin.editorial-closet'
 import { Route as AdminEditorialIntelligenceRouteImport } from './routes/admin.editorial-intelligence'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
 import { Route as AdminProductAuditRouteImport } from './routes/admin.product-audit'
@@ -107,6 +108,11 @@ const AdminBrandsRoute = AdminBrandsRouteImport.update({
 const AdminCatalogRoute = AdminCatalogRouteImport.update({
   id: '/catalog',
   path: '/catalog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEditorialClosetRoute = AdminEditorialClosetRouteImport.update({
+  id: '/editorial-closet',
+  path: '/editorial-closet',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminEditorialIntelligenceRoute =
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
@@ -265,6 +272,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
@@ -302,6 +310,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
@@ -340,6 +349,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/catalog'
+    | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
     | '/admin/product-audit'
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/catalog'
+    | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
     | '/admin/product-audit'
@@ -408,6 +419,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/catalog'
+    | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
     | '/admin/product-audit'
@@ -542,6 +554,13 @@ declare module '@tanstack/react-router' {
       path: '/catalog'
       fullPath: '/admin/catalog'
       preLoaderRoute: typeof AdminCatalogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/editorial-closet': {
+      id: '/admin/editorial-closet'
+      path: '/editorial-closet'
+      fullPath: '/admin/editorial-closet'
+      preLoaderRoute: typeof AdminEditorialClosetRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/editorial-intelligence': {
@@ -697,6 +716,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminBrandsRoute: typeof AdminBrandsRoute
   AdminCatalogRoute: typeof AdminCatalogRoute
+  AdminEditorialClosetRoute: typeof AdminEditorialClosetRoute
   AdminEditorialIntelligenceRoute: typeof AdminEditorialIntelligenceRoute
   AdminLooksRoute: typeof AdminLooksRoute
   AdminProductAuditRoute: typeof AdminProductAuditRoute
@@ -711,6 +731,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBrandsRoute: AdminBrandsRoute,
   AdminCatalogRoute: AdminCatalogRoute,
+  AdminEditorialClosetRoute: AdminEditorialClosetRoute,
   AdminEditorialIntelligenceRoute: AdminEditorialIntelligenceRoute,
   AdminLooksRoute: AdminLooksRoute,
   AdminProductAuditRoute: AdminProductAuditRoute,

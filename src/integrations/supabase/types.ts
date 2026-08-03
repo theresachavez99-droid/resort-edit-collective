@@ -707,6 +707,204 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_closet_candidates: {
+        Row: {
+          availability: string
+          availability_checked_at: string | null
+          brand: string
+          category: string
+          click_count: number
+          color: string | null
+          context_label: string | null
+          created_at: string
+          destination: string
+          editorial_rationale: string
+          expires_at: string | null
+          full_look_pairing: Json | null
+          http_status: number | null
+          id: string
+          image_url: string | null
+          match_score: number | null
+          material: string | null
+          model: string | null
+          moment_slug: string
+          position: number | null
+          price: string | null
+          product_name: string
+          product_url: string
+          prompt_version: string | null
+          rationale_tag: string | null
+          rejected_reason: string | null
+          retailer: string
+          retailer_click_count: number
+          retailer_priority_rank: number | null
+          run_id: string | null
+          silhouette: string | null
+          source_look_key: string | null
+          status: string
+          updated_at: string
+          verification_status: string
+          verification_verdict: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          availability?: string
+          availability_checked_at?: string | null
+          brand: string
+          category: string
+          click_count?: number
+          color?: string | null
+          context_label?: string | null
+          created_at?: string
+          destination: string
+          editorial_rationale?: string
+          expires_at?: string | null
+          full_look_pairing?: Json | null
+          http_status?: number | null
+          id?: string
+          image_url?: string | null
+          match_score?: number | null
+          material?: string | null
+          model?: string | null
+          moment_slug: string
+          position?: number | null
+          price?: string | null
+          product_name: string
+          product_url: string
+          prompt_version?: string | null
+          rationale_tag?: string | null
+          rejected_reason?: string | null
+          retailer?: string
+          retailer_click_count?: number
+          retailer_priority_rank?: number | null
+          run_id?: string | null
+          silhouette?: string | null
+          source_look_key?: string | null
+          status?: string
+          updated_at?: string
+          verification_status?: string
+          verification_verdict?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          availability?: string
+          availability_checked_at?: string | null
+          brand?: string
+          category?: string
+          click_count?: number
+          color?: string | null
+          context_label?: string | null
+          created_at?: string
+          destination?: string
+          editorial_rationale?: string
+          expires_at?: string | null
+          full_look_pairing?: Json | null
+          http_status?: number | null
+          id?: string
+          image_url?: string | null
+          match_score?: number | null
+          material?: string | null
+          model?: string | null
+          moment_slug?: string
+          position?: number | null
+          price?: string | null
+          product_name?: string
+          product_url?: string
+          prompt_version?: string | null
+          rationale_tag?: string | null
+          rejected_reason?: string | null
+          retailer?: string
+          retailer_click_count?: number
+          retailer_priority_rank?: number | null
+          run_id?: string | null
+          silhouette?: string | null
+          source_look_key?: string | null
+          status?: string
+          updated_at?: string
+          verification_status?: string
+          verification_verdict?: string | null
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      editorial_closet_events: {
+        Row: {
+          candidate_id: string | null
+          created_at: string
+          destination: string | null
+          event_type: string
+          id: string
+          meta: Json | null
+          moment_slug: string | null
+          retailer: string | null
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string
+          destination?: string | null
+          event_type: string
+          id?: string
+          meta?: Json | null
+          moment_slug?: string | null
+          retailer?: string | null
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string
+          destination?: string | null
+          event_type?: string
+          id?: string
+          meta?: Json | null
+          moment_slug?: string | null
+          retailer?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editorial_closet_events_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_closet_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "editorial_closet_events_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "editorial_closet_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      editorial_closet_settings: {
+        Row: {
+          created_at: string
+          destination: string
+          disabled_reason: string | null
+          enabled: boolean
+          id: string
+          moment_slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          destination: string
+          disabled_reason?: string | null
+          enabled?: boolean
+          id?: string
+          moment_slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          destination?: string
+          disabled_reason?: string | null
+          enabled?: boolean
+          id?: string
+          moment_slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       editorial_collection_look_slots: {
         Row: {
           affiliate_url: string | null
@@ -3044,6 +3242,66 @@ export type Database = {
           suggested_activities?: string[] | null
           suggested_destinations?: string[] | null
           suggested_tier?: string | null
+        }
+        Relationships: []
+      }
+      editorial_closet_public: {
+        Row: {
+          availability: string | null
+          brand: string | null
+          category: string | null
+          color: string | null
+          context_label: string | null
+          destination: string | null
+          editorial_rationale: string | null
+          id: string | null
+          image_url: string | null
+          match_score: number | null
+          moment_slug: string | null
+          position: number | null
+          price: string | null
+          product_name: string | null
+          product_url: string | null
+          rationale_tag: string | null
+          retailer: string | null
+        }
+        Insert: {
+          availability?: string | null
+          brand?: string | null
+          category?: string | null
+          color?: string | null
+          context_label?: string | null
+          destination?: string | null
+          editorial_rationale?: string | null
+          id?: string | null
+          image_url?: string | null
+          match_score?: number | null
+          moment_slug?: string | null
+          position?: number | null
+          price?: string | null
+          product_name?: string | null
+          product_url?: string | null
+          rationale_tag?: string | null
+          retailer?: string | null
+        }
+        Update: {
+          availability?: string | null
+          brand?: string | null
+          category?: string | null
+          color?: string | null
+          context_label?: string | null
+          destination?: string | null
+          editorial_rationale?: string | null
+          id?: string | null
+          image_url?: string | null
+          match_score?: number | null
+          moment_slug?: string | null
+          position?: number | null
+          price?: string | null
+          product_name?: string | null
+          product_url?: string | null
+          rationale_tag?: string | null
+          retailer?: string | null
         }
         Relationships: []
       }

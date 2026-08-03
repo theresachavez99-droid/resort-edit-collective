@@ -39,6 +39,7 @@ import {
   isExcludedProduct,
 } from "@/lib/merchandising-exclusions";
 import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
+import { EditorialClosetSection } from "@/components/EditorialClosetSection";
 import {
   MAX_SUPPORTING_LOOKS,
   isCompleteLook,
@@ -731,6 +732,15 @@ function MomentPage() {
           </div>
         </div>
       </section>
+
+      {/* EDITORIAL CLOSET — dynamic, secondary alternative-shopping layer.
+          Never counts toward the two supporting looks; only approved +
+          live-verified options render. */}
+      <EditorialClosetSection
+        momentSlug={slug}
+        momentName={card.moment_name}
+        heroCategory={featuredShop[0]?.category ?? null}
+      />
 
       {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid.
           Nightcap uses an editorial-only override (two approved Lilla

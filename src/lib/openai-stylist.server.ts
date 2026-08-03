@@ -457,3 +457,55 @@ export async function generateResortEditFullRestyle(
   });
   return { meta: meta(usedWebSearch), result: coerceResult(text, true) };
 }
+
+/**
+ * EDITORIAL CLOSET mode. The published look is NOT failing and must not be
+ * changed — the model proposes alternative options for one anchor category so
+ * the reader can shop the same moment differently. ChatGPT remains the only
+ * styling authority; this app just packages context and verifies URLs.
+ */
+export async function generateResortEditClosetAlternatives(
+  input: StylistInput & {
+    /** The anchor category being offered alternatives for, e.g. "Dress". */
+    alternativesFor: string;
+    /** How many alternatives to request (public module shows 3, drawer up to 12). */
+    requestCount?: number;
+    /** Contextual module label the alternatives will appear under. */
+    contextLabel?: string | null;
+  },
+): Promise<{ meta: StylistRunMeta; result: StylistResult }> {
+  const count = Math.max(3, Math.min(12, input.requestCount ?? 12));
+  const base = buildStylistPrompt({ ...input, mode: "slot" });
+
+  const developer = `${base.developer}
+
+EDITORIAL CLOSET MODE
+- The published look is NOT broken. Do not replace or criticise it.
+- Propose ALTERNATIVE options for the anchor category only, as a private stylist would offer a client a second and third way to wear this moment.
+- Vary the reason to choose each one (more relaxed, more polished, more color, quieter, evening-leaning, under $500, investment piece). Never repeat the same rationale.
+- Enforce brand diversity: no more than two alternatives from the same brand, and prefer brands not already worn in the published look.
+- Keep every option worthy of the same editorial story: no fast fashion, no generic category filler, no rings.
+- stylist_rationale must be one concise editorial sentence a reader would enjoy.
+- full_look_impact should describe the proposed complete-look pairing (which existing pieces still work, and what changes) in one sentence.`;
+
+  const user = `${base.user}
+
+EDITORIAL CLOSET REQUEST
+Anchor category for alternatives: ${input.alternativesFor}
+Module label these will appear under: ${input.contextLabel ?? "More Options for This Moment"}
+Return up to ${count} alternatives, strongest first. Return fewer rather than inventing a product or a URL.`;
+
+  const { text, usedWebSearch } = await callResponses({
+    developer,
+    user,
+    imageUrl: input.editorialImageUrl ?? null,
+    schemaName: "resort_edit_closet_alternatives",
+    includeSlot: false,
+    webSearch: true,
+  });
+  const result = coerceResult(text, false);
+  return {
+    meta: meta(usedWebSearch),
+    result: { ...result, candidates: result.candidates.slice(0, count) },
+  };
+}
