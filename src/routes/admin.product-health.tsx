@@ -625,6 +625,30 @@ function ProductHealthPage() {
                     candidates below still work.
                   </p>
                 )}
+                {primary && (
+                  <div className="mb-4">
+                    <textarea
+                      className="w-full border border-stone-300 px-2 py-2 text-xs"
+                      rows={2}
+                      placeholder="Styling note for the AI (e.g. too casual — keep the silhouette longer)"
+                      value={feedbackDraft[primary.id] ?? ""}
+                      onChange={(e) =>
+                        setFeedbackDraft((d) => ({ ...d, [primary.id]: e.target.value }))
+                      }
+                    />
+                    <button
+                      onClick={() => {
+                        const note = (feedbackDraft[primary.id] ?? "").trim();
+                        if (note.length < 2) return;
+                        sendFeedback.mutate({ productId: primary.id, feedback: note });
+                        setFeedbackDraft((d) => ({ ...d, [primary.id]: "" }));
+                      }}
+                      className="mt-1 border border-stone-300 px-2 py-1 text-xs"
+                    >
+                      Save styling note
+                    </button>
+                  </div>
+                )}
                 {slotCandidates.length === 0 && (
                   <p className="text-xs text-stone-500 mb-3">
                     None yet — generate AI candidates above or add one manually below. Both write
