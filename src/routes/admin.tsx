@@ -59,7 +59,7 @@ function StudioNav() {
           unresolved > 0 ? "border-red-700 text-red-700" : "border-stone-300 text-stone-500"
         }`}
       >
-        Replacements
+        Editorial Queue
         <span
           className={`inline-flex min-w-6 justify-center px-1.5 py-0.5 text-[0.7rem] tracking-normal ${
             unresolved > 0 ? "bg-red-700 text-white" : "bg-stone-200 text-stone-600"

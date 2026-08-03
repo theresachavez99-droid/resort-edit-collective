@@ -41,15 +41,6 @@ const editsBySlug: Record<string, number> = {
 
 const FEATURED_SLUGS = ["portofino", "mallorca"] as const;
 
-const COMING_SOON = [
-  "Cannes",
-  "Phuket",
-  "St. Barths",
-  "Nantucket",
-  "Capri",
-  "Ibiza",
-] as const;
-
 type FilterKey = "All" | "Italian Riviera" | "Mediterranean";
 
 const FILTERS: FilterKey[] = ["All", "Italian Riviera", "Mediterranean"];
@@ -224,29 +215,6 @@ function DestinationsPage() {
         </div>
       </section>
 
-      {/* COMING SOON — editorial chips */}
-      <section id="coming-soon" className="border-t border-border/40 bg-cream/30">
-        <div className="mx-auto max-w-[1100px] px-6 py-14 md:py-20 text-center">
-          <div className="flex items-center gap-4 justify-center mb-5">
-            <div className="h-px w-12 bg-gold/50" />
-            <h2 className="eyebrow text-gold tracking-[0.3em]">Coming Soon</h2>
-            <div className="h-px w-12 bg-gold/50" />
-          </div>
-          <p className="font-serif italic text-ink/70 text-lg md:text-xl">
-            The destinations currently on our packing list.
-          </p>
-          <ul className="mt-8 flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
-            {COMING_SOON.map((name) => (
-              <li
-                key={name}
-                className="font-serif text-sm md:text-base text-ink/75 border border-ink/15 rounded-full px-5 py-2 bg-ivory/60"
-              >
-                {name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
     </div>
   );
 }

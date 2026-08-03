@@ -81,7 +81,7 @@ export const destinations: Destination[] = [
     overview:
       "A vertical island of lemon groves, white-washed villas and Tyrrhenian blue — built for slow lunches and even slower descents to the sea.",
     whatToWear: ["Capri pants", "Eyelet cotton dresses", "Leather sandals from a Marina Grande cobbler", "Wide straw hat"],
-    shopEdits: [{ label: "Coming soon: The Capri Edit", href: "/destinations/capri" }],
+    shopEdits: [{ label: "The Capri Edit", href: "/destinations/capri" }],
     itinerary: [
       { day: "Day 1", plan: "Funicular to Capri town, granita at Piazzetta, sunset at Punta Tragara." },
       { day: "Day 2", plan: "Private gozzo around the Faraglioni, lunch at Da Luigi ai Faraglioni." },
@@ -106,7 +106,7 @@ export const destinations: Destination[] = [
     overview:
       "Sun-bleached Provence with a yachting wardrobe — fishing village mornings, Pampelonne afternoons, jazz-bar nights.",
     whatToWear: ["Striped Breton tops", "Linen jumpsuits", "Sandales tropéziennes", "Oversized resort sunglasses"],
-    shopEdits: [{ label: "Coming soon: The St. Tropez Edit", href: "/destinations/sttropez" }],
+    shopEdits: [{ label: "The St. Tropez Edit", href: "/destinations/sttropez" }],
     itinerary: [
       { day: "Day 1", plan: "Morning at Place des Lices market, lunch at Club 55, dinner at La Vague d'Or." },
       { day: "Day 2", plan: "Tender to Pampelonne, sunset rosé at Senequier on the old port." },
@@ -131,7 +131,7 @@ export const destinations: Destination[] = [
     overview:
       "The Balearic for those who want the quiet side — Tramuntana villages, almond groves and coves you reach by foot or by sail.",
     whatToWear: ["Crochet cover-ups", "Slip dresses", "Raffia totes", "Flat leather sandals"],
-    shopEdits: [{ label: "Coming soon: The Mallorca Edit", href: "/destinations/mallorca" }],
+    shopEdits: [{ label: "The Mallorca Edit", href: "/destinations/mallorca" }],
     itinerary: [
       { day: "Day 1", plan: "Drive the Tramuntana to Deià, lunch at Ca's Patró March." },
       { day: "Day 2", plan: "Boat from Port d'Andratx to a hidden cala for a long swim and picnic." },
@@ -156,7 +156,7 @@ export const destinations: Destination[] = [
     overview:
       "The north of the island, not the south — finca hotels, almond-grove dinners, and a sunset stretch above Cala d'Hort.",
     whatToWear: ["Bohemian maxi dresses", "Embroidered tunics", "Stacked silver bangles", "Leather flat sandals"],
-    shopEdits: [{ label: "Coming soon: The Ibiza Edit", href: "/destinations/ibiza" }],
+    shopEdits: [{ label: "The Ibiza Edit", href: "/destinations/ibiza" }],
     itinerary: [
       { day: "Day 1", plan: "Slow morning at La Granja, sunset at Hostal La Torre with a glass of cava." },
       { day: "Day 2", plan: "Hire a boat from Santa Eulalia for a day on Formentera's white-sand shallows." },
@@ -181,7 +181,7 @@ export const destinations: Destination[] = [
     overview:
       "Jungle and turquoise sea meet on a thin ribbon of beach — candlelit dinners, cenote mornings, and an unhurried barefoot dress code.",
     whatToWear: ["Linen wrap dresses", "Crochet bikinis", "Beaded sandals", "Panama hat"],
-    shopEdits: [{ label: "Coming soon: The Tulum Edit", href: "/destinations/tulum" }],
+    shopEdits: [{ label: "The Tulum Edit", href: "/destinations/tulum" }],
     itinerary: [
       { day: "Day 1", plan: "Sunrise yoga at Habitas, cenote swim, dinner at Hartwood." },
       { day: "Day 2", plan: "Day trip to Sian Ka'an biosphere, sunset mezcal at Casa Jaguar." },
@@ -206,7 +206,7 @@ export const destinations: Destination[] = [
     overview:
       "Cliffside villas, long-tail boats to Phang Nga Bay and pool decks that drop straight into the Andaman.",
     whatToWear: ["Silk slip dresses", "Cotton kaftans", "Gold cuff bracelets", "Sliders for the pool deck"],
-    shopEdits: [{ label: "Coming soon: The Phuket Edit", href: "/destinations/phuket" }],
+    shopEdits: [{ label: "The Phuket Edit", href: "/destinations/phuket" }],
     itinerary: [
       { day: "Day 1", plan: "Morning at Amanpuri, long-tail boat to Phi Phi for a picnic lunch." },
       { day: "Day 2", plan: "Sunset cocktails at Baba Nest, dinner at Pru in Layan." },

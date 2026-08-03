@@ -39,6 +39,11 @@ import {
   isExcludedProduct,
 } from "@/lib/merchandising-exclusions";
 import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
+import {
+  MAX_SUPPORTING_LOOKS,
+  isCompleteLook,
+  isDaytimeMoment,
+} from "@/lib/look-completeness";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
@@ -482,8 +487,8 @@ function MomentPage() {
   const hasCuratedOverride = curatedShopEntries.length > 0;
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
   // Slots whose product is being replaced still belong to the edit: they keep
-  // their place in the panel with a "Replacement in review" line. Only a fully
-  // empty edit falls back to the Coming Soon state.
+  // their place in the panel with a "Replacement in review" line. When nothing
+  // at all is shoppable the shop area is omitted entirely.
   const featuredInReviewCount = featuredShop.filter(
     (e) => e.kind === "override" && (e.product as OverrideItem).inReview,
   ).length;
@@ -511,7 +516,7 @@ function MomentPage() {
   // (no legacy day-siblings) — keeps the "More Resort Edit Looks" grid
   // to exactly the approved editorial cards.
   const suppressLegacySiblings = slug === "arrival";
-  const siblings: Look[] = suppressLegacySiblings
+  const allSiblings: Look[] = suppressLegacySiblings
     ? []
     : lookbook.filter(
         (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
@@ -520,6 +525,33 @@ function MomentPage() {
         // curated "Green Eyelet on Via Roma" editorial card below.
         (l) => !(slug === "shopping" && l.title === "Via Roma Boutiques"),
       );
+
+  // EDITORIAL COMPLETION LAW
+  // 1. A supporting look renders only when its shopping set is complete for
+  //    the moment (outfit · shoes · bag · jewelry · sunglasses by day).
+  //    Incomplete looks are unpublished from the page — never shown with a
+  //    placeholder or "Coming Soon" affordance. The Studio replacement queue
+  //    is the internal record of what still needs styling.
+  // 2. Every moment renders exactly one hero look and AT MOST two supporting
+  //    looks. Curated editorial cards take precedence over legacy siblings;
+  //    extras beyond the cap stay in the data (nothing deleted) and simply
+  //    aren't rendered.
+  const daytimeMoment = isDaytimeMoment(slug);
+  // Shopping publishes curated editorial cards only.
+  const completeSiblings: Look[] =
+    slug === "shopping"
+      ? []
+      : allSiblings.filter((sib) => {
+          const entries = resolveShopProducts(sib.daySlug, sib.lookSlug);
+          if (!entries.some(shopEntryIsLive)) return false;
+          return isCompleteLook(summarizeSlots(entries), { daytime: daytimeMoment });
+        });
+  const extraCards = MOMENT_EXTRA_EDITORIAL_CARDS[slug] ?? [];
+  const renderedExtraCards = extraCards.slice(0, MAX_SUPPORTING_LOOKS);
+  const siblings: Look[] = completeSiblings.slice(
+    0,
+    Math.max(0, MAX_SUPPORTING_LOOKS - renderedExtraCards.length),
+  );
 
   // Inline expansion state: which look's shop grid is currently open.
   // `featured` opens the featured look; `look-a|b|c` opens that sibling.
@@ -665,9 +697,9 @@ function MomentPage() {
                   ))}
                 </div>
               )}
-              {/* Standardized shop area — every moment shows either the Live
-                  Shopping Edit (curated affiliate pieces) or a Coming Soon
-                  state so the layout is identical across moments. */}
+              {/* Standardized shop area — a moment either publishes its live
+                  Resort Edit shopping list or shows nothing at all. No
+                  placeholder or "coming soon" states are ever rendered. */}
               {featuredPieceCount + featuredInReviewCount > 0 &&
               (isFounderLook || hasCuratedOverride) ? (
                 <div className="pt-2">
@@ -694,9 +726,7 @@ function MomentPage() {
                     </div>
                   )}
                 </div>
-              ) : (
-                <ComingSoonPanel heading={shopHeading} />
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -766,7 +796,7 @@ function MomentPage() {
             </div>
           </div>
         </section>
-      ) : (siblings.length > 0 || (MOMENT_EXTRA_EDITORIAL_CARDS[slug]?.length ?? 0) > 0) && (
+      ) : (siblings.length > 0 || renderedExtraCards.length > 0) && (
         <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
             <div className="mb-6 md:mb-8 max-w-2xl">
@@ -794,7 +824,7 @@ function MomentPage() {
                   }
                 />
               ))}
-              {MOMENT_EXTRA_EDITORIAL_CARDS[slug]?.map((c) => (
+              {renderedExtraCards.map((c) => (
                 <ExtraEditorialReferenceCard
                   key={c.key}
                   card={c}
@@ -1238,6 +1268,9 @@ function EditorialLookCard({
   const entries = editorialOnly ? [] : resolveShopProducts(look.daySlug, look.lookSlug);
   const liveCount = entries.filter(shopEntryIsLive).length;
   const hasLive = liveCount > 0;
+  // A shoppable supporting look with nothing live is unpublished rather than
+  // shown with a disabled placeholder CTA.
+  if (!editorialOnly && !hasLive) return null;
   const internalMomentSlug = momentSlugForLookKey(
     look.daySlug as LegacyDaySlug,
     look.lookSlug,
@@ -1271,7 +1304,7 @@ function EditorialLookCard({
             >
               VIEW THE EDIT →
             </Link>
-          ) : hasLive ? (
+          ) : (
             <button
               type="button"
               onClick={onToggle}
@@ -1284,13 +1317,6 @@ function EditorialLookCard({
                 className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
               />
             </button>
-          ) : (
-            <span
-              aria-disabled="true"
-              className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ink/60 bg-cream border border-border/60 px-5 py-2.5 self-start cursor-not-allowed select-none"
-            >
-              COMING SOON
-            </span>
           )}
           <SaveLookButton
             variant="icon"
@@ -1389,9 +1415,7 @@ function ShopCard({
       {...(o.slotLabel ? { category: o.slotLabel } : {})}
       url={isUsableShopUrl(o.url) ? o.url : null}
       image={o.image ?? null}
-      unavailableLabel={
-        o.inReview ? REPLACEMENT_IN_REVIEW_LABEL.toUpperCase() : "COMING SOON"
-      }
+      unavailableLabel={REPLACEMENT_IN_REVIEW_LABEL.toUpperCase()}
     />
   );
 }
@@ -1552,32 +1576,6 @@ function groupShopChapters(rows: OverrideItem[]): ShopChapter[] {
     { key: "jewelry", label: "JEWELRY", items: jewelry },
   ];
   return chapters.filter((c) => c.items.length > 0);
-}
-
-/**
- * Coming Soon state for the featured shop area. Preserves the exact layout
- * used by ShopLookPanel so pages don't shift when we swap in a live edit —
- * only the interactive affordance changes.
- */
-function ComingSoonPanel({ heading }: { heading: string }) {
-  return (
-    <div className="mt-2">
-      <div className="py-5">
-        <div className="font-display text-[1.15rem] md:text-[1.2rem] leading-snug text-ink/70">
-          {heading}
-        </div>
-        <p className="font-serif italic text-[0.9rem] text-ink/55 mt-2 leading-relaxed max-w-prose">
-          Our editors are finalizing the affiliate edit for this moment. Check back soon to shop the complete look.
-        </p>
-      </div>
-      <span
-        aria-disabled="true"
-        className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ink/60 bg-cream border border-border/60 px-5 py-2.5 cursor-not-allowed select-none"
-      >
-        COMING SOON
-      </span>
-    </div>
-  );
 }
 
 /**
