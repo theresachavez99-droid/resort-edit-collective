@@ -1675,14 +1675,32 @@ function ExtraEditorialReferenceCard({
   momentSlug,
   momentName,
   editorialOnly = false,
+  lookHealth,
 }: {
   card: ExtraEditorialCard;
   momentSlug: string;
   momentName: string;
   /** Editorial-only mode: no reference product row, no expander, no outbound links. */
   editorialOnly?: boolean;
+  /** Look-scoped slot health, keyed `lookKey::slot`. */
+  lookHealth?: Record<string, SlotResolution>;
 }) {
   const r = card.reference;
+  const lookKey = `portofino/${momentSlug}/${card.key}`;
+  // The reference product is maintained like any other slot: an approved backup
+  // swaps in silently, and a failed link renders as a non-clickable status line.
+  const reference = applyLookRowHealth(
+    {
+      slot: r.slot ?? "Reference",
+      brand: r.brand,
+      name: r.name,
+      ...(r.price ? { price: r.price } : {}),
+      url: r.url,
+    },
+    lookKey,
+    lookHealth,
+  );
+  const referenceShoppable = !reference.inReview && isUsableShopUrl(reference.url);
   return (
     <article className="flex flex-col bg-ivory border border-border/40">
       <div className="relative aspect-[4/5] overflow-hidden bg-cream">
