@@ -1270,6 +1270,9 @@ function EditorialLookCard({
   const entries = editorialOnly ? [] : resolveShopProducts(look.daySlug, look.lookSlug);
   const liveCount = entries.filter(shopEntryIsLive).length;
   const hasLive = liveCount > 0;
+  // A shoppable supporting look with nothing live is unpublished rather than
+  // shown with a disabled placeholder CTA.
+  if (!editorialOnly && !hasLive) return null;
   const internalMomentSlug = momentSlugForLookKey(
     look.daySlug as LegacyDaySlug,
     look.lookSlug,
@@ -1303,7 +1306,7 @@ function EditorialLookCard({
             >
               VIEW THE EDIT →
             </Link>
-          ) : hasLive ? (
+          ) : (
             <button
               type="button"
               onClick={onToggle}
@@ -1316,13 +1319,6 @@ function EditorialLookCard({
                 className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
               />
             </button>
-          ) : (
-            <span
-              aria-disabled="true"
-              className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ink/60 bg-cream border border-border/60 px-5 py-2.5 self-start cursor-not-allowed select-none"
-            >
-              COMING SOON
-            </span>
           )}
           <SaveLookButton
             variant="icon"
@@ -1421,9 +1417,7 @@ function ShopCard({
       {...(o.slotLabel ? { category: o.slotLabel } : {})}
       url={isUsableShopUrl(o.url) ? o.url : null}
       image={o.image ?? null}
-      unavailableLabel={
-        o.inReview ? REPLACEMENT_IN_REVIEW_LABEL.toUpperCase() : "COMING SOON"
-      }
+      unavailableLabel={REPLACEMENT_IN_REVIEW_LABEL.toUpperCase()}
     />
   );
 }
