@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { createFileRoute, Outlet, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { checkAdminSession, verifyAdmin } from "@/lib/admin-auth.functions";
+import { getQueueBadge } from "@/lib/replacement-queue.functions";
 
 /**
  * /admin layout — server-side gate for the whole Studio surface.
@@ -23,8 +24,52 @@ export const Route = createFileRoute("/admin")({
 
 function AdminLayout() {
   const { ok } = Route.useLoaderData();
-  if (ok) return <Outlet />;
+  if (ok)
+    return (
+      <>
+        <StudioNav />
+        <Outlet />
+      </>
+    );
   return <AdminUnlock />;
+}
+
+/**
+ * Persistent Studio nav strip. Its only job is the unresolved replacement
+ * count, so a failed product link is never invisible while working elsewhere in
+ * the Studio. Internal surface — never rendered on public pages.
+ */
+function StudioNav() {
+  const badgeFn = useServerFn(getQueueBadge);
+  const badge = useQuery({
+    queryKey: ["queue-badge"],
+    queryFn: () => badgeFn(),
+    refetchInterval: 60_000,
+  });
+  const unresolved = badge.data?.unresolved ?? 0;
+
+  return (
+    <nav className="border-b border-stone-200 bg-ivory/90 backdrop-blur px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+      <Link to="/admin" className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500">
+        Studio
+      </Link>
+      <Link
+        to="/admin/product-health/queue"
+        className={`inline-flex items-center gap-2 border px-3 py-1.5 text-[0.65rem] tracking-[0.24em] uppercase ${
+          unresolved > 0 ? "border-red-700 text-red-700" : "border-stone-300 text-stone-500"
+        }`}
+      >
+        Replacements
+        <span
+          className={`inline-flex min-w-6 justify-center px-1.5 py-0.5 text-[0.7rem] tracking-normal ${
+            unresolved > 0 ? "bg-red-700 text-white" : "bg-stone-200 text-stone-600"
+          }`}
+        >
+          {unresolved}
+        </span>
+      </Link>
+    </nav>
+  );
 }
 
 function AdminUnlock() {
