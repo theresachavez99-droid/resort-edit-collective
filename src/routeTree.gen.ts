@@ -24,6 +24,7 @@ import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
 import { Route as AdminEditorialIntelligenceRouteImport } from './routes/admin.editorial-intelligence'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
+import { Route as AdminProductAuditRouteImport } from './routes/admin.product-audit'
 import { Route as AdminProductHealthRouteImport } from './routes/admin.product-health'
 import { Route as AdminSystemRouteImport } from './routes/admin.system'
 import { Route as BrandsIndexRouteImport } from './routes/brands.index'
@@ -116,6 +117,11 @@ const AdminEditorialIntelligenceRoute =
 const AdminLooksRoute = AdminLooksRouteImport.update({
   id: '/looks',
   path: '/looks',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProductAuditRoute = AdminProductAuditRouteImport.update({
+  id: '/product-audit',
+  path: '/product-audit',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminProductHealthRoute = AdminProductHealthRouteImport.update({
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/admin/catalog': typeof AdminCatalogRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
+  '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -253,6 +260,7 @@ export interface FileRoutesByTo {
   '/admin/catalog': typeof AdminCatalogRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
+  '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -288,6 +296,7 @@ export interface FileRoutesById {
   '/admin/catalog': typeof AdminCatalogRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
+  '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
   '/admin/system': typeof AdminSystemRoute
   '/brands/$slug': typeof BrandsSlugRoute
@@ -324,6 +333,7 @@ export interface FileRouteTypes {
     | '/admin/catalog'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
+    | '/admin/product-audit'
     | '/admin/product-health'
     | '/admin/system'
     | '/brands/$slug'
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/admin/catalog'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
+    | '/admin/product-audit'
     | '/admin/product-health'
     | '/admin/system'
     | '/brands/$slug'
@@ -388,6 +399,7 @@ export interface FileRouteTypes {
     | '/admin/catalog'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
+    | '/admin/product-audit'
     | '/admin/product-health'
     | '/admin/system'
     | '/brands/$slug'
@@ -534,6 +546,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLooksRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/product-audit': {
+      id: '/admin/product-audit'
+      path: '/product-audit'
+      fullPath: '/admin/product-audit'
+      preLoaderRoute: typeof AdminProductAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/product-health': {
       id: '/admin/product-health'
       path: '/product-health'
@@ -661,6 +680,7 @@ interface AdminRouteChildren {
   AdminCatalogRoute: typeof AdminCatalogRoute
   AdminEditorialIntelligenceRoute: typeof AdminEditorialIntelligenceRoute
   AdminLooksRoute: typeof AdminLooksRoute
+  AdminProductAuditRoute: typeof AdminProductAuditRoute
   AdminProductHealthRoute: typeof AdminProductHealthRoute
   AdminSystemRoute: typeof AdminSystemRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -673,6 +693,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCatalogRoute: AdminCatalogRoute,
   AdminEditorialIntelligenceRoute: AdminEditorialIntelligenceRoute,
   AdminLooksRoute: AdminLooksRoute,
+  AdminProductAuditRoute: AdminProductAuditRoute,
   AdminProductHealthRoute: AdminProductHealthRoute,
   AdminSystemRoute: AdminSystemRoute,
   AdminIndexRoute: AdminIndexRoute,
