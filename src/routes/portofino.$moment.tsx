@@ -963,6 +963,11 @@ const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
  * narrative (used for meta descriptions and saved-look metadata).
  */
 const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
+  arrival: {
+    label: "Inspired by",
+    body:
+      "Tonal linen tailoring, warm tan leather, woven raffia, and sculptural gold. A polished arrival look with the ease of Mediterranean travel.",
+  },
   nightcap: {
     label: "Inspired by",
     body:
