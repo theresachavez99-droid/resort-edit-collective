@@ -1743,15 +1743,16 @@ function ExtraEditorialReferenceCard({
           </Link>
         ) : (
         <div className="mt-4 border-t border-border/50 pt-5">
+          {referenceShoppable ? (
           <a
-            href={r.url}
+            href={reference.url}
             target="_blank"
             rel="noopener noreferrer sponsored"
             onClick={() =>
               trackOutbound({
-                brand: r.brand,
-                item: r.name,
-                href: r.url,
+                brand: reference.brand,
+                item: reference.name,
+                href: reference.url,
                 category: r.slot ?? "Reference",
               })
             }
@@ -1762,10 +1763,10 @@ function ExtraEditorialReferenceCard({
                 {r.slot ?? "Reference"}
               </div>
               <div className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink mt-1.5">
-                {r.brand}
+                {reference.brand}
               </div>
               <div className="font-serif italic text-[0.95rem] text-ink/85 leading-snug mt-1">
-                {r.name}
+                {reference.name}
                 {r.color ? ` — ${r.color}` : ""}
               </div>
               <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 mt-1.5">
@@ -1773,18 +1774,36 @@ function ExtraEditorialReferenceCard({
               </div>
             </div>
             <div className="text-right shrink-0">
-              {r.price && (
-                <div className="font-serif text-gold text-[0.95rem]">{r.price}</div>
+              {reference.price && (
+                <div className="font-serif text-gold text-[0.95rem]">{reference.price}</div>
               )}
               <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
                 SHOP THE REFERENCE →
               </div>
             </div>
           </a>
+          ) : (
+            <ShopOmissionRows
+              rows={[
+                {
+                  slot: r.slot ?? "Reference",
+                  brand: reference.brand,
+                  name: reference.name,
+                  ...(reference.price ? { price: reference.price } : {}),
+                  ...(reference.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
+                },
+              ]}
+            />
+          )}
         </div>
         )}
         {!editorialOnly && card.shop && card.shop.products.length > 0 && (
-          <ExtraCompleteLookExpander title={card.title} shop={card.shop} />
+          <ExtraCompleteLookExpander
+            title={card.title}
+            shop={card.shop}
+            lookKey={lookKey}
+            {...(lookHealth ? { lookHealth } : {})}
+          />
         )}
       </div>
     </article>
