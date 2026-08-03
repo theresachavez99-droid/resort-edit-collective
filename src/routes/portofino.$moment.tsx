@@ -39,6 +39,7 @@ import {
   isExcludedProduct,
 } from "@/lib/merchandising-exclusions";
 import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
+import { EditorialClosetSection } from "@/components/EditorialClosetSection";
 import {
   MAX_SUPPORTING_LOOKS,
   isCompleteLook,
