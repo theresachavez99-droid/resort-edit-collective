@@ -519,37 +519,99 @@ function ProductHealthPage() {
               </table>
 
               <div className="px-4 py-4 border-t border-stone-200 bg-white">
-                <div className="text-[0.62rem] tracking-[0.3em] uppercase text-stone-500 mb-2">
-                  Replacement candidates ({backups.length}/{MAX_BACKUPS_PER_SLOT} backups
-                  approved)
+                <div className="flex flex-wrap items-baseline justify-between gap-3 mb-3">
+                  <div className="text-[0.62rem] tracking-[0.3em] uppercase text-stone-500">
+                    Replacement candidates ({backups.length}/{MAX_BACKUPS_PER_SLOT} backups
+                    approved)
+                  </div>
+                  {primary && (
+                    <div className="flex flex-wrap gap-1.5 text-xs">
+                      <button
+                        onClick={() =>
+                          generate.mutate({ productId: primary.id, regenerate: false })
+                        }
+                        disabled={generate.isPending || !aiStatus.data?.configured}
+                        className="bg-stone-900 text-white px-2 py-1 disabled:opacity-40"
+                      >
+                        {generate.isPending ? "Styling…" : "Generate AI replacements"}
+                      </button>
+                      <button
+                        onClick={() =>
+                          generate.mutate({ productId: primary.id, regenerate: true })
+                        }
+                        disabled={generate.isPending || !aiStatus.data?.configured}
+                        className="border border-stone-300 px-2 py-1 disabled:opacity-40"
+                      >
+                        Regenerate
+                      </button>
+                      <button
+                        onClick={() => restyle.mutate(rows[0]!.look_key)}
+                        disabled={restyle.isPending || !aiStatus.data?.configured}
+                        className="border border-stone-300 px-2 py-1 disabled:opacity-40"
+                      >
+                        Restyle complete look
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {slotCandidates.length === 0 && (
-                  <p className="text-xs text-stone-500 mb-3">
-                    None yet — add one below. AI sourcing will write into this same queue.
+                {!aiStatus.data?.configured && (
+                  <p className="text-[0.68rem] text-amber-700 mb-3">
+                    AI generation disabled until a provider credential is configured — manual
+                    candidates below still work.
                   </p>
                 )}
-                <ul className="space-y-2 mb-4">
+                {slotCandidates.length === 0 && (
+                  <p className="text-xs text-stone-500 mb-3">
+                    None yet — generate AI candidates above or add one manually below. Both write
+                    into this same review queue.
+                  </p>
+                )}
+                {/* Side-by-side candidate comparison: verification result, matching
+                    rationale, look impact, and AI provenance. */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                   {slotCandidates.map((c) => (
-                    <li key={c.id} className="text-xs flex flex-wrap gap-3 items-baseline">
-                      <span className="font-medium">{c.brand}</span>
-                      <span className="text-stone-600">{c.product_name}</span>
-                      <span className="text-stone-500">{c.price ?? "—"}</span>
-                      <span className="text-stone-500">
-                        match {c.matching_score ?? "—"}
-                      </span>
+                    <div key={c.id} className="border border-stone-200 p-3 text-xs">
+                      <div className="font-medium">{c.brand}</div>
+                      <div className="text-stone-600">{c.product_name}</div>
+                      <div className="text-stone-500 mt-1">
+                        {c.retailer ?? "—"} · {c.price ?? "—"}
+                        {c.color ? ` · ${c.color}` : ""}
+                      </div>
+                      <div className="text-stone-500">match {c.matching_score ?? "—"}</div>
                       <a
                         href={c.pdp_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="underline text-stone-500 break-all"
+                        className="underline text-stone-500 break-all block mt-1"
                       >
-                        PDP
+                        {c.pdp_url}
                       </a>
-                      <span className="uppercase tracking-[0.15em] text-stone-500">
+                      <div
+                        className={`mt-1 ${
+                          c.availability_verdict === "verified_live"
+                            ? "text-emerald-700"
+                            : "text-amber-700"
+                        }`}
+                      >
+                        {c.availability_verdict ?? "unverified"}
+                        {c.availability_http_status ? ` (${c.availability_http_status})` : ""}
+                        {c.verified_at ? ` · ${fmt(c.verified_at)}` : ""}
+                      </div>
+                      {c.rationale && <p className="text-stone-600 mt-2">{c.rationale}</p>}
+                      {c.look_impact && (
+                        <p className="text-stone-500 mt-1 italic">{c.look_impact}</p>
+                      )}
+                      <div className="text-[0.62rem] text-stone-400 mt-2">
+                        {c.source}
+                        {c.model ? ` · ${c.model}` : ""}
+                        {c.prompt_version ? ` · prompt ${c.prompt_version}` : ""}
+                        {c.generated_at ? ` · ${fmt(c.generated_at)}` : ""}
+                      </div>
+                      <div className="uppercase tracking-[0.15em] text-stone-500 mt-2">
                         {c.approval_status}
-                      </span>
+                      </div>
                       {c.approval_status === "pending" && (
-                        <>
+                        <div className="flex flex-wrap gap-1.5 mt-2">
                           <button
                             onClick={() =>
                               decide.mutate({ candidateId: c.id, decision: "approved" })
@@ -566,16 +628,29 @@ function ProductHealthPage() {
                           >
                             Reject
                           </button>
-                        </>
+                          <button
+                            onClick={() => setEditing(c)}
+                            className="border border-stone-300 px-2 py-1"
+                          >
+                            Edit
+                          </button>
+                        </div>
                       )}
-                      {c.rationale && (
-                        <span className="text-stone-500 basis-full">{c.rationale}</span>
-                      )}
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
                 {primary && (
-                  <CandidateForm pw={pw} slotProductId={primary.id} onSaved={invalidate} />
+                  <CandidateForm
+                    pw={pw}
+                    slotProductId={primary.id}
+                    onSaved={() => {
+                      setEditing(null);
+                      invalidate();
+                    }}
+                    {...(editing && editing.slot_product_id === primary.id
+                      ? { initial: editing }
+                      : {})}
+                  />
                 )}
               </div>
             </section>
