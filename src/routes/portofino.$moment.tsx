@@ -480,6 +480,12 @@ function MomentPage() {
       : resolveShopProducts(card.legacy_day_slug, card.look_slug);
   const hasCuratedOverride = curatedShopEntries.length > 0;
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
+  // Slots whose product is being replaced still belong to the edit: they keep
+  // their place in the panel with a "Replacement in review" line. Only a fully
+  // empty edit falls back to the Coming Soon state.
+  const featuredInReviewCount = featuredShop.filter(
+    (e) => e.kind === "override" && (e.product as OverrideItem).inReview,
+  ).length;
   const featuredSlots = summarizeSlots(featuredShop);
 
   const shortMomentName = SHORT_MOMENT_NAME[slug] ?? card.moment_name;
@@ -661,7 +667,8 @@ function MomentPage() {
               {/* Standardized shop area — every moment shows either the Live
                   Shopping Edit (curated affiliate pieces) or a Coming Soon
                   state so the layout is identical across moments. */}
-              {featuredPieceCount > 0 && (isFounderLook || hasCuratedOverride) ? (
+              {featuredPieceCount + featuredInReviewCount > 0 &&
+              (isFounderLook || hasCuratedOverride) ? (
                 <div className="pt-2">
                   <div className="pt-4 border-t border-border/40">
                     <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
