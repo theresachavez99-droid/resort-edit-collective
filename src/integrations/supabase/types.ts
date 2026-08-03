@@ -2069,6 +2069,90 @@ export type Database = {
           },
         ]
       }
+      product_replacement_candidates: {
+        Row: {
+          approval_status: string
+          brand: string
+          created_at: string
+          destination: string
+          id: string
+          look_key: string
+          matching_score: number | null
+          moment: string
+          pdp_url: string
+          price: string | null
+          product_name: string
+          promoted_product_id: string | null
+          rationale: string | null
+          retailer: string | null
+          slot: string
+          slot_product_id: string | null
+          source: string
+          style_dna: Json
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          approval_status?: string
+          brand: string
+          created_at?: string
+          destination: string
+          id?: string
+          look_key: string
+          matching_score?: number | null
+          moment: string
+          pdp_url: string
+          price?: string | null
+          product_name: string
+          promoted_product_id?: string | null
+          rationale?: string | null
+          retailer?: string | null
+          slot: string
+          slot_product_id?: string | null
+          source?: string
+          style_dna?: Json
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          approval_status?: string
+          brand?: string
+          created_at?: string
+          destination?: string
+          id?: string
+          look_key?: string
+          matching_score?: number | null
+          moment?: string
+          pdp_url?: string
+          price?: string | null
+          product_name?: string
+          promoted_product_id?: string | null
+          rationale?: string | null
+          retailer?: string | null
+          slot?: string
+          slot_product_id?: string | null
+          source?: string
+          style_dna?: Json
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_replacement_candidates_promoted_product_id_fkey"
+            columns: ["promoted_product_id"]
+            isOneToOne: false
+            referencedRelation: "shop_slot_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_replacement_candidates_slot_product_id_fkey"
+            columns: ["slot_product_id"]
+            isOneToOne: false
+            referencedRelation: "shop_slot_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_sources: {
         Row: {
           affiliate_url: string | null
@@ -2207,6 +2291,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      shop_slot_products: {
+        Row: {
+          brand: string
+          created_at: string
+          destination: string
+          id: string
+          is_primary: boolean
+          last_checked_at: string | null
+          last_http_status: number | null
+          last_seen_available_at: string | null
+          look_key: string
+          moment: string
+          notes: string | null
+          price: string | null
+          product_name: string
+          replacement_priority: number
+          retailer: string | null
+          slot: string
+          slot_label: string | null
+          status: string
+          style_dna: Json
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          brand: string
+          created_at?: string
+          destination: string
+          id?: string
+          is_primary?: boolean
+          last_checked_at?: string | null
+          last_http_status?: number | null
+          last_seen_available_at?: string | null
+          look_key: string
+          moment: string
+          notes?: string | null
+          price?: string | null
+          product_name: string
+          replacement_priority?: number
+          retailer?: string | null
+          slot: string
+          slot_label?: string | null
+          status?: string
+          style_dna?: Json
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          brand?: string
+          created_at?: string
+          destination?: string
+          id?: string
+          is_primary?: boolean
+          last_checked_at?: string | null
+          last_http_status?: number | null
+          last_seen_available_at?: string | null
+          look_key?: string
+          moment?: string
+          notes?: string | null
+          price?: string | null
+          product_name?: string
+          replacement_priority?: number
+          retailer?: string | null
+          slot?: string
+          slot_label?: string | null
+          status?: string
+          style_dna?: Json
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
       }
       sourced_products: {
         Row: {
@@ -2635,6 +2791,54 @@ export type Database = {
           published_at?: string | null
           sequence?: number | null
           slug?: string | null
+        }
+        Relationships: []
+      }
+      public_shop_slot_display: {
+        Row: {
+          brand: string | null
+          destination: string | null
+          is_primary: boolean | null
+          look_key: string | null
+          moment: string | null
+          price: string | null
+          product_name: string | null
+          replacement_priority: number | null
+          retailer: string | null
+          slot: string | null
+          slot_label: string | null
+          status: string | null
+          url: string | null
+        }
+        Insert: {
+          brand?: string | null
+          destination?: string | null
+          is_primary?: boolean | null
+          look_key?: string | null
+          moment?: string | null
+          price?: string | null
+          product_name?: string | null
+          replacement_priority?: number | null
+          retailer?: string | null
+          slot?: string | null
+          slot_label?: string | null
+          status?: string | null
+          url?: string | null
+        }
+        Update: {
+          brand?: string | null
+          destination?: string | null
+          is_primary?: boolean | null
+          look_key?: string | null
+          moment?: string | null
+          price?: string | null
+          product_name?: string | null
+          replacement_priority?: number | null
+          retailer?: string | null
+          slot?: string | null
+          slot_label?: string | null
+          status?: string | null
+          url?: string | null
         }
         Relationships: []
       }

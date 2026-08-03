@@ -51,6 +51,13 @@ export type OverrideItem = {
    * and is reported as a missing slot by the launch audit.
    */
   unsourced?: boolean;
+  /**
+   * True when the slot's primary product is dead/unavailable and no approved
+   * active backup exists yet (see `@/lib/product-health`). The public page
+   * keeps the editorial slot but renders a non-clickable
+   * "Replacement in review" state instead of a broken link.
+   */
+  inReview?: boolean;
 };
 
 export type LookOverride = {

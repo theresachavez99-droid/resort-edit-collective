@@ -3,6 +3,12 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useState, useEffect, useId, type CSSProperties } from "react";
 import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
+import { getMomentSlotHealth } from "@/lib/product-health.functions";
+import {
+  slotKey,
+  REPLACEMENT_IN_REVIEW_LABEL,
+  type SlotResolution,
+} from "@/lib/product-health";
 import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.json";
 import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
 import espressoHeroVideo from "@/assets/uploads/portofino/espresso-morning-hero.mp4.asset.json";
@@ -297,6 +303,19 @@ const momentQuery = (slug: string) =>
     queryFn: () => getPortofinoMoment({ data: { moment_slug: slug } }),
   });
 
+/**
+ * Slot availability overlay. Looks are permanent editorial concepts; the
+ * commerce item in a slot is replaceable. This query resolves, per slot, which
+ * single product may be displayed (primary, or an approved active backup) —
+ * or `needs_review`, in which case the slot renders a non-clickable
+ * "Replacement in review" state instead of a dead PDP link.
+ */
+const slotHealthQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["moment-slot-health", slug],
+    queryFn: () => getMomentSlotHealth({ data: { moment: slug } }),
+  });
+
 export const Route = createFileRoute("/portofino/$moment")({
   loader: async ({ params, context }) => {
     // Legacy /portofino/day-N URLs are handled here rather than as their own
@@ -321,7 +340,10 @@ export const Route = createFileRoute("/portofino/$moment")({
     }
     const def = getPortofinoMomentDef(params.moment);
     if (!def) throw notFound();
-    await context.queryClient.ensureQueryData(momentQuery(params.moment));
+    await Promise.all([
+      context.queryClient.ensureQueryData(momentQuery(params.moment)),
+      context.queryClient.ensureQueryData(slotHealthQuery(params.moment)),
+    ]);
     return { def };
   },
   head: ({ params }) => {
@@ -402,6 +424,7 @@ export const Route = createFileRoute("/portofino/$moment")({
 function MomentPage() {
   const { moment: slug } = Route.useParams();
   const { data } = useSuspenseQuery(momentQuery(slug));
+  const { data: slotHealth } = useSuspenseQuery(slotHealthQuery(slug));
   const card = data.ok ? data.moment : null;
   if (!card) throw notFound();
 
@@ -447,7 +470,8 @@ function MomentPage() {
   // depending on the publish pipeline.
   const curatedForMoment = MOMENT_SHOP_CURATED[slug];
   const curatedShopEntries: ShopEntry[] = excludeUnmerchandisable(curatedForMoment)
-    .filter((o) => isUsableShopUrl(o.url))
+    .map((o) => applySlotHealth(o, slotHealth.slots))
+    .filter((o) => isUsableShopUrl(o.url) || o.inReview)
     .map((product) => ({ kind: "override" as const, product }));
   const featuredShop = curatedShopEntries.length
     ? curatedShopEntries
@@ -456,6 +480,12 @@ function MomentPage() {
       : resolveShopProducts(card.legacy_day_slug, card.look_slug);
   const hasCuratedOverride = curatedShopEntries.length > 0;
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
+  // Slots whose product is being replaced still belong to the edit: they keep
+  // their place in the panel with a "Replacement in review" line. Only a fully
+  // empty edit falls back to the Coming Soon state.
+  const featuredInReviewCount = featuredShop.filter(
+    (e) => e.kind === "override" && (e.product as OverrideItem).inReview,
+  ).length;
   const featuredSlots = summarizeSlots(featuredShop);
 
   const shortMomentName = SHORT_MOMENT_NAME[slug] ?? card.moment_name;
@@ -637,7 +667,8 @@ function MomentPage() {
               {/* Standardized shop area — every moment shows either the Live
                   Shopping Edit (curated affiliate pieces) or a Coming Soon
                   state so the layout is identical across moments. */}
-              {featuredPieceCount > 0 && (isFounderLook || hasCuratedOverride) ? (
+              {featuredPieceCount + featuredInReviewCount > 0 &&
+              (isFounderLook || hasCuratedOverride) ? (
                 <div className="pt-2">
                   <div className="pt-4 border-t border-border/40">
                     <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
@@ -1077,6 +1108,36 @@ function isUsableShopUrl(url: string | undefined | null): url is string {
 }
 
 /**
+ * Overlay DB-resolved slot availability onto a curated editorial row.
+ *
+ * The editorial layer (image, title, copy, slot order) is never touched here —
+ * only the commerce item. When an approved active backup exists it is swapped
+ * in silently; when nothing is shoppable the row is flagged `inReview` so the
+ * card renders a non-clickable placeholder rather than a dead link.
+ */
+function applySlotHealth(
+  item: OverrideItem,
+  slots: Record<string, SlotResolution>,
+): OverrideItem {
+  const key = slotKey(item.category ?? item.slotLabel ?? "");
+  const resolution = key ? slots[key] : undefined;
+  if (!resolution) return item;
+  if (resolution.state === "live") {
+    const p = resolution.product;
+    return {
+      ...item,
+      brand: p.brand,
+      title: p.product_name,
+      url: p.url ?? "",
+      ...(p.price ? { price: p.price } : {}),
+      unsourced: false,
+      inReview: false,
+    };
+  }
+  return { ...item, url: "", unsourced: false, inReview: true };
+}
+
+/**
  * Build a short, deduped list of slot labels for the "Complete Outfit Includes"
  * summary. Counts live (non-placeholder) entries only, preserves canonical order,
  * and falls back gracefully for override-driven looks.
@@ -1266,7 +1327,9 @@ function ShopCard({
       {...(o.slotLabel ? { category: o.slotLabel } : {})}
       url={isUsableShopUrl(o.url) ? o.url : null}
       image={o.image ?? null}
-      unavailableLabel="COMING SOON"
+      unavailableLabel={
+        o.inReview ? REPLACEMENT_IN_REVIEW_LABEL.toUpperCase() : "COMING SOON"
+      }
     />
   );
 }
@@ -1330,6 +1393,11 @@ function ShopLookPanel({
         {href && (
           <div className="eyebrow text-[0.62rem] tracking-[0.32em] text-gold/80 mt-2 group-hover:text-gold transition-colors duration-300">
             VIEW PRODUCT →
+          </div>
+        )}
+        {!href && o.inReview && (
+          <div className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/45 mt-2">
+            {REPLACEMENT_IN_REVIEW_LABEL.toUpperCase()}
           </div>
         )}
       </div>
