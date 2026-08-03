@@ -297,6 +297,19 @@ const momentQuery = (slug: string) =>
     queryFn: () => getPortofinoMoment({ data: { moment_slug: slug } }),
   });
 
+/**
+ * Slot availability overlay. Looks are permanent editorial concepts; the
+ * commerce item in a slot is replaceable. This query resolves, per slot, which
+ * single product may be displayed (primary, or an approved active backup) —
+ * or `needs_review`, in which case the slot renders a non-clickable
+ * "Replacement in review" state instead of a dead PDP link.
+ */
+const slotHealthQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["moment-slot-health", slug],
+    queryFn: () => getMomentSlotHealth({ data: { moment: slug } }),
+  });
+
 export const Route = createFileRoute("/portofino/$moment")({
   loader: async ({ params, context }) => {
     // Legacy /portofino/day-N URLs are handled here rather than as their own
@@ -321,7 +334,10 @@ export const Route = createFileRoute("/portofino/$moment")({
     }
     const def = getPortofinoMomentDef(params.moment);
     if (!def) throw notFound();
-    await context.queryClient.ensureQueryData(momentQuery(params.moment));
+    await Promise.all([
+      context.queryClient.ensureQueryData(momentQuery(params.moment)),
+      context.queryClient.ensureQueryData(slotHealthQuery(params.moment)),
+    ]);
     return { def };
   },
   head: ({ params }) => {
