@@ -14,6 +14,8 @@ export type OmittedRow = {
   brand: string;
   name: string;
   price?: string;
+  /** Status line override, e.g. "Replacement in review" for a failed link. */
+  label?: string;
 };
 
 export function ShopOmissionRows({ rows }: { rows: OmittedRow[] }) {
@@ -44,7 +46,7 @@ export function ShopOmissionRows({ rows }: { rows: OmittedRow[] }) {
               <div className="font-serif text-ink/40 text-[0.95rem]">{p.price}</div>
             )}
             <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/40 mt-2">
-              STILL SOURCING
+              {(p.label ?? "Still sourcing").toUpperCase()}
             </div>
           </div>
         </li>
