@@ -181,7 +181,7 @@ Type: ${input.lookKind} look
 Title: ${input.lookTitle}
 Editorial caption / copy: ${input.editorialCopy ?? "—"}
 Editorial image description / alt text: ${input.imageAlt ?? "—"}
-Colour story: ${input.colorStory ?? (input.colorsInLook ?? []).join(", ") || "—"}
+Colour story: ${input.colorStory ?? ((input.colorsInLook ?? []).join(", ") || "—")}
 Colours already in the look: ${(input.colorsInLook ?? []).join(", ") || "—"}
 Jewellery designer(s) in the look: ${(input.jewelryBrandsInLook ?? []).join(", ") || "—"}
 Jewellery metal family: ${input.jewelryMetalFamily ?? "—"}

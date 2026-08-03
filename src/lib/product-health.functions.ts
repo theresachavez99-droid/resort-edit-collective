@@ -709,7 +709,7 @@ export const saveStylingPolicy = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     requireAdmin(data.password);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, unknown> = {};
+    const patch: Record<string, never> = {} as Record<string, never>;
     if (data.retailerPriority) patch["retailer_priority"] = data.retailerPriority;
     if (data.approvedBrands) patch["approved_brands"] = data.approvedBrands;
     if (data.restrictedBrands) patch["restricted_brands"] = data.restrictedBrands;
