@@ -752,7 +752,12 @@ function MomentPage() {
                       }}
                     />
                     {c.shop && (
-                      <NightcapShopExpander card={c} shop={c.shop} />
+                      <NightcapShopExpander
+                        card={c}
+                        shop={c.shop}
+                        lookKey={`portofino/${slug}/${c.key}`}
+                        lookHealth={slotHealth.looks}
+                      />
                     )}
                   </div>
                 </article>
@@ -794,6 +799,7 @@ function MomentPage() {
                   card={c}
                   momentSlug={slug}
                   momentName={card.moment_name}
+                  lookHealth={slotHealth.looks}
                 />
               ))}
             </div>
