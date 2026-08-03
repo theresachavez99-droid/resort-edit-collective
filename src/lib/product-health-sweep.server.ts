@@ -51,12 +51,17 @@ export async function sweepProductHealth(opts: {
     if (!row.url) continue;
     const probe = await probeProductUrl(row.url);
     const now = new Date().toISOString();
-    const patch: Record<string, unknown> = {
+    const patch: {
+      last_checked_at: string;
+      last_http_status: number | null;
+      status: string;
+      last_seen_available_at?: string;
+    } = {
       last_checked_at: now,
       last_http_status: probe.httpStatus,
       status: probe.status,
     };
-    if (probe.status === "active") patch["last_seen_available_at"] = now;
+    if (probe.status === "active") patch.last_seen_available_at = now;
     const { error: uErr } = await supabaseAdmin
       .from("shop_slot_products")
       .update(patch)
