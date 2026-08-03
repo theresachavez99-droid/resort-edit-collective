@@ -42,10 +42,10 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
     {
       slotLabel: "Bag",
       category: "Bag",
-      brand: "Dragon Diffusion",
-      title: "Santa Maria Woven Leather Bag — Natural",
-      price: "$551",
-      url: "https://dragondiffusion.com/products/santa-maria-natural-woven-leather-bag-handmade",
+      brand: "Loewe",
+      title: "Paula's Ibiza Loop Raffia Basket Bag — Natural",
+      price: "$2,900",
+      url: "https://www.mytheresa.com/us/en/men/loewe-paulas-ibiza-loop-raffia-bucket-bag-beige-p01181491",
       image: "",
     },
     {
