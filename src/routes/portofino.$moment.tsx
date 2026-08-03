@@ -1818,15 +1818,18 @@ function ExtraEditorialReferenceCard({
 function ExtraCompleteLookExpander({
   title,
   shop,
+  lookKey,
+  lookHealth,
 }: {
   title: string;
   shop: NonNullable<ExtraEditorialCard["shop"]>;
+  lookKey?: string;
+  lookHealth?: Record<string, SlotResolution>;
 }) {
   const [open, setOpen] = useState(false);
-  const rows = shop.products.filter((p) => !p.unsourced && isUsableShopUrl(p.url));
-  const omitted = shop.products
-    .filter((p) => p.unsourced || !isUsableShopUrl(p.url))
-    .map((p) => ({ slot: p.slot, brand: p.brand, name: p.name, price: p.price }));
+  const { live: rows, omitted } = splitHealthedRows(
+    shop.products.map((p) => applyLookRowHealth(p, lookKey, lookHealth)),
+  );
   if (rows.length === 0) return null;
   return (
     <div className="mt-3">
