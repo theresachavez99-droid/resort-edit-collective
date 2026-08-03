@@ -10,7 +10,7 @@ import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
-import arrivalPiazzaIvoryImage from "@/assets/uploads/lilla/lilla-arrival-piazza-in-ivory-v3.jpg.asset.json";
+import arrivalLinenVestHarborImage from "@/assets/uploads/lilla/arrival-lilla-linen-vest-harbor.jpg.asset.json";
 import arrivalWellsAtHarborImage from "@/assets/uploads/lilla/lilla-arrival-wells-at-the-harbor.jpg.asset.json";
 import shoppingGreenEyeletImage from "@/assets/uploads/lilla/shopping-lilla-green-eyelet-via-roma.png.asset.json";
 
@@ -64,8 +64,8 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       title: "Linen Vest at the Harbor",
       caption:
         "Faithfull's Maya vest and Isotta pant in natural linen — tonal, quietly tailored, and finished with warm tan leather and slim gold for the first walk along the harbor.",
-      image: arrivalPiazzaIvoryImage.url,
-      alt: "Lilla arriving on the Portofino harbor cobblestones in a soft round-neck ivory silk blouse with short cap sleeves, tucked into fluid ivory stretch-suiting wide-leg trousers, carrying a small tan-leather structured top-handle bag with a compact tan travel case at her feet, wearing cream leather pointed-toe slingback pumps on a low block heel with dark rectangular acetate sunglasses perched on her head.",
+      image: arrivalLinenVestHarborImage.url,
+      alt: "Lilla on the Portofino harbor cobblestones in a natural linen square-neck button-front vest and matching high-rise wide-leg linen trousers, carrying a natural raffia tote, wearing flat tan leather sandals, sunglasses resting on her softly pinned-up hair, with layered delicate gold necklaces, small gold hoops and a slim polished gold cuff.",
       reference: {
         slot: "Hero Piece · Vest",
         brand: "FAITHFULL THE BRAND",
