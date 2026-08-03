@@ -516,7 +516,7 @@ function MomentPage() {
   // (no legacy day-siblings) — keeps the "More Resort Edit Looks" grid
   // to exactly the approved editorial cards.
   const suppressLegacySiblings = slug === "arrival";
-  const siblings: Look[] = suppressLegacySiblings
+  const allSiblings: Look[] = suppressLegacySiblings
     ? []
     : lookbook.filter(
         (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
@@ -525,6 +525,33 @@ function MomentPage() {
         // curated "Green Eyelet on Via Roma" editorial card below.
         (l) => !(slug === "shopping" && l.title === "Via Roma Boutiques"),
       );
+
+  // EDITORIAL COMPLETION LAW
+  // 1. A supporting look renders only when its shopping set is complete for
+  //    the moment (outfit · shoes · bag · jewelry · sunglasses by day).
+  //    Incomplete looks are unpublished from the page — never shown with a
+  //    placeholder or "Coming Soon" affordance. The Studio replacement queue
+  //    is the internal record of what still needs styling.
+  // 2. Every moment renders exactly one hero look and AT MOST two supporting
+  //    looks. Curated editorial cards take precedence over legacy siblings;
+  //    extras beyond the cap stay in the data (nothing deleted) and simply
+  //    aren't rendered.
+  const daytimeMoment = isDaytimeMoment(slug);
+  // Shopping publishes curated editorial cards only.
+  const completeSiblings: Look[] =
+    slug === "shopping"
+      ? []
+      : allSiblings.filter((sib) => {
+          const entries = resolveShopProducts(sib.daySlug, sib.lookSlug);
+          if (!entries.some(shopEntryIsLive)) return false;
+          return isCompleteLook(summarizeSlots(entries), { daytime: daytimeMoment });
+        });
+  const extraCards = MOMENT_EXTRA_EDITORIAL_CARDS[slug] ?? [];
+  const renderedExtraCards = extraCards.slice(0, MAX_SUPPORTING_LOOKS);
+  const siblings: Look[] = completeSiblings.slice(
+    0,
+    Math.max(0, MAX_SUPPORTING_LOOKS - renderedExtraCards.length),
+  );
 
   // Inline expansion state: which look's shop grid is currently open.
   // `featured` opens the featured look; `look-a|b|c` opens that sibling.
