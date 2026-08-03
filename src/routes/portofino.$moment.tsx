@@ -39,6 +39,11 @@ import {
   isExcludedProduct,
 } from "@/lib/merchandising-exclusions";
 import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
+import {
+  MAX_SUPPORTING_LOOKS,
+  isCompleteLook,
+  isDaytimeMoment,
+} from "@/lib/look-completeness";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
