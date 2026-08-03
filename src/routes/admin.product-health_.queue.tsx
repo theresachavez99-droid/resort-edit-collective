@@ -104,7 +104,7 @@ function QueuePage() {
   if (!pw) {
     return (
       <main className="mx-auto max-w-md px-6 py-16">
-        <h1 className="font-serif text-2xl mb-4">Replacement Queue</h1>
+        <h1 className="font-serif text-2xl mb-4">Editorial Queue</h1>
         <p className="text-sm text-stone-600 mb-4">
           Enter the Studio password (or unlock from the Studio dashboard).
         </p>
@@ -133,7 +133,7 @@ function QueuePage() {
     <main className="mx-auto max-w-6xl px-6 py-10">
       <div className="flex items-baseline justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-serif text-3xl">Replacement Queue</h1>
+          <h1 className="font-serif text-3xl">Editorial Queue</h1>
           <p className="text-sm text-stone-600 mt-1">
             Internal triage for failed product links. Nothing here publishes automatically.
           </p>
