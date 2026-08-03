@@ -236,7 +236,7 @@ async function storeCandidates(
     matching_score: v.matchingScore,
     rationale: v.rationale,
     look_impact: v.lookImpact,
-    style_dna: v.styleDna,
+    style_dna: v.styleDna as Record<string, never>,
     availability_verdict: v.availabilityVerdict,
     availability_http_status: v.availabilityHttpStatus,
     verified_at: v.verifiedAt,
