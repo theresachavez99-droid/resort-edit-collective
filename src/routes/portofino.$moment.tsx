@@ -296,6 +296,7 @@ import { findResortEditLook } from "@/data/resortEditLooks";
 // when product links, styling, or layout change.
 import poolLoungingEditorial from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
 import longLunchEditorial from "@/assets/uploads/portofino/long-lunch-yellow-dress-harbor-v3.png.asset.json";
+import arrivalLinenVestEditorial from "@/assets/uploads/lilla/arrival-lilla-linen-vest-harbor.jpg.asset.json";
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -1003,7 +1004,7 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
   arrival: {
     label: "Inspired by",
     body:
-      "Tonal linen tailoring, warm tan leather, woven raffia, and sculptural gold. A polished arrival look with the ease of Mediterranean travel.",
+      "Faithfull's Maya vest and Isotta pant in natural linen — tonal, quietly tailored, and finished with warm tan leather and slim gold for the first walk along the harbor.",
   },
   nightcap: {
     label: "Inspired by",
@@ -1037,6 +1038,7 @@ const MOMENT_EDITORIAL_TITLE: Record<string, string> = {
  * when a moment publishes its own editorial photograph.
  */
 const MOMENT_EDITORIAL_IMAGE: Record<string, string> = {
+  arrival: arrivalLinenVestEditorial.url,
   "pool-lounging": poolLoungingEditorial.url,
   "long-lunch": longLunchEditorial.url,
 };
