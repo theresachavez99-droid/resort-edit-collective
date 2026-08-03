@@ -440,6 +440,18 @@ export async function runSiteProductAudit(scope: AuditScope = {}): Promise<Audit
         const { generateCandidatesForSlotProduct } = await import("./ai-replacement.server");
         const out = await generateCandidatesForSlotProduct(primary.id);
         report.queuedForStyling.push({ lookKey, slot, route, candidates: out.candidates.length });
+        // Documented notification seam — email/Slack can hook in later.
+        const { emitQueueStateChange } = await import("./queue-notifications.server");
+        await emitQueueStateChange({
+          lookKey,
+          slot,
+          destination: primary.destination,
+          moment: primary.moment,
+          route,
+          state: out.candidates.length > 0 ? "candidates_ready" : "awaiting_styling",
+          candidateCount: out.candidates.length,
+          actor: "audit",
+        });
         await logEvent({
           runId,
           slotProductId: primary.id,
