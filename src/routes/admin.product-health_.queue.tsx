@@ -25,7 +25,14 @@ import { PRODUCT_STATUS_LABELS, type ProductStatus } from "@/lib/product-health"
  * validated backup, or the non-clickable "Replacement in review" state.
  */
 export const Route = createFileRoute("/admin/product-health_/queue")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): {
+    runId?: string;
+    state?: QueueState;
+    destination?: string;
+    moment?: string;
+  } => ({
     runId: typeof search.runId === "string" ? search.runId : undefined,
     state: QUEUE_STATES.includes(search.state as QueueState)
       ? (search.state as QueueState)
