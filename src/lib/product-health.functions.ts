@@ -359,6 +359,31 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
       return { ok: true as const, promotedProductId: null };
     }
 
+    // An AI candidate can only be approved after independent verification.
+    const { verifyPdp } = await import("./pdp-verification.server");
+    const verification = await verifyPdp({
+      url: cand.pdp_url,
+      brand: cand.brand,
+      productName: cand.product_name,
+      color: cand.color,
+    });
+    if (verification.status !== "verified") {
+      await supabaseAdmin
+        .from("product_replacement_candidates")
+        .update({
+          approval_status: "rejected",
+          verification_status: verification.status,
+          verification_detail: verification as unknown as Record<string, never>,
+          availability_verdict: verification.verdict,
+          availability_http_status: verification.httpStatus,
+          verified_at: verification.verifiedAt,
+        })
+        .eq("id", cand.id);
+      throw new Error(
+        `Candidate failed verification (${verification.verdict}): ${verification.checks.join("; ")}`,
+      );
+    }
+
     const { data: existing, error: eErr } = await supabaseAdmin
       .from("shop_slot_products")
       .select("id,is_primary,replacement_priority")
@@ -372,9 +397,11 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
       );
     }
 
-    const { probeProductUrl } = await import("./product-health.server");
-    const probe = await probeProductUrl(cand.pdp_url);
     const now = new Date().toISOString();
+    const probe = {
+      status: "active" as const,
+      httpStatus: verification.httpStatus,
+    };
 
     const { data: inserted, error: iErr } = await supabaseAdmin
       .from("shop_slot_products")
@@ -387,7 +414,7 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
         product_name: cand.product_name,
         retailer: cand.retailer,
         url: cand.pdp_url,
-        price: cand.price,
+        price: verification.priceFound ?? cand.price,
         status: probe.status,
         last_checked_at: now,
         last_http_status: probe.httpStatus,
@@ -405,7 +432,11 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
       .from("product_replacement_candidates")
       .update({
         approval_status: "approved",
-        verified_at: now,
+        verified_at: verification.verifiedAt,
+        verification_status: "verified",
+        verification_detail: verification as unknown as Record<string, never>,
+        availability_verdict: verification.verdict,
+        availability_http_status: verification.httpStatus,
         promoted_product_id: inserted.id,
       })
       .eq("id", cand.id);
