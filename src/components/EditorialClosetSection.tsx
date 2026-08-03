@@ -25,6 +25,7 @@ import {
   type ClosetPublicCandidate,
 } from "@/lib/editorial-closet";
 import { canRenderProductImage } from "@/lib/product-image-policy";
+import { isPublishableProductUrl } from "@/lib/shop-url-policy";
 
 function AlternativeCard({
   item,
@@ -110,8 +111,13 @@ export function EditorialClosetSection({
     staleTime: 5 * 60 * 1000,
   });
 
+  // Final client-side guard: a search/category/homepage URL never renders as a
+  // shoppable link, even if it somehow reached an approved row.
   const candidates = useMemo(
-    () => (data?.candidates ?? []).slice(0, CLOSET_MAX_CANDIDATES),
+    () =>
+      (data?.candidates ?? [])
+        .filter((c) => isPublishableProductUrl(c.productUrl))
+        .slice(0, CLOSET_MAX_CANDIDATES),
     [data],
   );
 
