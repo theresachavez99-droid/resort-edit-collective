@@ -17,9 +17,58 @@ export const PRODUCT_STATUSES = [
   "sold_out",
   "unavailable",
   "404",
+  "non_product_url",
+  "title_mismatch",
+  "blocked_or_inconclusive",
   "needs_review",
 ] as const;
 export type ProductStatus = (typeof PRODUCT_STATUSES)[number];
+
+/**
+ * Statuses that must never render as a clickable outbound link and that make a
+ * primary eligible for automatic replacement by an approved, validated backup.
+ */
+export const FAILED_PRODUCT_STATUSES = [
+  "sold_out",
+  "unavailable",
+  "404",
+  "non_product_url",
+  "title_mismatch",
+] as const satisfies readonly ProductStatus[];
+
+export function isFailedStatus(status: string): boolean {
+  return (FAILED_PRODUCT_STATUSES as readonly string[]).includes(status);
+}
+
+/**
+ * A retailer blocking automated requests is NOT a product failure. These
+ * statuses suppress the link but require a human look before replacement.
+ */
+export function isInconclusiveStatus(status: string): boolean {
+  return status === "blocked_or_inconclusive" || status === "needs_review";
+}
+
+export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
+  active: "Active",
+  sold_out: "Sold out",
+  unavailable: "Unavailable",
+  "404": "404 / removed",
+  non_product_url: "Not a product page",
+  title_mismatch: "Title mismatch",
+  blocked_or_inconclusive: "Inconclusive (retailer blocked)",
+  needs_review: "Needs review",
+};
+
+/**
+ * Public route a look renders on. `destination/moment[/cardKey]` — editorial
+ * cards render on their moment page, so both map to the same public route.
+ */
+export function routeForLookKey(lookKey: string): string {
+  const [destination, moment] = lookKey.split("/");
+  if (!destination) return "/";
+  if (!moment) return `/${destination}`;
+  return `/${destination}/${moment}`;
+}
 
 export const CANDIDATE_APPROVAL_STATUSES = ["pending", "approved", "rejected"] as const;
 export type CandidateApprovalStatus = (typeof CANDIDATE_APPROVAL_STATUSES)[number];
