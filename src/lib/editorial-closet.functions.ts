@@ -142,9 +142,13 @@ export const trackClosetEvent = createServerFn({ method: "POST" })
         .eq("id", data.candidateId)
         .maybeSingle();
       const current = Number((row as Record<string, unknown> | null)?.[column] ?? 0);
+      const patch =
+        data.eventType === CLOSET_EVENTS.retailerClick
+          ? { retailer_click_count: current + 1 }
+          : { click_count: current + 1 };
       await supabaseAdmin
         .from("editorial_closet_candidates")
-        .update({ [column]: current + 1 })
+        .update(patch)
         .eq("id", data.candidateId);
     }
     return { ok: true as const };
