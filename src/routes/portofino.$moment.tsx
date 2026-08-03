@@ -1138,6 +1138,60 @@ function applySlotHealth(
 }
 
 /**
+ * Look-scoped version of the overlay, used for every supporting/editorial look
+ * on the page. Keyed by `lookKey::slot`, so each look's slots resolve
+ * independently of the hero look and of each other — the same maintenance
+ * behaviour applies sitewide, not only to the hero shop panel.
+ */
+type HealthedShopRow = {
+  slot: string;
+  brand: string;
+  name: string;
+  price?: string;
+  url: string;
+  unsourced?: boolean;
+  inReview: boolean;
+};
+
+function applyLookRowHealth(
+  row: { slot: string; brand: string; name: string; price?: string; url: string; unsourced?: boolean },
+  lookKey: string | undefined,
+  looks: Record<string, SlotResolution> | undefined,
+): HealthedShopRow {
+  const resolution =
+    lookKey && looks ? looks[`${lookKey}::${slotKey(row.slot)}`] : undefined;
+  if (!resolution) return { ...row, inReview: false };
+  if (resolution.state === "live") {
+    const p = resolution.product;
+    return {
+      ...row,
+      brand: p.brand,
+      name: p.product_name,
+      url: p.url ?? "",
+      ...(p.price ? { price: p.price } : {}),
+      unsourced: false,
+      inReview: false,
+    };
+  }
+  return { ...row, url: "", unsourced: false, inReview: true };
+}
+
+/** Split healthed rows into shoppable rows and non-clickable status rows. */
+function splitHealthedRows(rows: HealthedShopRow[]) {
+  const live = rows.filter((p) => !p.unsourced && !p.inReview && isUsableShopUrl(p.url));
+  const omitted = rows
+    .filter((p) => p.unsourced || p.inReview || !isUsableShopUrl(p.url))
+    .map((p) => ({
+      slot: p.slot,
+      brand: p.brand,
+      name: p.name,
+      ...(p.price ? { price: p.price } : {}),
+      ...(p.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
+    }));
+  return { live, omitted };
+}
+
+/**
  * Build a short, deduped list of slot labels for the "Complete Outfit Includes"
  * summary. Counts live (non-placeholder) entries only, preserves canonical order,
  * and falls back gracefully for override-driven looks.
