@@ -479,7 +479,6 @@ function MomentPage() {
       ? founderShopEntries
       : resolveShopProducts(card.legacy_day_slug, card.look_slug);
   const hasCuratedOverride = curatedShopEntries.length > 0;
-  console.log("DBG", slug, JSON.stringify({curated: (curatedForMoment??[]).length, entries: curatedShopEntries.length, slots: slotHealth.slots}));
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
   // Slots whose product is being replaced still belong to the edit: they keep
   // their place in the panel with a "Replacement in review" line. Only a fully
