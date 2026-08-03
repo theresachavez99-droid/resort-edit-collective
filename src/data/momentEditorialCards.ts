@@ -11,7 +11,6 @@ import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
 import arrivalLinenVestHarborImage from "@/assets/uploads/lilla/arrival-lilla-linen-vest-harbor.jpg.asset.json";
-import arrivalWellsAtHarborImage from "@/assets/uploads/lilla/lilla-arrival-wells-at-the-harbor.jpg.asset.json";
 import arrivalButterMargiHarborImage from "@/assets/uploads/lilla/arrival-lilla-butter-margi-harbor.jpg.asset.json";
 import shoppingGreenEyeletImage from "@/assets/uploads/lilla/shopping-lilla-green-eyelet-via-roma.png.asset.json";
 
