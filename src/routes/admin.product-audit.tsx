@@ -90,11 +90,31 @@ function ProductAuditPage() {
   const audit = useMutation({
     mutationFn: (scope: { destination?: string; moment?: string; lookKey?: string }) =>
       auditFn({ data: { password: pw, ...scope } }),
-    onSuccess: () => {
+    onSuccess: (report) => {
+      const line = auditSummaryLine({
+        failed: report.failures.length,
+        promoted: report.autoPromoted.length,
+        needsReview: report.queuedForStyling.length + report.inReview.length,
+      });
+      toast.success(line, {
+        duration: 12_000,
+        action: {
+          label: "Review replacements",
+          onClick: () =>
+            navigate({
+              to: "/admin/product-health/queue",
+              search: report.runId ? { runId: report.runId } : {},
+            }),
+        },
+      });
       qc.invalidateQueries({ queryKey: ["product-index"] });
       qc.invalidateQueries({ queryKey: ["audit-runs"] });
       qc.invalidateQueries({ queryKey: ["audit-events"] });
+      qc.invalidateQueries({ queryKey: ["queue-badge"] });
+      qc.invalidateQueries({ queryKey: ["latest-audit-summary"] });
     },
+    onError: (e) =>
+      toast.error(e instanceof Error ? e.message : "Audit failed"),
   });
 
   const products = index.data?.products ?? [];
