@@ -63,8 +63,8 @@ export const Route = createFileRoute("/brands/$slug")({
   notFoundComponent: () => (
     <div className="bg-ivory min-h-[60vh] flex items-center justify-center px-6">
       <div className="text-center">
-        <span className="eyebrow text-gold">Not in the index — yet</span>
-        <h1 className="font-display text-3xl mt-4">Brand coming soon</h1>
+        <span className="eyebrow text-gold">Not in the index</span>
+        <h1 className="font-display text-3xl mt-4">This designer isn't in The Edit</h1>
         <Link to="/brands" className="mt-6 inline-block eyebrow text-ink hover:text-gold">
           ← Back to all brands
         </Link>
