@@ -3,6 +3,12 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useState, useEffect, useId, type CSSProperties } from "react";
 import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
+import { getMomentSlotHealth } from "@/lib/product-health.functions";
+import {
+  slotKey,
+  REPLACEMENT_IN_REVIEW_LABEL,
+  type SlotResolution,
+} from "@/lib/product-health";
 import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.json";
 import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
 import espressoHeroVideo from "@/assets/uploads/portofino/espresso-morning-hero.mp4.asset.json";
