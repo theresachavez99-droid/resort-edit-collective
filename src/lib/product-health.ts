@@ -65,6 +65,16 @@ export function slotKey(slot: string): string {
   return slot.trim().toLowerCase();
 }
 
+/** Composite key used to match a DB row to one specific look's slot. */
+export function lookSlotKey(lookKey: string, slot: string): string {
+  return `${lookKey}::${slotKey(slot)}`;
+}
+
+/** True for a hero look key (`destination/moment`), false for editorial looks. */
+export function isHeroLookKey(lookKey: string): boolean {
+  return lookKey.split("/").length <= 2;
+}
+
 /**
  * Choose the single product to display for a slot. Backups are only eligible
  * when already approved into the slot (an unapproved candidate never reaches
@@ -83,12 +93,17 @@ export function resolveSlot(rows: SlotProductDisplay[]): SlotResolution {
   return { state: "needs_review", primary };
 }
 
-/** Group public rows into a `slot → resolution` map for one moment. */
+/**
+ * Group public rows into a `slot → resolution` map for one moment's HERO look.
+ * Editorial ("More Resort Edit Looks") rows are excluded here so they can never
+ * overwrite a hero slot; use `resolveLookSlots` for those.
+ */
 export function resolveMomentSlots(
   rows: SlotProductDisplay[],
 ): Record<string, SlotResolution> {
   const bySlot = new Map<string, SlotProductDisplay[]>();
   for (const row of rows) {
+    if (!isHeroLookKey(row.look_key)) continue;
     const key = slotKey(row.slot);
     const list = bySlot.get(key) ?? [];
     list.push(row);
@@ -96,6 +111,23 @@ export function resolveMomentSlots(
   }
   const out: Record<string, SlotResolution> = {};
   for (const [key, list] of bySlot) out[key] = resolveSlot(list);
+  return out;
+}
+
+/**
+ * Group rows into a `"lookKey::slot" → resolution` map. Sitewide: works for
+ * hero looks and for every supporting/editorial look on the page.
+ */
+export function resolveLookSlots(
+  rows: SlotProductDisplay[],
+): Record<string, SlotResolution> {
+  const byKey = new Map<string, SlotProductDisplay[]>();
+  for (const row of rows) {
+    const key = lookSlotKey(row.look_key, row.slot);
+    byKey.set(key, [...(byKey.get(key) ?? []), row]);
+  }
+  const out: Record<string, SlotResolution> = {};
+  for (const [key, list] of byKey) out[key] = resolveSlot(list);
   return out;
 }
 
