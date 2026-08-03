@@ -6,6 +6,7 @@ import { verifyAdmin } from "@/lib/admin-auth.functions";
 import { getAdminMetrics } from "@/lib/admin-metrics.functions";
 import { LaunchAuditPanel } from "@/components/LaunchAuditPanel";
 import { ProductImageAuditPanel } from "@/components/ProductImageAuditPanel";
+import { QueueStatusPanel } from "@/components/QueueStatusPanel";
 
 /**
  * Studio dashboard at /admin — the permanent editorial home.
@@ -244,6 +245,7 @@ function AdminDashboard() {
         <h2 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2">
           Availability
         </h2>
+        <QueueStatusPanel password={pw} />
         <div className="grid gap-3 md:grid-cols-2">
           {AVAILABILITY.map((item) => (
             <Link
