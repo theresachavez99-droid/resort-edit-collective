@@ -13,6 +13,7 @@ import {
   PRODUCT_STATUSES,
   MAX_BACKUPS_PER_SLOT,
   resolveMomentSlots,
+  resolveLookSlots,
   slotKey,
   type SlotProductDisplay,
   type SlotResolution,
@@ -44,10 +45,16 @@ export const getMomentSlotHealth = createServerFn({ method: "GET" })
   .inputValidator((i: unknown) =>
     z.object({ moment: z.string().min(1).max(80) }).parse(i),
   )
-  .handler(async ({ data }): Promise<{ slots: Record<string, SlotResolution> }> => {
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      slots: Record<string, SlotResolution>;
+      looks: Record<string, SlotResolution>;
+    }> => {
     const url = process.env["SUPABASE_URL"];
     const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
-    if (!url || !key) return { slots: {} };
+    if (!url || !key) return { slots: {}, looks: {} };
     const { createClient } = await import("@supabase/supabase-js");
     const client = createClient(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
@@ -68,9 +75,13 @@ export const getMomentSlotHealth = createServerFn({ method: "GET" })
         "destination,moment,look_key,slot,slot_label,brand,product_name,retailer,url,price,status,is_primary,replacement_priority",
       )
       .eq("moment", data.moment);
-    if (error || !rows) return { slots: {} };
-    return { slots: resolveMomentSlots(rows as SlotProductDisplay[]) };
-  });
+    if (error || !rows) return { slots: {}, looks: {} };
+    const typed = rows as SlotProductDisplay[];
+    // `slots` = hero look (back-compat); `looks` = every look on the page,
+    // keyed `lookKey::slot`, so supporting/editorial looks are covered too.
+    return { slots: resolveMomentSlots(typed), looks: resolveLookSlots(typed) };
+  },
+  );
 
 // ── Admin: read ───────────────────────────────────────────────────
 
