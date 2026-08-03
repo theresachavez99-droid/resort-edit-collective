@@ -11,7 +11,7 @@ import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
 import arrivalLinenVestHarborImage from "@/assets/uploads/lilla/arrival-lilla-linen-vest-harbor.jpg.asset.json";
-import arrivalWellsAtHarborImage from "@/assets/uploads/lilla/lilla-arrival-wells-at-the-harbor.jpg.asset.json";
+import arrivalButterMargiHarborImage from "@/assets/uploads/lilla/arrival-lilla-butter-margi-harbor.jpg.asset.json";
 import shoppingGreenEyeletImage from "@/assets/uploads/lilla/shopping-lilla-green-eyelet-via-roma.png.asset.json";
 
 /**
@@ -142,9 +142,7 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       title: "Butter Light on Arrival",
       caption:
         "Just off the boat and into the village — STAUD's Margi midi in soft butter, a fine ivory cashmere cardigan draped at the shoulders, and quiet woven leather for the walk up from the harbor.",
-      // Editorial placeholder retained until the butter-dress reference frame is
-      // supplied; the product data below is the approved Margi look.
-      image: arrivalWellsAtHarborImage.url,
+      image: arrivalButterMargiHarborImage.url,
       alt: "Editorial reference frame for the Arrival butter-dress look in Portofino — a soft butter midi dress worn with a fine ivory cashmere cardigan draped over the shoulders, flat leather sandals, a woven leather bag, tortoise sunglasses and sculptural gold jewelry.",
       reference: {
         slot: "Hero Piece · Dress",
