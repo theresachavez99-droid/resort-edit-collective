@@ -942,7 +942,7 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
  * polished public name so the page never reads as internal data.
  */
 const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
-  "arrival": "The Splendido Arrival",
+  "arrival": "The Ivory Arrival",
   "espresso-morning": "The Espresso Morning",
   "yacht-day": "The Yacht Day",
   "harbor-aperitivo": "The Harbor Aperitivo",
@@ -1372,6 +1372,7 @@ function ShopLookPanel({
  */
 const THE_LOOK_CATEGORIES = new Set([
   "corset", "top", "blouse", "shirt", "tee", "t-shirt",
+  "vest", "waistcoat",
   "pant", "pants", "trouser", "trousers", "skirt",
   "dress", "gown", "jumpsuit", "romper",
   "swimsuit", "bikini", "bikini top", "bikini bottom", "one-piece", "swim",
