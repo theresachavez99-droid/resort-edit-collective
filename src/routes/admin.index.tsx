@@ -77,6 +77,12 @@ const AVAILABILITY: NavItem[] = [
     description:
       "Sitewide link integrity — every outbound product URL, where it is used, its live verdict, automated backup promotions and the styling queue.",
   },
+  {
+    label: "Replacement Queue",
+    to: "/admin/product-health/queue",
+    description:
+      "Every failed slot and what it is waiting on — styling, verification or your approval. The Replacements badge in the Studio bar counts these.",
+  },
 ];
 
 const OPERATIONS: NavItem[] = [
