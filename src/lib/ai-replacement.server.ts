@@ -1,29 +1,36 @@
 /**
- * AI replacement orchestration (server-only).
+ * Replacement orchestration (server-only) — the workflow layer around the
+ * OpenAI styling engine.
  *
- * Assembles the full editorial context for a look, asks the AI stylist to
- * restyle the failed slot (or the whole look on explicit request), VERIFIES
- * every proposed PDP server-side, then stores the candidates for review with
- * provider / model / prompt-version / timestamp metadata so repeated page loads
- * never regenerate them.
+ * This app does NOT style. It:
+ *  1. assembles the complete editorial context of the look,
+ *  2. calls the OpenAI stylist (`openai-stylist.server.ts`),
+ *  3. independently verifies every proposed PDP (`pdp-verification.server.ts`),
+ *  4. stores candidates with provider / model / prompt-version / timestamp so
+ *     repeated page loads never regenerate them,
+ *  5. leaves approval, promotion and publishing to the owner.
  *
  * Nothing here publishes or promotes a product.
  */
-import { findRegistryLook } from "./look-registry";
+import { enumerateRegistryLooks, findRegistryLook } from "./look-registry";
 import { isExcludedProduct } from "./merchandising-exclusions";
-import { isPublishableProductUrl } from "./shop-url-policy";
-import { probeProductUrl } from "./product-health.server";
+import { budgetTierForPrice } from "./resort-edit-styling-rules";
+import { loadStylingFeedback, loadStylingPolicy } from "./resort-edit-styling-policy.server";
+import { verifyPdp, type PdpVerification } from "./pdp-verification.server";
 import {
-  AiStylistNotConfiguredError,
-  generateCompleteRestyle,
-  generateSlotReplacements,
-  isAiStylistConfigured,
+  OpenAiStylistNotConnectedError,
+  generateResortEditFullRestyle,
+  generateResortEditReplacementCandidates,
+  isOpenAiStylistConfigured,
+  openAiStylistModel,
   type OutfitPiece,
-  type RawAiCandidate,
-  type StylistLookContext,
-} from "./ai-stylist.server";
+  type StylistCandidate,
+  type StylistInput,
+  type StylistResult,
+  type StylistRunMeta,
+} from "./openai-stylist.server";
 
-export { isAiStylistConfigured, AiStylistNotConfiguredError };
+export { isOpenAiStylistConfigured, OpenAiStylistNotConnectedError, openAiStylistModel };
 
 type SlotRow = {
   id: string;
@@ -45,8 +52,12 @@ type SlotRow = {
 };
 
 const JEWELRY = ["earring", "necklace", "bracelet", "cuff", "anklet", "pendant"];
+const METALS = ["gold", "yellow gold", "white gold", "rose gold", "silver", "platinum"];
 
-async function loadLookContext(row: SlotRow): Promise<StylistLookContext> {
+async function loadLookContext(
+  row: SlotRow,
+  opts: { regenerationFeedback?: string | null } = {},
+): Promise<StylistInput> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: siblings } = await supabaseAdmin
     .from("shop_slot_products")
@@ -57,18 +68,21 @@ async function loadLookContext(row: SlotRow): Promise<StylistLookContext> {
     .eq("is_primary", true)
     .order("slot_order");
 
-  const outfit: OutfitPiece[] = (siblings ?? []).map((s) => ({
-    slot: s.slot,
-    slotLabel: s.slot_label,
-    brand: s.brand,
-    productName: s.product_name,
-    retailer: s.retailer,
-    price: s.price,
-    url: s.url,
-    status: s.status,
-  }));
+  const outfit: OutfitPiece[] = (siblings ?? []).map((s) => {
+    const dna = (s.style_dna ?? {}) as Record<string, unknown>;
+    return {
+      slot: s.slot,
+      slotLabel: s.slot_label,
+      brand: s.brand,
+      productName: s.product_name,
+      retailer: s.retailer,
+      price: s.price,
+      url: s.url,
+      status: s.status,
+      color: typeof dna["color"] === "string" ? dna["color"] : null,
+    };
+  });
 
-  // Editorial context: registry (title, caption, image alt) + moment narrative.
   const registry = findRegistryLook(row.look_key);
   if (registry) {
     for (const s of registry.slots) {
@@ -100,14 +114,45 @@ async function loadLookContext(row: SlotRow): Promise<StylistLookContext> {
       : [];
 
   const colors = new Set<string>();
-  for (const s of siblings ?? []) {
-    const dna = (s.style_dna ?? {}) as Record<string, unknown>;
-    if (typeof dna["color"] === "string") colors.add(dna["color"]);
-  }
+  for (const p of outfit) if (p.color) colors.add(p.color);
   const jewelryBrands = new Set<string>();
+  const metals = new Set<string>();
   for (const p of outfit) {
-    if (JEWELRY.some((j) => p.slot.toLowerCase().includes(j))) jewelryBrands.add(p.brand);
+    if (JEWELRY.some((j) => p.slot.toLowerCase().includes(j))) {
+      jewelryBrands.add(p.brand);
+      const hay = `${p.productName} ${p.color ?? ""}`.toLowerCase();
+      for (const m of METALS) if (hay.includes(m)) metals.add(m);
+    }
   }
+
+  // Nearby looks in the same moment — avoid accidental accessory/designer repeats.
+  const nearbyLooks = enumerateRegistryLooks({ destination: row.destination, moment: row.moment })
+    .filter((l) => l.lookKey !== row.look_key)
+    .slice(0, 4)
+    .map((l) => ({
+      lookTitle: l.lookTitle,
+      pieces: l.slots.map((s) => `${s.slot}: ${s.brand} ${s.productName}`),
+    }));
+
+  const [policy, adminFeedback] = await Promise.all([
+    loadStylingPolicy(),
+    loadStylingFeedback({ lookKey: row.look_key }),
+  ]);
+
+  const failedProduct: OutfitPiece = {
+    slot: row.slot,
+    slotLabel: row.slot_label,
+    brand: row.brand,
+    productName: row.product_name,
+    retailer: row.retailer,
+    price: row.price,
+    url: row.url,
+    status: row.status,
+    color:
+      typeof (row.style_dna as Record<string, unknown> | null)?.["color"] === "string"
+        ? ((row.style_dna as Record<string, unknown>)["color"] as string)
+        : null,
+  };
 
   return {
     destination: row.destination,
@@ -115,87 +160,42 @@ async function loadLookContext(row: SlotRow): Promise<StylistLookContext> {
     momentNarrative: momentRow?.narrative ?? null,
     stylingCues: cues,
     lookKey: row.look_key,
-    lookKind: row.look_kind === "editorial" ? "editorial" : "hero",
+    lookKind: row.look_kind === "editorial" ? "supporting" : "hero",
     lookTitle: row.look_title ?? registry?.lookTitle ?? row.look_key,
     editorialCopy: registry?.editorialCopy ?? null,
+    editorialImageUrl: null,
     imageAlt: registry?.imageAlt ?? null,
     outfit,
     failedSlot: row.slot,
-    failedProduct: {
-      slot: row.slot,
-      slotLabel: row.slot_label,
-      brand: row.brand,
-      productName: row.product_name,
-      retailer: row.retailer,
-      price: row.price,
-      url: row.url,
-      status: row.status,
-    },
+    failedProduct,
     failedStyleDna: (row.style_dna ?? {}) as Record<string, unknown>,
     colorsInLook: [...colors],
+    colorStory: [...colors].join(", ") || null,
     jewelryBrandsInLook: [...jewelryBrands],
-    brandRestrictions: ["No rings in any slot (permanent Resort Edit rule)"],
+    jewelryMetalFamily: [...metals].join(" / ") || null,
+    nearbyLooks,
+    priceTier: budgetTierForPrice(row.price),
+    policy,
+    adminFeedback,
+    regenerationFeedback: opts.regenerationFeedback ?? null,
   };
 }
 
-export type VerifiedCandidate = {
-  brand: string;
-  productName: string;
-  retailer: string | null;
-  pdpUrl: string;
-  price: string | null;
-  color: string | null;
-  matchingScore: number | null;
-  rationale: string | null;
-  lookImpact: string | null;
-  styleDna: Record<string, unknown>;
-  availabilityVerdict: string;
-  availabilityHttpStatus: number | null;
-  verifiedAt: string;
-};
+export type ReviewedCandidate = StylistCandidate & { verification: PdpVerification };
 
-/** Server-side verification — AI-supplied URLs are never trusted. */
-async function verifyCandidate(
-  c: RawAiCandidate,
+/** Independent verification — model-supplied URLs are never trusted. */
+async function reviewCandidate(
+  c: StylistCandidate,
   slot: string,
-): Promise<VerifiedCandidate | null> {
-  if (isExcludedProduct({ slot, category: (c.styleDna?.["category"] as string) ?? slot })) {
-    return null;
-  }
-  const now = new Date().toISOString();
-  if (!isPublishableProductUrl(c.pdpUrl)) {
-    return {
-      brand: c.brand,
-      productName: c.productName,
-      retailer: c.retailer || null,
-      pdpUrl: c.pdpUrl,
-      price: c.price ?? null,
-      color: c.color ?? null,
-      matchingScore: c.matchingScore ?? null,
-      rationale: c.rationale ?? null,
-      lookImpact: c.lookImpact ?? null,
-      styleDna: c.styleDna ?? {},
-      availabilityVerdict: "rejected_not_exact_pdp",
-      availabilityHttpStatus: null,
-      verifiedAt: now,
-    };
-  }
-  const probe = await probeProductUrl(c.pdpUrl);
-  return {
+): Promise<ReviewedCandidate | null> {
+  if (isExcludedProduct({ slot, category: c.category ?? slot })) return null;
+  const verification = await verifyPdp({
+    url: c.exact_pdp_url,
     brand: c.brand,
-    productName: c.productName,
-    retailer: c.retailer || null,
-    pdpUrl: c.pdpUrl,
-    price: c.price ?? null,
-    color: c.color ?? null,
-    matchingScore: c.matchingScore ?? null,
-    rationale: c.rationale ?? null,
-    lookImpact: c.lookImpact ?? null,
-    styleDna: c.styleDna ?? {},
-    availabilityVerdict: probe.status === "active" ? "verified_live" : `unverified_${probe.status}`,
-    availabilityHttpStatus: probe.httpStatus,
-    verifiedAt: now,
-  };
+    productName: c.product_name,
+    color: c.color,
+  });
+  return { ...c, verification };
 }
 
 async function loadSlotRow(slotProductId: string): Promise<SlotRow> {
@@ -211,41 +211,61 @@ async function loadSlotRow(slotProductId: string): Promise<SlotRow> {
   return data as SlotRow;
 }
 
-async function storeCandidates(
-  row: SlotRow,
-  slot: string,
-  verified: VerifiedCandidate[],
-  runMeta: { provider: string; model: string; promptVersion: string; generatedAt: string },
-  batch: string,
-  source: string,
-): Promise<number> {
-  if (!verified.length) return 0;
+async function storeCandidates(args: {
+  row: SlotRow;
+  slot: string;
+  reviewed: ReviewedCandidate[];
+  meta: StylistRunMeta;
+  result: StylistResult;
+  batch: string;
+  source: string;
+  feedback?: string | null;
+}): Promise<number> {
+  if (!args.reviewed.length) return 0;
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const rows = verified.map((v) => ({
-    slot_product_id: row.id,
-    destination: row.destination,
-    moment: row.moment,
-    look_key: row.look_key,
-    slot,
-    brand: v.brand,
-    product_name: v.productName,
-    retailer: v.retailer,
-    pdp_url: v.pdpUrl,
-    price: v.price,
-    color: v.color,
-    matching_score: v.matchingScore,
-    rationale: v.rationale,
-    look_impact: v.lookImpact,
-    style_dna: v.styleDna as Record<string, never>,
-    availability_verdict: v.availabilityVerdict,
-    availability_http_status: v.availabilityHttpStatus,
-    verified_at: v.verifiedAt,
-    provider: runMeta.provider,
-    model: runMeta.model,
-    prompt_version: runMeta.promptVersion,
-    generated_at: runMeta.generatedAt,
-    generation_batch: batch,
-    source,
+  const rows = args.reviewed.map((c) => ({
+    slot_product_id: args.row.id,
+    destination: args.row.destination,
+    moment: args.row.moment,
+    look_key: args.row.look_key,
+    slot: args.slot,
+    brand: c.brand,
+    product_name: c.product_name,
+    retailer: c.retailer || null,
+    pdp_url: c.exact_pdp_url,
+    price: c.verification.priceFound ?? c.price,
+    color: c.color,
+    category: c.category,
+    silhouette: c.silhouette,
+    material: c.material,
+    matching_score: c.matching_score,
+    rationale: c.stylist_rationale,
+    look_impact: c.full_look_impact,
+    retailer_priority_rank: c.retailer_priority_rank,
+    possible_duplicate_warning: c.possible_duplicate_warning,
+    style_dna: {
+      category: c.category,
+      color: c.color,
+      silhouette: c.silhouette,
+      material: c.material,
+    } as unknown as Record<string, never>,
+    verification_status: c.verification.status,
+    verification_detail: c.verification as unknown as Record<string, never>,
+    availability_verdict: c.verification.verdict,
+    availability_http_status: c.verification.httpStatus,
+    verified_at: c.verification.verifiedAt,
+    // A candidate that failed verification is rejected automatically and can
+    // never be presented as verified or publishable.
+    approval_status: c.verification.status === "verified" ? "pending" : "rejected",
+    failed_slot_summary: args.result.failed_slot_summary || null,
+    nonnegotiable_constraints: args.result.nonnegotiable_style_constraints,
+    feedback_note: args.feedback ?? null,
+    provider: args.meta.provider,
+    model: args.meta.model,
+    prompt_version: args.meta.promptVersion,
+    generated_at: args.meta.generatedAt,
+    generation_batch: args.batch,
+    source: args.source,
   }));
   const { error } = await supabaseAdmin.from("product_replacement_candidates").insert(rows);
   if (error) throw new Error(error.message);
@@ -253,17 +273,21 @@ async function storeCandidates(
 }
 
 /**
- * Generate + verify + store 3 replacement candidates for one failed slot,
- * styled inside the full existing outfit. Existing pending candidates for the
- * slot are cleared first when `regenerate` is set.
+ * Ask ChatGPT to style ONE failed slot inside the full existing outfit, verify
+ * each proposal, and store the results for owner review.
  */
 export async function generateCandidatesForSlotProduct(
   slotProductId: string,
-  opts: { regenerate?: boolean } = {},
-): Promise<{ candidates: VerifiedCandidate[]; batch: string; meta: unknown }> {
-  if (!isAiStylistConfigured()) throw new AiStylistNotConfiguredError();
+  opts: { regenerate?: boolean; feedback?: string | null } = {},
+): Promise<{
+  candidates: ReviewedCandidate[];
+  batch: string;
+  meta: StylistRunMeta;
+  result: StylistResult;
+}> {
+  if (!isOpenAiStylistConfigured()) throw new OpenAiStylistNotConnectedError();
   const row = await loadSlotRow(slotProductId);
-  const ctx = await loadLookContext(row);
+  const ctx = await loadLookContext(row, { regenerationFeedback: opts.feedback ?? null });
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
   if (opts.regenerate) {
@@ -273,27 +297,47 @@ export async function generateCandidatesForSlotProduct(
       .eq("slot_product_id", row.id)
       .eq("approval_status", "pending");
   }
+  if (opts.feedback?.trim()) {
+    await supabaseAdmin.from("product_styling_feedback").insert({
+      slot_product_id: row.id,
+      look_key: row.look_key,
+      slot: row.slot,
+      destination: row.destination,
+      moment: row.moment,
+      feedback: opts.feedback.trim(),
+    });
+  }
 
-  const { meta, candidates } = await generateSlotReplacements(ctx);
-  const verified: VerifiedCandidate[] = [];
-  for (const c of candidates) {
-    const v = await verifyCandidate(c, row.slot);
-    if (v) verified.push(v);
+  const { meta, result } = await generateResortEditReplacementCandidates(ctx);
+  const reviewed: ReviewedCandidate[] = [];
+  for (const c of result.candidates) {
+    const r = await reviewCandidate(c, row.slot);
+    if (r) reviewed.push(r);
   }
   const batch = crypto.randomUUID();
-  await storeCandidates(row, row.slot, verified, meta, batch, "ai_stylist");
-  return { candidates: verified, batch, meta };
+  await storeCandidates({
+    row,
+    slot: row.slot,
+    reviewed,
+    meta,
+    result,
+    batch,
+    source: "openai_stylist",
+    feedback: opts.feedback ?? null,
+  });
+  return { candidates: reviewed, batch, meta, result };
 }
 
 /**
- * Full restyle of a look (explicit admin action). Generates one candidate per
- * slot, attached to that slot's current primary product, and stores them for
- * review. The editorial image, title and copy are untouched.
+ * Explicit owner action: ask ChatGPT to restyle a complete look. The editorial
+ * image, title and copy are untouched — only commerce items are re-proposed,
+ * one candidate per slot, for review.
  */
 export async function restyleCompleteLook(
   lookKey: string,
-): Promise<{ batch: string; stored: number; skipped: string[] }> {
-  if (!isAiStylistConfigured()) throw new AiStylistNotConfiguredError();
+  opts: { feedback?: string | null } = {},
+): Promise<{ batch: string; stored: number; skipped: string[]; reason: string | null }> {
+  if (!isOpenAiStylistConfigured()) throw new OpenAiStylistNotConnectedError();
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: primaries, error } = await supabaseAdmin
     .from("shop_slot_products")
@@ -308,25 +352,34 @@ export async function restyleCompleteLook(
   if (!rows.length) throw new Error("No products registered for this look yet — import it first.");
 
   const anchor = rows[0]!;
-  const ctx = await loadLookContext(anchor);
-  const { meta, candidates } = await generateCompleteRestyle(ctx);
+  const ctx = await loadLookContext(anchor, { regenerationFeedback: opts.feedback ?? null });
+  const { meta, result } = await generateResortEditFullRestyle(ctx);
   const batch = crypto.randomUUID();
   const skipped: string[] = [];
   let stored = 0;
 
-  for (const c of candidates) {
+  for (const c of result.candidates) {
     const slot = (c.slot ?? "").trim().toLowerCase();
     const target = rows.find((r) => r.slot.toLowerCase() === slot);
     if (!target) {
-      skipped.push(c.slot ?? c.productName);
+      skipped.push(c.slot ?? c.product_name);
       continue;
     }
-    const v = await verifyCandidate(c, target.slot);
-    if (!v) {
-      skipped.push(`${slot} (excluded)`);
+    const reviewed = await reviewCandidate(c, target.slot);
+    if (!reviewed) {
+      skipped.push(`${slot} (excluded by Resort Edit rules)`);
       continue;
     }
-    stored += await storeCandidates(target, target.slot, [v], meta, batch, "ai_restyle");
+    stored += await storeCandidates({
+      row: target,
+      slot: target.slot,
+      reviewed: [reviewed],
+      meta,
+      result,
+      batch,
+      source: "openai_restyle",
+      feedback: opts.feedback ?? null,
+    });
   }
-  return { batch, stored, skipped };
+  return { batch, stored, skipped, reason: result.insufficient_candidates_reason };
 }

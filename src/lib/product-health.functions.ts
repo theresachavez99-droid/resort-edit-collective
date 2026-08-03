@@ -359,6 +359,31 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
       return { ok: true as const, promotedProductId: null };
     }
 
+    // An AI candidate can only be approved after independent verification.
+    const { verifyPdp } = await import("./pdp-verification.server");
+    const verification = await verifyPdp({
+      url: cand.pdp_url,
+      brand: cand.brand,
+      productName: cand.product_name,
+      color: cand.color,
+    });
+    if (verification.status !== "verified") {
+      await supabaseAdmin
+        .from("product_replacement_candidates")
+        .update({
+          approval_status: "rejected",
+          verification_status: verification.status,
+          verification_detail: verification as unknown as Record<string, never>,
+          availability_verdict: verification.verdict,
+          availability_http_status: verification.httpStatus,
+          verified_at: verification.verifiedAt,
+        })
+        .eq("id", cand.id);
+      throw new Error(
+        `Candidate failed verification (${verification.verdict}): ${verification.checks.join("; ")}`,
+      );
+    }
+
     const { data: existing, error: eErr } = await supabaseAdmin
       .from("shop_slot_products")
       .select("id,is_primary,replacement_priority")
@@ -372,9 +397,11 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
       );
     }
 
-    const { probeProductUrl } = await import("./product-health.server");
-    const probe = await probeProductUrl(cand.pdp_url);
     const now = new Date().toISOString();
+    const probe = {
+      status: "active" as const,
+      httpStatus: verification.httpStatus,
+    };
 
     const { data: inserted, error: iErr } = await supabaseAdmin
       .from("shop_slot_products")
@@ -387,7 +414,7 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
         product_name: cand.product_name,
         retailer: cand.retailer,
         url: cand.pdp_url,
-        price: cand.price,
+        price: verification.priceFound ?? cand.price,
         status: probe.status,
         last_checked_at: now,
         last_http_status: probe.httpStatus,
@@ -405,7 +432,11 @@ export const approveReplacementCandidate = createServerFn({ method: "POST" })
       .from("product_replacement_candidates")
       .update({
         approval_status: "approved",
-        verified_at: now,
+        verified_at: verification.verifiedAt,
+        verification_status: "verified",
+        verification_detail: verification as unknown as Record<string, never>,
+        availability_verdict: verification.verdict,
+        availability_http_status: verification.httpStatus,
         promoted_product_id: inserted.id,
       })
       .eq("id", cand.id);
@@ -576,32 +607,38 @@ export const runSitewideHealthSweep = createServerFn({ method: "POST" })
     });
   });
 
-// ── Admin: AI stylist workflow ────────────────────────────────────
+// ── Admin: ChatGPT styling workflow ───────────────────────────────
 
-/** Whether an AI provider credential is configured (drives the setup-needed UI state). */
+/**
+ * Whether the OpenAI styling engine is connected (drives the
+ * "ChatGPT styling is not connected" admin state).
+ */
 export const getAiStylistStatus = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => pw.parse(i))
   .handler(async ({ data }) => {
     requireAdmin(data.password);
-    const { isAiStylistConfigured, AI_STYLIST_MODEL, AI_STYLIST_PROVIDER } = await import(
-      "./ai-stylist.server"
-    );
-    const { AI_STYLIST_PROMPT_VERSION, AUTO_PROMOTION_RULE } = await import(
-      "./resort-edit-styling-rules"
-    );
+    const {
+      isOpenAiStylistConfigured,
+      openAiStylistModel,
+      OPENAI_STYLIST_PROVIDER,
+      OPENAI_STYLIST_PROMPT_VERSION,
+    } = await import("./openai-stylist.server");
+    const { AUTO_PROMOTION_RULE } = await import("./resort-edit-styling-rules");
     return {
-      configured: isAiStylistConfigured(),
-      provider: AI_STYLIST_PROVIDER,
-      model: AI_STYLIST_MODEL,
-      promptVersion: AI_STYLIST_PROMPT_VERSION,
+      configured: isOpenAiStylistConfigured(),
+      provider: OPENAI_STYLIST_PROVIDER,
+      model: openAiStylistModel(),
+      promptVersion: OPENAI_STYLIST_PROMPT_VERSION,
       autoPromotion: AUTO_PROMOTION_RULE,
       sweepEndpointReady: Boolean(process.env["PRODUCT_HEALTH_SWEEP_SECRET"]),
+      setupMessage:
+        "ChatGPT styling is not connected. Add OPENAI_API_KEY in Project Settings → Secrets to connect the Resort Edit styling engine.",
     };
   });
 
 /**
- * Generate 3 AI replacement candidates for ONE failed slot, styled inside the
- * full existing outfit. Admin-triggered, stored once, never auto-published.
+ * Ask ChatGPT to style ONE failed slot inside the full existing outfit.
+ * Owner-triggered, verified server-side, stored once, never auto-published.
  */
 export const generateAiReplacements = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) =>
@@ -609,47 +646,193 @@ export const generateAiReplacements = createServerFn({ method: "POST" })
       .extend({
         productId: z.string().uuid(),
         regenerate: z.boolean().default(false),
+        feedback: z.string().max(1000).optional(),
       })
       .parse(i),
   )
   .handler(async ({ data }) => {
     requireAdmin(data.password);
-    const { generateCandidatesForSlotProduct, isAiStylistConfigured } = await import(
+    const { generateCandidatesForSlotProduct, isOpenAiStylistConfigured } = await import(
       "./ai-replacement.server"
     );
-    if (!isAiStylistConfigured()) {
+    if (!isOpenAiStylistConfigured()) {
       return {
         ok: false as const,
         setupNeeded: true as const,
         message:
-          "AI stylist provider not configured — add an AI provider credential to enable generation.",
+          "ChatGPT styling is not connected — add OPENAI_API_KEY to enable the styling engine.",
         generated: 0,
+        verifiedLive: 0,
+        rejected: 0,
+        reason: null as string | null,
       };
     }
     const out = await generateCandidatesForSlotProduct(data.productId, {
       regenerate: data.regenerate,
+      feedback: data.feedback ?? null,
     });
     return {
       ok: true as const,
       setupNeeded: false as const,
+      message: null,
       generated: out.candidates.length,
-      verifiedLive: out.candidates.filter((c) => c.availabilityVerdict === "verified_live").length,
-      batch: out.batch,
+      verifiedLive: out.candidates.filter((c) => c.verification.status === "verified").length,
+      rejected: out.candidates.filter((c) => c.verification.status !== "verified").length,
+      reason: out.result.insufficient_candidates_reason,
     };
   });
 
 /**
- * Explicit full-look restyle. Preserves the editorial image, title and copy —
- * only the commerce items are re-proposed, one candidate per slot, for review.
+ * Explicit "Ask ChatGPT to restyle full look". Preserves the editorial image,
+ * title and copy — only commerce items are re-proposed, for review.
  */
 export const restyleCompleteLookAction = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) =>
+    pw
+      .extend({ lookKey: z.string().min(1).max(200), feedback: z.string().max(1000).optional() })
+      .parse(i),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { restyleCompleteLook, isOpenAiStylistConfigured } = await import(
+      "./ai-replacement.server"
+    );
+    if (!isOpenAiStylistConfigured()) {
+      return {
+        ok: false as const,
+        setupNeeded: true as const,
+        stored: 0,
+        skipped: [] as string[],
+        reason: null as string | null,
+      };
+    }
+    const out = await restyleCompleteLook(data.lookKey, { feedback: data.feedback ?? null });
+    return { ok: true as const, setupNeeded: false as const, ...out };
+  });
+
+// ── Admin: styling policy + feedback memory ───────────────────────
+
+/** Read the editable Resort Edit styling policy sent with every ChatGPT request. */
+export const getStylingPolicy = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) => pw.parse(i))
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { loadStylingPolicy } = await import("./resort-edit-styling-policy.server");
+    return loadStylingPolicy();
+  });
+
+/** Save the styling policy. Only an explicit save changes global policy. */
+export const saveStylingPolicy = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) =>
+    pw
+      .extend({
+        retailerPriority: z.array(z.string().max(80)).max(20).optional(),
+        approvedBrands: z.array(z.string().max(80)).max(200).optional(),
+        restrictedBrands: z.array(z.string().max(80)).max(200).optional(),
+        extraRules: z.array(z.string().max(400)).max(50).optional(),
+        heroThresholdNote: z.string().max(1000).optional(),
+        notes: z.string().max(2000).optional(),
+        noRings: z.boolean().optional(),
+        singleJewelryFamily: z.boolean().optional(),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const patch: {
+      retailer_priority?: string[];
+      approved_brands?: string[];
+      restricted_brands?: string[];
+      extra_rules?: string[];
+      hero_threshold_note?: string;
+      notes?: string;
+      no_rings?: boolean;
+      single_jewelry_family?: boolean;
+    } = {};
+    if (data.retailerPriority) patch.retailer_priority = data.retailerPriority;
+    if (data.approvedBrands) patch.approved_brands = data.approvedBrands;
+    if (data.restrictedBrands) patch.restricted_brands = data.restrictedBrands;
+    if (data.extraRules) patch.extra_rules = data.extraRules;
+    if (data.heroThresholdNote !== undefined) patch.hero_threshold_note = data.heroThresholdNote;
+    if (data.notes !== undefined) patch.notes = data.notes;
+    if (data.singleJewelryFamily !== undefined) {
+      patch.single_jewelry_family = data.singleJewelryFamily;
+    }
+    // No rings is permanent Resort Edit policy — it can never be switched off.
+    patch.no_rings = true;
+
+    const { data: existing } = await supabaseAdmin
+      .from("resort_edit_styling_policy")
+      .select("id")
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle();
+    if (existing) {
+      const { error } = await supabaseAdmin
+        .from("resort_edit_styling_policy")
+        .update(patch)
+        .eq("id", existing.id);
+      if (error) throw new Error(error.message);
+      return { ok: true as const, id: existing.id };
+    }
+    const { data: inserted, error } = await supabaseAdmin
+      .from("resort_edit_styling_policy")
+      .insert(patch)
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    return { ok: true as const, id: inserted.id };
+  });
+
+/**
+ * Record styling feedback ("too conservative", "avoid this brand"…). Stored as
+ * context for future generations; it never changes global policy on its own.
+ */
+export const saveStylingFeedback = createServerFn({ method: "POST" })
+  .inputValidator((i: unknown) =>
+    pw
+      .extend({
+        productId: z.string().uuid(),
+        candidateId: z.string().uuid().optional(),
+        feedback: z.string().min(2).max(1000),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data }) => {
+    requireAdmin(data.password);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: slot, error } = await supabaseAdmin
+      .from("shop_slot_products")
+      .select("id,destination,moment,look_key,slot")
+      .eq("id", data.productId)
+      .single();
+    if (error || !slot) throw new Error(error?.message ?? "Slot product not found");
+    const { error: iErr } = await supabaseAdmin.from("product_styling_feedback").insert({
+      slot_product_id: slot.id,
+      look_key: slot.look_key,
+      slot: slot.slot,
+      destination: slot.destination,
+      moment: slot.moment,
+      feedback: data.feedback,
+      candidate_id: data.candidateId ?? null,
+    });
+    if (iErr) throw new Error(iErr.message);
+    return { ok: true as const };
+  });
+
+/** Feedback history for a look — shown in the admin review panel. */
+export const listStylingFeedback = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => pw.extend({ lookKey: z.string().min(1).max(200) }).parse(i))
   .handler(async ({ data }) => {
     requireAdmin(data.password);
-    const { restyleCompleteLook, isAiStylistConfigured } = await import("./ai-replacement.server");
-    if (!isAiStylistConfigured()) {
-      return { ok: false as const, setupNeeded: true as const, stored: 0, skipped: [] as string[] };
-    }
-    const out = await restyleCompleteLook(data.lookKey);
-    return { ok: true as const, setupNeeded: false as const, ...out };
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("product_styling_feedback")
+      .select("id,slot,feedback,created_at")
+      .eq("look_key", data.lookKey)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (error) throw new Error(error.message);
+    return { feedback: rows ?? [] };
   });

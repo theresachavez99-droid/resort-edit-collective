@@ -2076,18 +2076,24 @@ export type Database = {
           availability_http_status: number | null
           availability_verdict: string | null
           brand: string
+          category: string | null
           color: string | null
           created_at: string
           destination: string
+          failed_slot_summary: string | null
+          feedback_note: string | null
           generated_at: string | null
           generation_batch: string | null
           id: string
           look_impact: string | null
           look_key: string
           matching_score: number | null
+          material: string | null
           model: string | null
           moment: string
+          nonnegotiable_constraints: string[]
           pdp_url: string
+          possible_duplicate_warning: string | null
           price: string | null
           product_name: string
           promoted_product_id: string | null
@@ -2095,11 +2101,15 @@ export type Database = {
           provider: string | null
           rationale: string | null
           retailer: string | null
+          retailer_priority_rank: number | null
+          silhouette: string | null
           slot: string
           slot_product_id: string | null
           source: string
           style_dna: Json
           updated_at: string
+          verification_detail: Json
+          verification_status: string
           verified_at: string | null
         }
         Insert: {
@@ -2108,18 +2118,24 @@ export type Database = {
           availability_http_status?: number | null
           availability_verdict?: string | null
           brand: string
+          category?: string | null
           color?: string | null
           created_at?: string
           destination: string
+          failed_slot_summary?: string | null
+          feedback_note?: string | null
           generated_at?: string | null
           generation_batch?: string | null
           id?: string
           look_impact?: string | null
           look_key: string
           matching_score?: number | null
+          material?: string | null
           model?: string | null
           moment: string
+          nonnegotiable_constraints?: string[]
           pdp_url: string
+          possible_duplicate_warning?: string | null
           price?: string | null
           product_name: string
           promoted_product_id?: string | null
@@ -2127,11 +2143,15 @@ export type Database = {
           provider?: string | null
           rationale?: string | null
           retailer?: string | null
+          retailer_priority_rank?: number | null
+          silhouette?: string | null
           slot: string
           slot_product_id?: string | null
           source?: string
           style_dna?: Json
           updated_at?: string
+          verification_detail?: Json
+          verification_status?: string
           verified_at?: string | null
         }
         Update: {
@@ -2140,18 +2160,24 @@ export type Database = {
           availability_http_status?: number | null
           availability_verdict?: string | null
           brand?: string
+          category?: string | null
           color?: string | null
           created_at?: string
           destination?: string
+          failed_slot_summary?: string | null
+          feedback_note?: string | null
           generated_at?: string | null
           generation_batch?: string | null
           id?: string
           look_impact?: string | null
           look_key?: string
           matching_score?: number | null
+          material?: string | null
           model?: string | null
           moment?: string
+          nonnegotiable_constraints?: string[]
           pdp_url?: string
+          possible_duplicate_warning?: string | null
           price?: string | null
           product_name?: string
           promoted_product_id?: string | null
@@ -2159,11 +2185,15 @@ export type Database = {
           provider?: string | null
           rationale?: string | null
           retailer?: string | null
+          retailer_priority_rank?: number | null
+          silhouette?: string | null
           slot?: string
           slot_product_id?: string | null
           source?: string
           style_dna?: Json
           updated_at?: string
+          verification_detail?: Json
+          verification_status?: string
           verified_at?: string | null
         }
         Relationships: [
@@ -2235,6 +2265,63 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_styling_feedback: {
+        Row: {
+          candidate_id: string | null
+          created_at: string
+          destination: string | null
+          feedback: string
+          id: string
+          look_key: string | null
+          moment: string | null
+          saved_to_policy: boolean
+          slot: string | null
+          slot_product_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string
+          destination?: string | null
+          feedback: string
+          id?: string
+          look_key?: string | null
+          moment?: string | null
+          saved_to_policy?: boolean
+          slot?: string | null
+          slot_product_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string
+          destination?: string | null
+          feedback?: string
+          id?: string
+          look_key?: string | null
+          moment?: string | null
+          saved_to_policy?: boolean
+          slot?: string | null
+          slot_product_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_styling_feedback_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "product_replacement_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_styling_feedback_slot_product_id_fkey"
+            columns: ["slot_product_id"]
+            isOneToOne: false
+            referencedRelation: "shop_slot_products"
             referencedColumns: ["id"]
           },
         ]
@@ -2321,6 +2408,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      resort_edit_styling_policy: {
+        Row: {
+          approved_brands: string[]
+          brand_direct_policy: string
+          created_at: string
+          destination_notes: Json
+          extra_rules: string[]
+          hero_threshold_note: string
+          id: string
+          is_active: boolean
+          no_rings: boolean
+          notes: string | null
+          restricted_brands: string[]
+          retailer_priority: string[]
+          single_jewelry_family: boolean
+          updated_at: string
+        }
+        Insert: {
+          approved_brands?: string[]
+          brand_direct_policy?: string
+          created_at?: string
+          destination_notes?: Json
+          extra_rules?: string[]
+          hero_threshold_note?: string
+          id?: string
+          is_active?: boolean
+          no_rings?: boolean
+          notes?: string | null
+          restricted_brands?: string[]
+          retailer_priority?: string[]
+          single_jewelry_family?: boolean
+          updated_at?: string
+        }
+        Update: {
+          approved_brands?: string[]
+          brand_direct_policy?: string
+          created_at?: string
+          destination_notes?: Json
+          extra_rules?: string[]
+          hero_threshold_note?: string
+          id?: string
+          is_active?: boolean
+          no_rings?: boolean
+          notes?: string | null
+          restricted_brands?: string[]
+          retailer_priority?: string[]
+          single_jewelry_family?: boolean
+          updated_at?: string
+        }
+        Relationships: []
       }
       shop_slot_products: {
         Row: {

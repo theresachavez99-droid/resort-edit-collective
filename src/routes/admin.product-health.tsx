@@ -15,6 +15,9 @@ import {
   getAiStylistStatus,
   generateAiReplacements,
   restyleCompleteLookAction,
+  getStylingPolicy,
+  saveStylingPolicy,
+  saveStylingFeedback,
 } from "@/lib/product-health.functions";
 import {
   PRODUCT_STATUSES,
@@ -113,10 +116,15 @@ function ProductHealthPage() {
   const aiStatusFn = useServerFn(getAiStylistStatus);
   const generateFn = useServerFn(generateAiReplacements);
   const restyleFn = useServerFn(restyleCompleteLookAction);
+  const policyFn = useServerFn(getStylingPolicy);
+  const savePolicyFn = useServerFn(saveStylingPolicy);
+  const feedbackFn = useServerFn(saveStylingFeedback);
   const qc = useQueryClient();
 
   const [pw, setPw] = useState("");
   const [editing, setEditing] = useState<CandidateRow | null>(null);
+  const [feedbackDraft, setFeedbackDraft] = useState<Record<string, string>>({});
+  const [policyDraft, setPolicyDraft] = useState<string>("");
   useEffect(() => {
     const c = sessionStorage.getItem(STORAGE_KEY);
     if (c) setPw(c);
@@ -136,6 +144,11 @@ function ProductHealthPage() {
     queryKey: ["admin-ai-stylist-status"],
     enabled: Boolean(pw),
     queryFn: () => aiStatusFn({ data: { password: pw } }),
+  });
+  const policy = useQuery({
+    queryKey: ["admin-styling-policy"],
+    enabled: Boolean(pw),
+    queryFn: () => policyFn({ data: { password: pw } }),
   });
 
   const invalidate = () => {
@@ -180,6 +193,15 @@ function ProductHealthPage() {
   const restyle = useMutation({
     mutationFn: (lookKey: string) => restyleFn({ data: { password: pw, lookKey } }),
     onSuccess: invalidate,
+  });
+  const savePolicy = useMutation({
+    mutationFn: (extraRules: string[]) =>
+      savePolicyFn({ data: { password: pw, extraRules } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-styling-policy"] }),
+  });
+  const sendFeedback = useMutation({
+    mutationFn: (vars: { productId: string; candidateId?: string; feedback: string }) =>
+      feedbackFn({ data: { password: pw, ...vars } }),
   });
 
   if (!pw) {
@@ -273,6 +295,49 @@ function ProductHealthPage() {
 
       {/* Sitewide registry coverage — every shoppable look across every
           destination and moment, hero and editorial. */}
+      {/* Styling policy the AI stylist must obey on every generation. Editing
+          here is how the Studio teaches the engine; nothing is auto-applied to
+          the public site. */}
+      {policy.data && (
+        <section className="mt-6 border border-stone-200 px-4 py-4 text-xs">
+          <div className="text-[0.62rem] tracking-[0.3em] uppercase text-stone-500">
+            Resort Edit styling policy
+          </div>
+          <p className="mt-2 text-stone-600">
+            Retailer priority: {policy.data.retailerPriority.join(" › ")}
+          </p>
+          <p className="text-stone-600">
+            No rings: {policy.data.noRings ? "enforced (permanent)" : "enforced (permanent)"} · one
+            jewellery family: {policy.data.singleJewelryFamily ? "on" : "off"}
+          </p>
+          <p className="text-stone-600 mt-1">
+            Approved brands: {policy.data.approvedBrands.length} · restricted:{" "}
+            {policy.data.restrictedBrands.length}
+          </p>
+          <textarea
+            className="mt-3 w-full border border-stone-300 px-2 py-2 text-xs"
+            rows={3}
+            placeholder="One extra styling rule per line (e.g. no visible logos on beachwear)"
+            value={policyDraft || policy.data.extraRules.join("\n")}
+            onChange={(e) => setPolicyDraft(e.target.value)}
+          />
+          <button
+            onClick={() =>
+              savePolicy.mutate(
+                (policyDraft || policy.data!.extraRules.join("\n"))
+                  .split("\n")
+                  .map((l) => l.trim())
+                  .filter(Boolean),
+              )
+            }
+            disabled={savePolicy.isPending}
+            className="mt-2 bg-stone-900 text-white px-3 py-1.5 text-[0.65rem] tracking-[0.2em] uppercase disabled:opacity-40"
+          >
+            {savePolicy.isPending ? "Saving…" : "Save policy rules"}
+          </button>
+        </section>
+      )}
+
       {coverage.data && (
         <section className="mt-6 border border-stone-200">
           <header className="bg-stone-50 px-4 py-3 flex flex-wrap items-baseline justify-between gap-3">
@@ -559,6 +624,30 @@ function ProductHealthPage() {
                     AI generation disabled until a provider credential is configured — manual
                     candidates below still work.
                   </p>
+                )}
+                {primary && (
+                  <div className="mb-4">
+                    <textarea
+                      className="w-full border border-stone-300 px-2 py-2 text-xs"
+                      rows={2}
+                      placeholder="Styling note for the AI (e.g. too casual — keep the silhouette longer)"
+                      value={feedbackDraft[primary.id] ?? ""}
+                      onChange={(e) =>
+                        setFeedbackDraft((d) => ({ ...d, [primary.id]: e.target.value }))
+                      }
+                    />
+                    <button
+                      onClick={() => {
+                        const note = (feedbackDraft[primary.id] ?? "").trim();
+                        if (note.length < 2) return;
+                        sendFeedback.mutate({ productId: primary.id, feedback: note });
+                        setFeedbackDraft((d) => ({ ...d, [primary.id]: "" }));
+                      }}
+                      className="mt-1 border border-stone-300 px-2 py-1 text-xs"
+                    >
+                      Save styling note
+                    </button>
+                  </div>
                 )}
                 {slotCandidates.length === 0 && (
                   <p className="text-xs text-stone-500 mb-3">
