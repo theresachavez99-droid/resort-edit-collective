@@ -42,7 +42,7 @@ export const Route = createFileRoute("/admin/product-health_/queue")({
   }),
   head: () => ({
     meta: [
-      { title: "Replacement Queue — Studio" },
+      { title: "Editorial Queue — Studio" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

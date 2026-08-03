@@ -490,7 +490,7 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
 
 /**
  * Nightcap-only editorial-reference cards for the "More Resort Edit Looks"
- * grid. These are editorial-only (no product grid, no COMING SOON CTA)
+ * grid. These are editorial-only (no product grid, no disabled CTA)
  * because the exact affiliate product sets for these two looks are not yet
  * approved. When the shopping edits are approved, wire them through the
  * normal sibling-look pipeline and remove this override.

@@ -487,8 +487,8 @@ function MomentPage() {
   const hasCuratedOverride = curatedShopEntries.length > 0;
   const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
   // Slots whose product is being replaced still belong to the edit: they keep
-  // their place in the panel with a "Replacement in review" line. Only a fully
-  // empty edit falls back to the Coming Soon state.
+  // their place in the panel with a "Replacement in review" line. When nothing
+  // at all is shoppable the shop area is omitted entirely.
   const featuredInReviewCount = featuredShop.filter(
     (e) => e.kind === "override" && (e.product as OverrideItem).inReview,
   ).length;
