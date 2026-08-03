@@ -54,6 +54,12 @@ function StudioNav() {
         Studio
       </Link>
       <Link
+        to="/admin/editorial-closet"
+        className="text-[0.65rem] tracking-[0.24em] uppercase text-stone-500 hover:text-ink"
+      >
+        Editorial Closet
+      </Link>
+      <Link
         to="/admin/product-health/queue"
         className={`inline-flex items-center gap-2 border px-3 py-1.5 text-[0.65rem] tracking-[0.24em] uppercase ${
           unresolved > 0 ? "border-red-700 text-red-700" : "border-stone-300 text-stone-500"
