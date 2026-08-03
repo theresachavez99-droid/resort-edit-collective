@@ -661,30 +661,50 @@ function ProductHealthPage() {
   );
 }
 
-/** Manual entry of a replacement candidate — same shape AI sourcing will emit. */
+/**
+ * Manual entry — and editing — of a replacement candidate. Manual and AI
+ * candidates share one shape and one review queue.
+ */
 function CandidateForm({
   pw,
   slotProductId,
   onSaved,
+  initial,
 }: {
   pw: string;
   slotProductId: string;
   onSaved: () => void;
+  /** When set, the form edits this existing candidate instead of adding one. */
+  initial?: CandidateRow;
 }) {
   const upsertFn = useServerFn(upsertReplacementCandidate);
-  const [brand, setBrand] = useState("");
-  const [productName, setProductName] = useState("");
-  const [retailer, setRetailer] = useState("");
-  const [pdpUrl, setPdpUrl] = useState("");
-  const [price, setPrice] = useState("");
-  const [score, setScore] = useState("");
-  const [rationale, setRationale] = useState("");
+  const [brand, setBrand] = useState(initial?.brand ?? "");
+  const [productName, setProductName] = useState(initial?.product_name ?? "");
+  const [retailer, setRetailer] = useState(initial?.retailer ?? "");
+  const [pdpUrl, setPdpUrl] = useState(initial?.pdp_url ?? "");
+  const [price, setPrice] = useState(initial?.price ?? "");
+  const [score, setScore] = useState(
+    initial?.matching_score != null ? String(initial.matching_score) : "",
+  );
+  const [rationale, setRationale] = useState(initial?.rationale ?? "");
+
+  // Re-prime the fields when the admin picks a different candidate to edit.
+  useEffect(() => {
+    setBrand(initial?.brand ?? "");
+    setProductName(initial?.product_name ?? "");
+    setRetailer(initial?.retailer ?? "");
+    setPdpUrl(initial?.pdp_url ?? "");
+    setPrice(initial?.price ?? "");
+    setScore(initial?.matching_score != null ? String(initial.matching_score) : "");
+    setRationale(initial?.rationale ?? "");
+  }, [initial]);
 
   const save = useMutation({
     mutationFn: () =>
       upsertFn({
         data: {
           password: pw,
+          ...(initial ? { id: initial.id } : {}),
           slotProductId,
           brand,
           productName,
@@ -693,7 +713,7 @@ function CandidateForm({
           ...(price ? { price } : {}),
           ...(score ? { matchingScore: Number(score) } : {}),
           ...(rationale ? { rationale } : {}),
-          source: "manual",
+          source: initial?.source ?? "manual",
         },
       }),
     onSuccess: () => {
@@ -725,7 +745,7 @@ function CandidateForm({
         disabled={!brand || !productName || !pdpUrl || save.isPending}
         className="mt-2 bg-stone-900 text-white px-3 py-1.5 text-[0.68rem] tracking-[0.2em] uppercase disabled:opacity-40"
       >
-        {save.isPending ? "Saving…" : "Add candidate"}
+        {save.isPending ? "Saving…" : initial ? "Save candidate" : "Add candidate"}
       </button>
       {save.error && (
         <p className="text-xs text-red-600 mt-2">{(save.error as Error).message}</p>
