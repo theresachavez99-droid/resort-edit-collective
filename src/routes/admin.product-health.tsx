@@ -231,6 +231,13 @@ function ProductHealthPage() {
             ← Studio
           </Link>
           <button
+            onClick={() => sweep.mutate({ autoGenerate: false })}
+            disabled={sweep.isPending}
+            className="border border-stone-300 px-4 py-2 text-[0.7rem] tracking-[0.2em] uppercase disabled:opacity-40"
+          >
+            {sweep.isPending ? "Sweeping…" : "Sitewide sweep"}
+          </button>
+          <button
             onClick={() => check.mutate({})}
             disabled={check.isPending}
             className="bg-stone-900 text-white px-4 py-2 text-[0.7rem] tracking-[0.2em] uppercase disabled:opacity-40"
@@ -240,10 +247,123 @@ function ProductHealthPage() {
         </div>
       </div>
 
+      {/* AI stylist availability. Generation is always admin-triggered; when no
+          provider credential is present the workflow shows a setup-needed state
+          rather than pretending AI sourcing is live. */}
+      <div className="mt-6 border border-stone-200 bg-stone-50 px-4 py-3 text-xs">
+        {aiStatus.data ? (
+          aiStatus.data.configured ? (
+            <p className="text-stone-700">
+              AI stylist ready — {aiStatus.data.provider} · {aiStatus.data.model} · prompt{" "}
+              {aiStatus.data.promptVersion}. Auto-promotion:{" "}
+              {aiStatus.data.autoPromotion.enabled ? "on" : "off (approval required)"}. Scheduled
+              sweep endpoint: {aiStatus.data.sweepEndpointReady ? "ready" : "secret missing"}.
+            </p>
+          ) : (
+            <p className="text-amber-700">
+              Setup needed — no AI provider credential is configured, so replacement generation is
+              disabled. Candidate schema, prompt construction, verification and this review UI are
+              in place and will work as soon as a provider key is added.
+            </p>
+          )
+        ) : (
+          <p className="text-stone-500">Checking AI stylist configuration…</p>
+        )}
+      </div>
+
+      {/* Sitewide registry coverage — every shoppable look across every
+          destination and moment, hero and editorial. */}
+      {coverage.data && (
+        <section className="mt-6 border border-stone-200">
+          <header className="bg-stone-50 px-4 py-3 flex flex-wrap items-baseline justify-between gap-3">
+            <div className="text-[0.62rem] tracking-[0.3em] uppercase text-stone-500">
+              Sitewide registry · {coverage.data.totals.imported}/{coverage.data.totals.slots} slots
+              across {coverage.data.totals.looks} looks
+            </div>
+            <button
+              onClick={() => importLooks.mutate({})}
+              disabled={importLooks.isPending}
+              className="bg-stone-900 text-white px-3 py-1.5 text-[0.65rem] tracking-[0.2em] uppercase disabled:opacity-40"
+            >
+              {importLooks.isPending ? "Importing…" : "Import all looks"}
+            </button>
+          </header>
+          <table className="w-full text-xs">
+            <thead className="text-left text-stone-500">
+              <tr className="border-b border-stone-200">
+                <th className="px-4 py-2 font-normal">Look</th>
+                <th className="px-4 py-2 font-normal">Kind</th>
+                <th className="px-4 py-2 font-normal">Slots</th>
+                <th className="px-4 py-2 font-normal">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {coverage.data.looks.map((l) => (
+                <tr key={l.lookKey} className="border-b border-stone-100">
+                  <td className="px-4 py-2">
+                    <div className="font-medium">{l.lookTitle}</div>
+                    <div className="text-stone-500 break-all">{l.lookKey}</div>
+                  </td>
+                  <td className="px-4 py-2">{l.lookKind}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    {l.importedCount}/{l.slotCount}
+                    {l.unsourcedCount > 0 && (
+                      <span className="text-amber-700"> · {l.unsourcedCount} unsourced</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-2">
+                    <div className="flex flex-wrap gap-1.5">
+                      <button
+                        onClick={() => importLooks.mutate({ lookKey: l.lookKey })}
+                        className="border border-stone-300 px-2 py-1"
+                      >
+                        Import
+                      </button>
+                      <button
+                        onClick={() => restyle.mutate(l.lookKey)}
+                        disabled={restyle.isPending || !aiStatus.data?.configured}
+                        className="border border-stone-300 px-2 py-1 disabled:opacity-40"
+                      >
+                        Restyle complete look
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
       {check.data && (
         <p className="mt-3 text-xs text-stone-600">
           Checked {check.data.count} link(s).{" "}
           {check.data.checked.filter((c) => c.changed).length} status change(s).
+        </p>
+      )}
+      {sweep.data && (
+        <p className="mt-3 text-xs text-stone-600">
+          Sweep: {sweep.data.checked} checked · {sweep.data.failed.length} failing ·{" "}
+          {sweep.data.recovered} recovered.
+        </p>
+      )}
+      {importLooks.data && (
+        <p className="mt-3 text-xs text-stone-600">
+          Imported {importLooks.data.imported} slot(s) from {importLooks.data.looksScanned} look(s).
+        </p>
+      )}
+      {generate.data && (
+        <p className="mt-3 text-xs text-stone-600">
+          {generate.data.setupNeeded
+            ? "AI provider not configured — generation skipped."
+            : `Generated ${generate.data.generated} candidate(s).`}
+        </p>
+      )}
+      {restyle.data && (
+        <p className="mt-3 text-xs text-stone-600">
+          {restyle.data.setupNeeded
+            ? "AI provider not configured — restyle skipped."
+            : `Restyle stored ${restyle.data.stored} candidate(s)${restyle.data.skipped.length ? ` · skipped ${restyle.data.skipped.join(", ")}` : ""}.`}
         </p>
       )}
       {(check.error || mark.error || promote.error || decide.error) && (
@@ -251,6 +371,11 @@ function ProductHealthPage() {
           {String(
             (check.error || mark.error || promote.error || decide.error) as Error,
           )}
+        </p>
+      )}
+      {(sweep.error || importLooks.error || generate.error || restyle.error) && (
+        <p className="mt-3 text-xs text-red-600">
+          {String((sweep.error || importLooks.error || generate.error || restyle.error) as Error)}
         </p>
       )}
 
