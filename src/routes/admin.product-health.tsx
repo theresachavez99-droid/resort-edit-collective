@@ -295,6 +295,49 @@ function ProductHealthPage() {
 
       {/* Sitewide registry coverage — every shoppable look across every
           destination and moment, hero and editorial. */}
+      {/* Styling policy the AI stylist must obey on every generation. Editing
+          here is how the Studio teaches the engine; nothing is auto-applied to
+          the public site. */}
+      {policy.data && (
+        <section className="mt-6 border border-stone-200 px-4 py-4 text-xs">
+          <div className="text-[0.62rem] tracking-[0.3em] uppercase text-stone-500">
+            Resort Edit styling policy
+          </div>
+          <p className="mt-2 text-stone-600">
+            Retailer priority: {policy.data.retailerPriority.join(" › ")}
+          </p>
+          <p className="text-stone-600">
+            No rings: {policy.data.noRings ? "enforced (permanent)" : "enforced (permanent)"} · one
+            jewellery family: {policy.data.singleJewelryFamily ? "on" : "off"}
+          </p>
+          <p className="text-stone-600 mt-1">
+            Approved brands: {policy.data.approvedBrands.length} · restricted:{" "}
+            {policy.data.restrictedBrands.length}
+          </p>
+          <textarea
+            className="mt-3 w-full border border-stone-300 px-2 py-2 text-xs"
+            rows={3}
+            placeholder="One extra styling rule per line (e.g. no visible logos on beachwear)"
+            value={policyDraft || policy.data.extraRules.join("\n")}
+            onChange={(e) => setPolicyDraft(e.target.value)}
+          />
+          <button
+            onClick={() =>
+              savePolicy.mutate(
+                (policyDraft || policy.data!.extraRules.join("\n"))
+                  .split("\n")
+                  .map((l) => l.trim())
+                  .filter(Boolean),
+              )
+            }
+            disabled={savePolicy.isPending}
+            className="mt-2 bg-stone-900 text-white px-3 py-1.5 text-[0.65rem] tracking-[0.2em] uppercase disabled:opacity-40"
+          >
+            {savePolicy.isPending ? "Saving…" : "Save policy rules"}
+          </button>
+        </section>
+      )}
+
       {coverage.data && (
         <section className="mt-6 border border-stone-200">
           <header className="bg-stone-50 px-4 py-3 flex flex-wrap items-baseline justify-between gap-3">
