@@ -1580,15 +1580,19 @@ function ComingSoonPanel({ heading }: { heading: string }) {
 function NightcapShopExpander({
   card,
   shop,
+  lookKey,
+  lookHealth,
 }: {
   card: NightcapEditorialCard;
   shop: NonNullable<NightcapEditorialCard["shop"]>;
+  /** Registry look key (`portofino/<moment>/<cardKey>`) for slot health lookup. */
+  lookKey?: string;
+  lookHealth?: Record<string, SlotResolution>;
 }) {
   const [open, setOpen] = useState(false);
-  const rows = shop.products.filter((p) => !p.unsourced && isUsableShopUrl(p.url));
-  const omitted = shop.products
-    .filter((p) => p.unsourced || !isUsableShopUrl(p.url))
-    .map((p) => ({ slot: p.slot, brand: p.brand, name: p.name, price: p.price }));
+  const { live: rows, omitted } = splitHealthedRows(
+    shop.products.map((p) => applyLookRowHealth(p, lookKey, lookHealth)),
+  );
   if (rows.length === 0) return null;
   return (
     <div className="mt-3">
