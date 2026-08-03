@@ -227,6 +227,27 @@ function AdminDashboard() {
         </div>
       </section>
 
+      {/* Availability */}
+      <section className="space-y-4">
+        <h2 className="text-[0.65rem] tracking-[0.3em] uppercase text-stone-500 border-b border-stone-200 pb-2">
+          Availability
+        </h2>
+        <div className="grid gap-3 md:grid-cols-2">
+          {AVAILABILITY.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="block border border-stone-300 p-4 hover:border-stone-500 transition"
+            >
+              <div className="text-sm font-medium">{item.label}</div>
+              <div className="text-xs text-stone-500 mt-1 leading-relaxed">
+                {item.description}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Operations */}
       <section className="space-y-3">
         <button
