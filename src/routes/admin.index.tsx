@@ -64,6 +64,15 @@ const EDITORIAL_LIBRARY: NavItem[] = [
   },
 ];
 
+const AVAILABILITY: NavItem[] = [
+  {
+    label: "Product Health",
+    to: "/admin/product-health",
+    description:
+      "Live link status per slot, approved backups, and the replacement queue. Looks stay published; only the commerce item is swapped — and only by approval.",
+  },
+];
+
 const OPERATIONS: NavItem[] = [
   {
     label: "System",
