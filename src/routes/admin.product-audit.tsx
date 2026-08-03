@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   runSiteAudit,
   getProductIndex,
   listAuditRuns,
   listAuditEvents,
 } from "@/lib/product-audit.functions";
+import { auditSummaryLine } from "@/components/QueueStatusPanel";
 import { PRODUCT_STATUS_LABELS, isFailedStatus, type ProductStatus } from "@/lib/product-health";
 
 /**
@@ -53,6 +55,7 @@ function tone(status: string): string {
 }
 
 function ProductAuditPage() {
+  const navigate = Route.useNavigate();
   const auditFn = useServerFn(runSiteAudit);
   const indexFn = useServerFn(getProductIndex);
   const runsFn = useServerFn(listAuditRuns);
