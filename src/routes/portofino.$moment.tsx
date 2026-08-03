@@ -1101,6 +1101,36 @@ function isUsableShopUrl(url: string | undefined | null): url is string {
 }
 
 /**
+ * Overlay DB-resolved slot availability onto a curated editorial row.
+ *
+ * The editorial layer (image, title, copy, slot order) is never touched here —
+ * only the commerce item. When an approved active backup exists it is swapped
+ * in silently; when nothing is shoppable the row is flagged `inReview` so the
+ * card renders a non-clickable placeholder rather than a dead link.
+ */
+function applySlotHealth(
+  item: OverrideItem,
+  slots: Record<string, SlotResolution>,
+): OverrideItem {
+  const key = slotKey(item.category ?? item.slotLabel ?? "");
+  const resolution = key ? slots[key] : undefined;
+  if (!resolution) return item;
+  if (resolution.state === "live") {
+    const p = resolution.product;
+    return {
+      ...item,
+      brand: p.brand,
+      title: p.product_name,
+      url: p.url ?? "",
+      ...(p.price ? { price: p.price } : {}),
+      unsourced: false,
+      inReview: false,
+    };
+  }
+  return { ...item, url: "", unsourced: false, inReview: true };
+}
+
+/**
  * Build a short, deduped list of slot labels for the "Complete Outfit Includes"
  * summary. Counts live (non-placeholder) entries only, preserves canonical order,
  * and falls back gracefully for override-driven looks.
