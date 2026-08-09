@@ -33,7 +33,6 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
             key={`${it.look_key}-${it.sort_order}-${it.item_name}`}
             brand={it.brand_name ?? "Resort Edit"}
             name={it.item_name}
-            {...(it.price_display ? { price: it.price_display } : {})}
             {...(it.retailer_name ? { retailer: it.retailer_name } : {})}
             url={it.affiliate_url}
             image={it.image_url}
