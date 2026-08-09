@@ -33,7 +33,7 @@ const exploringHarborBanner = exploringHarborBannerAsset.url;
 import beachClubLongLunchBanner from "@/assets/uploads/portofino/beach-club-long-lunch-banner-cabanas.png.asset.json";
 import arrivalBanner from "@/assets/uploads/portofino/arrival-banner-peach-facade-bougainvillea.png.asset.json";
 import beachClubLemon from "@/assets/uploads/lilla/lilla-lemon-beach-club.png.asset.json";
-import longLunchCard from "@/assets/uploads/portofino/long-lunch-yellow-dress-harbor-v2.png.asset.json";
+import longLunchCard from "@/assets/uploads/portofino/long-lunch-lilla-rima-ice-blue.png.asset.json";
 import shoppingCanonical from "@/assets/uploads/portofino/shopping-lilla-ombre-via-roma-v2.png.asset.json";
 import shoppingBanner from "@/assets/uploads/portofino/shopping-banner-via-roma-boutiques.png.asset.json";
 import nightcapCard from "@/assets/uploads/portofino/nightcap-lilla-harbor.png.asset.json";
