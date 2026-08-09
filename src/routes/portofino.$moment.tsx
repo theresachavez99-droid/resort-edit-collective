@@ -89,14 +89,18 @@ type MomentHeroVideo = {
  * The entry stays in MOMENT_HERO_VIDEO and the asset stays in the repo — just
  * delete the slug here to re-enable the cinematic hero.
  */
-const HERO_VIDEO_DISABLED = new Set<string>(["nightcap", "pool-lounging"]);
+const HERO_VIDEO_DISABLED = new Set<string>([
+  "nightcap",
+  "pool-lounging",
+  "arrival",
+]);
 
 /**
  * Slugs whose static hero renders as a full-width 16:9 scene banner instead of
  * the default viewport-height crop. Used for environment-only heroes where the
  * place (not a model) is the subject, so the frame should stay intact.
  */
-const HERO_STATIC_WIDE = new Set<string>(["pool-lounging"]);
+const HERO_STATIC_WIDE = new Set<string>(["pool-lounging", "arrival"]);
 
 /**
  * Registry of cinematic video heroes per moment slug. Each new destination or
