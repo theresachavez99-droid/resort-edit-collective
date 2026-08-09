@@ -33,10 +33,11 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
             key={`${it.look_key}-${it.sort_order}-${it.item_name}`}
             brand={it.brand_name ?? "Resort Edit"}
             name={it.item_name}
-            {...(it.retailer_name ? { retailer: it.retailer_name } : {})}
             url={it.affiliate_url}
             image={it.image_url}
             variant="editorial"
+            ctaLabel="VIEW PRODUCT →"
+            ctaClassName="eyebrow text-[0.62rem] tracking-[0.32em] text-gold/80 group-hover:text-gold transition-colors duration-300"
           />
         ))}
       </ProductCommerceGrid>
