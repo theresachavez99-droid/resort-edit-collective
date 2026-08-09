@@ -37,7 +37,7 @@ import beachClubLongLunchBanner from "@/assets/uploads/portofino/beach-club-long
 // Arrival hero: destination-establishing scene-only still (harbor, vintage
 // luggage, wooden launch) replacing the former AI video hero so the Lilla
 // editorial reference below stays the fashion focal point.
-import arrivalBanner from "@/assets/uploads/portofino/arrival-portofino-scene.jpg.asset.json";
+import arrivalBanner from "@/assets/uploads/portofino/arrival-portofino-scene-v2.jpg.asset.json";
 import beachClubLemon from "@/assets/uploads/lilla/lilla-lemon-beach-club.png.asset.json";
 import longLunchCard from "@/assets/uploads/portofino/long-lunch-lilla-rima-ice-blue.png.asset.json";
 import shoppingCanonical from "@/assets/uploads/portofino/shopping-lilla-ombre-via-roma-v2.png.asset.json";
