@@ -874,7 +874,7 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
   "long-lunch": "Long Lunch",
   "shopping": "Shopping",
   "nightcap": "Nightcap",
-  "pool-lounging": "Beach Club",
+  "pool-lounging": "Pool Lounging",
 };
 
 /**
