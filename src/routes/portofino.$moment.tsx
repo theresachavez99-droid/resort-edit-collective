@@ -84,6 +84,13 @@ type MomentHeroVideo = {
 };
 
 /**
+ * Slugs whose hero video is temporarily withheld (e.g. pending a re-export).
+ * The entry stays in MOMENT_HERO_VIDEO and the asset stays in the repo — just
+ * delete the slug here to re-enable the cinematic hero.
+ */
+const HERO_VIDEO_DISABLED = new Set<string>(["nightcap"]);
+
+/**
  * Registry of cinematic video heroes per moment slug. Each new destination or
  * moment that ships a hero video adds an entry here; the shared
  * `MomentCinematicHero` component reads focal points and overlay copy from
@@ -562,7 +569,11 @@ function MomentPage() {
 
   // Moments registered in MOMENT_HERO_VIDEO get the shared cinematic video
   // hero. All other moments keep the canonical image hero.
-  const cinematicHero = MOMENT_HERO_VIDEO[slug];
+  // Temporarily disabled slugs fall back to the static place-led hero image;
+  // remove the slug from HERO_VIDEO_DISABLED to re-enable its video.
+  const cinematicHero = HERO_VIDEO_DISABLED.has(slug)
+    ? undefined
+    : MOMENT_HERO_VIDEO[slug];
 
   // Optional editorial-image override — some moments (e.g. Pool Lounging)
   // publish an approved Resort Edit editorial image separate from the DB
