@@ -84,10 +84,10 @@ const experiences = [
   },
   {
     badge: "Most Popular",
-    name: "Beach Club Reservation",
-    desc: "Sun, sea, and the perfect lunch on a private deck above the water.",
+    name: "Beach Club at Paraggi",
+    desc: "A day at Bagni Fiore — the 1927 institution on Paraggi Bay, with Langosteria at lunch and emerald water at your feet.",
     image: experienceBeachClub,
-    cta: "Reserve Beach Club",
+    cta: "Reserve at Bagni Fiore",
     partnerKey: "experience-beach-club",
   },
   {
@@ -101,7 +101,7 @@ const experiences = [
   {
     badge: "Authentic Experience",
     name: "Cooking Classes",
-    desc: "Learn Ligurian classics—pesto, pasta, and lemon-kissed desserts.",
+    desc: "Pesto by mortar and pestle, focaccia, and trofie — Ligurian classics taught minutes from the harbor.",
     image: experienceCooking,
     cta: "View Cooking Classes",
     partnerKey: "experience-cooking-classes",
