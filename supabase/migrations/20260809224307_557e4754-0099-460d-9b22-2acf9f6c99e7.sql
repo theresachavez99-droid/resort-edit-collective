@@ -1,0 +1,1 @@
+UPDATE public.moments SET hero_image = '/__l5e/assets-v1/41f69127-9170-4a54-acb7-a6878403066c/pool-lounging-portofino-scene.webp' WHERE destination = 'portofino' AND slug = 'pool-lounging';
