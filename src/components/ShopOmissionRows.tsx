@@ -42,10 +42,7 @@ export function ShopOmissionRows({ rows }: { rows: OmittedRow[] }) {
             </div>
           </div>
           <div className="text-right shrink-0">
-            {p.price && (
-              <div className="font-serif text-ink/40 text-[0.95rem]">{p.price}</div>
-            )}
-            <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/40 mt-2">
+            <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/40">
               {(p.label ?? "Still sourcing").toUpperCase()}
             </div>
           </div>
