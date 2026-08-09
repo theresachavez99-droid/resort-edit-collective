@@ -351,6 +351,7 @@ export const Route = createFileRoute("/portofino/$moment")({
     await Promise.all([
       context.queryClient.ensureQueryData(momentQuery(params.moment)),
       context.queryClient.ensureQueryData(slotHealthQuery(params.moment)),
+      context.queryClient.ensureQueryData(lookItemsQuery(`portofino/${params.moment}`)),
     ]);
     return { def };
   },
