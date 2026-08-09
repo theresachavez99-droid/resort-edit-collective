@@ -34,6 +34,7 @@ import {
   type NightcapEditorialCard,
 } from "@/data/momentEditorialCards";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
+import { isSuppressedProduct } from "@/lib/suppressed-products";
 import {
   excludeUnmerchandisable,
   isExcludedProduct,
@@ -485,7 +486,10 @@ function MomentPage() {
   // data. This lets an editor lock a specific ordered set of pieces without
   // depending on the publish pipeline.
   const curatedForMoment = MOMENT_SHOP_CURATED[slug];
+  // Products whose DB audit verdict failed are gated out before render — see
+  // `src/lib/suppressed-products.ts` (source of truth: shop_slot_products.status).
   const curatedShopEntries: ShopEntry[] = excludeUnmerchandisable(curatedForMoment)
+    .filter((o) => !isSuppressedProduct(`portofino/${slug}`, o.brand, o.title))
     .map((o) => applySlotHealth(o, slotHealth.slots))
     .filter((o) => isUsableShopUrl(o.url) || o.inReview)
     .map((product) => ({ kind: "override" as const, product }));
@@ -1718,6 +1722,12 @@ function ExtraEditorialReferenceCard({
 }) {
   const r = card.reference;
   const lookKey = `portofino/${momentSlug}/${card.key}`;
+  // Failed-audit products are gated out entirely (no omission row, no status
+  // copy) — see `src/lib/suppressed-products.ts`.
+  const referenceSuppressed = isSuppressedProduct(lookKey, r.brand, r.name);
+  const shopProducts = (card.shop?.products ?? []).filter(
+    (p) => !isSuppressedProduct(lookKey, p.brand, p.name),
+  );
   // The reference product is maintained like any other slot: an approved backup
   // swaps in silently, and a failed link renders as a non-clickable status line.
   const reference = applyLookRowHealth(
@@ -1764,7 +1774,8 @@ function ExtraEditorialReferenceCard({
             url: `/portofino/${momentSlug}#more-looks`,
           }}
         />
-        {editorialOnly ? (
+        {editorialOnly || referenceSuppressed ? (
+          editorialOnly ? (
           <Link
             to="/portofino/$moment"
             params={{ moment: momentSlug }}
@@ -1772,6 +1783,7 @@ function ExtraEditorialReferenceCard({
           >
             VIEW THE EDIT →
           </Link>
+          ) : null
         ) : (
         <div className="mt-4 border-t border-border/50 pt-5">
           {referenceShoppable ? (
@@ -1825,10 +1837,10 @@ function ExtraEditorialReferenceCard({
           )}
         </div>
         )}
-        {!editorialOnly && card.shop && card.shop.products.length > 0 && (
+        {!editorialOnly && card.shop && shopProducts.length > 0 && (
           <ExtraCompleteLookExpander
             title={card.title}
-            shop={card.shop}
+            shop={{ ...card.shop, products: shopProducts }}
             lookKey={lookKey}
             {...(lookHealth ? { lookHealth } : {})}
           />

@@ -1,5 +1,6 @@
 import { orderedProducts, type ResortEditLook, type ResortEditProduct } from "@/data/resortEditLooks";
 import { ResortEditProductCard } from "./ResortEditProductCard";
+import { isSuppressedAnywhere } from "@/lib/suppressed-products";
 
 /**
  * Editorial slot label per hero/accessory position for a given look. Uses
@@ -22,7 +23,10 @@ function slotLabelFor(look: ResortEditLook, product: ResortEditProduct, index: n
 }
 
 export function ResortEditProductGrid({ look }: { look: ResortEditLook }) {
-  const items = orderedProducts(look);
+  // Failed-audit products never render publicly — see
+  // `src/lib/suppressed-products.ts` (source of truth: shop_slot_products.status).
+  const items = orderedProducts(look).filter((p) => !isSuppressedAnywhere(p.brand, p.name));
+  if (items.length === 0) return null;
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
       {items.map((product, i) => (
