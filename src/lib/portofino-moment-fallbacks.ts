@@ -239,11 +239,11 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
   {
     moment_slug: "beach-club",
     archetype_slug: "beach-club",
-    // Display renamed to "Pool Lounging" — the imagery on this URL
-    // (bikini, chaise lounges, luxury resort pool) reads as pool lounging.
-    // URL slug intentionally preserved to avoid SEO churn / redirects.
-    moment_name: "Pool Lounging",
-    narrative: "An elegant afternoon above the bay — lemon-print swim, a cream parasol, something cold in hand.",
+    // Label, narrative and URL are kept in sync: every surface that shows
+    // this card links to /portofino/beach-club and reads "Beach Club".
+    moment_name: "Beach Club",
+    narrative:
+      "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
     editorial_order: 5,
     moment_card_image: beachClubLemon.url,
     // Moment-specific banner override — applies ONLY to
@@ -251,25 +251,24 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
     hero_banner_image: beachClubLongLunchBanner.url,
     outfit_image: beachClubLemon.url,
     legacy_day: "/portofino/day-2",
-    legacy_look_title: "Pool Lounging Morning",
+    legacy_look_title: "Beach Club",
     legacy_day_slug: "day-2",
     look_slug: "look-a",
   },
   {
     moment_slug: "pool-lounging",
     archetype_slug: "pool-lounging",
-    // Display renamed to "Beach Club" — the elevated resort separates,
-    // dresses, and polished transition looks on this URL read as arriving
-    // at and spending time at an upscale beach club. URL slug preserved.
-    moment_name: "Beach Club",
+    // Label, narrative and URL are kept in sync: every surface that shows
+    // this card links to /portofino/pool-lounging and reads "Pool Lounging".
+    moment_name: "Pool Lounging",
     narrative:
-      "A leisurely afternoon on a lounger above the harbor, spritz in hand, the sea just below.",
+      "An elegant afternoon by the Splendido's pool, above the bay, beneath striped umbrellas.",
     editorial_order: 6,
     moment_card_image: poolLoungingShoppingImage.url,
     hero_banner_image: poolLoungingShoppingImage.url,
     outfit_image: poolLoungingShoppingImage.url,
     legacy_day: "/portofino/day-3",
-    legacy_look_title: "Beach Club",
+    legacy_look_title: "Pool Lounging",
     legacy_day_slug: "day-3",
     look_slug: "look-a",
   },

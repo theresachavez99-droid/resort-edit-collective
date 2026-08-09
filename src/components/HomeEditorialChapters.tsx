@@ -28,16 +28,13 @@ const CHAPTERS: Chapter[] = [
     key: "on-the-water",
     title: "On the Water",
     subtitle: "The Riviera at its most iconic.",
-    // NOTE: display names are swapped relative to the URL slugs — the
-    // `pool-lounging` slug renders as "Beach Club" and vice versa. Chapters
-    // are grouped by what the page actually shows, not by slug.
-    slugs: ["yacht-day", "pool-lounging", "harbor-aperitivo"],
+    slugs: ["yacht-day", "beach-club", "harbor-aperitivo"],
   },
   {
     key: "slow-afternoons",
     title: "Slow Afternoons",
     subtitle: "The quieter side of Portofino.",
-    slugs: ["beach-club", "shopping", "long-lunch"],
+    slugs: ["pool-lounging", "shopping", "long-lunch"],
   },
   {
     key: "evening",
