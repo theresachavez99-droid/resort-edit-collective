@@ -13,7 +13,6 @@ export function ProductCard({ item, variant = "compact" }: { item: ShopItem; var
     <ProductCommerceCard
       brand={item.brand}
       name={item.item}
-      price={item.price}
       url={resolveProductLink(item)}
       image={item.image ?? null}
       variant={variant}
