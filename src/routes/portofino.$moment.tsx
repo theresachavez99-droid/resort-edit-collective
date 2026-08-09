@@ -89,7 +89,14 @@ type MomentHeroVideo = {
  * The entry stays in MOMENT_HERO_VIDEO and the asset stays in the repo — just
  * delete the slug here to re-enable the cinematic hero.
  */
-const HERO_VIDEO_DISABLED = new Set<string>(["nightcap"]);
+const HERO_VIDEO_DISABLED = new Set<string>(["nightcap", "pool-lounging"]);
+
+/**
+ * Slugs whose static hero renders as a full-width 16:9 scene banner instead of
+ * the default viewport-height crop. Used for environment-only heroes where the
+ * place (not a model) is the subject, so the frame should stay intact.
+ */
+const HERO_STATIC_WIDE = new Set<string>(["pool-lounging"]);
 
 /**
  * Registry of cinematic video heroes per moment slug. Each new destination or
@@ -641,7 +648,14 @@ function MomentPage() {
       {cinematicHero ? (
         <MomentCinematicHero config={cinematicHero} />
       ) : (
-        <section className="relative h-[36vh] md:h-[48vh] min-h-[280px] w-full overflow-hidden bg-ink">
+        <section
+          className={
+            "relative w-full overflow-hidden bg-ink " +
+            (HERO_STATIC_WIDE.has(slug)
+              ? "aspect-[16/9] max-h-[70vh]"
+              : "h-[36vh] md:h-[48vh] min-h-[280px]")
+          }
+        >
           <img
             src={heroImage}
             alt={`${card.moment_name} — Portofino`}
