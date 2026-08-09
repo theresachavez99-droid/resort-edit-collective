@@ -121,8 +121,7 @@ function ProductTile({ product }: { product: ProductDNA }) {
         <h3 className="font-serif text-[0.98rem] text-ink leading-snug mt-1.5 line-clamp-2">
           {product.name}
         </h3>
-        <p className="font-serif text-[0.92rem] text-ink/70 mt-2">{product.price}</p>
-        <p className="eyebrow tracking-[0.22em] text-[0.55rem] text-ink/45 mt-1">
+        <p className="eyebrow tracking-[0.22em] text-[0.55rem] text-ink/45 mt-2">
           {product.channel === "affiliate" ? `AT ${product.retailer.replace(/\.com$/, "").toUpperCase()}` : "DIRECT FROM BRAND"}
         </p>
         <a

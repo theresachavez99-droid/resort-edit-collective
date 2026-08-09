@@ -19,13 +19,10 @@ export function ResortEditProductCard({
       brand={product.brand}
       name={product.name}
       {...(slotLabel ? { category: slotLabel } : {})}
-      {...(product.price ? { price: product.price } : {})}
       retailer={product.retailer}
       url={product.url}
       image={product.image}
       variant="editorial"
-      ctaLabel="VIEW PRODUCT →"
-      {...(product.liveAvailable === false ? { stockNote: "Checking availability" } : {})}
     />
   );
 }
