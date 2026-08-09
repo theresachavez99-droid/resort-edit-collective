@@ -258,9 +258,6 @@ function ProductsGrid({ products }: { products: SavedProduct[] }) {
           <p className="font-serif text-[0.95rem] text-ink leading-snug mt-1 line-clamp-2">
             {p.name}
           </p>
-          {p.price && (
-            <p className="font-serif text-[0.88rem] text-ink/70 mt-1">{p.price}</p>
-          )}
           <div className="mt-3 flex items-center justify-between">
             {p.url ? (
               <a
