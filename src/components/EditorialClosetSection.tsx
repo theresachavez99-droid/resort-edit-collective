@@ -70,7 +70,6 @@ function AlternativeCard({
           {item.productName}
         </h4>
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[0.72rem] text-ink/65">
-          {item.price && <span className="font-serif text-[0.9rem] text-ink">{item.price}</span>}
           {item.retailer && (
             <span className="eyebrow tracking-[0.22em] text-[0.55rem]">{item.retailer}</span>
           )}
