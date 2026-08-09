@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getLookItems } from "@/lib/look-items.functions";
 import { ProductCommerceCard, ProductCommerceGrid } from "@/components/commerce/ProductCommerceCard";
