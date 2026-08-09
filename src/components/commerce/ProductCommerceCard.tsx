@@ -22,6 +22,7 @@ export type ProductCommerceCardProps = {
   name: string;
   /** Editorial slot / category label, e.g. "Shoes", "The Look". */
   category?: string;
+  /** Retained for data plumbing only — never rendered publicly. */
   price?: string;
   /** Short availability line, e.g. "Limited availability". Never invented. */
   stockNote?: string;
@@ -50,12 +51,13 @@ export function ProductCommerceCard({
   url,
   image,
   imageVerified,
-  ctaLabel = "SHOP →",
+  ctaLabel,
   unavailableLabel = "STILL SOURCING",
   flag,
   variant = "compact",
 }: ProductCommerceCardProps) {
   const [imageFailed, setImageFailed] = useState(false);
+  const cta = ctaLabel ?? (retailer ? `SHOP AT ${retailer.toUpperCase()} →` : "SHOP →");
   const decision = productImageDecision(image, { verified: imageVerified });
   const showImage = decision.render && !imageFailed;
 
@@ -102,18 +104,8 @@ export function ProductCommerceCard({
         >
           {name}
         </div>
-        <div className="flex items-baseline justify-between gap-3 mt-2">
-          {retailer ? (
-            <span className="text-[0.68rem] tracking-[0.2em] uppercase text-ink/50">
-              {retailer}
-            </span>
-          ) : (
-            <span />
-          )}
-          {price && <span className="font-serif text-gold text-[0.9rem]">{price}</span>}
-        </div>
         {stockNote && (
-          <div className="eyebrow text-[0.52rem] tracking-[0.28em] text-ink/45 mt-2">
+          <div className="eyebrow text-[0.52rem] tracking-[0.28em] text-ink/45 mt-3">
             {stockNote}
           </div>
         )}
@@ -123,7 +115,7 @@ export function ProductCommerceCard({
               href ? "text-ink group-hover:text-gold transition-colors" : "text-ink/45"
             }`}
           >
-            {href ? ctaLabel : unavailableLabel}
+            {href ? cta : unavailableLabel}
           </span>
         </div>
       </div>
