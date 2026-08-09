@@ -562,7 +562,11 @@ function MomentPage() {
 
   // Moments registered in MOMENT_HERO_VIDEO get the shared cinematic video
   // hero. All other moments keep the canonical image hero.
-  const cinematicHero = MOMENT_HERO_VIDEO[slug];
+  // Temporarily disabled slugs fall back to the static place-led hero image;
+  // remove the slug from HERO_VIDEO_DISABLED to re-enable its video.
+  const cinematicHero = HERO_VIDEO_DISABLED.has(slug)
+    ? undefined
+    : MOMENT_HERO_VIDEO[slug];
 
   // Optional editorial-image override — some moments (e.g. Pool Lounging)
   // publish an approved Resort Edit editorial image separate from the DB

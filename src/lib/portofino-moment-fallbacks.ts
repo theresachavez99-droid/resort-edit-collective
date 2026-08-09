@@ -37,6 +37,8 @@ import longLunchCard from "@/assets/uploads/portofino/long-lunch-yellow-dress-ha
 import shoppingCanonical from "@/assets/uploads/portofino/shopping-lilla-ombre-via-roma-v2.png.asset.json";
 import shoppingBanner from "@/assets/uploads/portofino/shopping-banner-via-roma-boutiques.png.asset.json";
 import nightcapCard from "@/assets/uploads/portofino/nightcap-lilla-harbor.png.asset.json";
+import longLunchBanner from "@/assets/uploads/portofino/long-lunch-harbor-table-golden-afternoon.jpg.asset.json";
+import nightcapBanner from "@/assets/uploads/portofino/nightcap-piazzetta-night-harbor.jpg.asset.json";
 import type { LookSlug } from "@/lib/portofino-spec";
 
 export type LegacyDayPath =
@@ -299,7 +301,9 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
       "A long, harborside lunch where time slows down between every course.",
     editorial_order: 8,
     moment_card_image: longLunchCard.url,
-    hero_banner_image: beachClubLongLunchBanner.url,
+    // Dedicated place-led banner (no model) — replaces the borrowed
+    // Beach Club cabanas banner.
+    hero_banner_image: longLunchBanner.url,
     outfit_image: longLunchCard.url,
     legacy_day: "/portofino/day-2",
     legacy_look_title: "Long Lunch by the Sea",
@@ -314,7 +318,9 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
       "One final cocktail along the harbor before the perfect day comes to a close.",
     editorial_order: 12,
     moment_card_image: nightcapCard.url,
-    hero_banner_image: sunsetViewsHero.url,
+    // Dedicated place-led night banner — replaces the borrowed Sunset Views
+    // banner. Also serves as the Nightcap OG/social preview image.
+    hero_banner_image: nightcapBanner.url,
     outfit_image: nightcapCard.url,
     legacy_day: "/portofino/day-4",
     legacy_look_title: "Nightcap on the Piazzetta",
