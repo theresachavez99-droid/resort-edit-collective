@@ -41,6 +41,12 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
           />
         ))}
       </ProductCommerceGrid>
+      <p className="mt-5 md:mt-6 text-xs text-ink/55 tracking-wide font-sans leading-relaxed">
+        Resort Edit may earn a commission on items purchased through these links, at no additional cost to you.{" "}
+        <Link to="/about" hash="affiliate-disclosure" className="underline decoration-ink/30 hover:decoration-ink/60 hover:text-ink/75 transition-colors">
+          Affiliate Disclosure
+        </Link>
+      </p>
     </div>
   );
 }
