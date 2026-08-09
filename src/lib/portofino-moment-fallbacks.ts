@@ -26,6 +26,9 @@ import harborAperitivoBanner from "@/assets/uploads/portofino/harbor-aperitivo-b
 import rivieraDinnerCard from "@/assets/uploads/portofino/riviera-dinner-lilla-blue-floral-harbor.png.asset.json";
 import rivieraDinnerHero from "@/assets/uploads/portofino/riviera-dinner-harbor-terrace-sunset.png.asset.json";
 import poolLoungingShoppingImage from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
+// Scene-only (no model) 16:9 banner for the Pool Lounging moment page — the
+// Lilla editorial reference below stays the fashion focal point.
+import poolLoungingBanner from "@/assets/uploads/portofino/pool-lounging-portofino-scene.webp.asset.json";
 import exploringHarborAsset from "@/assets/uploads/portofino/exploring-the-harbor-white-eyelet.png.asset.json";
 const exploringHarborImage = exploringHarborAsset.url;
 import exploringHarborBannerAsset from "@/assets/uploads/portofino/exploring-the-harbor-banner-lemon-quay.png.asset.json";
@@ -267,7 +270,7 @@ export const PORTOFINO_ADDITIONAL_MOMENT_DEFS: PortofinoMomentDef[] = [
       "An elegant afternoon by the Splendido's pool, above the bay, beneath striped umbrellas.",
     editorial_order: 6,
     moment_card_image: poolLoungingShoppingImage.url,
-    hero_banner_image: poolLoungingShoppingImage.url,
+    hero_banner_image: poolLoungingBanner.url,
     outfit_image: poolLoungingShoppingImage.url,
     legacy_day: "/portofino/day-3",
     legacy_look_title: "Pool Lounging",
