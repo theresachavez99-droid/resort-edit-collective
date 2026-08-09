@@ -183,13 +183,13 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     fit: "cover",
     overlay: {
       eyebrow: "PORTOFINO",
-      headline: "Pool Lounging.",
+      headline: "Beach Club.",
       body:
-        "An elegant afternoon by the pool, above the bay, beneath striped umbrellas.",
+        "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
-    ariaLabel: "Pool Lounging in Portofino",
+    ariaLabel: "Beach Club in Portofino",
   },
   "yacht-day": {
     video: yachtDayHeroVideo.url,
@@ -271,13 +271,13 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     fit: "cover",
     overlay: {
       eyebrow: "PORTOFINO",
-      headline: "Beach Club.",
+      headline: "Pool Lounging.",
       body:
-        "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
+        "An elegant afternoon by the pool, above the bay, beneath striped umbrellas.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
-    ariaLabel: "Beach Club in Portofino",
+    ariaLabel: "Pool Lounging in Portofino",
   },
 };
 import {
@@ -870,7 +870,7 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
   "sunset-views": "Sunset",
   "riviera-dinner": "Riviera Dinner",
   "exploring-the-harbor": "Harbor",
-  "beach-club": "Pool Lounging",
+  "beach-club": "Beach Club",
   "long-lunch": "Long Lunch",
   "shopping": "Shopping",
   "nightcap": "Nightcap",
