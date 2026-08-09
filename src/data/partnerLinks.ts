@@ -46,14 +46,14 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     key: "experience-yacht-charter",
     partnerType: "experience",
     label: "Private Yacht Charter",
-    url: "https://www.getmyboat.com/",
+    url: "https://www.getmyboat.com/boat-rental/Portofino--Liguria--Italy/",
     affiliateProgram: null,
   },
   "experience-beach-club": {
     key: "experience-beach-club",
     partnerType: "experience",
-    label: "Beach Club Reservation",
-    url: "https://www.bagnicapri.it/",
+    label: "Beach Club at Paraggi",
+    url: "https://www.bagnifiore.com/en",
     affiliateProgram: null,
   },
   "experience-boat-excursions": {
@@ -66,8 +66,8 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   "experience-cooking-classes": {
     key: "experience-cooking-classes",
     partnerType: "experience",
-    label: "Cooking Classes",
-    url: "https://www.tuscanynow.com/experiences/cooking-classes/",
+    label: "Ligurian Cooking Classes",
+    url: "https://cesarine.com/en/search/santa-margherita-ligure/cooking-class",
     affiliateProgram: null,
   },
 };
