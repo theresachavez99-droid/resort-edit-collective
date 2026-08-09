@@ -1032,11 +1032,11 @@ const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
   "sunset-views": "The Sunset Hour",
   "riviera-dinner": "The Riviera Dinner",
   "exploring-the-harbor": "Exploring the Harbor",
-  "beach-club": "Poolside in Portofino",
+  "beach-club": "The Beach Club",
   "long-lunch": "The Long Lunch",
   "shopping": "The Shopping Afternoon",
   "nightcap": "The Nightcap",
-  "pool-lounging": "The Beach Club",
+  "pool-lounging": "Poolside in Portofino",
 };
 
 /**
