@@ -730,6 +730,9 @@ function MomentPage() {
               ) : null}
             </div>
           </div>
+          {/* SHOP THE LOOK — live `look_items_public` rows for this moment.
+              Renders nothing when the look has no items. */}
+          <ShopTheLookItems lookKey={`portofino/${slug}`} />
         </div>
       </section>
 
