@@ -295,6 +295,7 @@ import { isPublishableProductUrl } from "@/lib/shop-url-policy";
 import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
+import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheLookItems";
 import { findResortEditLook } from "@/data/resortEditLooks";
 // Locked Pool Lounging editorial reference — the seated poolside portrait
 // (Aperol Spritz, white lounge chair, Splendido pool). This asset is the
@@ -350,6 +351,7 @@ export const Route = createFileRoute("/portofino/$moment")({
     await Promise.all([
       context.queryClient.ensureQueryData(momentQuery(params.moment)),
       context.queryClient.ensureQueryData(slotHealthQuery(params.moment)),
+      context.queryClient.ensureQueryData(lookItemsQuery(`portofino/${params.moment}`)),
     ]);
     return { def };
   },
@@ -730,6 +732,9 @@ function MomentPage() {
               ) : null}
             </div>
           </div>
+          {/* SHOP THE LOOK — live `look_items_public` rows for this moment.
+              Renders nothing when the look has no items. */}
+          <ShopTheLookItems lookKey={`portofino/${slug}`} />
         </div>
       </section>
 

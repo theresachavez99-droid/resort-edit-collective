@@ -10,6 +10,7 @@ import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { portofinoMomentsQuery } from "@/components/HomeItinerary";
 import { HomeEditorialChapters } from "@/components/HomeEditorialChapters";
 import { getFeaturedDestination } from "@/data/featuredDestination";
+import { partnerHref } from "@/data/partnerLinks";
 import heroVideoAsset from "@/assets/portofino-hero.mp4.asset.json";
 import heroPosterAsset from "@/assets/portofino-hero-poster.jpg.asset.json";
 import * as React from "react";
@@ -48,7 +49,7 @@ const hotels = [
     desc: "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied view on the Riviera.",
     signals: ["Resort Edit top pick", "Harbour-facing rooms only", "Private pool terrace & cabanas"],
     note: "Where to stay if this trip is the trip.",
-    href: "https://www.belmond.com/hotels/europe/italy/portofino/belmond-hotel-splendido/",
+    partnerKey: "hotel-splendido",
   },
   {
     name: "Eight Hotel Portofino",
@@ -58,7 +59,7 @@ const hotels = [
     desc: "Quietly chic and steps from the piazzetta. A modern Italian retreat for travelers who want to live like a local in the heart of town.",
     signals: ["Steps from the piazzetta", "Boutique, under 20 rooms", "Concierge who books the impossible"],
     note: "For the trip you'll want to repeat next summer.",
-    href: "https://www.eighthotels.com/en/eight-hotel-portofino/",
+    partnerKey: "hotel-eight-portofino",
   },
   {
     name: "Hotel Piccolo Portofino",
@@ -68,7 +69,7 @@ const hotels = [
     desc: "An intimate seaside hideaway tucked into a private cove. Sun-bleached terraces, turquoise water, and the kind of service that anticipates everything.",
     signals: ["Private sea-access terrace", "Quiet side of the harbor", "Sea-view suites only"],
     note: "For the traveler who wants the harbor without the crowd.",
-    href: "https://www.hotelpiccoloportofino.com/",
+    partnerKey: "hotel-piccolo-portofino",
   },
 ];
 
@@ -79,7 +80,7 @@ const experiences = [
     desc: "Sail the Ligurian coast in style, from the harbor to hidden coves.",
     image: experienceYacht,
     cta: "Explore Yacht Charters",
-    href: "https://www.getmyboat.com/",
+    partnerKey: "experience-yacht-charter",
   },
   {
     badge: "Most Popular",
@@ -87,7 +88,7 @@ const experiences = [
     desc: "Sun, sea, and the perfect lunch on a private deck above the water.",
     image: experienceBeachClub,
     cta: "Reserve Beach Club",
-    href: "https://www.bagnicapri.it/",
+    partnerKey: "experience-beach-club",
   },
   {
     badge: "Half-Day Adventure",
@@ -95,7 +96,7 @@ const experiences = [
     desc: "Discover San Fruttuoso and the coastline by classic Italian boat.",
     image: experienceBoat,
     cta: "Explore Boat Excursions",
-    href: "https://www.tigullio.it/",
+    partnerKey: "experience-boat-excursions",
   },
   {
     badge: "Authentic Experience",
@@ -103,7 +104,7 @@ const experiences = [
     desc: "Learn Ligurian classics—pesto, pasta, and lemon-kissed desserts.",
     image: experienceCooking,
     cta: "View Cooking Classes",
-    href: "https://www.tuscanynow.com/experiences/cooking-classes/",
+    partnerKey: "experience-cooking-classes",
   },
 ];
 
@@ -235,7 +236,9 @@ function Index() {
                 </ul>
                 <p className="mt-5 font-serif italic text-[0.9rem] text-ink/60 flex-1">{h.note}</p>
                 <a
-                  href={h.href}
+                  href={partnerHref(h.partnerKey)}
+                  data-partner-key={h.partnerKey}
+                  data-partner-type="hotel"
                   target="_blank"
                   rel="noreferrer noopener sponsored"
                   className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"
@@ -280,7 +283,9 @@ function Index() {
                 <h3 className="font-display text-2xl tracking-wide text-ink">{e.name}</h3>
                 <p className="mt-3 font-serif text-[0.95rem] text-ink/75 leading-relaxed flex-1">{e.desc}</p>
                 <a
-                  href={e.href}
+                  href={partnerHref(e.partnerKey)}
+                  data-partner-key={e.partnerKey}
+                  data-partner-type="experience"
                   target="_blank"
                   rel="noreferrer noopener sponsored"
                   className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"

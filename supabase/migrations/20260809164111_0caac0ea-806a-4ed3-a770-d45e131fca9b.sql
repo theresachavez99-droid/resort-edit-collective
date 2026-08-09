@@ -1,0 +1,1 @@
+GRANT SELECT (is_active) ON public.look_items TO anon, authenticated;

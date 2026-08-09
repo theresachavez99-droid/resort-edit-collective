@@ -2085,6 +2085,60 @@ export type Database = {
         }
         Relationships: []
       }
+      look_items: {
+        Row: {
+          affiliate_url: string | null
+          brand_name: string
+          brand_slug: string | null
+          created_at: string
+          currency: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          item_name: string
+          look_key: string
+          network: string
+          price_display: string | null
+          retailer_name: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          affiliate_url?: string | null
+          brand_name: string
+          brand_slug?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          item_name: string
+          look_key: string
+          network?: string
+          price_display?: string | null
+          retailer_name?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          affiliate_url?: string | null
+          brand_name?: string
+          brand_slug?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          item_name?: string
+          look_key?: string
+          network?: string
+          price_display?: string | null
+          retailer_name?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       moment_runs: {
         Row: {
           created_at: string
@@ -3341,6 +3395,45 @@ export type Database = {
           slug?: string | null
           style_family?: string[] | null
           title?: string | null
+        }
+        Relationships: []
+      }
+      look_items_public: {
+        Row: {
+          affiliate_url: string | null
+          brand_name: string | null
+          brand_slug: string | null
+          currency: string | null
+          image_url: string | null
+          item_name: string | null
+          look_key: string | null
+          price_display: string | null
+          retailer_name: string | null
+          sort_order: number | null
+        }
+        Insert: {
+          affiliate_url?: string | null
+          brand_name?: string | null
+          brand_slug?: string | null
+          currency?: string | null
+          image_url?: string | null
+          item_name?: string | null
+          look_key?: string | null
+          price_display?: string | null
+          retailer_name?: string | null
+          sort_order?: number | null
+        }
+        Update: {
+          affiliate_url?: string | null
+          brand_name?: string | null
+          brand_slug?: string | null
+          currency?: string | null
+          image_url?: string | null
+          item_name?: string | null
+          look_key?: string | null
+          price_display?: string | null
+          retailer_name?: string | null
+          sort_order?: number | null
         }
         Relationships: []
       }
