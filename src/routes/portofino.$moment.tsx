@@ -1660,8 +1660,7 @@ function NightcapShopExpander({
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="font-serif text-gold text-[0.95rem]">{p.price}</div>
-                    <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
+                    <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 group-hover:text-gold transition-colors">
                       SHOP →
                     </div>
                   </div>
@@ -1795,10 +1794,7 @@ function ExtraEditorialReferenceCard({
               </div>
             </div>
             <div className="text-right shrink-0">
-              {reference.price && (
-                <div className="font-serif text-gold text-[0.95rem]">{reference.price}</div>
-              )}
-              <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
+              <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 group-hover:text-gold transition-colors">
                 SHOP THE REFERENCE →
               </div>
             </div>
@@ -1897,10 +1893,7 @@ function ExtraCompleteLookExpander({
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    {p.price && (
-                      <div className="font-serif text-gold text-[0.95rem]">{p.price}</div>
-                    )}
-                    <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 mt-2 group-hover:text-gold transition-colors">
+                    <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 group-hover:text-gold transition-colors">
                       SHOP →
                     </div>
                   </div>
