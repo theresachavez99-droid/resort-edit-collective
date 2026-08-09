@@ -84,6 +84,13 @@ type MomentHeroVideo = {
 };
 
 /**
+ * Slugs whose hero video is temporarily withheld (e.g. pending a re-export).
+ * The entry stays in MOMENT_HERO_VIDEO and the asset stays in the repo — just
+ * delete the slug here to re-enable the cinematic hero.
+ */
+const HERO_VIDEO_DISABLED = new Set<string>(["nightcap"]);
+
+/**
  * Registry of cinematic video heroes per moment slug. Each new destination or
  * moment that ships a hero video adds an entry here; the shared
  * `MomentCinematicHero` component reads focal points and overlay copy from
