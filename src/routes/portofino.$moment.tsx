@@ -295,7 +295,7 @@ import { isPublishableProductUrl } from "@/lib/shop-url-policy";
 import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
-import { ShopTheLookItems } from "@/components/commerce/ShopTheLookItems";
+import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheLookItems";
 import { findResortEditLook } from "@/data/resortEditLooks";
 // Locked Pool Lounging editorial reference — the seated poolside portrait
 // (Aperol Spritz, white lounge chair, Splendido pool). This asset is the
