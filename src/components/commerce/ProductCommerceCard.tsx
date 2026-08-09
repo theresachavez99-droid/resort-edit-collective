@@ -45,7 +45,6 @@ export function ProductCommerceCard({
   brand,
   name,
   category,
-  price,
   stockNote,
   retailer,
   url,
