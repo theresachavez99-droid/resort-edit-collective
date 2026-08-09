@@ -1,0 +1,1 @@
+UPDATE public.moments SET hero_image = '/__l5e/assets-v1/9a7969e4-c98b-41bb-9e69-9170e8855e82/arrival-portofino-scene-v2.jpg' WHERE slug = 'arrival';
