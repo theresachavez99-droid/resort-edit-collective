@@ -34,6 +34,11 @@ export type ProductCommerceCardProps = {
   /** True only when source, rights, URL and product match are verified. */
   imageVerified?: boolean;
   ctaLabel?: string;
+  /**
+   * Optional override for the CTA typography. Used by "Shop The Look" so its
+   * VIEW PRODUCT link matches the Complete Look sections letter-for-letter.
+   */
+  ctaClassName?: string;
   /** Copy shown when there is no publishable PDP link. */
   unavailableLabel?: string;
   /** Small corner note, e.g. "Updated". */
@@ -51,6 +56,7 @@ export function ProductCommerceCard({
   image,
   imageVerified,
   ctaLabel,
+  ctaClassName,
   unavailableLabel = "STILL SOURCING",
   flag,
   variant = "compact",
@@ -110,9 +116,13 @@ export function ProductCommerceCard({
         )}
         <div className="mt-auto pt-3">
           <span
-            className={`eyebrow text-[0.6rem] tracking-[0.35em] ${
-              href ? "text-ink group-hover:text-gold transition-colors" : "text-ink/45"
-            }`}
+            className={
+              href && ctaClassName
+                ? ctaClassName
+                : `eyebrow text-[0.6rem] tracking-[0.35em] ${
+                    href ? "text-ink group-hover:text-gold transition-colors" : "text-ink/45"
+                  }`
+            }
           >
             {href ? cta : unavailableLabel}
           </span>
