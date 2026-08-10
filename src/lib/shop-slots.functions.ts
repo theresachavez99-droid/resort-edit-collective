@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { createClient } from "@supabase/supabase-js";
 
 /**
  * Public read for "The Resort Edit" itemization sidebar.
@@ -28,17 +27,19 @@ export type PublicShopSlot = {
 export const getShopSlots = createServerFn({ method: "GET" })
   .inputValidator((d) => z.object({ lookKey: z.string().min(1).max(160) }).parse(d))
   .handler(async ({ data }): Promise<{ slots: PublicShopSlot[] }> => {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PUBLISHABLE_KEY!,
-      { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
-    );
-    const { data: rows, error } = await supabase
+    // Server-side read of a public, non-PII display view. `shop_slot_products`
+    // has RLS with no anon policy, so the publishable key sees zero rows; this
+    // handler therefore reads server-side with an explicit, price-free column
+    // projection and the view's own `status = 'active'` filter. No schema,
+    // grant, or policy change required.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
       .from("public_shop_slot_display")
       .select(
         "destination,moment,look_key,slot,slot_label,brand,product_name,retailer,url,status,is_primary,replacement_priority",
       )
-      .eq("look_key", data.lookKey);
+      .eq("look_key", data.lookKey)
+      .eq("status", "active");
     if (error) return { slots: [] };
     return { slots: (rows ?? []) as PublicShopSlot[] };
   });
