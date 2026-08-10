@@ -10,9 +10,11 @@ export const lookItemsQuery = (lookKey: string) =>
   });
 
 /**
- * "Shop The Look" — renders the look's `look_items_public` rows through the
- * standard commerce card. Renders nothing at all when a look has no items:
- * no placeholder, no empty state, no "coming soon".
+ * "Other Options" — renders the look's `look_items_public` rows as alternates
+ * and complements through the standard commerce card. The exact-outfit
+ * itemization lives in "The Resort Edit" sidebar; this layer is secondary.
+ * Renders nothing at all when a look has no items: no placeholder, no empty
+ * state, no "coming soon".
  */
 export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
   const { data } = useQuery(lookItemsQuery(lookKey));
@@ -22,9 +24,9 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
   return (
     <div className="mt-12 md:mt-14 border-t border-border/40 pt-10 md:pt-12">
       <div className="max-w-2xl mb-7 md:mb-9">
-        <span className="eyebrow text-[0.62rem] tracking-[0.36em] text-gold">SHOP THE LOOK</span>
+        <span className="eyebrow text-[0.62rem] tracking-[0.36em] text-gold">THE EDIT</span>
         <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
-          Shop The Look
+          Other Options
         </h3>
       </div>
       <ProductCommerceGrid>
@@ -36,7 +38,7 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
             url={it.affiliate_url}
             image={it.image_url}
             variant="editorial"
-            ctaLabel="VIEW PRODUCT →"
+            ctaLabel="Shop →"
             ctaClassName="eyebrow text-[0.62rem] tracking-[0.32em] text-gold/80 group-hover:text-gold transition-colors duration-300"
           />
         ))}
