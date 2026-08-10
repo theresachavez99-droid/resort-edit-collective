@@ -39,7 +39,6 @@ import { Route as AdminProductHealthQueueRouteImport } from './routes/admin.prod
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as ApiPublicProductAuditRouteImport } from './routes/api/public/product-audit'
 import { Route as ApiPublicProductHealthSweepRouteImport } from './routes/api/public/product-health-sweep'
-import { Route as ApiPublicTmpSlotsRouteImport } from './routes/api/public/tmp-slots'
 import { Route as PortofinoDayLookRouteImport } from './routes/portofino.$day.$look'
 import { Route as AdminMomentsIdRunRouteImport } from './routes/admin.moments.$id.run'
 import { Route as ApiPublicChar91DotmcpChar93ListToolsRouteImport } from './routes/api/public/[.mcp]/list-tools'
@@ -198,11 +197,6 @@ const ApiPublicProductHealthSweepRoute =
     path: '/api/public/product-health-sweep',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicTmpSlotsRoute = ApiPublicTmpSlotsRouteImport.update({
-  id: '/api/public/tmp-slots',
-  path: '/api/public/tmp-slots',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PortofinoDayLookRoute = PortofinoDayLookRouteImport.update({
   id: '/$day/$look',
   path: '/$day/$look',
@@ -263,7 +257,6 @@ export interface FileRoutesByFullPath {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
-  '/api/public/tmp-slots': typeof ApiPublicTmpSlotsRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
@@ -297,7 +290,6 @@ export interface FileRoutesByTo {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
-  '/api/public/tmp-slots': typeof ApiPublicTmpSlotsRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
@@ -336,7 +328,6 @@ export interface FileRoutesById {
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
-  '/api/public/tmp-slots': typeof ApiPublicTmpSlotsRoute
   '/portofino/$day/$look': typeof PortofinoDayLookRoute
   '/admin/moments/$id/run': typeof AdminMomentsIdRunRoute
   '/api/public/.mcp/list-tools': typeof ApiPublicChar91DotmcpChar93ListToolsRoute
@@ -376,7 +367,6 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
-    | '/api/public/tmp-slots'
     | '/portofino/$day/$look'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
@@ -410,7 +400,6 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
-    | '/api/public/tmp-slots'
     | '/portofino/$day/$look'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
@@ -448,7 +437,6 @@ export interface FileRouteTypes {
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
-    | '/api/public/tmp-slots'
     | '/portofino/$day/$look'
     | '/admin/moments/$id/run'
     | '/api/public/.mcp/list-tools'
@@ -470,7 +458,6 @@ export interface RootRouteChildren {
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
   ApiPublicProductAuditRoute: typeof ApiPublicProductAuditRoute
   ApiPublicProductHealthSweepRoute: typeof ApiPublicProductHealthSweepRoute
-  ApiPublicTmpSlotsRoute: typeof ApiPublicTmpSlotsRoute
   ApiPublicChar91DotmcpChar93ListToolsRoute: typeof ApiPublicChar91DotmcpChar93ListToolsRoute
   ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute: typeof ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute
   ApiPublicChar91DotmcpChar93InvokeToolToolRoute: typeof ApiPublicChar91DotmcpChar93InvokeToolToolRoute
@@ -688,13 +675,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicProductHealthSweepRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/tmp-slots': {
-      id: '/api/public/tmp-slots'
-      path: '/api/public/tmp-slots'
-      fullPath: '/api/public/tmp-slots'
-      preLoaderRoute: typeof ApiPublicTmpSlotsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/portofino/$day/$look': {
       id: '/portofino/$day/$look'
       path: '/$day/$look'
@@ -822,7 +802,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicMcpRoute: ApiPublicMcpRoute,
   ApiPublicProductAuditRoute: ApiPublicProductAuditRoute,
   ApiPublicProductHealthSweepRoute: ApiPublicProductHealthSweepRoute,
-  ApiPublicTmpSlotsRoute: ApiPublicTmpSlotsRoute,
   ApiPublicChar91DotmcpChar93ListToolsRoute:
     ApiPublicChar91DotmcpChar93ListToolsRoute,
   ApiPublicChar91DotwellKnownChar93OauthProtectedResourceRoute:
