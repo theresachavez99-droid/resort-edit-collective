@@ -315,6 +315,10 @@ import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
 import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheLookItems";
+import {
+  ResortEditItemization,
+  shopSlotsQuery,
+} from "@/components/commerce/ResortEditItemization";
 import { findResortEditLook } from "@/data/resortEditLooks";
 // Locked Pool Lounging editorial reference — the seated poolside portrait
 // (Aperol Spritz, white lounge chair, Splendido pool). This asset is the
@@ -371,6 +375,7 @@ export const Route = createFileRoute("/portofino/$moment")({
       context.queryClient.ensureQueryData(momentQuery(params.moment)),
       context.queryClient.ensureQueryData(slotHealthQuery(params.moment)),
       context.queryClient.ensureQueryData(lookItemsQuery(`portofino/${params.moment}`)),
+      context.queryClient.ensureQueryData(shopSlotsQuery(`portofino/${params.moment}`)),
     ]);
     return { def };
   },
@@ -736,33 +741,20 @@ function MomentPage() {
               {/* Standardized shop area — a moment either publishes its live
                   Resort Edit shopping list or shows nothing at all. No
                   placeholder or "coming soon" states are ever rendered. */}
-              {featuredPieceCount + featuredInReviewCount > 0 &&
-              (isFounderLook || hasCuratedOverride) ? (
-                <div className="pt-2">
-                  <div className="pt-4 border-t border-border/40">
-                    <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
-                      THE EDIT
-                    </span>
-                    <h3 className="font-display text-2xl md:text-[1.75rem] tracking-[0.04em] text-ink mt-2 leading-[1.1]">
-                      The Resort Edit
-                    </h3>
-                    <p className="font-serif italic text-[0.95rem] text-ink/70 mt-2 leading-relaxed max-w-prose">
-                      The pieces we would choose to wear this moment — matched to the photograph, from the designers we return to season after season.
-                    </p>
-                  </div>
-                  <ShopLookPanel heading={shopHeading} entries={featuredShop} />
-                  {completeLookHref && (
-                    <div className="pt-6 flex justify-center lg:justify-start">
-                      <Link
-                        to={completeLookHref}
-                        className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.36em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-8 py-4"
-                      >
-                        VIEW THE FULL EDIT →
-                      </Link>
-                    </div>
-                  )}
+              {/* THE RESORT EDIT — itemization rendered exclusively from the
+                  `public_shop_slot_display` view (status = 'active'). The old
+                  hardcoded registry path was retired: one source of truth. */}
+              <ResortEditItemization lookKey={`portofino/${slug}`} />
+              {completeLookHref && (
+                <div className="pt-6 flex justify-center lg:justify-start">
+                  <Link
+                    to={completeLookHref}
+                    className="inline-flex items-center gap-3 eyebrow text-[0.7rem] tracking-[0.36em] text-ivory bg-ink hover:bg-gold transition-colors duration-300 px-8 py-4"
+                  >
+                    VIEW THE FULL EDIT →
+                  </Link>
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
           {/* SHOP THE LOOK — live `look_items_public` rows for this moment.
