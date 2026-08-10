@@ -40,7 +40,6 @@ export const getShopSlots = createServerFn({ method: "GET" })
       )
       .eq("look_key", data.lookKey)
       .eq("status", "active");
-    if (error) { console.error("[shop-slots] error", data.lookKey, error.message); return { slots: [] }; }
-    console.log("[shop-slots]", data.lookKey, (rows ?? []).length);
+    if (error) return { slots: [] };
     return { slots: (rows ?? []) as PublicShopSlot[] };
   });
