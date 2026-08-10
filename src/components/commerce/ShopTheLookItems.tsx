@@ -38,7 +38,7 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
             url={it.affiliate_url}
             image={it.image_url}
             variant="editorial"
-            ctaLabel="VIEW PRODUCT →"
+            ctaLabel="Shop →"
             ctaClassName="eyebrow text-[0.62rem] tracking-[0.32em] text-gold/80 group-hover:text-gold transition-colors duration-300"
           />
         ))}
