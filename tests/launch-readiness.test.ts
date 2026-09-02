@@ -63,6 +63,41 @@ describe("canonical featured headings", () => {
   });
 });
 
+describe("retired five-day architecture", () => {
+  test("dynamic day/look route is a redirect-only tombstone", () => {
+    const src = read("src/routes/portofino.$day.$look.tsx");
+    expect(src).toContain("throw redirect(");
+    expect(src).toContain("statusCode: 301");
+    expect(src).not.toContain("findResortEditLook");
+    expect(src).not.toContain("ProductCard");
+    expect(src).not.toContain("price");
+  });
+
+  test("legacy priced data and rendering modules are deleted", () => {
+    for (const path of [
+      "src/data/portofino.ts",
+      "src/data/portofinoEdit.ts",
+      "src/data/lookbook.ts",
+      "src/data/lookFallbacks.ts",
+      "src/data/lookOverrides.ts",
+      "src/lib/portofino-spec.ts",
+      "src/components/ProductCard.tsx",
+      "src/components/MoreFromTheEdit.tsx",
+    ]) {
+      expect(() => read(path)).toThrow();
+    }
+  });
+
+  test("all retired look URLs have permanent canonical redirects", () => {
+    const redirects = read("public/_redirects");
+    for (let day = 1; day <= 5; day += 1) {
+      for (const look of ["a", "b", "c"]) {
+        expect(redirects).toMatch(new RegExp(`/portofino/day-${day}/look-${look}\\s+/portofino/`));
+      }
+    }
+  });
+});
+
 // ── 2. Zero-link commerce CTA suppression ───────────────────────
 describe("zero-link commerce CTA suppression", () => {
   test("policy: zero verified links → no shoppable-set CTA", () => {

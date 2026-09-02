@@ -1325,7 +1325,6 @@ function ExtraEditorialReferenceCard({
                     slot: r.slot ?? "Reference",
                     brand: reference.brand,
                     name: reference.name,
-                    ...(reference.price ? { price: reference.price } : {}),
                     ...(reference.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
                   },
                 ]}
