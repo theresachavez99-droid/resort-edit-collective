@@ -99,7 +99,9 @@ function findingsForMoment(slug: string): SlotFinding[] {
     ...(slug === "nightcap" ? NIGHTCAP_EDITORIAL_CARDS : []),
   ];
   for (const card of cards) {
-    const ref = (card as { reference?: { url?: string; slot?: string; brand?: string; name?: string } }).reference;
+    const ref = (
+      card as { reference?: { url?: string; slot?: string; brand?: string; name?: string } }
+    ).reference;
     if (ref?.url) {
       const { slot, displayLabel } = resolveSlot({ slot: ref.slot, title: ref.name });
       const v = classifyShopUrl(ref.url);

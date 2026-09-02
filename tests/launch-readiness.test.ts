@@ -17,11 +17,7 @@ import {
   publicFeaturedTitle,
 } from "@/lib/moment-display";
 import { countShoppableRows, shopCtaAllowed } from "@/lib/commerce-cta-policy";
-import {
-  EVENING_MOMENT_SLUGS,
-  isCompleteLook,
-  isDaytimeMoment,
-} from "@/lib/look-completeness";
+import { EVENING_MOMENT_SLUGS, isCompleteLook, isDaytimeMoment } from "@/lib/look-completeness";
 import { auditMoment, runLaunchAudit } from "@/lib/launch-audit";
 import { FORBIDDEN_SLOTS, REQUIRED_SLOTS } from "@/lib/product-slots";
 import { resolveMomentTemplate } from "@/lib/editorial-stylist";
@@ -40,11 +36,7 @@ describe("canonical featured headings", () => {
 
   test("Exploring the Harbor never features 'Via Roma Boutiques'", () => {
     expect(
-      publicFeaturedTitle(
-        "exploring-the-harbor",
-        "Via Roma Boutiques",
-        "Exploring the Harbor",
-      ),
+      publicFeaturedTitle("exploring-the-harbor", "Via Roma Boutiques", "Exploring the Harbor"),
     ).toBe("Exploring the Harbor");
   });
 
@@ -87,9 +79,7 @@ describe("zero-link commerce CTA suppression", () => {
       ]),
     ).toBe(0);
     expect(
-      countShoppableRows([
-        { url: "https://www.nordstrom.com/s/lagence-rima-dress/7854321" },
-      ]),
+      countShoppableRows([{ url: "https://www.nordstrom.com/s/lagence-rima-dress/7854321" }]),
     ).toBe(1);
   });
 

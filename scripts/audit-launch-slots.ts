@@ -30,27 +30,30 @@ let forbiddenCount = 0;
 
 for (const m of audit.moments) {
   const flag =
-    m.badUrls.length > 0 || m.forbiddenPresent.length > 0
-      ? "✗"
-      : m.zeroLinkPage
-        ? "!"
-        : "✓";
+    m.badUrls.length > 0 || m.forbiddenPresent.length > 0 ? "✗" : m.zeroLinkPage ? "!" : "✓";
   console.log(`\n${flag} ${m.name}  (/portofino/${m.slug}, ${m.momentType})`);
   console.log(`    product URLs: ${m.productUrls}`);
   console.log(`    filled:       ${m.filledSlots.map((s) => SLOT_DISPLAY[s]).join(", ") || "—"}`);
   if (m.intentionalOmissions.length)
-    console.log(`    intentional:  ${m.intentionalOmissions.map((s) => SLOT_DISPLAY[s]).join(", ")}`);
+    console.log(
+      `    intentional:  ${m.intentionalOmissions.map((s) => SLOT_DISPLAY[s]).join(", ")}`,
+    );
   if (m.missingRequiredSlots.length)
-    console.log(`    MISSING:      ${m.missingRequiredSlots.map((s) => SLOT_DISPLAY[s]).join(", ")} (warning — editorial decision)`);
+    console.log(
+      `    MISSING:      ${m.missingRequiredSlots.map((s) => SLOT_DISPLAY[s]).join(", ")} (warning — editorial decision)`,
+    );
   if (m.missingAdvisorySlots.length)
-    console.log(`    advisory:     ${m.missingAdvisorySlots.map((s) => SLOT_DISPLAY[s]).join(", ")}`);
+    console.log(
+      `    advisory:     ${m.missingAdvisorySlots.map((s) => SLOT_DISPLAY[s]).join(", ")}`,
+    );
   if (m.forbiddenPresent.length) {
     forbiddenCount += m.forbiddenPresent.length;
     hardFailures += m.forbiddenPresent.length;
-    console.log(`    ✗ FORBIDDEN (${m.momentType}): ${m.forbiddenPresent.map((s) => SLOT_DISPLAY[s]).join(", ")}`);
+    console.log(
+      `    ✗ FORBIDDEN (${m.momentType}): ${m.forbiddenPresent.map((s) => SLOT_DISPLAY[s]).join(", ")}`,
+    );
   }
-  if (m.unmappedLabels.length)
-    console.log(`    unmapped:     ${m.unmappedLabels.join(", ")}`);
+  if (m.unmappedLabels.length) console.log(`    unmapped:     ${m.unmappedLabels.join(", ")}`);
   if (m.zeroLinkPage)
     console.log(`    note:         zero-link page — commerce CTAs are suppressed at runtime`);
   for (const b of m.badUrls) {
@@ -63,10 +66,7 @@ for (const m of audit.moments) {
 // Zero-link pages must never render a shoppable-set CTA. The runtime gate is
 // data-driven (DB rows → `shopCtaAllowed`), so CI verifies (a) the policy
 // itself and (b) that the moment route actually renders through the policy.
-const routeSrc = readFileSync(
-  join(here, "..", "src", "routes", "portofino.$moment.tsx"),
-  "utf8",
-);
+const routeSrc = readFileSync(join(here, "..", "src", "routes", "portofino.$moment.tsx"), "utf8");
 const ctaChecks: Array<[string, boolean]> = [
   ["policy suppresses CTA at zero verified links", shopCtaAllowed(0) === false],
   ["policy allows CTA with verified links", shopCtaAllowed(1) === true],
@@ -88,7 +88,9 @@ console.log(`  exact product URLs:      ${t.productUrls}`);
 console.log(`  non-product URLs:        ${t.badUrls}`);
 console.log(`  forbidden slots:         ${forbiddenCount}`);
 console.log(`  zero-link pages:         ${t.zeroLinkPages} (warnings — CTA suppressed at runtime)`);
-console.log(`  moments missing slots:   ${t.momentsMissingRequired} (warnings — never auto-filled)`);
+console.log(
+  `  moments missing slots:   ${t.momentsMissingRequired} (warnings — never auto-filled)`,
+);
 
 if (hardFailures > 0) {
   console.error(`\n❌ ${hardFailures} hard failure(s) — publish blocked.`);

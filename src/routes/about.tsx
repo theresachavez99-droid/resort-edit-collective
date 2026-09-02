@@ -7,9 +7,16 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About | Resort Edit | Dressed for the destination" },
-      { name: "description", content: "Resort Edit is a luxury editorial publication for travel and fashion — curated for the sophisticated, worldly woman." },
+      {
+        name: "description",
+        content:
+          "Resort Edit is a luxury editorial publication for travel and fashion — curated for the sophisticated, worldly woman.",
+      },
       { property: "og:title", content: "About | Resort Edit | Dressed for the destination" },
-      { property: "og:description", content: "A luxury digital publication for travel and fashion." },
+      {
+        property: "og:description",
+        content: "A luxury digital publication for travel and fashion.",
+      },
       { property: "og:url", content: absoluteUrl("/about") },
       { property: "og:image", content: absoluteUrl(heroAsset.url) },
       { name: "twitter:image", content: absoluteUrl(heroAsset.url) },
@@ -33,12 +40,12 @@ function AboutPage() {
         // bias y low (toward the top of the image) at every breakpoint so the
         // hat is never clipped, with generous breathing room above.
         focal={{
-          base: { x: 78, y: 18 },   // mobile
-          sm:   { x: 76, y: 20 },
-          md:   { x: 74, y: 24 },   // tablet
-          lg:   { x: 70, y: 32 },   // desktop — per spec
-          xl:   { x: 66, y: 34 },
-          "2xl":{ x: 60, y: 36 },
+          base: { x: 78, y: 18 }, // mobile
+          sm: { x: 76, y: 20 },
+          md: { x: 74, y: 24 }, // tablet
+          lg: { x: 70, y: 32 }, // desktop — per spec
+          xl: { x: 66, y: 34 },
+          "2xl": { x: 60, y: 36 },
         }}
         heightClassName="h-[52vh] md:h-[64vh] lg:h-[72vh] min-h-[460px] max-h-[760px]"
         overlay={
@@ -62,13 +69,16 @@ function AboutPage() {
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>Every Resort Edit begins with a destination — not a suitcase.</p>
             <p>
-              We thoughtfully curate where to stay, what to experience, and what to wear, creating complete destination wardrobes inspired by the places themselves.
+              We thoughtfully curate where to stay, what to experience, and what to wear, creating
+              complete destination wardrobes inspired by the places themselves.
             </p>
             <p>
-              From first espresso to sunset aperitivo, every recommendation is chosen to help you travel beautifully and dress with intention.
+              From first espresso to sunset aperitivo, every recommendation is chosen to help you
+              travel beautifully and dress with intention.
             </p>
             <p className="border-l-2 border-gold/25 pl-5">
-              Every destination is personally researched and curated using the same editorial process we would use when planning our own travels.
+              Every destination is personally researched and curated using the same editorial
+              process we would use when planning our own travels.
             </p>
             <p>Because the best trips deserve an unforgettable wardrobe.</p>
           </div>
@@ -83,7 +93,8 @@ function AboutPage() {
         <div className="mx-auto max-w-xl text-left mt-8">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>
-              A question about a destination, a piece we featured, or somewhere you would love to see curated next — we read every note.
+              A question about a destination, a piece we featured, or somewhere you would love to
+              see curated next — we read every note.
             </p>
             <p>
               Write to{" "}
@@ -107,7 +118,8 @@ function AboutPage() {
         <div className="mx-auto max-w-xl text-left mt-8">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>
-              Resort Edit partners with brands, hotels, tourism boards, and affiliate programs whose sense of place matches our own.
+              Resort Edit partners with brands, hotels, tourism boards, and affiliate programs whose
+              sense of place matches our own.
             </p>
             <p>
               For partnerships and press, reach us at{" "}
@@ -123,8 +135,6 @@ function AboutPage() {
         </div>
       </section>
 
-
-
       <section
         id="affiliate-disclosure"
         className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
@@ -133,13 +143,17 @@ function AboutPage() {
         <div className="mx-auto max-w-xl text-left mt-8">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>
-              Resort Edit is reader-supported. When you purchase through links on our site, we may earn a commission from the retailer — at no additional cost to you.
+              Resort Edit is reader-supported. When you purchase through links on our site, we may
+              earn a commission from the retailer — at no additional cost to you.
             </p>
             <p>
-              Commissions never decide what we feature. Every look is curated editorially first; affiliate relationships only determine which retailer we link to, never which pieces we love.
+              Commissions never decide what we feature. Every look is curated editorially first;
+              affiliate relationships only determine which retailer we link to, never which pieces
+              we love.
             </p>
             <p>
-              Hotel, experience, and charter recommendations may likewise include partner links. We only recommend places and pieces we would choose for our own travels.
+              Hotel, experience, and charter recommendations may likewise include partner links. We
+              only recommend places and pieces we would choose for our own travels.
             </p>
           </div>
         </div>

@@ -28,7 +28,8 @@ export function SiteFooter() {
           Your Next Escape Starts Here
         </h2>
         <p className="mt-3 text-ivory/85 max-w-xl font-serif text-lg md:text-xl italic">
-          Receive beautifully curated travel inspiration, exceptional hotel discoveries, timeless packing ideas, and unforgettable places worth exploring.
+          Receive beautifully curated travel inspiration, exceptional hotel discoveries, timeless
+          packing ideas, and unforgettable places worth exploring.
         </p>
         <NewsletterForm
           ctaSource="footer"
@@ -51,24 +52,56 @@ export function SiteFooter() {
           <div>
             <p className="eyebrow text-gold-soft mb-4">Explore</p>
             <ul className="space-y-2 font-serif">
-              <li><Link to="/destinations" className="hover:text-gold">Destinations</Link></li>
-              <li><Link to="/portofino" className="hover:text-gold">The Portofino Edit</Link></li>
-              <li><Link to="/brands" className="hover:text-gold">Brands We Love</Link></li>
+              <li>
+                <Link to="/destinations" className="hover:text-gold">
+                  Destinations
+                </Link>
+              </li>
+              <li>
+                <Link to="/portofino" className="hover:text-gold">
+                  The Portofino Edit
+                </Link>
+              </li>
+              <li>
+                <Link to="/brands" className="hover:text-gold">
+                  Brands We Love
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
             <p className="eyebrow text-gold-soft mb-4">About</p>
             <ul className="space-y-2 font-serif">
-              <li><Link to="/about" hash="our-story" className="hover:text-gold">Our Story</Link></li>
-              <li><Link to="/about" hash="contact" className="hover:text-gold">Contact</Link></li>
-              <li><Link to="/about" hash="collaborate" className="hover:text-gold">Collaborate</Link></li>
+              <li>
+                <Link to="/about" hash="our-story" className="hover:text-gold">
+                  Our Story
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" hash="contact" className="hover:text-gold">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" hash="collaborate" className="hover:text-gold">
+                  Collaborate
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
             <p className="eyebrow text-gold-soft mb-4">Legal</p>
             <ul className="space-y-2 font-serif">
-              <li><Link to="/about" hash="affiliate-disclosure" className="hover:text-gold">Affiliate Disclosure</Link></li>
-              <li><Link to="/privacy-policy" className="hover:text-gold">Privacy Policy</Link></li>
+              <li>
+                <Link to="/about" hash="affiliate-disclosure" className="hover:text-gold">
+                  Affiliate Disclosure
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy-policy" className="hover:text-gold">
+                  Privacy Policy
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

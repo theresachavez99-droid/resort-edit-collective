@@ -4,14 +4,12 @@ import { subscribeEmail } from "@/lib/subscribers.functions";
 
 type Variant = "footer" | "inline-light";
 
-const CONSENT_COPY =
-  "Thoughtfully curated inspiration. Occasionally delivered.";
+const CONSENT_COPY = "Thoughtfully curated inspiration. Occasionally delivered.";
 
 function deriveDestination(pathname: string): string | undefined {
   // /portofino, /portofino/..., /destinations/portofino...
   const m =
-    pathname.match(/^\/destinations\/([^/]+)/) ||
-    pathname.match(/^\/([a-z0-9-]+?)(?:[\/.-]|$)/i);
+    pathname.match(/^\/destinations\/([^/]+)/) || pathname.match(/^\/([a-z0-9-]+?)(?:[\/.-]|$)/i);
   return m?.[1]?.toLowerCase();
 }
 
@@ -41,8 +39,7 @@ export function NewsletterForm({
     if (!email.trim()) return;
     setState({ kind: "loading" });
     try {
-      const pathname =
-        typeof window !== "undefined" ? window.location.pathname : undefined;
+      const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
       const res = await subscribe({
         data: {
           email: email.trim(),
@@ -57,8 +54,7 @@ export function NewsletterForm({
         setState({ kind: "error", message: res.error });
       }
     } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : "Network error. Please try again.";
+      const msg = err instanceof Error ? err.message : "Network error. Please try again.";
       setState({ kind: "error", message: msg });
     }
   };
@@ -80,11 +76,7 @@ export function NewsletterForm({
         {msg}
       </p>
     ) : (
-      <p
-        role="status"
-        aria-live="polite"
-        className="font-serif italic text-[0.95rem] text-ink/80"
-      >
+      <p role="status" aria-live="polite" className="font-serif italic text-[0.95rem] text-ink/80">
         {msg}
       </p>
     );
@@ -123,9 +115,7 @@ export function NewsletterForm({
             {isLoading ? "Saving…" : `${buttonLabel} →`}
           </button>
         </form>
-        <p className="mt-3 text-[0.7rem] text-ivory/55 max-w-md leading-relaxed">
-          {CONSENT_COPY}
-        </p>
+        <p className="mt-3 text-[0.7rem] text-ivory/55 max-w-md leading-relaxed">{CONSENT_COPY}</p>
         {state.kind === "error" && (
           <p role="alert" aria-live="assertive" className="mt-2 text-xs text-red-300">
             {state.message}
@@ -167,9 +157,7 @@ export function NewsletterForm({
           {isLoading ? "Saving…" : buttonLabel}
         </button>
       </form>
-      <p className="mt-2 text-[0.7rem] text-ink/55 leading-relaxed">
-        {CONSENT_COPY}
-      </p>
+      <p className="mt-2 text-[0.7rem] text-ink/55 leading-relaxed">{CONSENT_COPY}</p>
       {state.kind === "error" && (
         <p role="alert" aria-live="assertive" className="mt-1 text-xs text-red-600">
           {state.message}
