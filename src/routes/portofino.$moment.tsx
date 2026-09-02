@@ -302,6 +302,11 @@ import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
 import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheLookItems";
 import { ResortEditItemization, shopSlotsQuery } from "@/components/commerce/ResortEditItemization";
+import { StagedLookItemization } from "@/components/commerce/StagedLookItemization";
+import { PREVIEW_STAGED_LOOKS } from "@/data/previewStagedLooks";
+import { previewStagingQuery } from "@/lib/preview-staging.functions";
+import { evaluateAtomicLook } from "@/lib/look-atomic-completeness";
+import { isLillaLookComplete } from "@/lib/lilla-look-audit";
 import { findResortEditLook } from "@/data/resortEditLooks";
 // Locked Pool Lounging editorial reference — the seated poolside portrait
 // (Aperol Spritz, white lounge chair, Splendido pool). This asset is the
@@ -359,6 +364,7 @@ export const Route = createFileRoute("/portofino/$moment")({
       context.queryClient.ensureQueryData(slotHealthQuery(params.moment)),
       context.queryClient.ensureQueryData(lookItemsQuery(`portofino/${params.moment}`)),
       context.queryClient.ensureQueryData(shopSlotsQuery(`portofino/${params.moment}`)),
+      context.queryClient.ensureQueryData(previewStagingQuery()),
     ]);
     return { def };
   },
@@ -459,6 +465,22 @@ function MomentPage() {
   const momentLookKey = `portofino/${slug}`;
   const { data: shopSlotsData } = useSuspenseQuery(shopSlotsQuery(momentLookKey));
   const { data: lookItemsData } = useSuspenseQuery(lookItemsQuery(momentLookKey));
+  // PREVIEW-ONLY STAGING — founder-approved hero replacements render on the
+  // Lovable preview host only; the production hostname keeps its currently
+  // deployed behaviour until approval (see `@/lib/preview-staging`).
+  const { data: previewStagingData } = useSuspenseQuery(previewStagingQuery());
+  const previewStaging = previewStagingData?.staging ?? false;
+  const stagedCandidate = previewStaging ? PREVIEW_STAGED_LOOKS[slug] : undefined;
+  // ATOMIC COMPLETENESS — a staged look renders only when EVERY visible
+  // product category has an active, valid exact-product link.
+  const stagedLook =
+    stagedCandidate &&
+    evaluateAtomicLook({
+      visibleProductSlots: stagedCandidate.visibleProductSlots,
+      rows: stagedCandidate.rows,
+    }).complete
+      ? stagedCandidate
+      : undefined;
   const card = data.ok ? data.moment : null;
   if (!card) throw notFound();
 
@@ -520,9 +542,10 @@ function MomentPage() {
   // look_items_public), so the gate reflects exactly what the page renders —
   // there is no static registry to drift. Zero-link pages stay editorial:
   // no CTA, no placeholder, no "Coming Soon".
-  const shoppableRowCount =
-    countShoppableRows((shopSlotsData?.slots ?? []).filter((r) => r.brand || r.product_name)) +
-    countShoppableRows((lookItemsData?.items ?? []).map((it) => ({ url: it.affiliate_url })));
+  const shoppableRowCount = stagedLook
+    ? countShoppableRows(stagedLook.rows)
+    : countShoppableRows((shopSlotsData?.slots ?? []).filter((r) => r.brand || r.product_name)) +
+      countShoppableRows((lookItemsData?.items ?? []).map((it) => ({ url: it.affiliate_url })));
   const showShopCta = shopCtaAllowed(shoppableRowCount);
 
   // Public-facing display title for the featured look. Founder look titles are
@@ -572,7 +595,15 @@ function MomentPage() {
           return isCompleteLook(summarizeSlots(entries), { daytime: daytimeMoment });
         });
   const extraCards = MOMENT_EXTRA_EDITORIAL_CARDS[slug] ?? [];
-  const renderedExtraCards = extraCards.slice(0, MAX_SUPPORTING_LOOKS);
+  // ATOMIC COMPLETENESS (preview) — a supporting Lilla card renders only when
+  // every product category visible in its photograph has an active, valid
+  // link. Incomplete looks (e.g. "Green Eyelet on Via Roma", whose visible
+  // shoes and raffia bag are unlinked) are hidden entirely: no card, no
+  // expansion, no "Still sourcing" row.
+  const publishableExtraCards = previewStaging
+    ? extraCards.filter((c) => isLillaLookComplete(slug, c.key))
+    : extraCards;
+  const renderedExtraCards = publishableExtraCards.slice(0, MAX_SUPPORTING_LOOKS);
   const siblings: Look[] = completeSiblings.slice(
     0,
     Math.max(0, MAX_SUPPORTING_LOOKS - renderedExtraCards.length),
@@ -591,7 +622,7 @@ function MomentPage() {
   // Optional editorial-image override — some moments (e.g. Pool Lounging)
   // publish an approved Resort Edit editorial image separate from the DB
   // `resolved.image`. When present, this becomes the left-column image.
-  const editorialImage = MOMENT_EDITORIAL_IMAGE[slug] ?? resolved.image;
+  const editorialImage = stagedLook?.image ?? MOMENT_EDITORIAL_IMAGE[slug] ?? resolved.image;
   // Optional "View Complete Look" destination for moments that publish
   // a dedicated Complete Look page. Rendered as a centered CTA under the
   // Resort Edit shopping list.
@@ -697,9 +728,10 @@ function MomentPage() {
             <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
               <img
                 src={editorialImage}
-                alt={`${editorialTitle} — Portofino featured look`}
+                alt={stagedLook?.alt ?? `${editorialTitle} — Portofino featured look`}
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
+
               <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
                 INSPIRED BY
               </span>
@@ -724,7 +756,8 @@ function MomentPage() {
                 }}
               />
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
-                {MOMENT_FEATURED_COPY[slug]?.body ??
+                {stagedLook?.caption ??
+                  MOMENT_FEATURED_COPY[slug]?.body ??
                   (isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative))}
               </p>
               {/* Legacy slot summary removed for editorial restraint. */}
@@ -744,9 +777,13 @@ function MomentPage() {
                   Resort Edit shopping list or shows nothing at all. No
                   placeholder or "coming soon" states are ever rendered. */}
               {/* THE RESORT EDIT — itemization rendered exclusively from the
-                  `public_shop_slot_display` view (status = 'active'). The old
-                  hardcoded registry path was retired: one source of truth. */}
-              <ResortEditItemization lookKey={`portofino/${slug}`} />
+                  `public_shop_slot_display` view (status = 'active'), or, in
+                  preview staging, from the atomically complete staged look. */}
+              {stagedLook ? (
+                <StagedLookItemization look={stagedLook} />
+              ) : (
+                <ResortEditItemization lookKey={`portofino/${slug}`} />
+              )}
               {completeLookHref && (
                 <div className="pt-6 flex justify-center lg:justify-start">
                   <Link
@@ -760,8 +797,9 @@ function MomentPage() {
             </div>
           </div>
           {/* SHOP THE LOOK — live `look_items_public` rows for this moment.
-              Renders nothing when the look has no items. */}
-          <ShopTheLookItems lookKey={`portofino/${slug}`} />
+              Renders nothing when the look has no items. Suppressed while a
+              staged look owns the hero so the set stays atomic. */}
+          {stagedLook ? null : <ShopTheLookItems lookKey={`portofino/${slug}`} />}
         </div>
       </section>
 
@@ -790,7 +828,9 @@ function MomentPage() {
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-              {NIGHTCAP_EDITORIAL_CARDS.map((c) => (
+              {NIGHTCAP_EDITORIAL_CARDS.filter(
+                (c) => !previewStaging || isLillaLookComplete("nightcap", c.key),
+              ).map((c) => (
                 <article key={c.key} className="flex flex-col bg-ivory border border-border/40">
                   <div className="relative aspect-[4/5] overflow-hidden bg-cream">
                     <img

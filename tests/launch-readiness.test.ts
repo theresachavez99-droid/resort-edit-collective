@@ -22,6 +22,9 @@ import { auditMoment, runLaunchAudit } from "@/lib/launch-audit";
 import { FORBIDDEN_SLOTS, REQUIRED_SLOTS } from "@/lib/product-slots";
 import { resolveMomentTemplate } from "@/lib/editorial-stylist";
 import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
+import { evaluateAtomicLook } from "@/lib/look-atomic-completeness";
+import { auditLillaLooks, isLillaLookComplete, suppressedLillaLooks } from "@/lib/lilla-look-audit";
+import { PREVIEW_STAGED_LOOKS, SHOPPING_EVELYN_JADE } from "@/data/previewStagedLooks";
 
 const ROOT = join(import.meta.dir, "..");
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
@@ -182,5 +185,100 @@ describe("launch audit hard-failure surface", () => {
   test("harbor-aperitivo now audits as an evening moment", () => {
     const m = audit.moments.find((x) => x.slug === "harbor-aperitivo");
     expect(m?.momentType).toBe("evening");
+  });
+});
+
+// ── 7. Atomic look completeness (preview repair) ────────────────
+describe("atomic look completeness", () => {
+  const rows = (...pairs: Array<[string, string]>) =>
+    pairs.map(([slot, url]) => ({ slot, url }));
+
+  test("complete Evelyn set renders: seven visible categories, seven live rows", () => {
+    const verdict = evaluateAtomicLook({
+      visibleProductSlots: SHOPPING_EVELYN_JADE.visibleProductSlots,
+      rows: SHOPPING_EVELYN_JADE.rows,
+    });
+    expect(verdict.complete).toBe(true);
+    expect(verdict.missing).toEqual([]);
+    expect(SHOPPING_EVELYN_JADE.rows).toHaveLength(7);
+  });
+
+  test("no prices are stored on any staged row", () => {
+    const json = JSON.stringify(PREVIEW_STAGED_LOOKS);
+    expect(json).not.toMatch(/\$\d/);
+    expect(json).not.toMatch(/"price/i);
+  });
+
+  test("sold-out hero dress + active accessories => incomplete", () => {
+    const verdict = evaluateAtomicLook({
+      visibleProductSlots: ["outfit", "shoes", "bag", "sunglasses"],
+      rows: [
+        { slot: "Dress", url: "https://us.misterzimi.com/products/evelyn-dress-in-jade", status: "sold_out" },
+        ...rows(
+          ["Shoes", "https://www.shopbop.com/leda-sandal-ancient-greek-sandals/vp/v=1/1513893494.htm"],
+          ["Bag", "https://www.shopbop.com/moon-raffia-tote-bag-staud/vp/v=1/1590776527.htm"],
+          ["Sunglasses", "https://www.shopbop.com/veneto-illesteva/vp/v=1/1531641219.htm"],
+        ),
+      ],
+    });
+    expect(verdict.complete).toBe(false);
+    expect(verdict.missing).toContain("outfit");
+  });
+
+  test("shopping hero missing a bag => incomplete", () => {
+    const verdict = evaluateAtomicLook({
+      visibleProductSlots: ["outfit", "shoes", "bag", "sunglasses"],
+      rows: rows(
+        ["Dress", "https://us.misterzimi.com/products/evelyn-dress-in-jade"],
+        ["Shoes", "https://www.shopbop.com/leda-sandal-ancient-greek-sandals/vp/v=1/1513893494.htm"],
+        ["Sunglasses", "https://www.shopbop.com/veneto-illesteva/vp/v=1/1531641219.htm"],
+      ),
+    });
+    expect(verdict.complete).toBe(false);
+    expect(verdict.missing).toContain("bag");
+  });
+
+  test("shopping hero missing sunglasses => incomplete", () => {
+    const verdict = evaluateAtomicLook({
+      visibleProductSlots: ["outfit", "shoes", "bag", "sunglasses"],
+      rows: rows(
+        ["Dress", "https://us.misterzimi.com/products/evelyn-dress-in-jade"],
+        ["Shoes", "https://www.shopbop.com/leda-sandal-ancient-greek-sandals/vp/v=1/1513893494.htm"],
+        ["Bag", "https://www.shopbop.com/moon-raffia-tote-bag-staud/vp/v=1/1590776527.htm"],
+      ),
+    });
+    expect(verdict.complete).toBe(false);
+    expect(verdict.missing).toContain("sunglasses");
+  });
+
+  test("visible accessory declared but no valid linked item => incomplete", () => {
+    const verdict = evaluateAtomicLook({
+      visibleProductSlots: ["outfit", "shoes", "bag", "earrings"],
+      rows: [
+        ...rows(
+          ["Dress", "https://us.misterzimi.com/products/evelyn-dress-in-jade"],
+          ["Shoes", "https://www.shopbop.com/leda-sandal-ancient-greek-sandals/vp/v=1/1513893494.htm"],
+          ["Bag", "https://www.shopbop.com/moon-raffia-tote-bag-staud/vp/v=1/1590776527.htm"],
+        ),
+        { slot: "Earrings", url: "#" },
+      ],
+    });
+    expect(verdict.complete).toBe(false);
+    expect(verdict.missing).toContain("earrings");
+  });
+
+  test("Green Eyelet on Via Roma is suppressed (visible shoes + bag unlinked)", () => {
+    expect(isLillaLookComplete("shopping", "green-eyelet-on-via-roma")).toBe(false);
+    const entry = auditLillaLooks().find(
+      (a) => a.lookKey === "portofino/shopping/green-eyelet-on-via-roma",
+    );
+    expect(entry).toBeDefined();
+    expect(entry?.missing.length).toBeGreaterThan(0);
+  });
+
+  test("every suppressed look reports which visible categories are unmatched", () => {
+    for (const look of suppressedLillaLooks()) {
+      expect(look.missing.length).toBeGreaterThan(0);
+    }
   });
 });
