@@ -1,6 +1,15 @@
-import type { OverrideItem } from "@/data/lookOverrides";
-
-
+export type OverrideItem = {
+  slotLabel: string;
+  brand: string;
+  title: string;
+  url: string;
+  image: string;
+  isOptional?: boolean;
+  price?: string;
+  category?: string;
+  unsourced?: boolean;
+  inReview?: boolean;
+};
 /**
  * Moment-level curated Complete Edit. When present for a moment slug, this
  * replaces the founder / fallback shop entries with an editor-approved,

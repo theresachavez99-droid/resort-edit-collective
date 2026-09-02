@@ -33,9 +33,7 @@ if (!existsSync(registry)) {
 const DAY1_SURFACES = [
   "src/components/PortofinoDayPage.tsx",
   "src/routes/portofino.tsx",
-  "src/data/portofinoEdit.ts",
   "src/data/homeEdit.ts",
-  "src/data/portofino.ts",
   "src/lib/portofino-moment-fallbacks.ts",
 ];
 for (const rel of DAY1_SURFACES) {

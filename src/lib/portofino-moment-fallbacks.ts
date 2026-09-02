@@ -45,7 +45,7 @@ import shoppingBanner from "@/assets/uploads/portofino/shopping-banner-via-roma-
 import nightcapCard from "@/assets/uploads/portofino/nightcap-lilla-harbor.png.asset.json";
 import longLunchBanner from "@/assets/uploads/portofino/long-lunch-harbor-table-golden-afternoon.jpg.asset.json";
 import nightcapBanner from "@/assets/uploads/portofino/nightcap-piazzetta-night-harbor.jpg.asset.json";
-import type { LookSlug } from "@/lib/portofino-spec";
+export type LookSlug = "look-a" | "look-b" | "look-c";
 
 export type LegacyDayPath =
   | "/portofino/day-1"

@@ -8,10 +8,8 @@
  *
  * Editorial hero / reference photography is deliberately out of scope.
  */
-import { portofinoLooks } from "@/data/portofino";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
 import { LOOK_ALTERNATIVES } from "@/data/lookAlternatives";
-import { LOOK_PRODUCT_FALLBACKS } from "@/data/lookFallbacks";
 import { RESORT_EDIT_LOOKS, orderedProducts } from "@/data/resortEditLooks";
 import { PRODUCT_LIBRARY } from "@/data/productLibrary";
 import {
@@ -77,21 +75,6 @@ export function runProductImageAudit(): ProductImageAudit {
     if (r) rows.push(r);
   };
 
-  // Legacy day looks → look pages + moment shop grids
-  for (const look of portofinoLooks) {
-    for (const item of look.shop) {
-      push(
-        row(
-          "Day shop pool",
-          `/portofino (${look.day}) · look pages`,
-          item.brand,
-          item.item,
-          item.image,
-        ),
-      );
-    }
-  }
-
   // Curated moment shop rows (ShopLookPanel / complete-look grids)
   for (const [slug, items] of Object.entries(MOMENT_SHOP_CURATED)) {
     for (const it of items) {
@@ -104,25 +87,6 @@ export function runProductImageAudit(): ProductImageAudit {
     for (const g of groups) {
       for (const it of g.items) {
         push(row("Look alternatives", `/portofino/${key}`, it.brand, it.title, it.image));
-      }
-    }
-  }
-
-  // Tiered fallback kits
-  for (const [key, look] of Object.entries(LOOK_PRODUCT_FALLBACKS)) {
-    for (const tier of Object.values(look ?? {})) {
-      for (const p of Object.values(tier ?? {})) {
-        const item = p as { brand?: string; title?: string; image?: string };
-        if (!item?.brand) continue;
-        push(
-          row(
-            "Look fallback kit",
-            `/portofino/${key}`,
-            item.brand,
-            item.title ?? "",
-            item.image,
-          ),
-        );
       }
     }
   }
