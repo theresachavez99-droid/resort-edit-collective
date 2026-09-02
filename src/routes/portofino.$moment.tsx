@@ -29,12 +29,9 @@ import {
   type ExtraEditorialCard,
   type NightcapEditorialCard,
 } from "@/data/momentEditorialCards";
-import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
 import { isSuppressedProduct } from "@/lib/suppressed-products";
-import { excludeUnmerchandisable, isExcludedProduct } from "@/lib/merchandising-exclusions";
-import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
 import { EditorialClosetSection } from "@/components/EditorialClosetSection";
-import { MAX_SUPPORTING_LOOKS, isCompleteLook, isDaytimeMoment } from "@/lib/look-completeness";
+import { MAX_SUPPORTING_LOOKS } from "@/lib/look-completeness";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
@@ -284,20 +281,10 @@ import {
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
 import { ShopOmissionRows, SHOP_ACCURACY_NOTE } from "@/components/ShopOmissionRows";
 import { absoluteUrl } from "@/lib/site";
-import {
-  findLook,
-  lookbook,
-  LOOK_CATEGORY_LABEL,
-  LOOK_CATEGORY_ORDER,
-  type Look,
-  type LookProduct,
-} from "@/data/lookbook";
-import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { isPublishableProductUrl } from "@/lib/shop-url-policy";
 import { publicFeaturedTitle } from "@/lib/moment-display";
 import { countShoppableRows, shopCtaAllowed } from "@/lib/commerce-cta-policy";
-import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
 import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheLookItems";
@@ -307,7 +294,6 @@ import { PREVIEW_STAGED_LOOKS } from "@/data/previewStagedLooks";
 import { previewStagingQuery } from "@/lib/preview-staging.functions";
 import { evaluateAtomicLook } from "@/lib/look-atomic-completeness";
 import { isLillaLookComplete } from "@/lib/lilla-look-audit";
-import { findResortEditLook } from "@/data/resortEditLooks";
 // Locked Pool Lounging editorial reference — the seated poolside portrait
 // (Aperol Spritz, white lounge chair, Splendido pool). This asset is the
 // permanent visual for the Pool Lounging moment and must not be replaced
@@ -487,55 +473,11 @@ function MomentPage() {
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
   const isFounderLook = resolved.source === "founder_look";
-  const founderProducts = resolved.founder_hero_products ?? [];
 
   // Admin/debug visibility: source badge only renders with ?debug=1.
   const isDebug =
     typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug");
 
-  // Featured (canonical) look for this moment.
-  const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
-  const founderShopEntries: ShopEntry[] = founderProducts
-    .filter((p) => p.brand || p.product_name)
-    // Resort Edit never merchandises rings.
-    .filter((p) => !isExcludedProduct({ category: p.category, role: p.role }))
-    // Public Founder Look shop panel: only render rows with a usable
-    // retailer URL. Search-engine fallback or AFF- placeholder URLs are
-    // suppressed in production (visible only with ?debug=1) so the page
-    // never ships a dead "Shop →" card.
-    .filter((p) => isDebug || isUsableShopUrl(p.url))
-    .map((p) => ({
-      kind: "override" as const,
-      product: {
-        slotLabel:
-          p.role === "Hero Garment"
-            ? "The Look"
-            : p.role === "Optional"
-              ? prettifyCategory(p.category)
-              : prettifyCategory(p.category),
-        brand: p.brand || p.product_name.split(" ")[0] || "—",
-        title: p.product_name || p.brand || "",
-        url: isUsableShopUrl(p.url) ? p.url : "",
-        image: p.image_url ?? "",
-        isOptional: p.role === "Optional",
-      },
-    }));
-  // Moment-level curated Complete Edit takes priority over founder / fallback
-  // data. This lets an editor lock a specific ordered set of pieces without
-  // depending on the publish pipeline.
-  const curatedForMoment = MOMENT_SHOP_CURATED[slug];
-  // Products whose DB audit verdict failed are gated out before render — see
-  // `src/lib/suppressed-products.ts` (source of truth: shop_slot_products.status).
-  const curatedShopEntries: ShopEntry[] = excludeUnmerchandisable(curatedForMoment)
-    .filter((o) => !isSuppressedProduct(`portofino/${slug}`, o.brand, o.title))
-    .map((o) => applySlotHealth(o, slotHealth.slots))
-    .filter((o) => isUsableShopUrl(o.url) || o.inReview)
-    .map((product) => ({ kind: "override" as const, product }));
-  const featuredShop = curatedShopEntries.length
-    ? curatedShopEntries
-    : isFounderLook && founderShopEntries.length
-      ? founderShopEntries
-      : resolveShopProducts(card.legacy_day_slug, card.look_slug);
   // HONEST COMMERCE CTA — a shoppable-set CTA ("Shop The Look") may only
   // render when the featured section actually publishes verified product
   // links. Both sources are DB-driven (public_shop_slot_display +
@@ -557,43 +499,8 @@ function MomentPage() {
     card.moment_name;
   const featuredDisplayTitle = isFounderLook
     ? (FOUNDER_LOOK_DISPLAY_TITLE[slug] ?? founderDisplayTitle)
-    : (featuredLook?.title ?? resolved.title);
+    : resolved.title;
 
-  // Sibling looks within the same day — "More Ways to Dress for {moment}".
-  // Moments that publish only curated MOMENT_EXTRA_EDITORIAL_CARDS
-  // (no legacy day-siblings) — keeps the "More Resort Edit Looks" grid
-  // to exactly the approved editorial cards.
-  const suppressLegacySiblings = slug === "arrival";
-  const allSiblings: Look[] = suppressLegacySiblings
-    ? []
-    : lookbook
-        .filter((l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug)
-        .filter(
-          // Shopping: the legacy "Via Roma Boutiques" sibling is replaced by the
-          // curated "Green Eyelet on Via Roma" editorial card below.
-          (l) => !(slug === "shopping" && l.title === "Via Roma Boutiques"),
-        );
-
-  // EDITORIAL COMPLETION LAW
-  // 1. A supporting look renders only when its shopping set is complete for
-  //    the moment (outfit · shoes · bag · jewelry · sunglasses by day).
-  //    Incomplete looks are unpublished from the page — never shown with a
-  //    placeholder or "Coming Soon" affordance. The Studio replacement queue
-  //    is the internal record of what still needs styling.
-  // 2. Every moment renders exactly one hero look and AT MOST two supporting
-  //    looks. Curated editorial cards take precedence over legacy siblings;
-  //    extras beyond the cap stay in the data (nothing deleted) and simply
-  //    aren't rendered.
-  const daytimeMoment = isDaytimeMoment(slug);
-  // Shopping publishes curated editorial cards only.
-  const completeSiblings: Look[] =
-    slug === "shopping"
-      ? []
-      : allSiblings.filter((sib) => {
-          const entries = resolveShopProducts(sib.daySlug, sib.lookSlug);
-          if (!entries.some(shopEntryIsLive)) return false;
-          return isCompleteLook(summarizeSlots(entries), { daytime: daytimeMoment });
-        });
   const extraCards = MOMENT_EXTRA_EDITORIAL_CARDS[slug] ?? [];
   // ATOMIC COMPLETENESS (preview) — a supporting Lilla card renders only when
   // every product category visible in its photograph has an active, valid
@@ -604,14 +511,6 @@ function MomentPage() {
     ? extraCards.filter((c) => isLillaLookComplete(slug, c.key))
     : extraCards;
   const renderedExtraCards = publishableExtraCards.slice(0, MAX_SUPPORTING_LOOKS);
-  const siblings: Look[] = completeSiblings.slice(
-    0,
-    Math.max(0, MAX_SUPPORTING_LOOKS - renderedExtraCards.length),
-  );
-
-  // Inline expansion state: which look's shop grid is currently open.
-  // `featured` opens the featured look; `look-a|b|c` opens that sibling.
-  const [openShop, setOpenShop] = useState<string | null>(null);
 
   // Moments registered in MOMENT_HERO_VIDEO get the shared cinematic video
   // hero. All other moments keep the canonical image hero.
@@ -631,10 +530,6 @@ function MomentPage() {
   // override → candidate title → canonical moment name. Retired legacy look
   // titles ("Via Roma Boutiques", "Capri Aperitivo") can never render.
   const editorialTitle = publicFeaturedTitle(slug, featuredDisplayTitle, card.moment_name);
-  // Reference the founder-approved Resort Edit Look purely for typechecks /
-  // future related-look wiring; the page renders through the standard
-  // Nightcap-canonical template so every moment stays visually identical.
-  void findResortEditLook;
 
   return (
     <div className="pb-4 md:pb-6">
@@ -758,7 +653,7 @@ function MomentPage() {
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
                 {stagedLook?.caption ??
                   MOMENT_FEATURED_COPY[slug]?.body ??
-                  (isFounderLook ? card.narrative : (featuredLook?.caption ?? card.narrative))}
+                  card.narrative}
               </p>
               {/* Legacy slot summary removed for editorial restraint. */}
               {resolved.best_for && resolved.best_for.length > 0 && (
@@ -809,7 +704,7 @@ function MomentPage() {
       <EditorialClosetSection
         momentSlug={slug}
         momentName={card.moment_name}
-        heroCategory={featuredShop[0]?.category ?? null}
+        heroCategory={shopSlotsData?.slots?.[0]?.slot_label ?? shopSlotsData?.slots?.[0]?.slot ?? null}
       />
 
       {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid.
@@ -877,7 +772,7 @@ function MomentPage() {
           </div>
         </section>
       ) : (
-        (siblings.length > 0 || renderedExtraCards.length > 0) && (
+        renderedExtraCards.length > 0 && (
           <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
             <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
               <div className="mb-6 md:mb-8 max-w-2xl">
@@ -891,18 +786,6 @@ function MomentPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-                {siblings.map((sib) => (
-                  <EditorialLookCard
-                    key={sib.id}
-                    look={sib}
-                    momentName={card.moment_name}
-                    editorialOnly={slug === "shopping"}
-                    isOpen={openShop === sib.lookSlug}
-                    onToggle={() =>
-                      setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
-                    }
-                  />
-                ))}
                 {renderedExtraCards.map((c) => (
                   <ExtraEditorialReferenceCard
                     key={c.key}
@@ -1150,91 +1033,12 @@ const MOMENT_COMPLETE_LOOK: Record<string, string> = {
 };
 
 /**
- * Experiential rewrites for sibling "More X Looks" cards — sells the moment,
- * not the garment. Keyed by `${daySlug}/${lookSlug}`.
- */
-const SIBLING_CAPTION_OVERRIDES: Record<string, string> = {
-  "day-5/look-a": "For your first espresso and a slow morning discovering Portofino.",
-  "day-5/look-b": "For the long walk home through quiet streets after dinner by the water.",
-  "day-2/look-a":
-    "For stretching the afternoon beneath a cream parasol before lunch overlooking the sea.",
-  "day-4/look-a":
-    "A bold, feminine silhouette designed for golden-hour cocktails overlooking the harbor.",
-  "day-4/look-b":
-    "An elegant draped evening silhouette that feels effortlessly romantic beneath the lights of Portofino.",
-};
-
-// ──────────────────────────────────────────────────────────────
-// Helpers — shop product resolution + inline editorial cards
-// ──────────────────────────────────────────────────────────────
-type ShopEntry = {
-  category?: string;
-  product: LookProduct | OverrideItem;
-  kind: "category" | "override";
-};
-
-function resolveShopProducts(daySlug: LegacyDaySlug, lookSlug: LookSlug): ShopEntry[] {
-  const look = findLook(daySlug, lookSlug);
-  const override = look ? lookOverrideForPublic(daySlug, lookSlug) : null;
-  if (override) {
-    return override.main.map((p) => ({ product: p, kind: "override" as const }));
-  }
-  if (!look) return [];
-  const firstTierSlug =
-    TIER_SLUGS.find((t) =>
-      LOOK_CATEGORY_ORDER.some((c) => !look.tiers[t].products[c].isPlaceholder),
-    ) ?? TIER_SLUGS[0];
-  const products = look.tiers[firstTierSlug].products;
-  return LOOK_CATEGORY_ORDER.map((c) => ({
-    category: LOOK_CATEGORY_LABEL[c],
-    product: products[c],
-    kind: "category" as const,
-  }));
-}
-
-function shopEntryIsLive(entry: ShopEntry): boolean {
-  if (entry.kind === "override") {
-    const o = entry.product as OverrideItem;
-    return isUsableShopUrl(o.url);
-  }
-  const p = entry.product as LookProduct;
-  return !p.isPlaceholder;
-}
-
-/**
  * A URL is shoppable only when it points at an exact retailer product page.
  * The policy itself lives in `@/lib/shop-url-policy` so curated data files,
  * the launch audit, and CI all apply the same rule.
  */
 function isUsableShopUrl(url: string | undefined | null): url is string {
   return isPublishableProductUrl(url);
-}
-
-/**
- * Overlay DB-resolved slot availability onto a curated editorial row.
- *
- * The editorial layer (image, title, copy, slot order) is never touched here —
- * only the commerce item. When an approved active backup exists it is swapped
- * in silently; when nothing is shoppable the row is flagged `inReview` so the
- * card renders a non-clickable placeholder rather than a dead link.
- */
-function applySlotHealth(item: OverrideItem, slots: Record<string, SlotResolution>): OverrideItem {
-  const key = slotKey(item.category ?? item.slotLabel ?? "");
-  const resolution = key ? slots[key] : undefined;
-  if (!resolution) return item;
-  if (resolution.state === "live") {
-    const p = resolution.product;
-    return {
-      ...item,
-      brand: p.brand,
-      title: p.product_name,
-      url: p.url ?? "",
-      ...(p.price ? { price: p.price } : {}),
-      unsourced: false,
-      inReview: false,
-    };
-  }
-  return { ...item, url: "", unsourced: false, inReview: true };
 }
 
 /**
@@ -1247,7 +1051,6 @@ type HealthedShopRow = {
   slot: string;
   brand: string;
   name: string;
-  price?: string;
   url: string;
   unsourced?: boolean;
   inReview: boolean;
@@ -1274,7 +1077,6 @@ function applyLookRowHealth(
       brand: p.brand,
       name: p.product_name,
       url: p.url ?? "",
-      ...(p.price ? { price: p.price } : {}),
       unsourced: false,
       inReview: false,
     };
@@ -1291,7 +1093,6 @@ function splitHealthedRows(rows: HealthedShopRow[]) {
       slot: p.slot,
       brand: p.brand,
       name: p.name,
-      ...(p.price ? { price: p.price } : {}),
       ...(p.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
     }));
   return { live, omitted };
@@ -1302,379 +1103,6 @@ function splitHealthedRows(rows: HealthedShopRow[]) {
  * summary. Counts live (non-placeholder) entries only, preserves canonical order,
  * and falls back gracefully for override-driven looks.
  */
-function summarizeSlots(entries: ShopEntry[]): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const e of entries) {
-    if (!shopEntryIsLive(e)) continue;
-    let label: string | undefined;
-    if (e.kind === "category") label = e.category;
-    else label = (e.product as OverrideItem).slotLabel;
-    if (!label) continue;
-    const norm = label.trim();
-    if (seen.has(norm.toLowerCase())) continue;
-    seen.add(norm.toLowerCase());
-    out.push(norm);
-  }
-  return out;
-}
-
-function EditorialLookCard({
-  look,
-  momentName,
-  isOpen,
-  onToggle,
-  editorialOnly = false,
-}: {
-  look: Look;
-  momentName: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  /** Editorial-only mode: no product grid, no outbound links — internal CTA only. */
-  editorialOnly?: boolean;
-}) {
-  const entries = editorialOnly ? [] : resolveShopProducts(look.daySlug, look.lookSlug);
-  const liveCount = entries.filter(shopEntryIsLive).length;
-  const hasLive = liveCount > 0;
-  // A shoppable supporting look with nothing live is unpublished rather than
-  // shown with a disabled placeholder CTA.
-  if (!editorialOnly && !hasLive) return null;
-  const internalMomentSlug = momentSlugForLookKey(look.daySlug as LegacyDaySlug, look.lookSlug);
-  return (
-    <article className="flex flex-col bg-ivory border border-border/40">
-      <div className="relative aspect-[4/5] overflow-hidden bg-cream">
-        <img
-          src={look.heroImage}
-          alt={`${look.title} — additional Portofino look`}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover object-center"
-        />
-        <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-          INSPIRED BY
-        </span>
-      </div>
-      <div className="p-6 md:p-8 flex flex-col gap-3">
-        <h4 className="font-display text-2xl md:text-[1.75rem] tracking-[0.04em] text-ink leading-[1.15]">
-          {look.title}
-        </h4>
-        <p className="font-serif italic text-[0.95rem] text-ink/75 leading-relaxed line-clamp-3">
-          {SIBLING_CAPTION_OVERRIDES[`${look.daySlug}/${look.lookSlug}`] ?? look.caption}
-        </p>
-        <div className="flex items-center justify-between pt-2">
-          {editorialOnly ? (
-            <Link
-              to="/portofino/$moment"
-              params={{ moment: internalMomentSlug }}
-              className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
-            >
-              VIEW THE EDIT →
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={onToggle}
-              aria-expanded={isOpen}
-              aria-controls={`shop-${look.daySlug}-${look.lookSlug}`}
-              className="inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
-            >
-              {isOpen ? "HIDE THE EDIT" : "VIEW THE EDIT"}
-              <ChevronDown
-                className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-          )}
-          <SaveLookButton
-            variant="icon"
-            source="portofino_more_looks_sibling"
-            look={{
-              id: `portofino/${look.daySlug}/${look.lookSlug}`,
-              destination: "Portofino",
-              activity: momentName,
-              title: look.title,
-              description:
-                SIBLING_CAPTION_OVERRIDES[`${look.daySlug}/${look.lookSlug}`] ?? look.caption,
-              image: look.heroImage,
-              url: `/portofino/${look.daySlug}#more-looks`,
-            }}
-          />
-        </div>
-      </div>
-      {!editorialOnly && isOpen && hasLive && (
-        <div className="border-t border-border/40 px-5 md:px-7 py-7">
-          <InlineShop
-            id={`shop-${look.daySlug}-${look.lookSlug}`}
-            heading={`Shop ${look.title}`}
-            entries={entries}
-            compact
-          />
-        </div>
-      )}
-    </article>
-  );
-}
-
-function InlineShop({
-  id,
-  heading,
-  entries,
-  compact = false,
-}: {
-  id: string;
-  heading: string;
-  entries: ShopEntry[];
-  compact?: boolean;
-}) {
-  return (
-    <div id={id} className={compact ? "" : "mt-14 md:mt-16 border-t border-border/40 pt-10"}>
-      <div className="flex items-end justify-between mb-6">
-        <div>
-          <span className="eyebrow text-[0.6rem] tracking-[0.34em] text-gold">
-            Shop Individual Pieces
-          </span>
-          <h4 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink mt-2">
-            {heading}
-          </h4>
-        </div>
-      </div>
-      <div
-        className={`grid gap-4 md:gap-5 ${
-          compact ? "grid-cols-2 md:grid-cols-3" : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-        }`}
-      >
-        {entries.map((entry, i) => (
-          <ShopCard key={i} entry={entry} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ShopCard({
-  entry,
-}: {
-  entry: { category?: string; product: LookProduct | OverrideItem; kind: "category" | "override" };
-}) {
-  const { product, kind, category } = entry;
-
-  if (kind === "category") {
-    const p = product as LookProduct;
-    return (
-      <ProductCommerceCard
-        brand={p.brand}
-        name={p.title}
-        {...(category ? { category } : {})}
-        {...(p.price ? { price: p.price } : {})}
-        url={p.isPlaceholder ? null : p.url}
-        image={p.image ?? null}
-        unavailableLabel="NOT AVAILABLE THROUGH APPROVED PARTNERS"
-      />
-    );
-  }
-
-  // Override item (free-form curated grid)
-  const o = product as OverrideItem;
-  return (
-    <ProductCommerceCard
-      brand={o.brand}
-      name={o.title}
-      {...(o.slotLabel ? { category: o.slotLabel } : {})}
-      url={isUsableShopUrl(o.url) ? o.url : null}
-      image={o.image ?? null}
-      unavailableLabel={REPLACEMENT_IN_REVIEW_LABEL.toUpperCase()}
-    />
-  );
-}
-
-// ──────────────────────────────────────────────────────────────
-// Editorial "Shop This Look" side panel (text-first, link priority)
-// ──────────────────────────────────────────────────────────────
-
-const CATEGORY_LABELS: Record<string, string> = {
-  hero: "The Look",
-  top: "Top",
-  bottom: "Bottom",
-  dress: "Dress",
-  outerwear: "Outerwear",
-  shoes: "Shoes",
-  bag: "Bag",
-  sunglasses: "Sunglasses",
-  hat: "Hat",
-  jewelry: "Jewelry",
-  necklace: "Necklace",
-  earrings: "Earrings",
-  bracelet: "Bracelet",
-  scarf: "Scarf",
-  belt: "Belt",
-  swim: "Swim",
-  coverup: "Cover-up",
-};
-
-function prettifyCategory(c: string): string {
-  const key = (c || "").toLowerCase();
-  if (CATEGORY_LABELS[key]) return CATEGORY_LABELS[key];
-  return key.replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
-}
-
-function ShopLookPanel({ heading, entries }: { heading: string; entries: ShopEntry[] }) {
-  // Founder look entries are all "override" items mapped from hero_urls.
-  const rows = entries.filter((e) => e.kind === "override").map((e) => e.product as OverrideItem);
-  const chapters = groupShopChapters(rows);
-  const renderRow = (o: OverrideItem, i: number) => {
-    const href = isUsableShopUrl(o.url) ? o.url : "";
-    const Inner = (
-      <div>
-        {o.brand && (
-          <div className="font-serif italic text-[0.88rem] text-ink/55 leading-snug">{o.brand}</div>
-        )}
-        <div className="font-display text-[1.1rem] md:text-[1.15rem] leading-snug text-ink group-hover:text-gold transition-colors duration-300 mt-1">
-          {o.title || o.brand}
-        </div>
-        {href && (
-          <div className="eyebrow text-[0.62rem] tracking-[0.32em] text-gold/80 mt-2 group-hover:text-gold transition-colors duration-300">
-            VIEW PRODUCT →
-          </div>
-        )}
-        {!href && o.inReview && (
-          <div className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/45 mt-2">
-            {REPLACEMENT_IN_REVIEW_LABEL.toUpperCase()}
-          </div>
-        )}
-      </div>
-    );
-    return (
-      <li key={i} className="[&:not(:first-child)]:mt-3.5">
-        {href ? (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            onClick={() => trackOutbound({ brand: o.brand, item: o.title, href })}
-            className="group block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
-          >
-            {Inner}
-          </a>
-        ) : (
-          <div className="opacity-70">{Inner}</div>
-        )}
-      </li>
-    );
-  };
-  return (
-    <div className="mt-2">
-      {chapters.map((chapter, ci) => (
-        <section key={chapter.key} className={ci === 0 ? "mt-6" : "mt-11 md:mt-12"}>
-          <h4 className="eyebrow text-[0.64rem] tracking-[0.38em] text-ink/45 mb-5">
-            {chapter.label}
-          </h4>
-          <ul>{chapter.items.map(renderRow)}</ul>
-        </section>
-      ))}
-    </div>
-  );
-}
-
-/**
- * Chapter grouping — mirrors how a luxury stylist walks a client through
- * dressing: the outfit first, then the finishing touches (shoes, bag,
- * sunglasses, hat, scarf, belt, cover-up), then fine jewelry. Chapters
- * with no items are skipped so the layout adapts to any moment.
- */
-const THE_LOOK_CATEGORIES = new Set([
-  "corset",
-  "top",
-  "blouse",
-  "shirt",
-  "tee",
-  "t-shirt",
-  "vest",
-  "waistcoat",
-  "pant",
-  "pants",
-  "trouser",
-  "trousers",
-  "skirt",
-  "dress",
-  "gown",
-  "jumpsuit",
-  "romper",
-  "swimsuit",
-  "bikini",
-  "bikini top",
-  "bikini bottom",
-  "one-piece",
-  "swim",
-  "jacket",
-  "blazer",
-  "coat",
-  "cardigan",
-  "sweater",
-  "knit",
-]);
-const FINISHING_CATEGORIES = new Set([
-  "shoe",
-  "shoes",
-  "sandal",
-  "sandals",
-  "bag",
-  "clutch",
-  "tote",
-  "pouch",
-  "sunglasses",
-  "hat",
-  "scarf",
-  "belt",
-  "coverup",
-  "cover-up",
-  "cover up",
-]);
-const JEWELRY_CATEGORIES = new Set(["earrings", "necklace", "bracelet", "jewelry", "cuff"]);
-const FINISHING_ORDER = [
-  "shoe",
-  "shoes",
-  "sandal",
-  "sandals",
-  "bag",
-  "clutch",
-  "tote",
-  "pouch",
-  "sunglasses",
-  "hat",
-  "scarf",
-  "belt",
-  "coverup",
-  "cover-up",
-  "cover up",
-];
-const JEWELRY_ORDER = ["necklace", "earrings", "bracelet", "cuff", "jewelry"];
-
-type ShopChapter = { key: string; label: string; items: OverrideItem[] };
-
-function groupShopChapters(rows: OverrideItem[]): ShopChapter[] {
-  const norm = (s?: string) => (s ?? "").trim().toLowerCase();
-  const catOf = (r: OverrideItem) => norm(r.category ?? r.slotLabel);
-  const look: OverrideItem[] = [];
-  const finishing: OverrideItem[] = [];
-  const jewelry: OverrideItem[] = [];
-  for (const r of rows) {
-    const c = catOf(r);
-    if (JEWELRY_CATEGORIES.has(c)) jewelry.push(r);
-    else if (FINISHING_CATEGORIES.has(c)) finishing.push(r);
-    else if (THE_LOOK_CATEGORIES.has(c)) look.push(r);
-    else finishing.push(r);
-  }
-  const rankBy = (order: string[]) => (r: OverrideItem) => {
-    const i = order.indexOf(catOf(r));
-    return i === -1 ? order.length : i;
-  };
-  finishing.sort((a, b) => rankBy(FINISHING_ORDER)(a) - rankBy(FINISHING_ORDER)(b));
-  jewelry.sort((a, b) => rankBy(JEWELRY_ORDER)(a) - rankBy(JEWELRY_ORDER)(b));
-  const chapters: ShopChapter[] = [
-    { key: "look", label: "THE LOOK", items: look },
-    { key: "finishing", label: "FINISHING TOUCHES", items: finishing },
-    { key: "jewelry", label: "JEWELRY", items: jewelry },
-  ];
-  return chapters.filter((c) => c.items.length > 0);
-}
 
 /**
  * Inline "Shop Complete Look" expander for the Nightcap "Ivory After Dark"
@@ -1897,7 +1325,6 @@ function ExtraEditorialReferenceCard({
                     slot: r.slot ?? "Reference",
                     brand: reference.brand,
                     name: reference.name,
-                    ...(reference.price ? { price: reference.price } : {}),
                     ...(reference.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
                   },
                 ]}
