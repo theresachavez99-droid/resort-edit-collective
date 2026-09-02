@@ -51,9 +51,7 @@ export function previewStagingDefault(hostname: string | null | undefined): bool
 export function usePreviewStaging(): boolean {
   const [staging, setStaging] = useState(false);
   useEffect(() => {
-    const v = previewStagingDefault(window.location.hostname);
-    console.log("[staging]", window.location.hostname, v);
-    setStaging(v);
+    setStaging(previewStagingDefault(window.location.hostname));
   }, []);
   return staging;
 }
