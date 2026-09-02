@@ -8,7 +8,7 @@ Method: route-tree enumeration, static data extraction, HTTP probes of 56 curate
 | Priority | Count | Themes |
 |---|---|---|
 | Critical | 3 | 7 of 12 moments publish zero shoppable rows; product links are hardcoded in source with no verification loop; internal brand pipeline metrics were publicly readable (FIXED this turn) |
-| High | 6 | Pool Lounging/Beach Club title-vs-URL contradiction; production is running a stale build (still shows "Explore the Harbor"); dead Aquazzura PDP; non-PDP Shopify `/pages/` link; `destination_moments` out of sync with `moments` (6 vs 12 rows); `vault_products` empty while 160 reference products are approved |
+| High | 6 | Pool Lounging/Beach Club title-vs-URL contradiction; production is running a stale build (still shows "Explore the Harbor"); dead Aquazzura PDP; non-PDP Shopify `/pages/` link; `destination_moments` out of sync with `moments` — RESOLVED, see §I; `vault_products` empty while 160 reference products are approved |
 | Medium | 7 | Missing canonical on /portofino; poolside-glam absent from sitemap; NAP links unverifiable by probe (bot-blocked); "Founder" terminology in debug badge; no formal required-slot doctrine; look completeness unaudited; CTA language ("SHOP COMPLETE LOOK") overpromises exact-match |
 | Low | 4 | Duplicate legacy day-1..day-5 redirects retained (correct, 301); /my-edit is noindex (canonical unnecessary); debug badge visible only with ?debug; minor copy drift |
 
@@ -51,3 +51,41 @@ Batch 2: required-slot doctrine + omission rendering.
 Batch 3: `destination_moments` ↔ `moments` reconciliation.
 Batch 4: admin IA consolidation.
 Batch 5: editorial decisions from section G.
+
+## I. Addendum — Repair Batch 1 (structural launch blockers)
+
+Database state (verified by direct query at time of writing):
+
+- `destination_moments` now contains all 12 active Portofino canonical
+  moments (`arrival`, `espresso-morning`, `yacht-day`, `harbor-aperitivo`,
+  `sunset-views`, `riviera-dinner`, `exploring-the-harbor`, `beach-club`,
+  `long-lunch`, `shopping`, `nightcap`, `pool-lounging`) plus exactly one
+  inactive legacy row (`arrival-day`, "Arrival Day", active = false).
+  The earlier "6 vs 12 rows" desync in §A/§B is resolved.
+- Active `shop_slot_products` rows exist for moment-level look keys
+  `portofino/long-lunch` (4), `portofino/pool-lounging` (4),
+  `portofino/riviera-dinner` (5), `portofino/shopping` (3); active
+  `look_items` rows exist for `portofino/long-lunch` (3),
+  `portofino/nightcap` (2), `portofino/pool-lounging` (3),
+  `portofino/sunset-views` (3).
+
+Repairs shipped in this batch:
+
+1. Featured-look headings now flow through `publicFeaturedTitle`
+   (`src/lib/moment-display.ts`): Shopping renders "Shopping in Portofino",
+   Exploring the Harbor renders "Exploring the Harbor"; retired legacy look
+   titles ("Capri Aperitivo", "Via Roma Boutiques") can never render.
+2. Honest commerce CTAs: the hero "Shop The Look" CTA renders only when the
+   page publishes verified product links (`src/lib/commerce-cta-policy.ts`,
+   DB-driven gate). Zero-link pages stay editorial with no shopping CTA.
+3. Newsletter form: debug logging removed; accessible label, `aria-busy`,
+   and live status/error regions added.
+4. Footer Our Story / Contact / Collaborate now target distinct `/about`
+   anchors; Contact and Collaborate sections added with
+   hello@resortedit.com mailto conversion paths.
+5. Evening-moment definitions unified on `EVENING_MOMENT_SLUGS`
+   (harbor-aperitivo, sunset-views, riviera-dinner, nightcap); the launch
+   audit no longer misclassifies Harbor Aperitivo as daytime. Forbidden
+   slots and ungated commerce CTAs are now hard failures in
+   `bun run audit:slots`; focused regression tests live in
+   `tests/launch-readiness.test.ts` (wired into `bun run audit:launch`).
