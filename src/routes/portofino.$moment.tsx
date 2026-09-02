@@ -304,7 +304,7 @@ import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheL
 import { ResortEditItemization, shopSlotsQuery } from "@/components/commerce/ResortEditItemization";
 import { StagedLookItemization } from "@/components/commerce/StagedLookItemization";
 import { PREVIEW_STAGED_LOOKS } from "@/data/previewStagedLooks";
-import { usePreviewStaging } from "@/lib/preview-staging";
+import { previewStagingQuery } from "@/lib/preview-staging.functions";
 import { evaluateAtomicLook } from "@/lib/look-atomic-completeness";
 import { isLillaLookComplete } from "@/lib/lilla-look-audit";
 import { findResortEditLook } from "@/data/resortEditLooks";
@@ -364,6 +364,7 @@ export const Route = createFileRoute("/portofino/$moment")({
       context.queryClient.ensureQueryData(slotHealthQuery(params.moment)),
       context.queryClient.ensureQueryData(lookItemsQuery(`portofino/${params.moment}`)),
       context.queryClient.ensureQueryData(shopSlotsQuery(`portofino/${params.moment}`)),
+      context.queryClient.ensureQueryData(previewStagingQuery()),
     ]);
     return { def };
   },
@@ -467,7 +468,8 @@ function MomentPage() {
   // PREVIEW-ONLY STAGING — founder-approved hero replacements render on the
   // Lovable preview host only; the production hostname keeps its currently
   // deployed behaviour until approval (see `@/lib/preview-staging`).
-  const previewStaging = usePreviewStaging();
+  const { data: previewStagingData } = useSuspenseQuery(previewStagingQuery());
+  const previewStaging = previewStagingData?.staging ?? false;
   const stagedCandidate = previewStaging ? PREVIEW_STAGED_LOOKS[slug] : undefined;
   // ATOMIC COMPLETENESS — a staged look renders only when EVERY visible
   // product category has an active, valid exact-product link.
