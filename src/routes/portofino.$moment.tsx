@@ -311,6 +311,8 @@ import { findLook, lookbook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type Look
 import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { isPublishableProductUrl } from "@/lib/shop-url-policy";
+import { publicFeaturedTitle } from "@/lib/moment-display";
+import { countShoppableRows, shopCtaAllowed } from "@/lib/commerce-cta-policy";
 import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
@@ -458,6 +460,11 @@ function MomentPage() {
   const { moment: slug } = Route.useParams();
   const { data } = useSuspenseQuery(momentQuery(slug));
   const { data: slotHealth } = useSuspenseQuery(slotHealthQuery(slug));
+  // DB-driven commerce layers for this moment (prefetched in the loader) —
+  // read here as well so the hero CTA gate reflects exactly what renders.
+  const momentLookKey = `portofino/${slug}`;
+  const { data: shopSlotsData } = useSuspenseQuery(shopSlotsQuery(momentLookKey));
+  const { data: lookItemsData } = useSuspenseQuery(lookItemsQuery(momentLookKey));
   const card = data.ok ? data.moment : null;
   if (!card) throw notFound();
 
@@ -514,18 +521,20 @@ function MomentPage() {
     : isFounderLook && founderShopEntries.length
       ? founderShopEntries
       : resolveShopProducts(card.legacy_day_slug, card.look_slug);
-  const hasCuratedOverride = curatedShopEntries.length > 0;
-  const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
-  // Slots whose product is being replaced still belong to the edit: they keep
-  // their place in the panel with a "Replacement in review" line. When nothing
-  // at all is shoppable the shop area is omitted entirely.
-  const featuredInReviewCount = featuredShop.filter(
-    (e) => e.kind === "override" && (e.product as OverrideItem).inReview,
-  ).length;
-  const featuredSlots = summarizeSlots(featuredShop);
-
-  const shortMomentName = SHORT_MOMENT_NAME[slug] ?? card.moment_name;
-  const editorPickLabel = `Editor's ${shortMomentName} Pick`;
+  // HONEST COMMERCE CTA — a shoppable-set CTA ("Shop The Look") may only
+  // render when the featured section actually publishes verified product
+  // links. Both sources are DB-driven (public_shop_slot_display +
+  // look_items_public), so the gate reflects exactly what the page renders —
+  // there is no static registry to drift. Zero-link pages stay editorial:
+  // no CTA, no placeholder, no "Coming Soon".
+  const shoppableRowCount =
+    countShoppableRows(
+      (shopSlotsData?.slots ?? []).filter((r) => r.brand || r.product_name),
+    ) +
+    countShoppableRows(
+      (lookItemsData?.items ?? []).map((it) => ({ url: it.affiliate_url })),
+    );
+  const showShopCta = shopCtaAllowed(shoppableRowCount);
 
   // Public-facing display title for the featured look. Founder look titles are
   // often blank or workflow-y; map to an editorial name per moment so the page
@@ -537,9 +546,6 @@ function MomentPage() {
   const featuredDisplayTitle = isFounderLook
     ? FOUNDER_LOOK_DISPLAY_TITLE[slug] ?? founderDisplayTitle
     : featuredLook?.title ?? resolved.title;
-  const shopHeading = isFounderLook
-    ? `Shop ${featuredDisplayTitle}`
-    : `Shop ${featuredLook?.title ?? card.moment_name}`;
 
   // Sibling looks within the same day — "More Ways to Dress for {moment}".
   // Moments that publish only curated MOMENT_EXTRA_EDITORIAL_CARDS
@@ -603,8 +609,10 @@ function MomentPage() {
   // a dedicated Complete Look page. Rendered as a centered CTA under the
   // Resort Edit shopping list.
   const completeLookHref = MOMENT_COMPLETE_LOOK[slug];
-  // Optional editorial title override (defaults to featuredDisplayTitle).
-  const editorialTitle = MOMENT_EDITORIAL_TITLE[slug] ?? featuredDisplayTitle;
+  // Public featured heading — canonical-journey policy: approved editorial
+  // override → candidate title → canonical moment name. Retired legacy look
+  // titles ("Via Roma Boutiques", "Capri Aperitivo") can never render.
+  const editorialTitle = publicFeaturedTitle(slug, featuredDisplayTitle, card.moment_name);
   // Reference the founder-approved Resort Edit Look purely for typechecks /
   // future related-look wiring; the page renders through the standard
   // Nightcap-canonical template so every moment stays visually identical.
@@ -655,7 +663,7 @@ function MomentPage() {
 
       {/* HERO */}
       {cinematicHero ? (
-        <MomentCinematicHero config={cinematicHero} />
+        <MomentCinematicHero config={cinematicHero} showShopCta={showShopCta} />
       ) : (
         <section
           className={
@@ -883,24 +891,6 @@ function MomentPage() {
   );
 }
 
-/**
- * Short, conversational moment names for editorial section headings such as
- * "More {Short} Looks". Falls back to full moment name when missing.
- */
-const SHORT_MOMENT_NAME: Record<string, string> = {
-  "arrival": "Arrival",
-  "espresso-morning": "Espresso",
-  "yacht-day": "Yacht",
-  "harbor-aperitivo": "Harbor",
-  "sunset-views": "Sunset",
-  "riviera-dinner": "Riviera Dinner",
-  "exploring-the-harbor": "Harbor",
-  "beach-club": "Beach Club",
-  "long-lunch": "Long Lunch",
-  "shopping": "Shopping",
-  "nightcap": "Nightcap",
-  "pool-lounging": "Pool Lounging",
-};
 
 /**
  * Shared cinematic video hero used across moment pages. Reads video, poster,
@@ -913,7 +903,14 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
  * each breakpoint, so mobile / tablet / desktop can each keep the subject's
  * face inside the visible frame without changing zoom.
  */
-function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
+function MomentCinematicHero({
+  config,
+  showShopCta,
+}: {
+  config: MomentHeroVideo;
+  /** Honest-commerce gate: the shop CTA renders only when the page publishes verified product links. */
+  showShopCta: boolean;
+}) {
   const { video, poster, focal, fit = "cover", overlay, ariaLabel, containerHeightClasses } = config;
   const [reduceMotion, setReduceMotion] = useState(false);
   const [ready, setReady] = useState(false);
@@ -1031,12 +1028,14 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
             <p className="mt-4 font-serif italic text-[1rem] sm:text-[1.08rem] text-ivory/85 leading-relaxed">
               {overlay.body}
             </p>
-            <a
-              href={overlay.ctaHref}
-              className="mt-8 inline-flex items-center gap-3 eyebrow font-medium text-[0.82rem] tracking-[0.34em] text-ivory bg-ink/80 hover:bg-gold border border-ivory/50 hover:border-gold backdrop-blur-sm px-9 py-[0.95rem] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)] transition-colors"
-            >
-              {overlay.ctaLabel} →
-            </a>
+            {showShopCta && (
+              <a
+                href={overlay.ctaHref}
+                className="mt-8 inline-flex items-center gap-3 eyebrow font-medium text-[0.82rem] tracking-[0.34em] text-ivory bg-ink/80 hover:bg-gold border border-ivory/50 hover:border-gold backdrop-blur-sm px-9 py-[0.95rem] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)] transition-colors"
+              >
+                {overlay.ctaLabel} →
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -1093,14 +1092,8 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
   },
 };
 
-/**
- * Optional editorial title override, keyed by moment slug. When present,
- * replaces the default featured-look title in the right column.
- */
-const MOMENT_EDITORIAL_TITLE: Record<string, string> = {
-  "pool-lounging": "Poolside Glam",
-  "long-lunch": "The Long Lunch",
-};
+// Featured-look title overrides live in `@/lib/moment-display`
+// (MOMENT_FEATURED_TITLE_OVERRIDES) so tests and CI audits share them.
 
 /**
  * Optional approved editorial image override for the left column. Uses the
