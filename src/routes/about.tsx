@@ -48,7 +48,10 @@ function AboutPage() {
         <h1 className="sr-only">About Resort Edit</h1>
       </EditorialHero>
 
-      <section className="mx-auto max-w-2xl px-6 py-16 md:py-24 text-center">
+      <section
+        id="our-story"
+        className="mx-auto max-w-2xl px-6 py-16 md:py-24 scroll-mt-24 text-center"
+      >
         <span className="eyebrow text-gold">Who We Are</span>
         <p className="mt-8 font-serif italic text-[1.75rem] md:text-[2.25rem] leading-[1.25] text-ink">
           Resort Edit is for women who believe the destination should inspire the wardrobe.
@@ -71,6 +74,56 @@ function AboutPage() {
           </div>
         </div>
       </section>
+
+      <section
+        id="contact"
+        className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
+      >
+        <span className="eyebrow text-gold">Contact</span>
+        <div className="mx-auto max-w-xl text-left mt-8">
+          <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
+            <p>
+              A question about a destination, a piece we featured, or somewhere you would love to see curated next — we read every note.
+            </p>
+            <p>
+              Write to{" "}
+              <a
+                href="mailto:hello@resortedit.com"
+                className="border-b border-gold/40 pb-0.5 hover:border-gold hover:text-gold transition-colors"
+              >
+                hello@resortedit.com
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="collaborate"
+        className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
+      >
+        <span className="eyebrow text-gold">Collaborate</span>
+        <div className="mx-auto max-w-xl text-left mt-8">
+          <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
+            <p>
+              Resort Edit partners with brands, hotels, tourism boards, and affiliate programs whose sense of place matches our own.
+            </p>
+            <p>
+              For partnerships and press, reach us at{" "}
+              <a
+                href="mailto:hello@resortedit.com"
+                className="border-b border-gold/40 pb-0.5 hover:border-gold hover:text-gold transition-colors"
+              >
+                hello@resortedit.com
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+      </section>
+
+
 
       <section
         id="affiliate-disclosure"

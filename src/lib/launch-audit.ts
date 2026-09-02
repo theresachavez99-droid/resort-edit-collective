@@ -23,9 +23,10 @@ import {
   resolveSlot,
   type ProductSlot,
 } from "./product-slots";
-
-/** Evening moments never require sunglasses. */
-const EVENING_MOMENTS = new Set(["riviera-dinner", "nightcap", "sunset-views"]);
+// Single source of truth for evening moments (harbor-aperitivo, sunset-views,
+// riviera-dinner, nightcap) — never duplicated here, so the audit can't
+// drift from runtime completeness rules.
+import { EVENING_MOMENT_SLUGS } from "./look-completeness";
 
 export type SlotFinding = {
   slot: ProductSlot | null;
@@ -63,6 +64,7 @@ export type LaunchAudit = {
     zeroLinkPages: number;
     productUrls: number;
     badUrls: number;
+    forbiddenSlots: number;
     momentsMissingRequired: number;
   };
 };
@@ -134,7 +136,7 @@ function findingsForMoment(slug: string): SlotFinding[] {
 }
 
 export function auditMoment(slug: string, name: string): MomentAudit {
-  const momentType: "day" | "evening" = EVENING_MOMENTS.has(slug) ? "evening" : "day";
+  const momentType: "day" | "evening" = EVENING_MOMENT_SLUGS.has(slug) ? "evening" : "day";
   const findings = findingsForMoment(slug);
 
   const filled = new Set<ProductSlot>();
@@ -186,6 +188,7 @@ export function runLaunchAudit(): LaunchAudit {
       zeroLinkPages: moments.filter((m) => m.zeroLinkPage).length,
       productUrls: moments.reduce((n, m) => n + m.productUrls, 0),
       badUrls: moments.reduce((n, m) => n + m.badUrls.length, 0),
+      forbiddenSlots: moments.reduce((n, m) => n + m.forbiddenPresent.length, 0),
       momentsMissingRequired: moments.filter((m) => m.missingRequiredSlots.length > 0).length,
     },
   };
