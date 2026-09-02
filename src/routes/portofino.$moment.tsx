@@ -29,9 +29,7 @@ import {
   type ExtraEditorialCard,
   type NightcapEditorialCard,
 } from "@/data/momentEditorialCards";
-import { MOMENT_SHOP_CURATED, type OverrideItem } from "@/data/momentShopCurated";
 import { isSuppressedProduct } from "@/lib/suppressed-products";
-import { excludeUnmerchandisable, isExcludedProduct } from "@/lib/merchandising-exclusions";
 import { EditorialClosetSection } from "@/components/EditorialClosetSection";
 import { MAX_SUPPORTING_LOOKS } from "@/lib/look-completeness";
 
@@ -475,53 +473,11 @@ function MomentPage() {
   const { resolved } = card;
   const heroImage = card.hero_banner_image;
   const isFounderLook = resolved.source === "founder_look";
-  const founderProducts = resolved.founder_hero_products ?? [];
 
   // Admin/debug visibility: source badge only renders with ?debug=1.
   const isDebug =
     typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug");
 
-  const founderShopEntries: ShopEntry[] = founderProducts
-    .filter((p) => p.brand || p.product_name)
-    // Resort Edit never merchandises rings.
-    .filter((p) => !isExcludedProduct({ category: p.category, role: p.role }))
-    // Public Founder Look shop panel: only render rows with a usable
-    // retailer URL. Search-engine fallback or AFF- placeholder URLs are
-    // suppressed in production (visible only with ?debug=1) so the page
-    // never ships a dead "Shop →" card.
-    .filter((p) => isDebug || isUsableShopUrl(p.url))
-    .map((p) => ({
-      kind: "override" as const,
-      product: {
-        slotLabel:
-          p.role === "Hero Garment"
-            ? "The Look"
-            : p.role === "Optional"
-              ? prettifyCategory(p.category)
-              : prettifyCategory(p.category),
-        brand: p.brand || p.product_name.split(" ")[0] || "—",
-        title: p.product_name || p.brand || "",
-        url: isUsableShopUrl(p.url) ? p.url : "",
-        image: p.image_url ?? "",
-        isOptional: p.role === "Optional",
-      },
-    }));
-  // Moment-level curated Complete Edit takes priority over founder / fallback
-  // data. This lets an editor lock a specific ordered set of pieces without
-  // depending on the publish pipeline.
-  const curatedForMoment = MOMENT_SHOP_CURATED[slug];
-  // Products whose DB audit verdict failed are gated out before render — see
-  // `src/lib/suppressed-products.ts` (source of truth: shop_slot_products.status).
-  const curatedShopEntries: ShopEntry[] = excludeUnmerchandisable(curatedForMoment)
-    .filter((o) => !isSuppressedProduct(`portofino/${slug}`, o.brand, o.title))
-    .map((o) => applySlotHealth(o, slotHealth.slots))
-    .filter((o) => isUsableShopUrl(o.url) || o.inReview)
-    .map((product) => ({ kind: "override" as const, product }));
-  const featuredShop: ShopEntry[] = curatedShopEntries.length
-    ? curatedShopEntries
-    : isFounderLook && founderShopEntries.length
-      ? founderShopEntries
-      : [];
   // HONEST COMMERCE CTA — a shoppable-set CTA ("Shop The Look") may only
   // render when the featured section actually publishes verified product
   // links. Both sources are DB-driven (public_shop_slot_display +
@@ -748,7 +704,7 @@ function MomentPage() {
       <EditorialClosetSection
         momentSlug={slug}
         momentName={card.moment_name}
-        heroCategory={featuredShop[0]?.category ?? null}
+        heroCategory={shopSlotsData?.slots?.[0]?.slot_label ?? shopSlotsData?.slots?.[0]?.slot ?? null}
       />
 
       {/* MORE WAYS TO DRESS FOR THIS MOMENT — editorial look grid.
@@ -1077,52 +1033,12 @@ const MOMENT_COMPLETE_LOOK: Record<string, string> = {
 };
 
 /**
- * Experiential rewrites for sibling "More X Looks" cards — sells the moment,
- * not the garment. Keyed by `${daySlug}/${lookSlug}`.
- */
-// ──────────────────────────────────────────────────────────────
-// Helpers — shop product resolution + inline editorial cards
-// ──────────────────────────────────────────────────────────────
-type ShopEntry = {
-  category?: string;
-  product: OverrideItem;
-  kind: "override";
-};
-
-/**
  * A URL is shoppable only when it points at an exact retailer product page.
  * The policy itself lives in `@/lib/shop-url-policy` so curated data files,
  * the launch audit, and CI all apply the same rule.
  */
 function isUsableShopUrl(url: string | undefined | null): url is string {
   return isPublishableProductUrl(url);
-}
-
-/**
- * Overlay DB-resolved slot availability onto a curated editorial row.
- *
- * The editorial layer (image, title, copy, slot order) is never touched here —
- * only the commerce item. When an approved active backup exists it is swapped
- * in silently; when nothing is shoppable the row is flagged `inReview` so the
- * card renders a non-clickable placeholder rather than a dead link.
- */
-function applySlotHealth(item: OverrideItem, slots: Record<string, SlotResolution>): OverrideItem {
-  const key = slotKey(item.category ?? item.slotLabel ?? "");
-  const resolution = key ? slots[key] : undefined;
-  if (!resolution) return item;
-  if (resolution.state === "live") {
-    const p = resolution.product;
-    return {
-      ...item,
-      brand: p.brand,
-      title: p.product_name,
-      url: p.url ?? "",
-      ...(p.price ? { price: p.price } : {}),
-      unsourced: false,
-      inReview: false,
-    };
-  }
-  return { ...item, url: "", unsourced: false, inReview: true };
 }
 
 /**
@@ -1135,7 +1051,6 @@ type HealthedShopRow = {
   slot: string;
   brand: string;
   name: string;
-  price?: string;
   url: string;
   unsourced?: boolean;
   inReview: boolean;
@@ -1162,7 +1077,6 @@ function applyLookRowHealth(
       brand: p.brand,
       name: p.product_name,
       url: p.url ?? "",
-      ...(p.price ? { price: p.price } : {}),
       unsourced: false,
       inReview: false,
     };
@@ -1179,7 +1093,6 @@ function splitHealthedRows(rows: HealthedShopRow[]) {
       slot: p.slot,
       brand: p.brand,
       name: p.name,
-      ...(p.price ? { price: p.price } : {}),
       ...(p.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
     }));
   return { live, omitted };
@@ -1190,197 +1103,6 @@ function splitHealthedRows(rows: HealthedShopRow[]) {
  * summary. Counts live (non-placeholder) entries only, preserves canonical order,
  * and falls back gracefully for override-driven looks.
  */
-
-// ──────────────────────────────────────────────────────────────
-// Editorial "Shop This Look" side panel (text-first, link priority)
-// ──────────────────────────────────────────────────────────────
-
-const CATEGORY_LABELS: Record<string, string> = {
-  hero: "The Look",
-  top: "Top",
-  bottom: "Bottom",
-  dress: "Dress",
-  outerwear: "Outerwear",
-  shoes: "Shoes",
-  bag: "Bag",
-  sunglasses: "Sunglasses",
-  hat: "Hat",
-  jewelry: "Jewelry",
-  necklace: "Necklace",
-  earrings: "Earrings",
-  bracelet: "Bracelet",
-  scarf: "Scarf",
-  belt: "Belt",
-  swim: "Swim",
-  coverup: "Cover-up",
-};
-
-function prettifyCategory(c: string): string {
-  const key = (c || "").toLowerCase();
-  if (CATEGORY_LABELS[key]) return CATEGORY_LABELS[key];
-  return key.replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
-}
-
-function ShopLookPanel({ heading, entries }: { heading: string; entries: ShopEntry[] }) {
-  // Founder look entries are all "override" items mapped from hero_urls.
-  const rows = entries.filter((e) => e.kind === "override").map((e) => e.product as OverrideItem);
-  const chapters = groupShopChapters(rows);
-  const renderRow = (o: OverrideItem, i: number) => {
-    const href = isUsableShopUrl(o.url) ? o.url : "";
-    const Inner = (
-      <div>
-        {o.brand && (
-          <div className="font-serif italic text-[0.88rem] text-ink/55 leading-snug">{o.brand}</div>
-        )}
-        <div className="font-display text-[1.1rem] md:text-[1.15rem] leading-snug text-ink group-hover:text-gold transition-colors duration-300 mt-1">
-          {o.title || o.brand}
-        </div>
-        {href && (
-          <div className="eyebrow text-[0.62rem] tracking-[0.32em] text-gold/80 mt-2 group-hover:text-gold transition-colors duration-300">
-            VIEW PRODUCT →
-          </div>
-        )}
-        {!href && o.inReview && (
-          <div className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/45 mt-2">
-            {REPLACEMENT_IN_REVIEW_LABEL.toUpperCase()}
-          </div>
-        )}
-      </div>
-    );
-    return (
-      <li key={i} className="[&:not(:first-child)]:mt-3.5">
-        {href ? (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            onClick={() => trackOutbound({ brand: o.brand, item: o.title, href })}
-            className="group block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/60"
-          >
-            {Inner}
-          </a>
-        ) : (
-          <div className="opacity-70">{Inner}</div>
-        )}
-      </li>
-    );
-  };
-  return (
-    <div className="mt-2">
-      {chapters.map((chapter, ci) => (
-        <section key={chapter.key} className={ci === 0 ? "mt-6" : "mt-11 md:mt-12"}>
-          <h4 className="eyebrow text-[0.64rem] tracking-[0.38em] text-ink/45 mb-5">
-            {chapter.label}
-          </h4>
-          <ul>{chapter.items.map(renderRow)}</ul>
-        </section>
-      ))}
-    </div>
-  );
-}
-
-/**
- * Chapter grouping — mirrors how a luxury stylist walks a client through
- * dressing: the outfit first, then the finishing touches (shoes, bag,
- * sunglasses, hat, scarf, belt, cover-up), then fine jewelry. Chapters
- * with no items are skipped so the layout adapts to any moment.
- */
-const THE_LOOK_CATEGORIES = new Set([
-  "corset",
-  "top",
-  "blouse",
-  "shirt",
-  "tee",
-  "t-shirt",
-  "vest",
-  "waistcoat",
-  "pant",
-  "pants",
-  "trouser",
-  "trousers",
-  "skirt",
-  "dress",
-  "gown",
-  "jumpsuit",
-  "romper",
-  "swimsuit",
-  "bikini",
-  "bikini top",
-  "bikini bottom",
-  "one-piece",
-  "swim",
-  "jacket",
-  "blazer",
-  "coat",
-  "cardigan",
-  "sweater",
-  "knit",
-]);
-const FINISHING_CATEGORIES = new Set([
-  "shoe",
-  "shoes",
-  "sandal",
-  "sandals",
-  "bag",
-  "clutch",
-  "tote",
-  "pouch",
-  "sunglasses",
-  "hat",
-  "scarf",
-  "belt",
-  "coverup",
-  "cover-up",
-  "cover up",
-]);
-const JEWELRY_CATEGORIES = new Set(["earrings", "necklace", "bracelet", "jewelry", "cuff"]);
-const FINISHING_ORDER = [
-  "shoe",
-  "shoes",
-  "sandal",
-  "sandals",
-  "bag",
-  "clutch",
-  "tote",
-  "pouch",
-  "sunglasses",
-  "hat",
-  "scarf",
-  "belt",
-  "coverup",
-  "cover-up",
-  "cover up",
-];
-const JEWELRY_ORDER = ["necklace", "earrings", "bracelet", "cuff", "jewelry"];
-
-type ShopChapter = { key: string; label: string; items: OverrideItem[] };
-
-function groupShopChapters(rows: OverrideItem[]): ShopChapter[] {
-  const norm = (s?: string) => (s ?? "").trim().toLowerCase();
-  const catOf = (r: OverrideItem) => norm(r.category ?? r.slotLabel);
-  const look: OverrideItem[] = [];
-  const finishing: OverrideItem[] = [];
-  const jewelry: OverrideItem[] = [];
-  for (const r of rows) {
-    const c = catOf(r);
-    if (JEWELRY_CATEGORIES.has(c)) jewelry.push(r);
-    else if (FINISHING_CATEGORIES.has(c)) finishing.push(r);
-    else if (THE_LOOK_CATEGORIES.has(c)) look.push(r);
-    else finishing.push(r);
-  }
-  const rankBy = (order: string[]) => (r: OverrideItem) => {
-    const i = order.indexOf(catOf(r));
-    return i === -1 ? order.length : i;
-  };
-  finishing.sort((a, b) => rankBy(FINISHING_ORDER)(a) - rankBy(FINISHING_ORDER)(b));
-  jewelry.sort((a, b) => rankBy(JEWELRY_ORDER)(a) - rankBy(JEWELRY_ORDER)(b));
-  const chapters: ShopChapter[] = [
-    { key: "look", label: "THE LOOK", items: look },
-    { key: "finishing", label: "FINISHING TOUCHES", items: finishing },
-    { key: "jewelry", label: "JEWELRY", items: jewelry },
-  ];
-  return chapters.filter((c) => c.items.length > 0);
-}
 
 /**
  * Inline "Shop Complete Look" expander for the Nightcap "Ivory After Dark"
