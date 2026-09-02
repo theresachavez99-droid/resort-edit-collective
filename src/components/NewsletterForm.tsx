@@ -9,7 +9,7 @@ const CONSENT_COPY = "Thoughtfully curated inspiration. Occasionally delivered."
 function deriveDestination(pathname: string): string | undefined {
   // /portofino, /portofino/..., /destinations/portofino...
   const m =
-    pathname.match(/^\/destinations\/([^/]+)/) || pathname.match(/^\/([a-z0-9-]+?)(?:[\/.-]|$)/i);
+    pathname.match(/^\/destinations\/([^/]+)/) || pathname.match(/^\/([a-z0-9-]+?)(?:[/.-]|$)/i);
   return m?.[1]?.toLowerCase();
 }
 
