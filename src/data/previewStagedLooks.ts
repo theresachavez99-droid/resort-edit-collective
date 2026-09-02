@@ -9,7 +9,7 @@
  * These rows are shipped in code on purpose — no production database rows are
  * written or mutated by staging a look here. Prices are never stored or shown.
  */
-import evelynJadeImage from "@/assets/uploads/lilla/shopping-lilla-evelyn-jade-via-roma.png.asset.json";
+import evelynJadeImage from "@/assets/uploads/lilla/portofino-shopping-lilla-evelyn-jade-v2.png.asset.json";
 import type { VisibleProductSlot } from "@/lib/look-atomic-completeness";
 
 export type StagedLookRow = {
@@ -40,7 +40,7 @@ export const SHOPPING_EVELYN_JADE: StagedLook = {
   caption:
     "Mister Zimi's Evelyn dress in deep jade — scalloped straps, a cut-out waist and a full linen skirt — walked slowly past the lemon trees and shuttered boutiques, with gold leather sandals, a moon-shaped raffia tote and one warm gold family at the ears, throat and wrist.",
   image: evelynJadeImage.url,
-  alt: "Lilla walking a sunlit Portofino lane in a deep jade Mister Zimi Evelyn maxi dress with scalloped straps and a cut-out waist, carrying a moon-shaped natural raffia tote, wearing gold leather thong sandals, tortoise sunglasses and fine gold hoops, chain necklace and bangle.",
+  alt: "Lilla walking a sunlit Portofino lane in a deep jade Mister Zimi Evelyn maxi dress with scalloped straps and a cut-out waist, carrying a moon-shaped natural raffia tote, wearing gold leather thong sandals, tortoiseshell sunglasses pushed onto her head and fine gold hoops, chain necklace and bangle.",
   visibleProductSlots: [
     "outfit",
     "shoes",
