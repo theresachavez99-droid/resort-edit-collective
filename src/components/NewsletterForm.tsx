@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { subscribeEmail } from "@/lib/subscribers.functions";
 
@@ -27,6 +27,7 @@ export function NewsletterForm({
   placeholder?: string;
 }) {
   const subscribe = useServerFn(subscribeEmail);
+  const inputId = useId();
   const [email, setEmail] = useState("");
   const [state, setState] = useState<
     | { kind: "idle" }
@@ -37,31 +38,25 @@ export function NewsletterForm({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TEMP DEBUG — remove after newsletter flow is confirmed working end-to-end.
-    console.log("[newsletter] submit fired", { email, ctaSource });
     if (!email.trim()) return;
     setState({ kind: "loading" });
     try {
       const pathname =
         typeof window !== "undefined" ? window.location.pathname : undefined;
-      const payload = {
+      const res = await subscribe({
         data: {
           email: email.trim(),
           source_page: pathname,
           destination: pathname ? deriveDestination(pathname) : undefined,
           cta_source: ctaSource,
         },
-      };
-      console.log("[newsletter] calling subscribeEmail", payload);
-      const res = await subscribe(payload);
-      console.log("[newsletter] subscribeEmail result", res);
+      });
       if (res.ok) {
         setState({ kind: "success", alreadySubscribed: !!res.alreadySubscribed });
       } else {
         setState({ kind: "error", message: res.error });
       }
     } catch (err) {
-      console.error("[newsletter] subscribeEmail threw", err);
       const msg =
         err instanceof Error ? err.message : "Network error. Please try again.";
       setState({ kind: "error", message: msg });
@@ -69,6 +64,7 @@ export function NewsletterForm({
   };
 
   const isFooter = variant === "footer";
+  const isLoading = state.kind === "loading";
 
   // ── Success state ─────────────────────────────────────────────
   if (state.kind === "success") {
@@ -76,9 +72,21 @@ export function NewsletterForm({
       ? "You're already on the list."
       : "You're on the list for the next edit.";
     return isFooter ? (
-      <p className="mt-7 font-serif italic text-lg text-gold max-w-md">{msg}</p>
+      <p
+        role="status"
+        aria-live="polite"
+        className="mt-7 font-serif italic text-lg text-gold max-w-md"
+      >
+        {msg}
+      </p>
     ) : (
-      <p className="font-serif italic text-[0.95rem] text-ink/80">{msg}</p>
+      <p
+        role="status"
+        aria-live="polite"
+        className="font-serif italic text-[0.95rem] text-ink/80"
+      >
+        {msg}
+      </p>
     );
   }
 
@@ -88,9 +96,14 @@ export function NewsletterForm({
       <div className="w-full max-w-xl mt-7 flex flex-col items-center">
         <form
           onSubmit={onSubmit}
+          aria-busy={isLoading}
           className="flex flex-col sm:flex-row gap-2 w-full"
         >
+          <label htmlFor={inputId} className="sr-only">
+            Email address
+          </label>
           <input
+            id={inputId}
             type="email"
             required
             inputMode="email"
@@ -99,22 +112,24 @@ export function NewsletterForm({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={placeholder}
-            disabled={state.kind === "loading"}
+            disabled={isLoading}
             className="flex-1 h-14 bg-transparent border border-ivory/30 px-5 text-sm text-ivory placeholder:text-ivory/40 focus:outline-none focus:border-gold disabled:opacity-60"
           />
           <button
             type="submit"
-            disabled={state.kind === "loading"}
+            disabled={isLoading}
             className="eyebrow h-14 bg-gold text-ink px-10 hover:bg-ivory transition-colors whitespace-nowrap disabled:opacity-60"
           >
-            {state.kind === "loading" ? "Saving…" : `${buttonLabel} →`}
+            {isLoading ? "Saving…" : `${buttonLabel} →`}
           </button>
         </form>
         <p className="mt-3 text-[0.7rem] text-ivory/55 max-w-md leading-relaxed">
           {CONSENT_COPY}
         </p>
         {state.kind === "error" && (
-          <p className="mt-2 text-xs text-red-300">{state.message}</p>
+          <p role="alert" aria-live="assertive" className="mt-2 text-xs text-red-300">
+            {state.message}
+          </p>
         )}
       </div>
     );
@@ -125,9 +140,14 @@ export function NewsletterForm({
     <div className="w-full">
       <form
         onSubmit={onSubmit}
+        aria-busy={isLoading}
         className="flex flex-col sm:flex-row gap-2 w-full"
       >
+        <label htmlFor={inputId} className="sr-only">
+          Email address
+        </label>
         <input
+          id={inputId}
           type="email"
           required
           inputMode="email"
@@ -136,22 +156,24 @@ export function NewsletterForm({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={placeholder}
-          disabled={state.kind === "loading"}
+          disabled={isLoading}
           className="flex-1 h-11 bg-transparent border border-ink/25 px-4 text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:border-gold disabled:opacity-60"
         />
         <button
           type="submit"
-          disabled={state.kind === "loading"}
+          disabled={isLoading}
           className="eyebrow h-11 bg-ink text-ivory px-5 hover:bg-gold hover:text-ink transition-colors whitespace-nowrap text-[0.7rem] tracking-[0.28em] disabled:opacity-60"
         >
-          {state.kind === "loading" ? "Saving…" : buttonLabel}
+          {isLoading ? "Saving…" : buttonLabel}
         </button>
       </form>
       <p className="mt-2 text-[0.7rem] text-ink/55 leading-relaxed">
         {CONSENT_COPY}
       </p>
       {state.kind === "error" && (
-        <p className="mt-1 text-xs text-red-600">{state.message}</p>
+        <p role="alert" aria-live="assertive" className="mt-1 text-xs text-red-600">
+          {state.message}
+        </p>
       )}
     </div>
   );

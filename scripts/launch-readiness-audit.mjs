@@ -11,6 +11,7 @@
  *   3. Commerce image integrity    (audit-image-integrity.mjs)
  *   4. Day Image Registry          (audit-day-images.mjs)
  *   5. Outbound link hygiene       (audit-links.mjs)
+ *   6. Launch readiness tests      (bun test tests/)
  *
  * Critical failures block deploy. Treat this command as the build gate;
  * wire it into the deploy pipeline as the last step before publish.
@@ -22,17 +23,18 @@ import { dirname, join } from "node:path";
 const here = dirname(fileURLToPath(import.meta.url));
 
 const GATES = [
-  ["Static security regression", "audit-security-static.mjs"],
-  ["URL safety", "audit-url-safety.mjs"],
-  ["Commerce image integrity", "audit-image-integrity.mjs"],
-  ["Day Image Registry", "audit-day-images.mjs"],
-  ["Outbound link hygiene", "audit-links.mjs"],
+  ["Static security regression", process.execPath, [join(here, "audit-security-static.mjs")]],
+  ["URL safety", process.execPath, [join(here, "audit-url-safety.mjs")]],
+  ["Commerce image integrity", process.execPath, [join(here, "audit-image-integrity.mjs")]],
+  ["Day Image Registry", process.execPath, [join(here, "audit-day-images.mjs")]],
+  ["Outbound link hygiene", process.execPath, [join(here, "audit-links.mjs")]],
+  ["Launch readiness tests", "bun", ["test", join(here, "..", "tests")]],
 ];
 
 const results = [];
-for (const [label, file] of GATES) {
+for (const [label, cmd, args] of GATES) {
   console.log(`\n▶ ${label}`);
-  const r = spawnSync(process.execPath, [join(here, file)], { stdio: "inherit" });
+  const r = spawnSync(cmd, args, { stdio: "inherit" });
   results.push({ label, code: r.status ?? 1 });
 }
 
