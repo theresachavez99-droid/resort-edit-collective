@@ -4,11 +4,7 @@ import { useState, useEffect, useId, type CSSProperties } from "react";
 import { ChevronDown } from "lucide-react";
 import { getPortofinoMoment } from "@/lib/portofino-moments.functions";
 import { getMomentSlotHealth } from "@/lib/product-health.functions";
-import {
-  slotKey,
-  REPLACEMENT_IN_REVIEW_LABEL,
-  type SlotResolution,
-} from "@/lib/product-health";
+import { slotKey, REPLACEMENT_IN_REVIEW_LABEL, type SlotResolution } from "@/lib/product-health";
 import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.json";
 import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
 import espressoHeroVideo from "@/assets/uploads/portofino/espresso-morning-hero.mp4.asset.json";
@@ -35,17 +31,10 @@ import {
 } from "@/data/momentEditorialCards";
 import { MOMENT_SHOP_CURATED } from "@/data/momentShopCurated";
 import { isSuppressedProduct } from "@/lib/suppressed-products";
-import {
-  excludeUnmerchandisable,
-  isExcludedProduct,
-} from "@/lib/merchandising-exclusions";
+import { excludeUnmerchandisable, isExcludedProduct } from "@/lib/merchandising-exclusions";
 import { ProductCommerceCard } from "@/components/commerce/ProductCommerceCard";
 import { EditorialClosetSection } from "@/components/EditorialClosetSection";
-import {
-  MAX_SUPPORTING_LOOKS,
-  isCompleteLook,
-  isDaytimeMoment,
-} from "@/lib/look-completeness";
+import { MAX_SUPPORTING_LOOKS, isCompleteLook, isDaytimeMoment } from "@/lib/look-completeness";
 
 /**
  * Focal point for a hero video / poster expressed as CSS `object-position`
@@ -58,9 +47,9 @@ import {
  */
 type HeroFocal = { x: number; y: number };
 type ResponsiveHeroFocal = {
-  base: HeroFocal;      // <640px (mobile portrait)
-  md?: HeroFocal;       // ≥768px (tablet)
-  lg?: HeroFocal;       // ≥1024px (desktop)
+  base: HeroFocal; // <640px (mobile portrait)
+  md?: HeroFocal; // ≥768px (tablet)
+  lg?: HeroFocal; // ≥1024px (desktop)
 };
 
 type MomentHeroVideo = {
@@ -89,11 +78,7 @@ type MomentHeroVideo = {
  * The entry stays in MOMENT_HERO_VIDEO and the asset stays in the repo — just
  * delete the slug here to re-enable the cinematic hero.
  */
-const HERO_VIDEO_DISABLED = new Set<string>([
-  "nightcap",
-  "pool-lounging",
-  "arrival",
-]);
+const HERO_VIDEO_DISABLED = new Set<string>(["nightcap", "pool-lounging", "arrival"]);
 
 /**
  * Slugs whose static hero renders as a full-width 16:9 scene banner instead of
@@ -123,8 +108,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     overlay: {
       eyebrow: "PORTOFINO",
       headline: "The Arrival in Portofino.",
-      body:
-        "She steps into the Riviera slowly — ivory tailoring, sunlit stone, and the first feeling that the trip has truly begun.",
+      body: "She steps into the Riviera slowly — ivory tailoring, sunlit stone, and the first feeling that the trip has truly begun.",
       ctaLabel: "Shop The Arrival Look",
       ctaHref: "#shop-the-look",
     },
@@ -144,8 +128,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     overlay: {
       eyebrow: "PORTOFINO",
       headline: "Espresso Morning.",
-      body:
-        "A slow espresso. The first stroll along the harbor. The Riviera waking around you.",
+      body: "A slow espresso. The first stroll along the harbor. The Riviera waking around you.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
@@ -164,8 +147,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     overlay: {
       eyebrow: "PORTOFINO",
       headline: "Exploring the Harbor.",
-      body:
-        "The climb to Castello Brown and the path to the lighthouse, through Portofino's hidden corners and colorful streets.",
+      body: "The climb to Castello Brown and the path to the lighthouse, through Portofino's hidden corners and colorful streets.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
@@ -203,8 +185,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     overlay: {
       eyebrow: "PORTOFINO",
       headline: "Beach Club.",
-      body:
-        "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
+      body: "A leisurely afternoon at Paraggi, the emerald cove where even Portofino comes to swim.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
@@ -223,8 +204,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     overlay: {
       eyebrow: "PORTOFINO",
       headline: "Yacht Day.",
-      body:
-        "The crossing to San Fruttuoso — the abbey in a cove reachable only by boat or on foot — in effortless style.",
+      body: "The crossing to San Fruttuoso — the abbey in a cove reachable only by boat or on foot — in effortless style.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
@@ -243,8 +223,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     overlay: {
       eyebrow: "PORTOFINO",
       headline: "Sunset Views.",
-      body:
-        "From the hill above the harbor, the coast glows as the sun disappears into the sea.",
+      body: "From the hill above the harbor, the coast glows as the sun disappears into the sea.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
@@ -269,8 +248,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     overlay: {
       eyebrow: "PORTOFINO",
       headline: "Nightcap.",
-      body:
-        "One final cocktail on the piazzetta before the perfect day comes to a close.",
+      body: "One final cocktail on the piazzetta before the perfect day comes to a close.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
@@ -291,8 +269,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     overlay: {
       eyebrow: "PORTOFINO",
       headline: "Pool Lounging.",
-      body:
-        "An elegant afternoon by the pool, above the bay, beneath striped umbrellas.",
+      body: "An elegant afternoon by the pool, above the bay, beneath striped umbrellas.",
       ctaLabel: "Shop The Look",
       ctaHref: "#shop-the-look",
     },
@@ -307,18 +284,24 @@ import {
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
 import { ShopOmissionRows, SHOP_ACCURACY_NOTE } from "@/components/ShopOmissionRows";
 import { absoluteUrl } from "@/lib/site";
-import { findLook, lookbook, LOOK_CATEGORY_LABEL, LOOK_CATEGORY_ORDER, type Look, type LookProduct } from "@/data/lookbook";
+import {
+  findLook,
+  lookbook,
+  LOOK_CATEGORY_LABEL,
+  LOOK_CATEGORY_ORDER,
+  type Look,
+  type LookProduct,
+} from "@/data/lookbook";
 import { lookOverrideForPublic, type OverrideItem } from "@/data/lookOverrides";
 import { trackOutbound } from "@/lib/utils";
 import { isPublishableProductUrl } from "@/lib/shop-url-policy";
+import { publicFeaturedTitle } from "@/lib/moment-display";
+import { countShoppableRows, shopCtaAllowed } from "@/lib/commerce-cta-policy";
 import { TIER_SLUGS, type LookSlug } from "@/lib/portofino-spec";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
 import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheLookItems";
-import {
-  ResortEditItemization,
-  shopSlotsQuery,
-} from "@/components/commerce/ResortEditItemization";
+import { ResortEditItemization, shopSlotsQuery } from "@/components/commerce/ResortEditItemization";
 import { findResortEditLook } from "@/data/resortEditLooks";
 // Locked Pool Lounging editorial reference — the seated poolside portrait
 // (Aperol Spritz, white lounge chair, Splendido pool). This asset is the
@@ -421,7 +404,12 @@ export const Route = createFileRoute("/portofino/$moment")({
             "@type": "BreadcrumbList",
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "Resort Edit", item: absoluteUrl("/") },
-              { "@type": "ListItem", position: 2, name: "Portofino", item: absoluteUrl("/portofino") },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Portofino",
+                item: absoluteUrl("/portofino"),
+              },
               { "@type": "ListItem", position: 3, name: def.moment_name, item: absoluteUrl(path) },
             ],
           }),
@@ -434,7 +422,10 @@ export const Route = createFileRoute("/portofino/$moment")({
       <div className="text-center">
         <p className="eyebrow text-gold tracking-[0.3em] text-[0.7rem]">Portofino</p>
         <h1 className="font-display text-2xl mt-2">This moment couldn't be loaded.</h1>
-        <Link to="/portofino" className="mt-4 inline-block eyebrow tracking-[0.28em] text-[0.7rem] border-b border-gold text-gold">
+        <Link
+          to="/portofino"
+          className="mt-4 inline-block eyebrow tracking-[0.28em] text-[0.7rem] border-b border-gold text-gold"
+        >
           Return to Portofino
         </Link>
       </div>
@@ -444,8 +435,13 @@ export const Route = createFileRoute("/portofino/$moment")({
     <main className="min-h-[60vh] flex items-center justify-center px-6 text-ink">
       <div className="text-center">
         <p className="eyebrow text-gold tracking-[0.3em] text-[0.7rem]">Portofino</p>
-        <h1 className="font-display text-2xl mt-2">That moment doesn't exist in Portofino — yet.</h1>
-        <Link to="/portofino" className="mt-4 inline-block eyebrow tracking-[0.28em] text-[0.7rem] border-b border-gold text-gold">
+        <h1 className="font-display text-2xl mt-2">
+          That moment doesn't exist in Portofino — yet.
+        </h1>
+        <Link
+          to="/portofino"
+          className="mt-4 inline-block eyebrow tracking-[0.28em] text-[0.7rem] border-b border-gold text-gold"
+        >
           Browse all curated moments
         </Link>
       </div>
@@ -458,6 +454,11 @@ function MomentPage() {
   const { moment: slug } = Route.useParams();
   const { data } = useSuspenseQuery(momentQuery(slug));
   const { data: slotHealth } = useSuspenseQuery(slotHealthQuery(slug));
+  // DB-driven commerce layers for this moment (prefetched in the loader) —
+  // read here as well so the hero CTA gate reflects exactly what renders.
+  const momentLookKey = `portofino/${slug}`;
+  const { data: shopSlotsData } = useSuspenseQuery(shopSlotsQuery(momentLookKey));
+  const { data: lookItemsData } = useSuspenseQuery(lookItemsQuery(momentLookKey));
   const card = data.ok ? data.moment : null;
   if (!card) throw notFound();
 
@@ -468,13 +469,12 @@ function MomentPage() {
 
   // Admin/debug visibility: source badge only renders with ?debug=1.
   const isDebug =
-    typeof window !== "undefined" &&
-    new URLSearchParams(window.location.search).has("debug");
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug");
 
   // Featured (canonical) look for this moment.
   const featuredLook = findLook(card.legacy_day_slug, card.look_slug);
   const founderShopEntries: ShopEntry[] = founderProducts
-    .filter((p) => (p.brand || p.product_name))
+    .filter((p) => p.brand || p.product_name)
     // Resort Edit never merchandises rings.
     .filter((p) => !isExcludedProduct({ category: p.category, role: p.role }))
     // Public Founder Look shop panel: only render rows with a usable
@@ -514,18 +514,16 @@ function MomentPage() {
     : isFounderLook && founderShopEntries.length
       ? founderShopEntries
       : resolveShopProducts(card.legacy_day_slug, card.look_slug);
-  const hasCuratedOverride = curatedShopEntries.length > 0;
-  const featuredPieceCount = featuredShop.filter(shopEntryIsLive).length;
-  // Slots whose product is being replaced still belong to the edit: they keep
-  // their place in the panel with a "Replacement in review" line. When nothing
-  // at all is shoppable the shop area is omitted entirely.
-  const featuredInReviewCount = featuredShop.filter(
-    (e) => e.kind === "override" && (e.product as OverrideItem).inReview,
-  ).length;
-  const featuredSlots = summarizeSlots(featuredShop);
-
-  const shortMomentName = SHORT_MOMENT_NAME[slug] ?? card.moment_name;
-  const editorPickLabel = `Editor's ${shortMomentName} Pick`;
+  // HONEST COMMERCE CTA — a shoppable-set CTA ("Shop The Look") may only
+  // render when the featured section actually publishes verified product
+  // links. Both sources are DB-driven (public_shop_slot_display +
+  // look_items_public), so the gate reflects exactly what the page renders —
+  // there is no static registry to drift. Zero-link pages stay editorial:
+  // no CTA, no placeholder, no "Coming Soon".
+  const shoppableRowCount =
+    countShoppableRows((shopSlotsData?.slots ?? []).filter((r) => r.brand || r.product_name)) +
+    countShoppableRows((lookItemsData?.items ?? []).map((it) => ({ url: it.affiliate_url })));
+  const showShopCta = shopCtaAllowed(shoppableRowCount);
 
   // Public-facing display title for the featured look. Founder look titles are
   // often blank or workflow-y; map to an editorial name per moment so the page
@@ -535,11 +533,8 @@ function MomentPage() {
     FOUNDER_LOOK_DISPLAY_TITLE[slug] ||
     card.moment_name;
   const featuredDisplayTitle = isFounderLook
-    ? FOUNDER_LOOK_DISPLAY_TITLE[slug] ?? founderDisplayTitle
-    : featuredLook?.title ?? resolved.title;
-  const shopHeading = isFounderLook
-    ? `Shop ${featuredDisplayTitle}`
-    : `Shop ${featuredLook?.title ?? card.moment_name}`;
+    ? (FOUNDER_LOOK_DISPLAY_TITLE[slug] ?? founderDisplayTitle)
+    : (featuredLook?.title ?? resolved.title);
 
   // Sibling looks within the same day — "More Ways to Dress for {moment}".
   // Moments that publish only curated MOMENT_EXTRA_EDITORIAL_CARDS
@@ -548,13 +543,13 @@ function MomentPage() {
   const suppressLegacySiblings = slug === "arrival";
   const allSiblings: Look[] = suppressLegacySiblings
     ? []
-    : lookbook.filter(
-        (l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug,
-      ).filter(
-        // Shopping: the legacy "Via Roma Boutiques" sibling is replaced by the
-        // curated "Green Eyelet on Via Roma" editorial card below.
-        (l) => !(slug === "shopping" && l.title === "Via Roma Boutiques"),
-      );
+    : lookbook
+        .filter((l) => l.daySlug === card.legacy_day_slug && l.lookSlug !== card.look_slug)
+        .filter(
+          // Shopping: the legacy "Via Roma Boutiques" sibling is replaced by the
+          // curated "Green Eyelet on Via Roma" editorial card below.
+          (l) => !(slug === "shopping" && l.title === "Via Roma Boutiques"),
+        );
 
   // EDITORIAL COMPLETION LAW
   // 1. A supporting look renders only when its shopping set is complete for
@@ -591,9 +586,7 @@ function MomentPage() {
   // hero. All other moments keep the canonical image hero.
   // Temporarily disabled slugs fall back to the static place-led hero image;
   // remove the slug from HERO_VIDEO_DISABLED to re-enable its video.
-  const cinematicHero = HERO_VIDEO_DISABLED.has(slug)
-    ? undefined
-    : MOMENT_HERO_VIDEO[slug];
+  const cinematicHero = HERO_VIDEO_DISABLED.has(slug) ? undefined : MOMENT_HERO_VIDEO[slug];
 
   // Optional editorial-image override — some moments (e.g. Pool Lounging)
   // publish an approved Resort Edit editorial image separate from the DB
@@ -603,8 +596,10 @@ function MomentPage() {
   // a dedicated Complete Look page. Rendered as a centered CTA under the
   // Resort Edit shopping list.
   const completeLookHref = MOMENT_COMPLETE_LOOK[slug];
-  // Optional editorial title override (defaults to featuredDisplayTitle).
-  const editorialTitle = MOMENT_EDITORIAL_TITLE[slug] ?? featuredDisplayTitle;
+  // Public featured heading — canonical-journey policy: approved editorial
+  // override → candidate title → canonical moment name. Retired legacy look
+  // titles ("Via Roma Boutiques", "Capri Aperitivo") can never render.
+  const editorialTitle = publicFeaturedTitle(slug, featuredDisplayTitle, card.moment_name);
   // Reference the founder-approved Resort Edit Look purely for typechecks /
   // future related-look wiring; the page renders through the standard
   // Nightcap-canonical template so every moment stays visually identical.
@@ -613,20 +608,27 @@ function MomentPage() {
   return (
     <div className="pb-4 md:pb-6">
       {/* BREADCRUMB */}
-      <nav
-        aria-label="Breadcrumb"
-        className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-5 pb-2"
-      >
+      <nav aria-label="Breadcrumb" className="mx-auto max-w-[1180px] px-4 sm:px-6 pt-5 pb-2">
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 eyebrow text-[0.6rem] tracking-[0.26em] text-ink/55">
           <li>
-            <Link to="/" className="hover:text-gold transition-colors">Home</Link>
+            <Link to="/" className="hover:text-gold transition-colors">
+              Home
+            </Link>
           </li>
-          <li aria-hidden className="text-gold/50">/</li>
+          <li aria-hidden className="text-gold/50">
+            /
+          </li>
           <li>
-            <Link to="/portofino" className="hover:text-gold transition-colors">Portofino</Link>
+            <Link to="/portofino" className="hover:text-gold transition-colors">
+              Portofino
+            </Link>
           </li>
-          <li aria-hidden className="text-gold/50">/</li>
-          <li aria-current="page" className="text-ink">{card.moment_name}</li>
+          <li aria-hidden className="text-gold/50">
+            /
+          </li>
+          <li aria-current="page" className="text-ink">
+            {card.moment_name}
+          </li>
         </ol>
       </nav>
 
@@ -655,7 +657,7 @@ function MomentPage() {
 
       {/* HERO */}
       {cinematicHero ? (
-        <MomentCinematicHero config={cinematicHero} />
+        <MomentCinematicHero config={cinematicHero} showShopCta={showShopCta} />
       ) : (
         <section
           className={
@@ -779,9 +781,7 @@ function MomentPage() {
         <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
             <div className="mb-6 md:mb-8 max-w-2xl">
-              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                THE EDIT
-              </span>
+              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">THE EDIT</span>
               <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
                 More Resort Edit Looks
               </h3>
@@ -836,71 +836,52 @@ function MomentPage() {
             </div>
           </div>
         </section>
-      ) : (siblings.length > 0 || renderedExtraCards.length > 0) && (
-        <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
-            <div className="mb-6 md:mb-8 max-w-2xl">
-              <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">
-                THE EDIT
-              </span>
-              <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
-                More Resort Edit Looks
-              </h3>
-              <p className="font-serif italic text-[0.95rem] text-ink/70 mt-3 leading-relaxed">
-                Other interpretations of this editorial moment.
-              </p>
-            </div>
+      ) : (
+        (siblings.length > 0 || renderedExtraCards.length > 0) && (
+          <section id="more-looks" className="bg-cream/40 border-t border-border/40 scroll-mt-16">
+            <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
+              <div className="mb-6 md:mb-8 max-w-2xl">
+                <span className="eyebrow text-[0.62rem] tracking-[0.34em] text-gold">THE EDIT</span>
+                <h3 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink mt-3 leading-[1.1]">
+                  More Resort Edit Looks
+                </h3>
+                <p className="font-serif italic text-[0.95rem] text-ink/70 mt-3 leading-relaxed">
+                  Other interpretations of this editorial moment.
+                </p>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-              {siblings.map((sib) => (
-                <EditorialLookCard
-                  key={sib.id}
-                  look={sib}
-                  momentName={card.moment_name}
-                  editorialOnly={slug === "shopping"}
-                  isOpen={openShop === sib.lookSlug}
-                  onToggle={() =>
-                    setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
-                  }
-                />
-              ))}
-              {renderedExtraCards.map((c) => (
-                <ExtraEditorialReferenceCard
-                  key={c.key}
-                  card={c}
-                  momentSlug={slug}
-                  momentName={card.moment_name}
-                  lookHealth={slotHealth.looks}
-                />
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                {siblings.map((sib) => (
+                  <EditorialLookCard
+                    key={sib.id}
+                    look={sib}
+                    momentName={card.moment_name}
+                    editorialOnly={slug === "shopping"}
+                    isOpen={openShop === sib.lookSlug}
+                    onToggle={() =>
+                      setOpenShop((cur) => (cur === sib.lookSlug ? null : sib.lookSlug))
+                    }
+                  />
+                ))}
+                {renderedExtraCards.map((c) => (
+                  <ExtraEditorialReferenceCard
+                    key={c.key}
+                    card={c}
+                    momentSlug={slug}
+                    momentName={card.moment_name}
+                    lookHealth={slotHealth.looks}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )
       )}
 
       <OtherPortofinoMoments excludeSlugs={[slug]} />
     </div>
   );
 }
-
-/**
- * Short, conversational moment names for editorial section headings such as
- * "More {Short} Looks". Falls back to full moment name when missing.
- */
-const SHORT_MOMENT_NAME: Record<string, string> = {
-  "arrival": "Arrival",
-  "espresso-morning": "Espresso",
-  "yacht-day": "Yacht",
-  "harbor-aperitivo": "Harbor",
-  "sunset-views": "Sunset",
-  "riviera-dinner": "Riviera Dinner",
-  "exploring-the-harbor": "Harbor",
-  "beach-club": "Beach Club",
-  "long-lunch": "Long Lunch",
-  "shopping": "Shopping",
-  "nightcap": "Nightcap",
-  "pool-lounging": "Pool Lounging",
-};
 
 /**
  * Shared cinematic video hero used across moment pages. Reads video, poster,
@@ -913,8 +894,23 @@ const SHORT_MOMENT_NAME: Record<string, string> = {
  * each breakpoint, so mobile / tablet / desktop can each keep the subject's
  * face inside the visible frame without changing zoom.
  */
-function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
-  const { video, poster, focal, fit = "cover", overlay, ariaLabel, containerHeightClasses } = config;
+function MomentCinematicHero({
+  config,
+  showShopCta,
+}: {
+  config: MomentHeroVideo;
+  /** Honest-commerce gate: the shop CTA renders only when the page publishes verified product links. */
+  showShopCta: boolean;
+}) {
+  const {
+    video,
+    poster,
+    focal,
+    fit = "cover",
+    overlay,
+    ariaLabel,
+    containerHeightClasses,
+  } = config;
   const [reduceMotion, setReduceMotion] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -928,9 +924,7 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
 
   const focalBase = `${focal.base.x}% ${focal.base.y}%`;
   const focalMd = focal.md ? `${focal.md.x}% ${focal.md.y}%` : focalBase;
-  const focalLg = focal.lg
-    ? `${focal.lg.x}% ${focal.lg.y}%`
-    : focalMd;
+  const focalLg = focal.lg ? `${focal.lg.x}% ${focal.lg.y}%` : focalMd;
 
   // Per-hero scope id so the media-query style block below only affects
   // this instance's media elements. Focal points are seeded as CSS custom
@@ -1000,7 +994,8 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
             controlsList="nodownload nofullscreen noremoteplayback"
             onCanPlay={() => setReady(true)}
             className={
-              mediaClasses + " hero-media" +
+              mediaClasses +
+              " hero-media" +
               " transition-opacity duration-700 ease-out " +
               (ready ? "opacity-100" : "opacity-0")
             }
@@ -1031,12 +1026,14 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
             <p className="mt-4 font-serif italic text-[1rem] sm:text-[1.08rem] text-ivory/85 leading-relaxed">
               {overlay.body}
             </p>
-            <a
-              href={overlay.ctaHref}
-              className="mt-8 inline-flex items-center gap-3 eyebrow font-medium text-[0.82rem] tracking-[0.34em] text-ivory bg-ink/80 hover:bg-gold border border-ivory/50 hover:border-gold backdrop-blur-sm px-9 py-[0.95rem] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)] transition-colors"
-            >
-              {overlay.ctaLabel} →
-            </a>
+            {showShopCta && (
+              <a
+                href={overlay.ctaHref}
+                className="mt-8 inline-flex items-center gap-3 eyebrow font-medium text-[0.82rem] tracking-[0.34em] text-ivory bg-ink/80 hover:bg-gold border border-ivory/50 hover:border-gold backdrop-blur-sm px-9 py-[0.95rem] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)] transition-colors"
+              >
+                {overlay.ctaLabel} →
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -1050,7 +1047,7 @@ function MomentCinematicHero({ config }: { config: MomentHeroVideo }) {
  * polished public name so the page never reads as internal data.
  */
 const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
-  "arrival": "The Ivory Arrival",
+  arrival: "The Ivory Arrival",
   "espresso-morning": "The Espresso Morning",
   "yacht-day": "The Yacht Day",
   "harbor-aperitivo": "The Harbor Aperitivo",
@@ -1059,8 +1056,8 @@ const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
   "exploring-the-harbor": "Exploring the Harbor",
   "beach-club": "The Beach Club",
   "long-lunch": "The Long Lunch",
-  "shopping": "The Shopping Afternoon",
-  "nightcap": "The Nightcap",
+  shopping: "The Shopping Afternoon",
+  nightcap: "The Nightcap",
   "pool-lounging": "Poolside in Portofino",
 };
 
@@ -1073,34 +1070,24 @@ const FOUNDER_LOOK_DISPLAY_TITLE: Record<string, string> = {
 const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
   arrival: {
     label: "Inspired by",
-    body:
-      "Faithfull's Maya vest and Isotta pant in natural linen — tonal, quietly tailored, and finished with warm tan leather and slim gold for the first walk along the harbor.",
+    body: "Faithfull's Maya vest and Isotta pant in natural linen — tonal, quietly tailored, and finished with warm tan leather and slim gold for the first walk along the harbor.",
   },
   nightcap: {
     label: "Inspired by",
-    body:
-      "A sculpted satin corset paired with fluid tailoring creates an effortlessly elegant Riviera silhouette for evenings along the Portofino harbor.",
+    body: "A sculpted satin corset paired with fluid tailoring creates an effortlessly elegant Riviera silhouette for evenings along the Portofino harbor.",
   },
   "pool-lounging": {
     label: "Inspired by",
-    body:
-      "A polished Riviera poolside look designed for long afternoons overlooking Portofino — vibrant Capri print, natural raffia, and sculptural gold.",
+    body: "A polished Riviera poolside look designed for long afternoons overlooking Portofino — vibrant Capri print, natural raffia, and sculptural gold.",
   },
   "long-lunch": {
     label: "Inspired by",
-    body:
-      "A pale mist blue midi with a structured bodice and long front zipper — walked slowly along the Portofino quay after a lingering waterfront lunch. Warm tan leather, woven cognac, and floating 18k gold.",
+    body: "A pale mist blue midi with a structured bodice and long front zipper — walked slowly along the Portofino quay after a lingering waterfront lunch. Warm tan leather, woven cognac, and floating 18k gold.",
   },
 };
 
-/**
- * Optional editorial title override, keyed by moment slug. When present,
- * replaces the default featured-look title in the right column.
- */
-const MOMENT_EDITORIAL_TITLE: Record<string, string> = {
-  "pool-lounging": "Poolside Glam",
-  "long-lunch": "The Long Lunch",
-};
+// Featured-look title overrides live in `@/lib/moment-display`
+// (MOMENT_FEATURED_TITLE_OVERRIDES) so tests and CI audits share them.
 
 /**
  * Optional approved editorial image override for the left column. Uses the
@@ -1127,10 +1114,8 @@ const MOMENT_COMPLETE_LOOK: Record<string, string> = {
  * not the garment. Keyed by `${daySlug}/${lookSlug}`.
  */
 const SIBLING_CAPTION_OVERRIDES: Record<string, string> = {
-  "day-5/look-a":
-    "For your first espresso and a slow morning discovering Portofino.",
-  "day-5/look-b":
-    "For the long walk home through quiet streets after dinner by the water.",
+  "day-5/look-a": "For your first espresso and a slow morning discovering Portofino.",
+  "day-5/look-b": "For the long walk home through quiet streets after dinner by the water.",
   "day-2/look-a":
     "For stretching the afternoon beneath a cream parasol before lunch overlooking the sea.",
   "day-4/look-a":
@@ -1193,10 +1178,7 @@ function isUsableShopUrl(url: string | undefined | null): url is string {
  * in silently; when nothing is shoppable the row is flagged `inReview` so the
  * card renders a non-clickable placeholder rather than a dead link.
  */
-function applySlotHealth(
-  item: OverrideItem,
-  slots: Record<string, SlotResolution>,
-): OverrideItem {
+function applySlotHealth(item: OverrideItem, slots: Record<string, SlotResolution>): OverrideItem {
   const key = slotKey(item.category ?? item.slotLabel ?? "");
   const resolution = key ? slots[key] : undefined;
   if (!resolution) return item;
@@ -1232,12 +1214,18 @@ type HealthedShopRow = {
 };
 
 function applyLookRowHealth(
-  row: { slot: string; brand: string; name: string; price?: string; url: string; unsourced?: boolean },
+  row: {
+    slot: string;
+    brand: string;
+    name: string;
+    price?: string;
+    url: string;
+    unsourced?: boolean;
+  },
   lookKey: string | undefined,
   looks: Record<string, SlotResolution> | undefined,
 ): HealthedShopRow {
-  const resolution =
-    lookKey && looks ? looks[`${lookKey}::${slotKey(row.slot)}`] : undefined;
+  const resolution = lookKey && looks ? looks[`${lookKey}::${slotKey(row.slot)}`] : undefined;
   if (!resolution) return { ...row, inReview: false };
   if (resolution.state === "live") {
     const p = resolution.product;
@@ -1311,10 +1299,7 @@ function EditorialLookCard({
   // A shoppable supporting look with nothing live is unpublished rather than
   // shown with a disabled placeholder CTA.
   if (!editorialOnly && !hasLive) return null;
-  const internalMomentSlug = momentSlugForLookKey(
-    look.daySlug as LegacyDaySlug,
-    look.lookSlug,
-  );
+  const internalMomentSlug = momentSlugForLookKey(look.daySlug as LegacyDaySlug, look.lookSlug);
   return (
     <article className="flex flex-col bg-ivory border border-border/40">
       <div className="relative aspect-[4/5] overflow-hidden bg-cream">
@@ -1487,31 +1472,19 @@ const CATEGORY_LABELS: Record<string, string> = {
 function prettifyCategory(c: string): string {
   const key = (c || "").toLowerCase();
   if (CATEGORY_LABELS[key]) return CATEGORY_LABELS[key];
-  return key
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (m) => m.toUpperCase());
+  return key.replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 }
 
-function ShopLookPanel({
-  heading,
-  entries,
-}: {
-  heading: string;
-  entries: ShopEntry[];
-}) {
+function ShopLookPanel({ heading, entries }: { heading: string; entries: ShopEntry[] }) {
   // Founder look entries are all "override" items mapped from hero_urls.
-  const rows = entries
-    .filter((e) => e.kind === "override")
-    .map((e) => e.product as OverrideItem);
+  const rows = entries.filter((e) => e.kind === "override").map((e) => e.product as OverrideItem);
   const chapters = groupShopChapters(rows);
   const renderRow = (o: OverrideItem, i: number) => {
     const href = isUsableShopUrl(o.url) ? o.url : "";
     const Inner = (
       <div>
         {o.brand && (
-          <div className="font-serif italic text-[0.88rem] text-ink/55 leading-snug">
-            {o.brand}
-          </div>
+          <div className="font-serif italic text-[0.88rem] text-ink/55 leading-snug">{o.brand}</div>
         )}
         <div className="font-display text-[1.1rem] md:text-[1.15rem] leading-snug text-ink group-hover:text-gold transition-colors duration-300 mt-1">
           {o.title || o.brand}
@@ -1549,10 +1522,7 @@ function ShopLookPanel({
   return (
     <div className="mt-2">
       {chapters.map((chapter, ci) => (
-        <section
-          key={chapter.key}
-          className={ci === 0 ? "mt-6" : "mt-11 md:mt-12"}
-        >
+        <section key={chapter.key} className={ci === 0 ? "mt-6" : "mt-11 md:mt-12"}>
           <h4 className="eyebrow text-[0.64rem] tracking-[0.38em] text-ink/45 mb-5">
             {chapter.label}
           </h4>
@@ -1570,23 +1540,71 @@ function ShopLookPanel({
  * with no items are skipped so the layout adapts to any moment.
  */
 const THE_LOOK_CATEGORIES = new Set([
-  "corset", "top", "blouse", "shirt", "tee", "t-shirt",
-  "vest", "waistcoat",
-  "pant", "pants", "trouser", "trousers", "skirt",
-  "dress", "gown", "jumpsuit", "romper",
-  "swimsuit", "bikini", "bikini top", "bikini bottom", "one-piece", "swim",
-  "jacket", "blazer", "coat", "cardigan", "sweater", "knit",
+  "corset",
+  "top",
+  "blouse",
+  "shirt",
+  "tee",
+  "t-shirt",
+  "vest",
+  "waistcoat",
+  "pant",
+  "pants",
+  "trouser",
+  "trousers",
+  "skirt",
+  "dress",
+  "gown",
+  "jumpsuit",
+  "romper",
+  "swimsuit",
+  "bikini",
+  "bikini top",
+  "bikini bottom",
+  "one-piece",
+  "swim",
+  "jacket",
+  "blazer",
+  "coat",
+  "cardigan",
+  "sweater",
+  "knit",
 ]);
 const FINISHING_CATEGORIES = new Set([
-  "shoe", "shoes", "sandal", "sandals",
-  "bag", "clutch", "tote", "pouch",
-  "sunglasses", "hat", "scarf", "belt",
-  "coverup", "cover-up", "cover up",
+  "shoe",
+  "shoes",
+  "sandal",
+  "sandals",
+  "bag",
+  "clutch",
+  "tote",
+  "pouch",
+  "sunglasses",
+  "hat",
+  "scarf",
+  "belt",
+  "coverup",
+  "cover-up",
+  "cover up",
 ]);
-const JEWELRY_CATEGORIES = new Set([
-  "earrings", "necklace", "bracelet", "jewelry", "cuff",
-]);
-const FINISHING_ORDER = ["shoe", "shoes", "sandal", "sandals", "bag", "clutch", "tote", "pouch", "sunglasses", "hat", "scarf", "belt", "coverup", "cover-up", "cover up"];
+const JEWELRY_CATEGORIES = new Set(["earrings", "necklace", "bracelet", "jewelry", "cuff"]);
+const FINISHING_ORDER = [
+  "shoe",
+  "shoes",
+  "sandal",
+  "sandals",
+  "bag",
+  "clutch",
+  "tote",
+  "pouch",
+  "sunglasses",
+  "hat",
+  "scarf",
+  "belt",
+  "coverup",
+  "cover-up",
+  "cover up",
+];
 const JEWELRY_ORDER = ["necklace", "earrings", "bracelet", "cuff", "jewelry"];
 
 type ShopChapter = { key: string; label: string; items: OverrideItem[] };
@@ -1786,66 +1804,66 @@ function ExtraEditorialReferenceCard({
         />
         {editorialOnly || referenceSuppressed ? (
           editorialOnly ? (
-          <Link
-            to="/portofino/$moment"
-            params={{ moment: momentSlug }}
-            className="mt-2 inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
-          >
-            VIEW THE EDIT →
-          </Link>
+            <Link
+              to="/portofino/$moment"
+              params={{ moment: momentSlug }}
+              className="mt-2 inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
+            >
+              VIEW THE EDIT →
+            </Link>
           ) : null
         ) : (
-        <div className="mt-4 border-t border-border/50 pt-5">
-          {referenceShoppable ? (
-          <a
-            href={reference.url}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            onClick={() =>
-              trackOutbound({
-                brand: reference.brand,
-                item: reference.name,
-                href: reference.url,
-                category: r.slot ?? "Reference",
-              })
-            }
-            className="group flex items-baseline justify-between gap-4"
-          >
-            <div className="min-w-0">
-              <div className="eyebrow text-[0.55rem] tracking-[0.34em] text-gold">
-                {r.slot ?? "Reference"}
-              </div>
-              <div className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink mt-1.5">
-                {reference.brand}
-              </div>
-              <div className="font-serif italic text-[0.95rem] text-ink/85 leading-snug mt-1">
-                {reference.name}
-                {r.color ? ` — ${r.color}` : ""}
-              </div>
-              <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 mt-1.5">
-                {r.retailer}
-              </div>
-            </div>
-            <div className="text-right shrink-0">
-              <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 group-hover:text-gold transition-colors">
-                SHOP THE REFERENCE →
-              </div>
-            </div>
-          </a>
-          ) : (
-            <ShopOmissionRows
-              rows={[
-                {
-                  slot: r.slot ?? "Reference",
-                  brand: reference.brand,
-                  name: reference.name,
-                  ...(reference.price ? { price: reference.price } : {}),
-                  ...(reference.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
-                },
-              ]}
-            />
-          )}
-        </div>
+          <div className="mt-4 border-t border-border/50 pt-5">
+            {referenceShoppable ? (
+              <a
+                href={reference.url}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                onClick={() =>
+                  trackOutbound({
+                    brand: reference.brand,
+                    item: reference.name,
+                    href: reference.url,
+                    category: r.slot ?? "Reference",
+                  })
+                }
+                className="group flex items-baseline justify-between gap-4"
+              >
+                <div className="min-w-0">
+                  <div className="eyebrow text-[0.55rem] tracking-[0.34em] text-gold">
+                    {r.slot ?? "Reference"}
+                  </div>
+                  <div className="eyebrow text-[0.65rem] tracking-[0.28em] text-ink mt-1.5">
+                    {reference.brand}
+                  </div>
+                  <div className="font-serif italic text-[0.95rem] text-ink/85 leading-snug mt-1">
+                    {reference.name}
+                    {r.color ? ` — ${r.color}` : ""}
+                  </div>
+                  <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/55 mt-1.5">
+                    {r.retailer}
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="eyebrow text-[0.55rem] tracking-[0.32em] text-ink/70 group-hover:text-gold transition-colors">
+                    SHOP THE REFERENCE →
+                  </div>
+                </div>
+              </a>
+            ) : (
+              <ShopOmissionRows
+                rows={[
+                  {
+                    slot: r.slot ?? "Reference",
+                    brand: reference.brand,
+                    name: reference.name,
+                    ...(reference.price ? { price: reference.price } : {}),
+                    ...(reference.inReview ? { label: REPLACEMENT_IN_REVIEW_LABEL } : {}),
+                  },
+                ]}
+              />
+            )}
+          </div>
         )}
         {!editorialOnly && card.shop && shopProducts.length > 0 && (
           <ExtraCompleteLookExpander
