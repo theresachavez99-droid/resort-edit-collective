@@ -782,6 +782,17 @@ function MomentPage() {
               ) : (
                 <ResortEditItemization lookKey={`portofino/${slug}`} />
               )}
+              {/* EDITORIAL-INSPIRATION DISCLOSURE — shown only when the
+                  shoppable set is not complete/verified. The image and story
+                  stay visible; no partial outfit is presented for sale. */}
+              {!heroEligible && (
+                <p className="text-[0.7rem] leading-relaxed tracking-[0.04em] text-ink/60 border-t border-border/50 pt-4">
+                  Editorial inspiration. This look is shown for styling
+                  reference only — its shopping list is being verified, so no
+                  items from this image are offered for purchase here yet.
+                </p>
+              )}
+
               {completeLookHref && heroEligible && (
                 <div className="pt-6 flex justify-center lg:justify-start">
                   <Link
