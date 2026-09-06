@@ -1,4 +1,5 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
+import { CommissionNotice } from "@/components/CommissionNotice";
 import { getShopSlots, type PublicShopSlot } from "@/lib/shop-slots.functions";
 import { safeHref } from "@/lib/safe-url";
 import { trackOutbound } from "@/lib/utils";
@@ -112,6 +113,7 @@ export function ResortEditItemization({ lookKey }: { lookKey: string }) {
           The pieces we would choose to wear this moment — matched to the photograph, from the designers we return to season after season.
         </p>
       </div>
+      <CommissionNotice className="mt-4" />
       <div className="mt-2">
         {chapters.map((chapter, ci) => (
           <section key={chapter.key} className={ci === 0 ? "mt-6" : "mt-11 md:mt-12"}>

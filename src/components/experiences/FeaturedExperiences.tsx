@@ -1,3 +1,4 @@
+import { CommissionNotice } from "@/components/CommissionNotice";
 import { Link } from "@tanstack/react-router";
 import { featuredExperiences } from "@/data/destinationExperiences";
 import { ExperienceCard } from "./ExperienceCard";
@@ -23,6 +24,7 @@ export function FeaturedExperiences({ wrap }: { wrap: string }) {
         A few we'd plan a day around — with the look to wear for each.
       </p>
 
+      <CommissionNotice variant="booking" className="mb-5 text-center max-w-2xl mx-auto" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
         {experiences.map((e) => (
           <ExperienceCard key={e.key} experience={e} placement="home-featured" showDestination />

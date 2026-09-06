@@ -1,3 +1,4 @@
+import { CommissionNotice } from "@/components/CommissionNotice";
 import { experiencesForDestination } from "@/data/destinationExperiences";
 import { ExperienceCard } from "./ExperienceCard";
 
@@ -14,6 +15,7 @@ export function ExperienceCollection({ destinationSlug }: { destinationSlug: str
           Verified with each operator
         </span>
       </div>
+      <CommissionNotice variant="booking" className="mb-4" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {experiences.map((e) => (
           <ExperienceCard key={e.key} experience={e} placement={`${destinationSlug}-collection`} />

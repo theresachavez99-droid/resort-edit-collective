@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getLookItems } from "@/lib/look-items.functions";
 import { ProductCommerceCard, ProductCommerceGrid } from "@/components/commerce/ProductCommerceCard";
+import { CommissionNotice } from "@/components/CommissionNotice";
 
 export const lookItemsQuery = (lookKey: string) =>
   queryOptions({
@@ -29,6 +30,7 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
           Other Options
         </h3>
       </div>
+      <CommissionNotice className="mb-6 md:mb-7 max-w-2xl" />
       <ProductCommerceGrid>
         {items.map((it) => (
           <ProductCommerceCard
@@ -44,8 +46,9 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
         ))}
       </ProductCommerceGrid>
       <p className="mt-5 md:mt-6 text-xs text-ink/55 tracking-wide font-sans leading-relaxed">
-        Resort Edit may earn a commission on items purchased through these links, at no additional cost to you.{" "}
-        <Link to="/about" hash="affiliate-disclosure" className="underline decoration-ink/30 hover:decoration-ink/60 hover:text-ink/75 transition-colors">
+        Our photographs are our own art-directed editorial imagery, so a piece may look a little
+        different on the retailer's site.{" "}
+        <Link to="/affiliate-disclosure" className="underline decoration-ink/30 hover:decoration-ink/60 hover:text-ink/75 transition-colors">
           Affiliate Disclosure
         </Link>
       </p>
