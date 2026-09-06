@@ -101,8 +101,13 @@ export type PersistedSlot = {
   retailer: string | null;
   url: string;
   availability: string;
+  image_url?: string | null;
+  last_checked_at?: string | null;
+  verification?: VerificationState;
+  provenance?: string | null;
   rationale?: string | null;
 };
+
 
 function admin() {
   return import("@/integrations/supabase/client.server").then((m) => m.supabaseAdmin);
