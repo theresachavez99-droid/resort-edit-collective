@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getLookItems } from "@/lib/look-items.functions";
-import { ProductCommerceCard, ProductCommerceGrid } from "@/components/commerce/ProductCommerceCard";
+import {
+  ProductCommerceCard,
+  ProductCommerceGrid,
+} from "@/components/commerce/ProductCommerceCard";
 import { CommissionNotice } from "@/components/CommissionNotice";
 
 export const lookItemsQuery = (lookKey: string) =>
@@ -48,7 +51,10 @@ export function ShopTheLookItems({ lookKey }: { lookKey: string }) {
       <p className="mt-5 md:mt-6 text-xs text-ink/55 tracking-wide font-sans leading-relaxed">
         Our photographs are our own art-directed editorial imagery, so a piece may look a little
         different on the retailer's site.{" "}
-        <Link to="/affiliate-disclosure" className="underline decoration-ink/30 hover:decoration-ink/60 hover:text-ink/75 transition-colors">
+        <Link
+          to="/affiliate-disclosure"
+          className="underline decoration-ink/30 hover:decoration-ink/60 hover:text-ink/75 transition-colors"
+        >
           Affiliate Disclosure
         </Link>
       </p>

@@ -15,7 +15,10 @@ export function FeaturedExperiences({ wrap }: { wrap: string }) {
     <section className={`${wrap} mt-12 md:mt-16`} aria-labelledby="featured-experiences-heading">
       <div className="flex items-center gap-4 justify-center mb-3">
         <div className="h-px w-12 bg-gold/50" />
-        <h2 id="featured-experiences-heading" className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">
+        <h2
+          id="featured-experiences-heading"
+          className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink"
+        >
           EXPERIENCES WE'D BOOK
         </h2>
         <div className="h-px w-12 bg-gold/50" />

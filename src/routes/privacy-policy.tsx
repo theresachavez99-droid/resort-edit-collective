@@ -5,9 +5,19 @@ export const Route = createFileRoute("/privacy-policy")({
   head: () => ({
     meta: [
       { title: "Privacy Policy | Resort Edit | Dressed for the destination" },
-      { name: "description", content: "What Resort Edit collects — only a newsletter email address — what we do not track, how retailer links work, and how to access, correct or delete your information." },
-      { property: "og:title", content: "Privacy Policy | Resort Edit | Dressed for the destination" },
-      { property: "og:description", content: "What Resort Edit collects, what we do not track, and the choices you have." },
+      {
+        name: "description",
+        content:
+          "What Resort Edit collects — only a newsletter email address — what we do not track, how retailer links work, and how to access, correct or delete your information.",
+      },
+      {
+        property: "og:title",
+        content: "Privacy Policy | Resort Edit | Dressed for the destination",
+      },
+      {
+        property: "og:description",
+        content: "What Resort Edit collects, what we do not track, and the choices you have.",
+      },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: absoluteUrl("/privacy-policy") },
@@ -34,31 +44,34 @@ function PrivacyPolicyPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
       <span className="eyebrow text-gold">Legal</span>
-      <h1 className="mt-4 font-display text-4xl md:text-6xl tracking-wide text-ink">Privacy Policy</h1>
+      <h1 className="mt-4 font-display text-4xl md:text-6xl tracking-wide text-ink">
+        Privacy Policy
+      </h1>
       <div className="mt-6 h-px w-16 bg-gold" />
       <p className="mt-6 font-serif italic text-ink/70">Last updated: {updated}</p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
         Resort Edit ("Resort Edit," "we," "us," or "our") is an independent editorial publication at
         resortedit.com. This policy describes what we actually do today — not what a publication of
-        this kind might do. It is written to be accurate rather than broad, and we update it when our
-        practices change.
+        this kind might do. It is written to be accurate rather than broad, and we update it when
+        our practices change.
       </p>
 
       <Section title="Information We Collect">
         <p>We keep this deliberately small:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Your email address</strong>, when you subscribe to The Next Edit. We store it with
-            the date of your signup and the page it came from, so we know which edit you subscribed to.
+            <strong>Your email address</strong>, when you subscribe to The Next Edit. We store it
+            with the date of your signup and the page it came from, so we know which edit you
+            subscribed to.
           </li>
           <li>
-            <strong>Anything you send us by email</strong> at hello@resortedit.com, which stays in our
-            mailbox as ordinary correspondence.
+            <strong>Anything you send us by email</strong> at hello@resortedit.com, which stays in
+            our mailbox as ordinary correspondence.
           </li>
           <li>
-            <strong>Standard web-server request logs</strong> kept by our hosting provider to deliver
-            pages and protect the site — the same logs any website host records.
+            <strong>Standard web-server request logs</strong> kept by our hosting provider to
+            deliver pages and protect the site — the same logs any website host records.
           </li>
         </ul>
         <p>
@@ -83,8 +96,8 @@ function PrivacyPolicyPage() {
 
       <Section title="Saved Looks Stay in Your Browser">
         <p>
-          When you save a look, it is stored in your own browser's local storage. It is never sent to
-          us — we cannot see your saved looks — and clearing your browser data removes them.
+          When you save a look, it is stored in your own browser's local storage. It is never sent
+          to us — we cannot see your saved looks — and clearing your browser data removes them.
         </p>
       </Section>
 
@@ -92,8 +105,8 @@ function PrivacyPolicyPage() {
         <p>
           Subscribing stores your address so we can send curated editorial features, destination
           guides and shoppable edits. We are still setting up our sending service, so subscribing
-          today records your consent rather than triggering an immediate email — you will not receive
-          a confirmation message yet.
+          today records your consent rather than triggering an immediate email — you will not
+          receive a confirmation message yet.
         </p>
         <p>
           You can ask to be removed at any time by emailing us, and once sending begins every email
@@ -103,16 +116,19 @@ function PrivacyPolicyPage() {
 
       <Section title="Retailer & Affiliate Links">
         <p>
-          Some retailer links on this site may earn Resort Edit a commission if you buy something, at
-          no additional cost to you. Many of our links earn nothing at all, and we do not claim
+          Some retailer links on this site may earn Resort Edit a commission if you buy something,
+          at no additional cost to you. Many of our links earn nothing at all, and we do not claim
           membership of any affiliate network that has not accepted us.
         </p>
         <p>
           When you follow a link off this site, that company's own cookies, tracking and privacy
           policy apply — not ours — and any commission tracking happens on their side, not through
-          code we run here. Editorial selections are made independently of commissions. Full detail is
-          in our{" "}
-          <Link to="/affiliate-disclosure" className="text-gold hover:underline">Affiliate Disclosure</Link>.
+          code we run here. Editorial selections are made independently of commissions. Full detail
+          is in our{" "}
+          <Link to="/affiliate-disclosure" className="text-gold hover:underline">
+            Affiliate Disclosure
+          </Link>
+          .
         </p>
       </Section>
 
@@ -140,9 +156,14 @@ function PrivacyPolicyPage() {
         </ul>
         <p>
           Email{" "}
-          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">hello@resortedit.com</a>{" "}
+          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
+            hello@resortedit.com
+          </a>{" "}
           from the address concerned and we will act on it. Practical detail is on our{" "}
-          <Link to="/privacy-rights" className="text-gold hover:underline">Privacy Choices</Link> page.
+          <Link to="/privacy-rights" className="text-gold hover:underline">
+            Privacy Choices
+          </Link>{" "}
+          page.
         </p>
       </Section>
 
@@ -157,10 +178,10 @@ function PrivacyPolicyPage() {
 
       <Section title="If You Are in California">
         <p>
-          You may ask what personal information we hold, request a copy, and request deletion. Resort
-          Edit does not sell personal information and does not share it for cross-context behavioural
-          advertising, so there is nothing for a "Do Not Sell or Share" opt-out to switch off. We will
-          not treat you differently for making a request.
+          You may ask what personal information we hold, request a copy, and request deletion.
+          Resort Edit does not sell personal information and does not share it for cross-context
+          behavioural advertising, so there is nothing for a "Do Not Sell or Share" opt-out to
+          switch off. We will not treat you differently for making a request.
         </p>
       </Section>
 
@@ -173,19 +194,30 @@ function PrivacyPolicyPage() {
       </Section>
 
       <Section title="Children's Privacy">
-        <p>Resort Edit is intended for an adult audience and is not directed to children under 16. We do not knowingly collect personal information from children.</p>
+        <p>
+          Resort Edit is intended for an adult audience and is not directed to children under 16. We
+          do not knowingly collect personal information from children.
+        </p>
       </Section>
 
       <Section title="Changes to This Policy">
-        <p>We update this policy when our practices change, and revise the "Last updated" date above. Material changes will also be noted on the site.</p>
+        <p>
+          We update this policy when our practices change, and revise the "Last updated" date above.
+          Material changes will also be noted on the site.
+        </p>
       </Section>
 
       <Section title="Contact">
         <p>
           Questions, requests or corrections can be sent to{" "}
-          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">hello@resortedit.com</a>{" "}
+          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
+            hello@resortedit.com
+          </a>{" "}
           or through our{" "}
-          <Link to="/contact" className="text-gold hover:underline">Contact</Link> page.
+          <Link to="/contact" className="text-gold hover:underline">
+            Contact
+          </Link>{" "}
+          page.
         </p>
       </Section>
     </div>

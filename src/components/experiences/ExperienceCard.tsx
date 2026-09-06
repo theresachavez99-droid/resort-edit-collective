@@ -42,7 +42,9 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
       <div className="p-3.5 md:p-4 flex flex-col flex-1">
         <span className="eyebrow text-[0.55rem] tracking-[0.3em] text-gold">{e.kind}</span>
         <h3 className="font-display text-[1.05rem] tracking-wide leading-snug mt-1.5">{e.name}</h3>
-        <p className="font-serif italic text-ink/65 text-[0.86rem] mt-1.5 leading-relaxed">{e.editorial}</p>
+        <p className="font-serif italic text-ink/65 text-[0.86rem] mt-1.5 leading-relaxed">
+          {e.editorial}
+        </p>
         <ul className="mt-2.5 space-y-1">
           {e.facts.map((f) => (
             <li key={f} className="font-serif text-[0.8rem] text-ink/70 leading-snug">
@@ -51,7 +53,11 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
           ))}
         </ul>
         <p className="mt-2.5 font-serif text-[0.74rem] text-ink/45 leading-snug flex-1">
-          Operated by {e.operator}.{e.image && e.imageIsIllustrative ? " Imagery is our own editorial illustration of the destination, not the operator's." : ""}{!e.image ? " We have no verified photograph of this venue, so none is shown." : ""}
+          Operated by {e.operator}.
+          {e.image && e.imageIsIllustrative
+            ? " Imagery is our own editorial illustration of the destination, not the operator's."
+            : ""}
+          {!e.image ? " We have no verified photograph of this venue, so none is shown." : ""}
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 pt-2.5 border-t border-border/50">
           <a

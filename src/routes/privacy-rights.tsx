@@ -67,8 +67,8 @@ function PrivacyRightsPage() {
 
       <Section title="What stays on your own device">
         <p>
-          Looks you save with the heart icon are stored in your browser's own local storage. They are
-          never sent to us, so we cannot see them, and clearing your browser data removes them.
+          Looks you save with the heart icon are stored in your browser's own local storage. They
+          are never sent to us, so we cannot see them, and clearing your browser data removes them.
         </p>
       </Section>
 
@@ -81,8 +81,8 @@ function PrivacyRightsPage() {
         </ul>
         <p>
           Because there is no optional tracking to switch off, there is no cookie banner and no
-          opt-out toggle here — there would be nothing for it to turn off. If that ever changes, this
-          page changes with it, and any optional tracking will be off until you agree to it.
+          opt-out toggle here — there would be nothing for it to turn off. If that ever changes,
+          this page changes with it, and any optional tracking will be off until you agree to it.
         </p>
       </Section>
 
@@ -107,8 +107,8 @@ function PrivacyRightsPage() {
           <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
             hello@resortedit.com
           </a>{" "}
-          from the address you subscribed with and we will remove it. Once newsletter sending begins,
-          every email will also carry a one-click unsubscribe link.
+          from the address you subscribed with and we will remove it. Once newsletter sending
+          begins, every email will also carry a one-click unsubscribe link.
         </p>
       </Section>
 
@@ -118,9 +118,9 @@ function PrivacyRightsPage() {
           <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
             hello@resortedit.com
           </a>{" "}
-          and tell us what you would like: a copy of what we hold, a correction, or deletion. We will
-          use the email address you write from to identify your record, and we will not ask for extra
-          personal details to verify you.
+          and tell us what you would like: a copy of what we hold, a correction, or deletion. We
+          will use the email address you write from to identify your record, and we will not ask for
+          extra personal details to verify you.
         </p>
         <p>
           If you are in the EEA, the UK, California, or another place with similar laws, these are

@@ -109,7 +109,6 @@ export function SiteFooter() {
               </li>
             </ul>
           </div>
-
         </div>
         <div className="border-t border-ivory/10">
           <div className="relative mx-auto max-w-7xl px-6 py-4 flex flex-col md:block items-center gap-3 text-ivory/50 text-xs tracking-widest uppercase">

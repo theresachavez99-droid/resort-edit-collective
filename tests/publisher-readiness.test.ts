@@ -32,7 +32,12 @@ describe("privacy policy tells the truth about what runs", () => {
 
 describe("dedicated legal and contact routes exist", () => {
   const routes = readdirSync("src/routes");
-  for (const file of ["contact.tsx", "privacy-rights.tsx", "affiliate-disclosure.tsx", "privacy-policy.tsx"]) {
+  for (const file of [
+    "contact.tsx",
+    "privacy-rights.tsx",
+    "affiliate-disclosure.tsx",
+    "privacy-policy.tsx",
+  ]) {
     test(`${file} is a real route`, () => {
       expect(routes).toContain(file);
     });

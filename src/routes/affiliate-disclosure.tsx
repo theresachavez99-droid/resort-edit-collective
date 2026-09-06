@@ -80,8 +80,8 @@ function AffiliateDisclosurePage() {
       <Section title="Editorial independence">
         <p>
           Commissions never decide what appears here. Pieces are chosen for the destination, the
-          moment and the wardrobe. An affiliate relationship can influence which retailer we link
-          to when several stock the same piece — never whether a piece is featured.
+          moment and the wardrobe. An affiliate relationship can influence which retailer we link to
+          when several stock the same piece — never whether a piece is featured.
         </p>
       </Section>
 
