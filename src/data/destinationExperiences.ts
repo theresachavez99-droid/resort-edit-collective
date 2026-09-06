@@ -56,7 +56,6 @@ import expYacht from "@/assets/exp-yacht-charter.jpg";
 import expCruise from "@/assets/exp-sunset-cruise.jpg";
 import expCooking from "@/assets/exp-cooking-class.jpg";
 import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
-import expHarbor from "@/assets/exp-harbor-golden.jpg";
 import expBeachClub from "@/assets/experience-beach-club.jpg";
 
 const CHECKED = "2026-09-06";
