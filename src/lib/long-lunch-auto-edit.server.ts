@@ -202,7 +202,7 @@ async function loadCandidatePool(
   const { data: cands } = await db
     .from("product_replacement_candidates")
     .select(
-      "id,slot,brand,product_name,retailer,pdp_url,price,style_dna,approval_status,verification_status,verified_at,discovery_source",
+      "id,slot,brand,product_name,retailer,pdp_url,price,style_dna,approval_status,verification_status,verified_at,source",
     )
     .in("approval_status", ["approved", "promoted"])
     .limit(200);
@@ -225,7 +225,7 @@ async function loadCandidatePool(
       style_dna: (c.style_dna as Record<string, unknown> | null) ?? null,
       last_checked_at: (c.verified_at as string | null) ?? null,
       last_audit_verdict: (c.verification_status as string | null) ?? null,
-      registry_source: (c.discovery_source as string | null) ?? null,
+      registry_source: (c.source as string | null) ?? null,
     };
     const mapped = toCandidate(row, "product_replacement_candidates");
     if (mapped && needed.includes(mapped.slot)) out.push(mapped);
