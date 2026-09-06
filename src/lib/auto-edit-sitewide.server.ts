@@ -552,11 +552,33 @@ export type GenerateOutcome = {
 
 const SHORTLIST_PER_SLOT = 4;
 
+/**
+ * Coherence score for a candidate against the moment brief. The shortlist must
+ * be a curated, destination- and activity-appropriate set — not "the first four
+ * rows that happen to be in stock".
+ */
+function coherenceScore(pick: GatedPick, brief: NonNullable<ReturnType<typeof momentBrief>>): number {
+  const text = `${pick.brand} ${pick.productName}`.toLowerCase();
+  let score = 0;
+  if ((pick.moment ?? "").toLowerCase() === brief.momentSlug) score += 6;
+  const words = `${brief.colourStory} ${brief.scene} ${brief.silhouetteNotes ?? ""}`
+    .toLowerCase()
+    .split(/[^a-z]+/)
+    .filter((w) => w.length > 3);
+  score += words.filter((w) => text.includes(w)).length;
+  if (brief.timeOfDay === "evening" && /linen|eyelet|raffia|straw/.test(text)) score -= 2;
+  return score;
+}
+
 export async function generateMomentVersion(opts: {
   momentSlug: string;
   lookKey?: string;
   withHero?: boolean;
   activateIfClean?: boolean;
+  /** Slots whose current pieces still verify and must be kept as styled. */
+  preserveUrlsBySlot?: Record<string, string>;
+  /** Main clothing brands already used by other looks in this Moment. */
+  excludeMainBrands?: string[];
 }): Promise<GenerateOutcome> {
   const brief = momentBrief(opts.momentSlug);
   const lookKey = opts.lookKey ?? `portofino/${opts.momentSlug}`;
@@ -588,9 +610,25 @@ export async function generateMomentVersion(opts: {
     pool.push(pick);
   }
 
+  const excluded = new Set((opts.excludeMainBrands ?? []).map((b) => b.trim().toLowerCase()));
+  const preserved = opts.preserveUrlsBySlot ?? {};
+
   const candidatesBySlot: Record<string, GatedPick[]> = {};
   for (const slot of brief.requiredSlots) {
-    const list = pool.filter((p) => p.slot === slot).slice(0, SHORTLIST_PER_SLOT);
+    // PRESERVATION — a coordinated piece that still verifies is kept, so a
+    // single sold-out item never restyles the whole outfit needlessly.
+    const keepUrl = preserved[slot];
+    const kept = keepUrl ? pool.find((p) => p.slot === slot && p.url === keepUrl) : undefined;
+    if (kept) {
+      candidatesBySlot[slot] = [kept];
+      continue;
+    }
+    const list = pool
+      .filter((p) => p.slot === slot)
+      // Three different main clothing brands per Moment.
+      .filter((p) => slot !== "outfit" || !excluded.has(p.brand.trim().toLowerCase()))
+      .sort((a, b) => coherenceScore(b, brief) - coherenceScore(a, brief))
+      .slice(0, SHORTLIST_PER_SLOT);
     if (list.length) candidatesBySlot[slot] = list;
   }
   const missingSlots = brief.requiredSlots.filter((s) => !candidatesBySlot[s]);
@@ -610,6 +648,7 @@ export async function generateMomentVersion(opts: {
       if (found) picks.push(found);
     }
   }
+
 
   const slotsFingerprint = outfitFingerprint(picks.map((p) => ({ slot: p.slot, url: p.url })));
   const candidateIdsBySlot = Object.fromEntries(
