@@ -83,7 +83,53 @@ type MomentHeroVideo = {
  * The entry stays in MOMENT_HERO_VIDEO and the asset stays in the repo — just
  * delete the slug here to re-enable the cinematic hero.
  */
-const HERO_VIDEO_DISABLED = new Set<string>(["nightcap", "pool-lounging", "arrival"]);
+const HERO_VIDEO_DISABLED = new Set<string>([
+  "nightcap",
+  "pool-lounging",
+  "arrival",
+  "sunset-views",
+  "harbor-aperitivo",
+  "beach-club",
+  "exploring-the-harbor",
+  "yacht-day",
+]);
+
+/**
+ * Founder-approved still banners that replace a moment's video hero outright.
+ * Each entry supplies the asset URL, honest alt text (AI editorial illustration
+ * of the destination, not operator photography) and per-breakpoint
+ * object-position so the scene stays readable on narrow phone crops.
+ */
+const MOMENT_STATIC_HERO: Record<
+  string,
+  { url: string; alt: string; position: { base: string; md: string } }
+> = {
+  "sunset-views": {
+    url: sunsetViewsStillBanner.url,
+    alt: "AI editorial illustration of Portofino harbour at sunset, seen from a coastal garden path above the pastel waterfront",
+    position: { base: "62% 55%", md: "50% 50%" },
+  },
+  "harbor-aperitivo": {
+    url: harborAperitivoStillBanner.url,
+    alt: "AI editorial illustration of two spritz glasses on a marble café table overlooking Portofino harbour at golden hour",
+    position: { base: "40% 60%", md: "50% 50%" },
+  },
+  "beach-club": {
+    url: beachClubStillBanner.url,
+    alt: "AI editorial illustration of a Ligurian pebble beach club with cream parasols and loungers beside turquoise water",
+    position: { base: "35% 60%", md: "50% 50%" },
+  },
+  "exploring-the-harbor": {
+    url: exploringHarborStillBanner.url,
+    alt: "AI editorial illustration of Portofino's stone quay with wooden boats moored beneath pastel harbourfront buildings",
+    position: { base: "55% 55%", md: "50% 50%" },
+  },
+  "yacht-day": {
+    url: yachtDayStillBanner.url,
+    alt: "AI editorial illustration of a white motor yacht cruising past the wooded Portofino headland",
+    position: { base: "45% 55%", md: "50% 50%" },
+  },
+};
 
 /**
  * Slugs whose static hero renders as a full-width 16:9 scene banner instead of
