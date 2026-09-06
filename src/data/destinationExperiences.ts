@@ -41,7 +41,12 @@ export type DestinationExperience = {
   commissionable: boolean;
   /** Canonical Portofino moment whose looks suit this activity. */
   momentSlug: string;
-  image: string;
+  /**
+   * Editorial destination imagery. Omit (null) when no accurate image of the
+   * real venue exists — the card then uses an elegant text-only treatment
+   * rather than borrowing an unrelated photograph.
+   */
+  image: string | null;
   imageIsIllustrative: boolean;
   /** Surfaced in the small homepage selection. */
   featured: boolean;
@@ -153,8 +158,10 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     booking: "enquiry",
     commissionable: false,
     momentSlug: "espresso-morning",
-    image: expHarbor,
-    imageIsIllustrative: true,
+    // No accurate imagery of this farm is licensed to us, and the harbour photo
+    // previously used here misrepresented the venue. Text-only by design.
+    image: null,
+    imageIsIllustrative: false,
     featured: false,
   },
   {
