@@ -688,3 +688,140 @@ export async function clearSimulations() {
   await db.from("auto_edit_slot_simulations").delete().eq("look_key", LONG_LUNCH_LOOK_KEY);
   return { ok: true as const };
 }
+
+// ── Curation desk: propose → approve → publish ────────────────────
+//
+// Nothing the engine produces goes live on its own here. `proposeLook` writes
+// a CANDIDATE version, the founder reviews every slot with its verification
+// state, then approves (publish) or rejects. A single unavailable slot can be
+// flagged for replacement without rebuilding the whole look.
+
+export type CurationVersion = {
+  id: string;
+  version: number;
+  state: string;
+  is_active: boolean;
+  completeness_ok: boolean;
+  styling_score: number | null;
+  rationale: string | null;
+  requires_review: boolean;
+  replacement_reason: string | null;
+  change_kind: string | null;
+  engine: string | null;
+  created_at: string;
+  slots: PersistedSlot[];
+};
+
+function shapeVersion(row: Record<string, unknown>): CurationVersion {
+  return {
+    id: row["id"] as string,
+    version: row["version"] as number,
+    state: (row["state"] as string) ?? "unknown",
+    is_active: Boolean(row["is_active"]),
+    completeness_ok: Boolean(row["completeness_ok"]),
+    styling_score: (row["styling_score"] as number | null) ?? null,
+    rationale: (row["rationale"] as string | null) ?? null,
+    requires_review: Boolean(row["requires_review"]),
+    replacement_reason: (row["replacement_reason"] as string | null) ?? null,
+    change_kind: (row["change_kind"] as string | null) ?? null,
+    engine: (row["engine"] as string | null) ?? null,
+    created_at: row["created_at"] as string,
+    slots: ((row["slots"] as PersistedSlot[] | null) ?? []).map((s) => ({
+      ...s,
+      verification: s.verification ?? "needs_verification",
+    })),
+  };
+}
+
+const CURATION_SELECT =
+  "id,version,state,is_active,completeness_ok,styling_score,rationale,requires_review,replacement_reason,change_kind,engine,created_at,slots";
+
+/** Generates a candidate look for founder review. Never publishes. */
+export async function proposeLongLunchLook() {
+  return evaluateLongLunchAutoEdit({ force: true, mode: "propose" });
+}
+
+/** Everything the curation desk needs: live look, pending candidates, gaps. */
+export async function loadCurationDesk() {
+  const db = await admin();
+  const { data } = await db
+    .from("auto_edit_look_versions")
+    .select(CURATION_SELECT)
+    .eq("look_key", LONG_LUNCH_LOOK_KEY)
+    .order("version", { ascending: false })
+    .limit(12);
+  const versions = ((data ?? []) as Record<string, unknown>[]).map(shapeVersion);
+  const live = versions.find((v) => v.is_active) ?? null;
+  const candidates = versions.filter((v) => !v.is_active && v.state === "candidate");
+  return {
+    lookKey: LONG_LUNCH_LOOK_KEY,
+    destination: "Portofino",
+    moment: "The Long Lunch",
+    requiredSlots: REQUIRED_LONG_LUNCH_SLOTS,
+    live,
+    candidates,
+    history: versions,
+    feedAdapterConnected: Boolean(AFFILIATE_FEED_ADAPTER),
+  };
+}
+
+/**
+ * Founder approval. Publishing is refused unless the candidate is complete AND
+ * every slot has a live, verified product — an unverified slot is never
+ * treated as shoppable.
+ */
+export async function approveLongLunchCandidate(input: { versionId: string }) {
+  const db = await admin();
+  const { data } = await db
+    .from("auto_edit_look_versions")
+    .select(CURATION_SELECT)
+    .eq("id", input.versionId)
+    .eq("look_key", LONG_LUNCH_LOOK_KEY)
+    .maybeSingle();
+  if (!data) return { ok: false as const, reason: "Candidate not found." };
+  const version = shapeVersion(data as Record<string, unknown>);
+
+  const missing = REQUIRED_LONG_LUNCH_SLOTS.filter(
+    (s) => !version.slots.some((p) => p.slot === s && p.url),
+  );
+  if (missing.length || !version.completeness_ok) {
+    return {
+      ok: false as const,
+      reason: `Incomplete look — cannot publish. Missing: ${missing.join(", ") || "unknown"}.`,
+    };
+  }
+  const unverified = version.slots.filter((s) => s.verification !== "verified");
+  if (unverified.length) {
+    return {
+      ok: false as const,
+      reason: `Needs verification before publishing: ${unverified.map((s) => s.slot).join(", ")}.`,
+    };
+  }
+
+  await db
+    .from("auto_edit_look_versions")
+    .update({ is_active: false, state: "superseded" })
+    .eq("look_key", LONG_LUNCH_LOOK_KEY)
+    .eq("is_active", true);
+  await db
+    .from("auto_edit_look_versions")
+    .update({ is_active: true, state: "published", requires_review: false })
+    .eq("id", input.versionId);
+  return { ok: true as const, publishedVersion: version.version };
+}
+
+/** Rejects a candidate. The live look is untouched. */
+export async function rejectLongLunchCandidate(input: { versionId: string; reason?: string }) {
+  const db = await admin();
+  await db
+    .from("auto_edit_look_versions")
+    .update({
+      is_active: false,
+      state: "rejected",
+      requires_review: false,
+      replacement_reason: input.reason ?? "Rejected by founder.",
+    })
+    .eq("id", input.versionId)
+    .eq("look_key", LONG_LUNCH_LOOK_KEY);
+  return { ok: true as const };
+}
