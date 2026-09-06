@@ -70,13 +70,10 @@ export const RETIRED_LILLA_IDENTITY_REFERENCES: readonly {
  */
 export const REJECTED_LILLA_IMAGES: readonly { file: string; reason: string }[] = [
   {
-    file: "arrival-butter-full-body.png / arrival-lilla-butter-light-v2.png",
-    reason: "Rejected 6 September 2026 — face is not Lilla. Not to be published.",
-  },
-  {
-    file: "arrival-lilla-blue-lagoon-stripe.png",
+    file:
+      "arrival-lilla-blue-lagoon-stripe.png (founder upload 9ca0959c-6892-4c5c-be80-fc1697ecc270.png)",
     reason:
-      "Rejected — both the facial identity and the blue-and-white striped square-neck midi look. The outfit may not be retained by changing the face alone.",
+      "Rejected 6 September 2026 — centre-parted low bun, large brown aviators, plain blue-and-white narrow vertical-striped spaghetti-strap square-neck midi, white strappy sandals and small crocheted bag at the harbour. BOTH the facial identity AND the dress/styling are rejected. Never publish or reuse; the outfit may not be retained by swapping only the face. Replaced by the Posse Romy chilli-linen look (arrival-lilla-chilli-linen-quay-v1.png). This is not a ban on all stripes.",
   },
 ];
 
