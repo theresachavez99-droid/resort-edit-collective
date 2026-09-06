@@ -381,21 +381,48 @@ export async function pairHeroImage(input: {
   if (!process.env["LOVABLE_API_KEY"]) {
     return { imageUrl: null, validation: null, state: "blocked", prerequisite: "image generation key unavailable" };
   }
-  const db = await admin();
-  const { data: muse } = await db
-    .from("destination_muses")
-    .select("muse_name,reference_url,face_description,style_guardrails")
-    .eq("destination_slug", "portofino")
-    .maybeSingle();
-  const referenceUrl = (muse?.reference_url as string | undefined) ?? null;
-  if (!referenceUrl) {
+
+  // CONTROLLING STANDARD — the founder-approved butter-yellow image governs
+  // Lilla's face, body and warm golden-tan skin tone; the September teal
+  // photograph is the secondary facial reference. Both must be reachable as
+  // absolute URLs so the generator consumes their pixels. No absolute
+  // reference → blocked; a lookalike is never substituted.
+  const { BUTTER_STANDARD_LILLA_REFERENCE, CONTROLLING_LILLA_IDENTITY_REFERENCE } = await import(
+    "./lilla-identity-references"
+  );
+  const absolute = (u: string | null | undefined) => (u && /^https:\/\//i.test(u) ? u : null);
+  const butterRef = absolute(BUTTER_STANDARD_LILLA_REFERENCE.url);
+  const facialRef = absolute(CONTROLLING_LILLA_IDENTITY_REFERENCE.url);
+  if (!butterRef) {
     return {
       imageUrl: null,
       validation: null,
       state: "blocked",
-      prerequisite: "approved canonical identity reference not found — never substitute a lookalike",
+      prerequisite:
+        "controlling butter-standard Lilla reference is not available as an absolute https URL — generation must not proceed without it",
     };
   }
+  const referenceUrls = [butterRef, ...(facialRef ? [facialRef] : [])];
+
+  // Product reference imagery is mandatory: the muse must wear the exact
+  // linked products, and a text description is not proof of that.
+  const productImageUrls = (input.productImageUrls ?? []).filter((u) => /^https:\/\//i.test(u));
+  if (productImageUrls.length === 0) {
+    return {
+      imageUrl: null,
+      validation: null,
+      state: "blocked",
+      prerequisite:
+        "no permitted product reference imagery for the linked pieces — cannot prove the hero shows the exact products",
+    };
+  }
+
+  const db = await admin();
+  const { data: muse } = await db
+    .from("destination_muses")
+    .select("muse_name,face_description,style_guardrails")
+    .eq("destination_slug", "portofino")
+    .maybeSingle();
 
   const productSummary = input.picks
     .map((p) => `${p.slot}: ${p.brand} ${p.productName}`)
@@ -405,19 +432,20 @@ export async function pairHeroImage(input: {
     `Scene: ${brief.scene}`,
     `Colour story: ${brief.colourStory}`,
     `She is wearing exactly these linked products: ${productSummary}.`,
-    "Full-figure or three-quarter framing with the entire head, hair, body and shoes inside the frame, safe for responsive 16:9 and 4:5 crops.",
+    "Match the reference face, body build and warm golden-tan skin tone exactly across face, neck, arms, hands and legs.",
+    "Full-figure framing with the entire head, hair, body and shoes inside the frame, safe for responsive 16:9 and 4:5 crops.",
     "No text, no logos overlaid, no other people.",
   ].join(" ");
 
-  const { generateAndStoreMuse, verifyMuseFidelity } = await import("./muse-image.server");
+  const { generateAndStoreMuse } = await import("./muse-image.server");
   let museUrl: string;
   try {
     const result = await generateAndStoreMuse(input.versionId, prompt, {
-      referenceUrl,
-      museName: (muse?.muse_name as string | undefined) ?? null,
+      referenceUrl: butterRef,
+      museName: (muse?.muse_name as string | undefined) ?? "Lilla",
       faceDescription: (muse?.face_description as string | undefined) ?? null,
       guardrails: (muse?.style_guardrails as string | undefined) ?? null,
-      ...(input.productImageUrls?.length ? { productImageUrls: input.productImageUrls } : {}),
+      productImageUrls: [...referenceUrls.slice(1), ...productImageUrls],
     });
     museUrl = result.url;
   } catch (err) {
@@ -429,44 +457,42 @@ export async function pairHeroImage(input: {
     };
   }
 
-  let verification;
-  try {
-    verification = await verifyMuseFidelity(
-      museUrl,
-      referenceUrl,
-      (muse?.muse_name as string | undefined) ?? "the muse",
-      productSummary,
-    );
-  } catch {
+  const { verifyHeroAffirmatively } = await import("./hero-verification.server");
+  const check = await verifyHeroAffirmatively({ imageUrl: museUrl, referenceUrls, productSummary });
+  if (check.unavailable) {
     return {
       imageUrl: museUrl,
       validation: null,
       state: "blocked",
-      prerequisite: "hero identity/garment validation could not run",
+      prerequisite: `hero validation could not run: ${check.unavailable}`,
     };
   }
 
   const validation: HeroValidation = {
     slotsFingerprint: input.slotsFingerprint,
-    identityScore: verification.face_similarity,
-    garmentScore: verification.outfit_fidelity,
-    // Framing is asserted by the generation prompt and checked by the
-    // verification notes; anything ambiguous stays false and blocks.
-    cropSafe: !/crop|cut off|out of frame|头|missing feet/i.test(verification.notes ?? ""),
-    referenceUsed: referenceUrl,
-    notes: verification.notes ?? null,
+    identityScore: check.identityScore,
+    garmentScore: check.garmentScore,
+    // Framing is only "safe" when the verifier affirms head, body and feet.
+    cropSafe:
+      check.headInFrame === true && check.bodyInFrame === true && check.feetInFrame === true,
+    referenceUsed: butterRef,
+    referencesUsed: referenceUrls,
+    headInFrame: check.headInFrame,
+    bodyInFrame: check.bodyInFrame,
+    feetInFrame: check.feetInFrame,
+    identityConfirmed: check.identityConfirmed === true && check.skinToneConsistent === true,
+    productsConfirmed: check.productsConfirmed,
+    notes: check.notes,
   };
-  const passed =
-    verification.face_similarity >= 0.85 &&
-    verification.outfit_fidelity >= 0.8 &&
-    validation.cropSafe === true;
+  const decision = heroGate({ imageUrl: museUrl, validation }, input.slotsFingerprint);
   return {
     imageUrl: museUrl,
     validation,
-    state: passed ? "validated" : "blocked",
-    prerequisite: passed ? null : "hero image failed identity, garment or framing validation",
+    state: decision.ok ? "validated" : "blocked",
+    prerequisite: decision.ok ? null : decision.failures.map((f) => f.gate).join(", "),
   };
 }
+
 
 // ── Version generation ──────────────────────────────────────────
 
