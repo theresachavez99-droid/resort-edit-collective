@@ -17,7 +17,7 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
         {e.image ? (
           <img
             src={e.image}
-            alt={`${e.destinationName} — ${e.kind.toLowerCase()} scene`}
+            alt={e.imageAlt ?? `${e.destinationName} — ${e.kind.toLowerCase()} scene`}
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
@@ -33,6 +33,11 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
             </p>
           </div>
         )}
+        {e.image && e.imageCaption ? (
+          <span className="absolute bottom-0 inset-x-0 bg-ink/70 text-ivory text-[0.58rem] tracking-[0.14em] font-sans px-2.5 py-1 backdrop-blur-sm">
+            {e.imageCaption}
+          </span>
+        ) : null}
         {showDestination && (
           <span className="absolute top-3 left-3 bg-ink/75 text-ivory eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem] backdrop-blur-sm">
             {e.destinationName}
@@ -55,7 +60,7 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
         <p className="mt-2.5 font-serif text-[0.74rem] text-ink/45 leading-snug flex-1">
           Operated by {e.operator}.
           {e.image && e.imageIsIllustrative
-            ? " Imagery is our own editorial illustration of the destination, not the operator's."
+            ? " Imagery is an illustration of the destination, not a photograph of the operator's venue."
             : ""}
           {!e.image ? " We have no verified photograph of this venue, so none is shown." : ""}
         </p>

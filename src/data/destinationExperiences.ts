@@ -48,6 +48,10 @@ export type DestinationExperience = {
    */
   image: string | null;
   imageIsIllustrative: boolean;
+  /** Alt text override for cards. Falls back to a generic destination scene. */
+  imageAlt?: string;
+  /** Short visible caption shown under the image, e.g. an AI-generated notice. */
+  imageCaption?: string;
   /** Surfaced in the small homepage selection. */
   featured: boolean;
 };
@@ -57,6 +61,7 @@ import expCruise from "@/assets/exp-sunset-cruise.jpg";
 import expCooking from "@/assets/exp-cooking-class.jpg";
 import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import expBeachClub from "@/assets/experience-beach-club.jpg";
+import ecoFarmVineyard from "@/assets/portofino-ecofarm-vineyard.png.asset.json";
 
 const CHECKED = "2026-09-06";
 
@@ -177,10 +182,13 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     booking: "enquiry",
     commissionable: false,
     momentSlug: "espresso-morning",
-    // No accurate imagery of this farm is licensed to us, and the harbour photo
-    // previously used here misrepresented the venue. Text-only by design.
-    image: null,
-    imageIsIllustrative: false,
+    // Generic coastal-vineyard illustration, approved by the founder. It is NOT
+    // a photograph of La Portofinese and is captioned as such wherever shown.
+    image: ecoFarmVineyard.url,
+    imageIsIllustrative: true,
+    imageAlt:
+      "Illustrative Mediterranean coastal vineyard; not a photograph of La Portofinese",
+    imageCaption: "Illustrative vineyard scene · AI-generated",
     featured: false,
   },
   {
