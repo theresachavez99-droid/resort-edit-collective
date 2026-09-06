@@ -10,7 +10,7 @@
  * written or mutated by staging a look here. Prices are never stored or shown.
  */
 import evelynJadeImage from "@/assets/uploads/lilla/portofino-shopping-lilla-evelyn-jade-v2.png.asset.json";
-import arrivalIvoryLinenImage from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v7.png.asset.json";
+import arrivalIvoryLinenImage from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v8.png.asset.json";
 import type { VisibleProductSlot } from "@/lib/look-atomic-completeness";
 
 export type StagedLookRow = {
@@ -147,11 +147,11 @@ export const ARRIVAL_IVORY_LINEN: StagedLook = {
     },
     {
       slot: "Shoes",
-      brand: "Rag & Bone",
-      name: "Remi Flat Sandal",
-      color: "Tan",
+      brand: "Isabel Marant",
+      name: "Malvin Slide",
+      color: "Cognac",
       retailer: "Revolve",
-      url: "https://www.revolve.com/dp/RGBR-WZ359/",
+      url: "https://www.revolve.com/isabel-marant-malvin-slide-in-cognac/dp/IMAR-WZ466/",
     },
     {
       slot: "Bag",
