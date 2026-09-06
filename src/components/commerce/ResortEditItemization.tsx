@@ -144,11 +144,33 @@ function SlotRow({ row }: { row: PublicShopSlot }) {
   );
 }
 
+/**
+ * Public eligibility for a DB-driven moment hero look. Withholds the entire
+ * itemization when the outfit is not atomically complete — three accessories
+ * must never masquerade as a shoppable outfit.
+ */
+export function heroLookEligibility(lookKey: string, rows: PublicShopSlot[]) {
+  return evaluatePublicLook({
+    lookKey,
+    rows: rows.map((r) => ({
+      slot: r.slot ?? r.slot_label,
+      slotLabel: r.slot_label,
+      url: r.url,
+      status: r.status,
+      brand: r.brand,
+      productName: r.product_name,
+    })),
+  });
+}
+
 export function ResortEditItemization({ lookKey }: { lookKey: string }) {
   const { data } = useQuery(shopSlotsQuery(lookKey));
   const rows = (data?.slots ?? []).filter((r) => r.brand || r.product_name);
   if (rows.length === 0) return null;
+  // ATOMIC RULE — an incomplete outfit is withheld in full, never partially.
+  if (!heroLookEligibility(lookKey, rows).eligible) return null;
   const chapters = groupSlots(rows);
+
 
   return (
     <div className="pt-2">
