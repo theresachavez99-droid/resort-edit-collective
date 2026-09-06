@@ -10,7 +10,7 @@
  * written or mutated by staging a look here. Prices are never stored or shown.
  */
 import evelynJadeImage from "@/assets/uploads/lilla/portofino-shopping-lilla-evelyn-jade-v2.png.asset.json";
-import arrivalIvoryLinenImage from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v7.png.asset.json";
+import arrivalIvoryLinenImage from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v8.png.asset.json";
 import type { VisibleProductSlot } from "@/lib/look-atomic-completeness";
 
 export type StagedLookRow = {
@@ -118,7 +118,7 @@ export const ARRIVAL_IVORY_LINEN: StagedLook = {
   caption:
     "Faithfull's Maya vest and Isotta pant in natural linen — tonal, quietly tailored, finished with tan flat leather, a crochet raffia tote, tortoiseshell sunglasses pushed up into her hair and one slim gold family at the ears, throat and wrist.",
   image: arrivalIvoryLinenImage.url,
-  alt: "Lilla on the stone quay in Portofino in a natural ivory linen button-front vest and matching wide-leg linen trousers, tan flat leather thong sandals, a natural crochet raffia and leather tote, tortoiseshell sunglasses pushed up on her head and slim gold hoops, chain necklace and bangles.",
+  alt: "Lilla on the stone quay in Portofino in a natural ivory linen button-front vest and matching wide-leg linen trousers, polished cognac leather broad-strap flat slide sandals, a natural crochet raffia and leather tote, tortoiseshell sunglasses pushed up on her head and slim gold hoops, chain necklace and bangles.",
   visibleProductSlots: [
     "outfit",
     "shoes",
@@ -147,11 +147,11 @@ export const ARRIVAL_IVORY_LINEN: StagedLook = {
     },
     {
       slot: "Shoes",
-      brand: "Rag & Bone",
-      name: "Remi Flat Sandal",
-      color: "Tan",
+      brand: "Isabel Marant",
+      name: "Malvin Slide",
+      color: "Cognac",
       retailer: "Revolve",
-      url: "https://www.revolve.com/dp/RGBR-WZ359/",
+      url: "https://www.revolve.com/isabel-marant-malvin-slide-in-cognac/dp/IMAR-WZ466/",
     },
     {
       slot: "Bag",

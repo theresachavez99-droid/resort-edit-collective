@@ -11,7 +11,7 @@ import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
 import arrivalButterLightImage from "@/assets/uploads/lilla/arrival-lilla-butter-light-approved.png.asset.json";
-import arrivalChilliLinenImage from "@/assets/uploads/lilla/arrival-lilla-chilli-linen-quay-v1.png.asset.json";
+import arrivalChilliLinenImage from "@/assets/uploads/lilla/arrival-lilla-chilli-linen-quay-v2.png.asset.json";
 import shoppingGreenEyeletImage from "@/assets/uploads/lilla/shopping-lilla-green-eyelet-via-roma.png.asset.json";
 
 /**
@@ -115,9 +115,9 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       key: "chilli-linen-on-the-quay",
       title: "Chilli Linen on the Quay",
       caption:
-        "Posse's Romy dress in chilli linen — one clean column of colour against the ochre harbour front, with woven leather, pale brown leather underfoot and the quietest gold.",
+        "Posse's Romy dress in chilli linen — one clean column of colour against the ochre harbour front, with woven leather, gold leather underfoot and the quietest gold.",
       image: arrivalChilliLinenImage.url,
-      alt: "Lilla walking the Portofino harbour quay in a chilli-red linen midi dress with slim straps and a gathered waist, pale brown flat leather thong sandals, a natural woven leather shoulder bag, slim gold link earrings, a fine gold chain necklace and black sunglasses pushed up on her head.",
+      alt: "Lilla walking the Portofino harbour quay in a chilli-red linen midi dress with slim straps and a gathered waist, flat gold leather ankle-strap sandals, a natural woven leather shoulder bag, slim gold link earrings, a fine gold chain necklace and black sunglasses pushed up on her head.",
       reference: {
         slot: "Hero Piece · Dress",
         brand: "Posse",
@@ -128,13 +128,13 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       },
       shop: {
         stylingNote:
-          "One saturated linen colour, everything else natural: woven leather in hand, pale brown leather underfoot, one slim gold family at the ears and throat.",
+          "One saturated linen colour, everything else natural: woven leather in hand, gold leather underfoot, one slim gold family at the ears and throat.",
         products: [
           {
             slot: "Shoes",
-            brand: "THE ATTICO",
-            name: "Indie Flat Thong Sandal — Pale Brown",
-            url: "https://www.revolve.com/dp/ATTF-WZ165/",
+            brand: "Loeffler Randall",
+            name: "Karly Strappy Flat Sandal — Light Gold",
+            url: "https://www.revolve.com/loeffler-randall-karly-strappy-flat-sandal-in-light-gold/dp/LOEF-WZ608/",
           },
           {
             slot: "Bag",

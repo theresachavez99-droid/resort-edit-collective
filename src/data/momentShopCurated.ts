@@ -45,9 +45,9 @@ export const MOMENT_SHOP_CURATED: Record<string, OverrideItem[]> = {
     {
       slotLabel: "Shoes",
       category: "Shoe",
-      brand: "Rag & Bone",
-      title: "Remi Flat Sandal in Tan",
-      url: "https://www.revolve.com/dp/RGBR-WZ359/",
+      brand: "Isabel Marant",
+      title: "Malvin Slide in Cognac",
+      url: "https://www.revolve.com/isabel-marant-malvin-slide-in-cognac/dp/IMAR-WZ466/",
       image: "",
     },
     {
