@@ -1,8 +1,10 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { CommissionNotice } from "@/components/CommissionNotice";
 import { getShopSlots, type PublicShopSlot } from "@/lib/shop-slots.functions";
+import { evaluatePublicLook } from "@/lib/look-public-eligibility";
 import { safeHref } from "@/lib/safe-url";
 import { trackOutbound } from "@/lib/utils";
+
 
 export const shopSlotsQuery = (lookKey: string) =>
   queryOptions({
