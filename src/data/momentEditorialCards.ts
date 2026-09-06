@@ -111,9 +111,7 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       },
     },
   ],
-      },
-    },
-  ],
+
 
   "riviera-dinner": [
     {
