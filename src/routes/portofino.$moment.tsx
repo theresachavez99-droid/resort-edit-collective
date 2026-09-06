@@ -289,7 +289,12 @@ import { countShoppableRows, shopCtaAllowed } from "@/lib/commerce-cta-policy";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
 import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheLookItems";
-import { ResortEditItemization, shopSlotsQuery } from "@/components/commerce/ResortEditItemization";
+import {
+  ResortEditItemization,
+  heroLookEligibility,
+  shopSlotsQuery,
+} from "@/components/commerce/ResortEditItemization";
+
 import { StagedLookItemization } from "@/components/commerce/StagedLookItemization";
 import { PREVIEW_STAGED_LOOKS } from "@/data/previewStagedLooks";
 import { previewStagingQuery } from "@/lib/preview-staging.functions";
