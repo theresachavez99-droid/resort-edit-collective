@@ -60,6 +60,13 @@ type SlotRow = {
 const SELECT =
   "id,look_key,destination,moment,slot,slot_label,brand,product_name,retailer,url,price,status,is_primary,slot_order,style_dna";
 
+export type AutoEditHealth = {
+  broken_slots?: { slot: string; status: string; id: string }[];
+  simulated_product_ids?: string[];
+  concerns?: string[];
+  notes?: string[];
+};
+
 export type AutoEditVersion = {
   id: string;
   look_key: string;
@@ -70,7 +77,7 @@ export type AutoEditVersion = {
   styling_score: number | null;
   rationale: string | null;
   slots: PersistedSlot[];
-  health: Record<string, unknown>;
+  health: AutoEditHealth;
   requires_review: boolean;
   replacement_reason: string | null;
   change_kind: string | null;
