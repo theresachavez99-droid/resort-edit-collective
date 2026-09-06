@@ -60,7 +60,7 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
         <p className="mt-2.5 font-serif text-[0.74rem] text-ink/45 leading-snug flex-1">
           Operated by {e.operator}.
           {e.image && e.imageIsIllustrative
-            ? " Imagery is our own editorial illustration of the destination, not the operator's."
+            ? " Imagery is an illustration of the destination, not a photograph of the operator's venue."
             : ""}
           {!e.image ? " We have no verified photograph of this venue, so none is shown." : ""}
         </p>
