@@ -6,6 +6,27 @@ type Variant = "footer" | "inline-light";
 
 const CONSENT_COPY = "Thoughtfully curated inspiration. Occasionally delivered.";
 
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/;
+
+const TIMEOUT = "resort-edit-timeout";
+
+/** Bounded wait so a stalled request never leaves the form looking dead. */
+function withTimeout<T>(promise: Promise<T>, ms = 15000): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(TIMEOUT)), ms);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
+
 function deriveDestination(pathname: string): string | undefined {
   // /portofino, /portofino/..., /destinations/portofino...
   const m =
@@ -34,29 +55,42 @@ export function NewsletterForm({
     | { kind: "error"; message: string }
   >({ kind: "idle" });
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
+  const submit = async (raw: string) => {
+    const value = raw.trim().toLowerCase();
+    if (!EMAIL_RE.test(value) || value.length > 255) {
+      setState({ kind: "error", message: "Please enter a valid email address." });
+      return;
+    }
     setState({ kind: "loading" });
     try {
       const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
-      const res = await subscribe({
-        data: {
-          email: email.trim(),
+      const res = await withTimeout(
+        subscribe({
+          data: {
+            email: value,
           source_page: pathname,
           destination: pathname ? deriveDestination(pathname) : undefined,
-          cta_source: ctaSource,
-        },
-      });
+            cta_source: ctaSource,
+          },
+        }),
+      );
       if (res.ok) {
         setState({ kind: "success", alreadySubscribed: !!res.alreadySubscribed });
       } else {
         setState({ kind: "error", message: res.error });
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Network error. Please try again.";
+      const msg =
+        err instanceof Error && err.message === TIMEOUT
+          ? "That took too long. Please try again."
+          : "We couldn't reach us just now. Please try again.";
       setState({ kind: "error", message: msg });
     }
+  };
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void submit(email);
   };
 
   const isFooter = variant === "footer";
@@ -65,20 +99,26 @@ export function NewsletterForm({
   // ── Success state ─────────────────────────────────────────────
   if (state.kind === "success") {
     const msg = state.alreadySubscribed
-      ? "You're already on the list."
-      : "You're on the list for the next edit.";
+      ? "You're already on the list. We'll send the next Resort Edit to your inbox."
+      : "You're on the list. We'll send the next Resort Edit to your inbox.";
     return isFooter ? (
-      <p
-        role="status"
-        aria-live="polite"
-        className="mt-7 font-serif italic text-lg text-gold max-w-md"
-      >
-        {msg}
-      </p>
+      <div className="mt-7 w-full max-w-xl flex flex-col items-center text-center">
+        <p role="status" aria-live="polite" className="font-serif italic text-lg text-gold max-w-md">
+          {msg}
+        </p>
+        <p className="mt-2 text-[0.7rem] text-ivory/55 max-w-md leading-relaxed">
+          Saved to the list — no need to submit again.
+        </p>
+      </div>
     ) : (
-      <p role="status" aria-live="polite" className="font-serif italic text-[0.95rem] text-ink/80">
-        {msg}
-      </p>
+      <div className="w-full">
+        <p role="status" aria-live="polite" className="font-serif italic text-[0.95rem] text-ink/80">
+          {msg}
+        </p>
+        <p className="mt-1 text-[0.7rem] text-ink/55 leading-relaxed">
+          Saved to the list — no need to submit again.
+        </p>
+      </div>
     );
   }
 

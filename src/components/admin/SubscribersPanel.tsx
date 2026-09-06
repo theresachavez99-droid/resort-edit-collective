@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { listSubscribers, updateSubscriber } from "@/lib/subscribers.functions";
+import {
+  getNewsletterDeliveryStatus,
+  listSubscribers,
+  updateSubscriber,
+} from "@/lib/subscribers.functions";
 import { verifyAdmin } from "@/lib/admin-auth.functions";
 
 
@@ -86,6 +90,36 @@ export function SubscribersPanel() {
   }
 
   return <SubscribersTable password={pw} />;
+}
+
+/** Honest delivery status — capture and sending are separate things. */
+function DeliveryStatusBanner() {
+  const statusFn = useServerFn(getNewsletterDeliveryStatus);
+  const { data } = useQuery({
+    queryKey: ["newsletter-delivery-status"],
+    queryFn: () => statusFn({}),
+  });
+  if (!data) return null;
+  if (data.deliveryConfigured) {
+    return (
+      <p className="text-xs border border-border/60 bg-white px-3 py-2 rounded">
+        <strong>Capture:</strong> live. <strong>Delivery:</strong> connected — welcome emails send.
+      </p>
+    );
+  }
+  return (
+    <div className="text-xs border border-gold/60 bg-gold/10 px-3 py-2 rounded space-y-1">
+      <p>
+        <strong>Capture:</strong> live — every signup is stored below.
+      </p>
+      <p>
+        <strong>Delivery:</strong> not available. {data.blockedReason}
+      </p>
+      <p>
+        <strong>To enable:</strong> {data.requiredSetup}
+      </p>
+    </div>
+  );
 }
 
 function SubscribersTable({ password }: { password: string }) {
@@ -188,7 +222,9 @@ function SubscribersTable({ password }: { password: string }) {
           <span><strong>{subs.filter((s) => s.status === "unsubscribed").length}</strong> unsubscribed</span>
           <span><strong>{filtered.length}</strong> matching filters</span>
         </div>
+        <DeliveryStatusBanner />
       </header>
+
 
       <div className="flex flex-wrap gap-2 mb-4 items-center">
         <input

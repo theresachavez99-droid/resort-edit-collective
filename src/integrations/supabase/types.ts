@@ -3247,43 +3247,58 @@ export type Database = {
       }
       subscribers: {
         Row: {
+          consent_at: string
+          consent_source: string | null
           created_at: string
           cta_source: string | null
           destination: string | null
           email: string
           id: string
           notes: string | null
+          reactivated_at: string | null
           source_page: string | null
           status: string
           tags: string[]
           unsubscribed_at: string | null
           updated_at: string
+          welcome_sent_at: string | null
+          welcome_state: string
         }
         Insert: {
+          consent_at?: string
+          consent_source?: string | null
           created_at?: string
           cta_source?: string | null
           destination?: string | null
           email: string
           id?: string
           notes?: string | null
+          reactivated_at?: string | null
           source_page?: string | null
           status?: string
           tags?: string[]
           unsubscribed_at?: string | null
           updated_at?: string
+          welcome_sent_at?: string | null
+          welcome_state?: string
         }
         Update: {
+          consent_at?: string
+          consent_source?: string | null
           created_at?: string
           cta_source?: string | null
           destination?: string | null
           email?: string
           id?: string
           notes?: string | null
+          reactivated_at?: string | null
           source_page?: string | null
           status?: string
           tags?: string[]
           unsubscribed_at?: string | null
           updated_at?: string
+          welcome_sent_at?: string | null
+          welcome_state?: string
         }
         Relationships: []
       }
