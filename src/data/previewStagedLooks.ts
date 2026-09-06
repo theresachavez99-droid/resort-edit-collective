@@ -10,6 +10,7 @@
  * written or mutated by staging a look here. Prices are never stored or shown.
  */
 import evelynJadeImage from "@/assets/uploads/lilla/portofino-shopping-lilla-evelyn-jade-v2.png.asset.json";
+import arrivalIvoryLinenImage from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v6.png.asset.json";
 import type { VisibleProductSlot } from "@/lib/look-atomic-completeness";
 
 export type StagedLookRow = {
