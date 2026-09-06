@@ -1,8 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import experienceYacht from "@/assets/experience-yacht.jpg";
-import experienceBeachClub from "@/assets/experience-beach-club.jpg";
-import experienceBoat from "@/assets/experience-boat.jpg";
-import experienceCooking from "@/assets/experience-cooking.jpg";
+import { FeaturedExperiences } from "@/components/experiences/FeaturedExperiences";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
 import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
@@ -73,40 +70,6 @@ const hotels = [
   },
 ];
 
-const experiences = [
-  {
-    badge: "Editor's Pick",
-    name: "Private Yacht Charter",
-    desc: "Sail the Ligurian coast in style, from the harbor to hidden coves.",
-    image: experienceYacht,
-    cta: "Explore Yacht Charters",
-    partnerKey: "experience-yacht-charter",
-  },
-  {
-    badge: "Most Popular",
-    name: "Beach Club at Paraggi",
-    desc: "A day at Bagni Fiore — the 1927 institution on Paraggi Bay, with Langosteria at lunch and emerald water at your feet.",
-    image: experienceBeachClub,
-    cta: "Reserve at Bagni Fiore",
-    partnerKey: "experience-beach-club",
-  },
-  {
-    badge: "Half-Day Adventure",
-    name: "Boat Excursions",
-    desc: "Discover San Fruttuoso and the coastline by classic Italian boat.",
-    image: experienceBoat,
-    cta: "Explore Boat Excursions",
-    partnerKey: "experience-boat-excursions",
-  },
-  {
-    badge: "Authentic Experience",
-    name: "Cooking Classes",
-    desc: "Pesto by mortar and pestle, focaccia, and trofie — Ligurian classics taught minutes from the harbor.",
-    image: experienceCooking,
-    cta: "View Cooking Classes",
-    partnerKey: "experience-cooking-classes",
-  },
-];
 
 function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-14 mx-auto max-w-[1440px]";
@@ -257,46 +220,8 @@ function Index() {
         </div>
       </section>
 
-      {/* BOOK YOUR PORTOFINO EXPERIENCE */}
-      <section className={`${wrap} mt-12 md:mt-16`}>
-        <div className="flex items-center gap-4 justify-center mb-3">
-          <div className="h-px w-12 bg-gold/50" />
-          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BOOK YOUR PORTOFINO EXPERIENCE</h2>
-          <div className="h-px w-12 bg-gold/50" />
-        </div>
-        <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-          The experiences we'd book to complete the perfect Portofino itinerary.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {experiences.map((e) => (
-            <article key={e.name} className="bg-card border border-border/50 flex flex-col">
-              <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-muted">
-                <img src={e.image} alt={e.name} loading="lazy" width={1024} height={768} className="absolute inset-0 h-full w-full object-cover" />
-                {e.badge && (
-                  <span className="absolute left-4 bottom-4 bg-ink/75 text-ivory eyebrow text-[0.6rem] tracking-[0.26em] px-3 py-1.5 backdrop-blur-sm">
-                    {e.badge}
-                  </span>
-                )}
-              </div>
-              <div className="p-6 flex flex-col flex-1">
-                <h3 className="font-display text-2xl tracking-wide text-ink">{e.name}</h3>
-                <p className="mt-3 font-serif text-[0.95rem] text-ink/75 leading-relaxed flex-1">{e.desc}</p>
-                <a
-                  href={partnerHref(e.partnerKey)}
-                  data-partner-key={e.partnerKey}
-                  data-partner-type="experience"
-                  target="_blank"
-                  rel="noreferrer noopener sponsored"
-                  className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"
-                >
-                  {e.cta} →
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      {/* FEATURED EXPERIENCES — small destination-tagged selection */}
+      <FeaturedExperiences wrap={wrap} />
 
       {/* BRANDS WE LOVE */}
       <section className={`${wrap} mt-10 md:mt-14 pb-12 md:pb-20`}>

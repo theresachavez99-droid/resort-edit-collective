@@ -279,6 +279,7 @@ import {
   momentSlugForLookKey,
 } from "@/lib/portofino-moment-fallbacks";
 import { OtherPortofinoMoments } from "@/components/OtherPortofinoMoments";
+import { MomentExperience } from "@/components/experiences/MomentExperience";
 import { ShopOmissionRows, SHOP_ACCURACY_NOTE } from "@/components/ShopOmissionRows";
 import { absoluteUrl } from "@/lib/site";
 import { trackOutbound } from "@/lib/utils";
@@ -800,6 +801,8 @@ function MomentPage() {
           </section>
         )
       )}
+
+      <MomentExperience momentSlug={slug} />
 
       <OtherPortofinoMoments excludeSlugs={[slug]} />
     </div>
