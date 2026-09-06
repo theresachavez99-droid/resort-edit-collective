@@ -3,7 +3,7 @@
  * atomic hide, three-brand diversity, affirmative hero validation,
  * product-specific stock evidence, and blocked-data honesty.
  */
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { evaluatePublicLook, garmentCoverageOk } from "@/lib/look-public-eligibility";
 import {
   evidenceIsFresh,
