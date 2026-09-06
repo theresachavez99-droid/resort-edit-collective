@@ -60,6 +60,13 @@ function StudioNav() {
         Curation Desk
       </Link>
       <Link
+        to="/admin/launch-audit"
+        className="text-[0.65rem] tracking-[0.24em] uppercase text-stone-500 hover:text-ink"
+      >
+        Launch Audit
+      </Link>
+
+      <Link
         to="/admin/editorial-closet"
         className="text-[0.65rem] tracking-[0.24em] uppercase text-stone-500 hover:text-ink"
       >
