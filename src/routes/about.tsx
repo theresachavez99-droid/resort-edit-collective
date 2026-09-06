@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import heroAsset from "@/assets/about-hero-portofino-golden-harbor.png.asset.json";
 import { absoluteUrl } from "@/lib/site";
 import { EditorialHero } from "@/components/EditorialHero";
