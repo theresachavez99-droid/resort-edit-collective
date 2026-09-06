@@ -1018,7 +1018,7 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
  * when a moment publishes its own editorial photograph.
  */
 const MOMENT_EDITORIAL_IMAGE: Record<string, string> = {
-  arrival: arrivalLinenVestEditorial.url,
+  arrival: arrivalIvoryLinenQuayEditorial.url,
   "pool-lounging": poolLoungingEditorial.url,
   "long-lunch": longLunchEditorial.url,
 };
