@@ -631,18 +631,29 @@ function MomentPage() {
       {/* FEATURED LOOK — editorial hero styling recommendation */}
       <section id="shop-the-look" className="bg-ivory scroll-mt-16">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start">
-            <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
-              <img
-                src={editorialImage}
-                alt={stagedLook?.alt ?? `${editorialTitle} — Portofino featured look`}
-                className="absolute inset-0 h-full w-full object-cover object-center"
-              />
+          <div
+            className={
+              heroEligible
+                ? "grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start"
+                : "max-w-3xl"
+            }
+          >
+            {/* The model image renders ONLY with a complete shoppable outfit —
+                an incomplete outfit is withheld in full, image included. */}
+            {heroEligible && (
+              <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
+                <img
+                  src={editorialImage}
+                  alt={stagedLook?.alt ?? `${editorialTitle} — Portofino featured look`}
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
 
-              <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-                INSPIRED BY
-              </span>
-            </div>
+                <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+                  INSPIRED BY
+                </span>
+              </div>
+            )}
+
             <div className="space-y-4 lg:pl-2">
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {editorialTitle}
