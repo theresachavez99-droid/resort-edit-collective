@@ -24,12 +24,14 @@ import {
   MIN_SINGLE_SLOT_COHERENCE,
   heuristicCoherence,
   heuristicSlotFit,
+  deriveVerification,
   isEligibleRow,
   lookFingerprint,
   mapToCanonicalSlot,
   missingRequiredSlots,
   type AutoEditCandidate,
   type AutoEditSlotPick,
+  type VerificationState,
 } from "./long-lunch-auto-edit";
 import { isExcludedProduct } from "./merchandising-exclusions";
 import { loadStylingPolicy } from "./resort-edit-styling-policy.server";
@@ -390,7 +392,7 @@ export type EvaluationOutcome = {
 };
 
 export async function evaluateLongLunchAutoEdit(
-  opts: { force?: boolean } = {},
+  opts: { force?: boolean; mode?: "auto" | "propose" } = {},
 ): Promise<EvaluationOutcome> {
   const db = await admin();
   const lookKey = LONG_LUNCH_LOOK_KEY;
@@ -515,6 +517,12 @@ export async function evaluateLongLunchAutoEdit(
 
   const complete = missing.length === 0;
   const publishable = complete && score >= MIN_PUBLISH_COHERENCE;
+  /**
+   * Curation-desk mode. The engine writes a CANDIDATE the founder must approve;
+   * it never activates a version by itself.
+   */
+  const propose = opts.mode === "propose";
+  const activate = publishable && !propose;
   const rationale =
     (aiRationale ? `${aiRationale} ` : "") +
     (complete
@@ -537,7 +545,7 @@ export async function evaluateLongLunchAutoEdit(
   const version = ((last?.version as number) ?? 0) + 1;
   const slots = keep.map(persist);
 
-  if (publishable) {
+  if (activate) {
     await db
       .from("auto_edit_look_versions")
       .update({ is_active: false, state: "superseded" })
@@ -552,8 +560,8 @@ export async function evaluateLongLunchAutoEdit(
       destination: "Portofino",
       moment: "The Long Lunch",
       version,
-      state: publishable ? "published" : "blocked",
-      is_active: publishable,
+      state: activate ? "published" : publishable ? "candidate" : "blocked",
+      is_active: activate,
       completeness_ok: complete,
       styling_score: score,
       rationale: rationale.trim() || null,
@@ -564,7 +572,7 @@ export async function evaluateLongLunchAutoEdit(
         concerns,
         notes: heur.notes,
       } as unknown as never,
-      requires_review: !publishable,
+      requires_review: !activate,
       replacement_reason: replacementReason,
       change_kind: action,
       engine,
@@ -582,10 +590,10 @@ export async function evaluateLongLunchAutoEdit(
     missing,
     slots,
     engine,
-    requiresReview: !publishable,
+    requiresReview: !activate,
     simulatedIds,
     versionId: (inserted?.id as string) ?? null,
-    published: publishable,
+    published: activate,
   };
 }
 
