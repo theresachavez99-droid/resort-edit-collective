@@ -43,7 +43,9 @@ export const getShopSlots = createServerFn({ method: "GET" })
               destination: "Portofino",
               moment: "The Long Lunch",
               look_key: data.lookKey,
-              slot: s.slot,
+              // Keep the sidebar's existing visual hierarchy: "outfit" is the
+              // engine's canonical name for the hero garment chapter.
+              slot: s.slot === "outfit" ? "dress" : s.slot,
               slot_label: s.slot_label,
               brand: s.brand,
               product_name: s.product_name,
