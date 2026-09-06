@@ -23,6 +23,14 @@ import nightcapHeroVideo from "@/assets/uploads/portofino/nightcap-hero.mp4.asse
 import nightcapHeroPoster from "@/assets/uploads/portofino/nightcap-hero-poster.jpg.asset.json";
 import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero.mp4.asset.json";
 import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
+// Founder-supplied still destination banners (AI editorial illustrations of the
+// place — never operator property photography). These replace the former video
+// heroes on their five moment pages; no <video> element is rendered for them.
+import sunsetViewsStillBanner from "@/assets/uploads/portofino/sunset-views-banner.png.asset.json";
+import harborAperitivoStillBanner from "@/assets/uploads/portofino/harbor-aperitivo-banner.png.asset.json";
+import beachClubStillBanner from "@/assets/uploads/portofino/beach-club-banner.png.asset.json";
+import exploringHarborStillBanner from "@/assets/uploads/portofino/exploring-the-harbor-banner.png.asset.json";
+import yachtDayStillBanner from "@/assets/uploads/portofino/yacht-day-banner.png.asset.json";
 import {
   MOMENT_EXTRA_EDITORIAL_CARDS,
   NIGHTCAP_EDITORIAL_CARDS,
@@ -75,7 +83,53 @@ type MomentHeroVideo = {
  * The entry stays in MOMENT_HERO_VIDEO and the asset stays in the repo — just
  * delete the slug here to re-enable the cinematic hero.
  */
-const HERO_VIDEO_DISABLED = new Set<string>(["nightcap", "pool-lounging", "arrival"]);
+const HERO_VIDEO_DISABLED = new Set<string>([
+  "nightcap",
+  "pool-lounging",
+  "arrival",
+  "sunset-views",
+  "harbor-aperitivo",
+  "beach-club",
+  "exploring-the-harbor",
+  "yacht-day",
+]);
+
+/**
+ * Founder-approved still banners that replace a moment's video hero outright.
+ * Each entry supplies the asset URL, honest alt text (AI editorial illustration
+ * of the destination, not operator photography) and per-breakpoint
+ * object-position so the scene stays readable on narrow phone crops.
+ */
+const MOMENT_STATIC_HERO: Record<
+  string,
+  { url: string; alt: string; position: { base: string; md: string } }
+> = {
+  "sunset-views": {
+    url: sunsetViewsStillBanner.url,
+    alt: "AI editorial illustration of Portofino harbour at sunset, seen from a coastal garden path above the pastel waterfront",
+    position: { base: "62% 55%", md: "50% 50%" },
+  },
+  "harbor-aperitivo": {
+    url: harborAperitivoStillBanner.url,
+    alt: "AI editorial illustration of two spritz glasses on a marble café table overlooking Portofino harbour at golden hour",
+    position: { base: "40% 60%", md: "50% 50%" },
+  },
+  "beach-club": {
+    url: beachClubStillBanner.url,
+    alt: "AI editorial illustration of a Ligurian pebble beach club with cream parasols and loungers beside turquoise water",
+    position: { base: "35% 60%", md: "50% 50%" },
+  },
+  "exploring-the-harbor": {
+    url: exploringHarborStillBanner.url,
+    alt: "AI editorial illustration of Portofino's stone quay with wooden boats moored beneath pastel harbourfront buildings",
+    position: { base: "55% 55%", md: "50% 50%" },
+  },
+  "yacht-day": {
+    url: yachtDayStillBanner.url,
+    alt: "AI editorial illustration of a white motor yacht cruising past the wooded Portofino headland",
+    position: { base: "45% 55%", md: "50% 50%" },
+  },
+};
 
 /**
  * Slugs whose static hero renders as a full-width 16:9 scene banner instead of
@@ -534,6 +588,9 @@ function MomentPage() {
   // Temporarily disabled slugs fall back to the static place-led hero image;
   // remove the slug from HERO_VIDEO_DISABLED to re-enable its video.
   const cinematicHero = HERO_VIDEO_DISABLED.has(slug) ? undefined : MOMENT_HERO_VIDEO[slug];
+  // Founder-supplied still banner (no video element at all) for moments that
+  // publish an approved destination illustration instead of a hero video.
+  const staticHero = MOMENT_STATIC_HERO[slug];
 
   // Optional editorial-image override — some moments (e.g. Pool Lounging)
   // publish an approved Resort Edit editorial image separate from the DB
@@ -605,16 +662,31 @@ function MomentPage() {
         <section
           className={
             "relative w-full overflow-hidden bg-ink " +
-            (HERO_STATIC_WIDE.has(slug)
-              ? "aspect-[16/9] max-h-[70vh]"
-              : "h-[36vh] md:h-[48vh] min-h-[280px]")
+            (staticHero
+              ? "min-h-[500px] h-[clamp(500px,70vh,760px)] lg:min-h-[520px] lg:h-[clamp(520px,52vw,720px)]"
+              : HERO_STATIC_WIDE.has(slug)
+                ? "aspect-[16/9] max-h-[70vh]"
+                : "h-[36vh] md:h-[48vh] min-h-[280px]")
           }
+          data-static-hero={staticHero ? slug : undefined}
         >
+          {staticHero ? (
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `[data-static-hero="${slug}"] .static-hero-media{object-position:${staticHero.position.base};}@media (min-width:768px){[data-static-hero="${slug}"] .static-hero-media{object-position:${staticHero.position.md};}}`,
+              }}
+            />
+          ) : null}
           <img
-            src={heroImage}
-            alt={`${card.moment_name} — Portofino`}
-            className="absolute inset-0 h-full w-full object-cover"
+            src={staticHero ? staticHero.url : heroImage}
+            alt={staticHero ? staticHero.alt : `${card.moment_name} — Portofino`}
+            fetchPriority="high"
+            className={
+              "absolute inset-0 h-full w-full object-cover" +
+              (staticHero ? " static-hero-media" : "")
+            }
           />
+
           <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/10 to-black/45" />
           <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
             <Link
