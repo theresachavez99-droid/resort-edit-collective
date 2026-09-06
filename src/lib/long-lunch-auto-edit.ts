@@ -78,6 +78,16 @@ export type AutoEditCandidate = {
   url: string;
   price: string | null;
   styleDna: Record<string, unknown> | null;
+  /** Provenance — which registry/feed this record actually came from. */
+  provenance?: string | null;
+  /** Local or remote image reference, when the record carries one. */
+  imageUrl?: string | null;
+  /** Raw availability status on the source record. */
+  availability?: string | null;
+  /** Last time the PDP was actually checked, if ever. */
+  lastCheckedAt?: string | null;
+  /** Live-verification confidence. Never assume shoppable. */
+  verification?: VerificationState;
 };
 
 export type AutoEditSlotPick = AutoEditCandidate & {
@@ -90,6 +100,37 @@ export type AutoEditLookDraft = {
   complete: boolean;
   missingSlots: VisibleProductSlot[];
 };
+
+/** A slot pick is only "shoppable" when a real check confirmed it recently. */
+export type VerificationState = "verified" | "needs_verification" | "failed";
+
+/** A verification older than this is no longer trusted. */
+export const VERIFICATION_MAX_AGE_DAYS = 14;
+
+const VERDICT_OK = new Set(["ok", "available", "in_stock", "verified", "healthy", "pass"]);
+const VERDICT_BAD = new Set(["404", "gone", "sold_out", "unavailable", "fail", "error"]);
+
+/**
+ * Derives verification state from whatever provenance the record carries.
+ * Absent or stale evidence is NEVER treated as shoppable — it is surfaced to
+ * the founder as NEEDS VERIFICATION.
+ */
+export function deriveVerification(input: {
+  lastCheckedAt?: string | null;
+  verdict?: string | null;
+  now?: Date;
+}): VerificationState {
+  const verdict = (input.verdict ?? "").trim().toLowerCase();
+  if (verdict && VERDICT_BAD.has(verdict)) return "failed";
+  if (!input.lastCheckedAt) return "needs_verification";
+  const checked = Date.parse(input.lastCheckedAt);
+  if (!Number.isFinite(checked)) return "needs_verification";
+  const ageDays = ((input.now ?? new Date()).getTime() - checked) / 86_400_000;
+  if (ageDays > VERIFICATION_MAX_AGE_DAYS) return "needs_verification";
+  if (verdict && !VERDICT_OK.has(verdict)) return "needs_verification";
+  return "verified";
+}
+
 
 export function mapToCanonicalSlot(
   slot: string | null | undefined,

@@ -2,6 +2,7 @@ import { describe, expect, it } from "bun:test";
 import {
   LONG_LUNCH_REQUIRED_SLOTS,
   MIN_PUBLISH_COHERENCE,
+  deriveVerification,
   heuristicCoherence,
   isEligibleRow,
   lookFingerprint,
@@ -125,5 +126,31 @@ describe("fingerprint", () => {
       { slot: "outfit", url: "https://a/1" },
     ]);
     expect(a).toBe(b);
+  });
+});
+
+describe("verification derivation (curation desk)", () => {
+  const now = new Date("2026-03-01T00:00:00Z");
+
+  it("treats a never-checked product as needing verification, never shoppable", () => {
+    expect(deriveVerification({ lastCheckedAt: null, now })).toBe("needs_verification");
+  });
+
+  it("treats a stale check as needing verification", () => {
+    expect(
+      deriveVerification({ lastCheckedAt: "2026-01-01T00:00:00Z", verdict: "ok", now }),
+    ).toBe("needs_verification");
+  });
+
+  it("accepts a recent passing check", () => {
+    expect(
+      deriveVerification({ lastCheckedAt: "2026-02-25T00:00:00Z", verdict: "ok", now }),
+    ).toBe("verified");
+  });
+
+  it("marks a failing verdict as failed regardless of recency", () => {
+    expect(
+      deriveVerification({ lastCheckedAt: "2026-02-28T00:00:00Z", verdict: "404", now }),
+    ).toBe("failed");
   });
 });
