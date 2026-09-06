@@ -486,11 +486,21 @@ function MomentPage() {
   // look_items_public), so the gate reflects exactly what the page renders —
   // there is no static registry to drift. Zero-link pages stay editorial:
   // no CTA, no placeholder, no "Coming Soon".
+  const heroRows = (shopSlotsData?.slots ?? []).filter((r) => r.brand || r.product_name);
+  // ONE PUBLIC ELIGIBILITY RULE — the hero outfit is shoppable only when every
+  // visible category has an active exact-product link. Otherwise the whole
+  // shoppable unit (model image, itemization, Save control, CTA) is withheld.
+  const heroEligible = stagedLook
+    ? true
+    : heroRows.length > 0 && heroLookEligibility(momentLookKey, heroRows).eligible;
   const shoppableRowCount = stagedLook
     ? countShoppableRows(stagedLook.rows)
-    : countShoppableRows((shopSlotsData?.slots ?? []).filter((r) => r.brand || r.product_name)) +
-      countShoppableRows((lookItemsData?.items ?? []).map((it) => ({ url: it.affiliate_url })));
+    : heroEligible
+      ? countShoppableRows(heroRows) +
+        countShoppableRows((lookItemsData?.items ?? []).map((it) => ({ url: it.affiliate_url })))
+      : 0;
   const showShopCta = shopCtaAllowed(shoppableRowCount);
+
 
   // Public-facing display title for the featured look. Founder look titles are
   // often blank or workflow-y; map to an editorial name per moment so the page
