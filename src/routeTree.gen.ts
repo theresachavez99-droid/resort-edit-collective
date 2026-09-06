@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AffiliateDisclosureRouteImport } from './routes/affiliate-disclosure'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as MyEditRouteImport } from './routes/my-edit'
@@ -62,6 +63,11 @@ const AboutRoute = AboutRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AffiliateDisclosureRoute = AffiliateDisclosureRouteImport.update({
+  id: '/affiliate-disclosure',
+  path: '/affiliate-disclosure',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrandsRoute = BrandsRouteImport.update({
@@ -256,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
@@ -296,6 +303,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/my-edit': typeof MyEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -335,6 +343,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/brands': typeof BrandsRouteWithChildren
   '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
@@ -378,6 +387,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/affiliate-disclosure'
     | '/brands'
     | '/destinations'
     | '/my-edit'
@@ -418,6 +428,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/affiliate-disclosure'
     | '/my-edit'
     | '/privacy-policy'
     | '/robots.txt'
@@ -456,6 +467,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/affiliate-disclosure'
     | '/brands'
     | '/destinations'
     | '/my-edit'
@@ -498,6 +510,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AffiliateDisclosureRoute: typeof AffiliateDisclosureRoute
   BrandsRoute: typeof BrandsRouteWithChildren
   DestinationsRoute: typeof DestinationsRouteWithChildren
   MyEditRoute: typeof MyEditRoute
@@ -535,6 +548,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/affiliate-disclosure': {
+      id: '/affiliate-disclosure'
+      path: '/affiliate-disclosure'
+      fullPath: '/affiliate-disclosure'
+      preLoaderRoute: typeof AffiliateDisclosureRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brands': {
@@ -878,6 +898,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
+  AffiliateDisclosureRoute: AffiliateDisclosureRoute,
   BrandsRoute: BrandsRouteWithChildren,
   DestinationsRoute: DestinationsRouteWithChildren,
   MyEditRoute: MyEditRoute,
