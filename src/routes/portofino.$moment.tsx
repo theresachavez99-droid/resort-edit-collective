@@ -706,7 +706,7 @@ function MomentPage() {
               ) : (
                 <ResortEditItemization lookKey={`portofino/${slug}`} />
               )}
-              {completeLookHref && (
+              {completeLookHref && heroEligible && (
                 <div className="pt-6 flex justify-center lg:justify-start">
                   <Link
                     to={completeLookHref}
@@ -716,6 +716,7 @@ function MomentPage() {
                   </Link>
                 </div>
               )}
+
             </div>
           </div>
           {/* SHOP THE LOOK — live `look_items_public` rows for this moment.
