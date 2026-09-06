@@ -152,8 +152,19 @@ function AboutPage() {
               we love.
             </p>
             <p>
-              Hotel, experience, and charter recommendations may likewise include partner links. We
-              only recommend places and pieces we would choose for our own travels.
+              Our editorial photographs are art-directed by us and created with AI image
+              generation, so a linked piece may look a little different in the retailer's own
+              photography. We name and link the real pieces shown.
+            </p>
+            <p>
+              Hotels, beach clubs and experiences we mention are not sponsors and have not paid for
+              placement — those links go straight to the operator and earn us nothing. We only
+              recommend places and pieces we would choose for our own travels.
+            </p>
+            <p>
+              <Link to="/affiliate-disclosure" className="text-gold hover:underline">
+                Read the full Affiliate Disclosure →
+              </Link>
             </p>
           </div>
         </div>
