@@ -722,7 +722,7 @@ function MomentPage() {
           {/* SHOP THE LOOK — live `look_items_public` rows for this moment.
               Renders nothing when the look has no items. Suppressed while a
               staged look owns the hero so the set stays atomic. */}
-          {stagedLook ? null : <ShopTheLookItems lookKey={`portofino/${slug}`} />}
+          {stagedLook || !heroEligible ? null : <ShopTheLookItems lookKey={`portofino/${slug}`} />}
         </div>
       </section>
 
