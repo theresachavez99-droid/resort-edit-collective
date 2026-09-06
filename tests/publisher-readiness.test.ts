@@ -96,13 +96,17 @@ describe("no invented content on public pages", () => {
     expect(src).not.toContain("edits</span>");
   });
 
-  test("the eco-farm card shows no borrowed venue photograph", () => {
+  test("the eco-farm card uses a labelled illustration, not a venue photo", () => {
     const src = read("src/data/destinationExperiences.ts");
     const entry = src.slice(src.indexOf("portofino-la-portofinese-eco-farm"));
     const block = entry.slice(0, entry.indexOf("featured:"));
-    expect(block).toContain("image: null");
+    expect(block).toContain("ecoFarmVineyard.url");
+    expect(block).toContain("imageIsIllustrative: true");
+    expect(block).toContain("AI-generated");
+    expect(block).toContain("not a photograph of La Portofinese");
     expect(block).not.toContain("expHarbor");
   });
+
 
   test("experience cards handle a missing image without a broken <img>", () => {
     for (const file of [
