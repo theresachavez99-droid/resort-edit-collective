@@ -5,15 +5,18 @@
  * Lilla image generation or edit. They are never rendered as site content.
  *
  * Rules (project knowledge — Lilla identity lock):
- * - Every generated/regenerated image containing Lilla MUST pass at least one
- *   of these assets to the image tool as an explicit identity reference.
+ * - Every generated/regenerated image containing Lilla MUST pass the CONTROLLING
+ *   reference file below to the image tool as an actual image input, so the
+ *   generation consumes its pixels. A text description of her face is NOT a
+ *   substitute and never counts as an identity reference.
  * - Identity takes priority over styling and pose. No lookalike substitutions,
- *   no age shift, no "generic influencer" beautification.
- * - Design mockups, marketing composites, or previously generated look images
- *   are NOT valid identity references.
+ *   no age shift, no "generic influencer" beautification, no blending of
+ *   retired references.
+ * - Every output must be visually compared against the controlling reference
+ *   before acceptance. A prompt, a registry flag, a passing build or any
+ *   automated score proves nothing on its own.
  */
-import masterReferenceV1 from "@/assets/uploads/lilla/lilla-master-reference-v1.png.asset.json";
-import headshotPrimary from "@/assets/uploads/cira/cira-1.png.asset.json";
+import approvedIdentitySep1 from "@/assets/uploads/lilla/lilla-approved-identity-sep1-2026.png.asset.json";
 
 export type LillaIdentityReference = {
   /** Stable id used in generation logs and audit records. */
@@ -22,33 +25,60 @@ export type LillaIdentityReference = {
   url: string;
   /** Repo path of the pointer file, for tooling. */
   pointer: string;
+  /** Source path to hand to the image tool as an actual image input. */
+  sourcePath: string;
   /** Why this reference exists / what it locks. */
   note: string;
-  /** The primary sheet used first for any new generation. */
-  primary?: boolean;
 };
 
-export const LILLA_IDENTITY_REFERENCES: readonly LillaIdentityReference[] = [
+/**
+ * The ONLY reference approved for new Lilla generations and edits
+ * (founder correction, 6 September 2026).
+ */
+export const CONTROLLING_LILLA_IDENTITY_REFERENCE: LillaIdentityReference = {
+  id: "lilla-approved-identity-sep1-2026",
+  url: approvedIdentitySep1.url,
+  pointer: "src/assets/uploads/lilla/lilla-approved-identity-sep1-2026.png.asset.json",
+  sourcePath: "/mnt/user-uploads/lilla-approved-identity-sep1-2026.png",
+  note:
+    "Founder-supplied 1 September 2026 photograph (teal cutout maxi, Portofino lane). Controlling facial identity and apparent-age reference for all Portofino looks. Overrides every older sheet and every text age description.",
+};
+
+/**
+ * Retired references. Do NOT pass these to any generation, and do not blend
+ * them with the controlling reference above.
+ */
+export const RETIRED_LILLA_IDENTITY_REFERENCES: readonly {
+  id: string;
+  reason: string;
+}[] = [
   {
     id: "lilla-master-reference-v1",
-    url: masterReferenceV1.url,
-    pointer: "src/assets/uploads/lilla/lilla-master-reference-v1.png.asset.json",
-    note:
-      "Founder-supplied Lilla Master Reference v1 — 16-angle identity lock sheet (face, profiles, chin up/down, full body, hair up/down).",
-    primary: true,
+    reason:
+      "June/July master sheet. Retired 6 September 2026 — must not be used as the controlling reference or blended with it.",
   },
   {
-    id: "lilla-headshot-1",
-    url: headshotPrimary.url,
-    pointer: "src/assets/uploads/cira/cira-1.png.asset.json",
-    note: "Approved single canonical headshot, retained as a secondary identity reference.",
+    id: "cira-1",
+    reason:
+      "Earlier single headshot. Superseded by the 1 September 2026 photograph; produced facial/age drift.",
   },
 ];
 
-/** The reference to pass first to any Lilla image generation or edit. */
-export const PRIMARY_LILLA_IDENTITY_REFERENCE =
-  LILLA_IDENTITY_REFERENCES.find((reference) => reference.primary) ??
-  LILLA_IDENTITY_REFERENCES[0];
+/**
+ * Images the founder has explicitly rejected. These must never be published,
+ * reused, or repaired by swapping only the face.
+ */
+export const REJECTED_LILLA_IMAGES: readonly { file: string; reason: string }[] = [
+  {
+    file: "arrival-butter-full-body.png / arrival-lilla-butter-light-v2.png",
+    reason: "Rejected 6 September 2026 — face is not Lilla. Not to be published.",
+  },
+  {
+    file: "arrival-lilla-blue-lagoon-stripe.png",
+    reason:
+      "Rejected — both the facial identity and the blue-and-white striped square-neck midi look. The outfit may not be retained by changing the face alone.",
+  },
+];
 
 /** Identity references are production inputs only — never published as content. */
 export const LILLA_IDENTITY_REFERENCES_ARE_PUBLIC = false;
