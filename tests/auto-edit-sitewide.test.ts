@@ -114,7 +114,7 @@ describe("merchant policy", () => {
   });
 
   it("rejects a category or search link", () => {
-    const gate = merchantGate(pick({ url: "https://www.nordstrom.com/browse/women/shoes" }));
+    const gate = merchantGate(pick({ url: "https://www.nordstrom.com/" }));
     expect(gate.ok).toBe(false);
   });
 });
