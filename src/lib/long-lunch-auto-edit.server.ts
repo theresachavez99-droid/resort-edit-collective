@@ -757,7 +757,7 @@ export async function loadCurationDesk() {
     lookKey: LONG_LUNCH_LOOK_KEY,
     destination: "Portofino",
     moment: "The Long Lunch",
-    requiredSlots: REQUIRED_LONG_LUNCH_SLOTS,
+    requiredSlots: [...LONG_LUNCH_REQUIRED_SLOTS],
     live,
     candidates,
     history: versions,
@@ -781,7 +781,7 @@ export async function approveLongLunchCandidate(input: { versionId: string }) {
   if (!data) return { ok: false as const, reason: "Candidate not found." };
   const version = shapeVersion(data as Record<string, unknown>);
 
-  const missing = REQUIRED_LONG_LUNCH_SLOTS.filter(
+  const missing = [...LONG_LUNCH_REQUIRED_SLOTS].filter(
     (s) => !version.slots.some((p) => p.slot === s && p.url),
   );
   if (missing.length || !version.completeness_ok) {
