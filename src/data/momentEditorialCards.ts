@@ -11,6 +11,7 @@ import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
 import arrivalButterLightImage from "@/assets/uploads/lilla/arrival-lilla-butter-light-approved.png.asset.json";
+import arrivalChilliLinenImage from "@/assets/uploads/lilla/arrival-lilla-chilli-linen-quay-v1.png.asset.json";
 import shoppingGreenEyeletImage from "@/assets/uploads/lilla/shopping-lilla-green-eyelet-via-roma.png.asset.json";
 
 /**
@@ -110,7 +111,60 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
         ],
       },
     },
+    {
+      key: "chilli-linen-on-the-quay",
+      title: "Chilli Linen on the Quay",
+      caption:
+        "Posse's Romy dress in chilli linen — one clean column of colour against the ochre harbour front, with woven leather, pale brown leather underfoot and the quietest gold.",
+      image: arrivalChilliLinenImage.url,
+      alt: "Lilla walking the Portofino harbour quay in a chilli-red linen midi dress with slim straps and a gathered waist, pale brown flat leather thong sandals, a natural woven leather shoulder bag, slim gold link earrings, a fine gold chain necklace and black sunglasses pushed up on her head.",
+      reference: {
+        slot: "Hero Piece · Dress",
+        brand: "Posse",
+        name: "Romy Dress",
+        color: "Chilli",
+        retailer: "REVOLVE",
+        url: "https://www.revolve.com/dp/PSSE-WD18/",
+      },
+      shop: {
+        stylingNote:
+          "One saturated linen colour, everything else natural: woven leather in hand, pale brown leather underfoot, one slim gold family at the ears and throat.",
+        products: [
+          {
+            slot: "Shoes",
+            brand: "THE ATTICO",
+            name: "Indie Flat Thong Sandal — Pale Brown",
+            url: "https://www.revolve.com/dp/ATTF-WZ165/",
+          },
+          {
+            slot: "Bag",
+            brand: "Dragon Diffusion",
+            name: "Santa Marta Shoulder Bag — Natural",
+            url: "https://www.revolve.com/dp/DRAR-WY28/",
+          },
+          {
+            slot: "Sunglasses",
+            brand: "Le Specs",
+            name: "Unfaithful Sunglasses — Black",
+            url: "https://www.revolve.com/dp/LSPE-WA275/",
+          },
+          {
+            slot: "Earrings",
+            brand: "Jenny Bird",
+            name: "U-Link Earring — High Polish Gold",
+            url: "https://www.revolve.com/dp/JENR-WL245/",
+          },
+          {
+            slot: "Necklace",
+            brand: "Jenny Bird",
+            name: "Zeina Slim Chain — Gold",
+            url: "https://www.revolve.com/dp/JENR-WL355/",
+          },
+        ],
+      },
+    },
   ],
+
 
 
   "riviera-dinner": [
