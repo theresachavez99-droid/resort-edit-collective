@@ -42,6 +42,9 @@ export const SITEWIDE_ENGINE = "portofino-auto-edit-sitewide-v1";
 /** Hard cost ceiling per scheduled run: model calls + image generations. */
 export const MAX_SPEND_UNITS_PER_RUN = 12;
 
+/** Supabase JSON columns are typed narrowly; payloads here are plain JSON. */
+const asJson = (value: unknown) => value as never;
+
 function admin() {
   return import("@/integrations/supabase/client.server").then((m) => m.supabaseAdmin);
 }
@@ -580,7 +583,7 @@ export async function generateMomentVersion(opts: {
       model: verdict?.model ?? null,
       prompt_version: SITEWIDE_ENGINE,
       rationale: verdict?.rationale ?? null,
-      ai_verdict: verdict ? (verdict as unknown as Record<string, unknown>) : {},
+      ai_verdict: asJson(verdict ?? {}),
       ai_verdict_state: verdict?.approved ? "approved" : verdict ? "rejected" : "absent",
       requires_review: true,
       blocked_reason: "pending gates",
@@ -623,7 +626,7 @@ export async function generateMomentVersion(opts: {
     .update({
       completeness_ok: decision.publishable,
       hero_image_url: hero.imageUrl,
-      hero_validation: (hero.validation ?? {}) as unknown as Record<string, unknown>,
+      hero_validation: asJson(hero.validation ?? {}),
       hero_state: hero.state,
       blocked_reason: blockedReason,
       health: {
@@ -725,7 +728,7 @@ export async function runJob<T>(
       .update({
         status: "completed",
         finished_at: new Date().toISOString(),
-        result: result as unknown as Record<string, unknown>,
+        result: asJson(result),
         spend_units: used,
       })
       .eq("job_key", jobKey);
