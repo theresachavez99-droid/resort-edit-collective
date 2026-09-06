@@ -23,6 +23,14 @@ import nightcapHeroVideo from "@/assets/uploads/portofino/nightcap-hero.mp4.asse
 import nightcapHeroPoster from "@/assets/uploads/portofino/nightcap-hero-poster.jpg.asset.json";
 import poolLoungingHeroVideo from "@/assets/uploads/portofino/pool-lounging-hero.mp4.asset.json";
 import poolLoungingHeroPoster from "@/assets/uploads/portofino/pool-lounging-hero-poster.jpg.asset.json";
+// Founder-supplied still destination banners (AI editorial illustrations of the
+// place — never operator property photography). These replace the former video
+// heroes on their five moment pages; no <video> element is rendered for them.
+import sunsetViewsStillBanner from "@/assets/uploads/portofino/sunset-views-banner.png.asset.json";
+import harborAperitivoStillBanner from "@/assets/uploads/portofino/harbor-aperitivo-banner.png.asset.json";
+import beachClubStillBanner from "@/assets/uploads/portofino/beach-club-banner.png.asset.json";
+import exploringHarborStillBanner from "@/assets/uploads/portofino/exploring-the-harbor-banner.png.asset.json";
+import yachtDayStillBanner from "@/assets/uploads/portofino/yacht-day-banner.png.asset.json";
 import {
   MOMENT_EXTRA_EDITORIAL_CARDS,
   NIGHTCAP_EDITORIAL_CARDS,
