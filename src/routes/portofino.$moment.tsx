@@ -659,16 +659,31 @@ function MomentPage() {
         <section
           className={
             "relative w-full overflow-hidden bg-ink " +
-            (HERO_STATIC_WIDE.has(slug)
-              ? "aspect-[16/9] max-h-[70vh]"
-              : "h-[36vh] md:h-[48vh] min-h-[280px]")
+            (staticHero
+              ? "min-h-[500px] h-[clamp(500px,70vh,760px)] lg:min-h-[520px] lg:h-[clamp(520px,52vw,720px)]"
+              : HERO_STATIC_WIDE.has(slug)
+                ? "aspect-[16/9] max-h-[70vh]"
+                : "h-[36vh] md:h-[48vh] min-h-[280px]")
           }
+          data-static-hero={staticHero ? slug : undefined}
         >
+          {staticHero ? (
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `[data-static-hero="${slug}"] .static-hero-media{object-position:${staticHero.position.base};}@media (min-width:768px){[data-static-hero="${slug}"] .static-hero-media{object-position:${staticHero.position.md};}}`,
+              }}
+            />
+          ) : null}
           <img
-            src={heroImage}
-            alt={`${card.moment_name} — Portofino`}
-            className="absolute inset-0 h-full w-full object-cover"
+            src={staticHero ? staticHero.url : heroImage}
+            alt={staticHero ? staticHero.alt : `${card.moment_name} — Portofino`}
+            fetchPriority="high"
+            className={
+              "absolute inset-0 h-full w-full object-cover" +
+              (staticHero ? " static-hero-media" : "")
+            }
           />
+
           <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/10 to-black/45" />
           <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-8 text-ivory">
             <Link
