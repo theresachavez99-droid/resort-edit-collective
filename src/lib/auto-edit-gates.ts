@@ -126,17 +126,22 @@ export function merchantGate(pick: GatedPick): GateResult {
     return ok(failures);
   }
 
-  // Brand-direct fallback: host must contain the brand token.
-  const brandToken = pick.brand.toLowerCase().replace(/[^a-z0-9]/g, "");
-  if (!brandToken || !host.replace(/[^a-z0-9.]/g, "").includes(brandToken.slice(0, 6))) {
+  // Brand-direct fallback: the host must be an explicitly VERIFIED brand-direct
+  // domain. A partial name token in a hostname is not verification.
+  const brandKey = Object.keys(VERIFIED_BRAND_DIRECT_HOSTS).find(
+    (k) => k.toLowerCase() === pick.brand.trim().toLowerCase(),
+  );
+  const allowed = brandKey ? (VERIFIED_BRAND_DIRECT_HOSTS[brandKey] ?? []) : [];
+  if (!allowed.some((h) => host === h || host.endsWith(`.${h}`))) {
     failures.push({
       gate: "merchant_not_approved",
       slot: pick.slot,
-      detail: `${pick.retailer ?? "unknown merchant"} (${host}) is neither an approved retailer (${APPROVED_RETAILER_PRIORITY.join(", ")}) nor a matching brand-direct site`,
+      detail: `${pick.retailer ?? "unknown merchant"} (${host}) is neither an approved retailer (${APPROVED_RETAILER_PRIORITY.join(", ")}) nor a verified brand-direct domain for ${pick.brand}`,
     });
   }
   return ok(failures);
 }
+
 
 // ── Stock evidence ────────────────────────────────────────────────
 
