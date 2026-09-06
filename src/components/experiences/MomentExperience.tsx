@@ -24,10 +24,15 @@ export function MomentExperience({ momentSlug }: { momentSlug: string }) {
             <div className="relative aspect-[4/3] overflow-hidden bg-muted border border-border/60">
               <img
                 src={e.image}
-                alt={`${e.destinationName} — ${e.kind.toLowerCase()} scene`}
+                alt={e.imageAlt ?? `${e.destinationName} — ${e.kind.toLowerCase()} scene`}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover"
               />
+              {e.imageCaption ? (
+                <span className="absolute bottom-0 inset-x-0 bg-ink/70 text-ivory text-[0.6rem] tracking-[0.14em] font-sans px-2.5 py-1 backdrop-blur-sm">
+                  {e.imageCaption}
+                </span>
+              ) : null}
             </div>
           ) : null}
           <div>
@@ -53,7 +58,7 @@ export function MomentExperience({ momentSlug }: { momentSlug: string }) {
             <p className="mt-2.5 font-serif text-[0.76rem] text-ink/45 leading-snug max-w-2xl">
               Operated by {e.operator}.
               {e.image
-                ? " Imagery is our own editorial illustration of the destination, not the operator's."
+                ? " Imagery is an illustration of the destination, not a photograph of the operator's venue."
                 : " We have no verified photograph of this venue, so none is shown."}{" "}
               Links go to the operator's own page and earn us nothing.
             </p>
