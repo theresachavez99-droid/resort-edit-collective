@@ -38,6 +38,29 @@ export const APPROVED_RETAILER_HOSTS: Record<string, readonly string[]> = {
   "MatchesFashion": ["matchesfashion.com"],
 };
 
+/**
+ * Brand-direct domains verified by hand. Brand-direct linking is only allowed
+ * from a domain on this list — a hostname that merely contains part of the
+ * brand name proves nothing and is rejected.
+ */
+export const VERIFIED_BRAND_DIRECT_HOSTS: Record<string, readonly string[]> = {
+  "Zimmermann": ["zimmermann.com"],
+  "Posse": ["posse.com.au", "poss.com"],
+  "Faithfull the Brand": ["faithfullthebrand.com"],
+  "Jenny Bird": ["jenny-bird.com", "jennybird.com"],
+  "Dragon Diffusion": ["dragondiffusion.com"],
+  "Alexandra Miro": ["alexandramiro.com"],
+  "Mister Zimi": ["misterzimi.com"],
+  "Ancient Greek Sandals": ["ancient-greek-sandals.com"],
+  "STAUD": ["staud.clothing"],
+  "Illesteva": ["illesteva.com"],
+  "Karla Colletto": ["karlacolletto.com"],
+  "Missoni": ["missoni.com"],
+  "Le Specs": ["lespecs.com"],
+  "The Attico": ["theattico.com"],
+};
+
+
 export type StockEvidence = {
   /** Only "in_stock" is availability. Everything else holds publication. */
   availability: "in_stock" | "out_of_stock" | "unknown";
