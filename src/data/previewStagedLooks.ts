@@ -118,7 +118,7 @@ export const ARRIVAL_IVORY_LINEN: StagedLook = {
   caption:
     "Faithfull's Maya vest and Isotta pant in natural linen — tonal, quietly tailored, finished with tan flat leather, a crochet raffia tote, tortoiseshell sunglasses pushed up into her hair and one slim gold family at the ears, throat and wrist.",
   image: arrivalIvoryLinenImage.url,
-  alt: "Lilla on the stone quay in Portofino in a natural ivory linen button-front vest and matching wide-leg linen trousers, tan flat leather thong sandals, a natural crochet raffia and leather tote, tortoiseshell sunglasses pushed up on her head and slim gold hoops, chain necklace and bangles.",
+  alt: "Lilla on the stone quay in Portofino in a natural ivory linen button-front vest and matching wide-leg linen trousers, polished cognac leather broad-strap flat slide sandals, a natural crochet raffia and leather tote, tortoiseshell sunglasses pushed up on her head and slim gold hoops, chain necklace and bangles.",
   visibleProductSlots: [
     "outfit",
     "shoes",
