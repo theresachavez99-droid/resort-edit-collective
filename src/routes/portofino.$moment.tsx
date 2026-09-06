@@ -7,7 +7,6 @@ import { getMomentSlotHealth } from "@/lib/product-health.functions";
 import { slotKey, REPLACEMENT_IN_REVIEW_LABEL, type SlotResolution } from "@/lib/product-health";
 import arrivalHeroVideo from "@/assets/uploads/portofino/arrival-hero.mp4.asset.json";
 import arrivalHeroPoster from "@/assets/uploads/portofino/arrival-hero-poster.jpg.asset.json";
-import espressoHeroVideo from "@/assets/uploads/portofino/espresso-morning-hero.mp4.asset.json";
 import espressoHeroPoster from "@/assets/uploads/portofino/espresso-morning-hero-poster.jpg.asset.json";
 import exploringHarborHeroVideo from "@/assets/uploads/portofino/exploring-the-harbor-hero.mp4.asset.json";
 import exploringHarborHeroPoster from "@/assets/uploads/portofino/exploring-the-harbor-hero-poster.jpg.asset.json";
@@ -58,7 +57,8 @@ type ResponsiveHeroFocal = {
 };
 
 type MomentHeroVideo = {
-  video: string;
+  /** Omit to render the poster as a plain static <img> — no <video> element or video fetch. */
+  video?: string;
   poster: string;
   focal: ResponsiveHeroFocal;
   fit?: CSSProperties["objectFit"];
@@ -166,7 +166,7 @@ const MOMENT_HERO_VIDEO: Record<string, MomentHeroVideo> = {
     ariaLabel: "Arrival in Portofino",
   },
   "espresso-morning": {
-    video: espressoHeroVideo.url,
+    // Static hero: poster still only — no video element or video network fetch.
     poster: espressoHeroPoster.url,
     // Global hero rule: top-center on the eyeline (50% 15%). Head, hair,
     // and shoulders are always preserved; lower body may crop first.
@@ -1010,7 +1010,7 @@ function MomentCinematicHero({
       style={scopeStyle}
     >
       <style dangerouslySetInnerHTML={{ __html: responsiveCss }} />
-      {reduceMotion ? (
+      {reduceMotion || !video ? (
         <img
           src={poster}
           alt={ariaLabel}
