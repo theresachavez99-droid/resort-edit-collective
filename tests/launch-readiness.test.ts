@@ -132,12 +132,16 @@ describe("zero-link commerce CTA suppression", () => {
 
 // ── 3. Footer and About conversion paths ────────────────────────
 describe("footer and About conversion paths", () => {
-  test("footer Our Story / Contact / Collaborate point at distinct anchors", () => {
+  test("footer routes readers to Our Story, Contact, Collaborate and the legal pages", () => {
     const src = read("src/components/SiteFooter.tsx");
     expect(src).toContain('hash="our-story"');
-    expect(src).toContain('hash="contact"');
     expect(src).toContain('hash="collaborate"');
+    expect(src).toContain('to="/contact"');
+    expect(src).toContain('to="/affiliate-disclosure"');
+    expect(src).toContain('to="/privacy-rights"');
+    expect(src).toContain('to="/privacy-policy"');
   });
+
 
   test("About page publishes every anchored section with mailto paths", () => {
     const src = read("src/routes/about.tsx");
