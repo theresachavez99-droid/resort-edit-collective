@@ -1,13 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/privacy-policy")({
   head: () => ({
     meta: [
       { title: "Privacy Policy | Resort Edit | Dressed for the destination" },
-      { name: "description", content: "How Resort Edit collects, uses, and protects your information, including newsletter signups, affiliate links, cookies, and your rights under GDPR and CCPA." },
+      { name: "description", content: "What Resort Edit collects — only a newsletter email address — what we do not track, how retailer links work, and how to access, correct or delete your information." },
       { property: "og:title", content: "Privacy Policy | Resort Edit | Dressed for the destination" },
-      { property: "og:description", content: "How Resort Edit collects, uses, and protects your information." },
+      { property: "og:description", content: "What Resort Edit collects, what we do not track, and the choices you have." },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: absoluteUrl("/privacy-policy") },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/privacy-policy") }],
@@ -28,7 +30,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function PrivacyPolicyPage() {
-  const updated = "May 31, 2026";
+  const updated = "September 6, 2026";
   return (
     <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
       <span className="eyebrow text-gold">Legal</span>
@@ -37,81 +39,136 @@ function PrivacyPolicyPage() {
       <p className="mt-6 font-serif italic text-ink/70">Last updated: {updated}</p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
-        Resort Edit ("Resort Edit," "we," "us," or "our") respects your privacy. This Privacy Policy explains what information we collect when you visit resortedit.com, how we use it, and the choices you have. By using the site, you agree to the practices described here.
+        Resort Edit ("Resort Edit," "we," "us," or "our") is an independent editorial publication at
+        resortedit.com. This policy describes what we actually do today — not what a publication of
+        this kind might do. It is written to be accurate rather than broad, and we update it when our
+        practices change.
       </p>
 
       <Section title="Information We Collect">
-        <p>We collect limited information necessary to operate the site and deliver our editorial content:</p>
+        <p>We keep this deliberately small:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li><strong>Information you provide:</strong> your email address when you subscribe to The Next Edit, and any details you send us by email.</li>
-          <li><strong>Information collected automatically:</strong> device, browser, referring page, pages visited, and approximate location derived from your IP address.</li>
-          <li><strong>Information from partners:</strong> aggregated reporting from affiliate networks and analytics providers about clicks and conversions originating from Resort Edit.</li>
+          <li>
+            <strong>Your email address</strong>, when you subscribe to The Next Edit. We store it with
+            the date of your signup and the page it came from, so we know which edit you subscribed to.
+          </li>
+          <li>
+            <strong>Anything you send us by email</strong> at hello@resortedit.com, which stays in our
+            mailbox as ordinary correspondence.
+          </li>
+          <li>
+            <strong>Standard web-server request logs</strong> kept by our hosting provider to deliver
+            pages and protect the site — the same logs any website host records.
+          </li>
         </ul>
-      </Section>
-
-      <Section title="Newsletter & Email Collection">
         <p>
-          When you subscribe to our newsletter, we use your email address to send curated editorial features, destination guides, and shoppable edits. You can unsubscribe at any time using the link in any email, and your address will be removed from active mailing lists.
-        </p>
-        <p>We do not sell or rent newsletter subscriber lists to third parties.</p>
-      </Section>
-
-      <Section title="Affiliate Links & Commissions">
-        <p>
-          Resort Edit participates in affiliate marketing programs, including but not limited to RewardStyle / LTK, ShopMy, Skimlinks, Amazon Associates, and direct retailer partnerships. When you click an affiliate link and make a purchase, we may earn a commission at no additional cost to you.
-        </p>
-        <p>
-          Editorial selections are made independently. Commissions help fund the publication but do not influence what we choose to feature.
+          We do not ask you to create an account, and we do not collect payment information, because
+          nothing is sold on this site.
         </p>
       </Section>
 
-      <Section title="Cookies & Analytics">
-        <p>
-          We and our partners use cookies, pixels, and similar technologies to remember preferences, measure traffic, and attribute affiliate clicks. This may include first-party analytics cookies and third-party tags from affiliate networks.
-        </p>
-        <p>
-          You can control cookies through your browser settings. Disabling cookies may affect how parts of the site function, including affiliate link tracking.
-        </p>
-      </Section>
-
-      <Section title="Third-Party Services">
-        <p>We rely on trusted third parties to operate Resort Edit. Categories include:</p>
+      <Section title="What We Do Not Collect or Do">
         <ul className="list-disc pl-6 space-y-2">
-          <li>Email and newsletter delivery providers</li>
-          <li>Web hosting and content delivery networks</li>
-          <li>Analytics platforms</li>
-          <li>Affiliate networks and retailer partners</li>
-          <li>Social platforms (such as Instagram) when you interact with embedded content</li>
+          <li>We do not load advertising or analytics trackers on this site.</li>
+          <li>We do not set advertising cookies or build reader profiles.</li>
+          <li>We do not sell, rent or share personal information.</li>
+          <li>We do not buy email lists or add anyone who did not subscribe.</li>
         </ul>
-        <p>These providers receive only the information needed to perform their services and are bound by their own privacy policies.</p>
+        <p>
+          Because there is no optional tracking running, there is no cookie banner and no tracking
+          opt-out to operate. If we ever add optional tracking, it will be off until you agree to it
+          and this policy will say so first.
+        </p>
+      </Section>
+
+      <Section title="Saved Looks Stay in Your Browser">
+        <p>
+          When you save a look, it is stored in your own browser's local storage. It is never sent to
+          us — we cannot see your saved looks — and clearing your browser data removes them.
+        </p>
+      </Section>
+
+      <Section title="Newsletter">
+        <p>
+          Subscribing stores your address so we can send curated editorial features, destination
+          guides and shoppable edits. We are still setting up our sending service, so subscribing
+          today records your consent rather than triggering an immediate email — you will not receive
+          a confirmation message yet.
+        </p>
+        <p>
+          You can ask to be removed at any time by emailing us, and once sending begins every email
+          will also carry an unsubscribe link. We do not sell or rent subscriber lists.
+        </p>
+      </Section>
+
+      <Section title="Retailer & Affiliate Links">
+        <p>
+          Some retailer links on this site may earn Resort Edit a commission if you buy something, at
+          no additional cost to you. Many of our links earn nothing at all, and we do not claim
+          membership of any affiliate network that has not accepted us.
+        </p>
+        <p>
+          When you follow a link off this site, that company's own cookies, tracking and privacy
+          policy apply — not ours — and any commission tracking happens on their side, not through
+          code we run here. Editorial selections are made independently of commissions. Full detail is
+          in our{" "}
+          <Link to="/affiliate-disclosure" className="text-gold hover:underline">Affiliate Disclosure</Link>.
+        </p>
+      </Section>
+
+      <Section title="Third Parties We Rely On">
+        <p>We keep our suppliers to the minimum needed to publish:</p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Our website hosting and content delivery provider</li>
+          <li>The hosted database service that stores newsletter signups</li>
+          <li>Our email provider, for the mailbox at hello@resortedit.com</li>
+        </ul>
+        <p>
+          Each receives only what it needs to perform its function and is bound by its own privacy
+          terms. Retailers, hotels and tour operators we link to are independent companies; they
+          receive nothing about you from us.
+        </p>
       </Section>
 
       <Section title="Your Rights">
-        <p>Depending on where you live, you may have the right to:</p>
+        <p>You can ask us to:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Access, correct, or delete personal information we hold about you</li>
-          <li>Withdraw consent or unsubscribe from marketing communications</li>
-          <li>Object to or restrict certain processing of your information</li>
-          <li>Request a portable copy of information you provided</li>
+          <li>Tell you what we hold about you, or send you a copy of it</li>
+          <li>Correct it</li>
+          <li>Delete it, or unsubscribe you from the newsletter</li>
+          <li>Stop processing it</li>
         </ul>
-        <p>To exercise these rights, contact us at the email below.</p>
-      </Section>
-
-      <Section title="GDPR (European Economic Area & UK)">
         <p>
-          If you are located in the EEA or UK, we process your personal data on the basis of your consent (newsletter subscriptions), our legitimate interests (operating and improving the site, measuring affiliate performance), or to comply with legal obligations. You have the right to lodge a complaint with your local data protection authority.
+          Email{" "}
+          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">hello@resortedit.com</a>{" "}
+          from the address concerned and we will act on it. Practical detail is on our{" "}
+          <Link to="/privacy-rights" className="text-gold hover:underline">Privacy Choices</Link> page.
         </p>
       </Section>
 
-      <Section title="CCPA (California Residents)">
+      <Section title="If You Are in the EEA or UK">
         <p>
-          California residents have the right to know what personal information we collect, to request deletion, and to opt out of the "sale" or "sharing" of personal information as defined by the CCPA/CPRA. Resort Edit does not sell personal information for monetary value. To submit a request, contact us using the details below.
+          We process your email address on the basis of your consent, which you can withdraw at any
+          time, and keep server logs on the basis of our legitimate interest in running a secure
+          site. You may also complain to your local data protection authority. Our suppliers may
+          process data outside your country under the safeguards in their own terms.
+        </p>
+      </Section>
+
+      <Section title="If You Are in California">
+        <p>
+          You may ask what personal information we hold, request a copy, and request deletion. Resort
+          Edit does not sell personal information and does not share it for cross-context behavioural
+          advertising, so there is nothing for a "Do Not Sell or Share" opt-out to switch off. We will
+          not treat you differently for making a request.
         </p>
       </Section>
 
       <Section title="Data Retention">
         <p>
-          We retain personal information only for as long as needed for the purposes described in this policy, to comply with legal obligations, resolve disputes, and enforce agreements. Newsletter subscriber data is kept until you unsubscribe or request deletion.
+          Subscriber addresses are kept until you unsubscribe or ask us to delete them. Emails you
+          send us are kept as long as needed to deal with the matter. Server logs are retained for a
+          short period by our host for security and diagnostics.
         </p>
       </Section>
 
@@ -120,13 +177,15 @@ function PrivacyPolicyPage() {
       </Section>
 
       <Section title="Changes to This Policy">
-        <p>We may update this Privacy Policy from time to time. Material changes will be reflected by updating the "Last updated" date above and, where appropriate, by notice on the site.</p>
+        <p>We update this policy when our practices change, and revise the "Last updated" date above. Material changes will also be noted on the site.</p>
       </Section>
 
       <Section title="Contact">
         <p>
-          Questions, requests, or concerns about this Privacy Policy can be sent to{" "}
-          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">hello@resortedit.com</a>.
+          Questions, requests or corrections can be sent to{" "}
+          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">hello@resortedit.com</a>{" "}
+          or through our{" "}
+          <Link to="/contact" className="text-gold hover:underline">Contact</Link> page.
         </p>
       </Section>
     </div>
