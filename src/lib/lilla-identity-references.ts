@@ -45,6 +45,22 @@ export const CONTROLLING_LILLA_IDENTITY_REFERENCE: LillaIdentityReference = {
 };
 
 /**
+ * PRIMARY face + body + skin-tone standard (founder instruction, 6 September
+ * 2026): the approved butter-yellow dress image. Every new Lilla generation
+ * must match this face, body build/proportions and warm golden-tan skin tone
+ * across face, neck, arms, hands and legs. Supply it as an actual image input
+ * alongside the controlling facial reference above.
+ */
+export const BUTTER_STANDARD_LILLA_REFERENCE: LillaIdentityReference = {
+  id: "arrival-lilla-butter-light-approved",
+  url: "/__l5e/assets-v1/a7fb343d-6eb0-4224-b870-7941eb0488d8/arrival-lilla-butter-light-approved.png",
+  pointer: "src/assets/uploads/lilla/arrival-lilla-butter-light-approved.png.asset.json",
+  sourcePath: "/tmp/arrival-butter-full-body.png",
+  note:
+    "Founder-approved butter-yellow dress image. Primary standard for Lilla's face AND body, including proportions and warm golden-tan skin tone. Approved unchanged — never regenerate it.",
+};
+
+/**
  * Retired references. Do NOT pass these to any generation, and do not blend
  * them with the controlling reference above.
  */
