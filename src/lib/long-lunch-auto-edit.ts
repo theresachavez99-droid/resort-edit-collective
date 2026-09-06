@@ -190,7 +190,7 @@ export function heuristicCoherence(
   // Footwear appropriateness
   for (const s of slots) {
     if (s.slot === "shoes" && BAD_DAY_SHOE.test(text(s))) {
-      score -= 18;
+      score -= 34;
       notes.push(`${s.brand} footwear is wrong for an elegant daytime lunch.`);
     }
   }
