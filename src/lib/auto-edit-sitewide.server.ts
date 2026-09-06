@@ -23,7 +23,6 @@
 import {
   evaluatePublishGates,
   heroGate,
-  mainClothingBrand,
   merchantGate,
   momentBrandDiversityGate,
   outfitFingerprint,
@@ -38,6 +37,10 @@ import {
 import { canonicalVisibleSlot, type VisibleProductSlot } from "./look-atomic-completeness";
 import { isExcludedProduct } from "./merchandising-exclusions";
 import { momentBrief, PORTOFINO_MOMENT_BRIEFS } from "./portofino-moment-briefs";
+import { auditLillaLooks } from "./lilla-look-audit";
+
+/** Founder rule: every Moment publishes exactly three distinct complete looks. */
+export const REQUIRED_LOOKS_PER_MOMENT = 3;
 
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const STYLIST_MODEL = "google/gemini-3-flash";
@@ -199,6 +202,7 @@ export async function auditMoments(momentSlugs?: string[]): Promise<{
     if (byLook.size === 0) withNoProducts += 1;
 
     const looks: LookAudit[] = [];
+    const goodPicksByLook = new Map<string, GatedPick[]>();
     for (const [lookKey, lookRows] of byLook) {
       const slots: SlotAudit[] = [];
       const goodPicks: GatedPick[] = [];
@@ -231,6 +235,7 @@ export async function auditMoments(momentSlugs?: string[]): Promise<{
         ...(missingRequired.length ? [`missing: ${missingRequired.join(", ")}`] : []),
         ...slots.flatMap((s) => s.failures.map((f) => `${s.rawSlot}: ${f.gate}`)),
       ];
+      goodPicksByLook.set(lookKey, goodPicks);
       looks.push({
         lookKey,
         slots,
