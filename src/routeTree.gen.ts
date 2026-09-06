@@ -25,6 +25,7 @@ import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
 import { Route as AdminCurationRouteImport } from './routes/admin.curation'
 import { Route as AdminEditorialClosetRouteImport } from './routes/admin.editorial-closet'
 import { Route as AdminEditorialIntelligenceRouteImport } from './routes/admin.editorial-intelligence'
+import { Route as AdminLaunchAuditRouteImport } from './routes/admin.launch-audit'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
 import { Route as AdminProductAuditRouteImport } from './routes/admin.product-audit'
 import { Route as AdminProductHealthRouteImport } from './routes/admin.product-health'
@@ -129,6 +130,11 @@ const AdminEditorialIntelligenceRoute =
     path: '/editorial-intelligence',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminLaunchAuditRoute = AdminLaunchAuditRouteImport.update({
+  id: '/launch-audit',
+  path: '/launch-audit',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLooksRoute = AdminLooksRouteImport.update({
   id: '/looks',
   path: '/looks',
@@ -262,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
+  '/admin/launch-audit': typeof AdminLaunchAuditRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
@@ -298,6 +305,7 @@ export interface FileRoutesByTo {
   '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
+  '/admin/launch-audit': typeof AdminLaunchAuditRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
+  '/admin/launch-audit': typeof AdminLaunchAuditRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
@@ -381,6 +390,7 @@ export interface FileRouteTypes {
     | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
+    | '/admin/launch-audit'
     | '/admin/looks'
     | '/admin/product-audit'
     | '/admin/product-health'
@@ -417,6 +427,7 @@ export interface FileRouteTypes {
     | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
+    | '/admin/launch-audit'
     | '/admin/looks'
     | '/admin/product-audit'
     | '/admin/product-health'
@@ -457,6 +468,7 @@ export interface FileRouteTypes {
     | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
+    | '/admin/launch-audit'
     | '/admin/looks'
     | '/admin/product-audit'
     | '/admin/product-health'
@@ -614,6 +626,13 @@ declare module '@tanstack/react-router' {
       path: '/editorial-intelligence'
       fullPath: '/admin/editorial-intelligence'
       preLoaderRoute: typeof AdminEditorialIntelligenceRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/launch-audit': {
+      id: '/admin/launch-audit'
+      path: '/launch-audit'
+      fullPath: '/admin/launch-audit'
+      preLoaderRoute: typeof AdminLaunchAuditRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/looks': {
@@ -779,6 +798,7 @@ interface AdminRouteChildren {
   AdminCurationRoute: typeof AdminCurationRoute
   AdminEditorialClosetRoute: typeof AdminEditorialClosetRoute
   AdminEditorialIntelligenceRoute: typeof AdminEditorialIntelligenceRoute
+  AdminLaunchAuditRoute: typeof AdminLaunchAuditRoute
   AdminLooksRoute: typeof AdminLooksRoute
   AdminProductAuditRoute: typeof AdminProductAuditRoute
   AdminProductHealthRoute: typeof AdminProductHealthRoute
@@ -795,6 +815,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCurationRoute: AdminCurationRoute,
   AdminEditorialClosetRoute: AdminEditorialClosetRoute,
   AdminEditorialIntelligenceRoute: AdminEditorialIntelligenceRoute,
+  AdminLaunchAuditRoute: AdminLaunchAuditRoute,
   AdminLooksRoute: AdminLooksRoute,
   AdminProductAuditRoute: AdminProductAuditRoute,
   AdminProductHealthRoute: AdminProductHealthRoute,
