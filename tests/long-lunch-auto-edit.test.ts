@@ -2,6 +2,7 @@ import { describe, expect, it } from "bun:test";
 import {
   LONG_LUNCH_REQUIRED_SLOTS,
   MIN_PUBLISH_COHERENCE,
+  deriveVerification,
   heuristicCoherence,
   isEligibleRow,
   lookFingerprint,
