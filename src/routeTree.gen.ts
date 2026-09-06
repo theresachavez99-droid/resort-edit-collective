@@ -22,6 +22,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
+import { Route as AdminCurationRouteImport } from './routes/admin.curation'
 import { Route as AdminEditorialClosetRouteImport } from './routes/admin.editorial-closet'
 import { Route as AdminEditorialIntelligenceRouteImport } from './routes/admin.editorial-intelligence'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
@@ -109,6 +110,11 @@ const AdminBrandsRoute = AdminBrandsRouteImport.update({
 const AdminCatalogRoute = AdminCatalogRouteImport.update({
   id: '/catalog',
   path: '/catalog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCurationRoute = AdminCurationRouteImport.update({
+  id: '/curation',
+  path: '/curation',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminEditorialClosetRoute = AdminEditorialClosetRouteImport.update({
@@ -246,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
@@ -280,6 +287,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
@@ -319,6 +327,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
   '/admin/looks': typeof AdminLooksRoute
@@ -359,6 +368,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/catalog'
+    | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
@@ -393,6 +403,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/catalog'
+    | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
@@ -431,6 +442,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/brands'
     | '/admin/catalog'
+    | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
     | '/admin/looks'
@@ -567,6 +579,13 @@ declare module '@tanstack/react-router' {
       path: '/catalog'
       fullPath: '/admin/catalog'
       preLoaderRoute: typeof AdminCatalogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/curation': {
+      id: '/admin/curation'
+      path: '/curation'
+      fullPath: '/admin/curation'
+      preLoaderRoute: typeof AdminCurationRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/editorial-closet': {
@@ -736,6 +755,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminBrandsRoute: typeof AdminBrandsRoute
   AdminCatalogRoute: typeof AdminCatalogRoute
+  AdminCurationRoute: typeof AdminCurationRoute
   AdminEditorialClosetRoute: typeof AdminEditorialClosetRoute
   AdminEditorialIntelligenceRoute: typeof AdminEditorialIntelligenceRoute
   AdminLooksRoute: typeof AdminLooksRoute
@@ -751,6 +771,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBrandsRoute: AdminBrandsRoute,
   AdminCatalogRoute: AdminCatalogRoute,
+  AdminCurationRoute: AdminCurationRoute,
   AdminEditorialClosetRoute: AdminEditorialClosetRoute,
   AdminEditorialIntelligenceRoute: AdminEditorialIntelligenceRoute,
   AdminLooksRoute: AdminLooksRoute,
