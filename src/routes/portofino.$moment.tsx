@@ -573,15 +573,17 @@ function MomentPage() {
     : resolved.title;
 
   const extraCards = MOMENT_EXTRA_EDITORIAL_CARDS[slug] ?? [];
-  // ATOMIC COMPLETENESS (preview) — a supporting Lilla card renders only when
-  // every product category visible in its photograph has an active, valid
-  // link. Incomplete looks (e.g. "Green Eyelet on Via Roma", whose visible
-  // shoes and raffia bag are unlinked) are hidden entirely: no card, no
-  // expansion, no "Still sourcing" row.
-  // Complete-look rule applies on every environment, not just preview: a
-  // supporting look with an unlinked visible slot is hidden entirely.
-  const publishableExtraCards = extraCards.filter((c) => isLillaLookComplete(slug, c.key));
-  const renderedExtraCards = publishableExtraCards.slice(0, MAX_SUPPORTING_LOOKS);
+  // EDITORIAL VISIBILITY IS INDEPENDENT OF SHOPPING ELIGIBILITY — every stored
+  // (non-rejected) supporting Lilla image renders. Looks whose product set is
+  // not complete/verified render in editorial-only mode: image, title and
+  // caption with an accurate inspiration disclosure, and NO commerce rows,
+  // expander or outbound links. Durable auto-repair still owns fixing them.
+  const orderedExtraCards = [
+    ...extraCards.filter((c) => isLillaLookComplete(slug, c.key)),
+    ...extraCards.filter((c) => !isLillaLookComplete(slug, c.key)),
+  ];
+  const renderedExtraCards = orderedExtraCards.slice(0, MAX_SUPPORTING_LOOKS);
+
 
   // Moments registered in MOMENT_HERO_VIDEO get the shared cinematic video
   // hero. All other moments keep the canonical image hero.
@@ -710,26 +712,25 @@ function MomentPage() {
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
           <div
             className={
-              heroEligible
-                ? "grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start"
-                : "max-w-3xl"
+              "grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start"
             }
           >
-            {/* The model image renders ONLY with a complete shoppable outfit —
-                an incomplete outfit is withheld in full, image included. */}
-            {heroEligible && (
-              <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
-                <img
-                  src={editorialImage}
-                  alt={stagedLook?.alt ?? `${editorialTitle} — Portofino featured look`}
-                  className="absolute inset-0 h-full w-full object-cover object-center"
-                />
+            {/* EDITORIAL VISIBILITY IS INDEPENDENT OF SHOPPING ELIGIBILITY —
+                the approved Lilla editorial image always renders. Commerce
+                (itemization, CTA, outbound links) stays gated separately, so
+                an incomplete product set never reads as a shoppable outfit. */}
+            <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
+              <img
+                src={editorialImage}
+                alt={stagedLook?.alt ?? `${editorialTitle} — Portofino featured look`}
+                className="absolute inset-0 h-full w-full object-cover object-center"
+              />
 
-                <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-                  INSPIRED BY
-                </span>
-              </div>
-            )}
+              <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+                INSPIRED BY
+              </span>
+            </div>
+
 
             <div className="space-y-4 lg:pl-2">
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
@@ -783,6 +784,17 @@ function MomentPage() {
               ) : (
                 <ResortEditItemization lookKey={`portofino/${slug}`} />
               )}
+              {/* EDITORIAL-INSPIRATION DISCLOSURE — shown only when the
+                  shoppable set is not complete/verified. The image and story
+                  stay visible; no partial outfit is presented for sale. */}
+              {!heroEligible && (
+                <p className="text-[0.7rem] leading-relaxed tracking-[0.04em] text-ink/60 border-t border-border/50 pt-4">
+                  Editorial inspiration. This look is shown for styling
+                  reference only — its shopping list is being verified, so no
+                  items from this image are offered for purchase here yet.
+                </p>
+              )}
+
               {completeLookHref && heroEligible && (
                 <div className="pt-6 flex justify-center lg:justify-start">
                   <Link
@@ -828,9 +840,10 @@ function MomentPage() {
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-              {NIGHTCAP_EDITORIAL_CARDS.filter(
-                (c) => isLillaLookComplete("nightcap", c.key),
-              ).map((c) => (
+              {/* Editorial visibility is independent of shopping eligibility:
+                  every approved Nightcap image renders; commerce only when the
+                  look's product set is complete and verified. */}
+              {NIGHTCAP_EDITORIAL_CARDS.map((c) => (
                 <article key={c.key} className="flex flex-col bg-ivory border border-border/40">
                   <div className="relative aspect-[4/5] overflow-hidden bg-cream">
                     <img
@@ -862,13 +875,15 @@ function MomentPage() {
                         url: `/portofino/${slug}#more-looks`,
                       }}
                     />
-                    {c.shop && (
+                    {c.shop && isLillaLookComplete("nightcap", c.key) ? (
                       <NightcapShopExpander
                         card={c}
                         shop={c.shop}
                         lookKey={`portofino/${slug}/${c.key}`}
                         lookHealth={slotHealth.looks}
                       />
+                    ) : (
+                      <EditorialInspirationNotice />
                     )}
                   </div>
                 </article>
@@ -897,9 +912,11 @@ function MomentPage() {
                     card={c}
                     momentSlug={slug}
                     momentName={card.moment_name}
+                    editorialOnly={!isLillaLookComplete(slug, c.key)}
                     lookHealth={slotHealth.looks}
                   />
                 ))}
+
               </div>
             </div>
           </section>
@@ -1309,6 +1326,21 @@ function NightcapShopExpander({
  * INSPIRED BY badge, the caption, and a restrained outbound "SHOP THE
  * REFERENCE" link to the real designer product.
  */
+/**
+ * Accurate editorial-inspiration disclosure. Used wherever an approved Lilla
+ * image renders without a complete, verified shopping list — the image and
+ * story stay visible, but nothing is presented as purchasable.
+ */
+function EditorialInspirationNotice() {
+  return (
+    <p className="mt-2 text-[0.7rem] leading-relaxed tracking-[0.04em] text-ink/60 border-t border-border/50 pt-4">
+      Editorial inspiration. This look is shown for styling reference only — its
+      shopping list is being verified, so no items from this image are offered
+      for purchase here yet.
+    </p>
+  );
+}
+
 function ExtraEditorialReferenceCard({
   card,
   momentSlug,
@@ -1379,15 +1411,7 @@ function ExtraEditorialReferenceCard({
           }}
         />
         {editorialOnly || referenceSuppressed ? (
-          editorialOnly ? (
-            <Link
-              to="/portofino/$moment"
-              params={{ moment: momentSlug }}
-              className="mt-2 inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
-            >
-              VIEW THE EDIT →
-            </Link>
-          ) : null
+          editorialOnly ? <EditorialInspirationNotice /> : null
         ) : (
           <div className="mt-4 border-t border-border/50 pt-5">
             {referenceShoppable && <CommissionNotice className="mb-4" />}
