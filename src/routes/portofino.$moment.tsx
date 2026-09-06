@@ -840,9 +840,10 @@ function MomentPage() {
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-              {NIGHTCAP_EDITORIAL_CARDS.filter(
-                (c) => isLillaLookComplete("nightcap", c.key),
-              ).map((c) => (
+              {/* Editorial visibility is independent of shopping eligibility:
+                  every approved Nightcap image renders; commerce only when the
+                  look's product set is complete and verified. */}
+              {NIGHTCAP_EDITORIAL_CARDS.map((c) => (
                 <article key={c.key} className="flex flex-col bg-ivory border border-border/40">
                   <div className="relative aspect-[4/5] overflow-hidden bg-cream">
                     <img
@@ -874,13 +875,15 @@ function MomentPage() {
                         url: `/portofino/${slug}#more-looks`,
                       }}
                     />
-                    {c.shop && (
+                    {c.shop && isLillaLookComplete("nightcap", c.key) ? (
                       <NightcapShopExpander
                         card={c}
                         shop={c.shop}
                         lookKey={`portofino/${slug}/${c.key}`}
                         lookHealth={slotHealth.looks}
                       />
+                    ) : (
+                      <EditorialInspirationNotice />
                     )}
                   </div>
                 </article>
@@ -1323,6 +1326,21 @@ function NightcapShopExpander({
  * INSPIRED BY badge, the caption, and a restrained outbound "SHOP THE
  * REFERENCE" link to the real designer product.
  */
+/**
+ * Accurate editorial-inspiration disclosure. Used wherever an approved Lilla
+ * image renders without a complete, verified shopping list — the image and
+ * story stay visible, but nothing is presented as purchasable.
+ */
+function EditorialInspirationNotice() {
+  return (
+    <p className="mt-2 text-[0.7rem] leading-relaxed tracking-[0.04em] text-ink/60 border-t border-border/50 pt-4">
+      Editorial inspiration. This look is shown for styling reference only — its
+      shopping list is being verified, so no items from this image are offered
+      for purchase here yet.
+    </p>
+  );
+}
+
 function ExtraEditorialReferenceCard({
   card,
   momentSlug,
@@ -1393,15 +1411,7 @@ function ExtraEditorialReferenceCard({
           }}
         />
         {editorialOnly || referenceSuppressed ? (
-          editorialOnly ? (
-            <Link
-              to="/portofino/$moment"
-              params={{ moment: momentSlug }}
-              className="mt-2 inline-flex items-center gap-2 eyebrow text-[0.64rem] tracking-[0.32em] text-ivory bg-ink hover:bg-gold transition-colors px-5 py-2.5 self-start"
-            >
-              VIEW THE EDIT →
-            </Link>
-          ) : null
+          editorialOnly ? <EditorialInspirationNotice /> : null
         ) : (
           <div className="mt-4 border-t border-border/50 pt-5">
             {referenceShoppable && <CommissionNotice className="mb-4" />}
