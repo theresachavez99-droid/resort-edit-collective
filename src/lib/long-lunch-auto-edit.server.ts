@@ -162,8 +162,17 @@ function toCandidate(
     url: row.url as string,
     price: row.price,
     styleDna: row.style_dna,
+    provenance: row.registry_source ?? source,
+    imageUrl: null,
+    availability: row.status,
+    lastCheckedAt: row.last_checked_at ?? null,
+    verification: deriveVerification({
+      lastCheckedAt: row.last_checked_at ?? null,
+      verdict: row.last_audit_verdict ?? null,
+    }),
   };
 }
+
 
 /**
  * Eligible candidate pool — EXISTING product records only. There is no live
