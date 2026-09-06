@@ -573,15 +573,17 @@ function MomentPage() {
     : resolved.title;
 
   const extraCards = MOMENT_EXTRA_EDITORIAL_CARDS[slug] ?? [];
-  // ATOMIC COMPLETENESS (preview) — a supporting Lilla card renders only when
-  // every product category visible in its photograph has an active, valid
-  // link. Incomplete looks (e.g. "Green Eyelet on Via Roma", whose visible
-  // shoes and raffia bag are unlinked) are hidden entirely: no card, no
-  // expansion, no "Still sourcing" row.
-  // Complete-look rule applies on every environment, not just preview: a
-  // supporting look with an unlinked visible slot is hidden entirely.
-  const publishableExtraCards = extraCards.filter((c) => isLillaLookComplete(slug, c.key));
-  const renderedExtraCards = publishableExtraCards.slice(0, MAX_SUPPORTING_LOOKS);
+  // EDITORIAL VISIBILITY IS INDEPENDENT OF SHOPPING ELIGIBILITY — every stored
+  // (non-rejected) supporting Lilla image renders. Looks whose product set is
+  // not complete/verified render in editorial-only mode: image, title and
+  // caption with an accurate inspiration disclosure, and NO commerce rows,
+  // expander or outbound links. Durable auto-repair still owns fixing them.
+  const orderedExtraCards = [
+    ...extraCards.filter((c) => isLillaLookComplete(slug, c.key)),
+    ...extraCards.filter((c) => !isLillaLookComplete(slug, c.key)),
+  ];
+  const renderedExtraCards = orderedExtraCards.slice(0, MAX_SUPPORTING_LOOKS);
+
 
   // Moments registered in MOMENT_HERO_VIDEO get the shared cinematic video
   // hero. All other moments keep the canonical image hero.
