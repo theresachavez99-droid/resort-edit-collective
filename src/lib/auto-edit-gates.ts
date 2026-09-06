@@ -352,8 +352,21 @@ export type HeroValidation = {
   garmentScore: number | null;
   cropSafe: boolean | null;
   referenceUsed: string | null;
+  /** Every reference actually supplied to the generator as image pixels. */
+  referencesUsed?: readonly string[];
+  /**
+   * Affirmative verifier statements. Each must be an explicit `true` — a
+   * missing field is never treated as a pass, and a model score alone is not
+   * proof of any of them.
+   */
+  headInFrame?: boolean | null;
+  bodyInFrame?: boolean | null;
+  feetInFrame?: boolean | null;
+  identityConfirmed?: boolean | null;
+  productsConfirmed?: boolean | null;
   notes?: string | null;
 };
+
 
 export const HERO_MIN_IDENTITY = 0.85;
 export const HERO_MIN_GARMENT = 0.8;
