@@ -80,3 +80,38 @@ export const getActiveAutoEditLook = createServerFn({ method: "GET" })
       }));
     return { rows };
   });
+
+// ── Curation desk (admin only) ────────────────────────────────────
+//
+// Candidate generation and approval are separate, explicit founder actions.
+// Nothing here can publish a look automatically.
+
+export const getLongLunchCurationDesk = createServerFn({ method: "GET" }).handler(async () => {
+  await assertAdmin();
+  const { loadCurationDesk } = await import("./long-lunch-auto-edit.server");
+  return loadCurationDesk();
+});
+
+export const proposeLongLunchCandidate = createServerFn({ method: "POST" }).handler(async () => {
+  await assertAdmin();
+  const { proposeLongLunchLook } = await import("./long-lunch-auto-edit.server");
+  return proposeLongLunchLook();
+});
+
+export const approveLongLunchLook = createServerFn({ method: "POST" })
+  .inputValidator((input) => z.object({ versionId: z.string().uuid() }).parse(input))
+  .handler(async ({ data }) => {
+    await assertAdmin();
+    const { approveLongLunchCandidate } = await import("./long-lunch-auto-edit.server");
+    return approveLongLunchCandidate(data);
+  });
+
+export const rejectLongLunchLook = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z.object({ versionId: z.string().uuid(), reason: z.string().max(300).optional() }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    await assertAdmin();
+    const { rejectLongLunchCandidate } = await import("./long-lunch-auto-edit.server");
+    return rejectLongLunchCandidate(data);
+  });
