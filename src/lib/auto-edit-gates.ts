@@ -403,8 +403,20 @@ export function heroGate(
   if (v.cropSafe !== true) {
     failures.push({ gate: "hero_crop_unsafe", detail: "head, hair, body or shoes not safely framed" });
   }
+  // Affirmative checks. A missing field is a failure, never a pass.
+  const affirmations: [keyof HeroValidation, string][] = [
+    ["headInFrame", "verifier did not affirm the whole head is in frame"],
+    ["bodyInFrame", "verifier did not affirm the whole body is in frame"],
+    ["feetInFrame", "verifier did not affirm the feet/shoes are in frame"],
+    ["identityConfirmed", "verifier did not affirm this is the approved Lilla identity"],
+    ["productsConfirmed", "verifier did not affirm she wears the exact linked products"],
+  ];
+  for (const [field, detail] of affirmations) {
+    if (v[field] !== true) failures.push({ gate: `hero_${String(field)}_unproven`, detail });
+  }
   return ok(failures);
 }
+
 
 // ── Aggregate ────────────────────────────────────────────────────
 
