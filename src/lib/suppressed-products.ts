@@ -38,8 +38,6 @@ export const SUPPRESSED_PRODUCTS: SuppressedProduct[] = [
   { lookKey: "portofino/riviera-dinner/tide-at-blue-hour", brand: "Cult Gaia", productName: "Hera Nano Acrylic Clutch", reason: "404" },
   { lookKey: "portofino/riviera-dinner/tide-at-blue-hour", brand: "Aquazzura", productName: "So Nude 105 Leather Sandals", reason: "404" },
   // ── Sold out ─────────────────────────────────────────────────
-  { lookKey: "portofino/arrival/butter-light-arrival", brand: "W. Cashmere", productName: "Asteria Cardigan", reason: "sold_out" },
-  { lookKey: "portofino/arrival/butter-light-arrival", brand: "Le Specs", productName: "The Muse Sunglasses", reason: "sold_out" },
   { lookKey: "portofino/exploring-the-harbor/eloise-at-noon", brand: "SIMKHAI", productName: "Eloise Lace Maxi Dress", reason: "sold_out" },
   // Suppressed until a live colorway URL arrives.
   { lookKey: "portofino/long-lunch", brand: "L'AGENCE", productName: "Rima Belted Front Zip Midi Dress", reason: "sold_out" },

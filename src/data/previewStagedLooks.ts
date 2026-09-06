@@ -10,6 +10,7 @@
  * written or mutated by staging a look here. Prices are never stored or shown.
  */
 import evelynJadeImage from "@/assets/uploads/lilla/portofino-shopping-lilla-evelyn-jade-v2.png.asset.json";
+import arrivalIvoryLinenImage from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v6.png.asset.json";
 import type { VisibleProductSlot } from "@/lib/look-atomic-completeness";
 
 export type StagedLookRow = {
@@ -110,7 +111,93 @@ export const SHOPPING_EVELYN_JADE: StagedLook = {
   ],
 };
 
+/** Portofino Arrival — the Ivory Arrival on the harbour quay. */
+export const ARRIVAL_IVORY_LINEN: StagedLook = {
+  key: "ivory-linen-on-the-quay",
+  title: "The Ivory Arrival",
+  caption:
+    "Faithfull's Maya vest and Isotta pant in natural linen — tonal, quietly tailored, finished with tan flat leather, a crochet raffia tote, tortoiseshell sunglasses pushed up into her hair and one slim gold family at the ears, throat and wrist.",
+  image: arrivalIvoryLinenImage.url,
+  alt: "Lilla on the stone quay in Portofino in a natural ivory linen button-front vest and matching wide-leg linen trousers, tan flat leather thong sandals, a natural crochet raffia and leather tote, tortoiseshell sunglasses pushed up on her head and slim gold hoops, chain necklace and bangles.",
+  visibleProductSlots: [
+    "outfit",
+    "shoes",
+    "bag",
+    "sunglasses",
+    "earrings",
+    "necklace",
+    "bracelet",
+  ],
+  rows: [
+    {
+      slot: "Hero Piece · Vest",
+      brand: "FAITHFULL THE BRAND",
+      name: "Maya Vest In Natural",
+      color: "Natural",
+      retailer: "Revolve",
+      url: "https://www.revolve.com/dp/FAIB-WS275/",
+    },
+    {
+      slot: "Hero Piece · Trousers",
+      brand: "FAITHFULL THE BRAND",
+      name: "Isotta Pant In Natural",
+      color: "Natural",
+      retailer: "Revolve",
+      url: "https://www.revolve.com/dp/FAIB-WP74/",
+    },
+    {
+      slot: "Shoes",
+      brand: "Rag & Bone",
+      name: "Remi Flat Sandal",
+      color: "Tan",
+      retailer: "Revolve",
+      url: "https://www.revolve.com/dp/RGBR-WZ359/",
+    },
+    {
+      slot: "Bag",
+      brand: "florabella",
+      name: "Foggia Crochet Raffia And Leather Tote Bag",
+      color: "Natural & Gold",
+      retailer: "Revolve",
+      url: "https://www.revolve.com/dp/FLOR-WY94/",
+    },
+    {
+      slot: "Sunglasses",
+      brand: "Chimi",
+      name: "Sally Sunglasses",
+      color: "Lica Tortoise",
+      retailer: "Revolve",
+      url: "https://www.revolve.com/dp/CHMI-WG61/",
+    },
+    {
+      slot: "Earrings",
+      brand: "Jenny Bird",
+      name: "Nouveaux Puff Earrings",
+      color: "Gold",
+      retailer: "Revolve",
+      url: "https://www.revolve.com/dp/JENR-WL199/",
+    },
+    {
+      slot: "Necklace",
+      brand: "Jenny Bird",
+      name: "Zeina Slim Chain",
+      color: "Gold",
+      retailer: "Revolve",
+      url: "https://www.revolve.com/dp/JENR-WL355/",
+    },
+    {
+      slot: "Bracelet",
+      brand: "Jenny Bird",
+      name: "Gia Bangle",
+      color: "Gold",
+      retailer: "Revolve",
+      url: "https://www.revolve.com/dp/JENR-WL237/",
+    },
+  ],
+};
+
 /** Staged hero replacements keyed by canonical moment slug. */
 export const PREVIEW_STAGED_LOOKS: Record<string, StagedLook> = {
   shopping: SHOPPING_EVELYN_JADE,
+  arrival: ARRIVAL_IVORY_LINEN,
 };

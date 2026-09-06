@@ -300,7 +300,7 @@ import { isLillaLookComplete } from "@/lib/lilla-look-audit";
 // when product links, styling, or layout change.
 import poolLoungingEditorial from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
 import longLunchEditorial from "@/assets/uploads/portofino/long-lunch-lilla-rima-ice-blue-editorial.png.asset.json";
-import arrivalLinenVestEditorial from "@/assets/uploads/lilla/arrival-lilla-linen-vest-harbor.jpg.asset.json";
+import arrivalIvoryLinenQuayEditorial from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v6.png.asset.json";
 
 const momentQuery = (slug: string) =>
   queryOptions({
@@ -1018,7 +1018,7 @@ const MOMENT_FEATURED_COPY: Record<string, { label: string; body: string }> = {
  * when a moment publishes its own editorial photograph.
  */
 const MOMENT_EDITORIAL_IMAGE: Record<string, string> = {
-  arrival: arrivalLinenVestEditorial.url,
+  arrival: arrivalIvoryLinenQuayEditorial.url,
   "pool-lounging": poolLoungingEditorial.url,
   "long-lunch": longLunchEditorial.url,
 };
