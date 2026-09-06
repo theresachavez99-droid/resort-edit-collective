@@ -37,6 +37,7 @@ import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
 import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
 import { Route as AdminProductHealthQueueRouteImport } from './routes/admin.product-health_.queue'
+import { Route as ApiPublicAutoEditRefreshRouteImport } from './routes/api/public/auto-edit-refresh'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as ApiPublicProductAuditRouteImport } from './routes/api/public/product-audit'
 import { Route as ApiPublicProductHealthSweepRouteImport } from './routes/api/public/product-health-sweep'
@@ -188,6 +189,12 @@ const AdminProductHealthQueueRoute = AdminProductHealthQueueRouteImport.update({
   path: '/product-health/queue',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicAutoEditRefreshRoute =
+  ApiPublicAutoEditRefreshRouteImport.update({
+    id: '/api/public/auto-edit-refresh',
+    path: '/api/public/auto-edit-refresh',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   id: '/api/public/mcp',
   path: '/api/public/mcp',
@@ -268,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/admin/product-health/queue': typeof AdminProductHealthQueueRoute
+  '/api/public/auto-edit-refresh': typeof ApiPublicAutoEditRefreshRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -303,6 +311,7 @@ export interface FileRoutesByTo {
   '/portofino': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/admin/product-health/queue': typeof AdminProductHealthQueueRoute
+  '/api/public/auto-edit-refresh': typeof ApiPublicAutoEditRefreshRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -343,6 +352,7 @@ export interface FileRoutesById {
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/admin/product-health_/queue': typeof AdminProductHealthQueueRoute
+  '/api/public/auto-edit-refresh': typeof ApiPublicAutoEditRefreshRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -384,6 +394,7 @@ export interface FileRouteTypes {
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/admin/product-health/queue'
+    | '/api/public/auto-edit-refresh'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -419,6 +430,7 @@ export interface FileRouteTypes {
     | '/portofino'
     | '/admin/hero-outfit/$id'
     | '/admin/product-health/queue'
+    | '/api/public/auto-edit-refresh'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -458,6 +470,7 @@ export interface FileRouteTypes {
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/admin/product-health_/queue'
+    | '/api/public/auto-edit-refresh'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -480,6 +493,7 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicAutoEditRefreshRoute: typeof ApiPublicAutoEditRefreshRoute
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
   ApiPublicProductAuditRoute: typeof ApiPublicProductAuditRoute
   ApiPublicProductHealthSweepRoute: typeof ApiPublicProductHealthSweepRoute
@@ -686,6 +700,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductHealthQueueRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/auto-edit-refresh': {
+      id: '/api/public/auto-edit-refresh'
+      path: '/api/public/auto-edit-refresh'
+      fullPath: '/api/public/auto-edit-refresh'
+      preLoaderRoute: typeof ApiPublicAutoEditRefreshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/mcp': {
       id: '/api/public/mcp'
       path: '/api/public/mcp'
@@ -843,6 +864,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicAutoEditRefreshRoute: ApiPublicAutoEditRefreshRoute,
   ApiPublicMcpRoute: ApiPublicMcpRoute,
   ApiPublicProductAuditRoute: ApiPublicProductAuditRoute,
   ApiPublicProductHealthSweepRoute: ApiPublicProductHealthSweepRoute,
