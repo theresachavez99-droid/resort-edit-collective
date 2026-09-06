@@ -256,18 +256,50 @@ export async function auditMoments(momentSlugs?: string[]): Promise<{
             .map((s) => ({ slot: s.slot as string, url: s.url as string })),
         );
 
+    // The hardcoded supporting editorial cards are part of the public surface,
+    // so the audit counts them too — a Moment is not ready on one good look.
+    const supporting = auditLillaLooks().filter((a) => a.momentSlug === brief.momentSlug);
+    const completeSupporting = supporting.filter((a) => a.complete);
+    for (const s of supporting.filter((a) => !a.complete)) {
+      looks.push({
+        lookKey: s.lookKey,
+        slots: [],
+        missingRequired: s.missing,
+        publishable: false,
+        blockers: [`supporting card "${s.title}" missing: ${s.missing.join(", ")}`],
+      });
+    }
+
+    // Three distinct complete looks with three different MAIN clothing brands.
+    const completeLookCount = (publishableLook ? 1 : 0) + completeSupporting.length;
+    const brandDiversity = momentBrandDiversityGate(
+      publishableLook ? [{ lookKey: publishableLook.lookKey, picks: goodPicksByLook.get(publishableLook.lookKey) ?? [] }] : [],
+      1,
+    );
+
     const blockers: string[] = [];
     if (byLook.size === 0) blockers.push("no product records for this moment");
     if (!publishableLook) blockers.push("no complete, verified look");
     if (!heroPaired) blockers.push("no validated hero image paired with the live outfit");
+    if (completeLookCount < REQUIRED_LOOKS_PER_MOMENT) {
+      blockers.push(
+        `${completeLookCount} complete look(s); this Moment requires ${REQUIRED_LOOKS_PER_MOMENT} with three different main clothing brands`,
+      );
+    }
+    if (!brandDiversity.ok) blockers.push(...brandDiversity.failures.map((f) => f.detail));
 
     audits.push({
       momentSlug: brief.momentSlug,
       momentName: brief.momentName,
       timeOfDay: brief.timeOfDay,
       looks,
-      launchReady: Boolean(publishableLook) && heroPaired,
+      launchReady:
+        Boolean(publishableLook) &&
+        heroPaired &&
+        completeLookCount >= REQUIRED_LOOKS_PER_MOMENT &&
+        brandDiversity.ok,
       heroPaired,
+
       activeVersion: active
         ? {
             id: active.id as string,
