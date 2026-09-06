@@ -289,7 +289,12 @@ import { countShoppableRows, shopCtaAllowed } from "@/lib/commerce-cta-policy";
 import type { LegacyDaySlug } from "@/lib/portofino-moment-fallbacks";
 import { SaveLookButton } from "@/components/SaveLookButton";
 import { ShopTheLookItems, lookItemsQuery } from "@/components/commerce/ShopTheLookItems";
-import { ResortEditItemization, shopSlotsQuery } from "@/components/commerce/ResortEditItemization";
+import {
+  ResortEditItemization,
+  heroLookEligibility,
+  shopSlotsQuery,
+} from "@/components/commerce/ResortEditItemization";
+
 import { StagedLookItemization } from "@/components/commerce/StagedLookItemization";
 import { PREVIEW_STAGED_LOOKS } from "@/data/previewStagedLooks";
 import { previewStagingQuery } from "@/lib/preview-staging.functions";
@@ -486,11 +491,21 @@ function MomentPage() {
   // look_items_public), so the gate reflects exactly what the page renders —
   // there is no static registry to drift. Zero-link pages stay editorial:
   // no CTA, no placeholder, no "Coming Soon".
+  const heroRows = (shopSlotsData?.slots ?? []).filter((r) => r.brand || r.product_name);
+  // ONE PUBLIC ELIGIBILITY RULE — the hero outfit is shoppable only when every
+  // visible category has an active exact-product link. Otherwise the whole
+  // shoppable unit (model image, itemization, Save control, CTA) is withheld.
+  const heroEligible = stagedLook
+    ? true
+    : heroRows.length > 0 && heroLookEligibility(momentLookKey, heroRows).eligible;
   const shoppableRowCount = stagedLook
     ? countShoppableRows(stagedLook.rows)
-    : countShoppableRows((shopSlotsData?.slots ?? []).filter((r) => r.brand || r.product_name)) +
-      countShoppableRows((lookItemsData?.items ?? []).map((it) => ({ url: it.affiliate_url })));
+    : heroEligible
+      ? countShoppableRows(heroRows) +
+        countShoppableRows((lookItemsData?.items ?? []).map((it) => ({ url: it.affiliate_url })))
+      : 0;
   const showShopCta = shopCtaAllowed(shoppableRowCount);
+
 
   // Public-facing display title for the featured look. Founder look titles are
   // often blank or workflow-y; map to an editorial name per moment so the page
@@ -621,37 +636,52 @@ function MomentPage() {
       {/* FEATURED LOOK — editorial hero styling recommendation */}
       <section id="shop-the-look" className="bg-ivory scroll-mt-16">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-9 md:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start">
-            <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
-              <img
-                src={editorialImage}
-                alt={stagedLook?.alt ?? `${editorialTitle} — Portofino featured look`}
-                className="absolute inset-0 h-full w-full object-cover object-center"
-              />
+          <div
+            className={
+              heroEligible
+                ? "grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] gap-8 md:gap-12 items-start"
+                : "max-w-3xl"
+            }
+          >
+            {/* The model image renders ONLY with a complete shoppable outfit —
+                an incomplete outfit is withheld in full, image included. */}
+            {heroEligible && (
+              <div className="relative aspect-[4/5] overflow-hidden bg-cream/40 border border-border/60">
+                <img
+                  src={editorialImage}
+                  alt={stagedLook?.alt ?? `${editorialTitle} — Portofino featured look`}
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
 
-              <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
-                INSPIRED BY
-              </span>
-            </div>
+                <span className="absolute top-3 left-3 eyebrow tracking-[0.3em] text-[0.55rem] bg-ivory/95 text-ink px-2 py-1">
+                  INSPIRED BY
+                </span>
+              </div>
+            )}
+
             <div className="space-y-4 lg:pl-2">
               <h2 className="font-display text-3xl md:text-4xl tracking-[0.04em] text-ink leading-[1.1]">
                 {editorialTitle}
               </h2>
               {/* Save control lives in the featured column so every moment —
                   including those rendering the cinematic hero, which has no
-                  overlay controls — exposes an identical Save action. */}
-              <SaveLookButton
-                source="portofino_moment_featured"
-                look={{
-                  id: `portofino/${slug}`,
-                  destination: "Portofino",
-                  activity: card.moment_name,
-                  title: editorialTitle,
-                  description: card.narrative,
-                  image: editorialImage,
-                  url: `/portofino/${slug}`,
-                }}
-              />
+                  overlay controls — exposes an identical Save action. It is
+                  withheld with the rest of an incomplete shoppable unit. */}
+              {heroEligible && (
+                <SaveLookButton
+                  source="portofino_moment_featured"
+                  look={{
+                    id: `portofino/${slug}`,
+                    destination: "Portofino",
+                    activity: card.moment_name,
+                    title: editorialTitle,
+                    description: card.narrative,
+                    image: editorialImage,
+                    url: `/portofino/${slug}`,
+                  }}
+                />
+              )}
+
               <p className="font-serif italic text-[1rem] md:text-[1.05rem] text-ink/80 leading-relaxed max-w-prose">
                 {stagedLook?.caption ??
                   MOMENT_FEATURED_COPY[slug]?.body ??
@@ -681,7 +711,7 @@ function MomentPage() {
               ) : (
                 <ResortEditItemization lookKey={`portofino/${slug}`} />
               )}
-              {completeLookHref && (
+              {completeLookHref && heroEligible && (
                 <div className="pt-6 flex justify-center lg:justify-start">
                   <Link
                     to={completeLookHref}
@@ -691,12 +721,13 @@ function MomentPage() {
                   </Link>
                 </div>
               )}
+
             </div>
           </div>
           {/* SHOP THE LOOK — live `look_items_public` rows for this moment.
               Renders nothing when the look has no items. Suppressed while a
               staged look owns the hero so the set stays atomic. */}
-          {stagedLook ? null : <ShopTheLookItems lookKey={`portofino/${slug}`} />}
+          {stagedLook || !heroEligible ? null : <ShopTheLookItems lookKey={`portofino/${slug}`} />}
         </div>
       </section>
 

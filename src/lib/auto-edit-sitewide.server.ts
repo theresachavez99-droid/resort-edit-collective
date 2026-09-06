@@ -22,7 +22,9 @@
  */
 import {
   evaluatePublishGates,
+  heroGate,
   merchantGate,
+  momentBrandDiversityGate,
   outfitFingerprint,
   stockGate,
   type GateFailure,
@@ -31,9 +33,14 @@ import {
   type StockEvidence,
   type StylistVerdict,
 } from "./auto-edit-gates";
+
 import { canonicalVisibleSlot, type VisibleProductSlot } from "./look-atomic-completeness";
 import { isExcludedProduct } from "./merchandising-exclusions";
 import { momentBrief, PORTOFINO_MOMENT_BRIEFS } from "./portofino-moment-briefs";
+import { auditLillaLooks } from "./lilla-look-audit";
+
+/** Founder rule: every Moment publishes exactly three distinct complete looks. */
+export const REQUIRED_LOOKS_PER_MOMENT = 3;
 
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const STYLIST_MODEL = "google/gemini-3-flash";
@@ -73,8 +80,14 @@ type SlotRow = {
 
 // ── Evidence mapping ─────────────────────────────────────────────
 
-const IN_STOCK_VERDICTS = new Set(["ok", "in_stock", "available", "verified", "healthy", "pass"]);
+/**
+ * Only PRODUCT-SPECIFIC in-stock proof counts. Generic health labels ("ok",
+ * "healthy", "pass") mean the URL responded, not that the product is buyable,
+ * so they are deliberately NOT accepted as availability.
+ */
+const IN_STOCK_VERDICTS = new Set(["in_stock", "instock", "available", "variant_in_stock"]);
 const OUT_VERDICTS = new Set(["sold_out", "out_of_stock", "unavailable", "404", "gone"]);
+
 
 /**
  * Turns whatever a record carries into honest stock evidence. A 200 response is
@@ -189,6 +202,7 @@ export async function auditMoments(momentSlugs?: string[]): Promise<{
     if (byLook.size === 0) withNoProducts += 1;
 
     const looks: LookAudit[] = [];
+    const goodPicksByLook = new Map<string, GatedPick[]>();
     for (const [lookKey, lookRows] of byLook) {
       const slots: SlotAudit[] = [];
       const goodPicks: GatedPick[] = [];
@@ -221,6 +235,7 @@ export async function auditMoments(momentSlugs?: string[]): Promise<{
         ...(missingRequired.length ? [`missing: ${missingRequired.join(", ")}`] : []),
         ...slots.flatMap((s) => s.failures.map((f) => `${s.rawSlot}: ${f.gate}`)),
       ];
+      goodPicksByLook.set(lookKey, goodPicks);
       looks.push({
         lookKey,
         slots,
@@ -246,18 +261,50 @@ export async function auditMoments(momentSlugs?: string[]): Promise<{
             .map((s) => ({ slot: s.slot as string, url: s.url as string })),
         );
 
+    // The hardcoded supporting editorial cards are part of the public surface,
+    // so the audit counts them too — a Moment is not ready on one good look.
+    const supporting = auditLillaLooks().filter((a) => a.momentSlug === brief.momentSlug);
+    const completeSupporting = supporting.filter((a) => a.complete);
+    for (const s of supporting.filter((a) => !a.complete)) {
+      looks.push({
+        lookKey: s.lookKey,
+        slots: [],
+        missingRequired: s.missing,
+        publishable: false,
+        blockers: [`supporting card "${s.title}" missing: ${s.missing.join(", ")}`],
+      });
+    }
+
+    // Three distinct complete looks with three different MAIN clothing brands.
+    const completeLookCount = (publishableLook ? 1 : 0) + completeSupporting.length;
+    const brandDiversity = momentBrandDiversityGate(
+      publishableLook ? [{ lookKey: publishableLook.lookKey, picks: goodPicksByLook.get(publishableLook.lookKey) ?? [] }] : [],
+      1,
+    );
+
     const blockers: string[] = [];
     if (byLook.size === 0) blockers.push("no product records for this moment");
     if (!publishableLook) blockers.push("no complete, verified look");
     if (!heroPaired) blockers.push("no validated hero image paired with the live outfit");
+    if (completeLookCount < REQUIRED_LOOKS_PER_MOMENT) {
+      blockers.push(
+        `${completeLookCount} complete look(s); this Moment requires ${REQUIRED_LOOKS_PER_MOMENT} with three different main clothing brands`,
+      );
+    }
+    if (!brandDiversity.ok) blockers.push(...brandDiversity.failures.map((f) => f.detail));
 
     audits.push({
       momentSlug: brief.momentSlug,
       momentName: brief.momentName,
       timeOfDay: brief.timeOfDay,
       looks,
-      launchReady: Boolean(publishableLook) && heroPaired,
+      launchReady:
+        Boolean(publishableLook) &&
+        heroPaired &&
+        completeLookCount >= REQUIRED_LOOKS_PER_MOMENT &&
+        brandDiversity.ok,
       heroPaired,
+
       activeVersion: active
         ? {
             id: active.id as string,
@@ -375,21 +422,48 @@ export async function pairHeroImage(input: {
   if (!process.env["LOVABLE_API_KEY"]) {
     return { imageUrl: null, validation: null, state: "blocked", prerequisite: "image generation key unavailable" };
   }
-  const db = await admin();
-  const { data: muse } = await db
-    .from("destination_muses")
-    .select("muse_name,reference_url,face_description,style_guardrails")
-    .eq("destination_slug", "portofino")
-    .maybeSingle();
-  const referenceUrl = (muse?.reference_url as string | undefined) ?? null;
-  if (!referenceUrl) {
+
+  // CONTROLLING STANDARD — the founder-approved butter-yellow image governs
+  // Lilla's face, body and warm golden-tan skin tone; the September teal
+  // photograph is the secondary facial reference. Both must be reachable as
+  // absolute URLs so the generator consumes their pixels. No absolute
+  // reference → blocked; a lookalike is never substituted.
+  const { BUTTER_STANDARD_LILLA_REFERENCE, CONTROLLING_LILLA_IDENTITY_REFERENCE } = await import(
+    "./lilla-identity-references"
+  );
+  const absolute = (u: string | null | undefined) => (u && /^https:\/\//i.test(u) ? u : null);
+  const butterRef = absolute(BUTTER_STANDARD_LILLA_REFERENCE.url);
+  const facialRef = absolute(CONTROLLING_LILLA_IDENTITY_REFERENCE.url);
+  if (!butterRef) {
     return {
       imageUrl: null,
       validation: null,
       state: "blocked",
-      prerequisite: "approved canonical identity reference not found — never substitute a lookalike",
+      prerequisite:
+        "controlling butter-standard Lilla reference is not available as an absolute https URL — generation must not proceed without it",
     };
   }
+  const referenceUrls = [butterRef, ...(facialRef ? [facialRef] : [])];
+
+  // Product reference imagery is mandatory: the muse must wear the exact
+  // linked products, and a text description is not proof of that.
+  const productImageUrls = (input.productImageUrls ?? []).filter((u) => /^https:\/\//i.test(u));
+  if (productImageUrls.length === 0) {
+    return {
+      imageUrl: null,
+      validation: null,
+      state: "blocked",
+      prerequisite:
+        "no permitted product reference imagery for the linked pieces — cannot prove the hero shows the exact products",
+    };
+  }
+
+  const db = await admin();
+  const { data: muse } = await db
+    .from("destination_muses")
+    .select("muse_name,face_description,style_guardrails")
+    .eq("destination_slug", "portofino")
+    .maybeSingle();
 
   const productSummary = input.picks
     .map((p) => `${p.slot}: ${p.brand} ${p.productName}`)
@@ -399,19 +473,20 @@ export async function pairHeroImage(input: {
     `Scene: ${brief.scene}`,
     `Colour story: ${brief.colourStory}`,
     `She is wearing exactly these linked products: ${productSummary}.`,
-    "Full-figure or three-quarter framing with the entire head, hair, body and shoes inside the frame, safe for responsive 16:9 and 4:5 crops.",
+    "Match the reference face, body build and warm golden-tan skin tone exactly across face, neck, arms, hands and legs.",
+    "Full-figure framing with the entire head, hair, body and shoes inside the frame, safe for responsive 16:9 and 4:5 crops.",
     "No text, no logos overlaid, no other people.",
   ].join(" ");
 
-  const { generateAndStoreMuse, verifyMuseFidelity } = await import("./muse-image.server");
+  const { generateAndStoreMuse } = await import("./muse-image.server");
   let museUrl: string;
   try {
     const result = await generateAndStoreMuse(input.versionId, prompt, {
-      referenceUrl,
-      museName: (muse?.muse_name as string | undefined) ?? null,
+      referenceUrl: butterRef,
+      museName: (muse?.muse_name as string | undefined) ?? "Lilla",
       faceDescription: (muse?.face_description as string | undefined) ?? null,
       guardrails: (muse?.style_guardrails as string | undefined) ?? null,
-      ...(input.productImageUrls?.length ? { productImageUrls: input.productImageUrls } : {}),
+      productImageUrls: [...referenceUrls.slice(1), ...productImageUrls],
     });
     museUrl = result.url;
   } catch (err) {
@@ -423,44 +498,42 @@ export async function pairHeroImage(input: {
     };
   }
 
-  let verification;
-  try {
-    verification = await verifyMuseFidelity(
-      museUrl,
-      referenceUrl,
-      (muse?.muse_name as string | undefined) ?? "the muse",
-      productSummary,
-    );
-  } catch {
+  const { verifyHeroAffirmatively } = await import("./hero-verification.server");
+  const check = await verifyHeroAffirmatively({ imageUrl: museUrl, referenceUrls, productSummary });
+  if (check.unavailable) {
     return {
       imageUrl: museUrl,
       validation: null,
       state: "blocked",
-      prerequisite: "hero identity/garment validation could not run",
+      prerequisite: `hero validation could not run: ${check.unavailable}`,
     };
   }
 
   const validation: HeroValidation = {
     slotsFingerprint: input.slotsFingerprint,
-    identityScore: verification.face_similarity,
-    garmentScore: verification.outfit_fidelity,
-    // Framing is asserted by the generation prompt and checked by the
-    // verification notes; anything ambiguous stays false and blocks.
-    cropSafe: !/crop|cut off|out of frame|头|missing feet/i.test(verification.notes ?? ""),
-    referenceUsed: referenceUrl,
-    notes: verification.notes ?? null,
+    identityScore: check.identityScore,
+    garmentScore: check.garmentScore,
+    // Framing is only "safe" when the verifier affirms head, body and feet.
+    cropSafe:
+      check.headInFrame === true && check.bodyInFrame === true && check.feetInFrame === true,
+    referenceUsed: butterRef,
+    referencesUsed: referenceUrls,
+    headInFrame: check.headInFrame,
+    bodyInFrame: check.bodyInFrame,
+    feetInFrame: check.feetInFrame,
+    identityConfirmed: check.identityConfirmed === true && check.skinToneConsistent === true,
+    productsConfirmed: check.productsConfirmed,
+    notes: check.notes,
   };
-  const passed =
-    verification.face_similarity >= 0.85 &&
-    verification.outfit_fidelity >= 0.8 &&
-    validation.cropSafe === true;
+  const decision = heroGate({ imageUrl: museUrl, validation }, input.slotsFingerprint);
   return {
     imageUrl: museUrl,
     validation,
-    state: passed ? "validated" : "blocked",
-    prerequisite: passed ? null : "hero image failed identity, garment or framing validation",
+    state: decision.ok ? "validated" : "blocked",
+    prerequisite: decision.ok ? null : decision.failures.map((f) => f.gate).join(", "),
   };
 }
+
 
 // ── Version generation ──────────────────────────────────────────
 
@@ -479,11 +552,32 @@ export type GenerateOutcome = {
 
 const SHORTLIST_PER_SLOT = 4;
 
+/**
+ * Coherence score for a candidate against the moment brief. The shortlist must
+ * be a curated, destination- and activity-appropriate set — not "the first four
+ * rows that happen to be in stock".
+ */
+function coherenceScore(pick: GatedPick, brief: NonNullable<ReturnType<typeof momentBrief>>): number {
+  const text = `${pick.brand} ${pick.productName}`.toLowerCase();
+  let score = 0;
+  const words = `${brief.colourStory} ${brief.scene} `
+    .toLowerCase()
+    .split(/[^a-z]+/)
+    .filter((w) => w.length > 3);
+  score += words.filter((w) => text.includes(w)).length;
+  if (brief.timeOfDay === "evening" && /linen|eyelet|raffia|straw/.test(text)) score -= 2;
+  return score;
+}
+
 export async function generateMomentVersion(opts: {
   momentSlug: string;
   lookKey?: string;
   withHero?: boolean;
   activateIfClean?: boolean;
+  /** Slots whose current pieces still verify and must be kept as styled. */
+  preserveUrlsBySlot?: Record<string, string>;
+  /** Main clothing brands already used by other looks in this Moment. */
+  excludeMainBrands?: string[];
 }): Promise<GenerateOutcome> {
   const brief = momentBrief(opts.momentSlug);
   const lookKey = opts.lookKey ?? `portofino/${opts.momentSlug}`;
@@ -515,9 +609,25 @@ export async function generateMomentVersion(opts: {
     pool.push(pick);
   }
 
+  const excluded = new Set((opts.excludeMainBrands ?? []).map((b) => b.trim().toLowerCase()));
+  const preserved = opts.preserveUrlsBySlot ?? {};
+
   const candidatesBySlot: Record<string, GatedPick[]> = {};
   for (const slot of brief.requiredSlots) {
-    const list = pool.filter((p) => p.slot === slot).slice(0, SHORTLIST_PER_SLOT);
+    // PRESERVATION — a coordinated piece that still verifies is kept, so a
+    // single sold-out item never restyles the whole outfit needlessly.
+    const keepUrl = preserved[slot];
+    const kept = keepUrl ? pool.find((p) => p.slot === slot && p.url === keepUrl) : undefined;
+    if (kept) {
+      candidatesBySlot[slot] = [kept];
+      continue;
+    }
+    const list = pool
+      .filter((p) => p.slot === slot)
+      // Three different main clothing brands per Moment.
+      .filter((p) => slot !== "outfit" || !excluded.has(p.brand.trim().toLowerCase()))
+      .sort((a, b) => coherenceScore(b, brief) - coherenceScore(a, brief))
+      .slice(0, SHORTLIST_PER_SLOT);
     if (list.length) candidatesBySlot[slot] = list;
   }
   const missingSlots = brief.requiredSlots.filter((s) => !candidatesBySlot[s]);
@@ -537,6 +647,7 @@ export async function generateMomentVersion(opts: {
       if (found) picks.push(found);
     }
   }
+
 
   const slotsFingerprint = outfitFingerprint(picks.map((p) => ({ slot: p.slot, url: p.url })));
   const candidateIdsBySlot = Object.fromEntries(
@@ -743,24 +854,141 @@ export async function runJob<T>(
   }
 }
 
+// ── Live stock recheck + durable repair ─────────────────────────
+
+export type RecheckOutcome = {
+  lookKey: string;
+  rechecked: number;
+  confirmedGone: { slot: string; brand: string; productName: string; availability: string }[];
+  unknown: { slot: string; brand: string; productName: string; detail: string }[];
+  preserved: Record<string, string>;
+};
+
 /**
- * Scheduled refresh: re-checks stock evidence freshness and reports which
- * moments need work. It never generates paid work unless something actually
- * changed and the budget allows it.
+ * Re-checks the LIVE retailer page for every linked piece of a look and writes
+ * product-specific evidence back. Confirmed sold-out / gone pieces are the
+ * repair instruction; pieces the retailer will not disclose stay `unknown`,
+ * which blocks rather than assumes.
  */
-export async function scheduledRefresh(input: { limitMoments?: number; generate?: boolean } = {}) {
-  const { audits, summary } = await auditMoments();
-  const needsWork = audits.filter((a) => !a.launchReady).slice(0, input.limitMoments ?? 3);
-  const generated: GenerateOutcome[] = [];
-  if (input.generate) {
-    for (const moment of needsWork) {
-      const outcome = await generateMomentVersion({
-        momentSlug: moment.momentSlug,
-        withHero: true,
-        activateIfClean: true,
-      });
-      generated.push(outcome);
+export async function recheckLookStock(lookKey: string, maxRows = 12): Promise<RecheckOutcome> {
+  const db = await admin();
+  const { recheckStock } = await import("./stock-evidence.server");
+  const { data: rows } = await db
+    .from("shop_slot_products")
+    .select(SLOT_SELECT)
+    .eq("look_key", lookKey)
+    .limit(maxRows);
+
+  const out: RecheckOutcome = {
+    lookKey,
+    rechecked: 0,
+    confirmedGone: [],
+    unknown: [],
+    preserved: {},
+  };
+  for (const row of (rows ?? []) as SlotRow[]) {
+    if (!row.url) continue;
+    const slot = canonicalVisibleSlot(row.slot ?? row.slot_label ?? "") ?? row.slot ?? "";
+    const verdict = await recheckStock(row.url);
+    out.rechecked += 1;
+    await db
+      .from("shop_slot_products")
+      .update({
+        last_checked_at: verdict.checkedAt,
+        last_audit_verdict: `${verdict.availability}:${verdict.provenance}`,
+        ...(verdict.availability === "gone" ? { status: "404" } : {}),
+        ...(verdict.availability === "sold_out" ? { status: "sold_out" } : {}),
+      })
+      .eq("id", row.id);
+
+    const label = { slot, brand: row.brand ?? "", productName: row.product_name ?? "" };
+    if (verdict.availability === "in_stock") {
+      out.preserved[slot] = row.url;
+    } else if (verdict.availability === "sold_out" || verdict.availability === "gone") {
+      out.confirmedGone.push({ ...label, availability: verdict.availability });
+    } else {
+      out.unknown.push({ ...label, detail: verdict.detail ?? verdict.provenance });
     }
   }
-  return { summary, needsWork: needsWork.map((m) => m.momentSlug), generated };
+  return out;
 }
+
+/**
+ * Durable, idempotent repair for ONE look. Rechecks live stock, keeps every
+ * piece that still verifies, restyles only the failed slots, keeps the Moment's
+ * main clothing brands distinct, and activates atomically — image and full
+ * product set together — or leaves the look withheld with a recorded reason.
+ */
+export async function repairLook(input: {
+  momentSlug: string;
+  lookKey?: string;
+  excludeMainBrands?: string[];
+}): Promise<{
+  lookKey: string;
+  recheck: RecheckOutcome;
+  action: "no_repair_needed" | "repaired" | "blocked";
+  generated: GenerateOutcome | null;
+  blockedReason: string | null;
+}> {
+  const lookKey = input.lookKey ?? `portofino/${input.momentSlug}`;
+  const recheck = await recheckLookStock(lookKey);
+  if (recheck.confirmedGone.length === 0 && recheck.unknown.length === 0) {
+    return { lookKey, recheck, action: "no_repair_needed", generated: null, blockedReason: null };
+  }
+  if (recheck.confirmedGone.length === 0) {
+    return {
+      lookKey,
+      recheck,
+      action: "blocked",
+      generated: null,
+      blockedReason: `availability could not be verified for: ${recheck.unknown
+        .map((u) => `${u.slot} (${u.detail})`)
+        .join("; ")}`,
+    };
+  }
+  const generated = await generateMomentVersion({
+    momentSlug: input.momentSlug,
+    lookKey,
+    withHero: true,
+    activateIfClean: true,
+    preserveUrlsBySlot: recheck.preserved,
+    ...(input.excludeMainBrands ? { excludeMainBrands: input.excludeMainBrands } : {}),
+  });
+  return {
+    lookKey,
+    recheck,
+    action: generated.published ? "repaired" : "blocked",
+    generated,
+    blockedReason: generated.published ? null : generated.blockedReason,
+  };
+}
+
+/**
+ * Scheduled refresh: audits, actually re-checks live retailer stock for the
+ * moments that are failing, and runs bounded repair. Paid generation only
+ * happens inside a job with a spend cap, never on a page view.
+ */
+export async function scheduledRefresh(
+  input: { limitMoments?: number; generate?: boolean; repair?: boolean } = {},
+) {
+  const { audits, summary } = await auditMoments();
+  const needsWork = audits.filter((a) => !a.launchReady).slice(0, input.limitMoments ?? 3);
+  const repairs: Awaited<ReturnType<typeof repairLook>>[] = [];
+  const generated: GenerateOutcome[] = [];
+  for (const moment of needsWork) {
+    if (input.repair !== false) {
+      repairs.push(await repairLook({ momentSlug: moment.momentSlug }));
+    }
+    if (input.generate) {
+      generated.push(
+        await generateMomentVersion({
+          momentSlug: moment.momentSlug,
+          withHero: true,
+          activateIfClean: true,
+        }),
+      );
+    }
+  }
+  return { summary, needsWork: needsWork.map((m) => m.momentSlug), repairs, generated };
+}
+

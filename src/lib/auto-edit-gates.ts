@@ -38,6 +38,29 @@ export const APPROVED_RETAILER_HOSTS: Record<string, readonly string[]> = {
   "MatchesFashion": ["matchesfashion.com"],
 };
 
+/**
+ * Brand-direct domains verified by hand. Brand-direct linking is only allowed
+ * from a domain on this list — a hostname that merely contains part of the
+ * brand name proves nothing and is rejected.
+ */
+export const VERIFIED_BRAND_DIRECT_HOSTS: Record<string, readonly string[]> = {
+  "Zimmermann": ["zimmermann.com"],
+  "Posse": ["posse.com.au", "poss.com"],
+  "Faithfull the Brand": ["faithfullthebrand.com"],
+  "Jenny Bird": ["jenny-bird.com", "jennybird.com"],
+  "Dragon Diffusion": ["dragondiffusion.com"],
+  "Alexandra Miro": ["alexandramiro.com"],
+  "Mister Zimi": ["misterzimi.com"],
+  "Ancient Greek Sandals": ["ancient-greek-sandals.com"],
+  "STAUD": ["staud.clothing"],
+  "Illesteva": ["illesteva.com"],
+  "Karla Colletto": ["karlacolletto.com"],
+  "Missoni": ["missoni.com"],
+  "Le Specs": ["lespecs.com"],
+  "The Attico": ["theattico.com"],
+};
+
+
 export type StockEvidence = {
   /** Only "in_stock" is availability. Everything else holds publication. */
   availability: "in_stock" | "out_of_stock" | "unknown";
@@ -126,17 +149,22 @@ export function merchantGate(pick: GatedPick): GateResult {
     return ok(failures);
   }
 
-  // Brand-direct fallback: host must contain the brand token.
-  const brandToken = pick.brand.toLowerCase().replace(/[^a-z0-9]/g, "");
-  if (!brandToken || !host.replace(/[^a-z0-9.]/g, "").includes(brandToken.slice(0, 6))) {
+  // Brand-direct fallback: the host must be an explicitly VERIFIED brand-direct
+  // domain. A partial name token in a hostname is not verification.
+  const brandKey = Object.keys(VERIFIED_BRAND_DIRECT_HOSTS).find(
+    (k) => k.toLowerCase() === pick.brand.trim().toLowerCase(),
+  );
+  const allowed = brandKey ? (VERIFIED_BRAND_DIRECT_HOSTS[brandKey] ?? []) : [];
+  if (!allowed.some((h) => host === h || host.endsWith(`.${h}`))) {
     failures.push({
       gate: "merchant_not_approved",
       slot: pick.slot,
-      detail: `${pick.retailer ?? "unknown merchant"} (${host}) is neither an approved retailer (${APPROVED_RETAILER_PRIORITY.join(", ")}) nor a matching brand-direct site`,
+      detail: `${pick.retailer ?? "unknown merchant"} (${host}) is neither an approved retailer (${APPROVED_RETAILER_PRIORITY.join(", ")}) nor a verified brand-direct domain for ${pick.brand}`,
     });
   }
   return ok(failures);
 }
+
 
 // ── Stock evidence ────────────────────────────────────────────────
 
@@ -148,8 +176,12 @@ export function evidenceIsFresh(
   if (!evidence.checkedAt) return false;
   const t = Date.parse(evidence.checkedAt);
   if (!Number.isFinite(t)) return false;
-  return now.getTime() - t <= maxAgeDays * 86_400_000;
+  const age = now.getTime() - t;
+  // A check "from the future" is a clock or data error, not evidence.
+  if (age < -60 * 60 * 1000) return false;
+  return age <= maxAgeDays * 86_400_000;
 }
+
 
 export function stockGate(pick: GatedPick, now: Date = new Date()): GateResult {
   const failures: GateFailure[] = [];
@@ -320,8 +352,21 @@ export type HeroValidation = {
   garmentScore: number | null;
   cropSafe: boolean | null;
   referenceUsed: string | null;
+  /** Every reference actually supplied to the generator as image pixels. */
+  referencesUsed?: readonly string[];
+  /**
+   * Affirmative verifier statements. Each must be an explicit `true` — a
+   * missing field is never treated as a pass, and a model score alone is not
+   * proof of any of them.
+   */
+  headInFrame?: boolean | null;
+  bodyInFrame?: boolean | null;
+  feetInFrame?: boolean | null;
+  identityConfirmed?: boolean | null;
+  productsConfirmed?: boolean | null;
   notes?: string | null;
 };
+
 
 export const HERO_MIN_IDENTITY = 0.85;
 export const HERO_MIN_GARMENT = 0.8;
@@ -358,8 +403,20 @@ export function heroGate(
   if (v.cropSafe !== true) {
     failures.push({ gate: "hero_crop_unsafe", detail: "head, hair, body or shoes not safely framed" });
   }
+  // Affirmative checks. A missing field is a failure, never a pass.
+  const affirmations: [keyof HeroValidation, string][] = [
+    ["headInFrame", "verifier did not affirm the whole head is in frame"],
+    ["bodyInFrame", "verifier did not affirm the whole body is in frame"],
+    ["feetInFrame", "verifier did not affirm the feet/shoes are in frame"],
+    ["identityConfirmed", "verifier did not affirm this is the approved Lilla identity"],
+    ["productsConfirmed", "verifier did not affirm she wears the exact linked products"],
+  ];
+  for (const [field, detail] of affirmations) {
+    if (v[field] !== true) failures.push({ gate: `hero_${String(field)}_unproven`, detail });
+  }
   return ok(failures);
 }
+
 
 // ── Aggregate ────────────────────────────────────────────────────
 
@@ -406,4 +463,47 @@ export function outfitFingerprint(picks: { slot: string; url: string }[]): strin
     .map((p) => `${p.slot}:${p.url.trim().toLowerCase()}`)
     .sort()
     .join("|");
+}
+
+// ── Three-brand diversity across a Moment ─────────────────────────
+
+/** Main clothing brand of a look = the brand of its garment ("outfit") slot. */
+export function mainClothingBrand(picks: readonly GatedPick[]): string | null {
+  const garment = picks.find((p) => p.slot === "outfit");
+  return garment ? garment.brand.trim() : null;
+}
+
+/**
+ * Founder rule: every Moment publishes exactly three complete looks whose MAIN
+ * clothing brands are all different. Coordinated pieces inside one outfit may
+ * share a brand; the hero and both supports may not.
+ */
+export function momentBrandDiversityGate(
+  looks: readonly { lookKey: string; picks: readonly GatedPick[] }[],
+  requiredLooks = 3,
+): GateResult {
+  const failures: GateFailure[] = [];
+  const brands: string[] = [];
+  for (const look of looks) {
+    const brand = mainClothingBrand(look.picks);
+    if (!brand) {
+      failures.push({ gate: "main_brand_unknown", detail: `${look.lookKey} has no linked garment` });
+      continue;
+    }
+    brands.push(brand.toLowerCase());
+  }
+  if (looks.length < requiredLooks) {
+    failures.push({
+      gate: "moment_look_count",
+      detail: `${looks.length} complete look(s); this Moment requires ${requiredLooks}`,
+    });
+  }
+  const unique = new Set(brands);
+  if (brands.length > 0 && unique.size !== brands.length) {
+    failures.push({
+      gate: "main_brand_repeated",
+      detail: `main clothing brands repeat across the Moment: ${brands.join(", ")}`,
+    });
+  }
+  return ok(failures);
 }
