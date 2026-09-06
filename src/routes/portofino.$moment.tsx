@@ -588,6 +588,9 @@ function MomentPage() {
   // Temporarily disabled slugs fall back to the static place-led hero image;
   // remove the slug from HERO_VIDEO_DISABLED to re-enable its video.
   const cinematicHero = HERO_VIDEO_DISABLED.has(slug) ? undefined : MOMENT_HERO_VIDEO[slug];
+  // Founder-supplied still banner (no video element at all) for moments that
+  // publish an approved destination illustration instead of a hero video.
+  const staticHero = MOMENT_STATIC_HERO[slug];
 
   // Optional editorial-image override — some moments (e.g. Pool Lounging)
   // publish an approved Resort Edit editorial image separate from the DB
