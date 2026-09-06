@@ -801,6 +801,8 @@ function MomentPage() {
         )
       )}
 
+      <MomentExperience momentSlug={slug} />
+
       <OtherPortofinoMoments excludeSlugs={[slug]} />
     </div>
   );

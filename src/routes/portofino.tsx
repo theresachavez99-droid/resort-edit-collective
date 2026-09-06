@@ -1,9 +1,9 @@
-import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { listPortofinoMomentsForLanding, type PortofinoMomentCard } from "@/lib/portofino-moments.functions";
 import { PortofinoMomentCard as PortofinoMomentCardView } from "@/components/PortofinoMomentCard";
-import { getCanonicalDayImage, useDayImageOverrides } from "@/data/dayImageRegistry";
+import { getCanonicalDayImage } from "@/data/dayImageRegistry";
 import cira2Asset from "@/assets/uploads/cira/cira-2.png.asset.json";
 import cira3Asset from "@/assets/uploads/cira/cira-3.png.asset.json";
 import cira4Asset from "@/assets/uploads/cira/cira-4.png.asset.json";
@@ -21,7 +21,6 @@ import cira15Asset from "@/assets/uploads/cira/cira-15.png.asset.json";
 // Day 1 hero card on /portofino — read from the canonical Day Image
 // Registry so a founder-approved swap propagates here automatically.
 const lookYacht = getCanonicalDayImage("day-1", "destination_card");
-const lookBeach = getCanonicalDayImage("day-2", "destination_card");
 const lookDayclub = cira9Asset.url;
 const lookDinner = cira10Asset.url;
 const day5MarketStrolls = cira13Asset.url;
@@ -40,11 +39,8 @@ const d4c = cira12Asset.url;
 const d5a = cira13Asset.url;
 const d5b = cira14Asset.url;
 const d5c = cira15Asset.url;
-import expYacht from "@/assets/exp-yacht-charter.jpg";
-import expHarbor from "@/assets/exp-harbor-golden.jpg";
-import expCruise from "@/assets/exp-sunset-cruise.jpg";
-import expCooking from "@/assets/exp-cooking-class.jpg";
-import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
+import { ExperienceCollection } from "@/components/experiences/ExperienceCollection";
+import { WhileYoureHere } from "@/components/experiences/WhileYoureHere";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
 import hotelEight from "@/assets/hotel-eight.jpg";
@@ -92,9 +88,6 @@ function PortofinoPage() {
     }),
   );
   const moments: PortofinoMomentCard[] = data.ok ? data.moments : [];
-  // Founder-approved canonical day images override the TS default at render.
-  const dayOverrides = useDayImageOverrides();
-  const lookBeachOverride = dayOverrides["day-2"] ?? lookBeach;
 
   return (
     <div className="pb-10 md:pb-12">
@@ -156,55 +149,12 @@ function PortofinoPage() {
             </p>
           </div>
 
-          {/* BOOKABLE MOMENTS */}
+          {/* EXPERIENCES — six verified operators, each tied to a Moment */}
           <div className="mb-10 md:mb-12">
-            <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
-              <h3 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">BOOKABLE MOMENTS</h3>
-              <span className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink/50 hidden sm:inline">Reserve before you go</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {[
-                { name: "Dolce & Gabbana Beach Club", image: lookBeachOverride, desc: "Cabana service in Paraggi Bay with majolica-print umbrellas.", href: "https://www.dolcegabbana.com/en/special-projects/dg-le-carillon/", moment: "beach-club", badge: "MOST INSTAGRAMMABLE", badgeStyle: "gold" as const },
-                { name: "Private Yacht Charter", image: expYacht, desc: "Your own boat along the promontory — Portofino to Cinque Terre.", href: "https://www.viator.com/Portofino/d50421", moment: "yacht-day", badge: null, badgeStyle: null },
-                { name: "Private Boat to San Fruttuoso", image: expAbbey, desc: "A 10th-century abbey reachable only by water.", href: "https://www.viator.com/Portofino/d50421/san-fruttuoso", moment: "yacht-day", badge: "BOOK FIRST", badgeStyle: "ink" as const },
-                { name: "Sunset Cruise + Aperitivo", image: expCruise, desc: "Golden hour along the Ligurian coast, prosecco in hand.", href: "https://www.getyourguide.com/portofino-l1093/sunset-cruise", moment: "sunset-views", badge: "INSIDER FAVORITE", badgeStyle: "outline" as const },
-                { name: "Private Driver Transfer", image: expHarbor, desc: "Black-car arrival from Genoa, Milan, or Nice — no parking, no stress.", href: "https://www.getyourguide.com/portofino-l1093/transfers", moment: "arrival", badge: null, badgeStyle: null },
-                { name: "Reserve Harbor Dinner", image: expCooking, desc: "A candlelit table on the piazzetta — book weeks ahead.", href: "https://www.opentable.com/landmark/restaurants-near-portofino", moment: "riviera-dinner", badge: null, badgeStyle: null },
-              ].map((exp) => (
-                <article key={exp.name} className="bg-ivory border border-border/60 flex flex-col">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                    <img src={exp.image} alt={exp.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                    {exp.badge && (
-                      <span
-                        className={
-                          "absolute top-3 left-3 eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem] " +
-                          (exp.badgeStyle === "gold"
-                            ? "bg-gold text-ivory"
-                            : exp.badgeStyle === "ink"
-                              ? "bg-ink text-ivory"
-                              : "bg-ivory text-ink border border-ink")
-                        }
-                      >
-                        {exp.badge}
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-3.5 md:p-4 flex flex-col flex-1">
-                    <h4 className="font-display text-[1.05rem] tracking-wide leading-snug">{exp.name}</h4>
-                    <p className="font-serif italic text-ink/65 text-[0.86rem] mt-1.5 leading-relaxed flex-1">{exp.desc}</p>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 pt-2.5 border-t border-border/50">
-                      <a href={exp.href} target="_blank" rel="noopener noreferrer sponsored" className="eyebrow text-[0.6rem] tracking-[0.3em] text-ink hover:text-gold">
-                        BOOK →
-                      </a>
-                      <Link to="/portofino/$moment" params={{ moment: exp.moment }} className="eyebrow text-[0.6rem] tracking-[0.3em] text-gold hover:text-ink">
-                        WHAT TO WEAR HERE →
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <ExperienceCollection destinationSlug="portofino" />
+            <WhileYoureHere destinationSlug="portofino" />
           </div>
+
 
           {/* 3. WHERE TO STAY */}
           <div className="mb-10 md:mb-12">
