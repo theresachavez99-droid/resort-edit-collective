@@ -909,9 +909,11 @@ function MomentPage() {
                     card={c}
                     momentSlug={slug}
                     momentName={card.moment_name}
+                    editorialOnly={!isLillaLookComplete(slug, c.key)}
                     lookHealth={slotHealth.looks}
                   />
                 ))}
+
               </div>
             </div>
           </section>
