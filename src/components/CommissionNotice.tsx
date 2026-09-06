@@ -19,7 +19,7 @@ export function CommissionNotice({
   const body =
     variant === "shop"
       ? "Some links below may earn Resort Edit a commission if you buy, at no extra cost to you. Prices and stock are set by the retailer and can change."
-      : "Links below go directly to the operator's own page. We are not paid for these bookings, and we are not affiliated with or endorsed by the venues.";
+      : "Booking and enquiry links open the listed operator or booking platform. The experience links currently displayed are not commission-bearing.";
 
   return (
     <p

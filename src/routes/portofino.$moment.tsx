@@ -293,6 +293,7 @@ import { ResortEditItemization, shopSlotsQuery } from "@/components/commerce/Res
 import { StagedLookItemization } from "@/components/commerce/StagedLookItemization";
 import { PREVIEW_STAGED_LOOKS } from "@/data/previewStagedLooks";
 import { previewStagingQuery } from "@/lib/preview-staging.functions";
+import { CommissionNotice } from "@/components/CommissionNotice";
 import { evaluateAtomicLook } from "@/lib/look-atomic-completeness";
 import { isLillaLookComplete } from "@/lib/lilla-look-audit";
 // Locked Pool Lounging editorial reference — the seated poolside portrait
@@ -508,9 +509,9 @@ function MomentPage() {
   // link. Incomplete looks (e.g. "Green Eyelet on Via Roma", whose visible
   // shoes and raffia bag are unlinked) are hidden entirely: no card, no
   // expansion, no "Still sourcing" row.
-  const publishableExtraCards = previewStaging
-    ? extraCards.filter((c) => isLillaLookComplete(slug, c.key))
-    : extraCards;
+  // Complete-look rule applies on every environment, not just preview: a
+  // supporting look with an unlinked visible slot is hidden entirely.
+  const publishableExtraCards = extraCards.filter((c) => isLillaLookComplete(slug, c.key));
   const renderedExtraCards = publishableExtraCards.slice(0, MAX_SUPPORTING_LOOKS);
 
   // Moments registered in MOMENT_HERO_VIDEO get the shared cinematic video
@@ -725,7 +726,7 @@ function MomentPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
               {NIGHTCAP_EDITORIAL_CARDS.filter(
-                (c) => !previewStaging || isLillaLookComplete("nightcap", c.key),
+                (c) => isLillaLookComplete("nightcap", c.key),
               ).map((c) => (
                 <article key={c.key} className="flex flex-col bg-ivory border border-border/40">
                   <div className="relative aspect-[4/5] overflow-hidden bg-cream">
@@ -1145,6 +1146,7 @@ function NightcapShopExpander({
       </button>
       {open && (
         <div className="mt-6 border-t border-border/50 pt-6">
+          <CommissionNotice className="mb-5" />
           <ul className="divide-y divide-border/40">
             {rows.map((p) => (
               <li key={p.url} className="py-4">
@@ -1285,6 +1287,7 @@ function ExtraEditorialReferenceCard({
           ) : null
         ) : (
           <div className="mt-4 border-t border-border/50 pt-5">
+            {referenceShoppable && <CommissionNotice className="mb-4" />}
             {referenceShoppable ? (
               <a
                 href={reference.url}
@@ -1385,6 +1388,7 @@ function ExtraCompleteLookExpander({
       </button>
       {open && (
         <div className="mt-6 border-t border-border/50 pt-6">
+          <CommissionNotice className="mb-5" />
           <ul className="divide-y divide-border/40">
             {rows.map((p) => (
               <li key={p.url} className="py-4">

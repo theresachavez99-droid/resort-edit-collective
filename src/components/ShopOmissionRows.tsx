@@ -1,13 +1,14 @@
 import { excludeUnmerchandisable } from "@/lib/merchandising-exclusions";
 
 /**
- * Explicit-omission rendering for curated shopping lists (Batch 2 —
- * required-slot doctrine).
+ * Omission rows for curated shopping lists.
  *
- * Rows whose exact product URL has not been verified are never dropped
- * silently: they render as muted, unlinked "STILL SOURCING" lines so the
- * reader sees the complete styling intent and understands that the link,
- * not the piece, is what is missing.
+ * Customer-facing sourcing placeholders ("STILL SOURCING", "replacement in
+ * review") are no longer rendered: under the standing complete-look rule an
+ * incomplete commerce unit is hidden rather than shown with gaps. The stored
+ * row data and every caller are preserved, so the styling intent remains in
+ * the data layer and internal audits can still read it — this component simply
+ * renders nothing publicly.
  */
 export type OmittedRow = {
   slot: string;
@@ -19,8 +20,15 @@ export type OmittedRow = {
 };
 
 export function ShopOmissionRows({ rows }: { rows: OmittedRow[] }) {
-  // Rings are permanently excluded from Resort Edit merchandising, so they are
-  // never shown even as a "still sourcing" omission row.
+  // Rings are permanently excluded from Resort Edit merchandising, and no
+  // sourcing placeholder is shown to readers at all.
+  const visible = excludeUnmerchandisable(rows);
+  void visible;
+  return null;
+}
+
+/** Retained markup, unused publicly; kept for internal/admin surfaces only. */
+function OmissionRowsMarkup({ rows }: { rows: OmittedRow[] }) {
   const visible = excludeUnmerchandisable(rows);
   if (visible.length === 0) return null;
   return (
@@ -52,6 +60,8 @@ export function ShopOmissionRows({ rows }: { rows: OmittedRow[] }) {
   );
 }
 
+export { OmissionRowsMarkup };
+
 /** Standing disclosure shown beneath any curated shopping list. */
 export const SHOP_ACCURACY_NOTE =
-  "Every piece is chosen to match the photograph. Where an exact colorway or size is not stocked, we link the closest available version and say so.";
+  "Pieces are chosen to match the editorial image. Colour, drape and trim can differ from the retailer's own photography, which is the accurate reference for what you receive.";

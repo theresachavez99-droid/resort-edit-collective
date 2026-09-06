@@ -55,9 +55,8 @@ function ContactPage() {
       <div className="mt-6 h-px w-16 bg-gold" />
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
-        Resort Edit is a small independent publication, so every message reaches a real person.
-        Email is the only way to reach us — we do not run a contact form, a phone line or DMs for
-        support.
+        Resort Edit is a small independent publication. Email is our public point of contact — we do
+        not run a contact form, a phone line or social-media support.
       </p>
 
       <a
@@ -66,10 +65,6 @@ function ContactPage() {
       >
         hello@resortedit.com →
       </a>
-
-      <p className="mt-4 font-serif italic text-ink/60">
-        We read everything and reply to what we can, usually within a few days.
-      </p>
 
       <section className="mt-14">
         <h2 className="font-display text-2xl md:text-3xl tracking-wide text-ink">

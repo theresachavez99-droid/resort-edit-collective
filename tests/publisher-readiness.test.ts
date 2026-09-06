@@ -12,8 +12,12 @@ describe("privacy policy tells the truth about what runs", () => {
     }
   });
 
-  test("does not claim analytics or advertising trackers we do not load", () => {
-    expect(src).toContain("We do not load advertising or analytics trackers");
+  test("makes limited, accurate statements about advertising and tracking", () => {
+    expect(src).toContain("do not include an advertising or audience-analytics tag");
+    expect(src).toContain("hosting platform may run its own");
+    // No categorical absolutes we cannot verify across host telemetry.
+    expect(src).not.toContain("We do not load advertising or analytics trackers");
+    expect(src).not.toContain("receive nothing about you from us");
     expect(src).not.toContain("pixels");
   });
 
@@ -50,15 +54,20 @@ describe("dedicated legal and contact routes exist", () => {
     }
   });
 
-  test("privacy choices page does not fake an opt-out toggle", () => {
+  test("privacy choices page does not fake an opt-out toggle or overclaim", () => {
     const src = read("src/routes/privacy-rights.tsx");
-    expect(src).toContain("no cookie banner");
-    expect(src).toContain("We do not sell or share personal information");
+    expect(src).toContain("no consent banner or opt-out toggle");
+    expect(src).toContain("We do not sell or rent newsletter subscriber lists");
+    expect(src).not.toContain("That is the whole list");
+    expect(src).not.toContain("we never have");
   });
 
   test("affiliate disclosure explains AI-created imagery honestly", () => {
     const src = read("src/routes/affiliate-disclosure.tsx");
     expect(src).toContain("AI image generation");
+    expect(src).not.toContain("is hidden instead of shown incomplete");
+    expect(src).not.toContain("retailer that actually stocks it");
+    expect(src).not.toContain("boringly honest");
     expect(src).toContain("can differ from the product photography");
     expect(src).not.toContain("Rakuten");
   });
@@ -72,9 +81,10 @@ describe("commission disclosure appears before shopping and booking links", () =
     expect(notice).toContain('to="/affiliate-disclosure"');
   });
 
-  test("booking wording never claims commission or endorsement", () => {
-    expect(notice).toContain("We are not paid for these bookings");
-    expect(notice).toContain("not affiliated with or endorsed by the venues");
+  test("booking wording is accurate about operator and platform links", () => {
+    expect(notice).toContain("open the listed operator or booking platform");
+    expect(notice).toContain("not commission-bearing");
+    expect(notice).not.toContain("operator's own page");
   });
 
   for (const file of [

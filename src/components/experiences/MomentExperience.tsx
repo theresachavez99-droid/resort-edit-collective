@@ -60,7 +60,8 @@ export function MomentExperience({ momentSlug }: { momentSlug: string }) {
               {e.image
                 ? " Imagery is an illustration of the destination, not a photograph of the operator's venue."
                 : " We have no verified photograph of this venue, so none is shown."}{" "}
-              Links go to the operator's own page and earn us nothing.
+              Booking and enquiry links open the listed operator or booking platform, and are not
+              commission-bearing.
             </p>
             <a
               href={e.href}
