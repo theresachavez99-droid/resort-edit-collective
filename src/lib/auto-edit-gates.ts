@@ -148,8 +148,12 @@ export function evidenceIsFresh(
   if (!evidence.checkedAt) return false;
   const t = Date.parse(evidence.checkedAt);
   if (!Number.isFinite(t)) return false;
-  return now.getTime() - t <= maxAgeDays * 86_400_000;
+  const age = now.getTime() - t;
+  // A check "from the future" is a clock or data error, not evidence.
+  if (age < -60 * 60 * 1000) return false;
+  return age <= maxAgeDays * 86_400_000;
 }
+
 
 export function stockGate(pick: GatedPick, now: Date = new Date()): GateResult {
   const failures: GateFailure[] = [];
