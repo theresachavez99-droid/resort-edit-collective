@@ -27,6 +27,38 @@ export type PublicShopSlot = {
 export const getShopSlots = createServerFn({ method: "GET" })
   .inputValidator((d) => z.object({ lookKey: z.string().min(1).max(160) }).parse(d))
   .handler(async ({ data }): Promise<{ slots: PublicShopSlot[] }> => {
+    // Long Lunch Auto-Edit: when the styling engine has an ACTIVE, COMPLETE,
+    // coherence-cleared version for this look, it is the source of truth. When
+    // it does not, this falls through to the view exactly as before — and the
+    // itemization renders nothing rather than a partial look.
+    const { LONG_LUNCH_LOOK_KEY } = await import("./long-lunch-auto-edit");
+    if (data.lookKey === LONG_LUNCH_LOOK_KEY) {
+      const { loadActiveAutoEditLook } = await import("./long-lunch-auto-edit.server");
+      const version = await loadActiveAutoEditLook(data.lookKey);
+      if (version) {
+        return {
+          slots: (version.slots ?? [])
+            .filter((s) => Boolean(s.url))
+            .map((s, i) => ({
+              destination: "Portofino",
+              moment: "The Long Lunch",
+              look_key: data.lookKey,
+              // Keep the sidebar's existing visual hierarchy: "outfit" is the
+              // engine's canonical name for the hero garment chapter.
+              slot: s.slot === "outfit" ? "dress" : s.slot,
+              slot_label: s.slot_label,
+              brand: s.brand,
+              product_name: s.product_name,
+              retailer: s.retailer,
+              url: s.url,
+              status: "active",
+              is_primary: s.slot === "outfit",
+              replacement_priority: i,
+            })),
+        };
+      }
+    }
+
     // Server-side read of a public, non-PII display view. `shop_slot_products`
     // has RLS with no anon policy, so the publishable key sees zero rows; this
     // handler therefore reads server-side with an explicit, price-free column
@@ -43,3 +75,4 @@ export const getShopSlots = createServerFn({ method: "GET" })
     if (error) return { slots: [] };
     return { slots: (rows ?? []) as PublicShopSlot[] };
   });
+

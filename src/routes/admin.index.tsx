@@ -7,6 +7,7 @@ import { getAdminMetrics } from "@/lib/admin-metrics.functions";
 import { LaunchAuditPanel } from "@/components/LaunchAuditPanel";
 import { ProductImageAuditPanel } from "@/components/ProductImageAuditPanel";
 import { QueueStatusPanel } from "@/components/QueueStatusPanel";
+import { LongLunchAutoEditPanel } from "@/components/admin/LongLunchAutoEditPanel";
 
 /**
  * Studio dashboard at /admin — the permanent editorial home.
@@ -191,6 +192,7 @@ function AdminDashboard() {
         <Metric label="Inventory Issues" value={m?.inventoryIssues} accent="amber" />
       </section>
 
+      <LongLunchAutoEditPanel />
       <LaunchAuditPanel />
       <ProductImageAuditPanel />
 
