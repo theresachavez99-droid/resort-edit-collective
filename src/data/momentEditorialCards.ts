@@ -10,9 +10,8 @@ import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
-import arrivalIvorySplendidoImage from "@/assets/uploads/portofino/arrival-day-lilla-splendido-v5.png.asset.json";
 import arrivalBlueLagoonStripeImage from "@/assets/uploads/lilla/arrival-lilla-blue-lagoon-stripe.png.asset.json";
-import arrivalTerracottaStepsImage from "@/assets/uploads/lilla/arrival-lilla-terracotta-steps.png.asset.json";
+import arrivalButterLightImage from "@/assets/uploads/lilla/arrival-lilla-butter-light-v2.png.asset.json";
 import shoppingGreenEyeletImage from "@/assets/uploads/lilla/shopping-lilla-green-eyelet-via-roma.png.asset.json";
 
 /**
@@ -119,64 +118,65 @@ export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> 
       },
     },
     {
-      key: "terracotta-on-the-steps",
-      title: "Terracotta on the Steps",
+      key: "butter-light-arrival",
+      title: "Butter Light on Arrival",
       caption:
-        "FAITHFULL's Tali maxi in terracotta against ochre walls — pale-brown leather underfoot, woven tan leather in hand and warm gold at the ears, neck and wrist.",
-      image: arrivalTerracottaStepsImage.url,
-      alt: "Lilla on Portofino stone steps in a terracotta printed maxi dress, pale-brown flat leather thong sandals, a small woven tan leather bag, tortoise sunglasses and warm sculptural gold jewelry.",
+        "STAUD's Margi dress in butter with a cream open-knit cardigan over the shoulders, a straw basket bag and tan leather thongs — the softest possible landing on the harbor front.",
+      image: arrivalButterLightImage.url,
+      alt: "Lilla walking the harbor front in Portofino in a butter-yellow linen midi dress with a cream open-knit cardigan over her shoulders, tan leather thong sandals, a small straw basket bag with leather handles and slim gold jewelry.",
       reference: {
         slot: "Hero Piece · Dress",
-        brand: "FAITHFULL THE BRAND",
-        name: "Tali Maxi Dress",
-        color: "Terracotta",
-        retailer: "Revolve",
-        url: "https://www.revolve.com/dp/FAIB-WD848/",
+        brand: "STAUD",
+        name: "Margi Dress",
+        color: "Butter",
+        retailer: "STAUD",
+        url: "https://staud.clothing/products/margi-dress-butter",
       },
       shop: {
         stylingNote:
-          "A single saturated terracotta column, grounded in pale brown leather and woven tan — one warm gold family from ear to wrist, nothing cool in the mix.",
+          "Butter linen kept quiet: cream knit at the shoulder, warm tan leather at the foot and in hand, and one slim gold family — hoops, a coin pendant and a single cuff.",
         products: [
           {
+            slot: "Layer",
+            brand: "Varley",
+            name: "Pembroke Knit Cardigan — Egret",
+            url: "https://www.revolve.com/dp/VARR-WK235/",
+          },
+          {
             slot: "Shoes",
-            brand: "THE ATTICO",
-            name: "Indie Flat Thong Sandal — Pale Brown",
-            url: "https://www.revolve.com/dp/ATTF-WZ165/",
+            brand: "Madewell",
+            name: "Iggy Thong Sandal — Glazed Walnut",
+            url: "https://www.revolve.com/dp/MEWE-WZ15/",
           },
           {
             slot: "Bag",
-            brand: "Dragon Diffusion",
-            name: "Triple Jump Mini Woven Leather Bag — Tan",
-            url: "https://www.revolve.com/dp/DRAR-WY4/",
-          },
-          {
-            slot: "Sunglasses",
-            brand: "Le Specs",
-            name: "The Muse Sunglasses — Tort & Brown Mono Polarized",
-            url: "https://www.revolve.com/dp/LSPE-WG87/",
+            brand: "Poolside",
+            name: "The East West Mini Tote Bag — Cocoa",
+            url: "https://www.revolve.com/dp/POOR-WY52/",
           },
           {
             slot: "Earrings",
-            brand: "petit moments",
-            name: "Seabreeze Earrings — Gold",
-            url: "https://www.revolve.com/dp/PETM-WL966/",
+            brand: "Missoma",
+            name: "Savi Dome Mini Hoop Earrings — 18ct Gold Plated Vermeil",
+            url: "https://us.missoma.com/products/savi-dome-mini-hoop-earrings-18ct-gold-plated-vermeil",
           },
           {
             slot: "Necklace",
-            brand: "petit moments",
-            name: "Amulet Necklace — Gold",
-            url: "https://www.revolve.com/dp/PETM-WL1051/",
+            brand: "Missoma",
+            name: "Lucy Williams Roman Arc Coin Necklace — 18ct Gold Plated",
+            url: "https://us.missoma.com/products/lucy-williams-engravable-roman-arc-coin-necklace-18ct-gold-plated",
           },
           {
             slot: "Bracelet",
-            brand: "petit moments",
-            name: "Livorno Cuff — Gold",
-            url: "https://www.revolve.com/dp/PETM-WL594/",
+            brand: "Missoma",
+            name: "Baya Claw Cuff — 18ct Gold Plated",
+            url: "https://us.missoma.com/products/baya-claw-cuff-18ct-gold-plated",
           },
         ],
       },
     },
   ],
+
   "riviera-dinner": [
     {
       key: "tide-at-blue-hour",

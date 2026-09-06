@@ -23,15 +23,15 @@ export const LILLA_VISIBLE_SLOTS: Record<string, readonly VisibleProductSlot[]> 
     "necklace",
     "bracelet",
   ],
-  "portofino/arrival/terracotta-on-the-steps": [
+  "portofino/arrival/butter-light-arrival": [
     "outfit",
     "shoes",
     "bag",
-    "sunglasses",
     "earrings",
     "necklace",
     "bracelet",
   ],
+
   // Riviera Dinner (evening — no sunglasses)
   "portofino/riviera-dinner/tide-at-blue-hour": [
     "outfit",
