@@ -300,7 +300,7 @@ import { isLillaLookComplete } from "@/lib/lilla-look-audit";
 // when product links, styling, or layout change.
 import poolLoungingEditorial from "@/assets/uploads/portofino/pool-lounging-lilla-green-floral-splendido.png.asset.json";
 import longLunchEditorial from "@/assets/uploads/portofino/long-lunch-lilla-rima-ice-blue-editorial.png.asset.json";
-import arrivalIvoryLinenQuayEditorial from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v6.png.asset.json";
+import arrivalIvoryLinenQuayEditorial from "@/assets/uploads/lilla/arrival-lilla-ivory-linen-quay-v7.png.asset.json";
 
 const momentQuery = (slug: string) =>
   queryOptions({

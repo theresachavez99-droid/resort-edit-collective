@@ -14,19 +14,11 @@ import type { VisibleProductSlot } from "@/lib/look-atomic-completeness";
 
 export const LILLA_VISIBLE_SLOTS: Record<string, readonly VisibleProductSlot[]> = {
   // Arrival
-  "portofino/arrival/blue-lagoon-stripe": [
+  "portofino/arrival/terracotta-on-the-steps": [
     "outfit",
     "shoes",
     "bag",
     "sunglasses",
-    "earrings",
-    "necklace",
-    "bracelet",
-  ],
-  "portofino/arrival/butter-light-arrival": [
-    "outfit",
-    "shoes",
-    "bag",
     "earrings",
     "necklace",
     "bracelet",

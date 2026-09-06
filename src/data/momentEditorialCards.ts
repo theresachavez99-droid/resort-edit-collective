@@ -10,8 +10,7 @@ import longLunchStarfruitSilkImage from "@/assets/uploads/lilla/lilla-long-lunch
 import rivieraDinnerTideBlueHourImage from "@/assets/uploads/lilla/lilla-riviera-dinner-tide-at-blue-hour.jpg.asset.json";
 import longLunchWhiteEyeletImage from "@/assets/uploads/lilla/lilla-long-lunch-white-eyelet-at-noon-v2.jpg.asset.json";
 import exploringHarborEloiseImage from "@/assets/uploads/lilla/lilla-exploring-harbor-eloise-at-noon.jpg.asset.json";
-import arrivalBlueLagoonStripeImage from "@/assets/uploads/lilla/arrival-lilla-blue-lagoon-stripe.png.asset.json";
-import arrivalButterLightImage from "@/assets/uploads/lilla/arrival-lilla-butter-light-v2.png.asset.json";
+import arrivalTerracottaStepsImage from "@/assets/uploads/lilla/arrival-lilla-terracotta-steps-v2.png.asset.json";
 import shoppingGreenEyeletImage from "@/assets/uploads/lilla/shopping-lilla-green-eyelet-via-roma.png.asset.json";
 
 /**
@@ -60,117 +59,59 @@ export type ExtraEditorialCard = {
 export const MOMENT_EXTRA_EDITORIAL_CARDS: Record<string, ExtraEditorialCard[]> = {
   "arrival": [
     {
-      key: "blue-lagoon-stripe",
-      title: "Blue Lagoon Stripe",
+      key: "terracotta-on-the-steps",
+      title: "Terracotta on the Steps",
       caption:
-        "Solid & Striped's Indira dress in blue lagoon, optic-white leather sandals and a small natural straw tote — the cool, easy stripe for the first walk along the quay.",
-      image: arrivalBlueLagoonStripeImage.url,
-      alt: "Lilla walking the stone quay in Portofino in a blue-and-white striped cotton midi dress, optic-white flat leather sandals, a small natural woven straw tote, tortoise sunglasses and slim gold jewelry.",
+        "FAITHFULL's Tali maxi in terracotta against ochre walls — pale-brown leather underfoot, woven tan leather in hand and warm gold at the ears, neck and wrist.",
+      image: arrivalTerracottaStepsImage.url,
+      alt: "Lilla on Portofino stone steps in a terracotta printed halter maxi dress, pale-brown flat leather thong sandals, a small woven tan leather bag, tortoise sunglasses resting on her head and warm sculptural gold jewelry.",
       reference: {
         slot: "Hero Piece · Dress",
-        brand: "Solid & Striped",
-        name: "The Indira Dress",
-        color: "Blue Lagoon",
+        brand: "FAITHFULL THE BRAND",
+        name: "Tali Maxi Dress",
+        color: "Terracotta",
         retailer: "Revolve",
-        url: "https://www.revolve.com/dp/SLST-WD162/",
+        url: "https://www.revolve.com/dp/FAIB-WD848/",
       },
       shop: {
         stylingNote:
-          "One crisp stripe, optic white at the foot and natural straw in hand — cooled down with a single slim gold family so nothing competes with the harbor light.",
+          "A single saturated terracotta column, grounded in pale brown leather and woven tan — one warm gold family from ear to wrist, nothing cool in the mix.",
         products: [
           {
             slot: "Shoes",
-            brand: "Emme Parsons",
-            name: "Delice Sandal — Optic White Nappa",
-            url: "https://www.revolve.com/dp/EONR-WZ7/",
+            brand: "THE ATTICO",
+            name: "Indie Flat Thong Sandal — Pale Brown",
+            url: "https://www.revolve.com/dp/ATTF-WZ165/",
           },
           {
             slot: "Bag",
-            brand: "BTB Los Angeles",
-            name: "Mini Tammi Tote — Natural",
-            url: "https://www.revolve.com/dp/BTBR-WY145/",
+            brand: "Dragon Diffusion",
+            name: "Triple Jump Mini Woven Leather Bag — Tan",
+            url: "https://www.revolve.com/dp/DRAR-WY4/",
           },
           {
             slot: "Sunglasses",
-            brand: "Past Midnight",
-            name: "The Era Sunglasses — Tortoise",
-            url: "https://www.revolve.com/dp/PASR-WG19/",
+            brand: "Le Specs",
+            name: "The Muse Sunglasses — Tort & Brown Mono Polarized",
+            url: "https://www.revolve.com/dp/LSPE-WG87/",
           },
           {
             slot: "Earrings",
-            brand: "Ettika",
-            name: "Heirloom Twist Medium Hoop Earrings — Gold",
-            url: "https://www.revolve.com/dp/ETTI-WL1755/",
+            brand: "petit moments",
+            name: "Seabreeze Earrings — Gold",
+            url: "https://www.revolve.com/dp/PETM-WL966/",
           },
           {
             slot: "Necklace",
-            brand: "Ettika",
-            name: "Aura Rope Necklace — Gold",
-            url: "https://www.revolve.com/dp/ETTI-WL1704/",
+            brand: "petit moments",
+            name: "Amulet Necklace — Gold",
+            url: "https://www.revolve.com/dp/PETM-WL1051/",
           },
           {
             slot: "Bracelet",
-            brand: "Ettika",
-            name: "Dreamy Dome Bangle — Gold",
-            url: "https://www.revolve.com/dp/ETTI-WL1516/",
-          },
-        ],
-      },
-    },
-    {
-      key: "butter-light-arrival",
-      title: "Butter Light on Arrival",
-      caption:
-        "STAUD's Margi dress in butter with a cream open-knit cardigan over the shoulders, a straw basket bag and tan leather thongs — the softest possible landing on the harbor front.",
-      image: arrivalButterLightImage.url,
-      alt: "Lilla walking the harbor front in Portofino in a butter-yellow linen midi dress with a cream open-knit cardigan over her shoulders, tan leather thong sandals, a small straw basket bag with leather handles and slim gold jewelry.",
-      reference: {
-        slot: "Hero Piece · Dress",
-        brand: "STAUD",
-        name: "Margi Dress",
-        color: "Butter",
-        retailer: "STAUD",
-        url: "https://staud.clothing/products/margi-dress-butter",
-      },
-      shop: {
-        stylingNote:
-          "Butter linen kept quiet: cream knit at the shoulder, warm tan leather at the foot and in hand, and one slim gold family — hoops, a coin pendant and a single cuff.",
-        products: [
-          {
-            slot: "Layer",
-            brand: "Varley",
-            name: "Pembroke Knit Cardigan — Egret",
-            url: "https://www.revolve.com/dp/VARR-WK235/",
-          },
-          {
-            slot: "Shoes",
-            brand: "Madewell",
-            name: "Iggy Thong Sandal — Glazed Walnut",
-            url: "https://www.revolve.com/dp/MEWE-WZ15/",
-          },
-          {
-            slot: "Bag",
-            brand: "Poolside",
-            name: "The East West Mini Tote Bag — Cocoa",
-            url: "https://www.revolve.com/dp/POOR-WY52/",
-          },
-          {
-            slot: "Earrings",
-            brand: "Missoma",
-            name: "Savi Dome Mini Hoop Earrings — 18ct Gold Plated Vermeil",
-            url: "https://us.missoma.com/products/savi-dome-mini-hoop-earrings-18ct-gold-plated-vermeil",
-          },
-          {
-            slot: "Necklace",
-            brand: "Missoma",
-            name: "Lucy Williams Roman Arc Coin Necklace — 18ct Gold Plated",
-            url: "https://us.missoma.com/products/lucy-williams-engravable-roman-arc-coin-necklace-18ct-gold-plated",
-          },
-          {
-            slot: "Bracelet",
-            brand: "Missoma",
-            name: "Baya Claw Cuff — 18ct Gold Plated",
-            url: "https://us.missoma.com/products/baya-claw-cuff-18ct-gold-plated",
+            brand: "petit moments",
+            name: "Livorno Cuff — Gold",
+            url: "https://www.revolve.com/dp/PETM-WL594/",
           },
         ],
       },
