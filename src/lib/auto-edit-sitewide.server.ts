@@ -22,7 +22,10 @@
  */
 import {
   evaluatePublishGates,
+  heroGate,
+  mainClothingBrand,
   merchantGate,
+  momentBrandDiversityGate,
   outfitFingerprint,
   stockGate,
   type GateFailure,
@@ -31,6 +34,7 @@ import {
   type StockEvidence,
   type StylistVerdict,
 } from "./auto-edit-gates";
+
 import { canonicalVisibleSlot, type VisibleProductSlot } from "./look-atomic-completeness";
 import { isExcludedProduct } from "./merchandising-exclusions";
 import { momentBrief, PORTOFINO_MOMENT_BRIEFS } from "./portofino-moment-briefs";
