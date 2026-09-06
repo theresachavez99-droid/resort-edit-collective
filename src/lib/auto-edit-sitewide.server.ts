@@ -73,8 +73,14 @@ type SlotRow = {
 
 // ── Evidence mapping ─────────────────────────────────────────────
 
-const IN_STOCK_VERDICTS = new Set(["ok", "in_stock", "available", "verified", "healthy", "pass"]);
+/**
+ * Only PRODUCT-SPECIFIC in-stock proof counts. Generic health labels ("ok",
+ * "healthy", "pass") mean the URL responded, not that the product is buyable,
+ * so they are deliberately NOT accepted as availability.
+ */
+const IN_STOCK_VERDICTS = new Set(["in_stock", "instock", "available", "variant_in_stock"]);
 const OUT_VERDICTS = new Set(["sold_out", "out_of_stock", "unavailable", "404", "gone"]);
+
 
 /**
  * Turns whatever a record carries into honest stock evidence. A 200 response is
