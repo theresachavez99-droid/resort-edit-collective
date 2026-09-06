@@ -13,7 +13,19 @@
 import type { VisibleProductSlot } from "@/lib/look-atomic-completeness";
 
 export const LILLA_VISIBLE_SLOTS: Record<string, readonly VisibleProductSlot[]> = {
-  // Arrival
+  // Arrival — hero: Faithfull Maya vest + Isotta pant, tan flat sandals, a
+  // crochet raffia tote, tortoiseshell sunglasses pushed into her hair and one
+  // slim gold family at the ears, throat and wrist.
+  "portofino/arrival": [
+    "outfit",
+    "shoes",
+    "bag",
+    "sunglasses",
+    "earrings",
+    "necklace",
+    "bracelet",
+  ],
+
   "portofino/arrival/butter-light-arrival": [
     "outfit",
     "layer",
