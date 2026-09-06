@@ -14,8 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      auto_edit_jobs: {
+        Row: {
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          job_key: string
+          kind: string
+          moment_slug: string | null
+          result: Json
+          spend_units: number
+          started_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          job_key: string
+          kind: string
+          moment_slug?: string | null
+          result?: Json
+          spend_units?: number
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          job_key?: string
+          kind?: string
+          moment_slug?: string | null
+          result?: Json
+          spend_units?: number
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       auto_edit_look_versions: {
         Row: {
+          activated_at: string | null
+          ai_verdict: Json
+          ai_verdict_state: string
+          blocked_reason: string | null
           change_kind: string | null
           completeness_ok: boolean
           created_at: string
@@ -23,22 +72,33 @@ export type Database = {
           engine: string | null
           evaluated_at: string
           health: Json
+          hero_asset_ref: string | null
+          hero_fingerprint: string | null
+          hero_image_url: string | null
+          hero_state: string
+          hero_validation: Json
           id: string
           is_active: boolean
           look_key: string
           model: string | null
           moment: string | null
+          moment_slug: string | null
           prompt_version: string | null
           rationale: string | null
           replacement_reason: string | null
           requires_review: boolean
           slots: Json
+          slots_fingerprint: string | null
           state: string
           styling_score: number | null
           updated_at: string
           version: number
         }
         Insert: {
+          activated_at?: string | null
+          ai_verdict?: Json
+          ai_verdict_state?: string
+          blocked_reason?: string | null
           change_kind?: string | null
           completeness_ok?: boolean
           created_at?: string
@@ -46,22 +106,33 @@ export type Database = {
           engine?: string | null
           evaluated_at?: string
           health?: Json
+          hero_asset_ref?: string | null
+          hero_fingerprint?: string | null
+          hero_image_url?: string | null
+          hero_state?: string
+          hero_validation?: Json
           id?: string
           is_active?: boolean
           look_key: string
           model?: string | null
           moment?: string | null
+          moment_slug?: string | null
           prompt_version?: string | null
           rationale?: string | null
           replacement_reason?: string | null
           requires_review?: boolean
           slots?: Json
+          slots_fingerprint?: string | null
           state?: string
           styling_score?: number | null
           updated_at?: string
           version?: number
         }
         Update: {
+          activated_at?: string | null
+          ai_verdict?: Json
+          ai_verdict_state?: string
+          blocked_reason?: string | null
           change_kind?: string | null
           completeness_ok?: boolean
           created_at?: string
@@ -69,16 +140,23 @@ export type Database = {
           engine?: string | null
           evaluated_at?: string
           health?: Json
+          hero_asset_ref?: string | null
+          hero_fingerprint?: string | null
+          hero_image_url?: string | null
+          hero_state?: string
+          hero_validation?: Json
           id?: string
           is_active?: boolean
           look_key?: string
           model?: string | null
           moment?: string | null
+          moment_slug?: string | null
           prompt_version?: string | null
           rationale?: string | null
           replacement_reason?: string | null
           requires_review?: boolean
           slots?: Json
+          slots_fingerprint?: string | null
           state?: string
           styling_score?: number | null
           updated_at?: string
@@ -3633,6 +3711,49 @@ export type Database = {
       }
     }
     Functions: {
+      activate_auto_edit_version: {
+        Args: { p_version_id: string }
+        Returns: {
+          activated_at: string | null
+          ai_verdict: Json
+          ai_verdict_state: string
+          blocked_reason: string | null
+          change_kind: string | null
+          completeness_ok: boolean
+          created_at: string
+          destination: string | null
+          engine: string | null
+          evaluated_at: string
+          health: Json
+          hero_asset_ref: string | null
+          hero_fingerprint: string | null
+          hero_image_url: string | null
+          hero_state: string
+          hero_validation: Json
+          id: string
+          is_active: boolean
+          look_key: string
+          model: string | null
+          moment: string | null
+          moment_slug: string | null
+          prompt_version: string | null
+          rationale: string | null
+          replacement_reason: string | null
+          requires_review: boolean
+          slots: Json
+          slots_fingerprint: string | null
+          state: string
+          styling_score: number | null
+          updated_at: string
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "auto_edit_look_versions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       publish_founder_look: {
         Args: { look_id: string }
         Returns: {
@@ -3659,6 +3780,49 @@ export type Database = {
           p_style_family: string[]
         }
         Returns: number
+      }
+      rollback_auto_edit_version: {
+        Args: { p_look_key: string }
+        Returns: {
+          activated_at: string | null
+          ai_verdict: Json
+          ai_verdict_state: string
+          blocked_reason: string | null
+          change_kind: string | null
+          completeness_ok: boolean
+          created_at: string
+          destination: string | null
+          engine: string | null
+          evaluated_at: string
+          health: Json
+          hero_asset_ref: string | null
+          hero_fingerprint: string | null
+          hero_image_url: string | null
+          hero_state: string
+          hero_validation: Json
+          id: string
+          is_active: boolean
+          look_key: string
+          model: string | null
+          moment: string | null
+          moment_slug: string | null
+          prompt_version: string | null
+          rationale: string | null
+          replacement_reason: string | null
+          requires_review: boolean
+          slots: Json
+          slots_fingerprint: string | null
+          state: string
+          styling_score: number | null
+          updated_at: string
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "auto_edit_look_versions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {

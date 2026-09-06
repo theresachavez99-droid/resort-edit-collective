@@ -25,6 +25,7 @@ import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
 import { Route as AdminCurationRouteImport } from './routes/admin.curation'
 import { Route as AdminEditorialClosetRouteImport } from './routes/admin.editorial-closet'
 import { Route as AdminEditorialIntelligenceRouteImport } from './routes/admin.editorial-intelligence'
+import { Route as AdminLaunchAuditRouteImport } from './routes/admin.launch-audit'
 import { Route as AdminLooksRouteImport } from './routes/admin.looks'
 import { Route as AdminProductAuditRouteImport } from './routes/admin.product-audit'
 import { Route as AdminProductHealthRouteImport } from './routes/admin.product-health'
@@ -37,6 +38,7 @@ import { Route as PortofinoIndexRouteImport } from './routes/portofino.index'
 import { Route as PortofinoMomentRouteImport } from './routes/portofino.$moment'
 import { Route as AdminHeroOutfitIdRouteImport } from './routes/admin.hero-outfit.$id'
 import { Route as AdminProductHealthQueueRouteImport } from './routes/admin.product-health_.queue'
+import { Route as ApiPublicAutoEditRefreshRouteImport } from './routes/api/public/auto-edit-refresh'
 import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 import { Route as ApiPublicProductAuditRouteImport } from './routes/api/public/product-audit'
 import { Route as ApiPublicProductHealthSweepRouteImport } from './routes/api/public/product-health-sweep'
@@ -128,6 +130,11 @@ const AdminEditorialIntelligenceRoute =
     path: '/editorial-intelligence',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminLaunchAuditRoute = AdminLaunchAuditRouteImport.update({
+  id: '/launch-audit',
+  path: '/launch-audit',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLooksRoute = AdminLooksRouteImport.update({
   id: '/looks',
   path: '/looks',
@@ -188,6 +195,12 @@ const AdminProductHealthQueueRoute = AdminProductHealthQueueRouteImport.update({
   path: '/product-health/queue',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicAutoEditRefreshRoute =
+  ApiPublicAutoEditRefreshRouteImport.update({
+    id: '/api/public/auto-edit-refresh',
+    path: '/api/public/auto-edit-refresh',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
   id: '/api/public/mcp',
   path: '/api/public/mcp',
@@ -255,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
+  '/admin/launch-audit': typeof AdminLaunchAuditRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
@@ -268,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/admin/product-health/queue': typeof AdminProductHealthQueueRoute
+  '/api/public/auto-edit-refresh': typeof ApiPublicAutoEditRefreshRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -290,6 +305,7 @@ export interface FileRoutesByTo {
   '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
+  '/admin/launch-audit': typeof AdminLaunchAuditRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
@@ -303,6 +319,7 @@ export interface FileRoutesByTo {
   '/portofino': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/admin/product-health/queue': typeof AdminProductHealthQueueRoute
+  '/api/public/auto-edit-refresh': typeof ApiPublicAutoEditRefreshRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -330,6 +347,7 @@ export interface FileRoutesById {
   '/admin/curation': typeof AdminCurationRoute
   '/admin/editorial-closet': typeof AdminEditorialClosetRoute
   '/admin/editorial-intelligence': typeof AdminEditorialIntelligenceRoute
+  '/admin/launch-audit': typeof AdminLaunchAuditRoute
   '/admin/looks': typeof AdminLooksRoute
   '/admin/product-audit': typeof AdminProductAuditRoute
   '/admin/product-health': typeof AdminProductHealthRoute
@@ -343,6 +361,7 @@ export interface FileRoutesById {
   '/portofino/': typeof PortofinoIndexRoute
   '/admin/hero-outfit/$id': typeof AdminHeroOutfitIdRoute
   '/admin/product-health_/queue': typeof AdminProductHealthQueueRoute
+  '/api/public/auto-edit-refresh': typeof ApiPublicAutoEditRefreshRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
   '/api/public/product-audit': typeof ApiPublicProductAuditRoute
   '/api/public/product-health-sweep': typeof ApiPublicProductHealthSweepRoute
@@ -371,6 +390,7 @@ export interface FileRouteTypes {
     | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
+    | '/admin/launch-audit'
     | '/admin/looks'
     | '/admin/product-audit'
     | '/admin/product-health'
@@ -384,6 +404,7 @@ export interface FileRouteTypes {
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/admin/product-health/queue'
+    | '/api/public/auto-edit-refresh'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -406,6 +427,7 @@ export interface FileRouteTypes {
     | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
+    | '/admin/launch-audit'
     | '/admin/looks'
     | '/admin/product-audit'
     | '/admin/product-health'
@@ -419,6 +441,7 @@ export interface FileRouteTypes {
     | '/portofino'
     | '/admin/hero-outfit/$id'
     | '/admin/product-health/queue'
+    | '/api/public/auto-edit-refresh'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -445,6 +468,7 @@ export interface FileRouteTypes {
     | '/admin/curation'
     | '/admin/editorial-closet'
     | '/admin/editorial-intelligence'
+    | '/admin/launch-audit'
     | '/admin/looks'
     | '/admin/product-audit'
     | '/admin/product-health'
@@ -458,6 +482,7 @@ export interface FileRouteTypes {
     | '/portofino/'
     | '/admin/hero-outfit/$id'
     | '/admin/product-health_/queue'
+    | '/api/public/auto-edit-refresh'
     | '/api/public/mcp'
     | '/api/public/product-audit'
     | '/api/public/product-health-sweep'
@@ -480,6 +505,7 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicAutoEditRefreshRoute: typeof ApiPublicAutoEditRefreshRoute
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
   ApiPublicProductAuditRoute: typeof ApiPublicProductAuditRoute
   ApiPublicProductHealthSweepRoute: typeof ApiPublicProductHealthSweepRoute
@@ -602,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEditorialIntelligenceRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/launch-audit': {
+      id: '/admin/launch-audit'
+      path: '/launch-audit'
+      fullPath: '/admin/launch-audit'
+      preLoaderRoute: typeof AdminLaunchAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/looks': {
       id: '/admin/looks'
       path: '/looks'
@@ -686,6 +719,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductHealthQueueRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/auto-edit-refresh': {
+      id: '/api/public/auto-edit-refresh'
+      path: '/api/public/auto-edit-refresh'
+      fullPath: '/api/public/auto-edit-refresh'
+      preLoaderRoute: typeof ApiPublicAutoEditRefreshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/mcp': {
       id: '/api/public/mcp'
       path: '/api/public/mcp'
@@ -758,6 +798,7 @@ interface AdminRouteChildren {
   AdminCurationRoute: typeof AdminCurationRoute
   AdminEditorialClosetRoute: typeof AdminEditorialClosetRoute
   AdminEditorialIntelligenceRoute: typeof AdminEditorialIntelligenceRoute
+  AdminLaunchAuditRoute: typeof AdminLaunchAuditRoute
   AdminLooksRoute: typeof AdminLooksRoute
   AdminProductAuditRoute: typeof AdminProductAuditRoute
   AdminProductHealthRoute: typeof AdminProductHealthRoute
@@ -774,6 +815,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCurationRoute: AdminCurationRoute,
   AdminEditorialClosetRoute: AdminEditorialClosetRoute,
   AdminEditorialIntelligenceRoute: AdminEditorialIntelligenceRoute,
+  AdminLaunchAuditRoute: AdminLaunchAuditRoute,
   AdminLooksRoute: AdminLooksRoute,
   AdminProductAuditRoute: AdminProductAuditRoute,
   AdminProductHealthRoute: AdminProductHealthRoute,
@@ -843,6 +885,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicAutoEditRefreshRoute: ApiPublicAutoEditRefreshRoute,
   ApiPublicMcpRoute: ApiPublicMcpRoute,
   ApiPublicProductAuditRoute: ApiPublicProductAuditRoute,
   ApiPublicProductHealthSweepRoute: ApiPublicProductHealthSweepRoute,
