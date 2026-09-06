@@ -560,8 +560,7 @@ const SHORTLIST_PER_SLOT = 4;
 function coherenceScore(pick: GatedPick, brief: NonNullable<ReturnType<typeof momentBrief>>): number {
   const text = `${pick.brand} ${pick.productName}`.toLowerCase();
   let score = 0;
-  if ((pick.moment ?? "").toLowerCase() === brief.momentSlug) score += 6;
-  const words = `${brief.colourStory} ${brief.scene} ${brief.silhouetteNotes ?? ""}`
+  const words = `${brief.colourStory} ${brief.scene} `
     .toLowerCase()
     .split(/[^a-z]+/)
     .filter((w) => w.length > 3);
