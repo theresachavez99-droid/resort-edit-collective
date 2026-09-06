@@ -365,10 +365,15 @@ function persist(slot: AutoEditSlotPick): PersistedSlot {
     product_name: slot.productName,
     retailer: slot.retailer,
     url: slot.url,
-    availability: "active",
+    availability: slot.availability ?? "active",
+    image_url: slot.imageUrl ?? null,
+    last_checked_at: slot.lastCheckedAt ?? null,
+    verification: slot.verification ?? "needs_verification",
+    provenance: slot.provenance ?? slot.source,
     ...(slot.rationale ? { rationale: slot.rationale } : {}),
   };
 }
+
 
 export type EvaluationOutcome = {
   action: "unchanged" | "single_slot_repair" | "full_rebuild" | "blocked";
