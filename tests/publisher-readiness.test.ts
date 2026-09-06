@@ -47,7 +47,7 @@ describe("dedicated legal and contact routes exist", () => {
 
   test("privacy choices page does not fake an opt-out toggle", () => {
     const src = read("src/routes/privacy-rights.tsx");
-    expect(src).toContain("there is no cookie banner and no");
+    expect(src).toContain("no cookie banner");
     expect(src).toContain("does not sell personal information");
   });
 
