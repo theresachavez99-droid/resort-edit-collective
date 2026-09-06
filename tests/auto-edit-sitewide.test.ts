@@ -223,7 +223,7 @@ describe("hero pairing", () => {
     expect(gate.failures.some((f) => f.gate === "hero_identity_reference_missing")).toBe(true);
   });
 
-  it("passes a matching, validated hero", () => {
+  it("passes a matching, validated hero with affirmative checks", () => {
     const gate = heroGate(
       {
         imageUrl: "https://cdn/hero.png",
@@ -233,12 +233,18 @@ describe("hero pairing", () => {
           garmentScore: 0.9,
           cropSafe: true,
           referenceUsed: "https://cdn/lilla.png",
+          headInFrame: true,
+          bodyInFrame: true,
+          feetInFrame: true,
+          identityConfirmed: true,
+          productsConfirmed: true,
         },
       },
       fingerprint,
     );
     expect(gate.ok).toBe(true);
   });
+
 });
 
 describe("aggregate publish decision", () => {
