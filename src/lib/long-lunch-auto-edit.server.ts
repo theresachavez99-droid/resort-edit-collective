@@ -131,7 +131,8 @@ function toCandidate(
 ): AutoEditCandidate | null {
   const slot = mapToCanonicalSlot(row.slot, row.slot_label);
   if (!slot) return null;
-  if (isExcludedProduct({ slot: row.slot, name: row.product_name })) return null;
+  if (isExcludedProduct({ slot: row.slot, slotLabel: row.slot_label })) return null;
+  if (/\bring\b/i.test(row.product_name)) return null; // rings are never merchandised
   if (!isEligibleRow(row)) return null;
   return {
     source,
@@ -194,7 +195,7 @@ async function loadCandidatePool(
       status: "active",
       is_primary: false,
       slot_order: null,
-      style_dna: (c.style_dna as Record<string, unknown>) ?? null,
+      style_dna: (c.style_dna as Record<string, unknown> | null) ?? null,
     };
     const mapped = toCandidate(row, "product_replacement_candidates");
     if (mapped && needed.includes(mapped.slot)) out.push(mapped);
@@ -387,7 +388,7 @@ export async function evaluateLongLunchAutoEdit(
     .eq("look_key", lookKey)
     .eq("is_active", true)
     .maybeSingle();
-  const active = (activeRow as AutoEditVersion | null) ?? null;
+  const active = (activeRow as unknown as AutoEditVersion | null) ?? null;
 
   // 2 · nothing changed → no AI, no write
   if (!opts.force && active?.completeness_ok && missingNow.length === 0) {
@@ -526,13 +527,13 @@ export async function evaluateLongLunchAutoEdit(
       completeness_ok: complete,
       styling_score: score,
       rationale: rationale.trim() || null,
-      slots,
+      slots: slots as unknown as never,
       health: {
         broken_slots: broken.map((b) => ({ slot: b.slot, status: b.row.status, id: b.row.id })),
         simulated_product_ids: simulatedIds,
         concerns,
         notes: heur.notes,
-      },
+      } as unknown as never,
       requires_review: !publishable,
       replacement_reason: replacementReason,
       change_kind: action,
@@ -571,7 +572,7 @@ export async function loadActiveAutoEditLook(lookKey: string): Promise<AutoEditV
     .eq("is_active", true)
     .eq("completeness_ok", true)
     .maybeSingle();
-  return (data as AutoEditVersion | null) ?? null;
+  return (data as unknown as AutoEditVersion | null) ?? null;
 }
 
 export async function loadAutoEditHistory(limit = 10): Promise<AutoEditVersion[]> {
@@ -582,7 +583,7 @@ export async function loadAutoEditHistory(limit = 10): Promise<AutoEditVersion[]
     .eq("look_key", LONG_LUNCH_LOOK_KEY)
     .order("version", { ascending: false })
     .limit(limit);
-  return (data ?? []) as AutoEditVersion[];
+  return (data ?? []) as unknown as AutoEditVersion[];
 }
 
 export async function loadLongLunchDiagnostics() {
