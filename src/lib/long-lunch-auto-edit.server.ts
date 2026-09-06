@@ -55,10 +55,14 @@ type SlotRow = {
   is_primary: boolean | null;
   slot_order: number | null;
   style_dna: Record<string, unknown> | null;
+  last_checked_at?: string | null;
+  last_audit_verdict?: string | null;
+  registry_source?: string | null;
 };
 
 const SELECT =
-  "id,look_key,destination,moment,slot,slot_label,brand,product_name,retailer,url,price,status,is_primary,slot_order,style_dna";
+  "id,look_key,destination,moment,slot,slot_label,brand,product_name,retailer,url,price,status,is_primary,slot_order,style_dna,last_checked_at,last_audit_verdict,registry_source";
+
 
 export type AutoEditHealth = {
   broken_slots?: { slot: string; status: string; id: string }[];
