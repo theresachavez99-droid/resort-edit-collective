@@ -22,7 +22,7 @@ export function ExperienceCollection({ destinationSlug }: { destinationSlug: str
         ))}
       </div>
       <p className="mt-4 font-serif italic text-[0.82rem] text-ink/55 leading-relaxed max-w-3xl">
-        Details above are taken from each operator's own page and checked by hand. Availability and
+        Details above are taken from each operator or booking-platform listing and checked by hand. Availability and
         terms are set by the operator — some experiences are arranged by enquiry rather than instant
         booking.
       </p>

@@ -1,4 +1,5 @@
 import type { StagedLook, StagedLookRow } from "@/data/previewStagedLooks";
+import { CommissionNotice } from "@/components/CommissionNotice";
 import { safeHref } from "@/lib/safe-url";
 import { trackOutbound } from "@/lib/utils";
 import { canonicalVisibleSlot } from "@/lib/look-atomic-completeness";
@@ -68,8 +69,9 @@ export function StagedLookItemization({ look }: { look: StagedLook }) {
           The Resort Edit
         </h3>
         <p className="font-serif italic text-[0.95rem] text-ink/70 mt-2 leading-relaxed max-w-prose">
-          The exact pieces in this photograph — the complete look, nothing missing.
+          The exact pieces in this image — the complete look, nothing missing.
         </p>
+        <CommissionNotice className="mt-4" />
       </div>
       <div className="mt-2">
         {chapters.map((chapter, ci) => (

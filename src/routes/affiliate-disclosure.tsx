@@ -48,19 +48,17 @@ function AffiliateDisclosurePage() {
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
         Resort Edit is an independent editorial publication. This page explains, in plain language,
-        how our links work, how we may earn, and how our photography is made. We would rather be
-        boringly honest than quietly vague.
+        how our links work, how we may earn, and how our editorial imagery is made.
       </p>
 
       <Section title="How our links work">
         <p>
-          When we feature a piece, we link to the retailer that actually stocks it. Some of those
-          links may earn Resort Edit a commission if you buy something. You never pay more because
-          you used our link — the price is the retailer's price.
+          When we feature a piece, we link to a retailer's page for that piece. Some of those links
+          may earn Resort Edit a commission if you buy something. You never pay more because you used
+          our link — the price is the retailer's price.
         </p>
         <p>
-          Many of our links earn nothing at all. We link the right piece first and worry about
-          whether it earns second.
+          Many of our links earn nothing at all. Commission is never the reason a piece is featured.
         </p>
       </Section>
 
@@ -73,7 +71,8 @@ function AffiliateDisclosurePage() {
         <p>
           Hotels, beach clubs, farms and tour operators mentioned on this site are not sponsors,
           have not paid for placement, and have not endorsed Resort Edit. Booking and enquiry links
-          go to the operator's own page.
+          open the listed operator or booking platform, and the experience links currently displayed
+          are not commission-bearing.
         </p>
       </Section>
 
@@ -92,8 +91,8 @@ function AffiliateDisclosurePage() {
           a specific person, boutique, hotel or event.
         </p>
         <p>
-          We name and link the real, purchasable pieces shown in each look. Even so, a generated
-          image can differ from the product photography on the retailer's page: drape, colour under
+          Where we link a piece, we name the brand and product and link the retailer's page for it.
+          Even so, a generated image can differ from the product photography on the retailer's page: drape, colour under
           different light, trim detail and styling may not match exactly. The retailer's own
           photographs and description are always the accurate reference for what you will receive.
         </p>
@@ -105,15 +104,16 @@ function AffiliateDisclosurePage() {
 
       <Section title="Stock and availability">
         <p>
-          Availability changes constantly and some retailers block automated checks entirely. When
-          we cannot confirm a piece is available, we say so rather than guess — and a look that is
-          missing a linked piece is hidden instead of shown incomplete.
+          Availability changes constantly and some retailers block automated checks entirely. A link
+          on this site is not a guarantee that the piece is currently in stock, in your size or in
+          the colour shown; the retailer's own page is the accurate reference. Where we cannot
+          confirm a piece, we do not claim it is available.
         </p>
       </Section>
 
       <Section title="Questions">
         <p>
-          Anything unclear here is our fault, not yours. Write to us at{" "}
+          If anything here is unclear, write to us at{" "}
           <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
             hello@resortedit.com
           </a>{" "}
