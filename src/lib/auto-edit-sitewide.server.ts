@@ -854,24 +854,141 @@ export async function runJob<T>(
   }
 }
 
+// ── Live stock recheck + durable repair ─────────────────────────
+
+export type RecheckOutcome = {
+  lookKey: string;
+  rechecked: number;
+  confirmedGone: { slot: string; brand: string; productName: string; availability: string }[];
+  unknown: { slot: string; brand: string; productName: string; detail: string }[];
+  preserved: Record<string, string>;
+};
+
 /**
- * Scheduled refresh: re-checks stock evidence freshness and reports which
- * moments need work. It never generates paid work unless something actually
- * changed and the budget allows it.
+ * Re-checks the LIVE retailer page for every linked piece of a look and writes
+ * product-specific evidence back. Confirmed sold-out / gone pieces are the
+ * repair instruction; pieces the retailer will not disclose stay `unknown`,
+ * which blocks rather than assumes.
  */
-export async function scheduledRefresh(input: { limitMoments?: number; generate?: boolean } = {}) {
-  const { audits, summary } = await auditMoments();
-  const needsWork = audits.filter((a) => !a.launchReady).slice(0, input.limitMoments ?? 3);
-  const generated: GenerateOutcome[] = [];
-  if (input.generate) {
-    for (const moment of needsWork) {
-      const outcome = await generateMomentVersion({
-        momentSlug: moment.momentSlug,
-        withHero: true,
-        activateIfClean: true,
-      });
-      generated.push(outcome);
+export async function recheckLookStock(lookKey: string, maxRows = 12): Promise<RecheckOutcome> {
+  const db = await admin();
+  const { recheckStock } = await import("./stock-evidence.server");
+  const { data: rows } = await db
+    .from("shop_slot_products")
+    .select(SLOT_SELECT)
+    .eq("look_key", lookKey)
+    .limit(maxRows);
+
+  const out: RecheckOutcome = {
+    lookKey,
+    rechecked: 0,
+    confirmedGone: [],
+    unknown: [],
+    preserved: {},
+  };
+  for (const row of (rows ?? []) as SlotRow[]) {
+    if (!row.url) continue;
+    const slot = canonicalVisibleSlot(row.slot ?? row.slot_label ?? "") ?? row.slot ?? "";
+    const verdict = await recheckStock(row.url);
+    out.rechecked += 1;
+    await db
+      .from("shop_slot_products")
+      .update({
+        last_checked_at: verdict.checkedAt,
+        last_audit_verdict: `${verdict.availability}:${verdict.provenance}`,
+        ...(verdict.availability === "gone" ? { status: "404" } : {}),
+        ...(verdict.availability === "sold_out" ? { status: "sold_out" } : {}),
+      })
+      .eq("id", row.id);
+
+    const label = { slot, brand: row.brand ?? "", productName: row.product_name ?? "" };
+    if (verdict.availability === "in_stock") {
+      out.preserved[slot] = row.url;
+    } else if (verdict.availability === "sold_out" || verdict.availability === "gone") {
+      out.confirmedGone.push({ ...label, availability: verdict.availability });
+    } else {
+      out.unknown.push({ ...label, detail: verdict.detail ?? verdict.provenance });
     }
   }
-  return { summary, needsWork: needsWork.map((m) => m.momentSlug), generated };
+  return out;
 }
+
+/**
+ * Durable, idempotent repair for ONE look. Rechecks live stock, keeps every
+ * piece that still verifies, restyles only the failed slots, keeps the Moment's
+ * main clothing brands distinct, and activates atomically — image and full
+ * product set together — or leaves the look withheld with a recorded reason.
+ */
+export async function repairLook(input: {
+  momentSlug: string;
+  lookKey?: string;
+  excludeMainBrands?: string[];
+}): Promise<{
+  lookKey: string;
+  recheck: RecheckOutcome;
+  action: "no_repair_needed" | "repaired" | "blocked";
+  generated: GenerateOutcome | null;
+  blockedReason: string | null;
+}> {
+  const lookKey = input.lookKey ?? `portofino/${input.momentSlug}`;
+  const recheck = await recheckLookStock(lookKey);
+  if (recheck.confirmedGone.length === 0 && recheck.unknown.length === 0) {
+    return { lookKey, recheck, action: "no_repair_needed", generated: null, blockedReason: null };
+  }
+  if (recheck.confirmedGone.length === 0) {
+    return {
+      lookKey,
+      recheck,
+      action: "blocked",
+      generated: null,
+      blockedReason: `availability could not be verified for: ${recheck.unknown
+        .map((u) => `${u.slot} (${u.detail})`)
+        .join("; ")}`,
+    };
+  }
+  const generated = await generateMomentVersion({
+    momentSlug: input.momentSlug,
+    lookKey,
+    withHero: true,
+    activateIfClean: true,
+    preserveUrlsBySlot: recheck.preserved,
+    ...(input.excludeMainBrands ? { excludeMainBrands: input.excludeMainBrands } : {}),
+  });
+  return {
+    lookKey,
+    recheck,
+    action: generated.published ? "repaired" : "blocked",
+    generated,
+    blockedReason: generated.published ? null : generated.blockedReason,
+  };
+}
+
+/**
+ * Scheduled refresh: audits, actually re-checks live retailer stock for the
+ * moments that are failing, and runs bounded repair. Paid generation only
+ * happens inside a job with a spend cap, never on a page view.
+ */
+export async function scheduledRefresh(
+  input: { limitMoments?: number; generate?: boolean; repair?: boolean } = {},
+) {
+  const { audits, summary } = await auditMoments();
+  const needsWork = audits.filter((a) => !a.launchReady).slice(0, input.limitMoments ?? 3);
+  const repairs: Awaited<ReturnType<typeof repairLook>>[] = [];
+  const generated: GenerateOutcome[] = [];
+  for (const moment of needsWork) {
+    if (input.repair !== false) {
+      repairs.push(await repairLook({ momentSlug: moment.momentSlug }));
+    }
+    if (input.generate) {
+      generated.push(
+        await generateMomentVersion({
+          momentSlug: moment.momentSlug,
+          withHero: true,
+          activateIfClean: true,
+        }),
+      );
+    }
+  }
+  return { summary, needsWork: needsWork.map((m) => m.momentSlug), repairs, generated };
+}
+
