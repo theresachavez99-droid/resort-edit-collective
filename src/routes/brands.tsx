@@ -433,7 +433,10 @@ function BrandsPage() {
 
       {/* AFFILIATE DISCLOSURE */}
       <p className="mt-10 text-center eyebrow text-[0.55rem] text-ink/45 max-w-xl mx-auto px-6">
-        Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.
+        Resort Edit is reader-supported. Some links may earn a small commission at no cost to you.{" "}
+        <Link to="/affiliate-disclosure" className="underline hover:text-ink">
+          Affiliate Disclosure
+        </Link>
       </p>
 
       {/* EDITORIAL SIGN-OFF */}

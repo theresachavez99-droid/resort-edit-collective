@@ -271,7 +271,11 @@ function Index() {
       <div className={`${wrap} pb-16 md:pb-24`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
         <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
-          Prices and availability may change. Some links may earn a commission at no additional cost to you.
+          Availability is set by each retailer and may change. Some links may earn a commission at no
+          additional cost to you.{" "}
+          <Link to="/affiliate-disclosure" className="underline hover:text-ink/70">
+            Affiliate Disclosure
+          </Link>
         </p>
       </div>
     </div>

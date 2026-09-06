@@ -12,11 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AffiliateDisclosureRouteImport } from './routes/affiliate-disclosure'
 import { Route as BrandsRouteImport } from './routes/brands'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as MyEditRouteImport } from './routes/my-edit'
 import { Route as PortofinoRouteImport } from './routes/portofino'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as PrivacyRightsRouteImport } from './routes/privacy-rights'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -64,9 +67,19 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AffiliateDisclosureRoute = AffiliateDisclosureRouteImport.update({
+  id: '/affiliate-disclosure',
+  path: '/affiliate-disclosure',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandsRoute = BrandsRouteImport.update({
   id: '/brands',
   path: '/brands',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DestinationsRoute = DestinationsRouteImport.update({
@@ -87,6 +100,11 @@ const PortofinoRoute = PortofinoRouteImport.update({
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRightsRoute = PrivacyRightsRouteImport.update({
+  id: '/privacy-rights',
+  path: '/privacy-rights',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -256,11 +274,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/brands': typeof BrandsRouteWithChildren
+  '/contact': typeof ContactRoute
   '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
   '/portofino': typeof PortofinoRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/privacy-rights': typeof PrivacyRightsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
@@ -296,8 +317,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
+  '/contact': typeof ContactRoute
   '/my-edit': typeof MyEditRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/privacy-rights': typeof PrivacyRightsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
@@ -335,11 +359,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/brands': typeof BrandsRouteWithChildren
+  '/contact': typeof ContactRoute
   '/destinations': typeof DestinationsRouteWithChildren
   '/my-edit': typeof MyEditRoute
   '/portofino': typeof PortofinoRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/privacy-rights': typeof PrivacyRightsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/brands': typeof AdminBrandsRoute
@@ -378,11 +405,14 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/affiliate-disclosure'
     | '/brands'
+    | '/contact'
     | '/destinations'
     | '/my-edit'
     | '/portofino'
     | '/privacy-policy'
+    | '/privacy-rights'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
@@ -418,8 +448,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/affiliate-disclosure'
+    | '/contact'
     | '/my-edit'
     | '/privacy-policy'
+    | '/privacy-rights'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
@@ -456,11 +489,14 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/affiliate-disclosure'
     | '/brands'
+    | '/contact'
     | '/destinations'
     | '/my-edit'
     | '/portofino'
     | '/privacy-policy'
+    | '/privacy-rights'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/admin/brands'
@@ -498,11 +534,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AffiliateDisclosureRoute: typeof AffiliateDisclosureRoute
   BrandsRoute: typeof BrandsRouteWithChildren
+  ContactRoute: typeof ContactRoute
   DestinationsRoute: typeof DestinationsRouteWithChildren
   MyEditRoute: typeof MyEditRoute
   PortofinoRoute: typeof PortofinoRouteWithChildren
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  PrivacyRightsRoute: typeof PrivacyRightsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicAutoEditRefreshRoute: typeof ApiPublicAutoEditRefreshRoute
@@ -537,11 +576,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/affiliate-disclosure': {
+      id: '/affiliate-disclosure'
+      path: '/affiliate-disclosure'
+      fullPath: '/affiliate-disclosure'
+      preLoaderRoute: typeof AffiliateDisclosureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/brands': {
       id: '/brands'
       path: '/brands'
       fullPath: '/brands'
       preLoaderRoute: typeof BrandsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/destinations': {
@@ -570,6 +623,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
       preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-rights': {
+      id: '/privacy-rights'
+      path: '/privacy-rights'
+      fullPath: '/privacy-rights'
+      preLoaderRoute: typeof PrivacyRightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -878,11 +938,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
+  AffiliateDisclosureRoute: AffiliateDisclosureRoute,
   BrandsRoute: BrandsRouteWithChildren,
+  ContactRoute: ContactRoute,
   DestinationsRoute: DestinationsRouteWithChildren,
   MyEditRoute: MyEditRoute,
   PortofinoRoute: PortofinoRouteWithChildren,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
+  PrivacyRightsRoute: PrivacyRightsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicAutoEditRefreshRoute: ApiPublicAutoEditRefreshRoute,

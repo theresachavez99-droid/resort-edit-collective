@@ -41,7 +41,12 @@ export type DestinationExperience = {
   commissionable: boolean;
   /** Canonical Portofino moment whose looks suit this activity. */
   momentSlug: string;
-  image: string;
+  /**
+   * Editorial destination imagery. Omit (null) when no accurate image of the
+   * real venue exists — the card then uses an elegant text-only treatment
+   * rather than borrowing an unrelated photograph.
+   */
+  image: string | null;
   imageIsIllustrative: boolean;
   /** Surfaced in the small homepage selection. */
   featured: boolean;
@@ -51,7 +56,6 @@ import expYacht from "@/assets/exp-yacht-charter.jpg";
 import expCruise from "@/assets/exp-sunset-cruise.jpg";
 import expCooking from "@/assets/exp-cooking-class.jpg";
 import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
-import expHarbor from "@/assets/exp-harbor-golden.jpg";
 import expBeachClub from "@/assets/experience-beach-club.jpg";
 
 const CHECKED = "2026-09-06";
@@ -64,10 +68,12 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     name: "Private Boat Tour of the Portofino Riviera",
     operator: "Local boat operator, sold via Viator",
     kind: "Private boat",
-    editorial: "The promontory from the water — coves, cliffs and the pastel harbour seen the way it was meant to be seen.",
+    editorial:
+      "The promontory from the water — coves, cliffs and the pastel harbour seen the way it was meant to be seen.",
     facts: ["4 hours (approx.)", "Private tour", "Departs Portofino, Italy", "Offered in English"],
     href: "https://www.viator.com/tours/Portofino/Private-Boat-Tour-of-the-Portofino-Riviera/d4232-467798P8",
-    sourceUrl: "https://www.viator.com/tours/Portofino/Private-Boat-Tour-of-the-Portofino-Riviera/d4232-467798P8",
+    sourceUrl:
+      "https://www.viator.com/tours/Portofino/Private-Boat-Tour-of-the-Portofino-Riviera/d4232-467798P8",
     factsCheckedOn: CHECKED,
     booking: "availability",
     commissionable: false,
@@ -83,10 +89,17 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     name: "Sunset Boat Tour with Aperitif in Portofino",
     operator: "Local boat operator, sold via Viator",
     kind: "Sunset cruise",
-    editorial: "Golden hour on the Ligurian water, an aperitivo in hand, the hills turning apricot behind you.",
-    facts: ["1 hour 30 minutes (approx.)", "Small group", "Departs Portofino, Italy", "Offered in English and 1 more"],
+    editorial:
+      "Golden hour on the Ligurian water, an aperitivo in hand, the hills turning apricot behind you.",
+    facts: [
+      "1 hour 30 minutes (approx.)",
+      "Small group",
+      "Departs Portofino, Italy",
+      "Offered in English and 1 more",
+    ],
     href: "https://www.viator.com/tours/Portofino/Sunset-Boat-Tour-for-Small-Groups/d4232-467798P3",
-    sourceUrl: "https://www.viator.com/tours/Portofino/Sunset-Boat-Tour-for-Small-Groups/d4232-467798P3",
+    sourceUrl:
+      "https://www.viator.com/tours/Portofino/Sunset-Boat-Tour-for-Small-Groups/d4232-467798P3",
     factsCheckedOn: CHECKED,
     booking: "availability",
     commissionable: false,
@@ -102,10 +115,12 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     name: "Portofino Boat and Walking Tour with Pesto Cooking & Lunch",
     operator: "Local guide, sold via Viator",
     kind: "Pesto class & Ligurian lunch",
-    editorial: "Mortar, pestle and basil — Liguria's own recipe, learned between a boat ride and a walk through the village.",
+    editorial:
+      "Mortar, pestle and basil — Liguria's own recipe, learned between a boat ride and a walk through the village.",
     facts: ["3 hours (approx.)", "Departs Portofino, Italy", "Offered in English"],
     href: "https://www.viator.com/tours/Portofino/Best-of-Portofino-Boat-and-Walking-Tour-Pesto-Cooking-and-Lunch/d4232-68388P1",
-    sourceUrl: "https://www.viator.com/tours/Portofino/Best-of-Portofino-Boat-and-Walking-Tour-Pesto-Cooking-and-Lunch/d4232-68388P1",
+    sourceUrl:
+      "https://www.viator.com/tours/Portofino/Best-of-Portofino-Boat-and-Walking-Tour-Pesto-Cooking-and-Lunch/d4232-68388P1",
     factsCheckedOn: CHECKED,
     booking: "availability",
     commissionable: false,
@@ -121,10 +136,18 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     name: "Scenic Private Hiking Tour from Portofino to S. Fruttuoso",
     operator: "Local private guide, sold via Viator",
     kind: "Guided coastal walk",
-    editorial: "The old footpath over the headland to the abbey at San Fruttuoso — reachable on foot or by water, never by car.",
-    facts: ["4 to 6 hours (approx.)", "Private guide", "Pickup offered", "Departs Portofino, Italy", "Offered in English and 5 more"],
+    editorial:
+      "The old footpath over the headland to the abbey at San Fruttuoso — reachable on foot or by water, never by car.",
+    facts: [
+      "4 to 6 hours (approx.)",
+      "Private guide",
+      "Pickup offered",
+      "Departs Portofino, Italy",
+      "Offered in English and 5 more",
+    ],
     href: "https://www.viator.com/tours/Portofino/Portofino-to-S-Fruttuoso-Scenic-Coastal-Hike-with-Private-Guide/d4232-428295P2",
-    sourceUrl: "https://www.viator.com/tours/Portofino/Portofino-to-S-Fruttuoso-Scenic-Coastal-Hike-with-Private-Guide/d4232-428295P2",
+    sourceUrl:
+      "https://www.viator.com/tours/Portofino/Portofino-to-S-Fruttuoso-Scenic-Coastal-Hike-with-Private-Guide/d4232-428295P2",
     factsCheckedOn: CHECKED,
     booking: "availability",
     commissionable: false,
@@ -140,7 +163,8 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     name: "La Portofinese Eco-Farm — guided visit, vineyard tasting & picnic",
     operator: "La Portofinese (independent operator, booked direct)",
     kind: "Wine & eco-farm",
-    editorial: "A self-sustaining farm inside the Portofino park — bees, olive trees and vines above the Cala degli Inglesi.",
+    editorial:
+      "A self-sustaining farm inside the Portofino park — bees, olive trees and vines above the Cala degli Inglesi.",
     facts: [
       "Guided tour of the eco-farm with tasting of their wine in the vineyard",
       "Picnic aperitif, picnic lunch or early dinner options",
@@ -153,8 +177,10 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     booking: "enquiry",
     commissionable: false,
     momentSlug: "espresso-morning",
-    image: expHarbor,
-    imageIsIllustrative: true,
+    // No accurate imagery of this farm is licensed to us, and the harbour photo
+    // previously used here misrepresented the venue. Text-only by design.
+    image: null,
+    imageIsIllustrative: false,
     featured: false,
   },
   {
@@ -164,7 +190,8 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     name: "Bagni Fiore, Paraggi — beach club & restaurant",
     operator: "Bagni Fiore (independent operator, booked direct)",
     kind: "Beach experience",
-    editorial: "Emerald water at Paraggi, striped umbrellas in rows, lunch that stretches into the afternoon.",
+    editorial:
+      "Emerald water at Paraggi, striped umbrellas in rows, lunch that stretches into the afternoon.",
     facts: [
       "Via Paraggi a Mare 1, Santa Margherita Ligure",
       "Open Sunday to Saturday, 09:00–19:00",
@@ -187,7 +214,9 @@ export function experiencesForDestination(destinationSlug: string): DestinationE
 }
 
 export function featuredExperiences(destinationSlug?: string, limit = 3): DestinationExperience[] {
-  const pool = destinationSlug ? experiencesForDestination(destinationSlug) : [...DESTINATION_EXPERIENCES];
+  const pool = destinationSlug
+    ? experiencesForDestination(destinationSlug)
+    : [...DESTINATION_EXPERIENCES];
   return pool.filter((e) => e.featured).slice(0, limit);
 }
 

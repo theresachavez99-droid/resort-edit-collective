@@ -10,9 +10,17 @@ export const Route = createFileRoute("/destinations")({
   head: () => ({
     meta: [
       { title: "Destinations | Resort Edit | Dressed for the destination" },
-      { name: "description", content: "An interactive atlas of curated escapes — from Portofino and Capri to Tulum and Phuket. Luxury travel guides for the worldly woman." },
+      {
+        name: "description",
+        content:
+          "An interactive atlas of curated escapes — from Portofino and Capri to Tulum and Phuket. Luxury travel guides for the worldly woman.",
+      },
       { property: "og:title", content: "Destinations | Resort Edit | Dressed for the destination" },
-      { property: "og:description", content: "An interactive atlas of editorial travel guides from the Mediterranean to the tropics." },
+      {
+        property: "og:description",
+        content:
+          "An interactive atlas of editorial travel guides from the Mediterranean to the tropics.",
+      },
       { property: "og:url", content: absoluteUrl("/destinations") },
     ],
   }),
@@ -29,16 +37,6 @@ const vibeBySlug: Record<string, string> = {
   phuket: "Island Luxury",
 };
 
-const editsBySlug: Record<string, number> = {
-  portofino: 16,
-  capri: 18,
-  sttropez: 12,
-  ibiza: 22,
-  mallorca: 14,
-  tulum: 20,
-  phuket: 15,
-};
-
 const FEATURED_SLUGS = ["portofino", "mallorca"] as const;
 
 type FilterKey = "All" | "Italian Riviera" | "Mediterranean";
@@ -52,8 +50,7 @@ const filterTagsBySlug: Record<string, FilterKey[]> = {
 
 function DestinationsPage() {
   const featured = useMemo(
-    () =>
-      FEATURED_SLUGS.map((slug) => destinations.find((d) => d.slug === slug)!).filter(Boolean),
+    () => FEATURED_SLUGS.map((slug) => destinations.find((d) => d.slug === slug)!).filter(Boolean),
     [],
   );
   const [filter, setFilter] = useState<FilterKey>("All");
@@ -150,7 +147,6 @@ function DestinationsPage() {
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 max-w-[1100px] mx-auto">
               {visible.map((d) => {
                 const vibe = vibeBySlug[d.slug] ?? d.travelType;
-                const count = editsBySlug[d.slug] ?? 10;
                 return (
                   <li key={d.slug}>
                     <DestinationLink
@@ -170,7 +166,7 @@ function DestinationsPage() {
                           {d.name}
                         </h3>
                         <div className="mt-5 flex items-center justify-between border-t border-ivory/25 pt-3">
-                          <span className="eyebrow text-ivory/80 text-[0.65rem]">{count} edits</span>
+                          <span className="eyebrow text-ivory/80 text-[0.65rem]">{d.region}</span>
                           <span className="eyebrow text-ivory transition-transform duration-500 group-hover:translate-x-1">
                             Explore →
                           </span>
@@ -214,7 +210,6 @@ function DestinationsPage() {
           </div>
         </div>
       </section>
-
     </div>
   );
 }

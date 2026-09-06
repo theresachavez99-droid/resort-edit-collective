@@ -78,7 +78,7 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link to="/about" hash="contact" className="hover:text-gold">
+                <Link to="/contact" className="hover:text-gold">
                   Contact
                 </Link>
               </li>
@@ -93,13 +93,18 @@ export function SiteFooter() {
             <p className="eyebrow text-gold-soft mb-4">Legal</p>
             <ul className="space-y-2 font-serif">
               <li>
-                <Link to="/about" hash="affiliate-disclosure" className="hover:text-gold">
+                <Link to="/affiliate-disclosure" className="hover:text-gold">
                   Affiliate Disclosure
                 </Link>
               </li>
               <li>
                 <Link to="/privacy-policy" className="hover:text-gold">
                   Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy-rights" className="hover:text-gold">
+                  Your Privacy Choices
                 </Link>
               </li>
             </ul>

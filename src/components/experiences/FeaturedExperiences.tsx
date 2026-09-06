@@ -1,3 +1,4 @@
+import { CommissionNotice } from "@/components/CommissionNotice";
 import { Link } from "@tanstack/react-router";
 import { featuredExperiences } from "@/data/destinationExperiences";
 import { ExperienceCard } from "./ExperienceCard";
@@ -14,7 +15,10 @@ export function FeaturedExperiences({ wrap }: { wrap: string }) {
     <section className={`${wrap} mt-12 md:mt-16`} aria-labelledby="featured-experiences-heading">
       <div className="flex items-center gap-4 justify-center mb-3">
         <div className="h-px w-12 bg-gold/50" />
-        <h2 id="featured-experiences-heading" className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">
+        <h2
+          id="featured-experiences-heading"
+          className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink"
+        >
           EXPERIENCES WE'D BOOK
         </h2>
         <div className="h-px w-12 bg-gold/50" />
@@ -23,6 +27,7 @@ export function FeaturedExperiences({ wrap }: { wrap: string }) {
         A few we'd plan a day around — with the look to wear for each.
       </p>
 
+      <CommissionNotice variant="booking" className="mb-5 text-center max-w-2xl mx-auto" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
         {experiences.map((e) => (
           <ExperienceCard key={e.key} experience={e} placement="home-featured" showDestination />
