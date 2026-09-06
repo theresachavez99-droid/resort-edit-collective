@@ -439,3 +439,46 @@ export function outfitFingerprint(picks: { slot: string; url: string }[]): strin
     .sort()
     .join("|");
 }
+
+// ── Three-brand diversity across a Moment ─────────────────────────
+
+/** Main clothing brand of a look = the brand of its garment ("outfit") slot. */
+export function mainClothingBrand(picks: readonly GatedPick[]): string | null {
+  const garment = picks.find((p) => p.slot === "outfit");
+  return garment ? garment.brand.trim() : null;
+}
+
+/**
+ * Founder rule: every Moment publishes exactly three complete looks whose MAIN
+ * clothing brands are all different. Coordinated pieces inside one outfit may
+ * share a brand; the hero and both supports may not.
+ */
+export function momentBrandDiversityGate(
+  looks: readonly { lookKey: string; picks: readonly GatedPick[] }[],
+  requiredLooks = 3,
+): GateResult {
+  const failures: GateFailure[] = [];
+  const brands: string[] = [];
+  for (const look of looks) {
+    const brand = mainClothingBrand(look.picks);
+    if (!brand) {
+      failures.push({ gate: "main_brand_unknown", detail: `${look.lookKey} has no linked garment` });
+      continue;
+    }
+    brands.push(brand.toLowerCase());
+  }
+  if (looks.length < requiredLooks) {
+    failures.push({
+      gate: "moment_look_count",
+      detail: `${looks.length} complete look(s); this Moment requires ${requiredLooks}`,
+    });
+  }
+  const unique = new Set(brands);
+  if (brands.length > 0 && unique.size !== brands.length) {
+    failures.push({
+      gate: "main_brand_repeated",
+      detail: `main clothing brands repeat across the Moment: ${brands.join(", ")}`,
+    });
+  }
+  return ok(failures);
+}
