@@ -16,6 +16,8 @@ import { z } from "zod";
 
 const bodySchema = z.object({
   generate: z.boolean().default(false),
+  /** Live retailer stock recheck + durable repair of failing looks. */
+  repair: z.boolean().default(true),
   limitMoments: z.number().int().min(1).max(6).default(2),
 });
 
@@ -45,7 +47,7 @@ export const Route = createFileRoute("/api/public/auto-edit-refresh")({
         const { runJob, scheduledRefresh } = await import("@/lib/auto-edit-sitewide.server");
         const hour = new Date().toISOString().slice(0, 13);
         const outcome = await runJob(
-          `auto-edit-refresh:${hour}:${parsed.generate ? "generate" : "audit"}`,
+          `auto-edit-refresh:${hour}:${parsed.generate ? "generate" : parsed.repair ? "repair" : "audit"}`,
           "auto_edit_refresh",
           async () => scheduledRefresh(parsed),
         );
