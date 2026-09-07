@@ -193,7 +193,7 @@ function ExperienceCard({ e }: { e: DestinationExperience }) {
             >
               {(shop.label ?? "SHOP THE EDIT").toUpperCase()} →
             </a>
-          ) : igCard ? (
+          ) : igCard && instagramHref(igCard) ? (
             <a
               href={instagramHref(igCard)}
               target="_blank"
@@ -203,7 +203,12 @@ function ExperienceCard({ e }: { e: DestinationExperience }) {
               <Instagram className="w-3.5 h-3.5" strokeWidth={1.6} />
               SEE WHAT WE'D WEAR
             </a>
-          ) : null}
+          ) : (
+            <span className="inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.3em] text-ink/40">
+              <Instagram className="w-3.5 h-3.5" strokeWidth={1.6} />
+              THE INSTAGRAM EDIT IS COMING SOON
+            </span>
+          )}
         </div>
         <p className="mt-3 font-serif text-[0.72rem] text-ink/40">{experienceCta(e)}</p>
       </div>

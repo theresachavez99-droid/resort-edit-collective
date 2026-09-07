@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/site";
-import { InstagramStrip } from "@/components/InstagramStrip";
-import { INSTAGRAM_CARDS, INSTAGRAM_PROFILE_URL } from "@/data/instagramPosts";
+import { INSTAGRAM_HANDLE, INSTAGRAM_PROFILE_URL } from "@/data/instagramPosts";
 import heroPoster from "@/assets/uploads/portofino/harbor-aperitivo-banner-golden-hour.png.asset.json";
 
 export const Route = createFileRoute("/latest")({
