@@ -194,9 +194,9 @@ function ExperienceCard({ e }: { e: DestinationExperience }) {
             >
               {(shop.label ?? "SHOP THE EDIT").toUpperCase()} →
             </a>
-          ) : igCard && instagramHref(igCard) ? (
+          ) : igHref ? (
             <a
-              href={instagramHref(igCard)}
+              href={igHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.3em] text-ink/70 hover:text-gold transition-colors"
