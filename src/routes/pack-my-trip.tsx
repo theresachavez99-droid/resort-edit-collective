@@ -1,9 +1,13 @@
 import * as React from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueries, useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
 import { absoluteUrl } from "@/lib/site";
 import type { PortofinoMomentCard } from "@/lib/portofino-moments.functions";
+import {
+  heroLookEligibility,
+  shopSlotsQuery,
+} from "@/components/commerce/ResortEditItemization";
 import {
   PRICE_LEVELS,
   PRICE_LEVEL_LABELS,
@@ -14,7 +18,7 @@ import {
   TRIP_LENGTHS,
   buildItinerary,
   coreItinerary,
-  packingSummary,
+  summarizeCategories,
   portofinoLandingMomentsQuery,
   type PriceLevel,
   type ShoePreference,
@@ -229,7 +233,6 @@ function PackMyTrip() {
     () => (days ? buildItinerary(days, selected, live) : []),
     [days, selected, live],
   );
-  const packing = React.useMemo(() => packingSummary(itinerary), [itinerary]);
 
   return (
     <main className="bg-ivory min-h-screen pb-16 md:pb-24">
@@ -555,5 +558,49 @@ function PackMyTrip() {
         </section>
       )}
     </main>
+  );
+}
+
+/**
+ * "What to pack" — aggregated ONLY from pieces already published on the
+ * selected looks (`public_shop_slot_display`), and only from looks that pass
+ * the same completeness gate the moment pages use. Nothing is invented, and
+ * no prices, retailers or product URLs are shown here.
+ */
+function PackingSummary({ slugs }: { slugs: readonly string[] }) {
+  const results = useQueries({
+    queries: slugs.map((slug) => shopSlotsQuery(`portofino/${slug}`)),
+  });
+  const labels: string[] = [];
+  results.forEach((r, i) => {
+    const rows = (r.data?.slots ?? []).filter((x) => x.brand || x.product_name);
+    if (rows.length === 0) return;
+    const lookKey = `portofino/${slugs[i]}`;
+    if (!heroLookEligibility(lookKey, rows).eligible) return;
+    for (const row of rows) labels.push(row.slot_label || row.slot || "");
+  });
+  const packing = summarizeCategories(labels);
+  if (packing.length === 0) return null;
+  return (
+    <div className="mt-14 pt-8 border-t border-border/50">
+      <div className="text-center max-w-2xl mx-auto">
+        <Eyebrow>WHAT TO PACK</Eyebrow>
+        <h3 className="mt-2 font-display text-2xl sm:text-3xl tracking-[0.03em] text-ink">
+          Your Packing Summary
+        </h3>
+        <p className="mt-2 font-serif italic text-[0.94rem] text-ink/60">
+          Counted from the pieces published in the looks above.
+        </p>
+      </div>
+      <ul className="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3 max-w-3xl mx-auto">
+        {packing.map((p) => (
+          <li key={p.category} className="font-serif text-[0.95rem] text-ink/80">
+            <span className="text-gold mr-2">·</span>
+            {p.category}
+            <span className="text-ink/45"> × {p.count}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
