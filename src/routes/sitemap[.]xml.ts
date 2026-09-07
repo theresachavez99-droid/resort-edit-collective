@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
-import { brandCategories } from "@/data/brands";
 import { destinations } from "@/data/destinations";
 
 const BASE_URL = "https://resortedit.com";
@@ -11,33 +9,22 @@ type SitemapEntry = { path: string; changefreq: string; priority: string };
 const staticEntries: SitemapEntry[] = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/destinations", changefreq: "weekly", priority: "0.9" },
-  { path: "/portofino", changefreq: "monthly", priority: "0.9" },
-  { path: "/portofino/pool-lounging/poolside-glam", changefreq: "monthly", priority: "0.7" },
-  { path: "/brands", changefreq: "monthly", priority: "0.7" },
+  { path: "/portofino", changefreq: "weekly", priority: "0.9" },
+  { path: "/latest", changefreq: "weekly", priority: "0.8" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
+  { path: "/contact", changefreq: "yearly", priority: "0.4" },
+  { path: "/affiliate-disclosure", changefreq: "yearly", priority: "0.3" },
   { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
 ];
 
 function buildEntries(): SitemapEntry[] {
   const all: SitemapEntry[] = [
     ...staticEntries,
-    ...PORTOFINO_JOURNEY.map((m) => ({
-      path: `/portofino/${m.moment_slug}`,
-      changefreq: "weekly",
-      priority: "0.8",
-    })),
     ...destinations.map((d) => ({
       path: `/destinations/${d.slug}`,
       changefreq: "monthly",
       priority: "0.6",
     })),
-    ...brandCategories.flatMap((cat) =>
-      cat.brands.map((b) => ({
-        path: `/brands/${b.slug}`,
-        changefreq: "monthly",
-        priority: "0.5",
-      })),
-    ),
   ];
   const seen = new Set<string>();
   return all.filter((e) => {

@@ -39,3 +39,7 @@
 # Consolidation (Aug 2026): /resort-edits retired into /destinations
 /resort-edits                                            /destinations                        301!
 /resort-edits/*                                          /destinations                        301!
+
+# Simplification (Sep 2026): per-moment clothing-look pages retired into the
+# single Portofino destination hub.
+/portofino/*                                             /portofino                           301!

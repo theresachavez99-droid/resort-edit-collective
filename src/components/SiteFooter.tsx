@@ -1,11 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram } from "lucide-react";
 import logo from "@/assets/resort-edit-logo-ivory.png";
-import { NewsletterForm } from "@/components/NewsletterForm";
 
 export function SiteFooter() {
   return (
-    <footer id="newsletter" className="bg-ink text-ivory mt-14 md:mt-16">
+    <footer className="bg-ink text-ivory mt-14 md:mt-16">
       <div className="mx-auto max-w-5xl px-6 pt-9 md:pt-12 pb-9 md:pb-11 text-center flex flex-col items-center">
         <div className="relative inline-block mb-2">
           <img
@@ -25,23 +24,16 @@ export function SiteFooter() {
           </span>
         </div>
         <h2 className="mt-6 font-display text-3xl md:text-5xl tracking-wide text-ivory">
-          Your Next Escape Starts Here
+          Dressed for the Destination
         </h2>
         <p className="mt-3 text-ivory/85 max-w-xl font-serif text-lg md:text-xl italic">
-          Receive beautifully curated travel inspiration, exceptional hotel discoveries, timeless
-          packing ideas, and unforgettable places worth exploring.
+          Where to stay, what to do, and what to wear when you get there.
         </p>
-        <NewsletterForm
-          ctaSource="footer"
-          variant="footer"
-          buttonLabel="Get the Next Edit"
-          placeholder="Enter your email"
-        />
         <a
-          href="https://www.instagram.com/resort.edit"
+          href="https://www.instagram.com/resort.edit/"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-12 inline-flex items-center gap-3 eyebrow text-ivory hover:text-gold transition-colors"
+          className="mt-8 inline-flex items-center gap-3 eyebrow text-ivory hover:text-gold transition-colors"
         >
           <Instagram className="w-5 h-5" strokeWidth={1.5} />
           <span>Instagram: @resort.edit</span>
@@ -63,8 +55,8 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link to="/brands" className="hover:text-gold">
-                  Brands We Love
+                <Link to="/latest" className="hover:text-gold">
+                  Latest from @resort.edit
                 </Link>
               </li>
             </ul>
