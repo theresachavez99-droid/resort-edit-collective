@@ -1,15 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FeaturedExperiences } from "@/components/experiences/FeaturedExperiences";
-import hotelSplendido from "@/assets/hotel-splendido.jpg";
-import hotelEight from "@/assets/hotel-eight.jpg";
-import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
-import { portofinoMomentsQuery } from "@/components/HomeItinerary";
-import { HomeEditorialChapters } from "@/components/HomeEditorialChapters";
 import { getFeaturedDestination } from "@/data/featuredDestination";
-import { partnerHref } from "@/data/partnerLinks";
+import { InstagramStrip } from "@/components/InstagramStrip";
 import heroVideoAsset from "@/assets/portofino-hero.mp4.asset.json";
 import heroPosterAsset from "@/assets/portofino-hero-poster.jpg.asset.json";
+import portofinoFeatured from "@/assets/hero-portofino-harbor.jpg";
 import * as React from "react";
 
 const featured = getFeaturedDestination();
@@ -21,9 +16,19 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Resort Edit | Dressed for the Destination" },
-      { name: "description", content: "Luxury resort style guides and itineraries — curated looks, hotels, and experiences for women who dress for the destination." },
+      {
+        name: "description",
+        content:
+          "Where to stay, what to do, and what to wear when you get there. An editorial guide to luxury Mediterranean destinations, starting with Portofino.",
+      },
       { property: "og:title", content: "Resort Edit | Dressed for the Destination" },
-      { property: "og:description", content: "Luxury resort style guides and itineraries — curated looks, hotels, and experiences for women who dress for the destination." },
+      {
+        property: "og:description",
+        content:
+          "Where to stay, what to do, and what to wear when you get there. Editorial destination guides from Resort Edit.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:image", content: absoluteUrl(heroMuse) },
       { property: "og:url", content: SITE_URL },
       { name: "twitter:image", content: absoluteUrl(heroMuse) },
@@ -33,43 +38,27 @@ export const Route = createFileRoute("/")({
       { rel: "preload", as: "image", href: heroPosterUrl, fetchpriority: "high" },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(portofinoMomentsQuery),
   component: Index,
 });
 
-const hotels = [
+const pillars = [
   {
-    name: "Splendido, A Belmond Hotel",
-    image: hotelSplendido,
-    vibe: "ICONIC · CLIFFTOP VIEWS",
-    pick: "Resort Edit Favorite",
-    desc: "A cliffside grande dame above the harbor. Timeless Italian glamour, bougainvillea terraces, and the most storied view on the Riviera.",
-    signals: ["Resort Edit top pick", "Harbour-facing rooms only", "Private pool terrace & cabanas"],
-    note: "Where to stay if this trip is the trip.",
-    partnerKey: "hotel-splendido",
+    label: "STAY",
+    copy: "The addresses worth the flight — clifftop grande dames, harbourfront boutiques, private coves.",
   },
   {
-    name: "Eight Hotel Portofino",
-    image: hotelEight,
-    vibe: "PIAZZETTA · LOCAL ENERGY",
-    pick: "Best for First-Time Visitors",
-    desc: "Quietly chic and steps from the piazzetta. A modern Italian retreat for travelers who want to live like a local in the heart of town.",
-    signals: ["Steps from the piazzetta", "Boutique, under 20 rooms", "Concierge who books the impossible"],
-    note: "For the trip you'll want to repeat next summer.",
-    partnerKey: "hotel-eight-portofino",
+    label: "DO",
+    copy: "Boats, coastal walks, vineyards and long afternoons, with the operators who actually run them.",
   },
   {
-    name: "Hotel Piccolo Portofino",
-    image: hotelPiccolo,
-    vibe: "HIDDEN · PRIVATE COVE",
-    pick: "Best for Privacy",
-    desc: "An intimate seaside hideaway tucked into a private cove. Sun-bleached terraces, turquoise water, and the kind of service that anticipates everything.",
-    signals: ["Private sea-access terrace", "Quiet side of the harbor", "Sea-view suites only"],
-    note: "For the traveler who wants the harbor without the crowd.",
-    partnerKey: "hotel-piccolo-portofino",
+    label: "EAT",
+    copy: "The tables to book ahead, and the ones locals keep for themselves.",
+  },
+  {
+    label: "WEAR",
+    copy: "What we'd pack for each of those moments — styled on Instagram, shoppable when you're ready.",
   },
 ];
-
 
 function Index() {
   const wrap = "px-4 sm:px-6 lg:px-10 xl:px-14 mx-auto max-w-[1440px]";
@@ -81,16 +70,15 @@ function Index() {
     mq.addEventListener?.("change", update);
     return () => mq.removeEventListener?.("change", update);
   }, []);
+
   return (
     <div className="bg-ivory w-full">
-      {/* HERO — single cinematic scene, no commerce, no nav stack. */}
+      {/* HERO — single cinematic Portofino scene. */}
       <section
         aria-label={`${featured.name} — editorial cover`}
         className="relative w-full overflow-hidden bg-ink"
       >
-        <div
-          className="relative w-full h-[78vh] min-h-[560px] max-h-[920px] [--hero-focal:50%_15%] sm:[--hero-focal:50%_15%] md:[--hero-focal:50%_12%] lg:[--hero-focal:50%_10%] xl:[--hero-focal:50%_8%]"
-        >
+        <div className="relative w-full h-[78vh] min-h-[560px] max-h-[920px] [--hero-focal:50%_15%] md:[--hero-focal:50%_12%] lg:[--hero-focal:50%_10%]">
           {prefersReducedMotion ? (
             <img
               src={heroPosterUrl}
@@ -116,170 +104,129 @@ function Index() {
               aria-label={featured.heroImageAlt}
             />
           )}
-          {/* Quiet gradient so the type stays readable without crushing the image. */}
           <div className="absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/15 to-ink/25" />
           <div className="absolute inset-x-0 bottom-0 px-6 sm:px-10 lg:px-14 pb-12 md:pb-16 lg:pb-20">
             <div className="max-w-[1440px] mx-auto">
               <p className="eyebrow text-ivory/85 text-[0.7rem] sm:text-[0.78rem] tracking-[0.42em]">
-                RESORT EDIT™  ·  PORTOFINO, ITALY
+                RESORT EDIT™
               </p>
-              <h1 className="mt-3 font-display text-ivory text-[2.6rem] sm:text-[3.6rem] lg:text-[4.4rem] leading-[1.02] tracking-[0.01em] max-w-[22ch]">
-                One perfect day in Portofino.
+              <h1 className="mt-3 font-display text-ivory text-[2.6rem] sm:text-[3.6rem] lg:text-[4.4rem] leading-[1.02] tracking-[0.01em] max-w-[24ch]">
+                Dressed for the Destination™
               </h1>
-              <p className="mt-3 font-serif italic text-ivory/85 text-[1.05rem] sm:text-[1.15rem] lg:text-[1.25rem] leading-snug max-w-[44ch]">
-                From the first walk along the harbor to one final cocktail on the piazzetta.
+              <p className="mt-3 font-serif italic text-ivory/85 text-[1.05rem] sm:text-[1.15rem] lg:text-[1.25rem] leading-snug max-w-[46ch]">
+                Where to stay, what to do, and what to wear when you get there.
               </p>
               <Link
-                to="/pack-my-trip"
+                to="/portofino"
                 className="mt-6 inline-flex items-center justify-center eyebrow text-[0.7rem] tracking-[0.3em] text-ink bg-ivory px-7 py-3.5 hover:bg-gold transition-colors"
               >
-                PACK MY TRIP
+                EXPLORE PORTOFINO
               </Link>
-
             </div>
           </div>
         </div>
       </section>
 
-      {/* THESIS BAND — quiet centered statement, no commerce. */}
-      <section className={`${wrap} pt-12 md:pt-16 pb-8 md:pb-12 text-center`}>
-        <p
-          className="font-serif italic text-[1.5rem] sm:text-[1.8rem] lg:text-[2.05rem] leading-[1.15] tracking-[-0.005em] max-w-[34ch] mx-auto"
-          style={{ color: "oklch(0.42 0.06 60)" }}
-        >
-          Dressed for the Destination™
-        </p>
-        <p className="mt-4 font-serif italic text-ink/70 text-[1rem] sm:text-[1.08rem] max-w-[48ch] mx-auto leading-relaxed">
-          Every moment thoughtfully curated — from your first arrival to your final nightcap.
-        </p>
-        <div className="mt-6 mx-auto h-px w-16 bg-gold/60" />
+      {/* FEATURED DESTINATION */}
+      <section className={`${wrap} pt-12 md:pt-16`}>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-6 md:gap-10 items-center">
+          <div className="relative aspect-[4/3] lg:aspect-[5/4] overflow-hidden bg-muted">
+            <img
+              src={portofinoFeatured}
+              alt="Portofino harbor — pastel facades and wooden boats along the quay"
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+          <div className="lg:pl-2">
+            <p className="eyebrow text-gold text-[0.68rem] tracking-[0.34em]">
+              FEATURED DESTINATION
+            </p>
+            <h2 className="mt-2 font-display text-[2.1rem] sm:text-[2.6rem] lg:text-[3rem] tracking-[0.02em] text-ink leading-[1.04]">
+              Portofino, Italy
+            </h2>
+            <div className="mt-4 h-px w-16 bg-gold/60" />
+            <p className="mt-5 font-serif text-[1rem] sm:text-[1.05rem] text-ink/75 leading-relaxed max-w-[46ch]">
+              A pastel harbor on the Italian Riviera, small enough to walk in an afternoon and
+              layered enough to keep you all week. Our full edit: where to stay, the boats and
+              vineyards worth booking, the tables to reserve early, and what we'd wear for each.
+            </p>
+            <Link
+              to="/portofino"
+              className="mt-7 inline-flex items-center justify-center eyebrow text-[0.7rem] tracking-[0.3em] text-ivory bg-ink px-7 py-3.5 hover:bg-gold hover:text-ink transition-colors"
+            >
+              EXPLORE PORTOFINO
+            </Link>
+          </div>
+        </div>
       </section>
 
-      {/* THE TWELVE MOMENTS — promoted to first beat after the thesis band. */}
-      <section className={`${wrap}`}>
-        <div className="text-center max-w-3xl mx-auto">
-          <p className="eyebrow text-gold text-[0.7rem] tracking-[0.34em]">
-            THE PORTOFINO EDIT
-          </p>
-          <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.02em] text-ink leading-[1.05]">
-            Twelve Editorial Moments.
+      {/* LATEST FROM @RESORT.EDIT */}
+      <div className={`${wrap} pt-14 md:pt-20`}>
+        <InstagramStrip limit={6} showFollow={false} />
+      </div>
+
+      {/* STAY / DO / EAT / WEAR */}
+      <section className={`${wrap} pt-14 md:pt-20`}>
+        <div className="text-center max-w-2xl mx-auto">
+          <p className="eyebrow text-gold text-[0.68rem] tracking-[0.34em]">THE RESORT EDIT MODEL</p>
+          <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.03em] text-ink leading-[1.05]">
+            Four Ways We Edit a Destination
           </h2>
           <div className="mt-4 mx-auto h-px w-16 bg-gold/60" />
         </div>
-
-        <div className="mt-5 md:mt-7">
-          <HomeEditorialChapters />
-        </div>
-      </section>
-
-      {/* WHERE TO STAY */}
-      <section className={`${wrap} mt-12 md:mt-16`}>
-        <div className="flex items-center gap-4 justify-center mb-3">
-          <div className="h-px w-12 bg-gold/50" />
-          <h2 className="font-display text-[1.75rem] sm:text-[2.05rem] font-medium tracking-[0.18em] text-ink">WHERE RESORT EDIT WOULD STAY</h2>
-          <div className="h-px w-12 bg-gold/50" />
-        </div>
-        <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-          Where Resort Edit would stay—chosen for location, atmosphere, and unforgettable views.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-          {hotels.map((h) => (
-            <article key={h.name} className="bg-card border border-border/50 flex flex-col">
-              <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-muted">
-                <img src={h.image} alt={h.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                <span className="absolute left-4 bottom-4 bg-ink/75 text-ivory eyebrow text-[0.6rem] tracking-[0.26em] px-3 py-1.5 backdrop-blur-sm">
-                  {h.vibe}
-                </span>
-              </div>
-              <div className="p-6 flex flex-col flex-1">
-                <div className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">{h.pick}</div>
-                <h3 className="mt-2 font-display text-2xl tracking-wide text-ink">{h.name}</h3>
-                <p className="mt-3 font-serif text-[0.95rem] text-ink/75 leading-relaxed">{h.desc}</p>
-                <ul className="mt-5 space-y-1.5">
-                  {h.signals.map((s) => (
-                    <li key={s} className="flex gap-2 font-serif text-[0.9rem] text-ink/80">
-                      <span className="text-gold">·</span>
-                      <span>{s}</span>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-5 font-serif italic text-[0.9rem] text-ink/60 flex-1">{h.note}</p>
-                <a
-                  href={partnerHref(h.partnerKey)}
-                  data-partner-key={h.partnerKey}
-                  data-partner-type="hotel"
-                  target="_blank"
-                  rel="noreferrer noopener sponsored"
-                  className="mt-6 inline-flex justify-center eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 self-center hover:text-ink hover:border-ink transition-colors"
-                >
-                  Explore This Stay →
-                </a>
-              </div>
+        <div className="mt-7 md:mt-9 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          {pillars.map((p) => (
+            <article
+              key={p.label}
+              className="bg-cream border border-border/50 p-5 md:p-6 flex flex-col"
+            >
+              <span className="font-display text-[1.35rem] md:text-[1.6rem] tracking-[0.22em] text-ink">
+                {p.label}
+              </span>
+              <div className="mt-3 h-px w-10 bg-gold/60" />
+              <p className="mt-3 font-serif italic text-ink/70 text-[0.88rem] md:text-[0.94rem] leading-relaxed">
+                {p.copy}
+              </p>
             </article>
           ))}
         </div>
+      </section>
 
-        <div className="mt-6 pt-5 border-t border-ink/15 text-center">
-          <p className="font-serif italic text-[0.9rem] text-ink/55 max-w-2xl mx-auto leading-relaxed">
-            Rates available on enquiry. Some properties book out months in advance — we recommend reserving before your flights.
+      {/* FOLLOW CTA */}
+      <section className={`${wrap} pt-14 md:pt-20 pb-4`}>
+        <div className="bg-cream border border-border/50 px-6 py-10 md:py-14 text-center">
+          <p className="eyebrow text-gold text-[0.68rem] tracking-[0.34em]">THE STORY CONTINUES</p>
+          <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.03em] text-ink leading-[1.05] max-w-[26ch] mx-auto">
+            Follow the edit on Instagram
+          </h2>
+          <p className="mt-4 font-serif italic text-ink/65 text-[1rem] max-w-[44ch] mx-auto leading-relaxed">
+            New destinations, reels and looks land there first.
           </p>
+          <div className="mt-7">
+            <InstagramStrip
+              cards={[]}
+              showFollow
+              heading=""
+              eyebrow=""
+              intro=""
+            />
+            <a
+              href="https://www.instagram.com/resort.edit/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center eyebrow text-[0.7rem] tracking-[0.3em] text-ivory bg-ink px-7 py-3.5 hover:bg-gold hover:text-ink transition-colors"
+            >
+              FOLLOW @RESORT.EDIT
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* FEATURED EXPERIENCES — small destination-tagged selection */}
-      <FeaturedExperiences wrap={wrap} />
-
-      {/* BRANDS WE LOVE */}
-      <section className={`${wrap} mt-10 md:mt-14 pb-12 md:pb-20`}>
-        <div className="flex items-center gap-4 justify-center mb-3">
-          <div className="h-px w-12 bg-gold/50" />
-          <h2 className="font-display text-2xl sm:text-3xl tracking-[0.18em] text-ink">BRANDS WE LOVE</h2>
-          <div className="h-px w-12 bg-gold/50" />
-        </div>
-        <p className="mb-7 text-center font-serif italic text-[0.95rem] sm:text-base text-ink/65 max-w-2xl mx-auto">
-          Designers consistently chosen for their craftsmanship, destination relevance, and timeless style.
-        </p>
-        <ul className="mx-auto max-w-4xl flex flex-wrap items-center justify-center gap-x-7 gap-y-3 lg:gap-x-10">
-          {[
-            { name: "Eres", slug: "eres" },
-            { name: "Callas Milano", slug: "callas-milano" },
-            { name: "Pucci", slug: "pucci" },
-            { name: "Missoni", slug: "missoni" },
-            { name: "Zimmermann", slug: "zimmermann" },
-            { name: "Johanna Ortiz", slug: "johanna-ortiz" },
-            { name: "Alexandra Miro", slug: "alexandra-miro" },
-            { name: "Vix Paula Hermanny", slug: "vix-paula-hermanny" },
-          ].map(({ name, slug }, i, arr) => (
-            <li key={name} className="flex items-center gap-x-7 lg:gap-x-10">
-              <Link
-                to="/brands/$slug"
-                params={{ slug }}
-                className="font-display text-[1rem] sm:text-[1.1rem] tracking-[0.22em] uppercase text-ink/75 hover:text-gold transition-colors"
-              >
-                {name}
-              </Link>
-              {i < arr.length - 1 && (
-                <span aria-hidden className="text-gold/50">·</span>
-              )}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-6 text-center">
-          <Link
-            to="/brands"
-            className="eyebrow text-[0.72rem] tracking-[0.3em] text-gold border-b border-gold/50 pb-1 hover:text-ink hover:border-ink transition-colors"
-          >
-            See All Brands We Love →
-          </Link>
-        </div>
-      </section>
-
-      <div className={`${wrap} pb-16 md:pb-24`}>
+      <div className={`${wrap} pb-16 md:pb-24 pt-10`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
-        <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] tracking-normal leading-relaxed text-ink/40">
-          Availability is set by each retailer and may change. Some links may earn a commission at no
-          additional cost to you.{" "}
+        <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] leading-relaxed text-ink/40">
+          Some links may earn a commission at no additional cost to you.{" "}
           <Link to="/affiliate-disclosure" className="underline hover:text-ink/70">
             Affiliate Disclosure
           </Link>
