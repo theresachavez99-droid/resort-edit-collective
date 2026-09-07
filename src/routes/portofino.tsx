@@ -146,6 +146,7 @@ function SectionHeading({
 
 function ExperienceCard({ e }: { e: DestinationExperience }) {
   const igCard = instagramCardForExperience(e.key);
+  const igHref = igCard ? instagramHref(igCard) : undefined;
   const shop = shopTheEditLink(e.key);
 
   return (
