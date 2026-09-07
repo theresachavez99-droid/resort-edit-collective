@@ -123,23 +123,18 @@ export function buildItinerary(
 
 /**
  * Packing summary derived ONLY from product categories already published on
- * the selected looks. Moments without published product data contribute
- * nothing — no placeholder counts, ever.
+ * the selected looks. Moments with no published pieces contribute nothing —
+ * no placeholder counts, ever.
  */
-export function packingSummary(itinerary: readonly TripDay[]): Array<{
-  category: string;
-  count: number;
-}> {
+export function summarizeCategories(
+  labels: readonly (string | null | undefined)[],
+): Array<{ category: string; count: number }> {
   const counts = new Map<string, number>();
-  for (const day of itinerary) {
-    for (const m of day.moments) {
-      for (const p of m.resolved.founder_hero_products ?? []) {
-        const c = (p.category ?? "").trim();
-        if (!c) continue;
-        const label = c.charAt(0).toUpperCase() + c.slice(1);
-        counts.set(label, (counts.get(label) ?? 0) + 1);
-      }
-    }
+  for (const raw of labels) {
+    const c = (raw ?? "").trim();
+    if (!c) continue;
+    const label = c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
+    counts.set(label, (counts.get(label) ?? 0) + 1);
   }
   return [...counts.entries()]
     .map(([category, count]) => ({ category, count }))
