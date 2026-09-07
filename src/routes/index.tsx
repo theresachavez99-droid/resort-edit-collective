@@ -129,6 +129,13 @@ function Index() {
               <p className="mt-3 font-serif italic text-ivory/85 text-[1.05rem] sm:text-[1.15rem] lg:text-[1.25rem] leading-snug max-w-[44ch]">
                 From the first walk along the harbor to one final cocktail on the piazzetta.
               </p>
+              <Link
+                to="/pack-my-trip"
+                className="mt-6 inline-flex items-center justify-center eyebrow text-[0.7rem] tracking-[0.3em] text-ink bg-ivory px-7 py-3.5 hover:bg-gold transition-colors"
+              >
+                PACK MY TRIP
+              </Link>
+
             </div>
           </div>
         </div>
