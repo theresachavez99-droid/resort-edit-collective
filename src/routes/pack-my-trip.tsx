@@ -209,7 +209,7 @@ function PackMyTrip() {
   );
 
   const setSearch = (next: Partial<Search>) =>
-    navigate({ search: (prev) => ({ ...prev, ...next }), resetScroll: true });
+    navigate({ to: "/pack-my-trip", search: (prev) => ({ ...prev, ...next }), resetScroll: true });
 
   const chooseDays = (d: TripLength) =>
     setSearch({ days: d, moments: coreItinerary(d, live).join(","), step: 3 });
@@ -219,6 +219,7 @@ function PackMyTrip() {
       ? selected.filter((s) => s !== slug)
       : [...selected, slug];
     navigate({
+      to: "/pack-my-trip",
       search: (prev) => ({ ...prev, moments: next.join(",") }),
       resetScroll: false,
     });
@@ -558,6 +559,7 @@ function PackMyTrip() {
             <QuietButton
               onClick={() =>
                 navigate({
+                  to: "/pack-my-trip",
                   search: {},
                   resetScroll: true,
                 })
