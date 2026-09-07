@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import { listPortofinoMomentsForLanding, type PortofinoMomentCard } from "@/lib/portofino-moments.functions";
@@ -111,6 +111,30 @@ function PortofinoPage() {
           </p>
         </div>
       </section>
+
+      {/* THE PROMISE — entry point into the Pack My Trip flow */}
+      <section className="bg-cream border-b border-border/40">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-10 md:py-14 text-center">
+          <span className="eyebrow text-gold tracking-[0.32em] text-[0.7rem]">
+            DRESSED FOR THE DESTINATION™
+          </span>
+          <h2 className="mt-3 font-display text-3xl md:text-5xl tracking-[0.03em] text-ink leading-[1.05] max-w-[26ch] mx-auto">
+            Tell us where you're going. We'll dress the entire trip.
+          </h2>
+          <div className="mx-auto my-4 h-px w-12 bg-gold" />
+          <p className="font-serif italic text-base md:text-lg text-ink/65 leading-relaxed max-w-[48ch] mx-auto">
+            Complete outfits for every moment of the destination—from arrival to last call.
+          </p>
+          <Link
+            to="/pack-my-trip"
+            className="mt-7 inline-flex items-center justify-center eyebrow text-[0.7rem] tracking-[0.3em] text-ivory bg-ink px-7 py-3.5 hover:bg-gold hover:text-ink transition-colors"
+          >
+            BUILD MY PORTOFINO EDIT
+          </Link>
+        </div>
+      </section>
+
+
 
       {/* NINE DESTINATION MOMENTS — editorial chapter index, in journey order */}
       <section className="bg-ivory">
