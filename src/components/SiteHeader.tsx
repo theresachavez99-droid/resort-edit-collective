@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Menu, X } from "lucide-react";
 import { useState } from "react";
 import palmMark from "@/assets/resort-edit-mark.png";
-import { SavedCounter } from "@/components/SavedCounter";
 
 const nav = [
   { to: "/destinations", label: "Destinations" },
@@ -75,7 +74,6 @@ export function SiteHeader() {
 
         {/* Right cluster */}
         <div className="flex items-center gap-4 md:gap-6 justify-end">
-          <SavedCounter />
           <a
             href="https://www.instagram.com/resort.edit"
             target="_blank"

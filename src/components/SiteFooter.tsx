@@ -55,8 +55,8 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link to="/brands" className="hover:text-gold">
-                  Brands We Love
+                <Link to="/latest" className="hover:text-gold">
+                  Latest from @resort.edit
                 </Link>
               </li>
             </ul>
