@@ -28,6 +28,18 @@ import nightcapPiazzetta from "@/assets/uploads/portofino/nightcap-piazzetta-nig
 export const INSTAGRAM_HANDLE = "@resort.edit";
 export const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/resort.edit/";
 
+/**
+ * LAUNCH SWITCH — the ONE thing to flip when @resort.edit goes live.
+ * While false, every Instagram surface (homepage strip, /latest, Portofino
+ * "Seen on" section and experience cards) renders branded COMING SOON
+ * placeholders instead of linking anywhere. Cards stay non-clickable until a
+ * real `postUrl` is set below, so we never pretend a post exists.
+ */
+export const INSTAGRAM_LAUNCHED = false;
+
+export const INSTAGRAM_COMING_SOON_LINE =
+  "Portofino stories, experiences & what to wear — launching soon.";
+
 export type InstagramCardKind = "post" | "reel";
 
 export type InstagramCard = {
@@ -103,9 +115,15 @@ export const INSTAGRAM_CARDS: readonly InstagramCard[] = [
   },
 ];
 
-/** The link a card should open — the exact post when we have it, else the profile. */
-export function instagramHref(card: InstagramCard): string {
-  return card.postUrl ?? INSTAGRAM_PROFILE_URL;
+/** True only when the account is live AND this card has a real post URL. */
+export function instagramCardIsLive(card: InstagramCard): boolean {
+  return INSTAGRAM_LAUNCHED && Boolean(card.postUrl);
+}
+
+/** The link a live card should open. Undefined when the card is a placeholder. */
+export function instagramHref(card: InstagramCard): string | undefined {
+  if (!instagramCardIsLive(card)) return undefined;
+  return card.postUrl;
 }
 
 /** Label that stays truthful whether or not an exact post URL is set. */
