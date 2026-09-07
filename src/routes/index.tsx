@@ -204,13 +204,6 @@ function Index() {
             New destinations, reels and looks land there first.
           </p>
           <div className="mt-7">
-            <InstagramStrip
-              cards={[]}
-              showFollow
-              heading=""
-              eyebrow=""
-              intro=""
-            />
             <a
               href="https://www.instagram.com/resort.edit/"
               target="_blank"

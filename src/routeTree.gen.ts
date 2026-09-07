@@ -16,6 +16,7 @@ import { Route as AffiliateDisclosureRouteImport } from './routes/affiliate-disc
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DestinationsRouteImport } from './routes/destinations'
+import { Route as LatestRouteImport } from './routes/latest'
 import { Route as MyEditRouteImport } from './routes/my-edit'
 import { Route as PackMyTripRouteImport } from './routes/pack-my-trip'
 import { Route as PortofinoRouteImport } from './routes/portofino'
@@ -86,6 +87,11 @@ const ContactRoute = ContactRouteImport.update({
 const DestinationsRoute = DestinationsRouteImport.update({
   id: '/destinations',
   path: '/destinations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LatestRoute = LatestRouteImport.update({
+  id: '/latest',
+  path: '/latest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyEditRoute = MyEditRouteImport.update({
@@ -284,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/brands': typeof BrandsRouteWithChildren
   '/contact': typeof ContactRoute
   '/destinations': typeof DestinationsRouteWithChildren
+  '/latest': typeof LatestRoute
   '/my-edit': typeof MyEditRoute
   '/pack-my-trip': typeof PackMyTripRoute
   '/portofino': typeof PortofinoRouteWithChildren
@@ -326,6 +333,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/contact': typeof ContactRoute
+  '/latest': typeof LatestRoute
   '/my-edit': typeof MyEditRoute
   '/pack-my-trip': typeof PackMyTripRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -371,6 +379,7 @@ export interface FileRoutesById {
   '/brands': typeof BrandsRouteWithChildren
   '/contact': typeof ContactRoute
   '/destinations': typeof DestinationsRouteWithChildren
+  '/latest': typeof LatestRoute
   '/my-edit': typeof MyEditRoute
   '/pack-my-trip': typeof PackMyTripRoute
   '/portofino': typeof PortofinoRouteWithChildren
@@ -418,6 +427,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/contact'
     | '/destinations'
+    | '/latest'
     | '/my-edit'
     | '/pack-my-trip'
     | '/portofino'
@@ -460,6 +470,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/affiliate-disclosure'
     | '/contact'
+    | '/latest'
     | '/my-edit'
     | '/pack-my-trip'
     | '/privacy-policy'
@@ -504,6 +515,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/contact'
     | '/destinations'
+    | '/latest'
     | '/my-edit'
     | '/pack-my-trip'
     | '/portofino'
@@ -550,6 +562,7 @@ export interface RootRouteChildren {
   BrandsRoute: typeof BrandsRouteWithChildren
   ContactRoute: typeof ContactRoute
   DestinationsRoute: typeof DestinationsRouteWithChildren
+  LatestRoute: typeof LatestRoute
   MyEditRoute: typeof MyEditRoute
   PackMyTripRoute: typeof PackMyTripRoute
   PortofinoRoute: typeof PortofinoRouteWithChildren
@@ -615,6 +628,13 @@ declare module '@tanstack/react-router' {
       path: '/destinations'
       fullPath: '/destinations'
       preLoaderRoute: typeof DestinationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/latest': {
+      id: '/latest'
+      path: '/latest'
+      fullPath: '/latest'
+      preLoaderRoute: typeof LatestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my-edit': {
@@ -962,6 +982,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandsRoute: BrandsRouteWithChildren,
   ContactRoute: ContactRoute,
   DestinationsRoute: DestinationsRouteWithChildren,
+  LatestRoute: LatestRoute,
   MyEditRoute: MyEditRoute,
   PackMyTripRoute: PackMyTripRoute,
   PortofinoRoute: PortofinoRouteWithChildren,
