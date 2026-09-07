@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/site";
-import { InstagramStrip } from "@/components/InstagramStrip";
-import { INSTAGRAM_CARDS, INSTAGRAM_PROFILE_URL } from "@/data/instagramPosts";
+import { INSTAGRAM_HANDLE, INSTAGRAM_PROFILE_URL } from "@/data/instagramPosts";
 import heroPoster from "@/assets/uploads/portofino/harbor-aperitivo-banner-golden-hour.png.asset.json";
 
 export const Route = createFileRoute("/latest")({
@@ -49,12 +48,20 @@ function LatestPage() {
       </section>
 
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 md:py-16">
-        <InstagramStrip
-          cards={INSTAGRAM_CARDS}
-          eyebrow="EDITORIAL DIARY"
-          heading="Recent Stories & Reels"
-          intro="Every scene below opens on Instagram, where the destination stories are published first."
-        />
+        <section className="mx-auto max-w-2xl text-center border border-border/60 bg-cream px-6 py-14 md:py-20">
+          <p className="eyebrow text-gold text-[0.68rem] tracking-[0.34em]">COMING SOON</p>
+          <h2 className="mt-3 font-display text-3xl md:text-4xl tracking-[0.03em] text-ink leading-[1.05]">
+            The Resort Edit Diary
+          </h2>
+          <div className="mt-4 mx-auto h-px w-16 bg-gold/60" />
+          <p className="mt-5 font-serif italic text-ink/65 text-[1rem] md:text-[1.08rem] leading-relaxed">
+            Portofino stories, experiences &amp; what to wear — launching soon. Every scene will be
+            published first on Instagram, where the destination stories begin.
+          </p>
+          <p className="mt-6 eyebrow text-[0.62rem] tracking-[0.3em] text-ink/50">
+            {INSTAGRAM_HANDLE} · LAUNCHING SOON
+          </p>
+        </section>
 
         <p className="mt-12 text-center font-serif italic text-ink/60">
           Want the full destination edit?{" "}

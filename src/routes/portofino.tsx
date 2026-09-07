@@ -146,6 +146,7 @@ function SectionHeading({
 
 function ExperienceCard({ e }: { e: DestinationExperience }) {
   const igCard = instagramCardForExperience(e.key);
+  const igHref = igCard ? instagramHref(igCard) : undefined;
   const shop = shopTheEditLink(e.key);
 
   return (
@@ -193,9 +194,9 @@ function ExperienceCard({ e }: { e: DestinationExperience }) {
             >
               {(shop.label ?? "SHOP THE EDIT").toUpperCase()} →
             </a>
-          ) : igCard ? (
+          ) : igHref ? (
             <a
-              href={instagramHref(igCard)}
+              href={igHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.3em] text-ink/70 hover:text-gold transition-colors"
@@ -203,7 +204,12 @@ function ExperienceCard({ e }: { e: DestinationExperience }) {
               <Instagram className="w-3.5 h-3.5" strokeWidth={1.6} />
               SEE WHAT WE'D WEAR
             </a>
-          ) : null}
+          ) : (
+            <span className="inline-flex items-center gap-2 eyebrow text-[0.6rem] tracking-[0.3em] text-ink/40">
+              <Instagram className="w-3.5 h-3.5" strokeWidth={1.6} />
+              THE INSTAGRAM EDIT IS COMING SOON
+            </span>
+          )}
         </div>
         <p className="mt-3 font-serif text-[0.72rem] text-ink/40">{experienceCta(e)}</p>
       </div>
@@ -378,7 +384,7 @@ function PortofinoPage() {
           <InstagramStrip
             eyebrow="WEAR · SEEN ON @RESORT.EDIT"
             heading="What We'd Wear in Portofino"
-            intro="Each look is styled and published on Instagram. Tap through to see the full outfit and, where available, shop the edit."
+            intro="The looks we style for these Portofino moments will be published on Instagram — the Instagram edit is coming soon."
             limit={6}
           />
         </div>
