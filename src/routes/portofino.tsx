@@ -384,7 +384,7 @@ function PortofinoPage() {
           <InstagramStrip
             eyebrow="WEAR · SEEN ON @RESORT.EDIT"
             heading="What We'd Wear in Portofino"
-            intro="Each look is styled and published on Instagram. Tap through to see the full outfit and, where available, shop the edit."
+            intro="The looks we style for these Portofino moments will be published on Instagram — the Instagram edit is coming soon."
             limit={6}
           />
         </div>
