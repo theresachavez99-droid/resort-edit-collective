@@ -531,28 +531,8 @@ function PackMyTrip() {
           </div>
 
           {/* PACKING SUMMARY — categories already published on these looks. */}
-          {packing.length > 0 && (
-            <div className="mt-14 pt-8 border-t border-border/50">
-              <div className="text-center max-w-2xl mx-auto">
-                <Eyebrow>WHAT TO PACK</Eyebrow>
-                <h3 className="mt-2 font-display text-2xl sm:text-3xl tracking-[0.03em] text-ink">
-                  Your Packing Summary
-                </h3>
-                <p className="mt-2 font-serif italic text-[0.94rem] text-ink/60">
-                  Counted from the pieces published in the looks above.
-                </p>
-              </div>
-              <ul className="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3 max-w-3xl mx-auto">
-                {packing.map((p) => (
-                  <li key={p.category} className="font-serif text-[0.95rem] text-ink/80">
-                    <span className="text-gold mr-2">·</span>
-                    {p.category}
-                    <span className="text-ink/45"> × {p.count}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <PackingSummary slugs={itinerary.flatMap((d) => d.moments.map((m) => m.moment_slug))} />
+
 
           <div className="mt-12 flex flex-wrap items-center justify-center gap-6">
             <QuietButton onClick={() => setSearch({ step: 3 })}>EDIT MY TRIP</QuietButton>
