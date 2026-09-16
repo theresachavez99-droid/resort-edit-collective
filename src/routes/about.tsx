@@ -10,13 +10,15 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Resort Edit is a luxury editorial publication for travel and fashion — curated for the sophisticated, worldly woman.",
+          "Travel and style, considered together. Discover the editorial perspective behind Resort Edit.",
       },
       { property: "og:title", content: "About | Resort Edit | Dressed for the destination" },
       {
         property: "og:description",
-        content: "A luxury digital publication for travel and fashion.",
+        content:
+          "Travel and style, considered together. Discover the editorial perspective behind Resort Edit.",
       },
+
       { property: "og:url", content: absoluteUrl("/about") },
       { property: "og:image", content: absoluteUrl(heroAsset.url) },
       { name: "twitter:image", content: absoluteUrl(heroAsset.url) },
