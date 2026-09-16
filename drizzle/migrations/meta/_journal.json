@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789522260951,
+      "tag": "0000_create_outbound_click_daily",
+      "breakpoints": true
+    }
+  ]
+}
