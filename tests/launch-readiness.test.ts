@@ -347,11 +347,18 @@ describe("supplier facts match the listings we actually read", () => {
     expect(experiences).toContain('operator: "Experience My Portofino, sold via Viator"');
   });
 
+  test("founder-confirmed hotel URLs are used verbatim", () => {
+    expect(registry).toContain('directUrl: "https://portofino.eighthotels.it/en/"');
+    expect(registry).toContain('directUrl: "https://uvethotels.com/piccolohotel/"');
+    const eight = registry.slice(
+      registry.indexOf('"hotel-eight-portofino": {'),
+      registry.indexOf('"hotel-piccolo-portofino": {'),
+    );
+    expect(eight).toContain('status: "active-affiliate-pending"');
+  });
+
   test("unverified suppliers are withheld, not guessed", () => {
-    for (const key of [
-      "hotel-eight-portofino",
-      "portofino-san-fruttuoso-guided-hike",
-    ]) {
+    for (const key of ["portofino-san-fruttuoso-guided-hike"]) {
       const block = registry.slice(registry.indexOf(`"${key}": {`));
       const entry = block.slice(0, block.indexOf("},"));
       expect(entry).toContain('status: "withheld"');
