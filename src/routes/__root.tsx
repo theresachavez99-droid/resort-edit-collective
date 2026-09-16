@@ -167,17 +167,22 @@ function RootComponent() {
 }
 
 function RootInner() {
-  const { data: dayOverrides } = useSuspenseQuery(dayOverridesQueryOptions);
   return (
-    <DayImageOverridesProvider value={dayOverrides ?? {}}>
-      <div className="min-h-screen flex flex-col bg-ivory">
-        <SiteHeader />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <SiteFooter />
-        <Toaster position="top-center" richColors closeButton />
-      </div>
-    </DayImageOverridesProvider>
+    <div className="min-h-screen flex flex-col bg-ivory">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:text-ivory focus:px-4 focus:py-2 focus:eyebrow focus:text-[0.7rem] focus:tracking-[0.2em]"
+      >
+        Skip to content
+      </a>
+      <SiteHeader />
+      <main id="main-content" className="flex-1">
+        <Outlet />
+      </main>
+      <SiteFooter />
+      <Toaster position="top-center" richColors closeButton />
+    </div>
   );
+}
+
 }
