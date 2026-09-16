@@ -65,7 +65,8 @@ import expBeachClub from "@/assets/experience-beach-club.jpg";
 import ecoFarmVineyard from "@/assets/portofino-ecofarm-vineyard.png.asset.json";
 
 const CHECKED = "2026-09-16";
-const ILLUSTRATION_CAPTION = "Editorial illustration — not a photograph of the venue";
+const ILLUSTRATION_CAPTION =
+  "Editorial illustration (AI-generated) — not a photograph of the venue";
 
 type ExperienceSeed = Omit<DestinationExperience, "href" | "commissionable">;
 
