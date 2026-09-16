@@ -8,12 +8,12 @@ export const Route = createFileRoute("/privacy-rights")({
       {
         name: "description",
         content:
-          "What Resort Edit stores about you, how service providers process technical data, and how to unsubscribe, request a copy of your information, or ask us to delete it.",
+          "What Resort Edit stores about you, how service providers process technical data, how our aggregate click counts work, and how to request a copy of your information or ask us to delete it.",
       },
       { property: "og:title", content: "Your Privacy Choices | Resort Edit" },
       {
         property: "og:description",
-        content: "What we store, how it is used, and how to unsubscribe or request deletion.",
+        content: "What we store, how it is used, and how to request a copy or deletion.",
       },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
