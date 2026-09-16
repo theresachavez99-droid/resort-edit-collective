@@ -322,3 +322,45 @@ describe("atomic look completeness", () => {
     }
   });
 });
+
+describe("supplier facts match the listings we actually read", () => {
+  const experiences = readFileSync(
+    join(process.cwd(), "src/data/destinationExperiences.ts"),
+    "utf8",
+  );
+  const registry = readFileSync(join(process.cwd(), "src/data/outboundLinks.ts"), "utf8");
+
+  it("no experience claims a Portofino departure it does not have", () => {
+    expect(experiences).not.toContain('"Departs Portofino"');
+  });
+
+  it("the two Orange Wave boat tours state the Rapallo meeting point", () => {
+    const rapallo = experiences.match(
+      /Meets in Rapallo; confirm meeting details when booking/g,
+    );
+    expect(rapallo?.length).toBe(2);
+    expect(experiences).toContain('operator: "Orange Wave, sold via Viator"');
+  });
+
+  it("the pesto tour states the Santa Margherita Ligure ferry pier", () => {
+    expect(experiences).toContain("Starts at the Santa Margherita Ligure ferry pier");
+    expect(experiences).toContain('operator: "Experience My Portofino, sold via Viator"');
+  });
+
+  it("unverified suppliers are withheld, not guessed", () => {
+    for (const key of [
+      "hotel-eight-portofino",
+      "portofino-san-fruttuoso-guided-hike",
+      "shop-biankina",
+    ]) {
+      const block = registry.slice(registry.indexOf(`"${key}": {`));
+      const entry = block.slice(0, block.indexOf("},"));
+      expect(entry).toContain('status: "withheld"');
+    }
+  });
+
+  it("no affiliate URL is fabricated from the bare merchant code", () => {
+    expect(registry).not.toContain("ref=hxrfofuu");
+    expect(registry).not.toMatch(/affiliateUrl: "[^"]*resortedit/);
+  });
+});
