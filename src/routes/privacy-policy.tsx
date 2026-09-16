@@ -40,7 +40,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function PrivacyPolicyPage() {
-  const updated = "September 6, 2026";
+  const updated = "September 16, 2026";
   return (
     <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
       <span className="eyebrow text-gold">Legal</span>
