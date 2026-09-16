@@ -429,8 +429,7 @@ function PortofinoPage() {
             ))}
           </div>
           <p className="mt-6 text-center font-serif text-[0.8rem] text-ink/50 max-w-2xl mx-auto leading-relaxed">
-            Packing advice, not a shop. Resort Edit does not sell clothing, and nothing pictured
-            elsewhere on this site is available to buy here.
+            Any purchase happens on the brand's own site.
           </p>
 
           {/* One brand storefront link. Not the exact shoe in any image, not a
