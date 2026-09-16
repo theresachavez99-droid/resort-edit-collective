@@ -351,7 +351,6 @@ describe("supplier facts match the listings we actually read", () => {
     for (const key of [
       "hotel-eight-portofino",
       "portofino-san-fruttuoso-guided-hike",
-      "shop-biankina",
     ]) {
       const block = registry.slice(registry.indexOf(`"${key}": {`));
       const entry = block.slice(0, block.indexOf("},"));
@@ -360,7 +359,16 @@ describe("supplier facts match the listings we actually read", () => {
   });
 
   test("no affiliate URL is fabricated from the bare merchant code", () => {
-    expect(registry).not.toContain("ref=hxrfofuu");
     expect(registry).not.toMatch(/affiliateUrl: "[^"]*resortedit/);
+  });
+
+  test("the founder-supplied Biankina referral link is used verbatim", () => {
+    expect(registry).toContain('affiliateUrl: "https://biankina.com/?ref=hxrfofuu"');
+  });
+
+  test("no discount, coupon or commission rate is claimed anywhere public", () => {
+    const wear = readFileSync(join(process.cwd(), "src/routes/portofino.tsx"), "utf8");
+    expect(wear).toContain("Affiliate link — we may earn a commission if you purchase.");
+    expect(wear).not.toMatch(/\d+% ?off|coupon|promo code|discount code/i);
   });
 });
