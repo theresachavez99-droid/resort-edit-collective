@@ -413,7 +413,7 @@ function PortofinoPage() {
           <SectionHeading
             eyebrow="WEAR"
             title="What to Pack for Portofino"
-            intro="Practical packing advice for the days in this guide. Nothing here is for sale — it's simply what works on the paving, on the water and at dinner."
+            intro="Practical packing advice for the days in this guide — what works on the paving, on the water and at dinner."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 max-w-4xl mx-auto">
             {PORTOFINO_PACKING_GUIDE.map((p) => (
