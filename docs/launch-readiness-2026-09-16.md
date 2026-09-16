@@ -37,7 +37,7 @@ Re-verified 16 September 2026 after the founder's own source check.
 | Sunset Boat Tour | Viator listing | **Facts corrected.** Supplier Orange Wave; same Rapallo meeting point; about 1h30m. |
 | Pesto Boat & Walking Tour with Lunch | Viator listing | **Facts corrected.** Supplier Experience My Portofino; starts at the Santa Margherita Ligure ferry pier (Piazza Martiri della Libertà 1); about 3h; round-trip ferry tickets included. |
 | Private Coastal Hike to San Fruttuoso | — | **WITHHELD / omitted from launch.** Viator returns an HTTP 403 bot challenge to both curl and a real browser, so the listing could not be re-confirmed. Its meeting point is left unstated rather than assumed. |
-| Biankina | — | **WITHHELD.** No verified tracking URL and no merchant-network approval. The merchant code `resortedit` is held as an internal note only; no affiliate or discount URL is constructed from it and nothing renders publicly. |
+| Biankina | `https://biankina.com/?ref=hxrfofuu` | **CONNECTED — user-confirmed referral.** The founder supplied this exact referral URL on 16 Sep 2026; it is stored verbatim in the registry and the `?ref=hxrfofuu` parameter is preserved through outbound routing (no redirector rewrites it). One CTA renders, in the Portofino WEAR section, with the disclosure "Affiliate link — we may earn a commission if you purchase." and `rel="sponsored noopener noreferrer"`. This is a **user-confirmed affiliate relationship, not independently verified commission attribution**: payout, commission rate and conversion attribution require the merchant's own reporting. No discount percentage or coupon term is published, and the older bare text code `resortedit` is not used to construct any URL. |
 
 Nothing is described as sponsored or commissionable unless a real, verified
 affiliate URL exists in the registry. Withheld entries are omitted from the
@@ -76,7 +76,10 @@ Clicks are *interest signals only* — they are not sales or commissions.
   `aria-expanded` correctly and closes on Escape, 16 outbound links all resolve
   to registry URLs, no currency symbols rendered. Confirmed on the rendered
   page: no "Departs Portofino" text, Rapallo and Santa Margherita Ligure
-  meeting points visible, and no Eight Hotel, San Fruttuoso or Biankina entry.
+  meeting points visible, and no Eight Hotel or San Fruttuoso entry. The single
+  Biankina CTA renders in WEAR with `?ref=hxrfofuu` intact in its href and
+  `rel="sponsored noopener noreferrer"`; its click increments the aggregate
+  counter under placement `portofino-wear` (test count removed afterwards).
 - Outbound click recording verified end to end in the browser; the single test
   row was deleted afterwards, so the table is empty.
 - Hero diff verified: no hero lines changed.
@@ -87,9 +90,10 @@ Clicks are *interest signals only* — they are not sales or commissions.
    (Cloudflare blocks automated checks), then un-withhold the registry entry.
 2. **Private Coastal Hike to San Fruttuoso** — confirm the Viator listing is
    still live, then un-withhold.
-3. **Biankina** — no verified tracking URL and no network approval. Obtain the
-   exact affiliate link plus written commission and discount terms before the
-   shopping layer renders anything.
+3. **Biankina commission reporting** — the referral link is live, but commission
+   rate, payout and conversion attribution are unverified. Obtain merchant
+   reporting before making any earnings or discount claim. Travel links stay
+   unmonetized until real affiliate URLs exist.
 4. **Hotel and experience affiliate programs** — all live links render as plain
    links (`active-affiliate-pending`). No tracking IDs exist; none invented.
 5. **Instagram** — `INSTAGRAM_LAUNCHED = false`. Flip it and add real post URLs
