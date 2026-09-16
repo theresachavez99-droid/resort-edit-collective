@@ -18,7 +18,7 @@
 export type OutboundKind = "hotel" | "dining" | "experience" | "shopping";
 
 /** Decides the visible CTA wording. Only these three are allowed publicly. */
-export type OutboundCta = "visit-hotel" | "availability" | "enquiry";
+export type OutboundCta = "visit-hotel" | "availability" | "enquiry" | "shop-brand";
 
 export type OutboundStatus =
   /** Verified destination, safe to render. */
