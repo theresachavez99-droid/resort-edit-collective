@@ -103,8 +103,9 @@ function PrivacyRightsPage() {
 
       <Section title="When you leave our site">
         <p>
-          Retailer and operator links open that company's own website, where their cookies, tracking
-          and privacy policy apply, not ours. Some retailer links may earn us a commission — see our{" "}
+          Hotel, restaurant, experience and shopping links open that company's own website, where
+          their cookies, tracking and privacy policy apply, not ours. One of them — the Biankina
+          footwear storefront in our packing guide — may earn us a commission; see our{" "}
           <Link to="/affiliate-disclosure" className="text-gold hover:underline">
             Affiliate Disclosure
           </Link>
@@ -116,14 +117,13 @@ function PrivacyRightsPage() {
         </p>
       </Section>
 
-      <Section title="Unsubscribing">
+      <Section title="Removing an old email address">
         <p>
           Email us at{" "}
           <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
             hello@resortedit.com
           </a>{" "}
-          from the address you subscribed with and we will remove it. Once newsletter sending
-          begins, every email will also carry a one-click unsubscribe link.
+          from the address concerned and we will delete it.
         </p>
       </Section>
 
