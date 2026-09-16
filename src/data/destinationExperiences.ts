@@ -96,7 +96,8 @@ const SEEDS: readonly ExperienceSeed[] = [
     // a photograph of La Portofinese and is captioned as such wherever shown.
     image: ecoFarmVineyard.url,
     imageIsIllustrative: true,
-    imageAlt: "Editorial illustration of a Mediterranean coastal vineyard; not a photograph of La Portofinese",
+    imageAlt:
+      "Editorial illustration (AI-generated) of a Mediterranean coastal vineyard; not a photograph of La Portofinese",
     imageCaption: ILLUSTRATION_CAPTION,
     featured: true,
     prominent: true,
