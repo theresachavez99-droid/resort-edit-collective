@@ -116,11 +116,12 @@ function PrivacyPolicyPage() {
         </p>
       </Section>
 
-      <Section title="Retailer & Affiliate Links">
+      <Section title="Links to Other Sites">
         <p>
-          Some retailer links on this site may earn Resort Edit a commission if you buy something,
-          at no additional cost to you. Many of our links earn nothing at all, and we do not claim
-          membership of any affiliate network that has not accepted us.
+          One link on this site — the Biankina footwear storefront in our packing guide — may earn
+          Resort Edit a commission if you buy something, at no additional cost to you. Our hotel,
+          restaurant and experience links currently earn nothing, and we do not claim membership of
+          any affiliate or booking programme that has not accepted us.
         </p>
         <p>
           When you follow a link off this site, that company's own cookies, tracking and privacy
