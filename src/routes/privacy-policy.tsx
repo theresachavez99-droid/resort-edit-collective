@@ -8,7 +8,7 @@ export const Route = createFileRoute("/privacy-policy")({
       {
         name: "description",
         content:
-          "What Resort Edit collects, how newsletter signups and correspondence are handled, how service providers process technical data, how retailer links work, and how to access, correct or delete your information.",
+          "What Resort Edit collects, how correspondence is handled, how service providers process technical data, how our aggregate outbound link counts work, and how to access, correct or delete your information.",
       },
       {
         property: "og:title",
