@@ -432,6 +432,22 @@ function PortofinoPage() {
             Packing advice, not a shop. Resort Edit does not sell clothing, and nothing pictured
             elsewhere on this site is available to buy here.
           </p>
+
+          {/* One brand storefront link. Not the exact shoe in any image, not a
+              complete outfit, no stock claim, no price, no coupon. */}
+          <div className="mt-8 pt-8 border-t border-border/60 max-w-2xl mx-auto text-center">
+            <p className="font-serif text-ink/70 text-[0.92rem] leading-relaxed">
+              For the flat, walkable shoes the paving asks for, Biankina is a brand we like the look
+              of. Browse their footwear directly — you buy from them, not from us.
+            </p>
+            <div className="mt-4 flex justify-center">
+              <OutboundCta linkKey="shop-biankina" placement="portofino-wear" />
+            </div>
+            <p className="mt-3 font-serif text-[0.76rem] text-ink/50 leading-relaxed">
+              Affiliate link — we may earn a commission if you purchase.
+            </p>
+          </div>
+
         </div>
       </section>
 
