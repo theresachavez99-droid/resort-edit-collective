@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+
 
 import appCss from "../styles.css?url";
 import { SiteHeader } from "../components/SiteHeader";
