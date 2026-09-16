@@ -264,11 +264,12 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
 
 export const OUTBOUND_KEYS: readonly string[] = Object.keys(OUTBOUND_LINKS);
 
-/** Visible CTA wording. Only ever these three phrases. */
+/** Visible CTA wording. Only ever these phrases. */
 export const OUTBOUND_CTA_LABEL: Record<OutboundCta, string> = {
   "visit-hotel": "Visit hotel",
   availability: "Check dates & availability",
   enquiry: "Explore & enquire",
+  "shop-brand": "Explore Biankina footwear",
 };
 
 function isSafeHttpsUrl(url: string | null | undefined): boolean {
