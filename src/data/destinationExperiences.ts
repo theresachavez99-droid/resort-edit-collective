@@ -111,7 +111,15 @@ const SEEDS: readonly ExperienceSeed[] = [
     kind: "Private boat",
     editorial:
       "The promontory from the water — coves, cliffs and the pastel harbour seen the way it was meant to be seen.",
-    facts: ["About 4 hours", "Private tour", "Departs Portofino", "Offered in English"],
+    // Verified 16 Sep 2026 on the listing: supplier Orange Wave, meeting point
+    // Rotonda Marconi, Rapallo — NOT a Portofino harbour departure.
+    facts: [
+      "About 4 hours",
+      "Private tour",
+      "Meets in Rapallo; confirm meeting details when booking",
+      "Offered in English",
+    ],
+
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Private-Boat-Tour-of-the-Portofino-Riviera/d4232-467798P8",
     factsCheckedOn: CHECKED,
