@@ -8,6 +8,13 @@
       "when": 1789522260951,
       "tag": "0000_create_outbound_click_daily",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789523471253,
+      "tag": "0001_revoke_public_outbound_click_access",
+      "breakpoints": true
     }
   ]
 }

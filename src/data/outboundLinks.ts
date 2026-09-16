@@ -81,26 +81,32 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
     key: "hotel-eight-portofino",
     kind: "hotel",
     label: "Eight Hotel Portofino",
-    directUrl: "https://www.eighthotels.com/en/eight-hotel-portofino/",
+    // The old eighthotels.com/en/eight-hotel-portofino/ path no longer answers;
+    // the property's own site is on its brand subdomain.
+    directUrl: "https://portofino.eighthotels.it/en/",
     affiliateUrl: null,
     affiliateProgram: null,
     status: "active-affiliate-pending",
     cta: "visit-hotel",
-    source: "eighthotels.com official property page",
+    source: "portofino.eighthotels.it official property site",
     lastCheckedOn: CHECKED,
+    note: "Host answers 403 to plain scripted requests (bot filtering) but serves normally in a browser.",
   },
   "hotel-piccolo-portofino": {
     key: "hotel-piccolo-portofino",
     kind: "hotel",
     label: "Hotel Piccolo Portofino",
-    directUrl: "https://www.hotelpiccoloportofino.com/",
+    // hotelpiccoloportofino.com no longer resolves; the hotel is operated under
+    // Uvet Hotels and its official page lives there.
+    directUrl: "https://uvethotels.com/piccolohotel/en/home-en/",
     affiliateUrl: null,
     affiliateProgram: null,
     status: "active-affiliate-pending",
     cta: "visit-hotel",
-    source: "hotelpiccoloportofino.com official site",
+    source: "uvethotels.com official Hotel Piccolo Portofino page (verified 200)",
     lastCheckedOn: CHECKED,
   },
+
 
   /* ---------------------------------------------------------------- dining */
   "dining-dav-mare": {
@@ -218,23 +224,24 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
   },
 
   /* -------------------------------------------------------------- shopping */
-  // Recorded for the future shopping layer only. WITHHELD: we hold a merchant
-  // code ("resortedit") but no exact verified tracking URL and no confirmed
-  // discount terms, so nothing is rendered and nothing is invented.
+  // Recorded for the future shopping layer. The referral URL below was supplied
+  // by the founder verbatim and resolves (HTTP 200). No discount percentage or
+  // commission rate is recorded because none has been confirmed in writing.
   "shop-biankina": {
     key: "shop-biankina",
     kind: "shopping",
     label: "Biankina",
     directUrl: "https://biankina.com/",
-    affiliateUrl: null,
-    affiliateProgram: null,
-    status: "withheld",
+    affiliateUrl: "https://biankina.com/?ref=hxrfofuu",
+    affiliateProgram: "Biankina direct referral",
+    status: "active",
     cta: "availability",
-    source: "brand site (no verified affiliate/tracking URL on file)",
+    source: "referral URL supplied by the founder; verified to resolve 200",
     lastCheckedOn: CHECKED,
     note:
-      "Merchant code 'resortedit' supplied by the founder, but no exact tracking URL or confirmed discount terms verified. Pending: obtain the affiliate link from the merchant/network before rendering.",
+      "Exact founder-supplied referral link. Commission and any discount terms are NOT confirmed — do not publish a discount claim or a percentage.",
   },
+
 };
 
 export const OUTBOUND_KEYS: readonly string[] = Object.keys(OUTBOUND_LINKS);
