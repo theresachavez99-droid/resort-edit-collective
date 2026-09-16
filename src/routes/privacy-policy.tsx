@@ -173,10 +173,12 @@ function PrivacyPolicyPage() {
 
       <Section title="If You Are in the EEA or UK">
         <p>
-          We process your email address on the basis of your consent, which you can withdraw at any
-          time, and technical request data is processed on the basis of our legitimate interest in
-          running a secure, available site. You may also complain to your local data protection authority. Our suppliers may
-          process data outside your country under the safeguards in their own terms.
+          Any email address we still hold from the earlier signup form was given on the basis of your
+          consent, which you can withdraw at any time. Correspondence, technical request data and our
+          aggregate click counts are processed on the basis of our legitimate interest in running a
+          secure, available site and understanding which recommendations are useful. You may also
+          complain to your local data protection authority. Our suppliers may process data outside
+          your country under the safeguards in their own terms.
         </p>
       </Section>
 
@@ -191,10 +193,11 @@ function PrivacyPolicyPage() {
 
       <Section title="Data Retention">
         <p>
-          Subscriber addresses are kept until you unsubscribe or ask us to delete them. Emails you
-          send us are kept as long as needed to deal with the matter. Technical request data is
-          retained by our hosting, content-delivery and database providers under their own retention
-          schedules for operation and security.
+          Email addresses held from the earlier signup form are kept until you ask us to delete them.
+          Emails you send us are kept as long as needed to deal with the matter. Daily click counts
+          are aggregate figures with no personal information in them and are kept as site statistics.
+          Technical request data is retained by our hosting, content-delivery and database providers
+          under their own retention schedules for operation and security.
         </p>
       </Section>
 
