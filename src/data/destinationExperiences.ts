@@ -107,7 +107,7 @@ const SEEDS: readonly ExperienceSeed[] = [
     destinationSlug: "portofino",
     destinationName: "Portofino",
     name: "Private Boat Tour of the Portofino Riviera",
-    operator: "Local boat operator, sold via Viator",
+    operator: "Orange Wave, sold via Viator",
     kind: "Private boat",
     editorial:
       "The promontory from the water — coves, cliffs and the pastel harbour seen the way it was meant to be seen.",
@@ -136,7 +136,7 @@ const SEEDS: readonly ExperienceSeed[] = [
     destinationSlug: "portofino",
     destinationName: "Portofino",
     name: "Sunset Boat Tour with Aperitif",
-    operator: "Local boat operator, sold via Viator",
+    operator: "Orange Wave, sold via Viator",
     kind: "Sunset cruise",
     editorial:
       "Golden hour on the Ligurian water, an aperitivo in hand, the hills turning apricot behind you.",
@@ -165,7 +165,7 @@ const SEEDS: readonly ExperienceSeed[] = [
     destinationSlug: "portofino",
     destinationName: "Portofino",
     name: "Boat and Walking Tour with Pesto Cooking & Lunch",
-    operator: "Local guide, sold via Viator",
+    operator: "Experience My Portofino, sold via Viator",
     kind: "Pesto class & Ligurian lunch",
     editorial:
       "Mortar, pestle and basil — Liguria's own recipe, learned between a boat ride and a walk through the village.",
