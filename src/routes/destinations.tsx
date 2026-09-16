@@ -42,11 +42,11 @@ function DestinationsPage() {
         <div className="mx-auto max-w-[1280px] px-6 py-12 md:py-16 text-center">
           <span className="eyebrow text-gold tracking-[0.32em] text-[0.68rem]">DESTINATIONS</span>
           <h1 className="font-display text-4xl md:text-6xl mt-3 tracking-[0.04em] text-ink leading-[1.03]">
-            Where We're Publishing
+            Where to Dress Next
           </h1>
           <div className="mx-auto my-4 h-px w-14 bg-gold" />
           <p className="mt-2 font-serif italic text-ink/65 text-lg max-w-2xl mx-auto leading-relaxed">
-            One destination, edited in full. More are written before they appear here.
+            The places, stays, and experiences worth dressing for.
           </p>
         </div>
       </section>
