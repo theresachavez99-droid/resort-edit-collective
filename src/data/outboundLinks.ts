@@ -77,33 +77,41 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
     source: "belmond.com official hotel page",
     lastCheckedOn: CHECKED,
   },
+  // WITHHELD: the old eighthotels.com/en/eight-hotel-portofino/ path does not
+  // answer at all (connection times out), and the brand subdomain
+  // portofino.eighthotels.it sits behind a Cloudflare bot challenge, so no
+  // destination could be independently confirmed. A challenge alone does not
+  // prove the page is dead — re-open it in a normal browser, then set
+  // `directUrl` to the confirmed page and `status` to "active-affiliate-pending".
   "hotel-eight-portofino": {
     key: "hotel-eight-portofino",
     kind: "hotel",
     label: "Eight Hotel Portofino",
-    // The old eighthotels.com/en/eight-hotel-portofino/ path no longer answers;
-    // the property's own site is on its brand subdomain.
     directUrl: "https://portofino.eighthotels.it/en/",
     affiliateUrl: null,
     affiliateProgram: null,
-    status: "active-affiliate-pending",
+    status: "withheld",
     cta: "visit-hotel",
-    source: "portofino.eighthotels.it official property site",
+    source: "candidate brand subdomain — NOT confirmed (Cloudflare bot challenge)",
     lastCheckedOn: CHECKED,
-    note: "Host answers 403 to plain scripted requests (bot filtering) but serves normally in a browser.",
+    note:
+      "Old .com path: connection timeout. Brand subdomain: HTTP 403 Cloudflare challenge in both curl and a real browser. Entry hidden from the public site until a human confirms the page.",
   },
   "hotel-piccolo-portofino": {
     key: "hotel-piccolo-portofino",
     kind: "hotel",
     label: "Hotel Piccolo Portofino",
-    // hotelpiccoloportofino.com no longer resolves; the hotel is operated under
-    // Uvet Hotels and its official page lives there.
+    // hotelpiccoloportofino.com does not resolve. The official .it domain
+    // (hotelpiccoloportofino.it/en/) 301-redirects into the Uvet Hotels site,
+    // whose page identifies itself as "Boutique Hotel Piccolo Portofino" with
+    // the Via Duca degli Abruzzi 31 address. English page used here.
     directUrl: "https://uvethotels.com/piccolohotel/en/home-en/",
     affiliateUrl: null,
     affiliateProgram: null,
     status: "active-affiliate-pending",
     cta: "visit-hotel",
-    source: "uvethotels.com official Hotel Piccolo Portofino page (verified 200)",
+    source:
+      "hotelpiccoloportofino.it/en/ redirect target on uvethotels.com — English page verified 200 and identifies the hotel",
     lastCheckedOn: CHECKED,
   },
 
@@ -185,6 +193,10 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
     source: "viator.com listing",
     lastCheckedOn: CHECKED,
   },
+  // WITHHELD: the listing could not be independently confirmed — Viator
+  // returns an HTTP 403 bot challenge to both curl and a real browser here.
+  // The entry and its CTA are omitted from the public site until a human
+  // opens the listing and confirms it is still live.
   "portofino-san-fruttuoso-guided-hike": {
     key: "portofino-san-fruttuoso-guided-hike",
     kind: "experience",
@@ -193,7 +205,7 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
       "https://www.viator.com/tours/Portofino/Portofino-to-S-Fruttuoso-Scenic-Coastal-Hike-with-Private-Guide/d4232-428295P2",
     affiliateUrl: null,
     affiliateProgram: null,
-    status: "active-affiliate-pending",
+    status: "withheld",
     cta: "availability",
     source: "viator.com listing",
     lastCheckedOn: CHECKED,
@@ -224,24 +236,24 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
   },
 
   /* -------------------------------------------------------------- shopping */
-  // Recorded for the future shopping layer. The referral URL below was supplied
-  // by the founder verbatim and resolves (HTTP 200). No discount percentage or
-  // commission rate is recorded because none has been confirmed in writing.
+  // WITHHELD. We hold the merchant code "resortedit" as an internal note only.
+  // No exact verified tracking URL and no merchant-network approval exist, so
+  // no affiliate or discount URL may be constructed from that code, and nothing
+  // renders publicly.
   "shop-biankina": {
     key: "shop-biankina",
     kind: "shopping",
     label: "Biankina",
     directUrl: "https://biankina.com/",
-    affiliateUrl: "https://biankina.com/?ref=hxrfofuu",
-    affiliateProgram: "Biankina direct referral",
-    status: "active",
+    affiliateUrl: null,
+    affiliateProgram: null,
+    status: "withheld",
     cta: "availability",
-    source: "referral URL supplied by the founder; verified to resolve 200",
+    source: "brand site only — no verified affiliate/tracking URL on file",
     lastCheckedOn: CHECKED,
     note:
-      "Exact founder-supplied referral link. Commission and any discount terms are NOT confirmed — do not publish a discount claim or a percentage.",
+      "Internal pending setup: merchant code 'resortedit' supplied by the founder, plus an unconfirmed referral-style link. Neither has merchant-network approval or written commission/discount terms. Do NOT construct a tracking URL or publish a discount claim.",
   },
-
 };
 
 export const OUTBOUND_KEYS: readonly string[] = Object.keys(OUTBOUND_LINKS);
