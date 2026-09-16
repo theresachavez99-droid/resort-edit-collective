@@ -1,218 +1,86 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { destinations, destinationHref } from "@/data/destinations";
-import { DestinationLink } from "@/components/DestinationLink";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/site";
-import { PORTOFINO_JOURNEY } from "@/lib/portofino-moment-fallbacks";
-import heroCannes from "@/assets/hero-muse-cannes.jpg";
+import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 
+/**
+ * Destinations index. One destination is published — Portofino — so the page
+ * says exactly that instead of teasing empty guides. New destinations are added
+ * here as they are actually written.
+ */
 export const Route = createFileRoute("/destinations")({
   head: () => ({
     meta: [
-      { title: "Destinations | Resort Edit | Dressed for the destination" },
+      { title: "Destinations | Resort Edit" },
       {
         name: "description",
         content:
-          "An interactive atlas of curated escapes — from Portofino and Capri to Tulum and Phuket. Luxury travel guides for the worldly woman.",
+          "Resort Edit destination guides. Portofino on the Italian Riviera is published in full: where to stay, what to book, where to eat and what to pack.",
       },
-      { property: "og:title", content: "Destinations | Resort Edit | Dressed for the destination" },
+      { property: "og:title", content: "Destinations | Resort Edit" },
       {
         property: "og:description",
-        content:
-          "An interactive atlas of editorial travel guides from the Mediterranean to the tropics.",
+        content: "Resort Edit destination guides, starting with Portofino, Italy.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:image", content: absoluteUrl(portofinoImg) },
+      { name: "twitter:image", content: absoluteUrl(portofinoImg) },
       { property: "og:url", content: absoluteUrl("/destinations") },
     ],
   }),
   component: DestinationsPage,
 });
 
-const vibeBySlug: Record<string, string> = {
-  portofino: "Italian Riviera",
-  capri: "Coastal Glam",
-  sttropez: "Beach Clubs",
-  ibiza: "Beach Clubs",
-  mallorca: "Mediterranean Escape",
-  tulum: "Bohemian Escape",
-  phuket: "Island Luxury",
-};
-
-const FEATURED_SLUGS = ["portofino", "mallorca"] as const;
-
-type FilterKey = "All" | "Italian Riviera" | "Mediterranean";
-
-const FILTERS: FilterKey[] = ["All", "Italian Riviera", "Mediterranean"];
-
-const filterTagsBySlug: Record<string, FilterKey[]> = {
-  portofino: ["Italian Riviera", "Mediterranean"],
-  mallorca: ["Mediterranean"],
-};
-
 function DestinationsPage() {
-  const featured = useMemo(
-    () => FEATURED_SLUGS.map((slug) => destinations.find((d) => d.slug === slug)!).filter(Boolean),
-    [],
-  );
-  const [filter, setFilter] = useState<FilterKey>("All");
-  const visible = useMemo(
-    () =>
-      filter === "All"
-        ? featured
-        : featured.filter((d) => filterTagsBySlug[d.slug]?.includes(filter)),
-    [featured, filter],
-  );
-  const heroImage = heroCannes;
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const normalized = pathname.replace(/\/+$/, "");
+  if (normalized !== "/destinations") return <Outlet />;
 
   return (
     <div className="bg-ivory">
-      {/* HERO — split editorial, no map */}
       <section className="bg-ivory border-b border-border/40">
-        <div className="mx-auto max-w-[1400px] grid grid-cols-1 lg:grid-cols-2">
-          <div className="px-6 lg:px-12 py-10 md:py-14 lg:py-16 flex flex-col justify-center">
-            <span className="eyebrow text-gold">The Atlas</span>
-            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl mt-3 tracking-wide text-ink leading-[1.02]">
-              Where to Dress Next
-            </h1>
-            <p className="mt-5 font-serif italic text-ink/65 text-lg md:text-xl max-w-xl">
-              Style guides for women who dress for the destination.
-            </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Link
-                to="/portofino"
-                className="eyebrow bg-ink text-ivory px-6 py-3.5 rounded-md hover:bg-gold hover:text-ink transition-colors"
-              >
-                Explore The Portofino Edit →
-              </Link>
-            </div>
-          </div>
-          <div className="relative min-h-[320px] md:min-h-[420px] lg:min-h-[560px] bg-ink overflow-hidden">
-            {heroImage ? (
-              <img
-                src={heroImage}
-                alt="Featured destination"
-                className="absolute inset-0 h-full w-full object-cover object-[center_right] md:object-right"
-              />
-            ) : null}
-            <div className="absolute inset-0 bg-gradient-to-tr from-ink/30 via-transparent to-transparent" />
-          </div>
+        <div className="mx-auto max-w-[1280px] px-6 py-12 md:py-16 text-center">
+          <span className="eyebrow text-gold tracking-[0.32em] text-[0.68rem]">DESTINATIONS</span>
+          <h1 className="font-display text-4xl md:text-6xl mt-3 tracking-[0.04em] text-ink leading-[1.03]">
+            Where We're Publishing
+          </h1>
+          <div className="mx-auto my-4 h-px w-14 bg-gold" />
+          <p className="mt-2 font-serif italic text-ink/65 text-lg max-w-2xl mx-auto leading-relaxed">
+            One destination, edited in full. More are written before they appear here.
+          </p>
         </div>
       </section>
 
-      {/* FILTER ROW */}
-      <section id="destinations" className="bg-ivory border-b border-border/40">
-        <div className="mx-auto max-w-[1400px] px-6 py-5 md:py-6 flex items-center gap-5 md:gap-8">
-          <span className="eyebrow text-gold whitespace-nowrap hidden md:inline">Filter by</span>
-          <div className="flex-1 overflow-x-auto no-scrollbar">
-            <ul className="flex items-center gap-2 md:gap-3 min-w-max">
-              {FILTERS.map((f) => {
-                const active = f === filter;
-                return (
-                  <li key={f}>
-                    <button
-                      type="button"
-                      onClick={() => setFilter(f)}
-                      aria-pressed={active}
-                      className={`eyebrow px-4 py-2 rounded-full border transition-colors whitespace-nowrap ${
-                        active
-                          ? "bg-gold/90 border-gold text-ink font-semibold"
-                          : "bg-transparent border-ink/15 text-ink/70 hover:border-gold/60 hover:bg-cream/40"
-                      }`}
-                    >
-                      {f}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+      <section className="mx-auto max-w-[1100px] px-6 py-12 md:py-16">
+        <article className="grid grid-cols-1 md:grid-cols-2 border border-border/60 bg-card">
+          <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[380px] overflow-hidden bg-muted">
+            <img
+              src={portofinoImg}
+              alt="Portofino harbour — pastel facades and wooden boats along the quay"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           </div>
-        </div>
-      </section>
-
-      {/* FEATURED DESTINATIONS — large grid */}
-      <section className="bg-ivory py-10 md:py-14">
-        <div className="mx-auto max-w-[1400px] px-6">
-          <div className="flex items-baseline justify-between mb-6 md:mb-8">
-            <h2 className="font-display text-3xl md:text-4xl tracking-wide text-ink">
-              Featured Destinations
-            </h2>
-            <span className="eyebrow text-ink/50 hidden md:inline">
-              {visible.length} {visible.length === 1 ? "destination" : "destinations"}
+          <div className="p-6 md:p-9 flex flex-col justify-center">
+            <span className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">
+              ITALIAN RIVIERA · PUBLISHED
             </span>
-          </div>
-          {visible.length === 0 ? (
-            <p className="font-serif italic text-ink/55 py-12 text-center">
-              No destinations match that filter yet.
-            </p>
-          ) : (
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 max-w-[1100px] mx-auto">
-              {visible.map((d) => {
-                const vibe = vibeBySlug[d.slug] ?? d.travelType;
-                return (
-                  <li key={d.slug}>
-                    <DestinationLink
-                      d={d}
-                      className="group block relative overflow-hidden aspect-[4/5] bg-ink rounded-sm"
-                    >
-                      <img
-                        src={d.image}
-                        alt={d.name}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-all duration-[1400ms] ease-out group-hover:scale-[1.06] group-hover:brightness-[0.85]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
-                      <div className="absolute inset-x-0 bottom-0 p-6 text-ivory">
-                        <p className="eyebrow text-gold-soft text-[0.7rem]">{vibe}</p>
-                        <h3 className="font-display text-3xl md:text-4xl tracking-wide leading-tight mt-2">
-                          {d.name}
-                        </h3>
-                        <div className="mt-5 flex items-center justify-between border-t border-ivory/25 pt-3">
-                          <span className="eyebrow text-ivory/80 text-[0.65rem]">{d.region}</span>
-                          <span className="eyebrow text-ivory transition-transform duration-500 group-hover:translate-x-1">
-                            Explore →
-                          </span>
-                        </div>
-                      </div>
-                    </DestinationLink>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
-      </section>
-
-      {/* SHOP BY MOMENT — merged from the retired /resort-edits page */}
-      <section id="moments" className="border-t border-border/40 bg-ivory">
-        <div className="mx-auto max-w-[1400px] px-6 py-12 md:py-16">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="eyebrow text-gold">Shop by Moment</span>
-            <h2 className="font-display text-3xl md:text-5xl tracking-wide mt-4 text-ink">
-              For Every Moment
+            <h2 className="mt-2 font-display text-3xl md:text-[2.6rem] tracking-[0.03em] text-ink leading-[1.05]">
+              Portofino, Italy
             </h2>
-            <p className="mt-4 font-serif italic text-ink/65">
-              Inside Portofino — shoppable looks, moment by moment.
+            <p className="mt-4 font-serif text-ink/70 text-[0.98rem] leading-relaxed">
+              A pastel harbour small enough to walk in an afternoon. The full guide covers four
+              places to stay, the boats, the eco-farm vineyard and coastal walks worth booking, the
+              tables to reserve early, and what to pack for each of them.
             </p>
+            <Link
+              to="/portofino"
+              className="mt-7 self-start eyebrow text-[0.7rem] tracking-[0.3em] text-ivory bg-ink px-7 py-3.5 hover:bg-gold hover:text-ink transition-colors"
+            >
+              EXPLORE PORTOFINO
+            </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border/60">
-            {PORTOFINO_JOURNEY.map((m) => (
-              <Link
-                key={m.moment_slug}
-                to="/portofino/$moment"
-                params={{ moment: m.moment_slug }}
-                className="group bg-ivory p-8 md:p-10 text-center hover:bg-cream transition-colors"
-              >
-                <h3 className="font-display text-xl md:text-2xl tracking-wide text-ink group-hover:text-gold transition-colors">
-                  {m.moment_name}
-                </h3>
-                <p className="mt-3 font-serif italic text-sm text-ink/65">{m.narrative}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
+        </article>
       </section>
     </div>
   );
 }
-
-// Re-export so tree-shaking keeps the helper next to its consumers.
-export { destinationHref };
