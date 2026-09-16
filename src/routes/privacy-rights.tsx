@@ -44,23 +44,24 @@ function PrivacyRightsPage() {
         Your Privacy Choices
       </h1>
       <div className="mt-6 h-px w-16 bg-gold" />
-      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 6, 2026</p>
+      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 16, 2026</p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
-        The short version: the personal information we hold about readers is a newsletter address
-        you chose to give us and any message you send us. Saved looks stay in your own browser, and
-        our service providers process ordinary technical request data to run the site.
+        The short version: there is no signup form and no reader account on this site today. The
+        personal information we hold is any message you send us, plus email addresses given to an
+        earlier version of the site. Our service providers process ordinary technical request data to
+        run the site.
       </p>
 
       <Section title="What we store about you">
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Your email address</strong>, only if you subscribed to The Next Edit, together
-            with the date you subscribed and the page you subscribed from.
-          </li>
-          <li>
             <strong>Anything you email us</strong> at hello@resortedit.com, kept in our mailbox as
             correspondence.
+          </li>
+          <li>
+            <strong>An email address from the earlier signup form</strong>, if you gave one when the
+            site offered it. It is not used to send anything, and you can ask us to delete it.
           </li>
         </ul>
         <p>
@@ -70,10 +71,12 @@ function PrivacyRightsPage() {
         </p>
       </Section>
 
-      <Section title="What stays on your own device">
+      <Section title="Our daily click counts">
         <p>
-          Looks you save with the heart icon are stored in your browser's own local storage. They
-          are never sent to us, so we cannot see them, and clearing your browser data removes them.
+          When someone uses one of our hotel, restaurant, experience or shopping links, we add 1 to a
+          daily total made up of the date, a short internal name for the link, the page section, and
+          the count. It holds no email address, IP address, device identifier or account, and sets no
+          cookie of its own, so it cannot be traced back to you.
         </p>
       </Section>
 
