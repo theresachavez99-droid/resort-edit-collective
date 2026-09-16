@@ -83,26 +83,26 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const SITE_DESCRIPTION =
+  "Resort Edit — editorial destination guides. Where to stay, what to book, where to eat and what to pack, starting with Portofino, Italy.";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  loader: ({ context }) =>
-    context.queryClient.ensureQueryData(dayOverridesQueryOptions).catch(() => ({})),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Resort Edit | Dressed for the destination." },
-      { name: "description", content: "Resort Edit | Dressed for the destination. Discover destination guides, resort edits, and brands we love." },
+      { title: "Resort Edit | Dressed for the Destination" },
+      { name: "description", content: SITE_DESCRIPTION },
       { name: "author", content: "Resort Edit" },
-      { property: "og:title", content: "Resort Edit | Dressed for the destination." },
-      { property: "og:description", content: "Resort Edit | Dressed for the destination. Discover destination guides, resort edits, and brands we love." },
+      { property: "og:title", content: "Resort Edit | Dressed for the Destination" },
+      { property: "og:description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: SHARE_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@ResortEdit" },
-      { name: "twitter:image", content: SHARE_IMAGE },
-      { name: "twitter:title", content: "Resort Edit | Dressed for the destination." },
-      { name: "twitter:description", content: "Resort Edit | Dressed for the destination. Discover destination guides, resort edits, and brands we love." },
+      { name: "twitter:title", content: "Resort Edit | Dressed for the Destination" },
+      { name: "twitter:description", content: SITE_DESCRIPTION },
     ],
+
     links: [
       {
         rel: "stylesheet",
