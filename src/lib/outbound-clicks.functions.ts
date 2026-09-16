@@ -21,6 +21,7 @@ export const OUTBOUND_PLACEMENTS = [
   "portofino-eat",
   "home-featured",
   "portofino-collection",
+  "portofino-wear",
 ] as const;
 
 const schema = z.object({

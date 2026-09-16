@@ -18,7 +18,7 @@
 export type OutboundKind = "hotel" | "dining" | "experience" | "shopping";
 
 /** Decides the visible CTA wording. Only these three are allowed publicly. */
-export type OutboundCta = "visit-hotel" | "availability" | "enquiry";
+export type OutboundCta = "visit-hotel" | "availability" | "enquiry" | "shop-brand";
 
 export type OutboundStatus =
   /** Verified destination, safe to render. */
@@ -240,29 +240,36 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
   // No exact verified tracking URL and no merchant-network approval exist, so
   // no affiliate or discount URL may be constructed from that code, and nothing
   // renders publicly.
+  // The founder supplied this exact referral URL on 16 Sep 2026. It is used
+  // verbatim — ?ref=hxrfofuu must survive untouched. The older bare text code
+  // "resortedit" is NOT used to build a URL, and no discount percentage,
+  // coupon term or commission rate is claimed anywhere: payout, rate and
+  // conversion attribution can only come from the merchant's own reporting.
   "shop-biankina": {
     key: "shop-biankina",
     kind: "shopping",
     label: "Biankina",
     directUrl: "https://biankina.com/",
-    affiliateUrl: null,
-    affiliateProgram: null,
-    status: "withheld",
-    cta: "availability",
-    source: "brand site only — no verified affiliate/tracking URL on file",
+    affiliateUrl: "https://biankina.com/?ref=hxrfofuu",
+    affiliateProgram: "Biankina brand referral (founder-supplied link)",
+    status: "active",
+    cta: "shop-brand",
+    source: "referral URL supplied directly by the founder; destination loads with the ref parameter intact",
     lastCheckedOn: CHECKED,
     note:
-      "Internal pending setup: merchant code 'resortedit' supplied by the founder, plus an unconfirmed referral-style link. Neither has merchant-network approval or written commission/discount terms. Do NOT construct a tracking URL or publish a discount claim.",
+      "User-confirmed affiliate relationship. NOT independently verified commission attribution — no network dashboard, rate or payout confirmation on file. Never publish a discount percentage or coupon term.",
   },
+
 };
 
 export const OUTBOUND_KEYS: readonly string[] = Object.keys(OUTBOUND_LINKS);
 
-/** Visible CTA wording. Only ever these three phrases. */
+/** Visible CTA wording. Only ever these phrases. */
 export const OUTBOUND_CTA_LABEL: Record<OutboundCta, string> = {
   "visit-hotel": "Visit hotel",
   availability: "Check dates & availability",
   enquiry: "Explore & enquire",
+  "shop-brand": "Explore Biankina footwear",
 };
 
 function isSafeHttpsUrl(url: string | null | undefined): boolean {
