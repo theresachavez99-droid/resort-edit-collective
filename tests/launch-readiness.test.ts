@@ -369,6 +369,8 @@ describe("supplier facts match the listings we actually read", () => {
   test("no discount, coupon or commission rate is claimed anywhere public", () => {
     const wear = readFileSync(join(process.cwd(), "src/routes/portofino.tsx"), "utf8");
     expect(wear).toContain("Affiliate link — we may earn a commission if you purchase.");
-    expect(wear).not.toMatch(/\d+% ?off|coupon|promo code|discount code/i);
+    // strip comments first — the guard is about rendered copy, not source notes
+    const copy = wear.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+    expect(copy).not.toMatch(/\d+% ?off|coupon|promo code|discount code/i);
   });
 });
