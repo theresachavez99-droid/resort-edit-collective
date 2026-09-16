@@ -265,9 +265,10 @@ export function experiencesForDestination(destinationSlug: string): DestinationE
 export function featuredExperiences(destinationSlug?: string, limit = 3): DestinationExperience[] {
   const pool = destinationSlug
     ? experiencesForDestination(destinationSlug)
-    : [...DESTINATION_EXPERIENCES];
+    : DESTINATION_EXPERIENCES.filter((e) => outboundHref(e.key) !== null);
   return pool.filter((e) => e.featured).slice(0, limit);
 }
+
 
 export function experienceForMoment(momentSlug: string): DestinationExperience | undefined {
   return DESTINATION_EXPERIENCES.find((e) => e.momentSlug === momentSlug);
