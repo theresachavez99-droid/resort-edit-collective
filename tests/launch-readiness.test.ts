@@ -381,3 +381,35 @@ describe("supplier facts match the listings we actually read", () => {
     expect(copy).not.toMatch(/\d+% ?off|coupon|promo code|discount code/i);
   });
 });
+
+describe("outbound click table is server-only in versioned SQL", () => {
+  const migration = readFileSync(
+    join(process.cwd(), "drizzle/migrations/0001_revoke_public_outbound_click_access.sql"),
+    "utf8",
+  );
+
+  test("fresh installs revoke browser-facing roles on the table", () => {
+    for (const role of ["PUBLIC", "anon", "authenticated"]) {
+      expect(migration).toContain(`REVOKE ALL ON TABLE public.outbound_click_daily FROM ${role};`);
+      expect(migration).toContain(
+        `REVOKE ALL ON FUNCTION public.record_outbound_click(text, text) FROM ${role};`,
+      );
+    }
+  });
+
+  test("only the server role keeps access", () => {
+    expect(migration).toContain("GRANT ALL ON TABLE public.outbound_click_daily TO service_role;");
+    expect(migration).toContain(
+      "GRANT EXECUTE ON FUNCTION public.record_outbound_click(text, text) TO service_role;",
+    );
+    expect(migration).not.toMatch(/GRANT[^;]*TO (anon|authenticated|PUBLIC)/);
+  });
+
+  test("the click endpoint allowlists key and placement and stays server-credentialled", () => {
+    const fn = readFileSync(join(process.cwd(), "src/lib/outbound-clicks.functions.ts"), "utf8");
+    expect(fn).toContain("OUTBOUND_KEYS.includes(k)");
+    expect(fn).toContain("z.enum(OUTBOUND_PLACEMENTS)");
+    expect(fn).toContain('await import("@/integrations/supabase/client.server")');
+    expect(fn).not.toMatch(/SERVICE_ROLE|VITE_/);
+  });
+});
