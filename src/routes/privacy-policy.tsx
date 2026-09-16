@@ -60,11 +60,6 @@ function PrivacyPolicyPage() {
         <p>The information we handle falls into these categories:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Your email address</strong>, when you subscribe to The Next Edit. We store it
-            with the date of your signup and the page it came from, so we know which edit you
-            subscribed to.
-          </li>
-          <li>
             <strong>Anything you send us by email</strong> at hello@resortedit.com, which stays in
             our mailbox as ordinary correspondence.
           </li>
@@ -76,8 +71,13 @@ function PrivacyPolicyPage() {
           </li>
         </ul>
         <p>
-          We do not ask you to create an account, and we do not collect payment information, because
-          nothing is sold on this site.
+          There is currently no signup form, no newsletter form and no reader account on this site,
+          and we do not collect payment information, because nothing is sold here.
+        </p>
+        <p>
+          We still hold email addresses collected by an earlier version of this site, when it offered
+          a signup form. Those records are not used to send anything, and you can ask us to delete
+          yours at any time.
         </p>
       </Section>
 
@@ -93,8 +93,7 @@ function PrivacyPolicyPage() {
             security and diagnostics, and non-public preview environments used while we edit the
             site include that platform's editing and instrumentation script.
           </li>
-          <li>We do not sell or rent newsletter subscriber lists.</li>
-          <li>We do not buy email lists or add anyone who did not subscribe.</li>
+          <li>We do not buy, sell or rent email lists.</li>
         </ul>
         <p>
           Because we currently operate no optional advertising or profiling tracking of our own,
@@ -103,23 +102,17 @@ function PrivacyPolicyPage() {
         </p>
       </Section>
 
-      <Section title="Saved Looks Stay in Your Browser">
+      <Section title="How We Count Outbound Link Clicks">
         <p>
-          When you save a look, it is stored in your own browser's local storage. It is never sent
-          to us — we cannot see your saved looks — and clearing your browser data removes them.
-        </p>
-      </Section>
-
-      <Section title="Newsletter">
-        <p>
-          Subscribing stores your address so we can send curated editorial features, destination
-          guides and shoppable edits. We are still setting up our sending service, so subscribing
-          today records your consent rather than triggering an immediate email — you will not
-          receive a confirmation message yet.
+          When you use one of our hotel, restaurant, experience or shopping links, we add 1 to a
+          daily total so we can see which recommendations are useful. Each total records only the
+          date, a short internal name for the link, the section of the page it sat in, and the count.
         </p>
         <p>
-          You can ask to be removed at any time by emailing us, and once sending begins every email
-          will also carry an unsubscribe link. We do not sell or rent subscriber lists.
+          That counter stores no name, email address, IP address, device identifier or account, sets
+          no cookie of its own, and cannot be traced back to you or to an individual visit. It also
+          does not tell us whether you bought anything — sales information, if any, would come from
+          the merchant's own reporting, not from this site.
         </p>
       </Section>
 
