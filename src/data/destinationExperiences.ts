@@ -254,8 +254,13 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = SEEDS.f
 });
 
 export function experiencesForDestination(destinationSlug: string): DestinationExperience[] {
-  return DESTINATION_EXPERIENCES.filter((e) => e.destinationSlug === destinationSlug);
+  return DESTINATION_EXPERIENCES.filter(
+    // An experience whose registry link is withheld or invalid is omitted
+    // entirely — we never show a card with no working way to book it.
+    (e) => e.destinationSlug === destinationSlug && outboundHref(e.key) !== null,
+  );
 }
+
 
 export function featuredExperiences(destinationSlug?: string, limit = 3): DestinationExperience[] {
   const pool = destinationSlug
