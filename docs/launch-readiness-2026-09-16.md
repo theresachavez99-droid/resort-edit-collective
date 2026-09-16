@@ -30,13 +30,13 @@ Re-verified 16 September 2026 after the founder's own source check.
 | Splendido, A Belmond Hotel | belmond.com official page | 200 verified |
 | Splendido Mare, A Belmond Hotel | belmond.com official page | 200 verified |
 | Hotel Piccolo Portofino | `https://uvethotels.com/piccolohotel/` | **CONFIRMED — founder-verified.** `hotelpiccoloportofino.com` does not resolve; the official `.it`/`en/` address 301-redirects into the Uvet Hotels site, whose page title names Hotel Piccolo Portofino. The founder opened it successfully on 16 Sep 2026 and confirmed it as the official page. Exact root English URL now used; direct, non-affiliate link. |
-| Eight Hotel Portofino | `https://portofino.eighthotels.it/en/` | **CONFIRMED — founder-verified.** The old `.com` path does not answer (connection timeout), and our automated checks hit an HTTP 403 Cloudflare challenge on the brand subdomain — but the founder opened `portofino.eighthotels.it/en/` successfully on 16 Sep 2026; the page identifies Eight Hotels/Solido Hotels and the Portofino property. A challenge is not proof a page is dead, so human confirmation controls. Now active with the exact official URL; direct, non-affiliate link. All four hotel cards render. |
+| Eight Hotel Portofino | `https://portofino.eighthotels.it/en/` | **CONFIRMED — founder-verified.** The old `.com` path does not answer (connection timeout), and our automated checks returned HTTP 403 on the brand subdomain (a generic 403 proves nothing about the page either way) — but the founder opened `portofino.eighthotels.it/en/` successfully on 16 Sep 2026; the page identifies Eight Hotels/Solido Hotels and the Portofino property. A challenge is not proof a page is dead, so human confirmation controls. Now active with the exact official URL; direct, non-affiliate link. All four hotel cards render. |
 | Bagni Fiore | bagnifiore.com/en | 200 verified |
 | La Portofinese Eco-Farm | laportofinese.it official page | 200 verified |
 | Private Boat Tour of the Portofino Riviera | Viator listing | **Facts corrected.** Supplier Orange Wave; meeting point Rotonda Marconi, Rapallo. "Departs Portofino" replaced with "Meets in Rapallo; confirm meeting details when booking". No harbour pickup is claimed. |
 | Sunset Boat Tour | Viator listing | **Facts corrected.** Supplier Orange Wave; same Rapallo meeting point; about 1h30m. |
 | Pesto Boat & Walking Tour with Lunch | Viator listing | **Facts corrected.** Supplier Experience My Portofino; starts at the Santa Margherita Ligure ferry pier (Piazza Martiri della Libertà 1); about 3h; round-trip ferry tickets included. |
-| Private Coastal Hike to San Fruttuoso | — | **WITHHELD / omitted from launch.** Viator returns an HTTP 403 bot challenge to both curl and a real browser, so the listing could not be re-confirmed. Its meeting point is left unstated rather than assumed. |
+| Private Coastal Hike to San Fruttuoso | — | **WITHHELD / omitted from launch.** Neither we nor the founder have confirmed this exact listing; our automated fetches returned HTTP 403, which is not evidence about the listing's state. No card or CTA renders. Its meeting point is left unstated rather than assumed. |
 | Biankina | `https://biankina.com/?ref=hxrfofuu` | **CONNECTED — user-confirmed referral.** The founder supplied this exact referral URL on 16 Sep 2026; it is stored verbatim in the registry and the `?ref=hxrfofuu` parameter is preserved through outbound routing (no redirector rewrites it). One CTA renders, in the Portofino WEAR section, with the disclosure "Affiliate link — we may earn a commission if you purchase." and `rel="sponsored noopener noreferrer"`. This is a **user-confirmed affiliate relationship, not independently verified commission attribution**: payout, commission rate and conversion attribution require the merchant's own reporting. No discount percentage or coupon term is published, and the older bare text code `resortedit` is not used to construct any URL. |
 
 Nothing is described as sponsored or commissionable unless a real, verified
@@ -90,29 +90,55 @@ Clicks are *interest signals only* — they are not sales or commissions.
   `/affiliate-disclosure`, `/privacy-policy`, `/privacy-rights`, `/sitemap.xml`
   → 200. `/latest`, `/pack-my-trip`, `/my-edit`, `/brands`,
   `/portofino/nightcap` → 301.
-- Browser (desktop 1280 + mobile 390): no console errors, no horizontal
-  overflow at 390px (`scrollWidth = 390`), mobile menu toggles
-  `aria-expanded` correctly and closes on Escape, 16 outbound links all resolve
-  to registry URLs, no currency symbols rendered. Confirmed on the rendered
-  page: no "Departs Portofino" text, Rapallo and Santa Margherita Ligure
-  meeting points visible, and no Eight Hotel or San Fruttuoso entry. The single
-  Biankina CTA renders in WEAR with `?ref=hxrfofuu` intact in its href and
-  `rel="sponsored noopener noreferrer"`; its click increments the aggregate
-  counter under placement `portofino-wear` (test count removed afterwards).
-- Outbound click recording verified end to end in the browser; the single test
-  row was deleted afterwards, so the table is empty.
+- Browser (desktop 1280 + mobile 390), re-run 16 Sep 2026 after the final copy
+  corrections. Evidence type is stated for each item; nothing below is inferred
+  from code alone:
+  - **Rendered-DOM evidence:** exactly one Biankina anchor, href
+    `https://biankina.com/?ref=hxrfofuu` (parameter intact), `rel="noopener
+    noreferrer sponsored"`, visible label "EXPLORE BIANKINA FOOTWEAR →".
+  - **Rendered-text evidence:** the disclosure "Affiliate link — we may earn a
+    commission if you purchase." is visible next to that CTA; "Rapallo" and
+    "Santa Margherita Ligure ferry pier" appear; "Departs Portofino" does not;
+    the withheld San Fruttuoso hike card does not render; the contradictory
+    strings "Nothing here is for sale" and "Packing advice, not a shop" are gone
+    from the WEAR section.
+  - **Layout evidence:** `scrollWidth - innerWidth = 0` at both 1280 and 390.
+  - **Behavioural evidence:** clicking the Biankina CTA recorded exactly one row
+    (`2026-09-16`, `shop-biankina`, `portofino-wear`, `clicks = 1`), confirmed by
+    a direct database read; that single test row was then deleted.
+- Legal copy re-read after edit: `/affiliate-disclosure` now describes
+  destination guides, unmonetized hotel/experience links and the single Biankina
+  storefront referral, states clothing imagery is editorial and not shoppable,
+  and no longer claims firsthand visits. `/privacy-policy` and `/privacy-rights`
+  describe the aggregate click counter (date, link key, placement, count — no
+  identifiers, no cookie), keep the hosting/merchant technical-data explanation,
+  and no longer instruct readers to subscribe or save looks; historic subscriber
+  records are described without deleting any data. Both dated 16 Sep 2026.
+- `bun test` — 142 pass, 0 fail, 425 expectations (7 files).
 - Hero diff verified: no hero lines changed.
+
+## Evidence limits — what is NOT verified
+
+- **Affiliate sales attribution and payout are not independently verified.** The
+  Biankina referral URL is user-confirmed and the click count is ours; whether a
+  purchase is attributed to it, at what rate, and whether anything is paid can
+  only be established from the merchant's own reporting.
+- **A generic HTTP 403 is not proof of bot filtering.** Where our automated
+  fetches returned 403, the listing's current state is simply unknown to us; we
+  do not describe those pages as verified, dead, or bot-protected.
 
 ## Remaining prerequisites / blockers
 
-1. **Eight Hotel Portofino** — confirm the working page in a normal browser
-   (Cloudflare blocks automated checks), then un-withhold the registry entry.
-2. **Private Coastal Hike to San Fruttuoso** — confirm the Viator listing is
-   still live, then un-withhold.
-3. **Biankina commission reporting** — the referral link is live, but commission
-   rate, payout and conversion attribution are unverified. Obtain merchant
-   reporting before making any earnings or discount claim. Travel links stay
-   unmonetized until real affiliate URLs exist.
+1. **Private Coastal Hike to San Fruttuoso** (`d4232-428295P2`) — the exact
+   listing has never been confirmed by us or by the founder. The registry entry
+   is retained with `status: "withheld"`, so the public site renders no card and
+   no CTA for it. Un-withhold only after a human opens the listing and confirms
+   it is a live, purchasable tour. The real coastal footpath is described as a
+   walk in editorial copy and is deliberately not presented as a bookable tour.
+2. **Biankina commission reporting** — see Evidence limits above. Make no
+   earnings, rate or discount claim until merchant reporting exists.
+3. **Travel links stay unmonetized** until genuine affiliate URLs exist. Hotel,
+   restaurant and experience links are ordinary direct links today.
 4. **Hotel and experience affiliate programs** — all live links render as plain
    links (`active-affiliate-pending`). No tracking IDs exist; none invented.
 5. **Instagram** — `INSTAGRAM_LAUNCHED = false`. Flip it and add real post URLs

@@ -21,9 +21,16 @@ describe("privacy policy tells the truth about what runs", () => {
     expect(src).not.toContain("pixels");
   });
 
-  test("describes the newsletter as stored consent, not an immediate email", () => {
-    expect(src).toContain("records your consent");
+  test("does not describe a newsletter signup the site no longer offers", () => {
+    expect(src).toContain("no signup form, no newsletter form and no reader account");
     expect(src.toLowerCase()).not.toContain("check your inbox");
+    expect(src).not.toContain("Subscribing stores your address");
+  });
+
+  test("describes the aggregate click counter truthfully", () => {
+    expect(src).toContain("How We Count Outbound Link Clicks");
+    expect(src).toContain("sets\n          no cookie of its own");
+    expect(src).toContain("does not tell us whether you bought anything");
   });
 
   test("no tracking scripts are actually loaded in the root document", () => {
@@ -57,7 +64,8 @@ describe("dedicated legal and contact routes exist", () => {
   test("privacy choices page does not fake an opt-out toggle or overclaim", () => {
     const src = read("src/routes/privacy-rights.tsx");
     expect(src).toContain("no consent banner or opt-out toggle");
-    expect(src).toContain("We do not sell or rent newsletter subscriber lists");
+    expect(src).toContain("We do not buy, sell or rent email lists");
+    expect(src).toContain("daily click counts");
     expect(src).not.toContain("That is the whole list");
     expect(src).not.toContain("we never have");
   });
@@ -68,7 +76,9 @@ describe("dedicated legal and contact routes exist", () => {
     expect(src).not.toContain("is hidden instead of shown incomplete");
     expect(src).not.toContain("retailer that actually stocks it");
     expect(src).not.toContain("boringly honest");
-    expect(src).toContain("can differ from the product photography");
+    expect(src).toContain("Clothing shown in our imagery is editorial styling");
+    expect(src).toContain("Biankina footwear");
+    expect(src).not.toContain("we visited");
     expect(src).not.toContain("Rakuten");
   });
 });

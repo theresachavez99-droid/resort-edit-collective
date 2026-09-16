@@ -8,7 +8,7 @@ export const Route = createFileRoute("/privacy-policy")({
       {
         name: "description",
         content:
-          "What Resort Edit collects, how newsletter signups and correspondence are handled, how service providers process technical data, how retailer links work, and how to access, correct or delete your information.",
+          "What Resort Edit collects, how correspondence is handled, how service providers process technical data, how our aggregate outbound link counts work, and how to access, correct or delete your information.",
       },
       {
         property: "og:title",
@@ -40,7 +40,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function PrivacyPolicyPage() {
-  const updated = "September 6, 2026";
+  const updated = "September 16, 2026";
   return (
     <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
       <span className="eyebrow text-gold">Legal</span>
@@ -60,11 +60,6 @@ function PrivacyPolicyPage() {
         <p>The information we handle falls into these categories:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Your email address</strong>, when you subscribe to The Next Edit. We store it
-            with the date of your signup and the page it came from, so we know which edit you
-            subscribed to.
-          </li>
-          <li>
             <strong>Anything you send us by email</strong> at hello@resortedit.com, which stays in
             our mailbox as ordinary correspondence.
           </li>
@@ -76,8 +71,13 @@ function PrivacyPolicyPage() {
           </li>
         </ul>
         <p>
-          We do not ask you to create an account, and we do not collect payment information, because
-          nothing is sold on this site.
+          There is currently no signup form, no newsletter form and no reader account on this site,
+          and we do not collect payment information, because nothing is sold here.
+        </p>
+        <p>
+          We still hold email addresses collected by an earlier version of this site, when it offered
+          a signup form. Those records are not used to send anything, and you can ask us to delete
+          yours at any time.
         </p>
       </Section>
 
@@ -93,8 +93,7 @@ function PrivacyPolicyPage() {
             security and diagnostics, and non-public preview environments used while we edit the
             site include that platform's editing and instrumentation script.
           </li>
-          <li>We do not sell or rent newsletter subscriber lists.</li>
-          <li>We do not buy email lists or add anyone who did not subscribe.</li>
+          <li>We do not buy, sell or rent email lists.</li>
         </ul>
         <p>
           Because we currently operate no optional advertising or profiling tracking of our own,
@@ -103,31 +102,26 @@ function PrivacyPolicyPage() {
         </p>
       </Section>
 
-      <Section title="Saved Looks Stay in Your Browser">
+      <Section title="How We Count Outbound Link Clicks">
         <p>
-          When you save a look, it is stored in your own browser's local storage. It is never sent
-          to us — we cannot see your saved looks — and clearing your browser data removes them.
+          When you use one of our hotel, restaurant, experience or shopping links, we add 1 to a
+          daily total so we can see which recommendations are useful. Each total records only the
+          date, a short internal name for the link, the section of the page it sat in, and the count.
+        </p>
+        <p>
+          That counter stores no name, email address, IP address, device identifier or account, sets
+          no cookie of its own, and cannot be traced back to you or to an individual visit. It also
+          does not tell us whether you bought anything — sales information, if any, would come from
+          the merchant's own reporting, not from this site.
         </p>
       </Section>
 
-      <Section title="Newsletter">
+      <Section title="Links to Other Sites">
         <p>
-          Subscribing stores your address so we can send curated editorial features, destination
-          guides and shoppable edits. We are still setting up our sending service, so subscribing
-          today records your consent rather than triggering an immediate email — you will not
-          receive a confirmation message yet.
-        </p>
-        <p>
-          You can ask to be removed at any time by emailing us, and once sending begins every email
-          will also carry an unsubscribe link. We do not sell or rent subscriber lists.
-        </p>
-      </Section>
-
-      <Section title="Retailer & Affiliate Links">
-        <p>
-          Some retailer links on this site may earn Resort Edit a commission if you buy something,
-          at no additional cost to you. Many of our links earn nothing at all, and we do not claim
-          membership of any affiliate network that has not accepted us.
+          One link on this site — the Biankina footwear storefront in our packing guide — may earn
+          Resort Edit a commission if you buy something, at no additional cost to you. Our hotel,
+          restaurant and experience links currently earn nothing, and we do not claim membership of
+          any affiliate or booking programme that has not accepted us.
         </p>
         <p>
           When you follow a link off this site, that company's own cookies, tracking and privacy
@@ -145,14 +139,14 @@ function PrivacyPolicyPage() {
         <p>We keep our suppliers to the minimum needed to publish:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Our website hosting and content delivery provider</li>
-          <li>The hosted database service that stores newsletter signups</li>
+          <li>The hosted database service behind the site, including our daily click counts</li>
           <li>Our email provider, for the mailbox at hello@resortedit.com</li>
         </ul>
         <p>
           Each receives only what it needs to perform its function and is bound by its own privacy
           terms and security obligations, and may process data outside your country under the
-          safeguards in those terms. Retailers, hotels and tour operators we link to are independent
-          companies: we do not send them your newsletter address or correspondence, though when you
+          safeguards in those terms. Brands, hotels and tour operators we link to are independent
+          companies: we do not send them your email address or correspondence, though when you
           follow a link your own browser provides them with ordinary technical request data.
         </p>
       </Section>
@@ -162,7 +156,7 @@ function PrivacyPolicyPage() {
         <ul className="list-disc pl-6 space-y-2">
           <li>Tell you what we hold about you, or send you a copy of it</li>
           <li>Correct it</li>
-          <li>Delete it, or unsubscribe you from the newsletter</li>
+          <li>Delete it, including any email address held from the earlier signup form</li>
           <li>Stop processing it</li>
         </ul>
         <p>
@@ -180,10 +174,12 @@ function PrivacyPolicyPage() {
 
       <Section title="If You Are in the EEA or UK">
         <p>
-          We process your email address on the basis of your consent, which you can withdraw at any
-          time, and technical request data is processed on the basis of our legitimate interest in
-          running a secure, available site. You may also complain to your local data protection authority. Our suppliers may
-          process data outside your country under the safeguards in their own terms.
+          Any email address we still hold from the earlier signup form was given on the basis of your
+          consent, which you can withdraw at any time. Correspondence, technical request data and our
+          aggregate click counts are processed on the basis of our legitimate interest in running a
+          secure, available site and understanding which recommendations are useful. You may also
+          complain to your local data protection authority. Our suppliers may process data outside
+          your country under the safeguards in their own terms.
         </p>
       </Section>
 
@@ -198,10 +194,11 @@ function PrivacyPolicyPage() {
 
       <Section title="Data Retention">
         <p>
-          Subscriber addresses are kept until you unsubscribe or ask us to delete them. Emails you
-          send us are kept as long as needed to deal with the matter. Technical request data is
-          retained by our hosting, content-delivery and database providers under their own retention
-          schedules for operation and security.
+          Email addresses held from the earlier signup form are kept until you ask us to delete them.
+          Emails you send us are kept as long as needed to deal with the matter. Daily click counts
+          are aggregate figures with no personal information in them and are kept as site statistics.
+          Technical request data is retained by our hosting, content-delivery and database providers
+          under their own retention schedules for operation and security.
         </p>
       </Section>
 

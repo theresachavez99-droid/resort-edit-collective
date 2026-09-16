@@ -8,12 +8,12 @@ export const Route = createFileRoute("/privacy-rights")({
       {
         name: "description",
         content:
-          "What Resort Edit stores about you, how service providers process technical data, and how to unsubscribe, request a copy of your information, or ask us to delete it.",
+          "What Resort Edit stores about you, how service providers process technical data, how our aggregate click counts work, and how to request a copy of your information or ask us to delete it.",
       },
       { property: "og:title", content: "Your Privacy Choices | Resort Edit" },
       {
         property: "og:description",
-        content: "What we store, how it is used, and how to unsubscribe or request deletion.",
+        content: "What we store, how it is used, and how to request a copy or deletion.",
       },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -44,23 +44,24 @@ function PrivacyRightsPage() {
         Your Privacy Choices
       </h1>
       <div className="mt-6 h-px w-16 bg-gold" />
-      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 6, 2026</p>
+      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 16, 2026</p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
-        The short version: the personal information we hold about readers is a newsletter address
-        you chose to give us and any message you send us. Saved looks stay in your own browser, and
-        our service providers process ordinary technical request data to run the site.
+        The short version: there is no signup form and no reader account on this site today. The
+        personal information we hold is any message you send us, plus email addresses given to an
+        earlier version of the site. Our service providers process ordinary technical request data to
+        run the site.
       </p>
 
       <Section title="What we store about you">
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Your email address</strong>, only if you subscribed to The Next Edit, together
-            with the date you subscribed and the page you subscribed from.
-          </li>
-          <li>
             <strong>Anything you email us</strong> at hello@resortedit.com, kept in our mailbox as
             correspondence.
+          </li>
+          <li>
+            <strong>An email address from the earlier signup form</strong>, if you gave one when the
+            site offered it. It is not used to send anything, and you can ask us to delete it.
           </li>
         </ul>
         <p>
@@ -70,10 +71,12 @@ function PrivacyRightsPage() {
         </p>
       </Section>
 
-      <Section title="What stays on your own device">
+      <Section title="Our daily click counts">
         <p>
-          Looks you save with the heart icon are stored in your browser's own local storage. They
-          are never sent to us, so we cannot see them, and clearing your browser data removes them.
+          When someone uses one of our hotel, restaurant, experience or shopping links, we add 1 to a
+          daily total made up of the date, a short internal name for the link, the page section, and
+          the count. It holds no email address, IP address, device identifier or account, and sets no
+          cookie of its own, so it cannot be traced back to you.
         </p>
       </Section>
 
@@ -88,8 +91,8 @@ function PrivacyRightsPage() {
             its own operational scripts, and the non-public preview environment we use while editing
             includes that platform's instrumentation script.
           </li>
-          <li>We do not sell or rent newsletter subscriber lists.</li>
-          <li>We do not ask you to create an account to read or shop.</li>
+          <li>We do not buy, sell or rent email lists.</li>
+          <li>We do not ask you to create an account to read this site.</li>
         </ul>
         <p>
           Because we operate no optional advertising or profiling tracking of our own today, there is
@@ -100,8 +103,9 @@ function PrivacyRightsPage() {
 
       <Section title="When you leave our site">
         <p>
-          Retailer and operator links open that company's own website, where their cookies, tracking
-          and privacy policy apply, not ours. Some retailer links may earn us a commission — see our{" "}
+          Hotel, restaurant, experience and shopping links open that company's own website, where
+          their cookies, tracking and privacy policy apply, not ours. One of them — the Biankina
+          footwear storefront in our packing guide — may earn us a commission; see our{" "}
           <Link to="/affiliate-disclosure" className="text-gold hover:underline">
             Affiliate Disclosure
           </Link>
@@ -113,14 +117,13 @@ function PrivacyRightsPage() {
         </p>
       </Section>
 
-      <Section title="Unsubscribing">
+      <Section title="Removing an old email address">
         <p>
           Email us at{" "}
           <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
             hello@resortedit.com
           </a>{" "}
-          from the address you subscribed with and we will remove it. Once newsletter sending
-          begins, every email will also carry a one-click unsubscribe link.
+          from the address concerned and we will delete it.
         </p>
       </Section>
 
