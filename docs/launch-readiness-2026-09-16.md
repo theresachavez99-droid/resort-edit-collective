@@ -53,6 +53,25 @@ and `authenticated` on both the table and the function; `service_role` only
 (migration `0001_revoke_public_outbound_click_access.sql`). No user
 identifiers, no arbitrary destination URLs, no client-side storage.
 
+The public endpoint (`src/lib/outbound-clicks.functions.ts`) rejects anything
+that is not an allowlisted registry link key plus one of six predefined
+placements, and reaches the database only through the server-only admin client
+loaded inside the handler. No service credentials, keys or subscriber data are
+exposed to the browser, and the browser has no read or write grant.
+
+### Verified 16 Sep 2026 (security follow-up)
+
+- Live ACL on `public.outbound_click_daily` is
+  `postgres`, `service_role` (plus the read-only inspection role) — no `anon`,
+  `authenticated` or `PUBLIC` grants remain, so `TRUNCATE` (which RLS does not
+  cover) is unreachable from browser-facing roles.
+- `public.record_outbound_click` keeps `EXECUTE` for `postgres`/`service_role`
+  only.
+- The same revokes are in the versioned migration
+  `0001_revoke_public_outbound_click_access.sql`, so a fresh install lands in
+  the identical state; a regression test in `tests/launch-readiness.test.ts`
+  locks that SQL and the endpoint's allowlist/server-credential shape.
+
 Retrieval: query the table from the backend/SQL view, e.g.
 `select day, link_key, placement, clicks from public.outbound_click_daily order by day desc;`
 
