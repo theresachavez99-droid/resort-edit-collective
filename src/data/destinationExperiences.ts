@@ -198,13 +198,16 @@ const SEEDS: readonly ExperienceSeed[] = [
     kind: "Guided coastal walk",
     editorial:
       "The old footpath over the headland to the abbey at San Fruttuoso — reachable on foot or by water, never by car.",
+    // Facts held for review only — this listing could not be re-confirmed
+    // (bot challenge), so the entry is withheld in the registry. The meeting
+    // point is deliberately left unstated rather than assumed.
     facts: [
       "About 4 to 6 hours",
       "Private guide",
-      "Pickup offered",
-      "Departs Portofino",
+      "Confirm the meeting point when booking",
       "Offered in English and five more languages",
     ],
+
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Portofino-to-S-Fruttuoso-Scenic-Coastal-Hike-with-Private-Guide/d4232-428295P2",
     factsCheckedOn: CHECKED,
