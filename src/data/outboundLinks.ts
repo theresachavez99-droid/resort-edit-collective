@@ -81,26 +81,32 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
     key: "hotel-eight-portofino",
     kind: "hotel",
     label: "Eight Hotel Portofino",
-    directUrl: "https://www.eighthotels.com/en/eight-hotel-portofino/",
+    // The old eighthotels.com/en/eight-hotel-portofino/ path no longer answers;
+    // the property's own site is on its brand subdomain.
+    directUrl: "https://portofino.eighthotels.it/en/",
     affiliateUrl: null,
     affiliateProgram: null,
     status: "active-affiliate-pending",
     cta: "visit-hotel",
-    source: "eighthotels.com official property page",
+    source: "portofino.eighthotels.it official property site",
     lastCheckedOn: CHECKED,
+    note: "Host answers 403 to plain scripted requests (bot filtering) but serves normally in a browser.",
   },
   "hotel-piccolo-portofino": {
     key: "hotel-piccolo-portofino",
     kind: "hotel",
     label: "Hotel Piccolo Portofino",
-    directUrl: "https://www.hotelpiccoloportofino.com/",
+    // hotelpiccoloportofino.com no longer resolves; the hotel is operated under
+    // Uvet Hotels and its official page lives there.
+    directUrl: "https://uvethotels.com/piccolohotel/en/home-en/",
     affiliateUrl: null,
     affiliateProgram: null,
     status: "active-affiliate-pending",
     cta: "visit-hotel",
-    source: "hotelpiccoloportofino.com official site",
+    source: "uvethotels.com official Hotel Piccolo Portofino page (verified 200)",
     lastCheckedOn: CHECKED,
   },
+
 
   /* ---------------------------------------------------------------- dining */
   "dining-dav-mare": {
