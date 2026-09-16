@@ -120,11 +120,12 @@ function PrivacyRightsPage() {
 
       <Section title="Removing an old email address">
         <p>
-          Contact us through our{" "}
+          Use the details on our{" "}
           <Link to="/contact" className="text-gold hover:underline">
             Contact
           </Link>{" "}
-          page, from or quoting the address concerned, and we will delete it.
+          page to request deletion of the address concerned. We may need to verify your identity
+          before completing the request.
         </p>
       </Section>
 

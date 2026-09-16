@@ -149,4 +149,7 @@ Clicks are *interest signals only* — they are not sales or commissions.
    "Contact details are being updated." and the legal pages route all requests to
    `/contact`. Replace that line with the owner's confirmed address before
    publishing; until then this draft must not go live.
-7. **Publishing** — deliberately withheld pending founder review.
+7. **Publishing** — the owner has already authorized publication, and the
+   previous site version is published to resortedit.com. This copy revision is
+   saved as a draft pending a confirmed contact address (item 6); no new
+   publishing approval is required.
