@@ -77,12 +77,10 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
     source: "belmond.com official hotel page",
     lastCheckedOn: CHECKED,
   },
-  // WITHHELD: the old eighthotels.com/en/eight-hotel-portofino/ path does not
-  // answer at all (connection times out), and the brand subdomain
-  // portofino.eighthotels.it sits behind a Cloudflare bot challenge, so no
-  // destination could be independently confirmed. A challenge alone does not
-  // prove the page is dead — re-open it in a normal browser, then set
-  // `directUrl` to the confirmed page and `status` to "active-affiliate-pending".
+  // Confirmed by the founder 16 Sep 2026: portofino.eighthotels.it/en/ opened
+  // successfully and identifies Eight Hotels/Solido Hotels and the Portofino
+  // property. Our own automated check hit a Cloudflare bot challenge, which is
+  // not proof the page is dead — human confirmation controls here.
   "hotel-eight-portofino": {
     key: "hotel-eight-portofino",
     kind: "hotel",
@@ -90,28 +88,28 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
     directUrl: "https://portofino.eighthotels.it/en/",
     affiliateUrl: null,
     affiliateProgram: null,
-    status: "withheld",
+    status: "active-affiliate-pending",
     cta: "visit-hotel",
-    source: "candidate brand subdomain — NOT confirmed (Cloudflare bot challenge)",
+    source:
+      "Founder-verified 16 Sep 2026: official brand subdomain, page identifies Eight Hotels/Solido Hotels and the Portofino property",
     lastCheckedOn: CHECKED,
     note:
-      "Old .com path: connection timeout. Brand subdomain: HTTP 403 Cloudflare challenge in both curl and a real browser. Entry hidden from the public site until a human confirms the page.",
+      "Old .com path timed out and the brand subdomain serves a Cloudflare challenge to automated checks; the founder opened it successfully and confirmed it is the official page. Direct, non-affiliate link.",
   },
   "hotel-piccolo-portofino": {
     key: "hotel-piccolo-portofino",
     kind: "hotel",
     label: "Hotel Piccolo Portofino",
-    // hotelpiccoloportofino.com does not resolve. The official .it domain
-    // (hotelpiccoloportofino.it/en/) 301-redirects into the Uvet Hotels site,
-    // whose page identifies itself as "Boutique Hotel Piccolo Portofino" with
-    // the Via Duca degli Abruzzi 31 address. English page used here.
-    directUrl: "https://uvethotels.com/piccolohotel/en/home-en/",
+    // hotelpiccoloportofino.com does not resolve. The official .it/en/ address
+    // 301-redirects into the Uvet Hotels site, whose page title names Hotel
+    // Piccolo Portofino. Founder-confirmed root English home used here.
+    directUrl: "https://uvethotels.com/piccolohotel/",
     affiliateUrl: null,
     affiliateProgram: null,
     status: "active-affiliate-pending",
     cta: "visit-hotel",
     source:
-      "hotelpiccoloportofino.it/en/ redirect target on uvethotels.com — English page verified 200 and identifies the hotel",
+      "Founder-verified 16 Sep 2026: hotelpiccoloportofino.it/en/ redirects to uvethotels.com/piccolohotel/, whose page title names Hotel Piccolo Portofino",
     lastCheckedOn: CHECKED,
   },
 
