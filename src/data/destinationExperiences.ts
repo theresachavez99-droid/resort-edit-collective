@@ -5,21 +5,25 @@
  *  - `sourceUrl` is the exact supplier/operator page the facts below were read
  *    from, and `factsCheckedOn` is the date they were last verified by hand.
  *  - `facts` may only contain details printed on that page (duration, private
- *    vs shared, language, opening hours). Never invented.
+ *    vs shared, language, how booking works). Never invented.
+ *  - Outbound URLs are NOT stored here. Every public link resolves through the
+ *    outbound registry (`@/data/outboundLinks`) using the experience `key`, so
+ *    a URL, affiliate status or CTA wording is only ever changed in one place.
  *  - `booking` decides the CTA wording: "availability" pages let a traveller
  *    check dates directly; "enquiry" operators must never be presented as
  *    instant booking.
  *  - `commissionable` is FALSE unless a real affiliate program is connected.
- *    Ordinary links must never be described as earning commission.
  *  - Never any prices, reviews, ratings or scarcity claims (standing brand rule).
  *  - `imageIsIllustrative` marks destination imagery that is NOT an operator
- *    photograph, so the UI can say so.
+ *    photograph, so the UI can label it as an editorial illustration.
  */
+
+import { outboundHref, outboundIsSponsored } from "@/data/outboundLinks";
 
 export type ExperienceBooking = "availability" | "enquiry";
 
 export type DestinationExperience = {
-  /** Stable analytics key — never change once shipped. */
+  /** Stable analytics key — also the outbound-registry key. Never change it. */
   key: string;
   destinationSlug: string;
   destinationName: string;
@@ -32,6 +36,7 @@ export type DestinationExperience = {
   editorial: string;
   /** Verified facts, each printed on `sourceUrl`. */
   facts: readonly string[];
+  /** Resolved from the outbound registry. */
   href: string;
   sourceUrl: string;
   /** ISO date the facts above were verified against the source. */
@@ -39,21 +44,17 @@ export type DestinationExperience = {
   booking: ExperienceBooking;
   /** True only when a live affiliate program is connected for this link. */
   commissionable: boolean;
-  /** Canonical Portofino moment whose looks suit this activity. */
+  /** Legacy field kept for archived admin tooling. */
   momentSlug: string;
-  /**
-   * Editorial destination imagery. Omit (null) when no accurate image of the
-   * real venue exists — the card then uses an elegant text-only treatment
-   * rather than borrowing an unrelated photograph.
-   */
   image: string | null;
   imageIsIllustrative: boolean;
-  /** Alt text override for cards. Falls back to a generic destination scene. */
   imageAlt?: string;
-  /** Short visible caption shown under the image, e.g. an AI-generated notice. */
+  /** Short visible caption shown under the image, e.g. an AI illustration notice. */
   imageCaption?: string;
-  /** Surfaced in the small homepage selection. */
+  /** Surfaced in the small featured selection. */
   featured: boolean;
+  /** Given the large editorial treatment on the destination page. */
+  prominent?: boolean;
 };
 
 import expYacht from "@/assets/exp-yacht-charter.jpg";
@@ -63,9 +64,42 @@ import expAbbey from "@/assets/exp-san-fruttuoso.jpg";
 import expBeachClub from "@/assets/experience-beach-club.jpg";
 import ecoFarmVineyard from "@/assets/portofino-ecofarm-vineyard.png.asset.json";
 
-const CHECKED = "2026-09-06";
+const CHECKED = "2026-09-16";
+const ILLUSTRATION_CAPTION = "Editorial illustration — not a photograph of the venue";
 
-export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
+type ExperienceSeed = Omit<DestinationExperience, "href" | "commissionable">;
+
+const SEEDS: readonly ExperienceSeed[] = [
+  {
+    key: "portofino-la-portofinese-eco-farm",
+    destinationSlug: "portofino",
+    destinationName: "Portofino",
+    name: "La Portofinese Eco-Farm",
+    operator: "La Portofinese (independent operator, arranged direct)",
+    kind: "Vineyard & farm",
+    editorial:
+      "A working farm inside the Portofino park, above the Cala degli Inglesi: bees, vineyards, olive trees and a butterfly garden. Depending on what you arrange, a visit can pair a guided walk of the farm with a tasting of their wine in the vineyard, a picnic aperitif, lunch or an early dinner — or a hands-on kitchen session: corzetti pasta and pesto, wood-fired pizza and focaccia, or a focaccia and pesto demonstration.",
+    facts: [
+      "Inside the Portofino park, overlooking Cala degli Inglesi",
+      "Bees, vineyards, olive trees and a butterfly garden on the property",
+      "Guided visit with vineyard wine tasting; picnic aperitif, lunch or early dinner",
+      "Kitchen options include corzetti pasta and pesto, wood-fired pizza and focaccia, or a focaccia and pesto demonstration",
+      "Options differ — each visit includes only what you arrange, not everything listed",
+      "The farm lists spring and summer opening and requires reservations; confirm off-season dates with the operator",
+    ],
+    sourceUrl: "https://www.laportofinese.it/en/the-places/eco-farm/",
+    factsCheckedOn: CHECKED,
+    booking: "enquiry",
+    momentSlug: "espresso-morning",
+    // Generic coastal-vineyard illustration, approved by the founder. It is NOT
+    // a photograph of La Portofinese and is captioned as such wherever shown.
+    image: ecoFarmVineyard.url,
+    imageIsIllustrative: true,
+    imageAlt: "Editorial illustration of a Mediterranean coastal vineyard; not a photograph of La Portofinese",
+    imageCaption: ILLUSTRATION_CAPTION,
+    featured: true,
+    prominent: true,
+  },
   {
     key: "portofino-private-riviera-boat",
     destinationSlug: "portofino",
@@ -75,147 +109,128 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = [
     kind: "Private boat",
     editorial:
       "The promontory from the water — coves, cliffs and the pastel harbour seen the way it was meant to be seen.",
-    facts: ["4 hours (approx.)", "Private tour", "Departs Portofino, Italy", "Offered in English"],
-    href: "https://www.viator.com/tours/Portofino/Private-Boat-Tour-of-the-Portofino-Riviera/d4232-467798P8",
+    facts: ["About 4 hours", "Private tour", "Departs Portofino", "Offered in English"],
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Private-Boat-Tour-of-the-Portofino-Riviera/d4232-467798P8",
     factsCheckedOn: CHECKED,
     booking: "availability",
-    commissionable: false,
     momentSlug: "yacht-day",
     image: expYacht,
     imageIsIllustrative: true,
+    imageAlt: "Editorial illustration of a classic boat on the Ligurian coast",
+    imageCaption: ILLUSTRATION_CAPTION,
     featured: true,
   },
   {
     key: "portofino-sunset-boat-aperitif",
     destinationSlug: "portofino",
     destinationName: "Portofino",
-    name: "Sunset Boat Tour with Aperitif in Portofino",
+    name: "Sunset Boat Tour with Aperitif",
     operator: "Local boat operator, sold via Viator",
     kind: "Sunset cruise",
     editorial:
       "Golden hour on the Ligurian water, an aperitivo in hand, the hills turning apricot behind you.",
     facts: [
-      "1 hour 30 minutes (approx.)",
+      "About 1 hour 30 minutes",
       "Small group",
-      "Departs Portofino, Italy",
-      "Offered in English and 1 more",
+      "Departs Portofino",
+      "Offered in English and one more language",
     ],
-    href: "https://www.viator.com/tours/Portofino/Sunset-Boat-Tour-for-Small-Groups/d4232-467798P3",
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Sunset-Boat-Tour-for-Small-Groups/d4232-467798P3",
     factsCheckedOn: CHECKED,
     booking: "availability",
-    commissionable: false,
     momentSlug: "sunset-views",
     image: expCruise,
     imageIsIllustrative: true,
+    imageAlt: "Editorial illustration of the Ligurian coast at sunset",
+    imageCaption: ILLUSTRATION_CAPTION,
     featured: true,
   },
   {
     key: "portofino-pesto-boat-walk-lunch",
     destinationSlug: "portofino",
     destinationName: "Portofino",
-    name: "Portofino Boat and Walking Tour with Pesto Cooking & Lunch",
+    name: "Boat and Walking Tour with Pesto Cooking & Lunch",
     operator: "Local guide, sold via Viator",
     kind: "Pesto class & Ligurian lunch",
     editorial:
       "Mortar, pestle and basil — Liguria's own recipe, learned between a boat ride and a walk through the village.",
-    facts: ["3 hours (approx.)", "Departs Portofino, Italy", "Offered in English"],
-    href: "https://www.viator.com/tours/Portofino/Best-of-Portofino-Boat-and-Walking-Tour-Pesto-Cooking-and-Lunch/d4232-68388P1",
+    facts: ["About 3 hours", "Departs Portofino", "Offered in English"],
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Best-of-Portofino-Boat-and-Walking-Tour-Pesto-Cooking-and-Lunch/d4232-68388P1",
     factsCheckedOn: CHECKED,
     booking: "availability",
-    commissionable: false,
     momentSlug: "long-lunch",
     image: expCooking,
     imageIsIllustrative: true,
+    imageAlt: "Editorial illustration of basil, mortar and pestle for Ligurian pesto",
+    imageCaption: ILLUSTRATION_CAPTION,
     featured: true,
   },
   {
     key: "portofino-san-fruttuoso-guided-hike",
     destinationSlug: "portofino",
     destinationName: "Portofino",
-    name: "Scenic Private Hiking Tour from Portofino to S. Fruttuoso",
+    name: "Private Coastal Hike to San Fruttuoso",
     operator: "Local private guide, sold via Viator",
     kind: "Guided coastal walk",
     editorial:
       "The old footpath over the headland to the abbey at San Fruttuoso — reachable on foot or by water, never by car.",
     facts: [
-      "4 to 6 hours (approx.)",
+      "About 4 to 6 hours",
       "Private guide",
       "Pickup offered",
-      "Departs Portofino, Italy",
-      "Offered in English and 5 more",
+      "Departs Portofino",
+      "Offered in English and five more languages",
     ],
-    href: "https://www.viator.com/tours/Portofino/Portofino-to-S-Fruttuoso-Scenic-Coastal-Hike-with-Private-Guide/d4232-428295P2",
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Portofino-to-S-Fruttuoso-Scenic-Coastal-Hike-with-Private-Guide/d4232-428295P2",
     factsCheckedOn: CHECKED,
     booking: "availability",
-    commissionable: false,
     momentSlug: "exploring-the-harbor",
     image: expAbbey,
     imageIsIllustrative: true,
-    featured: false,
-  },
-  {
-    key: "portofino-la-portofinese-eco-farm",
-    destinationSlug: "portofino",
-    destinationName: "Portofino",
-    name: "La Portofinese Eco-Farm — guided visit, vineyard tasting & picnic",
-    operator: "La Portofinese (independent operator, booked direct)",
-    kind: "Wine & eco-farm",
-    editorial:
-      "A self-sustaining farm inside the Portofino park — bees, olive trees and vines above the Cala degli Inglesi.",
-    facts: [
-      "Guided tour of the eco-farm with tasting of their wine in the vineyard",
-      "Picnic aperitif, picnic lunch or early dinner options",
-      "In the heart of Portofino's park, overlooking Cala degli Inglesi",
-      "Arranged directly with the farm — enquiry only",
-    ],
-    href: "https://www.laportofinese.it/en/the-places/eco-farm/",
-    sourceUrl: "https://www.laportofinese.it/en/the-places/eco-farm/",
-    factsCheckedOn: CHECKED,
-    booking: "enquiry",
-    commissionable: false,
-    momentSlug: "espresso-morning",
-    // Generic coastal-vineyard illustration, approved by the founder. It is NOT
-    // a photograph of La Portofinese and is captioned as such wherever shown.
-    image: ecoFarmVineyard.url,
-    imageIsIllustrative: true,
-    imageAlt:
-      "Illustrative Mediterranean coastal vineyard; not a photograph of La Portofinese",
-    imageCaption: "Illustrative vineyard scene · AI-generated",
+    imageAlt: "Editorial illustration of a coastal footpath above the Ligurian sea",
+    imageCaption: ILLUSTRATION_CAPTION,
     featured: false,
   },
   {
     key: "portofino-bagni-fiore-paraggi",
     destinationSlug: "portofino",
     destinationName: "Portofino",
-    name: "Bagni Fiore, Paraggi — beach club & restaurant",
+    name: "Bagni Fiore, Paraggi — beach club",
     operator: "Bagni Fiore (independent operator, booked direct)",
     kind: "Beach experience",
     editorial:
       "Emerald water at Paraggi, striped umbrellas in rows, lunch that stretches into the afternoon.",
     facts: [
       "Via Paraggi a Mare 1, Santa Margherita Ligure",
-      "Open Sunday to Saturday, 09:00–19:00",
-      "Beach club booked on the club's own calendar; restaurant reservations via SevenRooms",
+      "Sunbeds booked on the club's own calendar",
+      "Restaurant reservations handled separately via SevenRooms",
+      "Opening dates and hours are seasonal — check the club's site before you travel",
     ],
-    href: "https://www.bagnifiore.com/en",
     sourceUrl: "https://www.bagnifiore.com/en",
     factsCheckedOn: CHECKED,
     booking: "availability",
-    commissionable: false,
     momentSlug: "beach-club",
     image: expBeachClub,
     imageIsIllustrative: true,
+    imageAlt: "Editorial illustration of a Ligurian beach club with striped umbrellas",
+    imageCaption: ILLUSTRATION_CAPTION,
     featured: false,
   },
 ];
+
+/**
+ * Only experiences with a valid outbound destination are published. A missing
+ * or withheld URL removes the card rather than rendering a dead link.
+ */
+export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = SEEDS.flatMap((seed) => {
+  const href = outboundHref(seed.key);
+  if (!href) return [];
+  return [{ ...seed, href, commissionable: outboundIsSponsored(seed.key) }];
+});
 
 export function experiencesForDestination(destinationSlug: string): DestinationExperience[] {
   return DESTINATION_EXPERIENCES.filter((e) => e.destinationSlug === destinationSlug);
@@ -234,10 +249,10 @@ export function experienceForMoment(momentSlug: string): DestinationExperience |
 
 /** Truthful CTA wording, derived from how the operator actually takes bookings. */
 export function experienceCta(e: DestinationExperience): string {
-  return e.booking === "availability" ? "Check dates & availability" : "Enquire";
+  return e.booking === "availability" ? "Check dates & availability" : "Explore & enquire";
 }
 
-/** Internal/admin view only — never rendered to shoppers. */
+/** Internal/admin view only — never rendered to visitors. */
 export function experienceTrackingStatus(): {
   total: number;
   commissionable: number;
