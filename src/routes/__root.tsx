@@ -125,14 +125,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "WebSite",
           name: "Resort Edit",
           url: "https://resortedit.com",
-          description:
-            "Resort Edit | Dressed for the destination. Destination guides, resort edits, and brands we love.",
+          description: SITE_DESCRIPTION,
           publisher: {
             "@type": "Organization",
             name: "Resort Edit",
             url: "https://resortedit.com",
-            logo: SHARE_IMAGE,
+            // The Resort Edit brand mark — never an editorial model image.
+            logo: BRAND_LOGO,
           },
+
         }),
       },
     ],
