@@ -144,8 +144,8 @@ function PrivacyPolicyPage() {
         <p>
           Each receives only what it needs to perform its function and is bound by its own privacy
           terms and security obligations, and may process data outside your country under the
-          safeguards in those terms. Retailers, hotels and tour operators we link to are independent
-          companies: we do not send them your newsletter address or correspondence, though when you
+          safeguards in those terms. Brands, hotels and tour operators we link to are independent
+          companies: we do not send them your email address or correspondence, though when you
           follow a link your own browser provides them with ordinary technical request data.
         </p>
       </Section>
