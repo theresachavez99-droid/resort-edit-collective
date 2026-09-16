@@ -169,7 +169,15 @@ const SEEDS: readonly ExperienceSeed[] = [
     kind: "Pesto class & Ligurian lunch",
     editorial:
       "Mortar, pestle and basil — Liguria's own recipe, learned between a boat ride and a walk through the village.",
-    facts: ["About 3 hours", "Departs Portofino", "Offered in English"],
+    // Verified 16 Sep 2026: supplier Experience My Portofino, starts at Piazza
+    // Martiri della Libertà 1 by the Santa Margherita Ligure ferry pier.
+    facts: [
+      "About 3 hours",
+      "Starts at the Santa Margherita Ligure ferry pier; confirm meeting details when booking",
+      "Round-trip ferry tickets included",
+      "Offered in English",
+    ],
+
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Best-of-Portofino-Boat-and-Walking-Tour-Pesto-Cooking-and-Lunch/d4232-68388P1",
     factsCheckedOn: CHECKED,
