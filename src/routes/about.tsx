@@ -69,18 +69,20 @@ function AboutPage() {
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>Every Resort Edit begins with a destination — not a suitcase.</p>
             <p>
-              We thoughtfully curate where to stay, what to experience, and what to wear, creating
-              complete destination wardrobes inspired by the places themselves.
+              We edit one destination at a time: where to stay, what to book, where to eat, and what
+              to pack for each of those days.
             </p>
             <p>
               From first espresso to sunset aperitivo, every recommendation is chosen to help you
               travel beautifully and dress with intention.
             </p>
             <p className="border-l-2 border-gold/25 pl-5">
-              Every destination is personally researched and curated using the same editorial
-              process we would use when planning our own travels.
+              Our guides are researched from operators' and hotels' own published information and
+              written by hand. Where we have not stayed or dined somewhere ourselves, we say what a
+              place is rather than claiming a personal visit.
             </p>
             <p>Because the best trips deserve an unforgettable wardrobe.</p>
+
           </div>
         </div>
       </section>
