@@ -138,7 +138,7 @@ function PrivacyPolicyPage() {
         <p>We keep our suppliers to the minimum needed to publish:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Our website hosting and content delivery provider</li>
-          <li>The hosted database service that stores newsletter signups</li>
+          <li>The hosted database service behind the site, including our daily click counts</li>
           <li>Our email provider, for the mailbox at hello@resortedit.com</li>
         </ul>
         <p>
