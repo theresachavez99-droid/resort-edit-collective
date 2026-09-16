@@ -91,8 +91,8 @@ function PrivacyRightsPage() {
             its own operational scripts, and the non-public preview environment we use while editing
             includes that platform's instrumentation script.
           </li>
-          <li>We do not sell or rent newsletter subscriber lists.</li>
-          <li>We do not ask you to create an account to read or shop.</li>
+          <li>We do not buy, sell or rent email lists.</li>
+          <li>We do not ask you to create an account to read this site.</li>
         </ul>
         <p>
           Because we operate no optional advertising or profiling tracking of our own today, there is
