@@ -44,70 +44,63 @@ function AffiliateDisclosurePage() {
         Affiliate Disclosure
       </h1>
       <div className="mt-6 h-px w-16 bg-gold" />
-      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 6, 2026</p>
+      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 16, 2026</p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
-        Resort Edit is an independent editorial publication. This page explains, in plain language,
-        how our links work, how we may earn, and how our editorial imagery is made.
+        Resort Edit is an independent editorial publication. Today it publishes destination guides —
+        currently Portofino — covering where to stay, what to do, where to eat and what to pack. This
+        page explains, in plain language, how our outbound links work, which of them can earn us
+        anything, and how our imagery is made.
       </p>
 
-      <Section title="How our links work">
+      <Section title="Hotel, restaurant and experience links">
         <p>
-          When we feature a piece, we link to a retailer's page for that piece. Some of those links
-          may earn Resort Edit a commission if you buy something. You never pay more because you used
-          our link — the price is the retailer's price.
+          Hotel, restaurant, tour and ferry links open the venue's own site or the booking platform
+          that lists the experience. As of the date above, none of those links earn Resort Edit
+          anything. They are ordinary links, not paid placements.
         </p>
         <p>
-          Many of our links earn nothing at all. Commission is never the reason a piece is featured.
+          The venues and operators we mention are not sponsors, have not paid for placement, and have
+          not endorsed Resort Edit. We do not claim membership of any affiliate or booking programme
+          we have not been accepted into.
         </p>
       </Section>
 
-      <Section title="What we are not">
+      <Section title="The one shopping link">
         <p>
-          We do not claim membership of any affiliate network we have not been accepted into, and we
-          do not describe an ordinary retailer link as a paid partnership. Where a link earns us
-          nothing, we do not pretend otherwise.
+          Our packing guide includes a single brand storefront referral, to Biankina footwear. If you
+          buy something after using that link, Resort Edit may earn a commission. You never pay more
+          because you used it, and we do not publish any discount, coupon or commission figure.
         </p>
         <p>
-          Hotels, beach clubs, farms and tour operators mentioned on this site are not sponsors,
-          have not paid for placement, and have not endorsed Resort Edit. Booking and enquiry links
-          open the listed operator or booking platform, and the experience links currently displayed
-          are not commission-bearing.
+          It is a link to the brand's storefront, not a link to a specific item, and it is not a claim
+          that any garment or shoe pictured elsewhere on this site is that brand or is for sale here.
+          Any purchase happens on the brand's own site, under their prices, stock and terms.
         </p>
       </Section>
 
       <Section title="Editorial independence">
         <p>
-          Commissions never decide what appears here. Pieces are chosen for the destination, the
-          moment and the wardrobe. An affiliate relationship can influence which retailer we link to
-          when several stock the same piece — never whether a piece is featured.
+          A commission never decides what appears here. Places and advice are chosen on their own
+          merits, and we say plainly when a link can earn us something.
         </p>
       </Section>
 
       <Section title="About our imagery">
         <p>
-          Resort Edit's editorial photographs are created with AI image generation, art-directed by
-          us. They are illustrations of how a look feels in a place — not documentary photographs of
-          a specific person, boutique, hotel or event.
+          Resort Edit's editorial images are created with AI image generation, art-directed by us.
+          They are illustrations of how a place or a look feels — not documentary photographs of a
+          specific person, hotel, restaurant, boat or event, and not the operator's own photography.
+          We label them as illustrations where we use them.
         </p>
         <p>
-          Where we link a piece, we name the brand and product and link the retailer's page for it.
-          Even so, a generated image can differ from the product photography on the retailer's page: drape, colour under
-          different light, trim detail and styling may not match exactly. The retailer's own
-          photographs and description are always the accurate reference for what you will receive.
+          Clothing shown in our imagery is editorial styling. It is not a claim that a pictured piece
+          is a particular retailer's product, and it is not shoppable.
         </p>
         <p>
-          Destination and venue imagery is our own editorial illustration of the place, not the
-          operator's photography, and is labelled as such where we use it.
-        </p>
-      </Section>
-
-      <Section title="Stock and availability">
-        <p>
-          Availability changes constantly and some retailers block automated checks entirely. A link
-          on this site is not a guarantee that the piece is currently in stock, in your size or in
-          the colour shown; the retailer's own page is the accurate reference. Where we cannot
-          confirm a piece, we do not claim it is available.
+          We have not necessarily visited every venue we describe. Facts such as meeting points,
+          durations and what a booking includes are taken from the venue's or operator's own current
+          listing, and those can change — always confirm the details when you book.
         </p>
       </Section>
 
