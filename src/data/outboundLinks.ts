@@ -224,23 +224,24 @@ export const OUTBOUND_LINKS: Record<string, OutboundLink> = {
   },
 
   /* -------------------------------------------------------------- shopping */
-  // Recorded for the future shopping layer only. WITHHELD: we hold a merchant
-  // code ("resortedit") but no exact verified tracking URL and no confirmed
-  // discount terms, so nothing is rendered and nothing is invented.
+  // Recorded for the future shopping layer. The referral URL below was supplied
+  // by the founder verbatim and resolves (HTTP 200). No discount percentage or
+  // commission rate is recorded because none has been confirmed in writing.
   "shop-biankina": {
     key: "shop-biankina",
     kind: "shopping",
     label: "Biankina",
     directUrl: "https://biankina.com/",
-    affiliateUrl: null,
-    affiliateProgram: null,
-    status: "withheld",
+    affiliateUrl: "https://biankina.com/?ref=hxrfofuu",
+    affiliateProgram: "Biankina direct referral",
+    status: "active",
     cta: "availability",
-    source: "brand site (no verified affiliate/tracking URL on file)",
+    source: "referral URL supplied by the founder; verified to resolve 200",
     lastCheckedOn: CHECKED,
     note:
-      "Merchant code 'resortedit' supplied by the founder, but no exact tracking URL or confirmed discount terms verified. Pending: obtain the affiliate link from the merchant/network before rendering.",
+      "Exact founder-supplied referral link. Commission and any discount terms are NOT confirmed — do not publish a discount claim or a percentage.",
   },
+
 };
 
 export const OUTBOUND_KEYS: readonly string[] = Object.keys(OUTBOUND_LINKS);
