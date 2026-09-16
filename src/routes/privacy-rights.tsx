@@ -56,9 +56,10 @@ function PrivacyRightsPage() {
       <Section title="What we store about you">
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Anything you email us</strong> at hello@resortedit.com, kept in our mailbox as
-            correspondence.
+            <strong>Any message you send us</strong>, if you contact us through the details on our
+            Contact page, kept as correspondence.
           </li>
+
           <li>
             <strong>An email address from the earlier signup form</strong>, if you gave one when the
             site offered it. It is not used to send anything, and you can ask us to delete it.
@@ -119,24 +120,25 @@ function PrivacyRightsPage() {
 
       <Section title="Removing an old email address">
         <p>
-          Email us at{" "}
-          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
-            hello@resortedit.com
-          </a>{" "}
-          from the address concerned and we will delete it.
+          Contact us through our{" "}
+          <Link to="/contact" className="text-gold hover:underline">
+            Contact
+          </Link>{" "}
+          page, from or quoting the address concerned, and we will delete it.
         </p>
       </Section>
 
       <Section title="Access, correction and deletion">
         <p>
-          Write to{" "}
-          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
-            hello@resortedit.com
-          </a>{" "}
-          and tell us what you would like: a copy of what we hold, a correction, or deletion.
-          We use the email address you write from to locate your record, and will only ask for
-          further detail if we cannot identify it or need to confirm the request is genuine.
+          Write to us using the details on our{" "}
+          <Link to="/contact" className="text-gold hover:underline">
+            Contact
+          </Link>{" "}
+          page and tell us what you would like: a copy of what we hold, a correction, or deletion.
+          Correspondence you send us is used to locate your record, and we will only ask for further
+          detail if we cannot identify it or need to confirm the request is genuine.
         </p>
+
         <p>
           If you are in the EEA, the UK, California, or another place with similar laws, these are
           the rights those laws give you, and you may also complain to your local data protection

@@ -106,11 +106,12 @@ function AffiliateDisclosurePage() {
 
       <Section title="Questions">
         <p>
-          If anything here is unclear, write to us at{" "}
-          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
-            hello@resortedit.com
-          </a>{" "}
-          or see our{" "}
+          For enquiries about this disclosure, visit{" "}
+          <Link to="/contact" className="text-gold hover:underline">
+            Contact
+          </Link>
+          . See also our{" "}
+
           <Link to="/privacy-policy" className="text-gold hover:underline">
             Privacy Policy
           </Link>{" "}

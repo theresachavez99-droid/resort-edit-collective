@@ -60,9 +60,10 @@ function PrivacyPolicyPage() {
         <p>The information we handle falls into these categories:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Anything you send us by email</strong> at hello@resortedit.com, which stays in
-            our mailbox as ordinary correspondence.
+            <strong>Anything you send us</strong> if you contact us through the details on our
+            Contact page, kept as ordinary correspondence.
           </li>
+
           <li>
             <strong>Technical request data</strong> — such as IP address, browser user agent,
             requested page and timestamp — processed by our hosting, content-delivery and database
@@ -140,7 +141,7 @@ function PrivacyPolicyPage() {
         <ul className="list-disc pl-6 space-y-2">
           <li>Our website hosting and content delivery provider</li>
           <li>The hosted database service behind the site, including our daily click counts</li>
-          <li>Our email provider, for the mailbox at hello@resortedit.com</li>
+          <li>A message-handling provider, if you send us correspondence</li>
         </ul>
         <p>
           Each receives only what it needs to perform its function and is bound by its own privacy
@@ -160,16 +161,17 @@ function PrivacyPolicyPage() {
           <li>Stop processing it</li>
         </ul>
         <p>
-          Email{" "}
-          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
-            hello@resortedit.com
-          </a>{" "}
-          from the address concerned and we will act on it. Practical detail is on our{" "}
+          Send your request using the details on our{" "}
+          <Link to="/contact" className="text-gold hover:underline">
+            Contact
+          </Link>{" "}
+          page and we will act on it. Practical detail is on our{" "}
           <Link to="/privacy-rights" className="text-gold hover:underline">
             Privacy Choices
           </Link>{" "}
           page.
         </p>
+
       </Section>
 
       <Section title="If You Are in the EEA or UK">
@@ -218,17 +220,14 @@ function PrivacyPolicyPage() {
 
       <Section title="Contact">
         <p>
-          Questions, requests or corrections can be sent to{" "}
-          <a href="mailto:hello@resortedit.com" className="text-gold hover:underline">
-            hello@resortedit.com
-          </a>{" "}
-          or through our{" "}
+          Questions, requests or corrections can be sent through our{" "}
           <Link to="/contact" className="text-gold hover:underline">
             Contact
           </Link>{" "}
           page.
         </p>
       </Section>
+
     </div>
   );
 }
