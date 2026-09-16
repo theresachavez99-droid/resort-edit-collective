@@ -2432,6 +2432,30 @@ export type Database = {
         }
         Relationships: []
       }
+      outbound_click_daily: {
+        Row: {
+          clicks: number
+          day: string
+          link_key: string
+          placement: string
+          updated_at: string
+        }
+        Insert: {
+          clicks?: number
+          day?: string
+          link_key: string
+          placement: string
+          updated_at?: string
+        }
+        Update: {
+          clicks?: number
+          day?: string
+          link_key?: string
+          placement?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_audit_events: {
         Row: {
           actor: string
@@ -3795,6 +3819,10 @@ export type Database = {
           p_style_family: string[]
         }
         Returns: number
+      }
+      record_outbound_click: {
+        Args: { p_link_key: string; p_placement: string }
+        Returns: undefined
       }
       rollback_auto_edit_version: {
         Args: { p_look_key: string }

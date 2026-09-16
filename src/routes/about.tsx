@@ -69,18 +69,20 @@ function AboutPage() {
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>Every Resort Edit begins with a destination — not a suitcase.</p>
             <p>
-              We thoughtfully curate where to stay, what to experience, and what to wear, creating
-              complete destination wardrobes inspired by the places themselves.
+              We edit one destination at a time: where to stay, what to book, where to eat, and what
+              to pack for each of those days.
             </p>
             <p>
               From first espresso to sunset aperitivo, every recommendation is chosen to help you
               travel beautifully and dress with intention.
             </p>
             <p className="border-l-2 border-gold/25 pl-5">
-              Every destination is personally researched and curated using the same editorial
-              process we would use when planning our own travels.
+              Our guides are researched from operators' and hotels' own published information and
+              written by hand. Where we have not stayed or dined somewhere ourselves, we say what a
+              place is rather than claiming a personal visit.
             </p>
             <p>Because the best trips deserve an unforgettable wardrobe.</p>
+
           </div>
         </div>
       </section>
@@ -143,24 +145,24 @@ function AboutPage() {
         <div className="mx-auto max-w-xl text-left mt-8">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>
-              Resort Edit is reader-supported. When you purchase through links on our site, we may
-              earn a commission from the retailer — at no additional cost to you.
+              Resort Edit is reader-supported. Some links may earn us a commission in future — at no
+              additional cost to you. Today, every hotel, dining and experience link on the site is
+              an ordinary link and earns us nothing.
             </p>
             <p>
-              Commissions never decide what we feature. Every look is curated editorially first;
-              affiliate relationships only determine which retailer we link to, never which pieces
-              we love.
+              Commissions never decide what we feature. Recommendations are chosen editorially
+              first; an affiliate relationship could only affect which page we link to.
             </p>
             <p>
-              Our editorial photographs are art-directed by us and created with AI image
-              generation, so a linked piece may look a little different in the retailer's own
-              photography. We name and link the real pieces shown.
+              Some imagery on the site is art-directed by us and created with AI image generation.
+              Illustrated venue images are labelled as editorial illustrations, so they are never
+              mistaken for photographs of a hotel, restaurant or operator.
             </p>
             <p>
               Hotels, beach clubs and experiences we mention are not sponsors and have not paid for
-              placement — those links go straight to the operator and earn us nothing. We only
-              recommend places and pieces we would choose for our own travels.
+              placement — those links go straight to the operator or booking platform.
             </p>
+
             <p>
               <Link to="/affiliate-disclosure" className="text-gold hover:underline">
                 Read the full Affiliate Disclosure →

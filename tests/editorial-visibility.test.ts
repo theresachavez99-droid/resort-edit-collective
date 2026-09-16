@@ -1,44 +1,65 @@
 /**
- * REGRESSION: editorial image visibility is INDEPENDENT of shopping
- * eligibility.
+ * SCOPE CHANGE (September 2026 simplification): the per-moment clothing-look
+ * pages were retired. `/portofino/$moment` and the legacy day/look paths are
+ * permanent redirects to the single Portofino destination hub, so there is no
+ * public page where editorial imagery and commerce can drift apart.
  *
- * Founder override (6 September 2026): approved Lilla editorial imagery must
- * always render on Portofino moment pages, hero and supporting. Only commerce
- * (itemization, expanders, outbound product links, shop CTA) is gated by
- * completeness. These assertions read the route source so a future refactor
- * cannot silently re-couple image rendering to product eligibility.
+ * The original guarantee — imagery visible, commerce gated — is preserved by
+ * these assertions in its current form: the retired routes must stay
+ * redirect-only and must never re-introduce public shopping surfaces without
+ * an explicit new decision.
  */
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 
-const route = readFileSync("src/routes/portofino.$moment.tsx", "utf8");
+const read = (p: string) => readFileSync(p, "utf8");
 
-describe("editorial visibility independent of commerce", () => {
-  test("hero editorial image is not wrapped in the shoppable-eligibility gate", () => {
-    expect(route).not.toContain("{heroEligible && (\n              <div className=\"relative aspect-[4/5]");
-    // The image element exists unconditionally inside the featured grid.
-    expect(route).toContain('alt={stagedLook?.alt ?? `${editorialTitle} — Portofino featured look`}');
+const RETIRED_ROUTES = [
+  "src/routes/portofino.$moment.tsx",
+  "src/routes/portofino.$day.$look.tsx",
+  "src/routes/portofino.pool-lounging.poolside-glam.tsx",
+  "src/routes/my-edit.tsx",
+  "src/routes/brands.tsx",
+  "src/routes/pack-my-trip.tsx",
+  "src/routes/latest.tsx",
+];
+
+describe("retired clothing-catalog routes", () => {
+  for (const path of RETIRED_ROUTES) {
+    test(`${path} redirects instead of rendering a catalog page`, () => {
+      const src = read(path);
+      expect(src).toContain("redirect(");
+      expect(src).toContain("/portofino");
+    });
+
+    test(`${path} renders no shopping surface`, () => {
+      const src = read(path);
+      for (const forbidden of [
+        "ShopTheLookItems",
+        "ResortEditItemization",
+        "showShopCta",
+        "StagedLookItemization",
+      ]) {
+        expect(src).not.toContain(forbidden);
+      }
+    });
+  }
+});
+
+describe("public Portofino hub", () => {
+  const hub = read("src/routes/portofino.tsx");
+
+  test("shows no prices", () => {
+    expect(hub).not.toMatch(/[$€£]\s?\d/);
   });
 
-  test("supporting cards are no longer filtered out when incomplete", () => {
-    expect(route).not.toContain("const publishableExtraCards");
-    expect(route).toContain("editorialOnly={!isLillaLookComplete(slug, c.key)}");
+  test("packing guidance is advice, not a shoppable set", () => {
+    expect(hub).toContain("PORTOFINO_PACKING_GUIDE");
+    expect(hub).not.toContain("ShopTheLookItems");
   });
 
-  test("nightcap cards render regardless of completeness, commerce gated", () => {
-    expect(route).toContain("{NIGHTCAP_EDITORIAL_CARDS.map((c) => (");
-    expect(route).toContain('{c.shop && isLillaLookComplete("nightcap", c.key) ? (');
-  });
-
-  test("an accurate editorial-inspiration disclosure replaces commerce", () => {
-    expect(route).toContain("function EditorialInspirationNotice()");
-    expect(route).toContain("Editorial inspiration.");
-    expect(route).toContain("<EditorialInspirationNotice />");
-  });
-
-  test("commerce gates remain in force", () => {
-    // Shop CTA + look-items block still require eligibility.
-    expect(route).toContain("stagedLook || !heroEligible ? null : <ShopTheLookItems");
-    expect(route).toContain("const showShopCta = shopCtaAllowed(shoppableRowCount)");
+  test("outbound links resolve through the typed registry", () => {
+    expect(hub).toContain("OutboundCta");
+    expect(hub).not.toMatch(/href="https?:\/\//);
   });
 });

@@ -56,11 +56,12 @@ describe("canonical featured headings", () => {
     }
   });
 
-  test("the moment route renders its heading through publicFeaturedTitle", () => {
+  test("the retired moment route no longer renders any heading (redirect-only)", () => {
     const src = read("src/routes/portofino.$moment.tsx");
-    expect(src).toContain('from "@/lib/moment-display"');
-    expect(src).toContain("publicFeaturedTitle(");
+    expect(src).toContain("redirect(");
+    expect(src).not.toContain("publicFeaturedTitle(");
   });
+
 });
 
 describe("retired five-day architecture", () => {
@@ -121,14 +122,14 @@ describe("zero-link commerce CTA suppression", () => {
     ).toBe(1);
   });
 
-  test("moment route wires the hero shop CTA through the gate", () => {
+  test("the retired moment route ships no shop CTA at all", () => {
     const src = read("src/routes/portofino.$moment.tsx");
-    expect(src).toContain('from "@/lib/commerce-cta-policy"');
-    expect(src).toContain("shopCtaAllowed(");
-    expect(src).toMatch(/showShopCta=\{/);
-    expect(src).toMatch(/\{showShopCta && \(/);
+    expect(src).toContain("redirect(");
+    expect(src).not.toContain("showShopCta");
+    expect(src).not.toContain("ShopTheLookItems");
   });
 });
+
 
 // ── 3. Footer and About conversion paths ────────────────────────
 describe("footer and About conversion paths", () => {

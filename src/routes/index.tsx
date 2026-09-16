@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { getFeaturedDestination } from "@/data/featuredDestination";
-import { InstagramStrip } from "@/components/InstagramStrip";
 import heroVideoAsset from "@/assets/portofino-hero.mp4.asset.json";
 import heroPosterAsset from "@/assets/portofino-hero-poster.jpg.asset.json";
 import portofinoFeatured from "@/assets/hero-portofino-harbor.jpg";
@@ -163,10 +162,27 @@ function Index() {
         </div>
       </section>
 
-      {/* LATEST FROM @RESORT.EDIT */}
-      <div className={`${wrap} pt-14 md:pt-20`}>
-        <InstagramStrip limit={6} showFollow={false} />
-      </div>
+      {/* WHAT TO PACK — a real, useful entry point instead of an empty feed grid */}
+      <section className={`${wrap} pt-14 md:pt-20`}>
+        <div className="bg-cream border border-border/50 px-6 py-10 md:py-14 text-center">
+          <p className="eyebrow text-gold text-[0.68rem] tracking-[0.34em]">WEAR</p>
+          <h2 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl tracking-[0.03em] text-ink leading-[1.05] max-w-[28ch] mx-auto">
+            What to pack for Portofino
+          </h2>
+          <p className="mt-4 font-serif italic text-ink/65 text-[1rem] max-w-[46ch] mx-auto leading-relaxed">
+            Shoes for the paving, sun cover for the water, a light layer for the boat home, and one
+            easy dinner option.
+          </p>
+          <Link
+            to="/portofino"
+            hash="wear"
+            className="mt-7 inline-flex items-center justify-center eyebrow text-[0.7rem] tracking-[0.3em] text-ink border border-ink/25 px-7 py-3.5 hover:border-gold hover:text-gold transition-colors"
+          >
+            READ THE PACKING GUIDE
+          </Link>
+        </div>
+      </section>
+
 
       {/* STAY / DO / EAT / WEAR */}
       <section className={`${wrap} pt-14 md:pt-20`}>

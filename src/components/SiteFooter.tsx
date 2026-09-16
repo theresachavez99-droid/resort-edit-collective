@@ -45,22 +45,23 @@ export function SiteFooter() {
             <p className="eyebrow text-gold-soft mb-4">Explore</p>
             <ul className="space-y-2 font-serif">
               <li>
+                <Link to="/portofino" className="hover:text-gold">
+                  The Portofino Guide
+                </Link>
+              </li>
+              <li>
+                <Link to="/portofino" hash="wear" className="hover:text-gold">
+                  What to Pack
+                </Link>
+              </li>
+              <li>
                 <Link to="/destinations" className="hover:text-gold">
                   Destinations
                 </Link>
               </li>
-              <li>
-                <Link to="/portofino" className="hover:text-gold">
-                  The Portofino Edit
-                </Link>
-              </li>
-              <li>
-                <Link to="/latest" className="hover:text-gold">
-                  Latest from @resort.edit
-                </Link>
-              </li>
             </ul>
           </div>
+
           <div>
             <p className="eyebrow text-gold-soft mb-4">About</p>
             <ul className="space-y-2 font-serif">

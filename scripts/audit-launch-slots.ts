@@ -63,18 +63,23 @@ for (const m of audit.moments) {
 }
 
 // ── Honest commerce CTA gate ─────────────────────────────────────
-// Zero-link pages must never render a shoppable-set CTA. The runtime gate is
-// data-driven (DB rows → `shopCtaAllowed`), so CI verifies (a) the policy
-// itself and (b) that the moment route actually renders through the policy.
+// The per-moment clothing-look pages were retired in the Sept 2026
+// simplification: `/portofino/$moment` is now a permanent redirect to the
+// destination hub, so no public page can render a shoppable-set CTA at all.
+// CI verifies (a) the policy still behaves correctly for any future commerce
+// surface and (b) the retired route really is redirect-only.
 const routeSrc = readFileSync(join(here, "..", "src", "routes", "portofino.$moment.tsx"), "utf8");
+const momentRouteIsRedirectOnly =
+  routeSrc.includes("redirect(") &&
+  !routeSrc.includes("showShopCta") &&
+  !routeSrc.includes("ShopTheLookItems") &&
+  !routeSrc.includes("ResortEditItemization");
 const ctaChecks: Array<[string, boolean]> = [
   ["policy suppresses CTA at zero verified links", shopCtaAllowed(0) === false],
   ["policy allows CTA with verified links", shopCtaAllowed(1) === true],
-  ["moment route imports commerce-cta-policy", routeSrc.includes("@/lib/commerce-cta-policy")],
-  ["moment route computes the gate via shopCtaAllowed(…)", routeSrc.includes("shopCtaAllowed(")],
-  ["cinematic hero receives the showShopCta gate", /showShopCta=\{/.test(routeSrc)],
-  ["hero shop CTA renders only behind the gate", /\{showShopCta && \(/.test(routeSrc)],
+  ["retired moment route is redirect-only (no public commerce)", momentRouteIsRedirectOnly],
 ];
+
 console.log("\n=== Honest commerce CTA gate ===");
 for (const [label, ok] of ctaChecks) {
   if (!ok) hardFailures++;

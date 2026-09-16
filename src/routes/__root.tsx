@@ -7,24 +7,24 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+
 
 import appCss from "../styles.css?url";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
-import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
+import shareImage from "@/assets/hero-portofino-harbor.jpg";
+import brandMark from "@/assets/resort-edit-mark.png";
 import { absoluteUrl } from "@/lib/site";
-import { DayImageOverridesProvider } from "@/data/dayImageRegistry";
-import { loadCanonicalDayImageOverrides } from "@/lib/day-images.functions";
 import { Toaster } from "@/components/ui/sonner";
 
-const dayOverridesQueryOptions = queryOptions({
-  queryKey: ["canonical-day-image-overrides"],
-  queryFn: () => loadCanonicalDayImageOverrides(),
-  staleTime: 5 * 60_000,
-});
+/**
+ * The retired catalog's canonical day-image override table is no longer read on
+ * public pages — those DB calls now live only in the admin image workflows, so
+ * the public site renders without any catalog database dependency.
+ */
+const SHARE_IMAGE = absoluteUrl(shareImage);
+const BRAND_LOGO = absoluteUrl(brandMark);
 
-const SHARE_IMAGE = absoluteUrl(heroMuseAsset.url);
 
 function NotFoundComponent() {
   return (
@@ -83,26 +83,26 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const SITE_DESCRIPTION =
+  "Resort Edit — editorial destination guides. Where to stay, what to book, where to eat and what to pack, starting with Portofino, Italy.";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  loader: ({ context }) =>
-    context.queryClient.ensureQueryData(dayOverridesQueryOptions).catch(() => ({})),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Resort Edit | Dressed for the destination." },
-      { name: "description", content: "Resort Edit | Dressed for the destination. Discover destination guides, resort edits, and brands we love." },
+      { title: "Resort Edit | Dressed for the Destination" },
+      { name: "description", content: SITE_DESCRIPTION },
       { name: "author", content: "Resort Edit" },
-      { property: "og:title", content: "Resort Edit | Dressed for the destination." },
-      { property: "og:description", content: "Resort Edit | Dressed for the destination. Discover destination guides, resort edits, and brands we love." },
+      { property: "og:title", content: "Resort Edit | Dressed for the Destination" },
+      { property: "og:description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: SHARE_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@ResortEdit" },
-      { name: "twitter:image", content: SHARE_IMAGE },
-      { name: "twitter:title", content: "Resort Edit | Dressed for the destination." },
-      { name: "twitter:description", content: "Resort Edit | Dressed for the destination. Discover destination guides, resort edits, and brands we love." },
+      { name: "twitter:title", content: "Resort Edit | Dressed for the Destination" },
+      { name: "twitter:description", content: SITE_DESCRIPTION },
     ],
+
     links: [
       {
         rel: "stylesheet",
@@ -125,14 +125,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "WebSite",
           name: "Resort Edit",
           url: "https://resortedit.com",
-          description:
-            "Resort Edit | Dressed for the destination. Destination guides, resort edits, and brands we love.",
+          description: SITE_DESCRIPTION,
           publisher: {
             "@type": "Organization",
             name: "Resort Edit",
             url: "https://resortedit.com",
-            logo: SHARE_IMAGE,
+            // The Resort Edit brand mark — never an editorial model image.
+            logo: BRAND_LOGO,
           },
+
         }),
       },
     ],
@@ -167,17 +168,20 @@ function RootComponent() {
 }
 
 function RootInner() {
-  const { data: dayOverrides } = useSuspenseQuery(dayOverridesQueryOptions);
   return (
-    <DayImageOverridesProvider value={dayOverrides ?? {}}>
-      <div className="min-h-screen flex flex-col bg-ivory">
-        <SiteHeader />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <SiteFooter />
-        <Toaster position="top-center" richColors closeButton />
-      </div>
-    </DayImageOverridesProvider>
+    <div className="min-h-screen flex flex-col bg-ivory">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:text-ivory focus:px-4 focus:py-2 focus:eyebrow focus:text-[0.7rem] focus:tracking-[0.2em]"
+      >
+        Skip to content
+      </a>
+      <SiteHeader />
+      <main id="main-content" className="flex-1">
+        <Outlet />
+      </main>
+      <SiteFooter />
+      <Toaster position="top-center" richColors closeButton />
+    </div>
   );
 }
