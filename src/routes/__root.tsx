@@ -12,19 +12,19 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import appCss from "../styles.css?url";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
-import heroMuseAsset from "@/assets/hero-muse-portofino-majolica.png.asset.json";
+import shareImage from "@/assets/hero-portofino-harbor.jpg";
+import brandMark from "@/assets/resort-edit-mark.png";
 import { absoluteUrl } from "@/lib/site";
-import { DayImageOverridesProvider } from "@/data/dayImageRegistry";
-import { loadCanonicalDayImageOverrides } from "@/lib/day-images.functions";
 import { Toaster } from "@/components/ui/sonner";
 
-const dayOverridesQueryOptions = queryOptions({
-  queryKey: ["canonical-day-image-overrides"],
-  queryFn: () => loadCanonicalDayImageOverrides(),
-  staleTime: 5 * 60_000,
-});
+/**
+ * The retired catalog's canonical day-image override table is no longer read on
+ * public pages — those DB calls now live only in the admin image workflows, so
+ * the public site renders without any catalog database dependency.
+ */
+const SHARE_IMAGE = absoluteUrl(shareImage);
+const BRAND_LOGO = absoluteUrl(brandMark);
 
-const SHARE_IMAGE = absoluteUrl(heroMuseAsset.url);
 
 function NotFoundComponent() {
   return (
