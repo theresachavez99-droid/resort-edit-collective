@@ -140,12 +140,15 @@ const SEEDS: readonly ExperienceSeed[] = [
     kind: "Sunset cruise",
     editorial:
       "Golden hour on the Ligurian water, an aperitivo in hand, the hills turning apricot behind you.",
+    // Verified 16 Sep 2026: supplier Orange Wave, meeting point Rotonda
+    // Marconi, Rapallo — no Portofino harbour pickup is offered.
     facts: [
       "About 1 hour 30 minutes",
       "Small group",
-      "Departs Portofino",
+      "Meets in Rapallo; confirm meeting details when booking",
       "Offered in English and one more language",
     ],
+
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Sunset-Boat-Tour-for-Small-Groups/d4232-467798P3",
     factsCheckedOn: CHECKED,
