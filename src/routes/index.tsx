@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { getFeaturedDestination } from "@/data/featuredDestination";
-import { getFeaturedDestination } from "@/data/featuredDestination";
 import heroVideoAsset from "@/assets/portofino-hero.mp4.asset.json";
 import heroPosterAsset from "@/assets/portofino-hero-poster.jpg.asset.json";
 import portofinoFeatured from "@/assets/hero-portofino-harbor.jpg";
