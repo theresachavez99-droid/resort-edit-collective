@@ -43,3 +43,14 @@
 # Simplification (Sep 2026): per-moment clothing-look pages retired into the
 # single Portofino destination hub.
 /portofino/*                                             /portofino                           301!
+
+# Launch simplification (Sep 2026): retired catalog, wizard and feed routes
+/pack-my-trip                                            /portofino                           301!
+/pack-my-trip/*                                          /portofino                           301!
+/my-edit                                                 /portofino                           301!
+/my-edit/*                                               /portofino                           301!
+/brands                                                  /portofino#wear                      301!
+/brands/*                                                /portofino#wear                      301!
+/latest                                                  /portofino                           301!
+/latest/*                                                /portofino                           301!
+
