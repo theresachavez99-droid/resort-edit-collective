@@ -23,19 +23,25 @@ identical to the pre-pass baseline).
 
 ## Merchant / source verification
 
+Re-verified 16 September 2026 after the founder's own source check.
+
 | Entry | URL | Status |
 | --- | --- | --- |
 | Splendido, A Belmond Hotel | belmond.com official page | 200 verified |
 | Splendido Mare, A Belmond Hotel | belmond.com official page | 200 verified |
-| Eight Hotel Portofino | `portofino.eighthotels.it/en/` | **URL corrected** — the old `eighthotels.com/en/eight-hotel-portofino/` path no longer answers. New host returns 403 to scripted requests (bot filtering) but serves normally in a browser. |
-| Hotel Piccolo Portofino | `uvethotels.com/piccolohotel/en/home-en/` | **URL corrected** — `hotelpiccoloportofino.com` no longer resolves (DNS). Official page now under Uvet Hotels, 200 verified. |
+| Hotel Piccolo Portofino | `uvethotels.com/piccolohotel/en/home-en/` | **Corrected.** `hotelpiccoloportofino.com` does not resolve. The official `.it` domain 301-redirects into the Uvet Hotels site; that page identifies itself as Boutique Hotel Piccolo Portofino (Via Duca degli Abruzzi 31). English page verified 200 and in use. |
+| Eight Hotel Portofino | — | **WITHHELD / omitted from launch.** The old `.com` path does not answer (connection timeout). The brand subdomain `portofino.eighthotels.it` returns an HTTP 403 Cloudflare bot challenge in curl *and* in a real headless browser, so no destination could be independently confirmed. A challenge is not proof the page is dead — open it in a normal browser, then set `directUrl` and flip `status` to `active-affiliate-pending`. |
 | Bagni Fiore | bagnifiore.com/en | 200 verified |
 | La Portofinese Eco-Farm | laportofinese.it official page | 200 verified |
-| Viator experiences | Viator listing pages | Verified as real listings; Viator answers 403 to scripted requests. |
-| Biankina | `https://biankina.com/?ref=hxrfofuu` | Founder-supplied referral URL, resolves 200. Recorded as an affiliate link. **No discount percentage or commission rate is recorded or published** — none has been confirmed in writing. |
+| Private Boat Tour of the Portofino Riviera | Viator listing | **Facts corrected.** Supplier Orange Wave; meeting point Rotonda Marconi, Rapallo. "Departs Portofino" replaced with "Meets in Rapallo; confirm meeting details when booking". No harbour pickup is claimed. |
+| Sunset Boat Tour | Viator listing | **Facts corrected.** Supplier Orange Wave; same Rapallo meeting point; about 1h30m. |
+| Pesto Boat & Walking Tour with Lunch | Viator listing | **Facts corrected.** Supplier Experience My Portofino; starts at the Santa Margherita Ligure ferry pier (Piazza Martiri della Libertà 1); about 3h; round-trip ferry tickets included. |
+| Private Coastal Hike to San Fruttuoso | — | **WITHHELD / omitted from launch.** Viator returns an HTTP 403 bot challenge to both curl and a real browser, so the listing could not be re-confirmed. Its meeting point is left unstated rather than assumed. |
+| Biankina | — | **WITHHELD.** No verified tracking URL and no merchant-network approval. The merchant code `resortedit` is held as an internal note only; no affiliate or discount URL is constructed from it and nothing renders publicly. |
 
-Nothing is described as sponsored or commissionable unless a real affiliate URL
-exists in the registry.
+Nothing is described as sponsored or commissionable unless a real, verified
+affiliate URL exists in the registry. Withheld entries are omitted from the
+public page entirely, not shown with a dead button.
 
 ## Click measurement — how to read results
 
@@ -55,7 +61,9 @@ Clicks are *interest signals only* — they are not sales or commissions.
 ## Checks actually run
 
 - `bunx tsgo --noEmit` — pass.
-- `bun test tests/` — **130 pass, 0 fail**, 392 assertions.
+- `bun test tests/` — **135 pass, 0 fail**, 402 assertions (now including guards
+  against a Portofino-departure claim, the two Rapallo meeting points, the ferry
+  pier start, withheld-supplier status, and any fabricated affiliate URL).
 - `bun run audit:slots` — pass; 0 non-product URLs, 0 forbidden slots, commerce
   CTA gate correct, retired moment route confirmed redirect-only.
 - `bun run build` — production build succeeded (only a Wrangler config notice).
@@ -66,19 +74,24 @@ Clicks are *interest signals only* — they are not sales or commissions.
 - Browser (desktop 1280 + mobile 390): no console errors, no horizontal
   overflow at 390px (`scrollWidth = 390`), mobile menu toggles
   `aria-expanded` correctly and closes on Escape, 16 outbound links all resolve
-  to registry URLs, no currency symbols rendered.
+  to registry URLs, no currency symbols rendered. Confirmed on the rendered
+  page: no "Departs Portofino" text, Rapallo and Santa Margherita Ligure
+  meeting points visible, and no Eight Hotel, San Fruttuoso or Biankina entry.
 - Outbound click recording verified end to end in the browser; the single test
   row was deleted afterwards, so the table is empty.
 - Hero diff verified: no hero lines changed.
 
 ## Remaining prerequisites / blockers
 
-1. **Biankina commercial terms** — commission rate and any reader discount are
-   unconfirmed. Get them in writing before any promotional wording.
-2. **Hotel and experience affiliate programs** — all currently render as plain
+1. **Eight Hotel Portofino** — confirm the working page in a normal browser
+   (Cloudflare blocks automated checks), then un-withhold the registry entry.
+2. **Private Coastal Hike to San Fruttuoso** — confirm the Viator listing is
+   still live, then un-withhold.
+3. **Biankina** — no verified tracking URL and no network approval. Obtain the
+   exact affiliate link plus written commission and discount terms before the
+   shopping layer renders anything.
+4. **Hotel and experience affiliate programs** — all live links render as plain
    links (`active-affiliate-pending`). No tracking IDs exist; none invented.
-3. **Instagram** — `INSTAGRAM_LAUNCHED = false`. Flip it and add real post URLs
+5. **Instagram** — `INSTAGRAM_LAUNCHED = false`. Flip it and add real post URLs
    in `src/data/instagramPosts.ts` once @resort.edit is live.
-4. **Bot-filtered hosts** — Eight Portofino and Viator answer 403 to automated
-   checks; re-confirm in a browser periodically rather than by script.
-5. **Publishing** — deliberately withheld pending founder review.
+6. **Publishing** — deliberately withheld pending founder review.

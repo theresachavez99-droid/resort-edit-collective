@@ -107,11 +107,19 @@ const SEEDS: readonly ExperienceSeed[] = [
     destinationSlug: "portofino",
     destinationName: "Portofino",
     name: "Private Boat Tour of the Portofino Riviera",
-    operator: "Local boat operator, sold via Viator",
+    operator: "Orange Wave, sold via Viator",
     kind: "Private boat",
     editorial:
       "The promontory from the water — coves, cliffs and the pastel harbour seen the way it was meant to be seen.",
-    facts: ["About 4 hours", "Private tour", "Departs Portofino", "Offered in English"],
+    // Verified 16 Sep 2026 on the listing: supplier Orange Wave, meeting point
+    // Rotonda Marconi, Rapallo — NOT a Portofino harbour departure.
+    facts: [
+      "About 4 hours",
+      "Private tour",
+      "Meets in Rapallo; confirm meeting details when booking",
+      "Offered in English",
+    ],
+
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Private-Boat-Tour-of-the-Portofino-Riviera/d4232-467798P8",
     factsCheckedOn: CHECKED,
@@ -128,16 +136,19 @@ const SEEDS: readonly ExperienceSeed[] = [
     destinationSlug: "portofino",
     destinationName: "Portofino",
     name: "Sunset Boat Tour with Aperitif",
-    operator: "Local boat operator, sold via Viator",
+    operator: "Orange Wave, sold via Viator",
     kind: "Sunset cruise",
     editorial:
       "Golden hour on the Ligurian water, an aperitivo in hand, the hills turning apricot behind you.",
+    // Verified 16 Sep 2026: supplier Orange Wave, meeting point Rotonda
+    // Marconi, Rapallo — no Portofino harbour pickup is offered.
     facts: [
       "About 1 hour 30 minutes",
       "Small group",
-      "Departs Portofino",
+      "Meets in Rapallo; confirm meeting details when booking",
       "Offered in English and one more language",
     ],
+
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Sunset-Boat-Tour-for-Small-Groups/d4232-467798P3",
     factsCheckedOn: CHECKED,
@@ -154,11 +165,19 @@ const SEEDS: readonly ExperienceSeed[] = [
     destinationSlug: "portofino",
     destinationName: "Portofino",
     name: "Boat and Walking Tour with Pesto Cooking & Lunch",
-    operator: "Local guide, sold via Viator",
+    operator: "Experience My Portofino, sold via Viator",
     kind: "Pesto class & Ligurian lunch",
     editorial:
       "Mortar, pestle and basil — Liguria's own recipe, learned between a boat ride and a walk through the village.",
-    facts: ["About 3 hours", "Departs Portofino", "Offered in English"],
+    // Verified 16 Sep 2026: supplier Experience My Portofino, starts at Piazza
+    // Martiri della Libertà 1 by the Santa Margherita Ligure ferry pier.
+    facts: [
+      "About 3 hours",
+      "Starts at the Santa Margherita Ligure ferry pier; confirm meeting details when booking",
+      "Round-trip ferry tickets included",
+      "Offered in English",
+    ],
+
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Best-of-Portofino-Boat-and-Walking-Tour-Pesto-Cooking-and-Lunch/d4232-68388P1",
     factsCheckedOn: CHECKED,
@@ -179,13 +198,16 @@ const SEEDS: readonly ExperienceSeed[] = [
     kind: "Guided coastal walk",
     editorial:
       "The old footpath over the headland to the abbey at San Fruttuoso — reachable on foot or by water, never by car.",
+    // Facts held for review only — this listing could not be re-confirmed
+    // (bot challenge), so the entry is withheld in the registry. The meeting
+    // point is deliberately left unstated rather than assumed.
     facts: [
       "About 4 to 6 hours",
       "Private guide",
-      "Pickup offered",
-      "Departs Portofino",
+      "Confirm the meeting point when booking",
       "Offered in English and five more languages",
     ],
+
     sourceUrl:
       "https://www.viator.com/tours/Portofino/Portofino-to-S-Fruttuoso-Scenic-Coastal-Hike-with-Private-Guide/d4232-428295P2",
     factsCheckedOn: CHECKED,
@@ -235,15 +257,21 @@ export const DESTINATION_EXPERIENCES: readonly DestinationExperience[] = SEEDS.f
 });
 
 export function experiencesForDestination(destinationSlug: string): DestinationExperience[] {
-  return DESTINATION_EXPERIENCES.filter((e) => e.destinationSlug === destinationSlug);
+  return DESTINATION_EXPERIENCES.filter(
+    // An experience whose registry link is withheld or invalid is omitted
+    // entirely — we never show a card with no working way to book it.
+    (e) => e.destinationSlug === destinationSlug && outboundHref(e.key) !== null,
+  );
 }
+
 
 export function featuredExperiences(destinationSlug?: string, limit = 3): DestinationExperience[] {
   const pool = destinationSlug
     ? experiencesForDestination(destinationSlug)
-    : [...DESTINATION_EXPERIENCES];
+    : DESTINATION_EXPERIENCES.filter((e) => outboundHref(e.key) !== null);
   return pool.filter((e) => e.featured).slice(0, limit);
 }
+
 
 export function experienceForMoment(momentSlug: string): DestinationExperience | undefined {
   return DESTINATION_EXPERIENCES.find((e) => e.momentSlug === momentSlug);
