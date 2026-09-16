@@ -155,7 +155,7 @@ function PrivacyPolicyPage() {
         <ul className="list-disc pl-6 space-y-2">
           <li>Tell you what we hold about you, or send you a copy of it</li>
           <li>Correct it</li>
-          <li>Delete it, or unsubscribe you from the newsletter</li>
+          <li>Delete it, including any email address held from the earlier signup form</li>
           <li>Stop processing it</li>
         </ul>
         <p>
