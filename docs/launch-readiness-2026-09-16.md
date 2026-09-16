@@ -143,4 +143,10 @@ Clicks are *interest signals only* — they are not sales or commissions.
    links (`active-affiliate-pending`). No tracking IDs exist; none invented.
 5. **Instagram** — `INSTAGRAM_LAUNCHED = false`. Flip it and add real post URLs
    in `src/data/instagramPosts.ts` once @resort.edit is live.
-6. **Publishing** — deliberately withheld pending founder review.
+6. **Verified contact address (unpublished draft blocker)** — the About and
+   Contact pages no longer show `hello@resortedit.com`, because the owner has not
+   confirmed that mailbox exists. Contact currently shows the plain draft line
+   "Contact details are being updated." and the legal pages route all requests to
+   `/contact`. Replace that line with the owner's confirmed address before
+   publishing; until then this draft must not go live.
+7. **Publishing** — deliberately withheld pending founder review.

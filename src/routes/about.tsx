@@ -10,13 +10,15 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Resort Edit is a luxury editorial publication for travel and fashion — curated for the sophisticated, worldly woman.",
+          "Travel and style, considered together. Discover the editorial perspective behind Resort Edit.",
       },
       { property: "og:title", content: "About | Resort Edit | Dressed for the destination" },
       {
         property: "og:description",
-        content: "A luxury digital publication for travel and fashion.",
+        content:
+          "Travel and style, considered together. Discover the editorial perspective behind Resort Edit.",
       },
+
       { property: "og:url", content: absoluteUrl("/about") },
       { property: "og:image", content: absoluteUrl(heroAsset.url) },
       { name: "twitter:image", content: absoluteUrl(heroAsset.url) },
@@ -59,54 +61,48 @@ function AboutPage() {
         id="our-story"
         className="mx-auto max-w-2xl px-6 py-16 md:py-24 scroll-mt-24 text-center"
       >
-        <span className="eyebrow text-gold">Who We Are</span>
+        <span className="eyebrow text-gold">The Publication</span>
         <p className="mt-8 font-serif italic text-[1.75rem] md:text-[2.25rem] leading-[1.25] text-ink">
-          Resort Edit is for women who believe the destination should inspire the wardrobe.
+          Travel and style, considered together.
         </p>
         <div className="my-10 h-px w-16 bg-gold mx-auto" />
 
         <div className="mx-auto max-w-xl text-left">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
-            <p>Every Resort Edit begins with a destination — not a suitcase.</p>
             <p>
-              We edit one destination at a time: where to stay, what to book, where to eat, and what
-              to pack for each of those days.
+              Resort Edit is a travel and style publication for women who dress for the destination.
             </p>
             <p>
-              From first espresso to sunset aperitivo, every recommendation is chosen to help you
-              travel beautifully and dress with intention.
+              Each guide brings together where to stay, what to do, where to eat, and what to
+              wear—from mornings by the water to dinner after dark.
             </p>
-            <p className="border-l-2 border-gold/25 pl-5">
-              Our guides are researched from operators' and hotels' own published information and
-              written by hand. Where we have not stayed or dined somewhere ourselves, we say what a
-              place is rather than claiming a personal visit.
+            <p>
+              Hotels, restaurants, experiences, and wardrobe ideas are selected for their character
+              and connection to the destination.
             </p>
-            <p>Because the best trips deserve an unforgettable wardrobe.</p>
-
+            <p>
+              <Link to="/portofino" className="text-gold hover:underline">
+                Explore the Portofino Edit →
+              </Link>
+            </p>
           </div>
         </div>
       </section>
 
       <section
-        id="contact"
+        id="editorial-approach"
         className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
       >
-        <span className="eyebrow text-gold">Contact</span>
+        <span className="eyebrow text-gold">Editorial Approach</span>
         <div className="mx-auto max-w-xl text-left mt-8">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>
-              A question about a destination, a piece we featured, or somewhere you would love to
-              see curated next — we read every note.
+              Recommendations are researched using information published by hotels, restaurants,
+              brands, and local operators. Firsthand experience is identified where applicable.
             </p>
             <p>
-              Write to{" "}
-              <a
-                href="mailto:hello@resortedit.com"
-                className="border-b border-gold/40 pb-0.5 hover:border-gold hover:text-gold transition-colors"
-              >
-                hello@resortedit.com
-              </a>
-              .
+              Selected imagery is created with AI to express the mood of a destination.
+              Illustrations of venues are labelled accordingly.
             </p>
           </div>
         </div>
@@ -116,21 +112,19 @@ function AboutPage() {
         id="collaborate"
         className="mx-auto max-w-2xl px-6 pb-16 md:pb-24 scroll-mt-24 text-center"
       >
-        <span className="eyebrow text-gold">Collaborate</span>
+        <span id="contact" className="sr-only scroll-mt-24" aria-hidden="true" />
+        <span className="eyebrow text-gold">Brand Partnerships</span>
         <div className="mx-auto max-w-xl text-left mt-8">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>
-              Resort Edit partners with brands, hotels, tourism boards, and affiliate programs whose
-              sense of place matches our own.
+              Resort Edit considers partnerships with hotels, travel brands, and fashion labels that
+              share its editorial perspective.
             </p>
             <p>
-              For partnerships and press, reach us at{" "}
-              <a
-                href="mailto:hello@resortedit.com"
-                className="border-b border-gold/40 pb-0.5 hover:border-gold hover:text-gold transition-colors"
-              >
-                hello@resortedit.com
-              </a>
+              For commercial enquiries and press, visit{" "}
+              <Link to="/contact" className="text-gold hover:underline">
+                Contact
+              </Link>
               .
             </p>
           </div>
@@ -145,24 +139,13 @@ function AboutPage() {
         <div className="mx-auto max-w-xl text-left mt-8">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
             <p>
-              Resort Edit is reader-supported. Some links may earn us a commission in future — at no
-              additional cost to you. Today, every hotel, dining and experience link on the site is
-              an ordinary link and earns us nothing.
+              Some shopping links are affiliate links. If you make a purchase through one, Resort
+              Edit may earn a commission at no additional cost to you.
             </p>
             <p>
-              Commissions never decide what we feature. Recommendations are chosen editorially
-              first; an affiliate relationship could only affect which page we link to.
+              Recommendations are selected on editorial merit. Affiliate relationships are
+              disclosed.
             </p>
-            <p>
-              Some imagery on the site is art-directed by us and created with AI image generation.
-              Illustrated venue images are labelled as editorial illustrations, so they are never
-              mistaken for photographs of a hotel, restaurant or operator.
-            </p>
-            <p>
-              Hotels, beach clubs and experiences we mention are not sponsors and have not paid for
-              placement — those links go straight to the operator or booking platform.
-            </p>
-
             <p>
               <Link to="/affiliate-disclosure" className="text-gold hover:underline">
                 Read the full Affiliate Disclosure →
@@ -174,3 +157,4 @@ function AboutPage() {
     </div>
   );
 }
+

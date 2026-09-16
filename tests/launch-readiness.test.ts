@@ -144,13 +144,15 @@ describe("footer and About conversion paths", () => {
   });
 
 
-  test("About page publishes every anchored section with mailto paths", () => {
+  test("About page publishes every anchored section and no unverified mailbox", () => {
     const src = read("src/routes/about.tsx");
     for (const id of ["our-story", "contact", "collaborate", "affiliate-disclosure"]) {
       expect(src).toContain(`id="${id}"`);
     }
-    expect(src).toContain("mailto:hello@resortedit.com");
+    expect(src).not.toContain("mailto:");
+    expect(src).toContain('to="/contact"');
   });
+
 });
 
 // ── 4. Newsletter hardening ─────────────────────────────────────
