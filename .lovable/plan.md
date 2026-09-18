@@ -1,36 +1,26 @@
-## Assessment
+# Portofino Guide Editorial Tightening
 
-**Current hero bag listed on `/portofino/shopping`:**
-- Dragon Diffusion — Santa Maria Woven Leather Bag — Natural
-- $551
-- URL: `https://dragondiffusion.com/products/santa-maria-natural-woven-leather-bag-handmade`
+## Scope
+Edit only the public `/portofino` guide and its Portofino-specific display data. Preserve the hero, imagery, navigation, typography, colors, card styling, responsive behavior, footer, legal pages, homepage video, tracking infrastructure, and every other route.
 
-**Bag visibly carried in the hero image:**
-- A tall, cylindrical woven **raffia/straw tote** with two looped top handles
-- Natural tan color
-- Basket-like, open-top silhouette
+## Changes
+- Keep the hero and four existing hotel cards; shorten the repeated STAY introduction.
+- Limit DO to four existing recommendations: La Portofinese Eco-Farm, Private Boat Tour, Pesto Cooking & Lunch, and Bagni Fiore.
+- Tighten experience descriptions and facts, especially the Eco-Farm, while retaining its labelled illustration and one seasonal/reservation caveat.
+- Remove repeated per-card operator and verification boilerplate; replace it with one shared note near the section.
+- Limit EAT to DaV Mare, La Terrazza, Ristorante Puny, and Da ö Batti.
+- Replace the four packing cards and Biankina promotion with one compact, unlinked packing block.
+- Merge Planning Notes and Getting There into a concise “Before You Go” section containing only the requested logistics.
+- Remove the standalone Instagram sentence and follow button.
+- Consolidate page disclaimers into one bottom note covering availability, labelled editorial/AI illustrations, and current non-commission status.
 
-**Match analysis:**
+## Technical details
+- Primary page: `src/routes/portofino.tsx`.
+- Portofino-specific data may be tightened in `src/data/destinationExperiences.ts`, `src/data/portofinoDining.ts`, and `src/data/portofinoPackingGuide.ts` only where needed to render this guide accurately.
+- Keep outbound tracking untouched; removing the Biankina presentation does not alter its registry entry.
+- Update only existing focused assertions if they encode the removed guide content; add no unrelated tests.
 
-| Dimension | Listed bag | Bag in photo | Match |
-|---|---|---|---|
-| **Silhouette** | Flatter, rectangular/saddle woven leather body | Tall cylindrical basket tote | No |
-| **Weave/material** | Woven leather | Woven raffia/straw | No |
-| **Handle shape** | Rolled leather straps | Two looped top handles | No |
-| **Scale** | Medium crossbody/shoulder bag | Large statement tote | No |
-| **Color** | Natural tan | Natural tan | Yes |
-
-**Verdict:** The color matches, but the material, silhouette, handles, and scale do not. The listed Dragon Diffusion Santa Maria is a woven leather bag, not the raffia basket tote in the photo.
-
-**Recommended direction:** Replace the Dragon Diffusion Santa Maria with a **large woven raffia/straw tote with loop handles** — preferably an artisanal basket-style tote that mirrors the open, airy, market-shopping silhouette in the image.
-
-### Plan
-1. Source 1–3 in-stock large raffia/straw basket tote options from approved retailers (e.g., Loewe Anagram Basket / Celine Panier / similar artisanal raffia tote).
-2. Verify each candidate has a live, working product detail page URL.
-3. Update the Shopping hero `Bag` entry in `src/data/momentShopCurated.ts` to the chosen raffia tote, preserving the existing text-first de-hotlinked card format.
-4. Run the shop-link / slot audit to confirm the new URL passes the publish gate.
-5. Verify the rendered `/portofino/shopping` page displays the new bag with no external retailer images and no old Dragon Diffusion references in the DOM.
-
-### Technical details
-- File to edit: `src/data/momentShopCurated.ts` (Shopping block, `slotLabel: "Bag"` entry).
-- Verification: `bun run audit:slots`, `bun run build`, and Playwright DOM check on `/portofino/shopping`.
+## Validation
+- Run the focused Portofino/launch-readiness tests and the production build.
+- Inspect `/portofino` at desktop and mobile widths for the exact 4/4 recommendation counts, working anchors, preserved labels/images, no Biankina or duplicate cards, and no awkward gaps or horizontal overflow.
+- Confirm the homepage hero video remains byte-for-byte untouched and do not publish.
