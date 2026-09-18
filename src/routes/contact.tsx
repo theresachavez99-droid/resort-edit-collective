@@ -64,7 +64,10 @@ function ContactPage() {
       </p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/70">
-        Contact details are being updated.
+        For editorial, press and partnership enquiries:{" "}
+        <a href="mailto:helloresortedit@gmail.com" className="text-gold hover:underline">
+          helloresortedit@gmail.com
+        </a>
       </p>
 
       <section className="mt-14">
