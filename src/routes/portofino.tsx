@@ -1,5 +1,4 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { Instagram } from "lucide-react";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
 import hotelSplendido from "@/assets/hotel-splendido.jpg";
 import hotelSplendidoMare from "@/assets/hotel-splendido-mare.jpg";
@@ -8,10 +7,8 @@ import hotelPiccolo from "@/assets/hotel-piccolo.jpg";
 import { absoluteUrl } from "@/lib/site";
 import { experiencesForDestination, type DestinationExperience } from "@/data/destinationExperiences";
 import { PORTOFINO_DINING } from "@/data/portofinoDining";
-import { PORTOFINO_PACKING_GUIDE } from "@/data/portofinoPackingGuide";
 import { outboundHref } from "@/data/outboundLinks";
 import { OutboundCta } from "@/components/OutboundCta";
-import { INSTAGRAM_PROFILE_URL } from "@/data/instagramPosts";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
@@ -82,32 +79,51 @@ const HOTELS = [
  * Practical planning advice only. No insider or scarcity claims, no
  * assertions about what locals do, no guaranteed transfer times.
  */
-const PLANNING_NOTES = [
-  "Book beach clubs, boats and dinner tables as far ahead as you can — the village is small and high season is busy.",
-  "Paraggi is the beach; Portofino is the harbour, the shops and dinner. Most days work best split between the two.",
-  "Driving into Portofino is restricted and parking is limited. Arriving by boat or taxi from Santa Margherita Ligure is usually simpler.",
-  "Flat, gripped shoes are worth packing for the paving and the footpaths, especially after dinner.",
-  "Boats, the eco-farm and cooking sessions are often seasonal — confirm dates and weather directly with the operator before you commit.",
-  "Staying in Santa Margherita Ligure gives you more restaurants and easier logistics, with Portofino a short transfer away.",
-];
+const EXPERIENCE_KEYS = [
+  "portofino-la-portofinese-eco-farm",
+  "portofino-private-riviera-boat",
+  "portofino-pesto-boat-walk-lunch",
+  "portofino-bagni-fiore-paraggi",
+] as const;
 
-const GETTING_THERE = [
-  {
-    label: "Private Driver",
-    note: "Black-car transfer from Genoa, Milan or Nice. Journey times vary with traffic and the coast road, so ask your driver to confirm.",
+const DINING_KEYS = ["dav-mare", "la-terrazza", "ristorante-puny", "da-o-batti"] as const;
+
+const EXPERIENCE_COPY: Record<string, { editorial: string; facts: readonly string[] }> = {
+  "portofino-la-portofinese-eco-farm": {
+    editorial:
+      "A working farm above Cala degli Inglesi, where Portofino's cultivated landscape meets the sea.",
+    facts: [
+      "Bees, vineyards, olive trees and a butterfly garden",
+      "Arrange a wine tasting, picnic, lunch or early dinner",
+      "Choose corzetti and pesto, or wood-fired pizza and focaccia; spring and summer opening, by reservation",
+    ],
   },
-  {
-    label: "By Boat",
-    note: "Water taxi or ferry from Santa Margherita Ligure or Rapallo — the entrance the village was designed for. Services are weather-dependent.",
+  "portofino-private-riviera-boat": {
+    editorial: "Coves, cliffs and the pastel harbour, seen from the water.",
+    facts: ["About four hours", "Private tour", "Meets in Rapallo"],
   },
-  {
-    label: "Santa Margherita Base",
-    note: "Stay along the coast for easier parking and more restaurants, then come into Portofino for lunch, aperitivo or dinner.",
+  "portofino-pesto-boat-walk-lunch": {
+    editorial: "A boat ride, a village walk and Liguria's defining sauce made by hand.",
+    facts: [
+      "About three hours",
+      "Starts at the Santa Margherita Ligure ferry pier",
+      "Round-trip ferry tickets included",
+    ],
   },
-  {
-    label: "Train + Transfer",
-    note: "Rail to Santa Margherita Ligure, then taxi or boat into the village. Check the final connection before you book a late arrival.",
+  "portofino-bagni-fiore-paraggi": {
+    editorial: "Emerald water, striped umbrellas and lunch beside the bay at Paraggi.",
+    facts: [
+      "Sunbeds booked on the club's own calendar",
+      "Restaurant reservations handled separately",
+      "Opening dates and hours are seasonal",
+    ],
   },
+};
+
+const BEFORE_YOU_GO = [
+  "Book hotels, boats, beach clubs and tables early; many experiences are seasonal.",
+  "Portofino is the harbour, shops and dinner; Paraggi is the beach.",
+  "Arrive by boat or taxi, or take the train to Santa Margherita Ligure and transfer from there.",
 ];
 
 function SectionHeading({
@@ -159,6 +175,7 @@ function ExperienceFacts({ facts }: { facts: readonly string[] }) {
 }
 
 function ProminentExperience({ e }: { e: DestinationExperience }) {
+  const copy = EXPERIENCE_COPY[e.key] ?? e;
   return (
     <article className="bg-ivory border border-border/60 grid grid-cols-1 md:grid-cols-[42%_1fr]">
       {e.image && (
@@ -180,13 +197,9 @@ function ProminentExperience({ e }: { e: DestinationExperience }) {
           {e.name}
         </h3>
         <p className="mt-3 font-serif italic text-ink/70 text-[0.95rem] leading-relaxed">
-          {e.editorial}
+          {copy.editorial}
         </p>
-        <ExperienceFacts facts={e.facts} />
-        <p className="mt-3 font-serif text-[0.76rem] text-ink/45 leading-snug">
-          Operated by {e.operator}. Details read from the operator's own page on{" "}
-          {e.factsCheckedOn}.
-        </p>
+        <ExperienceFacts facts={copy.facts} />
         <div className="mt-auto pt-5">
           <OutboundCta
             linkKey={e.key}
@@ -200,6 +213,7 @@ function ProminentExperience({ e }: { e: DestinationExperience }) {
 }
 
 function ExperienceCard({ e }: { e: DestinationExperience }) {
+  const copy = EXPERIENCE_COPY[e.key] ?? e;
   return (
     <article className="bg-ivory border border-border/60 flex flex-col">
       {e.image && (
@@ -221,12 +235,9 @@ function ExperienceCard({ e }: { e: DestinationExperience }) {
           {e.name}
         </h3>
         <p className="mt-3 font-serif italic text-ink/70 text-[0.92rem] leading-relaxed">
-          {e.editorial}
+          {copy.editorial}
         </p>
-        <ExperienceFacts facts={e.facts} />
-        <p className="mt-3 font-serif text-[0.74rem] text-ink/45 leading-snug flex-1">
-          Operated by {e.operator}.
-        </p>
+        <ExperienceFacts facts={copy.facts} />
         <div className="mt-4">
           <OutboundCta
             linkKey={e.key}
@@ -244,10 +255,15 @@ function PortofinoPage() {
   const normalized = pathname.replace(/\/+$/, "");
   if (normalized !== "/portofino") return <Outlet />;
 
-  const experiences = experiencesForDestination("portofino");
+  const experiences = experiencesForDestination("portofino").filter((e) =>
+    EXPERIENCE_KEYS.includes(e.key as (typeof EXPERIENCE_KEYS)[number]),
+  );
   const prominent = experiences.filter((e) => e.prominent);
   const rest = experiences.filter((e) => !e.prominent);
   const hotels = HOTELS.filter((h) => outboundHref(h.linkKey) !== null);
+  const dining = PORTOFINO_DINING.filter((d) =>
+    DINING_KEYS.includes(d.key as (typeof DINING_KEYS)[number]),
+  );
 
   return (
     <div className="bg-ivory pb-10 md:pb-12">
@@ -280,7 +296,7 @@ function PortofinoPage() {
             { hash: "do", label: "Do" },
             { hash: "eat", label: "Eat" },
             { hash: "wear", label: "Wear" },
-            { hash: "planning", label: "Planning" },
+            { hash: "planning", label: "Before You Go" },
           ].map((s) => (
             <li key={s.hash}>
               <a
@@ -300,7 +316,6 @@ function PortofinoPage() {
           <SectionHeading
             eyebrow="STAY"
             title="Where We'd Stay"
-            intro="Four addresses on the promontory — clifftop, harbourfront, boutique, or a private cove."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             {hotels.map((h) => (
@@ -333,9 +348,6 @@ function PortofinoPage() {
               </article>
             ))}
           </div>
-          <p className="mt-5 font-serif text-[0.8rem] text-ink/50 text-center max-w-2xl mx-auto leading-relaxed">
-            Links open each hotel's own website, where rooms, dates and rates are set by the hotel.
-          </p>
         </div>
       </section>
 
@@ -345,7 +357,7 @@ function PortofinoPage() {
           <SectionHeading
             eyebrow="DO"
             title="What We'd Book"
-            intro="A vineyard farm inside the park, boats along the promontory, pesto made by hand, and the old footpath to the abbey."
+            intro="Four ways to experience the promontory, from vineyard terraces to the water."
           />
           {prominent.map((e) => (
             <div key={e.key} className="mb-5 md:mb-7">
@@ -357,12 +369,6 @@ function PortofinoPage() {
               <ExperienceCard key={e.key} e={e} />
             ))}
           </div>
-          <p className="mt-6 font-serif text-[0.8rem] text-ink/50 text-center max-w-3xl mx-auto leading-relaxed">
-            Details are taken from each operator's or booking platform's own listing. Availability,
-            seasons and terms are set by the operator — some experiences are arranged by enquiry
-            rather than instant booking. Venue images on this page are editorial illustrations, not
-            photographs of the venues.
-          </p>
         </div>
       </section>
 
@@ -375,7 +381,7 @@ function PortofinoPage() {
             intro="A short list — the tables worth reserving early, and the easier options along the coast."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-            {PORTOFINO_DINING.map((d) => {
+            {dining.map((d) => {
               const href = d.linkKey ? outboundHref(d.linkKey) : null;
               return (
                 <article
@@ -415,109 +421,40 @@ function PortofinoPage() {
             title="What to Pack for Portofino"
             intro="Practical packing advice for the days in this guide — what works on the paving, on the water and at dinner."
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 max-w-4xl mx-auto">
-            {PORTOFINO_PACKING_GUIDE.map((p) => (
-              <article key={p.key} className="bg-ivory border border-border/60 p-5 md:p-6">
-                <h3 className="font-display text-xl tracking-wide text-ink leading-snug">
-                  {p.label}
-                </h3>
-                <div className="mt-3 h-px w-10 bg-gold/60" />
-                <p className="mt-3 font-serif text-ink/70 text-[0.92rem] leading-relaxed">
-                  {p.advice}
-                </p>
-              </article>
-            ))}
-          </div>
-          <p className="mt-6 text-center font-serif text-[0.8rem] text-ink/50 max-w-2xl mx-auto leading-relaxed">
-            Any purchase happens on the brand's own site.
-          </p>
-
-          {/* One brand storefront link. Not the exact shoe in any image, not a
-              complete outfit, no stock claim, no price, no coupon. */}
-          <div className="mt-8 pt-8 border-t border-border/60 max-w-2xl mx-auto text-center">
-            <p className="font-serif text-ink/70 text-[0.92rem] leading-relaxed">
-              For the flat, walkable shoes the paving asks for, Biankina is a brand we like the look
-              of. Browse their footwear directly — you buy from them, not from us.
+          <article className="bg-ivory border border-border/60 p-5 md:p-7 max-w-3xl mx-auto">
+            <p className="font-serif text-ink/70 text-[0.95rem] leading-relaxed">
+              Pack walkable shoes with grip for stone paving, light daywear with a hat and swimwear
+              for the sun, and a knit or wrap for boats and cooler evenings. One easy dress or
+              elegant separates, with shoes you can still walk in, will cover dinner.
             </p>
-            <div className="mt-4 flex justify-center">
-              <OutboundCta linkKey="shop-biankina" placement="portofino-wear" />
-            </div>
-            <p className="mt-3 font-serif text-[0.76rem] text-ink/50 leading-relaxed">
-              Affiliate link — we may earn a commission if you purchase.
-            </p>
-          </div>
-
+          </article>
         </div>
       </section>
 
-      {/* PLANNING NOTES + GETTING THERE */}
+      {/* BEFORE YOU GO */}
       <section id="planning" className="scroll-mt-24 mx-auto max-w-[1280px] px-4 sm:px-6 pt-12 md:pt-16">
-        <div className="mb-12 md:mb-16">
-          <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
-            <h2 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">
-              PLANNING NOTES
-            </h2>
-            <span className="eyebrow text-[0.58rem] tracking-[0.3em] text-ink/50 hidden sm:inline">
-              Practical, not promises
-            </span>
-          </div>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3">
-            {PLANNING_NOTES.map((tip, i) => (
-              <li key={tip} className="flex gap-4">
-                <span className="font-display text-gold text-sm pt-0.5 tracking-wider">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <p className="font-serif text-ink/75 text-[0.95rem] leading-relaxed">{tip}</p>
-              </li>
-            ))}
-          </ul>
+        <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
+          <h2 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">
+            BEFORE YOU GO
+          </h2>
         </div>
-
-        <div>
-          <div className="flex items-baseline justify-between mb-4 border-b border-ink/15 pb-2.5">
-            <h2 className="font-display text-xl md:text-2xl tracking-[0.18em] text-ink">
-              GETTING THERE
-            </h2>
-            <span className="eyebrow text-[0.58rem] tracking-[0.3em] text-ink/50 hidden sm:inline">
-              Confirm times with your operator
-            </span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {GETTING_THERE.map((g) => (
-              <article key={g.label} className="bg-card border border-border/60 p-4">
-                <span className="eyebrow text-[0.58rem] tracking-[0.32em] text-gold">
-                  {g.label.toUpperCase()}
-                </span>
-                <p className="font-serif text-ink/70 text-[0.92rem] mt-2 leading-relaxed">
-                  {g.note}
-                </p>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-14 text-center">
-          <p className="font-serif italic text-ink/60 text-[0.95rem] max-w-xl mx-auto leading-relaxed">
-            Resort Edit publishes destination scenes on Instagram as well. The guide above is
-            complete on its own.
-          </p>
-          <a
-            href={INSTAGRAM_PROFILE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-flex items-center gap-2.5 eyebrow text-[0.68rem] tracking-[0.3em] text-ivory bg-ink px-7 py-3.5 hover:bg-gold hover:text-ink transition-colors"
-          >
-            <Instagram className="w-4 h-4" strokeWidth={1.6} />
-            FOLLOW @RESORT.EDIT
-          </a>
-        </div>
+        <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          {BEFORE_YOU_GO.map((tip, i) => (
+            <li key={tip} className="bg-card border border-border/60 p-4 flex gap-4">
+              <span className="font-display text-gold text-sm pt-0.5 tracking-wider">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p className="font-serif text-ink/75 text-[0.95rem] leading-relaxed">{tip}</p>
+            </li>
+          ))}
+        </ul>
 
         <div className="mt-12">
           <div className="mx-auto h-px w-16 bg-ink/15" />
-          <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] leading-relaxed text-ink/40">
-            Availability is set by each hotel and operator and may change. The hotel, dining and
-            experience links on this page are ordinary links and currently earn Resort Edit no
-            commission.{" "}
+          <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] leading-relaxed text-ink/40 max-w-4xl mx-auto">
+            Availability, seasons and terms are controlled by each hotel or operator. Venue
+            illustrations are editorial and AI-generated where labelled. Hotel, dining and
+            experience links on this page currently earn Resort Edit no commission.{" "}
             <Link to="/affiliate-disclosure" className="underline hover:text-ink/70">
               Affiliate Disclosure
             </Link>
