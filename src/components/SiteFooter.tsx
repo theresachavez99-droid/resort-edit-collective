@@ -91,6 +91,11 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link to="/affiliate-disclosure" hash="about-our-imagery" className="hover:text-gold">
+                  About our imagery
+                </Link>
+              </li>
+              <li>
                 <Link to="/privacy-policy" className="hover:text-gold">
                   Privacy Policy
                 </Link>

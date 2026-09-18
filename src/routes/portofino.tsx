@@ -9,6 +9,11 @@ import { experiencesForDestination, type DestinationExperience } from "@/data/de
 import { PORTOFINO_DINING } from "@/data/portofinoDining";
 import { outboundHref } from "@/data/outboundLinks";
 import { OutboundCta } from "@/components/OutboundCta";
+import {
+  EditorialImageBadge,
+  EditorialImageryNote,
+  NamedPlaceDisclosure,
+} from "@/components/EditorialImageryDisclosure";
 
 export const Route = createFileRoute("/portofino")({
   head: () => ({
@@ -48,29 +53,29 @@ const HOTELS = [
   {
     linkKey: "hotel-splendido",
     name: "Splendido, A Belmond Hotel",
-    category: "ULTRA LUXURY",
-    note: "A cliffside grande dame above the harbour — bougainvillea terraces, a pastel-pink facade, and one of the most photographed views on the Riviera.",
+    category: "THE ICON",
+    note: "Choose it for the full Portofino theatre: hillside views, resort days and dinner above the harbour.",
     image: hotelSplendido,
   },
   {
     linkKey: "hotel-splendido-mare",
     name: "Splendido Mare, A Belmond Hotel",
-    category: "HARBOURFRONT",
-    note: "On the piazzetta itself. Wake to the boats, dine on the waterfront, walk everywhere that matters.",
+    category: "THE HARBOUR STAY",
+    note: "Choose it to wake on the piazzetta and walk straight into the village—harbour immediacy over resort seclusion.",
     image: hotelSplendidoMare,
   },
   {
     linkKey: "hotel-eight-portofino",
     name: "Eight Hotel Portofino",
-    category: "BOUTIQUE",
-    note: "A small, quietly chic hotel a short walk from the piazzetta — the intimate option in the village.",
+    category: "THE BOUTIQUE ALTERNATIVE",
+    note: "A smaller, quieter address a short walk from the piazzetta, for village access without the grand-hotel scene.",
     image: hotelEight,
   },
   {
     linkKey: "hotel-piccolo-portofino",
     name: "Hotel Piccolo Portofino",
-    category: "PRIVATE COVE",
-    note: "A seaside hideaway set above its own cove, with terraces facing the water.",
+    category: "THE BEACH-FIRST BASE",
+    note: "A relaxed seaside stay above a private cove, for travelers who want the water before the piazzetta.",
     image: hotelPiccolo,
   },
 ] as const;
@@ -86,7 +91,7 @@ const EXPERIENCE_KEYS = [
   "portofino-bagni-fiore-paraggi",
 ] as const;
 
-const DINING_KEYS = ["dav-mare", "la-terrazza", "ristorante-puny", "da-o-batti"] as const;
+const DINING_KEYS = ["dav-mare", "ristorante-puny", "la-terrazza", "da-o-batti"] as const;
 
 const EXPERIENCE_COPY: Record<string, { editorial: string; facts: readonly string[] }> = {
   "portofino-la-portofinese-eco-farm": {
@@ -154,14 +159,6 @@ function SectionHeading({
   );
 }
 
-function IllustrationCaption({ text }: { text: string }) {
-  return (
-    <span className="absolute bottom-0 inset-x-0 bg-ink/70 text-ivory text-[0.58rem] tracking-[0.14em] font-sans px-2.5 py-1 backdrop-blur-sm">
-      {text}
-    </span>
-  );
-}
-
 function ExperienceFacts({ facts }: { facts: readonly string[] }) {
   return (
     <ul className="mt-3 space-y-1">
@@ -186,7 +183,7 @@ function ProminentExperience({ e }: { e: DestinationExperience }) {
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          {e.imageCaption && <IllustrationCaption text={e.imageCaption} />}
+          {e.imageIsIllustrative && <EditorialImageBadge />}
         </div>
       )}
       <div className="p-5 md:p-8 flex flex-col">
@@ -200,6 +197,7 @@ function ProminentExperience({ e }: { e: DestinationExperience }) {
           {copy.editorial}
         </p>
         <ExperienceFacts facts={copy.facts} />
+        {e.imageIsIllustrative && <NamedPlaceDisclosure />}
         <div className="mt-auto pt-5">
           <OutboundCta
             linkKey={e.key}
@@ -224,7 +222,7 @@ function ExperienceCard({ e }: { e: DestinationExperience }) {
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          {e.imageCaption && <IllustrationCaption text={e.imageCaption} />}
+          {e.imageIsIllustrative && <EditorialImageBadge />}
         </div>
       )}
       <div className="p-5 md:p-6 flex flex-col flex-1">
@@ -238,6 +236,7 @@ function ExperienceCard({ e }: { e: DestinationExperience }) {
           {copy.editorial}
         </p>
         <ExperienceFacts facts={copy.facts} />
+        {e.imageIsIllustrative && <NamedPlaceDisclosure />}
         <div className="mt-4">
           <OutboundCta
             linkKey={e.key}
@@ -288,6 +287,8 @@ function PortofinoPage() {
         </div>
       </section>
 
+      <EditorialImageryNote />
+
       {/* QUICK JUMP */}
       <nav aria-label="Portofino sections" className="bg-cream border-b border-border/40">
         <ul className="mx-auto max-w-[1280px] px-4 sm:px-6 py-4 flex flex-wrap items-center justify-center gap-x-7 gap-y-2">
@@ -316,6 +317,7 @@ function PortofinoPage() {
           <SectionHeading
             eyebrow="STAY"
             title="Where We'd Stay"
+            intro="Four ways to stay: the full Portofino theatre, the harbour at your door, a quieter village address or a beach-first base."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             {hotels.map((h) => (
@@ -330,6 +332,7 @@ function PortofinoPage() {
                     loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
+                  <EditorialImageBadge />
                 </div>
                 <div className="p-4 md:p-5 flex flex-col">
                   <span className="eyebrow text-[0.56rem] tracking-[0.32em] text-gold">
@@ -341,8 +344,13 @@ function PortofinoPage() {
                   <p className="font-serif italic text-ink/65 text-[0.86rem] mt-2 leading-relaxed flex-1">
                     {h.note}
                   </p>
+                   <NamedPlaceDisclosure />
                   <div className="mt-3">
-                    <OutboundCta linkKey={h.linkKey} placement="portofino-stay" />
+                     <OutboundCta
+                       linkKey={h.linkKey}
+                       placement="portofino-stay"
+                       label="CHECK ROOMS & DATES"
+                     />
                   </div>
                 </div>
               </article>
@@ -452,9 +460,8 @@ function PortofinoPage() {
         <div className="mt-12">
           <div className="mx-auto h-px w-16 bg-ink/15" />
           <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] leading-relaxed text-ink/40 max-w-4xl mx-auto">
-            Availability, seasons and terms are controlled by each hotel or operator. Venue
-            illustrations are editorial and AI-generated where labelled. Hotel, dining and
-            experience links on this page currently earn Resort Edit no commission.{" "}
+            Availability, seasons and terms are controlled by each hotel or operator. Hotel, dining
+            and experience links on this page currently earn Resort Edit no commission.{" "}
             <Link to="/affiliate-disclosure" className="underline hover:text-ink/70">
               Affiliate Disclosure
             </Link>

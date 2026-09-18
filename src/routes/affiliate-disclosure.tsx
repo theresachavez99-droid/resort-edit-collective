@@ -24,9 +24,9 @@ export const Route = createFileRoute("/affiliate-disclosure")({
   component: AffiliateDisclosurePage,
 });
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, id }: { title: string; children: React.ReactNode; id?: string }) {
   return (
-    <section className="mt-12">
+    <section id={id} className="mt-12 scroll-mt-24">
       <h2 className="font-display text-2xl md:text-3xl tracking-wide text-ink">{title}</h2>
       <div className="mt-3 h-px w-12 bg-gold" />
       <div className="mt-5 space-y-4 font-serif text-base md:text-lg leading-relaxed text-ink/80">
@@ -86,16 +86,17 @@ function AffiliateDisclosurePage() {
         </p>
       </Section>
 
-      <Section title="About our imagery">
+      <Section title="About our imagery" id="about-our-imagery">
         <p>
-          Resort Edit's editorial images are created with AI image generation, art-directed by us.
-          They are illustrations of how a place or a look feels — not documentary photographs of a
-          specific person, hotel, restaurant, boat or event, and not the operator's own photography.
-          We label them as illustrations where we use them.
+          Resort Edit editorial imagery is AI-generated unless specifically credited otherwise. It
+          illustrates the Resort Edit point of view and is not documentary photography of a person,
+          hotel, restaurant, destination, activity or event. Images that visualize named properties
+          and experiences are labelled as editorial visualizations.
         </p>
         <p>
-          Clothing shown in our imagery is editorial styling. It is not a claim that a pictured piece
-          is a particular retailer's product, and it is not shoppable.
+          Images of Lilla wearing linked products are AI-generated model images. Retailer photography
+          should be used to confirm exact color, fit and details. Verified retailer and product
+          photography may be third-party and is not labelled as AI-generated.
         </p>
         <p>
           We have not necessarily visited every venue we describe. Facts such as meeting points,

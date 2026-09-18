@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import heroAsset from "@/assets/about-hero-portofino-golden-harbor.png.asset.json";
 import { absoluteUrl } from "@/lib/site";
 import { EditorialHero } from "@/components/EditorialHero";
+import { EditorialImageBadge, EditorialImageryNote } from "@/components/EditorialImageryDisclosure";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -55,7 +56,10 @@ function AboutPage() {
         }
       >
         <h1 className="sr-only">About Resort Edit</h1>
+        <EditorialImageBadge />
       </EditorialHero>
+
+      <EditorialImageryNote />
 
       <section
         id="our-story"
