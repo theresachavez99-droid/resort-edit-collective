@@ -94,9 +94,10 @@ function AffiliateDisclosurePage() {
           visualize named properties and experiences are labelled as editorial visualizations.
         </p>
         <p>
-          Images of Lilla wearing linked products are AI-generated model images. Retailer photography
-          should be used to confirm exact color, fit and details. Verified retailer and product
-          photography may be third-party and is not labelled as AI-generated.
+          Clothing shown in our imagery is editorial styling. Images of Lilla wearing linked
+          products are AI-generated model images. Retailer photography should be used to confirm
+          exact color, fit and details. Verified retailer and product photography may be third-party
+          and is not labelled as AI-generated.
         </p>
         <p>
           We have not necessarily visited every venue we describe. Facts such as meeting points,

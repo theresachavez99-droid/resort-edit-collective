@@ -260,8 +260,8 @@ function PortofinoPage() {
   const prominent = experiences.filter((e) => e.prominent);
   const rest = experiences.filter((e) => !e.prominent);
   const hotels = HOTELS.filter((h) => outboundHref(h.linkKey) !== null);
-  const dining = PORTOFINO_DINING.filter((d) =>
-    DINING_KEYS.includes(d.key as (typeof DINING_KEYS)[number]),
+  const dining = DINING_KEYS.map((key) => PORTOFINO_DINING.find((d) => d.key === key)).filter(
+    (d): d is (typeof PORTOFINO_DINING)[number] => Boolean(d),
   );
 
   return (
