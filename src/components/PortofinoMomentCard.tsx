@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import type { PortofinoMomentCard as PortofinoMomentCardData } from "@/lib/portofino-moments.functions";
-import { EditorialImageBadge } from "@/components/EditorialImageryDisclosure";
+import {
+  EditorialImageBadge,
+  LillaProductDisclosure,
+} from "@/components/EditorialImageryDisclosure";
 
 /**
  * Canonical card for a Portofino moment. Single source of truth for the
@@ -32,6 +35,7 @@ export function PortofinoMomentCard({ m }: { m: PortofinoMomentCardData }) {
         <EditorialImageBadge />
       </div>
       <div className="p-5 md:p-6 flex flex-col flex-1">
+        <LillaProductDisclosure />
         <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">
           {m.moment_name}
         </h3>

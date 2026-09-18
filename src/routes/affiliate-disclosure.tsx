@@ -88,10 +88,10 @@ function AffiliateDisclosurePage() {
 
       <Section title="About our imagery" id="about-our-imagery">
         <p>
-          Resort Edit editorial imagery is AI-generated unless specifically credited otherwise. It
-          illustrates the Resort Edit point of view and is not documentary photography of a person,
-          hotel, restaurant, destination, activity or event. Images that visualize named properties
-          and experiences are labelled as editorial visualizations.
+          Resort Edit editorial imagery is created with AI image generation unless specifically
+          credited otherwise. It illustrates the Resort Edit point of view and is not documentary
+          photography of a person, hotel, restaurant, destination, activity or event. Images that
+          visualize named properties and experiences are labelled as editorial visualizations.
         </p>
         <p>
           Images of Lilla wearing linked products are AI-generated model images. Retailer photography
