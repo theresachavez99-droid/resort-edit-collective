@@ -138,7 +138,7 @@ function Index() {
           <div className="relative aspect-[4/3] lg:aspect-[5/4] overflow-hidden bg-muted">
             <img
               src={portofinoFeatured}
-              alt="Portofino harbor — pastel facades and wooden boats along the quay"
+              alt="AI-generated editorial illustration of Portofino harbor, with pastel facades and wooden boats along the quay"
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover"
             />

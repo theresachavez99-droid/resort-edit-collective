@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import type { PortofinoMomentCard as PortofinoMomentCardData } from "@/lib/portofino-moments.functions";
+import { EditorialImageBadge } from "@/components/EditorialImageryDisclosure";
 
 /**
  * Canonical card for a Portofino moment. Single source of truth for the
@@ -16,7 +17,7 @@ export function PortofinoMomentCard({ m }: { m: PortofinoMomentCardData }) {
       <div className="relative aspect-[4/5] overflow-hidden bg-cream/40">
         <img
           src={m.moment_card_image}
-          alt={`${m.moment_name} — Portofino`}
+          alt={`AI-generated editorial illustration for ${m.moment_name} in Portofino`}
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
           style={
@@ -28,6 +29,7 @@ export function PortofinoMomentCard({ m }: { m: PortofinoMomentCardData }) {
               : undefined
           }
         />
+        <EditorialImageBadge />
       </div>
       <div className="p-5 md:p-6 flex flex-col flex-1">
         <h3 className="font-display text-xl md:text-2xl tracking-[0.04em] text-ink leading-tight">

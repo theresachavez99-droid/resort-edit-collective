@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { trackOutbound } from "@/lib/utils";
 import { experienceCta, type DestinationExperience } from "@/data/destinationExperiences";
+import { EditorialImageBadge, NamedPlaceDisclosure } from "@/components/EditorialImageryDisclosure";
 
 type Props = {
   experience: DestinationExperience;
@@ -17,7 +18,7 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
         {e.image ? (
           <img
             src={e.image}
-            alt={e.imageAlt ?? `${e.destinationName} — ${e.kind.toLowerCase()} scene`}
+            alt={e.imageAlt ?? `AI-generated editorial illustration of ${e.kind.toLowerCase()} in ${e.destinationName}`}
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
@@ -33,11 +34,7 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
             </p>
           </div>
         )}
-        {e.image && e.imageCaption ? (
-          <span className="absolute bottom-0 inset-x-0 bg-ink/70 text-ivory text-[0.58rem] tracking-[0.14em] font-sans px-2.5 py-1 backdrop-blur-sm">
-            {e.imageCaption}
-          </span>
-        ) : null}
+        {e.image && e.imageIsIllustrative ? <EditorialImageBadge /> : null}
         {showDestination && (
           <span className="absolute top-3 left-3 bg-ink/75 text-ivory eyebrow px-2.5 py-1 tracking-[0.28em] text-[0.55rem] backdrop-blur-sm">
             {e.destinationName}
@@ -59,11 +56,9 @@ export function ExperienceCard({ experience: e, placement, showDestination = fal
         </ul>
         <p className="mt-2.5 font-serif text-[0.74rem] text-ink/45 leading-snug flex-1">
           Operated by {e.operator}.
-          {e.image && e.imageIsIllustrative
-            ? " Imagery is an illustration of the destination, not a photograph of the operator's venue."
-            : ""}
           {!e.image ? " We have no verified photograph of this venue, so none is shown." : ""}
         </p>
+        {e.image && e.imageIsIllustrative ? <NamedPlaceDisclosure /> : null}
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 pt-2.5 border-t border-border/50">
           <a
             href={e.href}

@@ -1,5 +1,6 @@
 import { experienceForMoment, experienceCta } from "@/data/destinationExperiences";
 import { trackOutbound } from "@/lib/utils";
+import { EditorialImageBadge, NamedPlaceDisclosure } from "@/components/EditorialImageryDisclosure";
 
 /**
  * On a Moment page: the one experience this moment's looks were styled for.
@@ -24,15 +25,11 @@ export function MomentExperience({ momentSlug }: { momentSlug: string }) {
             <div className="relative aspect-[4/3] overflow-hidden bg-muted border border-border/60">
               <img
                 src={e.image}
-                alt={e.imageAlt ?? `${e.destinationName} — ${e.kind.toLowerCase()} scene`}
+                alt={e.imageAlt ?? `AI-generated editorial illustration of ${e.kind.toLowerCase()} in ${e.destinationName}`}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover"
               />
-              {e.imageCaption ? (
-                <span className="absolute bottom-0 inset-x-0 bg-ink/70 text-ivory text-[0.6rem] tracking-[0.14em] font-sans px-2.5 py-1 backdrop-blur-sm">
-                  {e.imageCaption}
-                </span>
-              ) : null}
+              {e.imageIsIllustrative ? <EditorialImageBadge /> : null}
             </div>
           ) : null}
           <div>
@@ -57,12 +54,11 @@ export function MomentExperience({ momentSlug }: { momentSlug: string }) {
             </ul>
             <p className="mt-2.5 font-serif text-[0.76rem] text-ink/45 leading-snug max-w-2xl">
               Operated by {e.operator}.
-              {e.image
-                ? " Imagery is an illustration of the destination, not a photograph of the operator's venue."
-                : " We have no verified photograph of this venue, so none is shown."}{" "}
+              {!e.image ? " We have no verified photograph of this venue, so none is shown." : ""}{" "}
               Booking and enquiry links open the listed operator or booking platform, and are not
               commission-bearing.
             </p>
+            {e.image && e.imageIsIllustrative ? <NamedPlaceDisclosure /> : null}
             <a
               href={e.href}
               target="_blank"

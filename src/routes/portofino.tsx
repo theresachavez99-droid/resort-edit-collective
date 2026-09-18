@@ -270,10 +270,11 @@ function PortofinoPage() {
       <section className="relative h-[44vh] md:h-[58vh] min-h-[320px] w-full overflow-hidden bg-ink">
         <img
           src={portofinoImg}
-          alt="Portofino harbour — pastel facades and wooden boats along the quay"
+          alt="AI-generated editorial illustration of Portofino harbour, with pastel facades and wooden boats along the quay"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-ink/20 to-ink/60" />
+        <EditorialImageBadge />
         <div className="relative z-10 h-full flex flex-col items-center justify-end text-center px-6 pb-6 md:pb-10 text-ivory">
           <span className="eyebrow text-[0.62rem] md:text-[0.7rem] tracking-[0.42em] text-ivory/80">
             DRESSED FOR THE DESTINATION™
@@ -328,7 +329,7 @@ function PortofinoPage() {
                 <div className="relative overflow-hidden bg-muted">
                   <img
                     src={h.image}
-                    alt={h.name}
+                    alt={`AI-generated editorial illustration inspired by ${h.name}; not a photograph of the property`}
                     loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
@@ -344,13 +345,13 @@ function PortofinoPage() {
                   <p className="font-serif italic text-ink/65 text-[0.86rem] mt-2 leading-relaxed flex-1">
                     {h.note}
                   </p>
-                   <NamedPlaceDisclosure />
+                  <NamedPlaceDisclosure />
                   <div className="mt-3">
-                     <OutboundCta
-                       linkKey={h.linkKey}
-                       placement="portofino-stay"
-                       label="CHECK ROOMS & DATES"
-                     />
+                    <OutboundCta
+                      linkKey={h.linkKey}
+                      placement="portofino-stay"
+                      label="CHECK ROOMS & DATES"
+                    />
                   </div>
                 </div>
               </article>

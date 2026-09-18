@@ -52,14 +52,12 @@ function DestinationsPage() {
         </div>
       </section>
 
-      <EditorialImageryNote />
-
       <section className="mx-auto max-w-[1100px] px-6 py-12 md:py-16">
         <article className="grid grid-cols-1 md:grid-cols-2 border border-border/60 bg-card">
           <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[380px] overflow-hidden bg-muted">
             <img
               src={portofinoImg}
-              alt="Portofino harbour — pastel facades and wooden boats along the quay"
+              alt="AI-generated editorial illustration of Portofino harbour, with pastel facades and wooden boats along the quay"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <EditorialImageBadge />
@@ -85,6 +83,7 @@ function DestinationsPage() {
           </div>
         </article>
       </section>
+      <EditorialImageryNote />
     </div>
   );
 }

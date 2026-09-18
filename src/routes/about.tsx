@@ -37,7 +37,7 @@ function AboutPage() {
     <div>
       <EditorialHero
         src={heroAsset.url}
-        alt="Golden-hour view overlooking Portofino harbor with a woman in a white dress and straw hat enjoying the Italian Riviera."
+        alt="AI-generated editorial illustration of a golden-hour Portofino view with a woman in a white dress and straw hat."
         priority
         // Subject (hat + face) sits in the upper-right of the source image. We
         // bias y low (toward the top of the image) at every breakpoint so the
