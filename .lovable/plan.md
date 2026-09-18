@@ -1,26 +1,18 @@
-# Portofino Guide Editorial Tightening
+# Resort Edit stay and imagery disclosure update
 
 ## Scope
-Edit only the public `/portofino` guide and its Portofino-specific display data. Preserve the hero, imagery, navigation, typography, colors, card styling, responsive behavior, footer, legal pages, homepage video, tracking infrastructure, and every other route.
+- Strengthen only the Portofino STAY copy, preserve its four-card 2×2 treatment, and reorder the four existing EAT cards.
+- Add shared, understated disclosure components for page-level AI imagery notes, image badges, named-place visualization text, and Lilla/product-image guidance.
+- Apply the shared disclosure system to every currently live public editorial page that displays AI imagery, without touching redirects, admin tools, product photography, routes, or media assets.
+- Add the footer imagery link and update the existing disclosure section at its matching anchor.
 
-## Changes
-- Keep the hero and four existing hotel cards; shorten the repeated STAY introduction.
-- Limit DO to four existing recommendations: La Portofinese Eco-Farm, Private Boat Tour, Pesto Cooking & Lunch, and Bagni Fiore.
-- Tighten experience descriptions and facts, especially the Eco-Farm, while retaining its labelled illustration and one seasonal/reservation caveat.
-- Remove repeated per-card operator and verification boilerplate; replace it with one shared note near the section.
-- Limit EAT to DaV Mare, La Terrazza, Ristorante Puny, and Da ö Batti.
-- Replace the four packing cards and Biankina promotion with one compact, unlinked packing block.
-- Merge Planning Notes and Getting There into a concise “Before You Go” section containing only the requested logistics.
-- Remove the standalone Instagram sentence and follow button.
-- Consolidate page disclaimers into one bottom note covering availability, labelled editorial/AI illustrations, and current non-commission status.
+## Implementation
+- Keep every existing outbound URL and tracking path unchanged; override only the visible hotel CTA label on the Portofino guide.
+- Correct generated-scene alt text to identify editorial illustrations.
+- Replace the Portofino experience image caption bars with corner badges and nearby accessible named-experience wording.
+- Preserve the homepage video and all image source, crop, focal-point, and sizing behavior.
 
-## Technical details
-- Primary page: `src/routes/portofino.tsx`.
-- Portofino-specific data may be tightened in `src/data/destinationExperiences.ts`, `src/data/portofinoDining.ts`, and `src/data/portofinoPackingGuide.ts` only where needed to render this guide accurately.
-- Keep outbound tracking untouched; removing the Biankina presentation does not alter its registry entry.
-- Update only existing focused assertions if they encode the removed guide content; add no unrelated tests.
-
-## Validation
-- Run the focused Portofino/launch-readiness tests and the production build.
-- Inspect `/portofino` at desktop and mobile widths for the exact 4/4 recommendation counts, working anchors, preserved labels/images, no Biankina or duplicate cards, and no awkward gaps or horizontal overflow.
-- Confirm the homepage hero video remains byte-for-byte untouched and do not publish.
+## Verification
+- Run focused disclosure/launch tests and the project build/type checks.
+- Inspect desktop and mobile views for the homepage, Portofino, Destinations, About, footer anchor, card equality, badge readability, and overflow.
+- Report exact files changed and any editorial image route that could not be covered safely. Do not publish.
