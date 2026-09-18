@@ -54,7 +54,8 @@ describe("public Portofino hub", () => {
   });
 
   test("packing guidance is advice, not a shoppable set", () => {
-    expect(hub).toContain("PORTOFINO_PACKING_GUIDE");
+    expect(hub).toContain("Pack walkable shoes with grip");
+    expect(hub).not.toContain("shop-biankina");
     expect(hub).not.toContain("ShopTheLookItems");
   });
 
