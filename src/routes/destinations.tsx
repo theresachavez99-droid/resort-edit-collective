@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/site";
 import portofinoImg from "@/assets/hero-portofino-harbor.jpg";
+import { EditorialImageBadge, EditorialImageryNote } from "@/components/EditorialImageryDisclosure";
 
 /**
  * Destinations index. One destination is published — Portofino — so the page
@@ -56,9 +57,10 @@ function DestinationsPage() {
           <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[380px] overflow-hidden bg-muted">
             <img
               src={portofinoImg}
-              alt="Portofino harbour — pastel facades and wooden boats along the quay"
+              alt="AI-generated editorial illustration of Portofino harbour, with pastel facades and wooden boats along the quay"
               className="absolute inset-0 h-full w-full object-cover"
             />
+            <EditorialImageBadge />
           </div>
           <div className="p-6 md:p-9 flex flex-col justify-center">
             <span className="eyebrow text-[0.6rem] tracking-[0.32em] text-gold">
@@ -81,6 +83,7 @@ function DestinationsPage() {
           </div>
         </article>
       </section>
+      <EditorialImageryNote />
     </div>
   );
 }

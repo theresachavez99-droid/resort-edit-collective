@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import heroAsset from "@/assets/about-hero-portofino-golden-harbor.png.asset.json";
 import { absoluteUrl } from "@/lib/site";
 import { EditorialHero } from "@/components/EditorialHero";
+import { EditorialImageBadge, EditorialImageryNote } from "@/components/EditorialImageryDisclosure";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -36,7 +37,7 @@ function AboutPage() {
     <div>
       <EditorialHero
         src={heroAsset.url}
-        alt="Golden-hour view overlooking Portofino harbor with a woman in a white dress and straw hat enjoying the Italian Riviera."
+        alt="AI-generated editorial illustration of a golden-hour Portofino view with a woman in a white dress and straw hat."
         priority
         // Subject (hat + face) sits in the upper-right of the source image. We
         // bias y low (toward the top of the image) at every breakpoint so the
@@ -55,7 +56,10 @@ function AboutPage() {
         }
       >
         <h1 className="sr-only">About Resort Edit</h1>
+        <EditorialImageBadge />
       </EditorialHero>
+
+      <EditorialImageryNote />
 
       <section
         id="our-story"

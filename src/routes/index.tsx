@@ -5,6 +5,7 @@ import heroVideoAsset from "@/assets/portofino-hero.mp4.asset.json";
 import heroPosterAsset from "@/assets/portofino-hero-poster.jpg.asset.json";
 import portofinoFeatured from "@/assets/hero-portofino-harbor.jpg";
 import * as React from "react";
+import { EditorialImageBadge, EditorialImageryNote } from "@/components/EditorialImageryDisclosure";
 
 const featured = getFeaturedDestination();
 const heroMuse = featured.heroImage;
@@ -106,6 +107,7 @@ function Index() {
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/15 to-ink/25" />
+          <EditorialImageBadge />
           <div className="absolute inset-x-0 bottom-0 px-6 sm:px-10 lg:px-14 pb-12 md:pb-16 lg:pb-20">
             <div className="max-w-[1440px] mx-auto">
               <p className="eyebrow text-ivory/85 text-[0.7rem] sm:text-[0.78rem] tracking-[0.42em]">
@@ -128,16 +130,19 @@ function Index() {
         </div>
       </section>
 
+      <EditorialImageryNote />
+
       {/* FEATURED DESTINATION */}
       <section className={`${wrap} pt-12 md:pt-16`}>
         <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-6 md:gap-10 items-center">
           <div className="relative aspect-[4/3] lg:aspect-[5/4] overflow-hidden bg-muted">
             <img
               src={portofinoFeatured}
-              alt="Portofino harbor — pastel facades and wooden boats along the quay"
+              alt="AI-generated editorial illustration of Portofino harbor, with pastel facades and wooden boats along the quay"
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover"
             />
+            <EditorialImageBadge />
           </div>
           <div className="lg:pl-2">
             <p className="eyebrow text-gold text-[0.68rem] tracking-[0.34em]">
