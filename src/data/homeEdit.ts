@@ -153,7 +153,7 @@ export const homeDays: HomeDay[] = [
         brand: "Biankina",
         item: "Marseille Espadrille Wedges — Beige Tan",
         price: "$295",
-        href: "https://biankina.com/products/marseille-eco-canvas-vegan-espadrille-wedges-beige-tan?ref=Resortedit",
+        href: "https://biankina.com/products/marseille-eco-canvas-vegan-espadrille-wedges-beige-tan",
       },
       {
         category: "Bag",

@@ -44,7 +44,7 @@ function PrivacyRightsPage() {
         Your Privacy Choices
       </h1>
       <div className="mt-6 h-px w-16 bg-gold" />
-      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 16, 2026</p>
+      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 27, 2026</p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
         The short version: there is no signup form and no reader account on this site today. The
@@ -105,8 +105,8 @@ function PrivacyRightsPage() {
       <Section title="When you leave our site">
         <p>
           Hotel, restaurant, experience and shopping links open that company's own website, where
-          their cookies, tracking and privacy policy apply, not ours. One of them — the Biankina
-          footwear storefront in our packing guide — may earn us a commission; see our{" "}
+          their cookies, tracking and privacy policy apply, not ours. Current outbound links earn
+          Resort Edit no commission; see our{" "}
           <Link to="/affiliate-disclosure" className="text-gold hover:underline">
             Affiliate Disclosure
           </Link>

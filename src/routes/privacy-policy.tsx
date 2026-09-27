@@ -40,7 +40,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function PrivacyPolicyPage() {
-  const updated = "September 16, 2026";
+  const updated = "September 27, 2026";
   return (
     <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
       <span className="eyebrow text-gold">Legal</span>
@@ -119,16 +119,14 @@ function PrivacyPolicyPage() {
 
       <Section title="Links to Other Sites">
         <p>
-          One link on this site — the Biankina footwear storefront in our packing guide — may earn
-          Resort Edit a commission if you buy something, at no additional cost to you. Our hotel,
-          restaurant and experience links currently earn nothing, and we do not claim membership of
-          any affiliate or booking programme that has not accepted us.
+          Our current hotel, restaurant, experience and shopping links earn Resort Edit no
+          commission, and we do not claim membership of any affiliate or booking programme that has
+          not accepted us.
         </p>
         <p>
           When you follow a link off this site, that company's own cookies, tracking and privacy
-          policy apply — not ours — and any commission tracking happens on their side, not through
-          code we run here. Editorial selections are made independently of commissions. Full detail
-          is in our{" "}
+          policy apply — not ours. Editorial selections are made independently. Full detail is in
+          our{" "}
           <Link to="/affiliate-disclosure" className="text-gold hover:underline">
             Affiliate Disclosure
           </Link>

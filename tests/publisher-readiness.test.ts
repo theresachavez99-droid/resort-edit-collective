@@ -77,7 +77,8 @@ describe("dedicated legal and contact routes exist", () => {
     expect(src).not.toContain("retailer that actually stocks it");
     expect(src).not.toContain("boringly honest");
     expect(src).toContain("Clothing shown in our imagery is editorial styling");
-    expect(src).toContain("Biankina footwear");
+    expect(src).toContain("none of those links earn Resort Edit a");
+    expect(src).not.toContain("Biankina");
     expect(src).not.toContain("we visited");
     expect(src).not.toContain("Rakuten");
   });
@@ -86,14 +87,14 @@ describe("dedicated legal and contact routes exist", () => {
 describe("commission disclosure appears before shopping and booking links", () => {
   const notice = read("src/components/CommissionNotice.tsx");
 
-  test("shop wording promises no fee to the reader and links to the full text", () => {
-    expect(notice).toContain("at no extra cost to you");
+  test("shop wording accurately states that current links earn no commission", () => {
+    expect(notice).toContain("earn Resort Edit no commission");
     expect(notice).toContain('to="/affiliate-disclosure"');
   });
 
   test("booking wording is accurate about operator and platform links", () => {
     expect(notice).toContain("open the listed operator or booking platform");
-    expect(notice).toContain("not commission-bearing");
+    expect(notice).toContain("earn Resort Edit no commission");
     expect(notice).not.toContain("operator's own page");
   });
 
