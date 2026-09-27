@@ -94,7 +94,7 @@ describe("commission disclosure appears before shopping and booking links", () =
 
   test("booking wording is accurate about operator and platform links", () => {
     expect(notice).toContain("open the listed operator or booking platform");
-    expect(notice).toContain("not commission-bearing");
+    expect(notice).toContain("earn Resort Edit no commission");
     expect(notice).not.toContain("operator's own page");
   });
 
