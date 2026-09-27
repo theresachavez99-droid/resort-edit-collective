@@ -37,11 +37,11 @@ Re-verified 16 September 2026 after the founder's own source check.
 | Sunset Boat Tour | Viator listing | **Facts corrected.** Supplier Orange Wave; same Rapallo meeting point; about 1h30m. |
 | Pesto Boat & Walking Tour with Lunch | Viator listing | **Facts corrected.** Supplier Experience My Portofino; starts at the Santa Margherita Ligure ferry pier (Piazza Martiri della Libertà 1); about 3h; round-trip ferry tickets included. |
 | Private Coastal Hike to San Fruttuoso | — | **WITHHELD / omitted from launch.** Neither we nor the founder have confirmed this exact listing; our automated fetches returned HTTP 403, which is not evidence about the listing's state. No card or CTA renders. Its meeting point is left unstated rather than assumed. |
-| Biankina | `https://biankina.com/?ref=hxrfofuu` | **CONNECTED — user-confirmed referral.** The founder supplied this exact referral URL on 16 Sep 2026; it is stored verbatim in the registry and the `?ref=hxrfofuu` parameter is preserved through outbound routing (no redirector rewrites it). One CTA renders, in the Portofino WEAR section, with the disclosure "Affiliate link — we may earn a commission if you purchase." and `rel="sponsored noopener noreferrer"`. This is a **user-confirmed affiliate relationship, not independently verified commission attribution**: payout, commission rate and conversion attribution require the merchant's own reporting. No discount percentage or coupon term is published, and the older bare text code `resortedit` is not used to construct any URL. |
 
-Nothing is described as sponsored or commissionable unless a real, verified
-affiliate URL exists in the registry. Withheld entries are omitted from the
-public page entirely, not shown with a dead button.
+The Biankina referral and storefront callout were removed on 27 September 2026.
+No current outbound hotel, restaurant, experience or shopping link earns Resort
+Edit a commission. Withheld entries are omitted from the public page entirely,
+not shown with a dead button.
 
 ## Click measurement — how to read results
 
@@ -90,26 +90,19 @@ Clicks are *interest signals only* — they are not sales or commissions.
   `/affiliate-disclosure`, `/privacy-policy`, `/privacy-rights`, `/sitemap.xml`
   → 200. `/latest`, `/pack-my-trip`, `/my-edit`, `/brands`,
   `/portofino/nightcap` → 301.
-- Browser (desktop 1280 + mobile 390), re-run 16 Sep 2026 after the final copy
+- Browser (desktop 1280 + mobile 390), re-run 27 Sep 2026 after the referral removal
   corrections. Evidence type is stated for each item; nothing below is inferred
   from code alone:
-  - **Rendered-DOM evidence:** exactly one Biankina anchor, href
-    `https://biankina.com/?ref=hxrfofuu` (parameter intact), `rel="noopener
-    noreferrer sponsored"`, visible label "EXPLORE BIANKINA FOOTWEAR →".
-  - **Rendered-text evidence:** the disclosure "Affiliate link — we may earn a
-    commission if you purchase." is visible next to that CTA; "Rapallo" and
-    "Santa Margherita Ligure ferry pier" appear; "Departs Portofino" does not;
-    the withheld San Fruttuoso hike card does not render; the contradictory
-    strings "Nothing here is for sale" and "Packing advice, not a shop" are gone
-    from the WEAR section.
+  - **Rendered-DOM evidence:** no referral storefront anchor or sponsored link
+    renders on the Portofino guide or affiliate disclosure.
+  - **Rendered-text evidence:** current hotel, restaurant, experience and
+    shopping links are accurately described as earning Resort Edit no commission;
+    "Rapallo" and "Santa Margherita Ligure ferry pier" appear; "Departs
+    Portofino" does not; the withheld San Fruttuoso hike card does not render.
   - **Layout evidence:** `scrollWidth - innerWidth = 0` at both 1280 and 390.
-  - **Behavioural evidence:** clicking the Biankina CTA recorded exactly one row
-    (`2026-09-16`, `shop-biankina`, `portofino-wear`, `clicks = 1`), confirmed by
-    a direct database read; that single test row was then deleted.
 - Legal copy re-read after edit: `/affiliate-disclosure` now describes
-  destination guides, unmonetized hotel/experience links and the single Biankina
-  storefront referral, states clothing imagery is editorial and not shoppable,
-  and no longer claims firsthand visits. `/privacy-policy` and `/privacy-rights`
+  destination guides and unmonetized outbound links, states clothing imagery is
+  editorial, and no longer claims firsthand visits. `/privacy-policy` and `/privacy-rights`
   describe the aggregate click counter (date, link key, placement, count — no
   identifiers, no cookie), keep the hosting/merchant technical-data explanation,
   and no longer instruct readers to subscribe or save looks; historic subscriber
@@ -119,10 +112,6 @@ Clicks are *interest signals only* — they are not sales or commissions.
 
 ## Evidence limits — what is NOT verified
 
-- **Affiliate sales attribution and payout are not independently verified.** The
-  Biankina referral URL is user-confirmed and the click count is ours; whether a
-  purchase is attributed to it, at what rate, and whether anything is paid can
-  only be established from the merchant's own reporting.
 - **A generic HTTP 403 is not proof of bot filtering.** Where our automated
   fetches returned 403, the listing's current state is simply unknown to us; we
   do not describe those pages as verified, dead, or bot-protected.
@@ -135,19 +124,17 @@ Clicks are *interest signals only* — they are not sales or commissions.
    no CTA for it. Un-withhold only after a human opens the listing and confirms
    it is a live, purchasable tour. The real coastal footpath is described as a
    walk in editorial copy and is deliberately not presented as a bookable tour.
-2. **Biankina commission reporting** — see Evidence limits above. Make no
-   earnings, rate or discount claim until merchant reporting exists.
-3. **Travel links stay unmonetized** until genuine affiliate URLs exist. Hotel,
+2. **Travel links stay unmonetized** until genuine affiliate URLs exist. Hotel,
    restaurant and experience links are ordinary direct links today.
-4. **Hotel and experience affiliate programs** — all live links render as plain
+3. **Hotel and experience affiliate programs** — all live links render as plain
    links (`active-affiliate-pending`). No tracking IDs exist; none invented.
-5. **Instagram** — `INSTAGRAM_LAUNCHED = false`. Flip it and add real post URLs
+4. **Instagram** — `INSTAGRAM_LAUNCHED = false`. Flip it and add real post URLs
    in `src/data/instagramPosts.ts` once @resort.edit is live.
-6. **Verified contact address — RESOLVED (18 Sep 2026)** — the owner created and
+5. **Verified contact address — RESOLVED (18 Sep 2026)** — the owner created and
    confirmed the single Resort Edit inbox: `helloresortedit@gmail.com`. The
    Contact page now shows it as a working `mailto:` link, replacing the
    "Contact details are being updated." placeholder; no form, phone number or
    response-time promise was added.
-7. **Publishing — AUTHORIZED (18 Sep 2026)** — with the contact address
+6. **Publishing — AUTHORIZED (18 Sep 2026)** — with the contact address
    confirmed, the draft is cleared for publication. The owner will deploy
    through the project publisher.
