@@ -4,9 +4,9 @@ import { Link } from "@tanstack/react-router";
  * Plain-language commission disclosure.
  *
  * Placed ABOVE any shopping or booking links so a reader sees it before
- * clicking, not only in the footer. Wording stays truthful: some links may
- * earn a commission, none of them change what we choose to feature, and we
- * never claim a partnership we do not have.
+ * clicking, not only in the footer. Wording stays truthful about the current
+ * absence of commission-bearing links and never claims a partnership we do
+ * not have.
  */
 export function CommissionNotice({
   variant = "shop",
@@ -18,8 +18,8 @@ export function CommissionNotice({
 }) {
   const body =
     variant === "shop"
-      ? "Some links below may earn Resort Edit a commission if you buy, at no extra cost to you. Prices and stock are set by the retailer and can change."
-      : "Booking and enquiry links open the listed operator or booking platform. The experience links currently displayed are not commission-bearing.";
+      ? "Shopping links currently displayed are ordinary retailer links and earn Resort Edit no commission. Prices and stock are set by the retailer and can change."
+      : "Booking and enquiry links open the listed operator or booking platform. The links currently displayed earn Resort Edit no commission.";
 
   return (
     <p

@@ -242,7 +242,7 @@ function Index() {
       <div className={`${wrap} pb-16 md:pb-24 pt-10`}>
         <div className="mx-auto h-px w-16 bg-ink/15" />
         <p className="mt-6 text-center font-serif text-[11px] md:text-[12px] leading-relaxed text-ink/40">
-          Some links may earn a commission at no additional cost to you.{" "}
+          Current hotel, experience and shopping links earn Resort Edit no commission.{" "}
           <Link to="/affiliate-disclosure" className="underline hover:text-ink/70">
             Affiliate Disclosure
           </Link>

@@ -43,7 +43,6 @@ const AFFILIATE_DIRECT_BRANDS = new Set<string>(
     "Ancient Greek Sandals",
     "Aquazzura",
     "Aranaz",
-    "Biankina",
     "Brinker & Eliza",
     "Castañer",
     "Charo Ruiz Ibiza",

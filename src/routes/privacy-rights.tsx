@@ -105,8 +105,8 @@ function PrivacyRightsPage() {
       <Section title="When you leave our site">
         <p>
           Hotel, restaurant, experience and shopping links open that company's own website, where
-          their cookies, tracking and privacy policy apply, not ours. One of them — the Biankina
-          footwear storefront in our packing guide — may earn us a commission; see our{" "}
+          their cookies, tracking and privacy policy apply, not ours. Current outbound links earn
+          Resort Edit no commission; see our{" "}
           <Link to="/affiliate-disclosure" className="text-gold hover:underline">
             Affiliate Disclosure
           </Link>

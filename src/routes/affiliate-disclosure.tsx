@@ -44,7 +44,7 @@ function AffiliateDisclosurePage() {
         Affiliate Disclosure
       </h1>
       <div className="mt-6 h-px w-16 bg-gold" />
-      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 16, 2026</p>
+      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 27, 2026</p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
         Resort Edit is an independent editorial publication. Today it publishes destination guides —
@@ -53,11 +53,11 @@ function AffiliateDisclosurePage() {
         anything, and how our imagery is made.
       </p>
 
-      <Section title="Hotel, restaurant and experience links">
+      <Section title="Outbound links">
         <p>
-          Hotel, restaurant, tour and ferry links open the venue's own site or the booking platform
-          that lists the experience. As of the date above, none of those links earn Resort Edit
-          anything. They are ordinary links, not paid placements.
+          Hotel, restaurant, experience and shopping links open the venue, operator, booking platform
+          or retailer that lists them. As of the date above, none of those links earn Resort Edit a
+          commission. They are ordinary links, not paid placements.
         </p>
         <p>
           The venues and operators we mention are not sponsors, have not paid for placement, and have
@@ -66,23 +66,10 @@ function AffiliateDisclosurePage() {
         </p>
       </Section>
 
-      <Section title="The one shopping link">
-        <p>
-          Our packing guide includes a single brand storefront referral, to Biankina footwear. If you
-          buy something after using that link, Resort Edit may earn a commission. You never pay more
-          because you used it, and we do not publish any discount, coupon or commission figure.
-        </p>
-        <p>
-          It is a link to the brand's storefront, not a link to a specific item, and it is not a claim
-          that any garment or shoe pictured elsewhere on this site is that brand or is for sale here.
-          Any purchase happens on the brand's own site, under their prices, stock and terms.
-        </p>
-      </Section>
-
       <Section title="Editorial independence">
         <p>
-          A commission never decides what appears here. Places and advice are chosen on their own
-          merits, and we say plainly when a link can earn us something.
+          Places and advice are chosen on their own merits. If a link becomes commission-bearing in
+          future, we will identify it and update this disclosure.
         </p>
       </Section>
 

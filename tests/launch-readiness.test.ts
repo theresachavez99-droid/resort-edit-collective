@@ -371,8 +371,9 @@ describe("supplier facts match the listings we actually read", () => {
     expect(registry).not.toMatch(/affiliateUrl: "[^"]*resortedit/);
   });
 
-  test("the founder-supplied Biankina referral link is used verbatim", () => {
-    expect(registry).toContain('affiliateUrl: "https://biankina.com/?ref=hxrfofuu"');
+  test("the retired Biankina referral is absent from the public registry", () => {
+    expect(registry).not.toContain("Biankina");
+    expect(registry).not.toContain("hxrfofuu");
   });
 
   test("general packing advice has no affiliate promotion or sales claim", () => {

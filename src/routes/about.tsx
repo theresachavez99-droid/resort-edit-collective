@@ -142,13 +142,10 @@ function AboutPage() {
         <span className="eyebrow text-gold">Affiliate Disclosure</span>
         <div className="mx-auto max-w-xl text-left mt-8">
           <div className="space-y-5 font-serif text-[1.1875rem] md:text-[1.25rem] leading-[1.7] text-ink/90">
+            <p>Current hotel, experience and shopping links earn Resort Edit no commission.</p>
             <p>
-              Some shopping links are affiliate links. If you make a purchase through one, Resort
-              Edit may earn a commission at no additional cost to you.
-            </p>
-            <p>
-              Recommendations are selected on editorial merit. Affiliate relationships are
-              disclosed.
+              Recommendations are selected on editorial merit. Any future affiliate relationships
+              will be disclosed.
             </p>
             <p>
               <Link to="/affiliate-disclosure" className="text-gold hover:underline">
