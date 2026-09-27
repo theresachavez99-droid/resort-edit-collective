@@ -6,4 +6,4 @@
 - [x] Verify focused tests, build, desktop, and mobile; do not publish.
 - [x] Remove every public Biankina referral and shopping callout.
 - [x] Correct public commission disclosures and affected readiness checks.
-- [ ] Verify focused tests, build, and public desktop/mobile pages; do not publish.
+- [x] Verify focused tests, build, and public desktop/mobile pages; do not publish.

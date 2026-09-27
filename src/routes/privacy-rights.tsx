@@ -44,7 +44,7 @@ function PrivacyRightsPage() {
         Your Privacy Choices
       </h1>
       <div className="mt-6 h-px w-16 bg-gold" />
-      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 16, 2026</p>
+      <p className="mt-6 font-serif italic text-ink/70">Last updated: September 27, 2026</p>
 
       <p className="mt-8 font-serif text-lg leading-relaxed text-ink/80">
         The short version: there is no signup form and no reader account on this site today. The
